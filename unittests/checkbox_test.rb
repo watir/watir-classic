@@ -32,6 +32,10 @@ class TC_CheckBox < Test::Unit::TestCase
        assert_equal(false , $ie.checkbox(:name,"box4" , 3).disabled )
        assert_equal("" , $ie.checkbox(:name,"box4" , 3).id )
 
+       assert_equal("box4-value5" , $ie.checkbox(:name,"box4" , 5).title)
+       assert_equal("" , $ie.checkbox(:name,"box4" , 4).title)
+
+
     end
 
 
