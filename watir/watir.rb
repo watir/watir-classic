@@ -584,10 +584,13 @@ module Watir
         # this method shows all the images availble in the document
         def show_images()
             doc = getDocument()
+            index=1
             doc.images.each do |l|
                 puts "image: name: #{l.name}"
                 puts "         id: #{l.invoke("id")}"
-                puts "      src: #{l.src}"
+                puts "        src: #{l.src}"
+                puts "      index: #{index}"
+                index+=1
             end
         end
         alias showImages show_images
@@ -595,26 +598,45 @@ module Watir
         # this method shows all the links availble in the document
         def show_links()
 
-            props=["name" ,"id" , "href" , "innerText" ]
+            props=       ["name" ,"id" , "href"  ]
+            print_sizes= [12 , 12, 60]
             doc = getDocument()
-            s = ""
+            index=0
+
+            # draw the table header
+            s = "index".ljust(6) 
+            props.each_with_index do |p,i|
+                s=s+ p.ljust(print_sizes[i]) 
+            end
+            s=s + "text/src".ljust(printsize)
+            s=s+"\n"
+
+            # now get the details of the links
             doc.links.each do |n|
-                props.each do |prop|
+                index+=1
+                s = s + index.to_s.ljust(6)
+                props.each_with_index do |prop,i|
+                    printsize=print_sizes[i]
                     begin
                         p = n.invoke(prop)
-                        s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
+                         temp_var = "#{p}".to_s.ljust(printsize)
                     rescue
                         # this object probably doesnt have this property
+                         temp_var = "".to_s.ljust(printsize)
                     end
+                    s =s+ temp_var
+                end
+                s=s+  n.innerText
+                if n.getElementsByTagName("IMG").length > 0
+                     s=s+  " / " + n.getElementsByTagName("IMG")[0.to_s].src
                 end
                 s=s+"\n"
-                
             end
             puts  s
 
         end
         alias showLinks show_links
-        
+
         # this method shows the name, id etc of the object that is currently active - ie the element that has focus
         # its mostly used in irb when creating a script
         def show_active
@@ -671,8 +693,10 @@ module Watir
         def show_divs( )
             divs = getDocument().getElementsByTagName("DIV")
             puts "Found #{divs.length} div tags"
+            index=1
             divs.each do |d|
-                puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}  id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                index+=1
             end
         end
         alias showDivs show_divs
@@ -682,8 +706,10 @@ module Watir
         def show_tables( )
             tables = getDocument().getElementsByTagName("TABLE")
             puts "Found #{tables.length} tables"
+            index=1
             tables.each do |d|
-                puts "id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.cols }"
+                puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.cols }"
+                index+=1
             end
         end
         alias showTables show_tables
@@ -693,9 +719,11 @@ module Watir
         # this method shows all the spans availble in the document
         def show_spans( )
             spans = getDocument().getElementsByTagName("SPAN")
-            puts "Found #{spans.length} div tags"
+            puts "Found #{spans.length} span tags"
+            index=1
             spans.each do |d|
-                puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}   id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                index+=1
             end
         end
         alias showSpans show_spans
@@ -1078,6 +1106,11 @@ module Watir
         #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
         def table( how, what )
             return Table.new( self , how, what)
+        end
+
+        # this is the main method for accessing the tables iterator. It returns a Tables object
+        def tables()
+            return Tables.new(self)
         end
 
         # this method accesses a table cell. 
@@ -1825,6 +1858,24 @@ module Watir
         end
     end
 
+    # this class accesses the text fields in the document as a collection
+    # it would normally only be accessed by the text_fields method of IEController
+    class Tables< Iterators
+        def initialize( ieController )
+            super
+            if  @ieController.ie.document.body.getElementsByTagName("TABLE").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("TABLE")
+                @length=objects.length
+            end        
+        end
+       
+        def iterator_object(i)
+            @ieController.table( :index , i+1)
+        end
+    end
+
+
+
 
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
@@ -2016,7 +2067,6 @@ module Watir
 
             this_row = row(index)
             count = this_row.cells.length
-            puts "Row has #{count} cells"
             return count
         end
 
@@ -2053,7 +2103,6 @@ module Watir
    
         def row(index)
             table_rows = table_rows = @o.invoke("rows")
-            puts "there are #{table_rows.length} rows"
             return table_rows[(index-1).to_s]
         end
         private :row
@@ -2446,6 +2495,10 @@ module Watir
             n = []
             n <<   "href:".ljust(TO_S_SIZE) + self.href
             n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
+            if @o.getElementsByTagName("IMG").length > 0
+                puts "found : #{@o.getElementsByTagName("IMG").length } link images"
+                n << "image src:".ljust(TO_S_SIZE) + @o.getElementsByTagName("IMG")[0.to_s].src
+            end
             return n
          end
 
@@ -2455,6 +2508,40 @@ module Watir
             r=r + link_string_creator
             return r.join("\n")
          end
+
+        # this method highlights the image ( in fact it adds or removes a border around the image)
+        #  * setOrClear   - symbol - :set to set the border, :clear to remove it
+        def highLight( setOrClear )
+             if @o.getElementsByTagName("IMG").length > 0 
+     
+
+                if setOrClear == :set
+                    begin
+                        @original_border = @o.border
+                        @o.border = 1
+                    rescue
+                        @original_border = nil
+                    end
+                else
+                    begin 
+                        @o.border = @original_border 
+                        @original_border = nil
+                    rescue
+                        # we could be here for a number of reasons...
+                    ensure
+                        @original_border = nil
+                    end
+                end
+            else
+                super
+            end
+
+
+        end
+
+         
+
+
 
 
     end
