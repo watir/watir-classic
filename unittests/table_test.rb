@@ -19,6 +19,8 @@ class TC_Tables < Test::Unit::TestCase
 
        assert($ie.table(:id, 't1').exists? )
        assert($ie.table(:index, 1).exists? )
+       assert($ie.table(:index, 2).exists? )
+
 
     end
 
@@ -28,6 +30,8 @@ class TC_Tables < Test::Unit::TestCase
 
         assert_equal( 2 , $ie.table(:index , 1).rows)
         assert_equal( 5 , $ie.table(:id, 't1').rows)   # 4 rows and a header 
+        assert_equal( 5 , $ie.table(:index, 2).rows)   # same table as above, just accessed by index 
+
 
     end
 
