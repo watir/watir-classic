@@ -287,6 +287,7 @@ module Watir
             @ie.navigate(url)
             waitForIE()
             sleep 0.2
+            return @down_load_time
         end
         
         # Goes to the previous page - the same as clicking the browsers back button
@@ -380,6 +381,7 @@ module Watir
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
         def wait( noSleep  = false )
             begin
+                @down_load_time=0
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
                 
@@ -413,10 +415,12 @@ module Watir
                                 print s.next
                             end
                         end
-                    rescue
-                        @logger.warn 'frame error in wait'
+                    rescue=>e
+                        @logger.warn 'frame error in wait' 
                     end
                 end
+                @down_load_time =  Time.now - pageLoadStart 
+
                 print "\b"
                 log "waitForIE Complete"
                 s=nil
