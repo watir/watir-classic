@@ -17,7 +17,7 @@ class TC_PopUps < Test::Unit::TestCase
 
     def test_simple
         gotoPopUpPage()
-        c = "start '#{$ie.dir.gsub("/" , "\\" )}\\clickJSDialog.rb' OK 3"
+        c = "start #{$ie.dir.gsub("/" , "\\" )}\\clickJSDialog.rb OK 3"
         puts "Starting #{c}"
         w = WinClicker.new
         w.winsystem(c )   
@@ -47,7 +47,7 @@ class TC_PopUps < Test::Unit::TestCase
 
     def atest_Prompt
         gotoPopUpPage()
-        c = "start #{$ie.dir.gsub("/" , "\\" )}\\clickJSDialog.rb Cancel 3"
+        c = "start #{$ie.dir.gsub("/" , "\\" )}\\clickJSDialog.rb Cancel 3  "
         puts "Starting #{c}"
         w = WinClicker.new
         w.winsystem(c )   
