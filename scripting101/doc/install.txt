@@ -3,7 +3,7 @@ h1. Scripting for Testers
 h2. Installation Instructions
 
 These instructions describe how to install the software we'll use in
-our Scripting for Testers class.
+our _Scripting for Testers_ class (aka _Scripting Web Tests_).
 
 We will be using Ruby (a programming language) and WTR
 (a library) on your machine to test server software. You can run the
@@ -22,8 +22,8 @@ machines that are still running these operating systems often are too
 slow or have other problems that we don't have time for in a class
 environment. Sorry.)
 
-The WTR software requires Internet Explorer and therefore
-only runs on Windows. The Timeclock server was developed on a
+The WTR software requires Internet Explorer and therefore only runs on 
+Windows. The Timeclock server was developed on a
 Macintosh, and should run on any machine supporting Ruby (Unix, Linux,
 Windows). The Timeclock "product tests" will not run on Windows using
 the mswin build (the one you use for the class). They will run on
@@ -46,7 +46,7 @@ We are currently using this Ruby installer:
 h4. IE Controller
 
 You will need to install this Ruby library:
-"iec.2004.054.0.zip":http://rubyforge.org/frs/?group_id=104&release_id=305    
+"iec.2004.227.0.zip":http://rubyforge.org/frs/?group_id=104&release_id=727    
 
 #      Unzip this file onto your hard drive (c:). An "iec" directory
 #      will be created automatically.
@@ -61,7 +61,7 @@ see any error messages.)
 h4. Scripting Class Materials.
 
 You will also need the materials hosted on rubyforge.org:
-"wtr/scripting101.tar.gz":http://rubyforge.org/cgi-bin/viewcvs/cgi/viewcvs.cgi/wtr/scripting101/scripting101.tar.gz?tarball=1&cvsroot=wtr
+"scripting101-1.3.1.tar.gz":http://rubyforge.org/frs/?group_id=104&release_id=717
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.

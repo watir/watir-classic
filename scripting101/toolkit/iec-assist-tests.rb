@@ -5,15 +5,14 @@ require 'English'
 require 'toolkit'
 require 'test/unit'
 
- 
-class Test_login  < Test::Unit::TestCase
+class Test_show_elements  < Test::Unit::TestCase
   def setup()
     start_ie("http://localhost:8080")
     $iec.wait
     @read_end, @write_end = IO.pipe
     $stdout = @write_end
   end
-  
+
   # Only one form on this page; all cases in this group should show same result
   @@regexReport = Regexp.new("^\s*name:\s*name\s+value:\s*$")
   def check_report()
@@ -35,7 +34,7 @@ class Test_login  < Test::Unit::TestCase
       check_report()
     end
   end
-  
+
   def xtest_show_elements_noarg()
     begin
       show_elements()
@@ -45,7 +44,7 @@ class Test_login  < Test::Unit::TestCase
       check_report()
     end
   end
-  
+
   def teardown
     $iec.close
     if @write_end then @write_end.close end
@@ -53,5 +52,3 @@ class Test_login  < Test::Unit::TestCase
     $stdout = STDOUT
   end
 end
-
-

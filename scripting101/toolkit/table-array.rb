@@ -4,7 +4,7 @@ def table_array (table, y=[])
   for row in table_rows
     x = []
     for td in row.getElementsbyTagName("TD")
-      x << td.innerHtml
+      x << td.innerText.strip
     end
     y << x
   end
@@ -13,10 +13,10 @@ end
 
 class RecentRecordsArray < Array
   def job_name index
-    self[index][0].strip
+    self[index][0]
   end
   def status index
-    self[index][3].strip
+    self[index][3]
   end
 end
 
@@ -24,7 +24,7 @@ def get_results_table_array
   tables = $iec.document.getElementsByTagName("TABLE")
   results_table = tables.item(tables.length - 1) # last
   result = table_array(results_table, RecentRecordsArray.new)
-#  assert_equal ["Recent Records "], result[0]
+#  assert_equal ["Recent Records"], result[0]
   result
 end
 
@@ -37,6 +37,4 @@ def assert_job_record( index, name, status )
   assert_equal name, results.job_name( index )
   assert_equal status, results.status( index )
 end
-
-
 

@@ -62,7 +62,7 @@ class Lab3Part1 < Test::Unit::TestCase
     y = get_results_table_array
     assert_equal 2, y.length
     assert_equal "background", y.job_name(1)
-    assert_equal "<B>running</B>", y.status(1)
+    assert_equal "running", y.status(1)
   end
   def teardown
     $iec.close if $iec
@@ -92,7 +92,7 @@ class Lab3Part3 < Test::Unit::TestCase
     y = get_results_table_array
     assert_equal 3, y.length
     assert_equal "job2", y.job_name(1)
-    assert_equal "<B>running</B>", y.status(1)
+    assert_equal "running", y.status(1)
     assert_equal "job1", y.job_name(2)
     assert_equal "paused", y.status(2)
   end
