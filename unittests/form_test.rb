@@ -7,13 +7,11 @@ require 'unittests/setup'
 class TC_Forms < Test::Unit::TestCase
     include Watir
 
-    def gotoCheckBoxPage()
+    def setup()
         $ie.goto($htmlRoot + "checkboxes1.html")
     end
 
     def test_CheckBox_Exists
-       gotoCheckBoxPage()
-
        assert($ie.checkBox(:name, "box1").exists?)   
        assert_false($ie.checkBox(:name, "missing").exists?)   
 
@@ -22,29 +20,20 @@ class TC_Forms < Test::Unit::TestCase
     end
 
     def test_CheckBox_Enabled
-       gotoCheckBoxPage()
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").enabled?  }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:id, "noName").enabled?  }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "box4" , 6).enabled?  }  
 
-       #assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").enabled?  }  
-       #assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:id, "noName").enabled?  }  
-       #assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "box4" , 6).enabled?  }  
-
-       #assert($ie.checkBox(:name, "box1").enabled?)   
-       #assert_false($ie.checkBox(:name, "box2").enabled?)   
-
-       #assert($ie.checkBox(:name, "box4" , 4).enabled?)  
-       $ie.showAllObjects()
- 
+       assert($ie.checkBox(:name, "box1").enabled?)   
+       assert_false($ie.checkBox(:name, "box2").enabled?)   
+       assert($ie.checkBox(:name, "box4" , 4).enabled?)  
        assert_false($ie.checkBox(:name, "box4" , 5 ).enabled?)   
     end
 
     def test_checkBox_isSet
-       gotoCheckBoxPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").isSet?  }  
 
-       puts "box 1 is set : #{ $ie.checkBox(:name, 'box1').isSet? } "
        assert_false($ie.checkBox(:name, "box1").isSet?)   
-
        assert_false($ie.checkBox(:name, "box2").isSet?)   
        assert($ie.checkBox(:name, "box3").isSet?)   
 
@@ -53,8 +42,6 @@ class TC_Forms < Test::Unit::TestCase
     end
 
     def test_checkBox_clear
-       gotoCheckBoxPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").clear  }  
 
        $ie.checkBox(:name, "box1").clear
@@ -70,24 +57,18 @@ class TC_Forms < Test::Unit::TestCase
        assert_false($ie.checkBox(:name, "box4" , 1).isSet?)   
     end
 
-    def test_checkBox_getSTate
-       gotoCheckBoxPage()
-
+    def test_checkBox_getState
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").getState  }  
 
        assert_equal( CheckBox::UNCHECKED , $ie.checkBox(:name, "box1").getState )   
-
        assert_equal( CheckBox::CHECKED , $ie.checkBox(:name, "box3").getState)   
 
-       # checkboxes that have the sme name but different values
-
+       # checkboxes that have the same name but different values
        assert_equal( CheckBox::UNCHECKED , $ie.checkBox(:name, "box4" , 2).getState )   
        assert_equal( CheckBox::CHECKED , $ie.checkBox(:name, "box4" , 1).getState)   
     end
 
     def test_checkBox_set
-       gotoCheckBoxPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkBox(:name, "noName").set  }  
 
        $ie.checkBox(:name, "box1").set
