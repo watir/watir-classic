@@ -1,13 +1,18 @@
 Watir Relase How To
 
 Check everything out of cvs
+-- Do an export. This means you won't get the CVS directories.
 
 in Watir.rb, change the VERSION constant to be the release number
 
 run install
 run the unit tests, if they pass, check watir.rb back in
+-- Actually the install is unnecessary. The unit tests run against ../watir.rb regardless of what is installed 
+
 tag the files
 cvs tag -c -R "new version number" *.*     watir version numbers are like this: v1_8
+-- Do this first, before the export. Then you export using the TAG.
+-- (Otherwise it is possible someone checks something in between the extract and the tag.)
 
 build the rdoc
 
@@ -17,6 +22,7 @@ delete all the CVS directories
    then edit this file, adding rmdir /s /q at the begining of each line 
    run this batch file
    delete this batch file
+-- Not necessary
 
 delete this file!
 
@@ -24,9 +30,10 @@ zip up. Note the filename is watir_v1_1.zip
 
 delete the watir_bonus directories
 delete the files in C:\ruby\lib\ruby\site_ruby\1.8\watir and C:\ruby\lib\ruby\site_ruby\1.8\watir.rb
+-- No longer necessary
 
 unzip and test
-
+-- Again? Why?
 
 Release Notes
 
