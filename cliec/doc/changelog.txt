@@ -1,0 +1,21 @@
+===Change Log
+
+====2003.362.0
+* Builder and Installer working under new RubyForge src tree, etc. Woop.
+* waitForIE now sleeps so as not to suck up all CPU time. (thx to Brian
+  Candler).
+* cl/util/version is now protected so if it doesn't exist the world rolls
+  on without -- ain't that important. Thanks to Shashank Date for the bug
+  report.
+* "Hello world" demo now included in the main file, just run it to see
+  things in action.
+* cleaned up the readme.txt some, and included it in the build
+* Source re-org and move to RubyForge.net/projects/wtr
+* Added mozaxc to cliec/contrib folder with some scripts to help tinker
+  around with controlling the mozaxc ActiveX control embedded in a web page.
+* Added an example folder with sample code.
+
+====2003.027.0
+* No Change Log being kept up to this point. Sorry.
+
+

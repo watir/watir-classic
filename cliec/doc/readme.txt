@@ -1,31 +1,3 @@
-===To Do
-
-* I will request you to include a README file in its installation and mention
-  that you also need to first install "clutil"  and "clxmlserial" as
-  pre-requistes. Better still, if you can include all the necessary modules in
-  one package ! "Shashank Date" <sdate@everestkc.net>
-* Mozilla ActiveX control - to be IE COM compatible. Definitely need to check
-  out ... http://www.iol.ie/~locka/mozilla/control.htm
-
-===Change Log
-
-====2003.xxx.x
-* waitForIE now sleeps so as not to suck up all CPU time. (thx to Brian
-  Candler).
-* cl/util/version is now protected so if it doesn't exist the world rolls
-  on without -- ain't that important. Thanks to Shashank Date for the bug
-  report
-* "Hello world" demo now included in the main file, just run it to see
-  things in action.
-* cleaned up the readme.txt some, and included it in the build
-* Source re-org and move to RubyForge.net/projects/wtr
-* Added mozaxc to cliec/contrib folder with some scripts to help tinker
-  around with controlling the mozaxc ActiveX control embedded in a web page.
-* Added an example folder with sample code.  
-
-====2003.027.0
-* No Change Log being kept up to this point. Sorry.
-
 ===How-To
 
 From a response on the Ruby mailing list. http://samie.sf.net, the Perl

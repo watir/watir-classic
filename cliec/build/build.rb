@@ -1,39 +1,49 @@
+require 'cl/util/console'
 require 'cl/util/file'
 require 'cl/util/version'
 require 'ftools'
+require 'fileutils'
 require 'cl/util/win'
-
-@v = CLabs::Version.new(
-  Time.now.strftime("%Y"),
-  Time.now.strftime("%j"),
-  0
-)
+require 'install'
 
 def zipfn
-  "iec.#{@v.to_s}.zip"
+  File.join('../dist', "iec.#{@v.to_s}.zip")
 end
 
 def dl_url
   "http://clabs.org/dl/iec/#{zipfn}"
 end
 
-raise "I started a re-org, but haven't tried all this out yet..."
-
-@v.write_version_header('cliecontroller.rb')
-Dir['*.zip'].each do |fn| File.delete(fn) end
 root_dir = './iec'
+
+BUILD_MANIFEST = {
+  'install.rb'   => root_dir,
+  '../src/**/*'  => File.join(root_dir, 'src'),
+  '../doc/*'     => File.join(root_dir, 'doc'),
+  '../example/*' => File.join(root_dir, 'example')
+}
+
+@v = CLabs::Version.new(
+  Time.now.strftime("%Y"),
+  Time.now.strftime("%j"),
+  0
+)
+@v.write_version_header('../src/iec/cliecontroller.rb')
+
 File.makedirs root_dir
-iec_files = ['install.rb', '../src/iec.rb', '../src/cliecontroller.rb', '../doc/Readme']
-iec_files.each do |f| File.copy f, File.join(root_dir, File.basename(f)) end
+copy_files(BUILD_MANIFEST)
+
+Dir[File.join('../dist', '*.zip')].each do |fn| File.delete(fn) end
+File::makedirs('../dist')
 system("zip -r #{zipfn} #{root_dir}")
 sleep 2
 ClUtilFile.delTree(root_dir)
 
-clabs_build = false
+clabs_build = if_switch('-clabs')
 if clabs_build
   puts "updating scrplist.xml..."
   fsize = (File.size("#{zipfn}") / 1000).to_s + 'k'
-  require 'f:/dev/cvslocal/cweb/clabs/scrplist.rb'
+  require 'c:/dev/cvslocal/cweb/clabs/scrplist.rb'
   slist = get_slist
   slist.groups.each do |group|
     group.items.each do |sitem|
@@ -48,12 +58,10 @@ if clabs_build
     end
   end
   write_slist(slist)
-end
 
-if clabs_build
   puts "copying .zip to clabs dist..."
-  cp_dest_dir = "f:/dev/cvslocal/cweb/clabs/bin/dl/iec"
+  cp_dest_dir = "c:/dev/cvslocal/cweb/clabs/bin/dl/iec"
   File.makedirs(cp_dest_dir)
-  File.copy "#{zipfn}", File.join(cp_dest_dir, "#{zipfn}")
+  File.copy "#{zipfn}", File.join(cp_dest_dir, "#{File.basename(zipfn)}")
   system('pause')
 end
