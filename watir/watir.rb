@@ -53,10 +53,10 @@
 #   ie.button(:caption, "Cancel").click 
 #   
 #  The ways that are available to identify an html object depend upon the object type. 
-#   :id         used for an object that has an ID attribute  
-#   :name      used for an object that has a name attribute 
-#   :caption   used for finding buttons ( this is the value attribute of the button - <input type = button value="Stop"> )
-#   :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based. <br>
+#   :id      used for an object that has an ID attribute -- this is the best way!
+#   :name    used for an object that has a name attribute. 
+#   :value   value of text fields, captions of buttons 
+#   :index   finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
 
 require 'win32ole'
 require 'logger'
@@ -1851,7 +1851,6 @@ module Watir
             doKeyPress( setThis )
             highLight(:clear)
             @ieController.clearFrame()
-            
         end
         
         # This method is used internally by setText and appendText
@@ -1878,6 +1877,7 @@ module Watir
                 @ieController.waitForIE(true)
             end
         end
+        private :doKeyPress
     end
     
 end
