@@ -268,7 +268,7 @@ class IE
     READYSTATE_COMPLETE = 4          
 
     # the default delay when typing 
-    DEFUALT_TYPING_SPEED = 0.08
+    DEFAULT_TYPING_SPEED = 0.08
 
     # the default color for highlighting objects
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
@@ -287,7 +287,7 @@ class IE
         @frame = ""
         @presetFrame = ""
         @form = ""
-        @typingspeed = DEFUALT_TYPING_SPEED
+        @typingspeed = DEFAULT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
     end
 
@@ -416,6 +416,10 @@ class IE
         #puts "waitForIE Complete"
         s=nil
     end
+    
+    def wait
+        waitForIE
+    end
 
     # this method causes Internet Explorer to navigate to the specified url
     #  * url  - string - the URL to navigate to
@@ -423,6 +427,10 @@ class IE
         @ie.navigate(url)
         waitForIE()
         sleep 3
+    end
+
+    def close
+        @ie.quit
     end
 
     # this method is used to display the available frames that Internet Explorer currently has loaded.
@@ -556,7 +564,7 @@ class IE
     #    * value  - the value of the object to get, used when getting itens like checkboxes and radios
     def getObjectAtIndex(doc , index , types , value=nil)
 
-        #puts" getting object #{types.to_s}  at index( #{index}"
+        # puts "getting object #{types.to_s}  at index( #{index}"
 
         o = nil
         objectIndex = 1
