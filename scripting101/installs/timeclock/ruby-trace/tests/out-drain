@@ -1,0 +1,10 @@
+drain-example.rb:13 at 2004/03/09 15:12:18
+=  announce: Messages at the "announce" level appear in both destinations.
+/cygdrive/d/cvs/tc-marick/ruby-trace/ruby-trace/destination.rb:99:in `to_destination' at 2004/03/09 15:12:18
+=  announce: ==== Beginning of buffer contents.
+drain-example.rb:13 at 2004/03/09 15:12:18
+=  announce: Messages at the "announce" level appear in both destinations.
+drain-example.rb:14 at 2004/03/09 15:12:18
+=  event: Messages at the "event" level appear in only the buffer.
+/cygdrive/d/cvs/tc-marick/ruby-trace/ruby-trace/destination.rb:104:in `to_destination' at 2004/03/09 15:12:18
+=  announce: ==== End of buffer contents.
