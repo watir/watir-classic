@@ -11,7 +11,7 @@ class FakeDoc
    attr_accessor :links
    
    def initialize()
-      @links = nil
+      @links = ""
    end
    
 	def frames
@@ -22,10 +22,13 @@ class FakeDoc
 		return "complete"
 	end
 	
-	def links
-		return nil
+	def addLink(value)
+		if @links.nil?
+			@links = value
+		else
+			@links << value
+		end
 	end
-	
 end
 
 class StubExplorer
@@ -35,10 +38,11 @@ class StubExplorer
 	def initialize()
 		@timeToWait = 1
 		@visible = $HIDE_IE
+      @document = FakeDoc.new()
 	end
 	
 	def document
-		return FakeDoc.new()
+		return @document
 	end
 	
 	def busy ()
@@ -62,11 +66,7 @@ class TestIE < IE
    end
    
    def addLink(link)
-      if (@ie.document.links == nil)
-         @ie.document.links = [link]
-      else
-         @ie.document.links = @ie.document.links + [link]
-      end
+      @ie.document.addLink(link)
    end
 	
    def setTimeToWait(time = 1)
