@@ -114,7 +114,9 @@ class MoTunes::TextInput < MoTunes::Widget
       if editable
         r.text_input(@value) do |new_value| @value = new_value end
       else
+        r.open_tag('span')
         r.text(@value)
+        r.close
       end
     end
   end
@@ -135,7 +137,9 @@ class MoTunes::Select < MoTunes::Widget
           |selected_item| @value = selected_item 
         end
       else
+        r.open_tag('span')
         r.text(@value)
+        r.close
       end
     end  
   end

@@ -41,23 +41,6 @@ def show_ie
   true
 end
 
-def leave_ie_showing
-  false
-end
-
 nav_setup
-@iec.options[:demo_mode] = true; @iec.options[:demo_wait] = 1
+set_demo_mode(true, 0.75)
 home
-@iec.browse
-@iec.bill_evans
-@iec.montreux_ii
-@iec.add
-@iec.checkout
-@iec.bill_first_name = 'Chris'
-@iec.bill_last_name = 'Morris'
-@iec.bill_address_1 = '111 Sunshine Ln.'
-@iec.bill_city = 'Denton'
-@iec.bill_state = 'TX'
-@iec.bill_zip = '76210'
-#@iec.ship_is_bill = true
-@iec.submit

@@ -35,12 +35,33 @@
 
 require 'cl/iec'
 
+# ARGV need to be deleted to enable the Test::Unit functionatily that grabs
+# the remaining ARGV as a filter on what tests to run
+
+$DEMO = ARGV.include?('-d'); ARGV.delete('-d')
+$LEAVE_IE = ARGV.include?('-l') || $DEMO; ARGV.delete('-l')
+$SHOW_IE = ARGV.include?('-v') || $DEMO; ARGV.delete('-v')
+
 module MoTunes
   module Navigator
     def nav_setup
       $stderr.puts "nav_setup called #{Time.now}" if $DEBUG
       @root_url = 'http://localhost:7000/borges/store'
-      @iec = ClIEController.new({ :visible => show_ie, :auto_wrap_form => true })    
+      @iec = ClIEController.new({ :visible => show_ie, :auto_wrap_form => true })
+      set_demo_mode($DEMO)
+    end
+    
+    def show_ie
+      $SHOW_IE
+    end
+    
+    def leave_ie_showing
+      $LEAVE_IE
+    end
+    
+    def set_demo_mode(value, demo_wait=2)
+      @iec.options[:demo_mode] = value
+      @iec.options[:demo_wait] = demo_wait
     end
     
     def nav_teardown

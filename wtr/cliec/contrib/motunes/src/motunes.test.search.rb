@@ -36,17 +36,7 @@
 require 'motunes.test'
 
 class TestSearch < TestMoTunesBase
-  def show_ie
-    true
-  end
-  
-  def leave_ie_showing
-    true
-  end
-  
   def test_search
-    @iec.options[:demo_mode] = true; @iec.options[:demo_wait] = 2
-
     home
     @iec.search_text = 'mays'
     @iec.submit

@@ -36,17 +36,7 @@
 require 'motunes.test'
 
 class TestBrowse < TestMoTunesBase
-  def show_ie
-    true
-  end
-  
-  def leave_ie_showing
-    true
-  end
-  
   def test_browse
-    @iec.options[:demo_mode] = true; @iec.options[:demo_wait] = 2
-
     home
     @iec.browse
     @iec.bill_evans

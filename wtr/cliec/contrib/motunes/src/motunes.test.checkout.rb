@@ -33,64 +33,46 @@
   (based on BSD Open Source License)
 =end
 
-class MoTunes::Cart < Borges::Component
-  def remove(item)
-    session.cart.delete(item)
-  end
+require 'motunes.test'
 
-  def render_content_on(r)
-    return self unless session.has_cart?
+class TestCheckout < TestMoTunesBase
+  def test_checkout
+    home
+    @iec.browse
+    @iec.bill_evans
+    @iec.montreux_ii
+    @iec.add
+    @iec.checkout
+    @iec.options[:demo_wait] = 0.5
+    @iec.bill_first_name = 'Chris'
+    @iec.bill_last_name = 'Morris'
+    @iec.bill_address_1 = '2021 Loon Lake Rd.'
+    @iec.bill_city = 'Denton'
+    @iec.bill_state = 'TX'
+    @iec.bill_zip = '76210'
+    
+    @iec.ship_first_name = 'Carolyn'
+    @iec.ship_last_name = 'Morris'
+    @iec.ship_address_1 = '6842 Abbot Pl.'
+    @iec.ship_city = 'Worthington'
+    @iec.ship_state = 'IDOHIA'
+    @iec.ship_zip = '43085'
 
-    r.div_named('cart') do
-      r.small do r.bold('Your cart: ') end
-
-      r.table do
-        render_album_row_titles(r)
-        grand_total = 0
-        session.cart.each do |item, count| 
-          total = (count * item.price)
-          grand_total += total
-          render_album_row(r, item, count, total.to_cents)
-        end
-
-        r.table_spacer_row
-        render_album_grand_total(r, grand_total.to_cents)
-      end
-    end
-  end
-
-  def render_album_row(r, album, count, total)
-    r.table_row do
-      r.table_data do
-        r.small do
-          r.element_id('remove_' + album.name)
-          r.anchor('x') do
-            remove(album)
-          end 
-        end
-      end
-      r.table_data do r.small do r.text(album.name) end end
-      r.table_data do r.small do r.text(count) end end
-      r.table_data do r.small do r.text(total) end end
-    end
-  end
-  
-  def render_album_row_titles(r)
-    r.table_row do
-      r.table_data do r.space end
-      r.table_data do r.small do r.bold('Album') end end
-      r.table_data do r.small do r.bold('Qty') end end
-      r.table_data do r.small do r.bold('Total') end end
-    end
-  end
-  
-  def render_album_grand_total(r, grand_total)
-    r.table_row do
-      r.table_data do r.space end
-      r.table_data do r.space end
-      r.table_data do r.space end
-      r.table_data do r.small do r.bold(grand_total) end end
-    end
+    #@iec.ship_is_bill = true
+    @iec.submit
+    
+    assert_equal('Chris', @iec.bill_first_name)
+    assert_equal('Morris', @iec.bill_last_name)
+    assert_equal('2021 Loon Lake Rd.', @iec.bill_address_1)
+    assert_equal('Denton', @iec.bill_city)
+    assert_equal('TX', @iec.bill_state)
+    assert_equal('76210', @iec.bill_zip)
+    
+    assert_equal('Carolyn', @iec.ship_first_name)
+    assert_equal('Morris', @iec.ship_last_name)
+    assert_equal('6842 Abbot Pl.', @iec.ship_address_1)
+    assert_equal('Worthington', @iec.ship_city)
+    assert_equal('IDOHIA', @iec.ship_state)
+    assert_equal('43085', @iec.ship_zip)
   end
 end
-
