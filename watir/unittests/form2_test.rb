@@ -26,7 +26,7 @@ class TC_Forms < Test::Unit::TestCase
        assert_false($ie.form( "missing").exists?)   
 
        assert($ie.form(:index,  1).exists?)   
-       assert_false($ie.form(:index, 4).exists?)   
+       assert_false($ie.form(:index, 88).exists?)   
 
        assert($ie.form(:method, "get").exists?)   
        assert_false($ie.form(:method, "missing").exists?)   
@@ -37,6 +37,12 @@ class TC_Forms < Test::Unit::TestCase
 
 
        
+    end
+
+    def test_showforms
+       gotoFormsPage()
+       puts"--------------------------- forms----------------------"
+        $ie.showForms
     end
 
     def test_ButtonInForm

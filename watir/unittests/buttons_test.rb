@@ -57,8 +57,6 @@ class TC_Buttons < Test::Unit::TestCase
 
        $ie.button("Click Me").click
        assert($ie.pageContainsText("PASS") )
-
-
     end
 
     def test_Button_click_only
