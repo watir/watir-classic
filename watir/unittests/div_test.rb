@@ -44,4 +44,43 @@ class TC_Divs < Test::Unit::TestCase
 
     end
 
+
+    #---- Span Tests ---
+
+    def test_Spans
+
+       assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
+       assert_raises(UnknownObjectException) {$ie.span(:title , "span77").click }
+
+
+
+       assert($ie.textField(:name, "text2").verify_contains("0") )  
+       $ie.span(:id , "span3").click
+       assert($ie.textField(:name, "text2").verify_contains("1") )  
+
+       $ie.span(:id , "span4").click
+       assert($ie.textField(:name, "text2").verify_contains("0") )  
+    end
+
+    def test_get_span_text
+       assert_raises(UnknownObjectException) {$ie.span(:id , "span77").text }
+       assert_raises(UnknownObjectException) {$ie.span(:title , "span77").text }
+
+       assert_equal("This span has an onClick that increments text2" ,   $ie.span(:id , "span3").text.strip )
+       assert_equal("This text is in a span with an id of span1 and title of test2" ,   $ie.span(:title , "Test2").text.strip )
+
+    end
+
+    def test_get_span_style
+
+        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").style }
+        assert_equal("blueText" ,   $ie.span(:id , "span2").style )
+        assert_equal("" ,   $ie.span(:id , "span1").style )
+
+    end
+
+
+
+
+
 end
