@@ -12,9 +12,24 @@ class TC_Navigate< Test::Unit::TestCase
     end
 
     def test_navigation
+
+       $ie.clear_url_list
        gotoPage( 'buttons1.html')
+       url = $ie.url.downcase.gsub('///' , '//')   # no idea why this happens - we get 3 / after file:
+       assert_equal(url , $htmlRoot + 'buttons1.html') 
+
+       assert_equal( 1, $ie.url_list.length )
+       assert_equal( url , $ie.url_list[0].gsub('\\', '/').downcase )
+
        gotoPage( 'checkboxes1.html')
+       url = $ie.url.downcase.gsub('///' , '//')   # no idea why this happens - we get 3 / after file:
+
        assert_equal($ie.title , "Test page for Check Boxes") 
+       assert_equal( 2, $ie.url_list.length )
+       assert_equal( url , $ie.url_list[1].gsub('\\', '/').downcase )
+
+       $ie.clear_url_list
+       assert_equal( 0, $ie.url_list.length )
 
        $ie.back
        assert_equal($ie.title , "Test page for buttons")   
