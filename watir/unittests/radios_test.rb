@@ -116,6 +116,10 @@ class TC_Radios < Test::Unit::TestCase
         assert_equal("box5"  ,    $ie.radio(:index, 2).id )  
         assert_equal(""      ,    $ie.radio(:index, 2).name )  
 
+        assert_equal("box4-value5", $ie.radio(:name , "box4" , 5 ).title  )
+        assert_equal("", $ie.radio(:name , "box4" , 4 ).title  )
+
+
     end
 
     def test_radio_iterators
