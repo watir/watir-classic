@@ -66,38 +66,27 @@ class WinClicker
 
     end
 
-
-    # file requester dialog box
-
-    def setFileRequesterFileName ( textToSet )
-
-        # first set the Choose File Window to be active
-        hWnd = getWindowHandle("Choose file" )
-        if hWnd != -1
-
-           makeWindowActive (hWnd)
-           setTextValueForFileNameField( hWnd , textToSet) 
-           return true
-        else
-            puts 'File Requester not found'
-            return false
+    # we may need to play with the default try count.  3 is a reasonably safe value.
+    def setFileRequesterFileName( textToSet, tryCount = 3 )
+      	for i in (1..tryCount)
+            # first set the Choose File Window to be active
+            hWnd = getWindowHandle("Choose file" )
+            if hWnd != -1
+               makeWindowActive(hWnd)
+               setTextValueForFileNameField( hWnd , textToSet) 
+               clickWindowsButton_hwnd(hWnd, "&Open")
+               return true
+            end            
         end
+        puts 'File Requester not found'
+        return false
     end
 
-
     def setFileRequesterFileName_newProcess ( textToSet )
-
-        # first set the Choose File Window to be active
-        hWnd = getWindowHandle("Choose file" )
-        if hWnd != -1
-
-           makeWindowActive (hWnd)
-           setTextValueForFileNameField( hWnd , textToSet) 
-           return true
-        else
-            puts 'File Requester not found'
-            return false
-        end
+        myapp = "#{@path_to_clicker}/setFileDialog.rb #{textToSet}"
+        puts "Starting win setFileDialog in new process. Setting text #{textToSet}"
+        puts "Starting app: #{myapp}"
+        winsystem( "start #{myapp}" )
     end
 
 
@@ -333,7 +322,7 @@ class WinClicker
               t ,  textCaption  = get_caption.call(chwnd, captionBuffer  , textLength+1)    
               puts "Caption =" +  textCaption[1].to_s
 
-              if /#{textCaption[1].to_s}/ =~ childCaption then
+              if /#{childCaption}/ =~ textCaption[1].to_s then
                   return chwnd
               end
               bContinueEnum
@@ -363,7 +352,7 @@ class WinClicker
         
          staticText = []
          buff = " " * 16
-         get_class_name = User32['GetClassName', 'ILpI']
+         get_class_name = @User32['GetClassName', 'ILpI']
 
          if hWnd == -1
              hWnd = getWindowHandle(windowCaption)
@@ -404,7 +393,7 @@ class WinClicker
          control_hWnd = []
 
          buff = " " * 16
-         get_class_name = User32['GetClassName', 'ILpI']
+         get_class_name = @User32['GetClassName', 'ILpI']
 
          bContinueEnum = -1
          enum_childWindows_proc = DL.callback('ILL') {|hWnd,lparam|
@@ -439,7 +428,7 @@ class WinClicker
 
     def setTextBoxText(hWnd , textToSet)
 
-        send_message = User32['SendMessage',  'ILISS']  
+        send_message = @User32['SendMessage',  'ILISS']  
         r  ,rs  = send_message.call(hWnd , WM_SETTEXT ,   '' ,    textToSet   )
         puts 'setTextBoxText: send message returned: ' + r.to_s 
      
@@ -448,7 +437,7 @@ class WinClicker
     def getControlText( hWnd)
          buff = " " * 256
 
-        send_message = User32['SendMessage',  'ILIIS']  
+        send_message = @User32['SendMessage',  'ILIIS']  
         r  ,rs  = send_message.call(hWnd , WM_GETTEXT , 256 , buff )
         puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
         return buff.to_s
@@ -460,7 +449,7 @@ class WinClicker
         # get the title for the specified hwnd
 
          buff = " " * 256
-        getWindowText = User32['GetWindowText' , 'ILSI']
+        getWindowText = @User32['GetWindowText' , 'ILSI']
         r , rs = getWindowText.call( hWnd , buff , 256 )
         puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
         return buff.to_s
