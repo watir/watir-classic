@@ -361,7 +361,7 @@ end</div>
    <li>print our failure message to the screen</li>
    <li><i>a</i> is not false, meaning it is true; the page did contain the text we are looking for</li>
    <li>print our passing message to the screen</li>
-   <li>end our method</li></ol></p>
+   <li>end our <i>if</i> block</li></ol></p>
 <h3>Using test::unit Assertions</h3>
 <p>Using xUnit assertions can be a more powerful way of validating test results. (For a good explanation of assertions, visit this NUnit page which  <a href= "http://www.nunit.org/assertions.html">explains assertions</a>.)</p>
 <p>Ruby has an xUnit framework called <b>test::unit</b> that we can use with Watir.</p>
@@ -382,11 +382,25 @@ end </div>
 &nbsp;&nbsp;<i>fill in Watir methods here</i><br>
 end</div>
 <h4>Use Assertions</h4>
-<p>Watir supports assertions by wrapping Watir methods within an <i>assert</i> or <i>assert_false</i>:</p>
+<p>Watir can support assertions by wrapping Watir methods within an <i>assert</i> or <i>assert_false</i>:</p>
 <div class = "testexample">assert($ie.pageContainsText("Reached test verification point.")</div>
 <div class = "testexample">assert_false($ie.pageContainsText("Did not reach test verification point.")</div>
 <p>Watir can test for many different states of objects. We can use assertions to check of objects <i>exist</i>, 
 are <i>enabled</i> or <i>disabled</i>, or any other state that the DOM tells the web browser about an object.</p>
+<h4>Printing Results When Using Assertions</h4>
+<p>In the simple example above, we were able to evaluate whether "pageContainsText" returned true or false. Based on the result from this method, 
+we could print out a pass or failure. When we wrap that method call in an assertion, we need to do something different. Test::unit assertsions don't necessarily
+return a true or a false.</p>
+<p>Here is an example of how to print the results of an assertion:</p>
+<div class = "testexample">begin<br>
+ &nbsp;     assert($ie.pageContainsText("Test verification point.") )<br>
+&nbsp;&nbsp;	 puts("TEST PASSED. Found test string: 'Test verification point.' ")<br>
+&nbsp;  rescue => e <br>
+  &nbsp;&nbsp;      puts("TEST FAILED." + e.message + "\n" + e.backtrace.join("\n")) <br>
+   end<br>
+</div>
+<p> We use a block of scripting code with a <b>rescue</b> statement. This is a built-in Ruby method that will handle failures. If the assertion fails, all the messages from the failure 
+are returned with the rescue statement and assigned to the variable <b>e</b>. The rescue statement allows the script to keep running even though there was a failure.</p>
 <h2>Tips and Tricks</h2>
 <h4>Troubleshooting</h4>
 <p>Not all HTML tags will look the same. If you have difficulty getting Watir to interact with an object on your web page, try the Watir method with different attributes.
