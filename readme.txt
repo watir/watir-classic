@@ -10,7 +10,8 @@ How To Use:
 This only works on Windows.
 This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12  using Windows 2000 and XP.
 It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
-Check out the mail lists and the documentation for the workarounds
+Best is to use Ruby 1.8.2-14.
+Check out the mail lists and the documentation for the workarounds.
 Install ruby from http://ruby-lang.org
 Install the watir files, unit tests and sample html pages. 
 run the unittests by going to the dir where you installed to, cd unittests, then run the tests.
@@ -42,8 +43,5 @@ Danny Faught
 Andy Tinkham
 Atilla Ozgur
 Lorenzo Jorquera
-
-Coding Conventions:
--------------------
-All require paths should be relative to the top of the
-development hierarchy.
+Elisabeth Hendrickson
+Michael Kelly
