@@ -49,6 +49,19 @@ class TC_Links < Test::Unit::TestCase
         $ie.link(:url, "link_pass.html").click
         assert( $ie.pageContainsText("Links3-Pass") ) 
 
+       gotoLinksPage()
+
+        $ie.link(:index, 1).click
+        assert( $ie.pageContainsText("Links2-Pass") ) 
+
+       gotoLinksPage()
+
+        
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).click }  
+
+
+
+
     end
 
 

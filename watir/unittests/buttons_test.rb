@@ -51,6 +51,8 @@ class TC_Buttons < Test::Unit::TestCase
         puts $ie.button(:caption, "Click Me").to_s
         puts line
 
+        puts $ie.button(:index, 1).to_s
+
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").to_s   }  
 
     end

@@ -78,12 +78,26 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
+    def test_TextField_to_s
+         gotoPage()
+
+         puts "---------------- To String test -------------"
+         puts $ie.textField(:index , 1).to_s
+         puts "---------------- To String test -------------"
+         puts $ie.textField(:index , 2).to_s
+         puts "---------------- To String test -------------"
+         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.textField(:index, 999 ).to_s}  
+
+
+ 
+    end
+
 
     def test_textField_Append
          gotoPage()
          assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
-         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
-         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectDisabledException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
 
          $ie.textField(:name, "text1").append(" Some Text")
          assert_equal(  "Hello World Some Text" , $ie.textField(:name, "text1").getContents )  
