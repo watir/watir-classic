@@ -18,6 +18,10 @@ module Timeclock
         end
         return "#{ENV['HOME']}/Library/Timeclock"
       end
+      
+      if Config::CONFIG['target_os'] == 'mswin32'
+	return "c:/timeclock_data"
+      end
         
       raise ConfigurationProblem, no_data_dir
     end
