@@ -4,13 +4,12 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-class TC_Forms < Test::Unit::TestCase
+class TC_Forms3 < Test::Unit::TestCase
     include Watir
 
     def gotoFormsPage()
         $ie.goto($htmlRoot + "forms3.html")
     end
-
 
     def test_Form_Exists
        gotoFormsPage()
@@ -29,10 +28,6 @@ class TC_Forms < Test::Unit::TestCase
 
        assert($ie.form(:action, "pass.html").exists?)   
        assert_false($ie.form(:action, "missing").exists?)   
-
-
-
-       
     end
 
     def test_showforms
