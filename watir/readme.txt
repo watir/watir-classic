@@ -31,8 +31,24 @@ Paul Rogers (paul.rogers@shaw.ca)
 Bret Pettichord (bret@pettichord.com)
 The mailing list: http://rubyforge.org/mail/?group_id=104
 
+
 Contributors:
 -------------
+Bret Pettichord
+Paul Rogers
+Jonathan Kohl
+Chris Morris
+Karlin Fox
+Lorenzo Jorquera
+Atilla Ozgur
+Justin McCarthy
+Chris McMahon
+Elisabeth Hendrickson
+Michael Kelly
+
+
+Acknowledgements:
+-----------------
 Chris Morris
 Brian Marick
 Jonathan Kohl
@@ -41,8 +57,6 @@ Janet Gregory
 Peter Chau
 Danny Faught
 Andy Tinkham
-Atilla Ozgur
-Lorenzo Jorquera
-Elisabeth Hendrickson
-Michael Kelly
-Jacinda Scott (logo)
+Jacinda Scott (logo creator)
+
+Thanks for your ideas and support!
