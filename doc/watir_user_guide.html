@@ -220,13 +220,6 @@ are not explicit in the tag such as the "text" attributes.
   <li>Provide your new test file with access to the Watir tool by
 entering this statement at the beginning of your test script: <b>require
 'watir'</b></li>
-  <ul>
-    <li>In the 'require' statement, enter the path from the directory
-your script is in to the directory that contains the "watir.rb" file.
-If you are
-one directory away, you can use a relative path. ex. require
-'../watir'. This reads: "to find watir.rb, go back a directory".</li>
-  </ul>
   <li>Open Internet Explorer and navigate to the application you wish
 to test</li>
   <li>Interact with it to design your test case</li>
@@ -293,9 +286,7 @@ the file in a text editor.</p>
 <h2>Include the Watir Tool</h2>
 <p>To use the Watir tool, first enter the following in your test script:</p>
 <div class="testexample">require 'watir'</div>
-<p>If you create a test in a different directory than the one that
-watir.rb is in, you can put the full path to watir.rb in the require
-statement. </p>
+<p>This allows our test script to use the Watir tool.</p>
 <h2>Create a Test Instance of Internet Explorer</h2>
 <p>To create a test instance of Internet Explorer, enter the following
 in your test script:</p>
