@@ -102,7 +102,9 @@ class TC_Images < Test::Unit::TestCase
         assert_equal( "" , $ie.image(:index, 2).value )
         assert_equal( "88" , $ie.image(:index, 2).height )
         assert_equal( "88" , $ie.image(:index, 2).width )
-        assert_equal( "03/10/2005" , $ie.image(:index, 2).fileCreatedDate )
+
+        # this line fails, as the date is when it is installed on the local oc, not the date the file was really created
+        #assert_equal( "03/10/2005" , $ie.image(:index, 2).fileCreatedDate )
         assert_equal( "788",  $ie.image(:index, 2).fileSize )
 
         puts"--------------------- To String tests -------------------"
