@@ -12,7 +12,7 @@ class TC_Divs < Test::Unit::TestCase
     end
 
 
-    def test_Divs
+    def test_divs
 
        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").click }
        assert_raises(UnknownObjectException) {$ie.div(:title , "div77").click }
@@ -27,7 +27,7 @@ class TC_Divs < Test::Unit::TestCase
        assert($ie.textField(:name, "text1").verify_contains("0") )  
     end
 
-    def test_getText
+    def test_text
        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").text }
        assert_raises(UnknownObjectException) {$ie.div(:title , "div77").text }
 
@@ -36,7 +36,7 @@ class TC_Divs < Test::Unit::TestCase
 
     end
 
-    def test_getStyle
+    def test_style
 
         assert_raises(UnknownObjectException) {$ie.div(:id , "div77").style }
         assert_equal("blueText" ,   $ie.div(:id , "div2").style )
@@ -47,7 +47,7 @@ class TC_Divs < Test::Unit::TestCase
 
     #---- Span Tests ---
 
-    def test_Spans
+    def test_spans
 
        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
        assert_raises(UnknownObjectException) {$ie.span(:title , "span77").click }
@@ -62,7 +62,7 @@ class TC_Divs < Test::Unit::TestCase
        assert($ie.textField(:name, "text2").verify_contains("0") )  
     end
 
-    def test_get_span_text
+    def test_span_text
        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").text }
        assert_raises(UnknownObjectException) {$ie.span(:title , "span77").text }
 
@@ -71,7 +71,7 @@ class TC_Divs < Test::Unit::TestCase
 
     end
 
-    def test_get_span_style
+    def test_span_style
 
         assert_raises(UnknownObjectException) {$ie.span(:id , "span77").style }
         assert_equal("blueText" ,   $ie.span(:id , "span2").style )

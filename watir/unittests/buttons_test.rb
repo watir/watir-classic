@@ -7,11 +7,11 @@ require 'unittests/setup'
 class TC_Buttons < Test::Unit::TestCase
     include Watir
 
-    def gotoButtonPage()
+    def goto_button_page()
         $ie.goto($htmlRoot + "buttons1.html")
     end
 
-    def gotoFramesPage()
+    def goto_frames_page()
         $ie.goto($htmlRoot + "frame_buttons.html")
     end
 
@@ -27,18 +27,18 @@ class TC_Buttons < Test::Unit::TestCase
     end
 
     def test_Button_to_s
-        gotoButtonPage()
+        goto_button_page()
 
-b4 = ['name              b4',
-'type              button',
-'id                b5',
-'value             Disabled Button',
-'disabled          true']
-b1 = ['name              b1',
-'type              button',
-'id                b2',
-'value             Click Me',
-'disabled          false']
+        b4 = ['name              b4',
+        'type              button',
+        'id                b5',
+        'value             Disabled Button',
+        'disabled          true']
+        b1 = ['name              b1',
+        'type              button',
+        'id                b2',
+        'value             Click Me',
+        'disabled          false']
 
         assert_equal(b4, $ie.button(:name, "b4").to_s)
         assert_equal(b1, $ie.button(:caption, "Click Me").to_s)
@@ -48,36 +48,36 @@ b1 = ['name              b1',
     end
 
    
-    def test_Button_UsingDefault
+    def test_button_using_default
 
         # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
 
-       gotoButtonPage()
+       goto_button_page()
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button( "Missing Caption").click   }  
 
        $ie.button("Click Me").click
-       assert($ie.pageContainsText("PASS") )
+       assert($ie.contains_text("PASS") )
     end
 
     def test_Button_click_only
-       gotoButtonPage()
+       goto_button_page()
        $ie.button(:caption, "Click Me").click
-       assert($ie.pageContainsText("PASS") )
+       assert($ie.contains_text("PASS") )
     end
 
-    def test_Button_click
-       gotoButtonPage()
+    def test_button_click
+       goto_button_page()
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:caption, "Missing Caption").click   }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:id, "missingID").click   }  
 
        assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:caption, "Disabled Button").click   }  
 
        $ie.button(:caption, "Click Me").click
-       assert($ie.pageContainsText("PASS") )
+       assert($ie.contains_text("PASS") )
     end
 
     def test_Button_Exists
-       gotoButtonPage()
+       goto_button_page()
        assert($ie.button(:caption, "Click Me").exists?)   
        assert($ie.button(:caption, "Submit").exists?)   
        assert($ie.button(:name, "b1").exists?)   
@@ -91,7 +91,7 @@ b1 = ['name              b1',
     end
 
     def test_Button_Enabled
-       gotoButtonPage()
+       goto_button_page()
        assert($ie.button(:caption, "Click Me").enabled?)   
        assert_false($ie.button(:caption, "Disabled Button").enabled?)   
        assert_false($ie.button(:name, "b4").enabled?)   
@@ -102,7 +102,7 @@ b1 = ['name              b1',
     end
 
     def test_frame
-        gotoFramesPage()
+        goto_frames_page()
 
        assert($ie.frame("buttonFrame").button(:caption, "Click Me").enabled?)   
        assert_raises(  UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { $ie.button(:caption, "Disabled Button").enabled?}  

@@ -91,25 +91,50 @@ class TC_Forms3 < Test::Unit::TestCase
         $ie.showForms
     end
 
+    def test_reset
+
+        assert( $ie.reset(:index, 1).exists?)
+        assert( $ie.reset(:index, 1).enabled?)
+
+
+        $ie.text_field(:id, "t1").set("Hello, reset test!")
+        assert_equal($ie.text_field(:id, 't1').getContents, 'Hello, reset test!')
+
+        $ie.reset(:index, 1).click
+        assert_equal("" , $ie.text_field(:id, 't1').getContents )
+
+
+        # also verify it works under a form
+        $ie.text_field(:id, "t1").set("reset test - using a form")
+        assert_equal($ie.text_field(:id, 't1').getContents, 'reset test - using a form')
+
+        $ie.form(:index,2).reset(:index,1).click
+        assert_equal("" , $ie.text_field(:id, 't1').getContents )
+
+
+
+
+    end
+
     def test_Flash
         $ie.form(:name ,"test2").button(:caption , "Submit").flash
     end 
 
     def test_objects_with_same_name
-        assert_equal('textfield' ,$ie.textField( :name , 'g1').getProperty('value') )
+        assert_equal('textfield' ,$ie.text_field( :name , 'g1').getProperty('value') )
         assert_equal('button'    ,$ie.button(    :name , 'g1').getProperty('value') )
-        assert_equal('1'         ,$ie.checkBox(  :name , 'g1').getProperty('value') )
+        assert_equal('1'         ,$ie.checkbox(  :name , 'g1').getProperty('value') )
         assert_equal('2'         ,$ie.radio(     :name , 'g1').getProperty('value') )
 
-        assert_equal('textfield_id' ,$ie.textField( :id , 'g1').getProperty('value') )
+        assert_equal('textfield_id' ,$ie.text_field( :id , 'g1').getProperty('value') )
         assert_equal('button_id'    ,$ie.button(    :id , 'g1').getProperty('value') )
-        assert_equal('1_id'         ,$ie.checkBox(  :id , 'g1').getProperty('value') )
+        assert_equal('1_id'         ,$ie.checkbox(  :id , 'g1').getProperty('value') )
         assert_equal('2_id'         ,$ie.radio(     :id , 'g1').getProperty('value') )
     end
 
     def test_flash
         $ie.button( 'Click Me').flash
-        assert_raises( UnknownObjectException ) { $ie.textField( :name , 'g177').flash   }
+        assert_raises( UnknownObjectException ) { $ie.text_field( :name , 'g177').flash   }
     end
 
     def test_showElements
@@ -138,7 +163,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_false( $ie.button(:src , /missing/).exists? )
         assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
 
-        assert( $ie.pageContainsText("PASS") )
+        assert( $ie.contains_text("PASS") )
     end
 end
 
@@ -150,26 +175,26 @@ class TC_Forms4 < Test::Unit::TestCase
     end
     
     def test_find_text_field_ignoring_form
-        assert_equal($ie.textField(:name, 'name').getContents, 'apple') # should it raise a not-unique error instead?
+        assert_equal($ie.text_field(:name, 'name').getContents, 'apple') # should it raise a not-unique error instead?
     end
     
     def test_correct_form_field_is_found_using_form_name
-        assert_equal($ie.form(:name, 'apple_form').textField(:name, 'name').getContents, 'apple')
-        assert_equal($ie.form(:name, 'banana_form').textField(:name, 'name').getContents, 'banana')
+        assert_equal($ie.form(:name, 'apple_form').text_field(:name, 'name').getContents, 'apple')
+        assert_equal($ie.form(:name, 'banana_form').text_field(:name, 'name').getContents, 'banana')
     end
 
     def test_correct_form_field_is_found_using_form_index
-        assert_equal($ie.form(:index, 1).textField(:name, 'name').getContents, 'apple')
-        assert_equal($ie.form(:index, 2).textField(:name, 'name').getContents, 'banana')
+        assert_equal($ie.form(:index, 1).text_field(:name, 'name').getContents, 'apple')
+        assert_equal($ie.form(:index, 2).text_field(:name, 'name').getContents, 'banana')
     end
     
     def test_using_text_on_form
-        $ie.form(:name, 'apple_form').textField(:name, 'name').set('strudel')
-        assert_equal($ie.form(:index, 1).textField(:name, 'name').getContents, 'strudel')
+        $ie.form(:name, 'apple_form').text_field(:name, 'name').set('strudel')
+        assert_equal($ie.form(:index, 1).text_field(:name, 'name').getContents, 'strudel')
     end 
     
     def test_submit
         $ie.form(:name, 'apple_form').submit
-        assert( $ie.pageContainsText("PASS") )
+        assert( $ie.contains_text("PASS") )
     end
 end

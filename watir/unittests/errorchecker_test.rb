@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_error_checker< Test::Unit::TestCase
     include Watir
 
-    def gotoPage(page)
+    def goto_page(page)
         $ie.goto($htmlRoot + page)
     end
 
@@ -17,11 +17,11 @@ class TC_error_checker< Test::Unit::TestCase
         }
 
         $ie.add_checker(button_checker )
-        assert_raises( RuntimeError ) { gotoPage('forms3.html') }
-        assert_nothing_raised { gotoPage('buttons1.html') }
+        assert_raises( RuntimeError ) { goto_page('forms3.html') }
+        assert_nothing_raised { goto_page('buttons1.html') }
 
         $ie.disable_checker( button_checker )
-        assert_nothing_raised { gotoPage('forms3.html') }
+        assert_nothing_raised { goto_page('forms3.html') }
 
     end
 

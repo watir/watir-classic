@@ -35,11 +35,11 @@ class TC_PopUps < Test::Unit::TestCase
         gotoPopUpPage()
         startClicker("OK" , 3)
         $ie.button("Confirm").click
-        assert( $ie.textField(:name , "confirmtext").verify_contains("OK") )
+        assert( $ie.text_field(:name , "confirmtext").verify_contains("OK") )
 
         startClicker("Cancel" , 3)
         $ie.button("Confirm").click
-        assert( $ie.textField(:name , "confirmtext").verify_contains("Cancel") )
+        assert( $ie.text_field(:name , "confirmtext").verify_contains("Cancel") )
 
 
 

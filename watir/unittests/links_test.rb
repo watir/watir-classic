@@ -48,17 +48,17 @@ class TC_Links < Test::Unit::TestCase
        gotoLinksPage()
 
         $ie.link(:text, "test1").click
-        assert( $ie.pageContainsText("Links2-Pass") ) 
+        assert( $ie.contains_text("Links2-Pass") ) 
 
        gotoLinksPage()
 
         $ie.link(:url, "link_pass.html").click
-        assert( $ie.pageContainsText("Links3-Pass") ) 
+        assert( $ie.contains_text("Links3-Pass") ) 
 
        gotoLinksPage()
 
         $ie.link(:index, 1).click
-        assert( $ie.pageContainsText("Links2-Pass") ) 
+        assert( $ie.contains_text("Links2-Pass") ) 
 
        gotoLinksPage()
 
