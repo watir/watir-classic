@@ -1,6 +1,6 @@
 # Suggested solution to lab 2 using watir.
 
-require 'watir'
+require 'toolkit/watir'
 
 # 1. Login using existing account
 $ie = IE.new
