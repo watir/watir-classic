@@ -57,11 +57,27 @@ class TC_Buttons < Test::Unit::TestCase
     end
 
    
+    def test_Button_UsingDefault
+
+        # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
+
+       gotoButtonPage()
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button( "Missing Caption").click   }  
+
+       $ie.button("Click Me").click
+       assert($ie.pageContainsText("PASS") )
+
+
+    end
+
+
     def test_Button_click
 
-
+       gotoButtonPage()
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:caption, "Missing Caption").click   }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:id, "missingID").click   }  
+
+       puts "failing line next..."
        assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:caption, "Disabled Button").click   }  
 
        puts "Clicking the button"
