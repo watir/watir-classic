@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>getHandleOfControl (WinClicker)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir/winClicker.rb, line 386</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getHandleOfControl</span> (<span class="ruby-identifier">hWnd</span> , <span class="ruby-identifier">controlClass</span>, <span class="ruby-identifier">position</span> )
+
+         <span class="ruby-comment cmt"># returns the handle (or -1 if its not found) of the nth control of this class</span>
+         <span class="ruby-identifier">enum_childWindows</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'EnumChildWindows'</span> , <span class="ruby-value str">'IIPL'</span> ]
+         <span class="ruby-identifier">get_caption_length</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'GetWindowTextLengthA'</span> ,<span class="ruby-value str">'LI'</span> ]    <span class="ruby-comment cmt"># format here - return value type (Long) followed by parameter types - int in this case -      see http://www.ruby-lang.org/cgi-bin/cvsweb.cgi/~checkout~/ruby/ext/dl/doc/dl.txt?</span>
+         <span class="ruby-identifier">get_caption</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'GetWindowTextA'</span>, <span class="ruby-value str">'iLsL'</span> ] 
+        
+         <span class="ruby-identifier">control_hWnd</span> = []
+
+         <span class="ruby-identifier">buff</span> = <span class="ruby-value str">&quot; &quot;</span> <span class="ruby-operator">*</span> <span class="ruby-value">16</span>
+         <span class="ruby-identifier">get_class_name</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'GetClassName'</span>, <span class="ruby-value str">'ILpI'</span>]
+
+         <span class="ruby-identifier">bContinueEnum</span> = <span class="ruby-value">-1</span>
+         <span class="ruby-identifier">enum_childWindows_proc</span> = <span class="ruby-constant">DL</span>.<span class="ruby-identifier">callback</span>(<span class="ruby-value str">'ILL'</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">hWnd</span>,<span class="ruby-identifier">lparam</span><span class="ruby-operator">|</span>
+              <span class="ruby-identifier">r</span>,<span class="ruby-identifier">rs</span> = <span class="ruby-identifier">get_class_name</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">hWnd</span>, <span class="ruby-identifier">buff</span>, <span class="ruby-identifier">buff</span>.<span class="ruby-identifier">size</span>)
+              <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Found window: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rs</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; Handle: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">hWnd</span>.<span class="ruby-identifier">to_s</span>
+
+              <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rs</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">controlClass</span>  <span class="ruby-comment cmt"># there must be a better way of detecting this</span>
+
+                  <span class="ruby-comment cmt"># we have found a control of the specified type - add it to an array of hwnd</span>
+                  <span class="ruby-identifier">control_hWnd</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">hWnd</span>
+                
+              <span class="ruby-keyword kw">end</span>
+              <span class="ruby-identifier">bContinueEnum</span>
+         }
+         <span class="ruby-identifier">r</span>  = <span class="ruby-identifier">enum_childWindows</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">hWnd</span>, <span class="ruby-identifier">enum_childWindows_proc</span>  ,<span class="ruby-value">0</span>)
+         <span class="ruby-identifier">controlHwnd</span> = <span class="ruby-identifier">control_hWnd</span>[<span class="ruby-identifier">position</span>]
+         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">controlHwnd</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">then</span>
+            <span class="ruby-identifier">controlHwnd</span> = <span class="ruby-value">-1</span>
+         <span class="ruby-keyword kw">end</span>
+         
+         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">controlHwnd</span> 
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

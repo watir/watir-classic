@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>getParent (WinClicker)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir/winClicker.rb, line 158</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getParent</span> (<span class="ruby-identifier">childhWnd</span> )
+        <span class="ruby-comment cmt"># pass a hWnd into this function and it will return the parent hWnd</span>
+        <span class="ruby-identifier">getParentWindow</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'GetParent'</span> , <span class="ruby-value str">'II'</span> ]
+
+        <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Finding Parent for: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">childhWnd</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-identifier">a</span> , <span class="ruby-identifier">b</span> = <span class="ruby-identifier">getParentWindow</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">childhWnd</span> )
+        <span class="ruby-comment cmt">#puts &quot;a = &quot; a.to_s , b.to_s</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">a</span>
+
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
