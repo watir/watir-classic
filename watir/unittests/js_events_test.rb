@@ -1,7 +1,8 @@
 # tests for JavaScript events
 # revision: $Revision$
-
-require 'unittests/setup'
+ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
+require 'watir'
+require 'setup'
 
 class TC_JSEvents < Test::Unit::TestCase
 
@@ -48,7 +49,13 @@ class TC_JSEvents < Test::Unit::TestCase
     def test_page_status
        gotoJavaScriptEventsPage()
        $ie.link(:text, "Check the Status").fireEvent("onMouseOver")
-       assert($ie.getStatus == "Here is your status") 
+       assert($ie.getStatus, "It worked") 
+    end
+    
+    def test_page_status
+       gotoJavaScriptEventsPage()
+       $ie.link(:text, "Clear the Status").fireEvent("onMouseOver")
+       assert($ie.getStatus, "") 
     end
  #end of window status
 
