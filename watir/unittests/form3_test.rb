@@ -87,4 +87,24 @@ class TC_Forms < Test::Unit::TestCase
     end
 
 
+    def test_submitWithImage
+
+        assert( $ie.button(:alt , "submit").exists? )
+        assert( $ie.button(:alt , /sub/).exists? )
+
+        assert_false( $ie.button(:alt , "missing").exists? )
+        assert_false( $ie.button(:alt , /missing/).exists? )
+
+        #assert( $ie.button(:src , "file:///#{$myDir}/html/images/button.jpg").exists? )    # this doesnt work for everybody
+        assert( $ie.button(:src , /button/).exists? )
+
+        assert_false( $ie.button(:src , "missing").exists? )
+        assert_false( $ie.button(:src , /missing/).exists? )
+        assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
+
+        assert( $ie.pageContainsText("PASS") )
+
+    end
+
+
 end
