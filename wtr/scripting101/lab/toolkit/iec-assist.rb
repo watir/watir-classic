@@ -39,6 +39,7 @@ def show_forms()
     puts "action: " + form.action
   end
 end
+alias show_form_actions show_forms
   
 def get_form_by_action( action )
   "Return the first Form on the current page that has the specified Action."
