@@ -127,7 +127,7 @@ Watir can use different attributes of a tag to manipulate that object, so it is 
 <ol>
 <li>Open your text editor.</li>
 <li>Name your test file with a <b>.rb</b> (Ruby) extension.</li>
-<li>Include the watir library by entering this statement at the beginning of your test script: <b>require 'watir.rb'</b></li>
+<li>Provide your new test file with access to the Watir tool by entering this statement at the beginning of your test script: <b>require 'watir.rb'</b></li>
 <li>Open Internet Explorer and navigate to the application you wish to test</li>
 <li>Interact with it to design your test case</li>
 <li>Using the Watir methods below, type the corresponding Watir methods into your test script</li> 
@@ -142,7 +142,7 @@ an instance of the Internet Explorer web browser.</p>
 <p>In Ruby, think of programming in terms of objects and messages. Watir was also developed with objects and messages in mind. If you think of the <b>$ie</b> variable as an object, you can send messages to it.
 Think of objects as nouns. When you start up an Internet Explorer instance - you refer to it as a thing. If you send a message to that object, 
 it will respond to that message if it recognizes it.</p>
-<p>Think of the messages as verbs. In Ruby, you send a message to an object by separating the object you arecalling from the message you are sending to it with a dot. For example, <b>Dog.bark</b> would tell the object <i>Dog</i> that it must <i>bark</i>.</p><p>This isn't very specific though. What dog should bark? In the Watir world, you could identify the test area to be our <b>yard</b>, or by using the global variable notation: <b>$yard</b>. Like <i>$ie</i>, treat it as an object with attributes containing other objects with attributes. For example, in our yard, there are two dogs: Heidi and Megabyte. Each of these dog objects have attributes that identify them. They have names, breeds, shapes and sizes and colors. To be more specific, and interacting
+<p>Think of the messages as verbs. In Ruby, you send a message to an object by separating the object you are calling from the message you are sending to it with a dot. For example, <b>Dog.bark</b> would tell the object <i>Dog</i> that it must <i>bark</i>.</p><p>This isn't very specific though. What dog should bark? In the Watir world, you could identify the test area to be our <b>yard</b>, or by using the global variable notation: <b>$yard</b>. Like <i>$ie</i>, treat it as an object with attributes containing other objects with attributes. For example, in our yard, there are two dogs: Heidi and Megabyte. Each of these dog objects have attributes that identify them. They have names, breeds, shapes and sizes and colors. To be more specific, and interacting
 with them the Watir way, you could send the message "bark" to the dog Heidi like this: <b>$yard.dog(:name, "Heidi").bark</b>. This says in Watir syntax: in the yard, identify the dog Heidi by her name attribute, 
 and send her the "bark" message. The expected outcome would be Heidi responding to the message by barking.</p>
 <p>When you develop test scripts with Watir, you interact with objects on a web page by sending them messages. Like the yard example, the IE browser itself contains objects. You can access these objects within an IE browser instance by identifying them by different attributes. 
@@ -150,8 +150,8 @@ Just like in the dog example, above,  you must be very specific when you send me
 declared by different application developers. With Watir, identify objects and send them messages by using the dot notation. For example <b>$ie.button</b>, narrows down the type of object to send a message to. 
 <b>$ie.button(:caption, "Click Me").click</b> identifies the object on the page as a button within the instance of Internet Explorer that has the caption (or value attribute) "Click Me". When you send the message (the verb) <b>click</b>, Watir interprets and tells IE to click. </p>
 
-<h2>Include the Watir Library</h2>
-<p>To use the Watir library, enter the following in your test script:</p>
+<h2>Include the Watir Tool</h2>
+<p>To use the Watir tool, first enter the following in your test script:</p>
 <div class = "testexample">require 'watir.rb'</div>
 <p>If you create a test in a different directory than the one that watir.rb is in, you can put the full path to watir.rb in the require statement. </p>
 <h2>Create a Test Instance of Internet Explorer</h2>
@@ -171,7 +171,7 @@ you identify the link object by using the text attribute "Pickaxe".</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a></div>
 <h4>Text</h4>
-<p>Watir code to click a link using the "text" attribute:</p>
+<p>Watir code to click a link using the <i>text</i> attribute:</p>
 <div class = "testexample">$ie.link(:text, "Pickaxe").click</div>
 <p>What you see in the HTML source (attribute highlighted):</p>
 <div class = "htmlexample">&lt;a href="http://pragmaticprogrammer.com/titles/ruby/"&gt;<b>Pickaxe</b>&lt;/a&gt;</div>
@@ -202,11 +202,20 @@ you identify the link object by using the text attribute "Pickaxe".</p>
 <div class = "browserexample">Type in Me:  <input type = "text" name = "typeinme"> </div>
 <h2>Submitting Data from a Web Page</h2>
 <p>Send test scenarios to application</p>
-<h3>Buttons</h3>
+<h3>Buttons:</h3>
 <h4>HTML Buttons</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><input type = "button" name = "clickme" value = "Click Me"> </div>
 <h4>Image Buttons</h4>
+<h3>Forms</h3>
+<p>There may be input fields on a web page, but no button to submit. Instead, they will allow you to hit Enter on your keyboard. When there is no button to submit the data, 
+we can just submit the form itself.</p>
+<p>What you see in the web browser:</p>
+<div class = "browserexample">Enter name and hit Enter/Return: <form action = "login" method="get"><input name="username" type="text"></input></form> </div>
+<p>Watir code to submit the form using the <i>action</i> attribute: 
+<div class = "testexample">$ie.form(:action, "login").submit</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;form action = "<b>login</b>" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Validating Test Results</h2>
 <p>Did the test pass or fail?</p>
 <h3>Object Exists</h3>
