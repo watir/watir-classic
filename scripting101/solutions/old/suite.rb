@@ -5,7 +5,7 @@ require 'test/unit'
 
 $: << File.join( File.dirname( __FILE__ ), '..' )
 require 'toolkit/iostring'
-require 'toolkit/table-array'
+require 'toolkit/timeclock-recent-records'
 require 'toolkit/testhook'
 require 'toolkit/iec-assist'
 require 'toolkit/timeclock-assist'

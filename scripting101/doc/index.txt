@@ -1,4 +1,4 @@
-h1. Scripting for Testers
+h1. Scripting Web Tests
 
 h2. Tutorial Documentation
 
@@ -12,10 +12,9 @@ Useful information you'll need to complete the tutorial labs.
   toolkit. 
 * "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
   Ruby language.  
-* "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. 
-  Overview of the WTR toolkit.
-* "Using IRB to Drive Internet Explorer":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc. 
-  An annotated example of using IRB and WTR to drive Timeclock. 
+* "Scripting Web Tests Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. 
+  Overview of the WATIR toolkit and a few extensions for Timeclock.
+* WATIR User Guide
 
 h3. Lab Exercises
 
@@ -58,6 +57,9 @@ h3. Further Reading
 Articles that develop themes and topics introduced in this tutorial, available
 on the web.
 
+* "Wireless Matrix AutoTests.":Wireless%20Matrix%20AutoTests.doc. Paul Rogers 
+  describes how the use Web Testing for Ruby for production testing at Wireless
+  Matrix.
 * "Programming in Ruby":http://www.pragmaticprogrammer.com/articles/ddj_ruby.pdf.
   Dave Thomas and Andy Hunt provide programmers with a succinct overview of the 
   Ruby language.

@@ -25,7 +25,7 @@ wait
 # verify that the job record appears in the bottom
 tables = $iec.document.getElementsByTagName("TABLE")
 results_table = tables.item(tables.length - 1) # last table
-require 'toolkit/table-array'
+require 'toolkit/timeclock-recent-records'
 a = table_array(results_table)
 
 if a[1][0] == "learning"

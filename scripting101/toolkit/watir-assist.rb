@@ -10,7 +10,5 @@ def ie_load ( html_file )
   return $ie
 end
 
-def get_document()
-  $ie.getDocument
-end
+
 

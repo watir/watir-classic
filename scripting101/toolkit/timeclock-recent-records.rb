@@ -1,3 +1,12 @@
+# Allow tests against the recent records table in Timeclock
+
+require 'test/unit/assertions'
+include Test::Unit::Assertions
+
+#
+# General Code that might be moved to WATIR
+#
+
 # Convert the DOM table object into a two-dimensional array. - works with WATIR
 def table_array (table, y=[])
   table_rows = table.getElementsByTagName("TR")
@@ -11,6 +20,11 @@ def table_array (table, y=[])
   return y
 end
 
+#
+# Timeclock Specific
+#
+
+# Timeclock results table
 class RecentRecordsArray < Array
   def job_name index
     self[index][0]
@@ -37,4 +51,3 @@ def assert_job_record( index, name, status )
   assert_equal name, results.job_name( index )
   assert_equal status, results.status( index )
 end
-

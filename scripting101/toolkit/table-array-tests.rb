@@ -1,6 +1,6 @@
-# tests 'table-array.rb' - now works with watir
+# tests 'timeclock-recent-records.rb' - now works with watir
 
-require 'toolkit/table-array'
+require 'toolkit/timeclock-recent-records'
 require 'test/unit'
 require 'toolkit/iostring'
 

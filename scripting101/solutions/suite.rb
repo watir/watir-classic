@@ -6,7 +6,7 @@ require 'test/unit'
 $: << File.join( File.dirname( __FILE__ ), '..' )
 require 'toolkit/iostring'
 require 'toolkit/testhook'
-require 'toolkit/table-array'
+require 'toolkit/timeclock-recent-records'
 require 'toolkit/watir-assist'
 
 class Lab2 < Test::Unit::TestCase
@@ -67,3 +67,20 @@ class Lab3 < Test::Unit::TestCase
   end
 end
 
+class Lab4 < Test::Unit::TestCase
+  def setup
+    ensure_no_user_data 'ruby' 
+    @mockout = IOString.new ""
+  end
+  def test_lab4_1
+    $stdout = @mockout
+    load 'lab4_1.rb'
+    $stdout = STDOUT
+    assert_match /PASS - job started\n/, @mockout
+    assert_match /PASS - background job is running\n/, @mockout
+  end
+  def teardown
+    $stdout = STDOUT
+    $ie.close if $ie
+  end
+end
