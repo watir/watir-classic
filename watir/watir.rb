@@ -824,7 +824,7 @@ class IE
 
         o = nil
         container.each do |r|
-            next unless o ==nil
+            next unless o == nil
             begin
                 next unless htmlObjectTypes.include?(r.invoke("type").downcase)
                 o = r if what.matches(r.value)
@@ -1203,12 +1203,10 @@ class Table < ObjectActions
     # this method returns the number of cols in the table
     # raises an UnknownTableException if the table doesnt exist
     def columns( rowToUse = 1)
-
         raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
         table_rows = @o.getElementsByTagName("TR")
         cols = table_rows[rowToUse.to_s].getElementsByTagName("TD")
         return cols.length
-
     end
 
     # this method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc
