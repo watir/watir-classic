@@ -1,6 +1,6 @@
 ===Change Log
 
-====2004.xxx.x
+====2004.006.0
 * ClIEController.form now has optional param to automatically wrap the DOM
   form instance in an IEDomFormWrapper instance. 
 * ClIEController.initialize now takes an options hash to specify, well, 
@@ -74,7 +74,10 @@
   having to touch it directly. Default output is $stdout, but method accepts
   an io instance.
 * minor fix on the Select node wrapper.
-* new node wrappers: Header, Italic, Input Text  
+* new node wrappers: Header, Italic, Input Text
+* license.txt added and all .rb files updated with license in header. 
+  License now includes contributor names.
+* contrib/motunes added to cvs and to distro.  
        
 ====2003.362.0
 * Builder and Installer working under new RubyForge src tree, etc. Woop.
