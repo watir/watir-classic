@@ -32,7 +32,7 @@ ruby article
 
 END
               )
-$iec.close
+$ie.close
 
 end
 
