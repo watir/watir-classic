@@ -1065,6 +1065,10 @@ module Watir
             return Div.new(self , how , what)
         end
 
+        def span( how , what )
+            return Span.new(self , how , what)
+        end
+
     end # class IE
     
     
@@ -1406,27 +1410,41 @@ module Watir
         end
     end
 
-    class Div < ObjectActions
+    class SpanDivCommon < ObjectActions
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getNonControlObject("div" , how, what )
+            @o = ieController.getNonControlObject(@objectType , how, what )
             super( @o )
             @how = how
             @what = what
         end
 
         def text()
-            raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
+            raise UnknownObjectException ,  "Unable to locate a #{self.class} using #{@how} and #{@what} "  if @o == nil
             d = @o.innerText
             return d
         end
 
         def style
-            raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
+            raise UnknownObjectException ,  "Unable to locate a #{self.class} using #{@how} and #{@what} "  if @o == nil
             d = @o.invoke("className")
             return d
         end
 
+    end
+
+    class Div < SpanDivCommon 
+        def initialize( ieController, how, what)
+            @objectType = "div"
+            super ( ieController, how, what)
+        end
+    end
+
+    class Span < SpanDivCommon 
+        def initialize( ieController, how, what)
+            @objectType = "span"
+            super ( ieController, how, what)
+        end
     end
 
         
