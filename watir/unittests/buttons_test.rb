@@ -27,8 +27,11 @@ class TC_Buttons < Test::Unit::TestCase
     end
 
     def aaatest_Button_to_s
-        goto_button_page()
 
+        # i think the tests for to_s should be dropped. The output is not in a nice format to be tested, and the
+        # individual properties are tested in the test_properties method
+
+        goto_button_page()
         b4 = ['name              b4',
         'type              button',
         'id                b5',
@@ -46,8 +49,35 @@ class TC_Buttons < Test::Unit::TestCase
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").to_s   }  
 
     end
+ 
+    def test_properties
+       goto_button_page()
 
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").id   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").name   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").disabled   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").type   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").value   }  
+
+       assert_equal("b1"  , $ie.button(:index, 1).name  ) 
+       assert_equal("b2"  , $ie.button(:index, 1).id  ) 
+       assert_equal("button"  , $ie.button(:index, 1).type  ) 
+       assert_equal("Click Me"  , $ie.button(:index, 1).value  ) 
+       assert_equal(false  , $ie.button(:index, 1).disabled  ) 
+
+       assert_equal("b1"  , $ie.button(:id, "b2").name  ) 
+       assert_equal("b2"  , $ie.button(:id, "b2").id  ) 
+       assert_equal("button"  , $ie.button(:id, "b2").type  ) 
+       
+       assert_equal("b4"  , $ie.button(:index, 2).name  ) 
+       assert_equal("b5"  , $ie.button(:index, 2).id  ) 
+       assert_equal("button"  , $ie.button(:index, 2).type  ) 
+       assert_equal("Disabled Button"  , $ie.button(:index, 2).value  ) 
+       assert_equal(true  , $ie.button(:index, 2).disabled  ) 
+
+    end
    
+
     def test_button_using_default
 
         # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
