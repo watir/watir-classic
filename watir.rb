@@ -59,7 +59,11 @@ class ObjectReadOnlyException  < WatirException
     end
 end
 
+class NoValueFoundException < WatirException
+    def initialize()
 
+    end
+end
 
 class ObjectActions
 
@@ -224,14 +228,34 @@ class IE
     end
 
     def pageContainsText(text)
-        if ( getDocument.body.innerText =~ /#{text}/ ) != nil
-            log "pageContainsText: Looking for: #{text} - found it ok" 
-            return true
-        else
-            log "pageContainsText: Looking for: #{text} - Didnt Find it" 
-            return false
-        end
-    end
+
+
+puts "-------------"
+puts getDocument.body.innerText
+
+puts "-------------"
+         if text.kind_of? Regexp
+
+            if ( getDocument.body.innerText.match(text)  ) != nil
+                puts  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
+                return true
+            else
+                puts "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
+                return false
+            end
+
+
+        elsif text.kind_of? String
+
+            if ( getDocument.body.innerText.index(text)  ) != nil
+                puts "pageContainsText: Looking for: #{text} (string) - found it ok" 
+                return true
+            else
+                puts  "pageContainsText: Looking for: #{text} (string)  - Didnt Find it" 
+                return false
+            end
+
+        end    end
 
     def waitForIE( noSleep  = false )
          
@@ -254,12 +278,14 @@ class IE
             print s.next
         end
         print "\b"
+        puts "waitForIE Complete"
         s=nil
     end
 
     def goto( url )
         @ie.navigate(url)
         waitForIE()
+        sleep 3
     end
 
     def showFrames()
@@ -354,8 +380,102 @@ class IE
         t = TextField.new(self , how, what)
     end
 
+    def selectBox( how , what )
+        s = SelectBox.new(self , how, what)
+    end
+
 end
 
+
+class SelectBox < ObjectActions
+
+    def initialize( ieController,  how , what )
+       @ieController = ieController
+       @o = ieController.getObject( how, what )
+       super( @o )
+    end
+
+    def clearSelection
+        raise UnknownObjectException if @o==nil
+        @o.each do |selectBoxItem|
+            selectBoxItem.selected = false
+        end
+    end
+
+    def select( item )
+        raise UnknownObjectException if @o==nil
+        if item.kind_of?( Array )== false
+            items = [item ]
+        else
+            items = item 
+        end
+
+        matchedAnItem = false
+
+        items.each do |thisItem|
+
+            puts "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
+
+            matchedAnItem = false
+            if thisItem.kind_of?( Regexp )
+                @o.each do |selectBoxItem|
+                    if thisItem.match( selectBoxItem.text)
+                        matchedAnItem = true
+                        selectBoxItem.selected = true
+                        puts " #{selectBoxItem.text} is being selected"
+
+                    end
+                end
+
+            elsif thisItem.kind_of?( String )
+                @o.each do |selectBoxItem|
+                    puts " comparing #{thisItem } to #{selectBoxItem.text}"
+                    if thisItem == selectBoxItem.text 
+                        matchedAnItem = true
+                        puts " #{selectBoxItem.text} is being selected"
+                        selectBoxItem.selected = true     
+                    end
+                end
+
+
+            end
+            raise NoValueFoundException    if matchedAnItem ==false
+        end
+
+
+    end
+
+    def getAllContents()
+        raise UnknownObjectException if @o==nil
+        returnArray = []
+
+        puts "There are #{@o.length} items"
+
+        @o.each do |thisItem|
+            returnArray << thisItem.text
+        end
+        return returnArray 
+
+    end
+
+    def getSelectedItems
+
+        raise UnknownObjectException if @o==nil
+        returnArray = []
+
+        puts "There are #{@o.length} items"
+
+        @o.each do |thisItem|
+            if thisItem.selected == true
+                puts "Item ( #{thisItem.text} ) is selected"
+                returnArray << thisItem.text 
+            end
+        end
+        return returnArray 
+
+
+    end
+end
 
 class Button < ObjectActions
     
