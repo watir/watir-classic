@@ -319,8 +319,8 @@ and can check to see if a page contains the objects that are expected for the te
 <p>Our test will pass if this is what is displayed on the page at our verification point.</p>
 <p>Watir code to check that the text exists on the web page  <i>pageContainsText</i> method: 
 <div class = "testexample">$ie.pageContainsText("Reached test verification point.") </div>
-<p>We will need to create a small method to validate that this occurred, or use Ruby's test::unit testing framework.</p>
-To create a simple method to let us know whether the test passed or not:</p>
+<p>We will need to add some scripting code to validate that this occurred, or use Ruby's test::unit testing framework.</p>
+Scripting code to let us know whether the test passed or not:</p>
 <div class = "testexample">a = $ie.pageContainsText("Reached test verification point.")<br> 
 if !a <br>  
 &nbsp;     puts: "Test failed! Page didn't contain text: Reached test verification point."<br> 
