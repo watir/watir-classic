@@ -45,3 +45,4 @@ Atilla Ozgur
 Lorenzo Jorquera
 Elisabeth Hendrickson
 Michael Kelly
+Jacinda Scott (logo)
