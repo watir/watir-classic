@@ -97,10 +97,32 @@ googleSearch.rb file in a text editor. To open it with SciTE, simply right-click
 <p>To use Watir, or any other library in our test case requires us to tell the program where to find the library.</p>
 <p>What you see in the text editor:</p>
 <div class = "testexample">
-  <font color = "green"> #includes</font><br>
+  <font color = "green"> #includes:</font><br>
    require <font color = "purple">'../watir'</font><font color = "green">   # the watir controller</font>
 </div>
 <p>In this case, we used a relative path to the watir file "../watir". Since the examples folder is one folder down from the watir.rb file, we can use this notation
 instead of the full path: "../". This reads: "Go back out of the folder we are in, and look for the file we need there." We can also use a full path such as: "C:\my folder\Watir\watir"</p>
+<h2>Section 3: Declare Variables</h2>
+<p>If we are going to use something in our script more than once, or something that could change, we can declare it as a variable and reuse it throughout the script. 
+Some objects we can use for testing tend to change, such as URLs for applications we are testing. In this script, we assign the test URL as a variable. If it changes, 
+we only have to change it in one place.
+</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+<font color = "green"> #variables:</font><br>
+   testSite = <font color = "purple">'http://www.google.com'</font>
+</div>
+
+<h2>Section 4: Open an Internet Explorer Browser</h2>
+<p>To begin driving Internet Explorer, we need to tell Watir to open an instance for testing.</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+  <font color = "green">#open the IE browser</font><br>
+   $ie = IE.new<br>
+</div>
+<p>To explain what this is doing, we can start from the right of the "=" operator. We send a message "new" to the "IE" (Internet Explorer) object, and assign it to a variable called "$ie".
+The "$ie" variable is a global variable which means we can access it anywhere in our script. the $ in front of the variable name tells the Ruby interpreter that it is global.
+We want this to be a global variable so we can access the Internet Explorer browser at any time in our script. Now we can refer to the Internet Explorer object in our script by using
+the "$ie" variable. This saves typing and helps make the script more readable.</p>
 </body>
 </html>
