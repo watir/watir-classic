@@ -5,11 +5,14 @@ require '../toolkit/testhook'
 require '../toolkit'
 
 class DemoSuite < Test::Unit::TestCase
+  def teardown
+    $iec.close if $iec
+  end
   def test_simple_test
     load 'simple-test.rb'
   end
-  def teardown
-    $iec.close if $iec
+  def test_all_buttons
+    load 'all-buttons.rb'
   end
 end
 
