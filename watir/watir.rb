@@ -531,6 +531,17 @@ class IE
 
     end
 
+    def showLinks()
+        doc = getDocument()
+        doc.links.each do |l|
+            log "Link: name: #{l.name}"
+            log "        id: #{l.invoke("id")}"
+            log "      href: #{l.href}"
+            log "      text: #{l.innerText}"
+        end
+
+    end
+
     def getHTML()
         return getDocument().body.innerHTML
     end
