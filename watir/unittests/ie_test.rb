@@ -10,39 +10,43 @@ class TC_ie < Test::Unit::TestCase
     include Watir
 
    def setup
-      @fakedIE = TestIE.new
+      @faked_ie = TestIE.new
    end
     
    def test_waitForIE
-      @WAITTIME = 5
+      wait_time = 5
     
-      @fakedIE.setTimeToWait @WAITTIME
-      beginTime = Time.now
-      @fakedIE.waitForIE
-      elapseTime = Time.now - beginTime
-      assertNumberWithinRange(elapseTime, @WAITTIME, 0.5)
+      @faked_ie.setTimeToWait wait_time
+      begin_time = Time.now
+      @faked_ie.waitForIE
+      elapsed_time = Time.now - begin_time
+      assert_number_in_range(elapsed_time, wait_time, 0.5)
    end
     
+   # is this correct? 
    def test_getLink_ByIndexReturnsNilOnNoLinks
-      assert_nil(@fakedIE.getLink(:index, 1))
-      assert_nil(@fakedIE.getLink(:index, 1))
+      assert_nil(@faked_ie.getLink(:index, 1))
+      assert_nil(@faked_ie.getLink(:index, 1))
    end
     
    def test_getLink_ByBadHow
-      @fakedIE.addLink "foo"
-      assert_raise(MissingWayOfFindingObjectException){@fakedIE.getLink(:no_such_mechanism, "verifying error handling")}
+      @faked_ie.addLink "foo"
+      assert_raise(MissingWayOfFindingObjectException) do
+          @faked_ie.getLink(:no_such_mechanism, "verifying error handling")
+      end
    end
-
     
+   # is this correct? 
    def test_getLink_ByUrlReturnsNilOnNoLinks
-      assert_nil(@fakedIE.getLink(:url, "whatever"))
+      assert_nil(@faked_ie.getLink(:url, "whatever"))
    end
     
+   # is this correct? 
    def test_getLink_ByTextReturnsNilOnNoLinks
-      assert_nil(@fakedIE.getLink(:text, "whatever"))
+      assert_nil(@faked_ie.getLink(:text, "whatever"))
    end
     
-   def assertNumberWithinRange( elapseTime, expectedTime, tolerance = 0.0)
-      assert( (elapseTime - expectedTime).abs < tolerance )
+   def assert_number_in_range( elapsed_time, expectedTime, tolerance )
+      assert( (elapsed_time - expectedTime).abs < tolerance )
    end
 end
