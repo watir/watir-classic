@@ -723,17 +723,21 @@ module Watir
                     next  unless o == nil
                     
                     begin
-                        
+                        ns = false
                         case how
                         when :id
                             attribute = object.invoke("id")
                         when :name
                             attribute = object.invoke("name")
+                        when :beforeText
+                            attribute = object.getAdjacentText("afterEnd").strip
+                        when :afterText
+                            attribute = object.getAdjacentText("beforeBegin").strip
                         else
                             next
                         end
                         
-                        if attribute == what
+                        if  what.matches( attribute )  #attribute == what
                             if types
                                 if elementTypes.include?(object.invoke("type"))
                                     if value
