@@ -1,5 +1,64 @@
 ===Change Log
 
+====2004.xxx.x
+* ClIEController.form now has optional param to automatically wrap the DOM
+  form instance in an IEDomFormWrapper instance. 
+* ClIEController.initialize now takes an options hash to specify, well, 
+  options. Two options at this point: visible and auto_wrap_form. This
+  method is still backwards compatible -- if you pass in a boolean then
+  the visible variable is set and all others ignored.
+* Big refactoring/improvements in accessing DOM nodes:
+  * IEDomFormWrapper used to have more funky code for wrapping widgets, now
+    it's a more flexible plug-in-ish, polymorphing structure, with a 
+    separate subclass to wrap every node type (although only some node types
+    are supported yet -- see readme.txt). Supporting additional node types 
+    will be much easier to add to the code now.
+  * There were some limitations because the previous code favored element 
+    nodes instead of all nodes on the form. That's been fixed so that text
+    nodes are not discriminated against.
+  * Special code nonsense for ASP.NET labels has been removed, though should
+    still be supported.
+  * A new method_missing on ClIEController itself allows very easy access
+    to DOM nodes (in and out of forms) that have id/name attributes. 
+    [there is still a little screwiness here using this method to talk to
+     some form inputs].
+     
+    If the page has a link with an id like so:
+    
+      <a href='http://clabs.org' id=clabs>cLabs.org</a>
+      
+    You can simply call:
+
+      @iec.clabs
+
+    ... to click the link. 
+
+    Buttons with names/ids can be accessed the same way. 
+
+    You can even add your own method_missing to forward calls to your @iec
+    instance so your test scripts can look something like this:
+
+      home
+      browse
+      apples
+      add; add;
+      checkout
+
+    (unfortunately, assigning values to text inputs, for example, doesn't
+     work with this method_missing approach, because Ruby interprets this:
+    
+       first_name = 'chris'
+       
+     as a local variable assignment, and it's never passed to 
+     method_missing. So it has to again be:
+     
+       @iec.first_name = 'chris')
+       
+* WindowsFormWrapper code for use against .NET Windows Forms that have COM
+  interop enabled has been removed. This code lives in a file called 
+  dotnet.form.rb that's back in the old cLabs scrapware cliecontroller CVS
+  repository. 
+       
 ====2003.362.0
 * Builder and Installer working under new RubyForge src tree, etc. Woop.
 * waitForIE now sleeps so as not to suck up all CPU time. (thx to Brian
