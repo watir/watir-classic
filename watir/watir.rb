@@ -323,20 +323,10 @@ class IE
     attr_accessor :newWindow
 
     attr_accessor :eventThread
-
-    # This method creates an instance of the IE controller
-    def original_initialize( logger=nil )
-        @logger = logger
-        @ie =   WIN32OLE.new('InternetExplorer.Application')
-        @ie.visible = ! $HIDE_IE
-        @frame = ""
-        @presetFrame = ""
-        @form = nil
-        @typingspeed = DEFAULT_TYPING_SPEED
-        @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
-        @defaultSleepTime = DEFAULT_SLEEP_TIME
-    end
-
+    
+   def createBrowser
+	return WIN32OLE.new('InternetExplorer.Application')
+   end
 
   def initialize( logger=nil, how = nil ,what = nil )
         @logger = logger
@@ -344,10 +334,10 @@ class IE
            @ie = SeekWindow(how,what)
            #if it can not find window
            if @ie == nil
-               @ie =   WIN32OLE.new('InternetExplorer.Application')
+               @ie =  createBrowser
             end
         else
-            @ie =   WIN32OLE.new('InternetExplorer.Application')
+            @ie =  createBrowser
         end
         @ie.visible = ! $HIDE_IE
         @frame = ""
