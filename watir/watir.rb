@@ -319,7 +319,7 @@ puts "-------------"
     end
 
 
-    def getObject( how, what  )
+    def getObject( how, what , value=nil )
         doc = getDocument()
 
         o = nil
@@ -336,7 +336,7 @@ puts "-------------"
                         #puts "getElementByName gets nothing!"
                     else
                         #puts "getelement by name returns len = #{n.length}"
-                        o=n["0"]
+                        o=n["0"] if value ==nil
                         #puts "o type is : " + o.invoke("type")
                     end
                 rescue => e
@@ -347,6 +347,21 @@ puts "-------------"
             #when :index
             #  we need to know what type of object
         end
+
+
+        # if a value has been supplied, for exampe with a check box or a radio button, we need to go through the collection and get the correct one
+        if value
+            begin 
+                n.each do |thisObject|
+                    if thisObject.value == value.to_s and o ==nil
+                        o = thisObject
+                    end
+                end
+            rescue
+
+            end
+        end
+
 
         #reset the frame reference
         frame("")
@@ -384,6 +399,11 @@ puts "-------------"
         s = SelectBox.new(self , how, what)
     end
 
+    def checkBox ( how , what , value=nil)
+        c = CheckBox.new( self, how, what , value)
+
+    end
+
 end
 
 
@@ -397,9 +417,12 @@ class SelectBox < ObjectActions
 
     def clearSelection
         raise UnknownObjectException if @o==nil
+        highLight( :set)
         @o.each do |selectBoxItem|
             selectBoxItem.selected = false
         end
+        highLight( :clear)
+
     end
 
     def select( item )
@@ -411,7 +434,7 @@ class SelectBox < ObjectActions
         end
 
         matchedAnItem = false
-
+        highLight( :set)
         items.each do |thisItem|
 
             puts "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
@@ -441,6 +464,7 @@ class SelectBox < ObjectActions
             end
             raise NoValueFoundException    if matchedAnItem ==false
         end
+        highLight( :clear )
 
 
     end
@@ -486,6 +510,57 @@ class Button < ObjectActions
     end
 
 end
+
+
+
+class CheckBox < ObjectActions
+
+    CHECKED = true
+    UNCHECKED = false
+
+    def initialize( ieController,  how , what , value=nil )
+        @ieController = ieController
+        @o = ieController.getObject( how, what , value)
+        super( @o )
+    end
+
+
+   def isSet?
+        raise UnknownObjectException if @o==nil
+        return true if @o.checked
+        return false
+
+   end
+
+   def clear
+
+        raise UnknownObjectException if @o==nil
+        raise ObjectDisabledException   if !self.enabled?
+        @o.checked = false
+
+   end
+
+   def set
+  
+        raise UnknownObjectException if @o==nil
+        raise ObjectDisabledException   if !self.enabled?
+        highLight( :set)
+        @o.checked = true
+        highLight( :clear )
+
+
+   end
+
+   def getState
+
+        raise UnknownObjectException if @o==nil
+        return CHECKED if @o.checked == true
+        return UNCHECKED 
+
+   end
+
+end
+
 
 class TextField < ObjectActions
     
