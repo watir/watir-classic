@@ -47,6 +47,12 @@ class UnknownFrameException< WatirException
     end
 end
 
+class UnknownFormException< WatirException
+    def initialize()
+
+    end
+end
+
 
 class ObjectActions
 
@@ -83,7 +89,7 @@ class ObjectActions
 
     def getProperty(name)
         raise UnknownPropertyException if !@ieProperties.has_key?(name)
-        retrun @ieProperties[name]
+        return @ieProperties[name]
     end
     def to_s
 
@@ -137,6 +143,7 @@ class IE
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = TRUE
         @frame = ""
+        @form = ""
     end
 
     def getIE()
@@ -148,9 +155,12 @@ class IE
         return self
     end
 
-    def method_missing( method , args )
+    
+
+
+    #def method_missing( method , args )
         #@ie.invoke( :method( args ) )
-    end
+    #end
 
     def getDocument()
         if @frame == ""
@@ -170,6 +180,8 @@ class IE
             raise UnknownFrameException if frameExists == false
             doc = @ie.document.frames[@frame.to_s].document
         end
+
+        
         return doc
     end
 
@@ -253,7 +265,7 @@ class IE
                 
             when :name
                 begin 
-                    p "geto by name  #{what}"
+                    #p "getobject by name  #{what}"
                     n = doc.getElementsByName(what)
                     if n.length == 0 
                         o=nil
@@ -274,6 +286,7 @@ class IE
 
         #reset the frame reference
         frame("")
+        
 
         return o
     end
@@ -299,6 +312,10 @@ class IE
         b = Button.new(self , how , what )
     end
 
+    def textField( how , what )
+        t = TextField.new(self , how, what)
+    end
+
 end
 
 
@@ -308,6 +325,50 @@ class Button < ObjectActions
         @ieController = ieController
         @o = ieController.getObject( how, what )
         super( @o )
+    end
+
+end
+
+class TextField < ObjectActions
+    
+    def initialize( ieController,  how , what )
+        @ieController = ieController
+        @o = ieController.getObject( how, what )
+        super( @o )
+
+        @properties = {
+            "maxLength"  => "maxLength" ,
+            "length"  => "length" ,
+
+
+        }
+
+    end
+
+    
+
+
+    def getContents()
+        raise UnknownObjectException if @o==nil
+        return self.getProperty("value")
+
+    end
+
+    def verify_contains( containsThis )
+        raise UnknownObjectException if @o==nil
+
+        if containsThis.kind_of? String
+            return true if self.getProperty("value") == containsThis
+        elsif containsThis.kind_of? Regexp
+            return true if self.getProperty("value").match(containsThis) != nil
+        end
+        return false
+    end
+ 
+    
+
+    def set( setThis )
+
     end
 
 end
