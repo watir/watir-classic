@@ -660,6 +660,18 @@ module Watir
         alias showDivs show_divs
 
 
+        # this method is used to show all the tables that are available
+        def show_tables( )
+            tables = getDocument().getElementsByTagName("TABLE")
+            puts "Found #{tables.length} tables"
+            tables.each do |d|
+                puts "id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.cols }"
+            end
+        end
+        alias showTables show_tables
+
+
+
         # this method shows all the spans availble in the document
         def show_spans( )
             spans = getDocument().getElementsByTagName("SPAN")
@@ -946,7 +958,9 @@ module Watir
              n = nil
              parts.each do | p |
                  next unless n==nil
-                 n = p if what.matches( p.invoke("id") )
+                 if what.matches( p.invoke("id") )
+                     n = p 
+                 end
              end
              return n
         end
@@ -1042,13 +1056,13 @@ module Watir
         # this method accesses a table cell. 
         # how - symbol - how we access the cell,  :id is supported
         def cell( how, what )
-           return Cell.new( self, how, what)
+           return TableCell.new( self, how, what)
         end
 
         # this method accesses a table row. 
         # how - symbol - how we access the row,  :id is supported
         def row( how, what )
-           return Row.new( self, how, what)
+           return TableRow.new( self, how, what)
         end
 
 
@@ -1867,10 +1881,8 @@ module Watir
         end
     end
 
-=begin
-#---- pauls new table stuff        
     # This class is used for dealing with tables.
-    # This will not be normally used by users, as the table method of IEController would return an initialised nstance of a table.
+    # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
     class Table < ObjectActions
  
         # Returns an initialized instance of the table object to wich anElement belongs
@@ -1884,6 +1896,34 @@ module Watir
             return Table.new(ieController,:from_object,o)
         end
 
+        # tables dont have name, so return an empty string
+        def name
+            return ""
+        end
+
+        # tables dont have value, so return an empty string
+        def value
+            return ""
+        end
+
+        # this method is used to ppulate the properties in the to_s method
+        def table_string_creator
+            n = []
+            n <<   "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
+            n <<   "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
+            return n
+         end
+         private :table_string_creator
+
+         # returns the properties of the object in a string
+         # raises an ObjectNotFound exception if the object cannot be found
+         def to_s
+            object_exist_check
+            r = string_creator
+            r=r + table_string_creator
+            return r.join("\n")
+         end
+
         # Returns an initialized instance of a table object
         #   * ieController  - an instance of an IEController
         #   * how         - symbol - how we access the table
@@ -1894,7 +1934,7 @@ module Watir
             parent.log "There are #{ allTables.length } tables"
             table = nil
             tableIndex = 1
-	    if(how != :from_object) then
+	      if(how != :from_object) then
                 allTables.each do |t|
                     next  unless table == nil
                     case how
@@ -1906,9 +1946,9 @@ module Watir
                         if tableIndex == what.to_i
                             table = t
                         end
-                        end
-                        tableIndex = tableIndex + 1
                     end
+                    tableIndex = tableIndex + 1
+                end
 	    else
 		    table = what
 	    end
@@ -1927,20 +1967,18 @@ module Watir
             elements = []
             for td in row(index).children
                 if(td.children.length > 0) then 
-                    elements << td.children(0)
+                    elements << TableCell.new(@ieController, :direct, td.children(0) )
                 else
-                    elements << td
+                    elements << TableCell.new(@ieController, :direct, td )
                 end
             end
-            
-            return TableRow.new(@ieController , elements)
+            return TableRow.new(@ieController ,:direct, elements)
         end
 
         # This method returns the number of rows in the table.
         # Raises an UnknownTableException if the table doesnt exist.
         def row_count 
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
             return table_body.children.length
         end
 
@@ -1978,303 +2016,101 @@ module Watir
         def table_body
             return @o.children(0)
         end
-	  private :table_body
+        private :table_body
    
         def row(index)
             return table_body.children(index - 1)
         end
-	private :row
+        private :row
 
- end
+     end
 
+    # this class is a table row
+    class TableRow < ObjectActions
 
-    # this class is a table cell
-    class Cell < ObjectActions
-
-        # Returns an initialized instance of a table cell
-        #   * ieController  - an instance of an IEController
-        #   * how         - symbol - how we access the cell
-        #   * what         - what we use to access the cell - id, name index etc 
-        def initialize( ieController,  how , what )
+        # Returns an initialized instance of a table cell          
+        #   * o  - the object contained in the cell 
+        #   * ieController  - an instance of an IEController       
+        #   * how          - symbol - how we access the cell        
+        #   * what         - what we use to access the cell - id, name index etc. If how is :direct then what is a Internet Explorer Raw Row 
+        def initialize(ieController , how, what)
             @ieController = ieController
-
-            if how == :from_existing
+            if how == :direct
                 @o = what
             else
-                super( @o )
-                @how = how
-                @what = what
-                @o = ieController.getTablePart( "TD" , how , what )
-            end 
+                @o = ieController.getTablePart( "TR" , how , what )   
+            end
+            super( @o )   
+            @how = how   
+            @what = what   
+        end
+   
+	  # Returns an element from the row
+        def [](index)
+            object_exist_check
+            raise UnknownCellException , "Unable to locate a cell at index #{index}" if @o.length < index
+            return @o[(index-1)]
         end
 
+        #defaults all missing methods to the array of elements, to be able to
+        # use the row as an array
+        def method_missing(aSymbol,*args)
+            return @o.send(aSymbol,*args)
+        end
+   
+        # table rows dont have names, so always returns an empty string
+        def name
+             return ""
+        end
+        # table rows dont have values, so always returns an empty string
+        def value 
+             return ""
+        end
+
+
+    end
+ 
+    # this class is a table cell - when called via the table object
+    class TableCell <ObjectActions
+
+        # Returns an initialized instance of a table cell          
+        #   * ieController  - an instance of an IEController       
+        #   * how         - symbol - how we access the cell        
+        #   * what         - what we use to access the cell - id, name index etc
+        def initialize( ieController,  how , what )   
+            @ieController = ieController    
+             if how == :direct
+                 @o = what
+             else
+                 @o = ieController.getTablePart( "TD" , how , what )   
+             end
+             super( @o )   
+             @how = how   
+             @what = what   
+         end 
 
         def text()
-            raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
-            return @o.innerText
- 
+             raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
+             return @o.innerText 
         end
-        alias getContents text
         alias to_s text
-
-	# Returns the object contained in the cell as a Button
+ 
+        # Returns the object contained in the cell as a Button
         def button
             return Button.new(@ieController,:from_object,@o)
         end
 
-	# Returns the object contained in the cell as a Table
+        # Returns the object contained in the cell as a Table
         def table
             return Table.new(@ieController,:from_object,@o)
         end
      
-	# Returns the text of the object contained in the cell
+        # Returns the text of the object contained in the cell
         def text
             return @o.innerText
         end
 
-	# Returns the object contained in the cell as a TextField
-        def textField
-            return TextField.new(@ieController,:from_object,@o)
-        end
-
-    end
-
-    # this class is a table cell
-    class TableCell____
-
-        # Returns an initialized instance of a table cell
-        #   * o  - the object contained in the cell
-        #   * ieController  - an instance of an IEController
-        def initialize(ieController , o)
-            @o = o
-            @ieController = ieController
-        end
- 
-	# Returns the object contained in the cell as a Button
-        def button
-            return Button.new(@ieController,:from_object,@o)
-        end
-
-	# Returns the object contained in the cell as a Table
-        def table
-            return Table.new(@ieController,:from_object,@o)
-        end
-     
-	# Returns the text of the object contained in the cell
-        def text
-            return @o.innerText
-        end
-
-	# Returns the object contained in the cell as a TextField
-        def textField
-            return TextField.new(@ieController,:from_object,@o)
-        end
- 
-   end
-
-
-
-
-    # this class is a table row
-    class Row < ObjectActions
-
-        # Returns an initialized instance of a table cell
-        #   * ieController  - an instance of an IEController
-        #   * how         - symbol - how we access the cell
-        #   * what         - what we use to access the cell - id, name index etc 
-        def initialize( ieController,  how , what )
-            @ieController = ieController
-            @o = ieController.getTablePart( "TR" , how , what )
-            super( @o )
-            @how = how
-            @what = what
-        end
-   
-	# Returns an element from the row
-        def [](index)
-            raise UnknownCellException if (index > @o.length )
-            #return TableCell.new( @ieController , 2 , index -1])
-        end
-
-	# defaults all missing methods to the array of elements, to be able to
-	# use the row as an array
-        def method_missing(aSymbol,*args)
-            return @row.send(aSymbol,*args)
-        end
-   
-    end
-# --- end of pauls stuff
-=end
-    # This class is used for dealing with tables.
-    # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
-    class Table < ObjectActions
- 
-        # Returns an initialized instance of the table object to wich anElement
-	# belongs
-        #   * ieController  - an instance of an IEController
-        #   * anElement     - a Watir object (TextField, Button, etc.)
-        def Table.create_from_element(ieController,anElement)
-            o = anElement.getOLEObject.parentElement
-            while(o && o.tagName != 'TABLE')
-                o = o.parentElement
-            end
-            return Table.new(ieController,:from_object,o)
-        end
-
-        # Returns an initialized instance of a table object
-        #   * ieController  - an instance of an IEController
-        #   * how         - symbol - how we access the table
-        #   * what         - what we use to access the table - id, name index etc 
-        def initialize( parent,  how , what )
-            @ieController = parent
-            allTables = parent.getDocument.body.getElementsByTagName("TABLE")
-            parent.log "There are #{ allTables.length } tables"
-            table = nil
-            tableIndex = 1
-	    if(how != :from_object) then
-                allTables.each do |t|
-                    next  unless table == nil
-                    case how
-                        when :id
-                        if t.invoke("id").to_s == what.to_s
-                            table = t
-                        end
-                        when :index
-                        if tableIndex == what.to_i
-                            table = t
-                        end
-                        end
-                        tableIndex = tableIndex + 1
-                    end
-	    else
-		    table = what
-	    end
-            parent.log "table - #{what}, #{how} Not found " if table ==  nil
-            @o = table
-            super( @o )
-            @how = how
-            @what = what
-        end
-   
-        # Returns a row in the table
-        #   * index         - the index of the row
-        def [](index)
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
-            elements = []
-            for td in row(index).children
-                if(td.children.length > 0) then 
-                    elements << td.children(0)
-                else
-                    elements << td
-                end
-            end
-            
-            return TableRow.new(elements,@ieController)
-        end
-
-        # This method returns the number of rows in the table.
-        # Raises an UnknownTableException if the table doesnt exist.
-        def row_count 
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
-            return table_body.children.length
-        end
-
-        # This method returns the number of columns in a row of the table.
-        # Raises an UnknownTableException if the table doesn't exist.
-        #   * index         - the index of the row
-        def column_count(index=1) 
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
-            columns = 0
-            for td in row(index).children
-                columns += td.colSpan
-            end
-
-            return columns
-        end
-
-        # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
-        # Raises an UnknownTableException if the table doesn't exist.
-        def to_a
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-            y = []
-            table_rows = @o.getElementsByTagName("TR")
-            for row in table_rows
-                x = []
-                for td in row.getElementsbyTagName("TD")
-                    x << td.innerText.strip
-                end
-                y << x
-            end
-            return y
-            
-        end
-
-        def table_body
-            return @o.children(0)
-        end
-	private :table_body
-   
-        def row(index)
-            return table_body.children(index - 1)
-        end
-	private :row
-
- end
-
-    # this class is a table row
-    class TableRow
-
-        # Returns an initialized instance of a table cell
-        #   * row  - an Array with the elements of the row
-        #   * ieController  - an instance of an IEController
-        def initialize(row,ieController)
-            @row = row
-            @ieController = ieController
-        end
-   
-	# Returns an element from the row
-        def [](index)
-            return TableCell.new(@row[index -1],@ieController)
-        end
-
-	# defaults all missing methods to the array of elements, to be able to
-	# use the row as an array
-        def method_missing(aSymbol,*args)
-            return @row.send(aSymbol,*args)
-        end
-   
-    end
- 
-    # this class is a table cell
-    class TableCell
-
-        # Returns an initialized instance of a table cell
-        #   * o  - the object contained in the cell
-        #   * ieController  - an instance of an IEController
-        def initialize(o,ieController)
-            @o = o
-            @ieController = ieController
-        end
- 
-	# Returns the object contained in the cell as a Button
-        def button
-            return Button.new(@ieController,:from_object,@o)
-        end
-
-	# Returns the object contained in the cell as a Table
-        def table
-            return Table.new(@ieController,:from_object,@o)
-        end
-     
-	# Returns the text of the object contained in the cell
-        def text
-            return @o.innerText
-        end
-
-	# Returns the object contained in the cell as a TextField
+        # Returns the object contained in the cell as a TextField
         def textField
             return TextField.new(@ieController,:from_object,@o)
         end
