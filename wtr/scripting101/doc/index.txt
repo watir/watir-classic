@@ -10,8 +10,7 @@ This documentation accompanies the one-day tutorial.
 * "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
   Ruby language.  
 
-* "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. Overview of the WTR
-  toolkit. As of 4/21/04 page 2 still needs updates. 
+* "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. Overview of the WTR toolkit.
 
 * "Using IRB to Drive Internet Explorer":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc. An
   annotated example of using IRB and WTR to drive Timeclock. 

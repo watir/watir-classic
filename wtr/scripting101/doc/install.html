@@ -33,7 +33,8 @@
 	<p>You will need to install one Ruby library: <a href="http://rubyforge.org/frs/?group_id=104&#38;release_id=305">iec.2004.054.0.zip</a>    </p>
 
 	<ol>
-	<li>     Unzip this file into a new directory on your computer. </li>
+	<li>     Unzip this file onto your hard drive (c:). An &#8220;iec&#8221; directory</li>
+		<li>     will be created automatically.</li>
 		<li>     Start up a command shell. (Start-> Run, enter &#8220;cmd&#8221;.)</li>
 		<li>     Enter &#8220;cd iec&#8221;.</li>
 		<li>     Enter &#8220;ruby install.rb&#8221;.</li>
@@ -46,8 +47,8 @@
 	<p>You will also need the materials hosted on rubyforge.org: <a href="http://rubyforge.org/cgi-bin/viewcvs/cgi/viewcvs.cgi/wtr/scripting101/scripting101.tar.gz?tarball=1&#38;cvsroot=wtr">wtr/scripting101.tar.gz</a></p>
 
 	<ol>
-	<li>Extract the contents of this archive into your hard drive,
-  to c:/scripting101. </li>
+	<li>Extract the contents of this archive into your hard drive (c:). A
+  &#8220;scripting101&#8221; directory will be created automatically.</li>
 	</ol>
 
 	<h3>Running the Timeclock Server.</h3>
@@ -60,9 +61,11 @@
 		<li>     Enter &#8220;ruby http-server.rb&#8221;. The server is now running.</li>
 	</ol>
 
+	<p>Note: If you close this command window, the server will stop.</p>
+
 	<p>You can verify that the server is running correctly by running some sample tests.</p>
 
 	<ol>
 	<li>     Start a new command shell.</li>
-		<li>     Enter &#8220;ruby c:\scripting101\lab\solutions\suite.rb&#8221;.</li>
+		<li>     Enter &#8220;ruby c:\scripting101\lab\solutions\suite.rb -b&#8221;.</li>
 	</ol>
