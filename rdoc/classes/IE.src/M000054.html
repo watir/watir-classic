@@ -5,52 +5,60 @@
 
 <!--
 
-    getObjectAtIndex (IE)
+    waitForIE (IE)
 
   -->
 <html>
 <head>
-	<title>getObjectAtIndex (IE)</title>
+	<title>waitForIE (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 732</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getObjectAtIndex</span>(<span class="ruby-identifier">container</span> , <span class="ruby-identifier">index</span> , <span class="ruby-identifier">types</span> , <span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span>)
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 502</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">waitForIE</span>( <span class="ruby-identifier">noSleep</span>  = <span class="ruby-keyword kw">false</span> )
+         
+        <span class="ruby-identifier">pageLoadStart</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+        <span class="ruby-ivar">@pageHasReloaded</span>= <span class="ruby-keyword kw">false</span>
 
-        <span class="ruby-comment cmt">#puts&quot; getting object #{types.to_s}  at index( #{index}&quot;</span>
+        <span class="ruby-comment cmt">#puts &quot;waitForIE: busy&quot; + @ie.busy.to_s</span>
+        <span class="ruby-identifier">s</span>= <span class="ruby-constant">Spinner</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-keyword kw">while</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">busy</span>
+            <span class="ruby-ivar">@pageHasReloaded</span> = <span class="ruby-keyword kw">true</span>
+            <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.02</span>
+            <span class="ruby-identifier">print</span>  <span class="ruby-identifier">s</span>.<span class="ruby-identifier">next</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">s</span>.<span class="ruby-identifier">reverse</span>
 
-        <span class="ruby-identifier">o</span> = <span class="ruby-keyword kw">nil</span>
-        <span class="ruby-identifier">objectIndex</span> = <span class="ruby-value">1</span>
-        <span class="ruby-identifier">container</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">thisObject</span> <span class="ruby-operator">|</span>
+        <span class="ruby-comment cmt">#puts &quot;waitForIE: readystate=&quot; + @ie.readyState.to_s </span>
+        <span class="ruby-keyword kw">until</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">readyState</span> <span class="ruby-operator">==</span> <span class="ruby-constant">READYSTATE_COMPLETE</span>
+            <span class="ruby-ivar">@pageHasReloaded</span> = <span class="ruby-keyword kw">true</span>
+            <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.02</span>
+            <span class="ruby-identifier">print</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">next</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> 
             <span class="ruby-keyword kw">begin</span>
-
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>.<span class="ruby-identifier">include?</span>( <span class="ruby-identifier">thisObject</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>) )
-                    <span class="ruby-keyword kw">begin</span> 
-                        <span class="ruby-identifier">oName</span> = <span class="ruby-identifier">thisObject</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;name&quot;</span>)
-                    <span class="ruby-keyword kw">rescue</span>
-                        <span class="ruby-identifier">oName</span> = <span class="ruby-value str">&quot;unknown&quot;</span>
+                <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">until</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>[<span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">document</span>.<span class="ruby-identifier">readyState</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;complete&quot;</span>
+                        <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.02</span>
+                        <span class="ruby-identifier">print</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">next</span>
                     <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-comment cmt">#puts &quot;checking object type is #{ thisObject.invoke(&quot;type&quot;) } name is #{oName} current index is #{objectIndex}  &quot;</span>
-
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">objectIndex</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>
-                        <span class="ruby-identifier">o</span> = <span class="ruby-identifier">thisObject</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
-                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">thisObject</span>.<span class="ruby-identifier">value</span>
-                                <span class="ruby-keyword kw">break</span>
-                            <span class="ruby-keyword kw">end</span>
-                        <span class="ruby-keyword kw">else</span>
-                            <span class="ruby-keyword kw">break</span>
-                        <span class="ruby-keyword kw">end</span>
-
-                    <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-identifier">objectIndex</span> <span class="ruby-operator">+=</span><span class="ruby-value">1</span>
                 <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">rescue</span>
-                <span class="ruby-comment cmt"># probably doesnt support type</span>
+             <span class="ruby-keyword kw">rescue</span>
+
+             <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-keyword kw">until</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">readyState</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;complete&quot;</span>
+                <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.02</span>
+                <span class="ruby-identifier">print</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">next</span>
             <span class="ruby-keyword kw">end</span>
         <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+        <span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;\b&quot;</span>
+        <span class="ruby-comment cmt">#puts &quot;waitForIE Complete&quot;</span>
+        <span class="ruby-identifier">s</span>=<span class="ruby-keyword kw">nil</span>
+        <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.01</span>
+        <span class="ruby-identifier">sleep</span> <span class="ruby-ivar">@defaultSleepTime</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">noSleep</span>  <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

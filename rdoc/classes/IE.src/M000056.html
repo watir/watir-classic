@@ -5,25 +5,21 @@
 
 <!--
 
-    button (IE)
+    goto (IE)
 
   -->
 <html>
 <head>
-	<title>button (IE)</title>
+	<title>goto (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 822</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">button</span>( <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span>=<span class="ruby-keyword kw">nil</span>  )
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">how</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Symbol</span>
-            <span class="ruby-identifier">raise</span> <span class="ruby-constant">MissingWayOfFindingObjectException</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span><span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
-            <span class="ruby-identifier">b</span> = <span class="ruby-constant">Button</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span> )
-        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">how</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
-            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;how is a string - #{how}&quot;</span>
-            <span class="ruby-identifier">b</span> = <span class="ruby-constant">Button</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">:caption</span>, <span class="ruby-identifier">how</span>)
-       <span class="ruby-keyword kw">end</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 553</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">goto</span>( <span class="ruby-identifier">url</span> )
+        <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">navigate</span>(<span class="ruby-identifier">url</span>)
+        <span class="ruby-identifier">waitForIE</span>()
+        <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.2</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -5,25 +5,27 @@
 
 <!--
 
-    exists? (IE)
+    new (IE)
 
   -->
 <html>
 <head>
-	<title>exists? (IE)</title>
+	<title>new (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 337</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exists?</span>
-        <span class="ruby-ivar">@doc</span> = <span class="ruby-identifier">getDocument</span>(<span class="ruby-keyword kw">false</span>)  
-        <span class="ruby-identifier">getForm</span>()
-        <span class="ruby-identifier">formExists</span> = <span class="ruby-keyword kw">false</span>
-        <span class="ruby-identifier">formExists</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@form</span>
-        <span class="ruby-identifier">clearForm</span>()
-        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">formExists</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 328</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">logger</span>=<span class="ruby-keyword kw">nil</span> )
+        <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">logger</span>
+        <span class="ruby-ivar">@ie</span> =   <span class="ruby-constant">WIN32OLE</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'InternetExplorer.Application'</span>)
+        <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">visible</span> = <span class="ruby-operator">!</span> <span class="ruby-identifier">$HIDE_IE</span>
+        <span class="ruby-ivar">@frame</span> = <span class="ruby-value str">&quot;&quot;</span>
+        <span class="ruby-ivar">@presetFrame</span> = <span class="ruby-value str">&quot;&quot;</span>
+        <span class="ruby-ivar">@form</span> = <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-ivar">@typingspeed</span> = <span class="ruby-constant">DEFAULT_TYPING_SPEED</span>
+        <span class="ruby-ivar">@activeObjectHighLightColor</span> = <span class="ruby-constant">DEFAULT_HIGHLIGHT_COLOR</span>
+        <span class="ruby-ivar">@defaultSleepTime</span> = <span class="ruby-constant">DEFAULT_SLEEP_TIME</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -77,7 +77,7 @@
 		<div id="description">
 			<p>
 This class is the main Internet Explorer Controller An instance of this
-should be created to access <a href="IE.html">IE</a>
+must be created to access Internet Explorer.
 </p>
 
 		</div>
@@ -87,38 +87,48 @@ should be created to access <a href="IE.html">IE</a>
 			<h2 class="section-bar">Methods</h2>
 
 			<div class="name-list">
-			<a href="#M000056">button</a>&nbsp;&nbsp;
-			<a href="#M000059">checkBox</a>&nbsp;&nbsp;
-			<a href="#M000041">clearForm</a>&nbsp;&nbsp;
-			<a href="#M000034">clearFrame</a>&nbsp;&nbsp;
-			<a href="#M000036">clearPresetFrame</a>&nbsp;&nbsp;
-			<a href="#M000048">close</a>&nbsp;&nbsp;
-			<a href="#M000040">exists?</a>&nbsp;&nbsp;
-			<a href="#M000038">form</a>&nbsp;&nbsp;
-			<a href="#M000033">frame</a>&nbsp;&nbsp;
-			<a href="#M000037">getCurrentFrame</a>&nbsp;&nbsp;
-			<a href="#M000043">getDocument</a>&nbsp;&nbsp;
-			<a href="#M000042">getForm</a>&nbsp;&nbsp;
-			<a href="#M000032">getIE</a>&nbsp;&nbsp;
-			<a href="#M000051">getImage</a>&nbsp;&nbsp;
-			<a href="#M000055">getLink</a>&nbsp;&nbsp;
-			<a href="#M000052">getObject</a>&nbsp;&nbsp;
-			<a href="#M000054">getObjectAtIndex</a>&nbsp;&nbsp;
-			<a href="#M000053">getObjectWithValue</a>&nbsp;&nbsp;
-			<a href="#M000047">goto</a>&nbsp;&nbsp;
-			<a href="#M000062">image</a>&nbsp;&nbsp;
-			<a href="#M000061">link</a>&nbsp;&nbsp;
-			<a href="#M000031">new</a>&nbsp;&nbsp;
-			<a href="#M000044">pageContainsText</a>&nbsp;&nbsp;
-			<a href="#M000035">presetFrame</a>&nbsp;&nbsp;
-			<a href="#M000060">radio</a>&nbsp;&nbsp;
-			<a href="#M000058">selectBox</a>&nbsp;&nbsp;
-			<a href="#M000050">showAllObjects</a>&nbsp;&nbsp;
-			<a href="#M000049">showFrames</a>&nbsp;&nbsp;
-			<a href="#M000039">submit</a>&nbsp;&nbsp;
-			<a href="#M000057">textField</a>&nbsp;&nbsp;
-			<a href="#M000046">wait</a>&nbsp;&nbsp;
-			<a href="#M000045">waitForIE</a>&nbsp;&nbsp;
+			<a href="#M000074">button</a>&nbsp;&nbsp;
+			<a href="#M000041">captureEvents</a>&nbsp;&nbsp;
+			<a href="#M000077">checkBox</a>&nbsp;&nbsp;
+			<a href="#M000047">clearFrame</a>&nbsp;&nbsp;
+			<a href="#M000049">clearPresetFrame</a>&nbsp;&nbsp;
+			<a href="#M000057">close</a>&nbsp;&nbsp;
+			<a href="#M000043">dir</a>&nbsp;&nbsp;
+			<a href="#M000051">form</a>&nbsp;&nbsp;
+			<a href="#M000046">frame</a>&nbsp;&nbsp;
+			<a href="#M000066">getContainer</a>&nbsp;&nbsp;
+			<a href="#M000050">getCurrentFrame</a>&nbsp;&nbsp;
+			<a href="#M000052">getDocument</a>&nbsp;&nbsp;
+			<a href="#M000062">getHTML</a>&nbsp;&nbsp;
+			<a href="#M000045">getIE</a>&nbsp;&nbsp;
+			<a href="#M000065">getImage</a>&nbsp;&nbsp;
+			<a href="#M000072">getLink</a>&nbsp;&nbsp;
+			<a href="#M000068">getObject</a>&nbsp;&nbsp;
+			<a href="#M000071">getObjectAtIndex</a>&nbsp;&nbsp;
+			<a href="#M000070">getObjectWithSrcOrAlt</a>&nbsp;&nbsp;
+			<a href="#M000069">getObjectWithValue</a>&nbsp;&nbsp;
+			<a href="#M000067">getTable</a>&nbsp;&nbsp;
+			<a href="#M000063">getText</a>&nbsp;&nbsp;
+			<a href="#M000056">goto</a>&nbsp;&nbsp;
+			<a href="#M000080">image</a>&nbsp;&nbsp;
+			<a href="#M000042">isEventThreadRunning?</a>&nbsp;&nbsp;
+			<a href="#M000079">link</a>&nbsp;&nbsp;
+			<a href="#M000044">log</a>&nbsp;&nbsp;
+			<a href="#M000040">new</a>&nbsp;&nbsp;
+			<a href="#M000053">pageContainsText</a>&nbsp;&nbsp;
+			<a href="#M000081">popup</a>&nbsp;&nbsp;
+			<a href="#M000048">presetFrame</a>&nbsp;&nbsp;
+			<a href="#M000078">radio</a>&nbsp;&nbsp;
+			<a href="#M000076">selectBox</a>&nbsp;&nbsp;
+			<a href="#M000064">showAllObjects</a>&nbsp;&nbsp;
+			<a href="#M000059">showForms</a>&nbsp;&nbsp;
+			<a href="#M000058">showFrames</a>&nbsp;&nbsp;
+			<a href="#M000060">showImages</a>&nbsp;&nbsp;
+			<a href="#M000061">showLinks</a>&nbsp;&nbsp;
+			<a href="#M000073">table</a>&nbsp;&nbsp;
+			<a href="#M000075">textField</a>&nbsp;&nbsp;
+			<a href="#M000055">wait</a>&nbsp;&nbsp;
+			<a href="#M000054">waitForIE</a>&nbsp;&nbsp;
 			</div>
 		</div>
 
@@ -135,7 +145,7 @@ should be created to access <a href="IE.html">IE</a>
 				<tr class="top-aligned-row context-row">
 					<td>&nbsp;</td>
 					<td colspan="2" class="context-item-desc">
-Used internaly to determine when <a href="IE.html">IE</a> has fiished
+Used internally to determine when <a href="IE.html">IE</a> has finished
 loading a page
 
 </td>
@@ -148,7 +158,19 @@ loading a page
 				<tr class="top-aligned-row context-row">
 					<td>&nbsp;</td>
 					<td colspan="2" class="context-item-desc">
-the default delay when typing
+The default delay when entering text on a web page.
+
+</td>
+				</tr>
+				<tr class="top-aligned-row context-row">
+					<td class="context-item-name">DEFAULT_SLEEP_TIME</td>
+					<td>=</td>
+					<td class="context-item-value">0.1</td>
+				</tr>
+				<tr class="top-aligned-row context-row">
+					<td>&nbsp;</td>
+					<td colspan="2" class="context-item-desc">
+The default time we wait after a page has loaded.
 
 </td>
 				</tr>
@@ -160,7 +182,7 @@ the default delay when typing
 				<tr class="top-aligned-row context-row">
 					<td>&nbsp;</td>
 					<td colspan="2" class="context-item-desc">
-the default color for highlighting objects
+The default color for highlighting objects as they are accessed.
 
 </td>
 				</tr>
@@ -179,8 +201,30 @@ the default color for highlighting objects
 					<td class="context-item-name">activeObjectHighLightColor</td>
 					<td class="context-item-value">&nbsp;[RW]&nbsp;</td>
 					<td class="context-item-desc">
-the color we want to use for the active object. This can be any valid html
-color
+The color we want to use for the active object. This can be any valid
+web-friendly color.
+
+</td>
+				</tr>
+				<tr class="top-aligned-row context-row">
+					<td class="context-item-name">defaultSleepTime</td>
+					<td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+					<td class="context-item-desc">
+This is used to change how long after a page has finished loading that we
+wait for.
+
+</td>
+				</tr>
+				<tr class="top-aligned-row context-row">
+					<td class="context-item-name">eventThread</td>
+					<td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+					<td class="context-item-desc"></td>
+				</tr>
+				<tr class="top-aligned-row context-row">
+					<td class="context-item-name">newWindow</td>
+					<td class="context-item-value">&nbsp;[RW]&nbsp;</td>
+					<td class="context-item-desc">
+When a new window is created it is stored in newWindow
 
 </td>
 				</tr>
@@ -188,7 +232,7 @@ color
 					<td class="context-item-name">typingspeed</td>
 					<td class="context-item-value">&nbsp;[RW]&nbsp;</td>
 					<td class="context-item-desc">
-this is used to change the speed that typing goes at
+This is used to change the typing speed when entering text on a page.
 
 </td>
 				</tr>
@@ -208,62 +252,78 @@ this is used to change the speed that typing goes at
 		<div id="methods">
 			<h2 class="section-bar">Public Class methods</h2>
 
-			<div id="method-M000031" class="method-detail">
-				<a name="M000031"></a>
+			<div id="method-M000040" class="method-detail">
+				<a name="M000040"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000031.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000031.html');return false;">
-					<span class="method-name">new</span><span class="method-args">()</span>
+					<a href="IE.src/M000040.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000040.html');return false;">
+					<span class="method-name">new</span><span class="method-args">( logger=nil )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method creates an instance of the <a href="IE.html">IE</a> controller
+This method creates an instance of the <a href="IE.html">IE</a> controller
 </p>
 				</div>
 			</div>
 
 			<h2 class="section-bar">Public Instance methods</h2>
 
-			<div id="method-M000056" class="method-detail">
-				<a name="M000056"></a>
+			<div id="method-M000074" class="method-detail">
+				<a name="M000074"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000056.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000056.html');return false;">
+					<a href="IE.src/M000074.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000074.html');return false;">
 					<span class="method-name">button</span><span class="method-args">( how , what=nil )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a button.
+This is the main method for accessing a button. Often declared as an
+&lt;input type = submit&gt; tag.
 </p>
 <pre>
  *  how   - symbol - how we access the button , :index, :caption, :name etc
  *  what  - string, int or re , what we are looking for,
 </pre>
 <p>
-returns a <a href="Button.html">Button</a> object
+Returns a <a href="Button.html">Button</a> object.
 </p>
 				</div>
 			</div>
 
-			<div id="method-M000059" class="method-detail">
-				<a name="M000059"></a>
+			<div id="method-M000041" class="method-detail">
+				<a name="M000041"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000059.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000059.html');return false;">
+					<a href="IE.src/M000041.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000041.html');return false;">
+					<span class="method-name">captureEvents</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000077" class="method-detail">
+				<a name="M000077"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000077.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000077.html');return false;">
 					<span class="method-name">checkBox</span><span class="method-args">( how , what , value=nil)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a check box.
+This is the main method for accessing a check box. Usually an &lt;input
+type = checkbox&gt; HTML tag.
 </p>
 <pre>
  *  how   - symbol - how we access the check box , :index, :id, :name etc
@@ -276,136 +336,52 @@ returns a <a href="CheckBox.html">CheckBox</a> object
 				</div>
 			</div>
 
-			<div id="method-M000041" class="method-detail">
-				<a name="M000041"></a>
+			<div id="method-M000047" class="method-detail">
+				<a name="M000047"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000041.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000041.html');return false;">
-					<span class="method-name">clearForm</span><span class="method-args">()</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-				</div>
-			</div>
-
-			<div id="method-M000034" class="method-detail">
-				<a name="M000034"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000034.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000034.html');return false;">
+					<a href="IE.src/M000047.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000047.html');return false;">
 					<span class="method-name">clearFrame</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method is used internally to clear the name of the frame to use
+This method is used internally to clear the name of the html frame to use.
 </p>
 				</div>
 			</div>
 
-			<div id="method-M000036" class="method-detail">
-				<a name="M000036"></a>
+			<div id="method-M000049" class="method-detail">
+				<a name="M000049"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000036.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000036.html');return false;">
+					<a href="IE.src/M000049.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000049.html');return false;">
 					<span class="method-name">clearPresetFrame</span><span class="method-args">( )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-This method is used to clear the frame that is used on multiple object
-accesses
+This method is used to clear the html frame that is used on multiple object
+accesses.
 </p>
 				</div>
 			</div>
 
-			<div id="method-M000048" class="method-detail">
-				<a name="M000048"></a>
+			<div id="method-M000057" class="method-detail">
+				<a name="M000057"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000048.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000048.html');return false;">
+					<a href="IE.src/M000057.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000057.html');return false;">
 					<span class="method-name">close</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
-				</div>
-			</div>
-
-			<div id="method-M000040" class="method-detail">
-				<a name="M000040"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000040.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000040.html');return false;">
-					<span class="method-name">exists?</span><span class="method-args">()</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-this applies to a form. - it will be refactored into a Form object
-eventually
-</p>
-				</div>
-			</div>
-
-			<div id="method-M000038" class="method-detail">
-				<a name="M000038"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000038.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000038.html');return false;">
-					<span class="method-name">form</span><span class="method-args">( how , formName=nil )</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-				</div>
-			</div>
-
-			<div id="method-M000033" class="method-detail">
-				<a name="M000033"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000033.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000033.html');return false;">
-					<span class="method-name">frame</span><span class="method-args">( frameName)</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-This method sets the frame to use for a single object access
-</p>
-<pre>
-  *   frameName  - string with the name of the frame to use
-</pre>
-				</div>
-			</div>
-
-			<div id="method-M000037" class="method-detail">
-				<a name="M000037"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000037.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000037.html');return false;">
-					<span class="method-name">getCurrentFrame</span><span class="method-args">()</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-This method returns the name of the currently used frame. Only applies when
-presetFrame method is used
-</p>
 				</div>
 			</div>
 
@@ -415,49 +391,11 @@ presetFrame method is used
 				<div class="method-heading">
 					<a href="IE.src/M000043.html" target="Code" class="method-signature"
 						onclick="popupCode('IE.src/M000043.html');return false;">
-					<span class="method-name">getDocument</span><span class="method-args">(useForm = true)</span>
+					<span class="method-name">dir</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
-					<p>
-This method is used internally to set the document to use.
-</p>
-<pre>
- Raises UnknownFrameException if a specified frame cannot be found
-</pre>
-				</div>
-			</div>
-
-			<div id="method-M000042" class="method-detail">
-				<a name="M000042"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000042.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000042.html');return false;">
-					<span class="method-name">getForm</span><span class="method-args">()</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-				</div>
-			</div>
-
-			<div id="method-M000032" class="method-detail">
-				<a name="M000032"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000032.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000032.html');return false;">
-					<span class="method-name">getIE</span><span class="method-args">()</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-This method returns the internet explorer object, so that methods,
-properties etc that the IEController does not support can be accessedcan be
-</p>
 				</div>
 			</div>
 
@@ -467,7 +405,7 @@ properties etc that the IEController does not support can be accessedcan be
 				<div class="method-heading">
 					<a href="IE.src/M000051.html" target="Code" class="method-signature"
 						onclick="popupCode('IE.src/M000051.html');return false;">
-					<span class="method-name">getImage</span><span class="method-args">( how, what )</span>
+					<span class="method-name">form</span><span class="method-args">( how , formName=nil )</span>
 					</a>
 				</div>
 			
@@ -475,27 +413,55 @@ properties etc that the IEController does not support can be accessedcan be
 				</div>
 			</div>
 
-			<div id="method-M000055" class="method-detail">
-				<a name="M000055"></a>
+			<div id="method-M000046" class="method-detail">
+				<a name="M000046"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000055.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000055.html');return false;">
-					<span class="method-name">getLink</span><span class="method-args">( how, what )</span>
+					<a href="IE.src/M000046.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000046.html');return false;">
+					<span class="method-name">frame</span><span class="method-args">( frameName)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method gets a link from the document
+This method sets the html frame to use for a single object to access.
 </p>
 <pre>
-   * how  - symbol - how we get the link Supported types are:
-                     :index - the link at position x , 1 based
-                     :url   - get the link that has a url that matches. A regular expression match is performed
-                     :text  - get link based on the supplied text. uses either a string or regular expression match
-   * what - depends on how - an integer for index, a string or RE for url and text
+  *   frameName  - string with the name of the frame to use
 </pre>
+				</div>
+			</div>
+
+			<div id="method-M000066" class="method-detail">
+				<a name="M000066"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000066.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000066.html');return false;">
+					<span class="method-name">getContainer</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000050" class="method-detail">
+				<a name="M000050"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000050.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000050.html');return false;">
+					<span class="method-name">getCurrentFrame</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns the name of the currently used frame. Only applies when
+the presetFrame method is used.
+</p>
 				</div>
 			</div>
 
@@ -505,89 +471,16 @@ this method gets a link from the document
 				<div class="method-heading">
 					<a href="IE.src/M000052.html" target="Code" class="method-signature"
 						onclick="popupCode('IE.src/M000052.html');return false;">
-					<span class="method-name">getObject</span><span class="method-args">( how, what , types=nil , value=nil )</span>
+					<span class="method-name">getDocument</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for finding objects on a page
+This method is used internally to set the document for Watir to use.
 </p>
 <pre>
-  * how - symbol - the way we look for the object. Supported values are
-                 - :name
-                 - :id
-                 - :index
-  * what  - string the thing we are looking for, ie the name, or id or index of the object we are looking for
-  * types - what object types we will look at. Only used when index is specified as the how
-  * value - used for objects that have one name, but many values, for example radios and checkboxes
-</pre>
-				</div>
-			</div>
-
-			<div id="method-M000054" class="method-detail">
-				<a name="M000054"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000054.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000054.html');return false;">
-					<span class="method-name">getObjectAtIndex</span><span class="method-args">(container , index , types , value=nil)</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-this method is used to locate an object when indexes are used. used
-internally.
-</p>
-<pre>
-   * container  - the container we are looking in
-   * index      - the index of the element we want to get - 1 based
-   * types      - an array of the type of objects to look at
-   * value      - the value of the object to get, used when getting itens like checkboxes and radios
-</pre>
-				</div>
-			</div>
-
-			<div id="method-M000053" class="method-detail">
-				<a name="M000053"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000053.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000053.html');return false;">
-					<span class="method-name">getObjectWithValue</span><span class="method-args">(what , container , *htmlObjectTypes )</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-This method is used internally to locate an object that has a value
-specified. normally used for buttons with a caption
-</p>
-<pre>
-  * what              - what we are looking for - normally the caption of a button
-  * container         - the container that we are searching in ( a form or the body of a document )
-  * *htmlObjectTypes  - an array of the objects we are interested in
-</pre>
-				</div>
-			</div>
-
-			<div id="method-M000047" class="method-detail">
-				<a name="M000047"></a>
-
-				<div class="method-heading">
-					<a href="IE.src/M000047.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000047.html');return false;">
-					<span class="method-name">goto</span><span class="method-args">( url )</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
-this method causes Internet Explorer to navigate to the specified url
-</p>
-<pre>
- * url  - string - the URL to navigate to
+ Raises UnknownFrameException if a specified frame cannot be found.
 </pre>
 				</div>
 			</div>
@@ -598,13 +491,255 @@ this method causes Internet Explorer to navigate to the specified url
 				<div class="method-heading">
 					<a href="IE.src/M000062.html" target="Code" class="method-signature"
 						onclick="popupCode('IE.src/M000062.html');return false;">
+					<span class="method-name">getHTML</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000045" class="method-detail">
+				<a name="M000045"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000045.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000045.html');return false;">
+					<span class="method-name">getIE</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns the Internet Explorer object. Methods, properties, etc.
+that the IEController does not support can be accessed.
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000065" class="method-detail">
+				<a name="M000065"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000065.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000065.html');return false;">
+					<span class="method-name">getImage</span><span class="method-args">( how, what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method retrieves an image on a web page for use. Uses an &lt;img
+src=&quot;image.gif&quot;&gt; HTML tag.
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000072" class="method-detail">
+				<a name="M000072"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000072.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000072.html');return false;">
+					<span class="method-name">getLink</span><span class="method-args">( how, what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method gets a link from the document. This is a hyperlink, generally
+declared in the &lt;a href=&quot;<a
+href="http://testsite">test">testsite">test</a> site&lt;/a&gt; HTML tag.
+</p>
+<pre>
+   * how  - symbol - how we get the link Supported types are:
+                     :index - the link at position x , 1 based
+                     :url   - get the link that has a url that matches. A regular expression match is performed
+                     :text  - get link based on the supplied text. uses either a string or regular expression match
+   * what - depends on how - an integer for index, a string or regexp for url and text
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000068" class="method-detail">
+				<a name="M000068"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000068.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000068.html');return false;">
+					<span class="method-name">getObject</span><span class="method-args">( how, what , types=nil , value=nil )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This is the main method for finding objects on a web page.
+</p>
+<pre>
+  * how - symbol - the way we look for the object. Supported values are
+                 - :name
+                 - :id
+                 - :index
+                 - :value
+  * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
+  * types - what object types we will look at. Only used when index is specified as the how.
+  * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000071" class="method-detail">
+				<a name="M000071"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000071.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000071.html');return false;">
+					<span class="method-name">getObjectAtIndex</span><span class="method-args">(container , index , types , value=nil)</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method is used to locate an object when an &quot;index&quot; is used.
+It is used internally.
+</p>
+<pre>
+   * container  - the container we are looking in
+   * index      - the index of the element we want to get - 1 based counting
+   * types      - an array of the type of objects to look at
+   * value      - the value of the object to get, used when getting itens like checkboxes and radios
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000070" class="method-detail">
+				<a name="M000070"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000070.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000070.html');return false;">
+					<span class="method-name">getObjectWithSrcOrAlt</span><span class="method-args">( what , how , container , htmlObjectTypes )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method is used on buttons that are of type &quot;image&quot;. Usually
+an &lt;img src=&quot;&quot;&gt; or &lt;input type=&quot;image&quot;&gt;
+HTML tag. When an image is used to submit a form, it is treated as a
+button.
+</p>
+<pre>
+  * what              - what we are looking for - normally the src or alt tag attribute of a button
+  * container         - the container that we are searching in ( a form or the body of a document )
+  * htmlObjectTypes  - an array of the objects we are interested in
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000069" class="method-detail">
+				<a name="M000069"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000069.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000069.html');return false;">
+					<span class="method-name">getObjectWithValue</span><span class="method-args">(what , container , *htmlObjectTypes )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method is used internally to locate an object that has a value
+specified. It is normally used for buttons with a caption (HTML value
+attribute).
+</p>
+<pre>
+  * what              - what we are looking for - normally the value or caption of a button
+  * container         - the container that we are searching in ( a form or the body of a document )
+  * *htmlObjectTypes  - an array of the objects we are interested in
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000067" class="method-detail">
+				<a name="M000067"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000067.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000067.html');return false;">
+					<span class="method-name">getTable</span><span class="method-args">( how, what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method is used to get a table from the page. :index (1 based
+counting)and :id are supported.
+</p>
+<pre>
+ NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
+</pre>
+<p>
+:index can be used when there are multiple forms on a page. The first form
+can be accessed with :index 1, the second :index 2, etc.
+</p>
+<pre>
+  * how - symbol - the way we look for the table. Supported values are
+                 - :id
+                 - :index
+  * what  - string the thing we are looking for, ex. id or index of the object we are looking for
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000063" class="method-detail">
+				<a name="M000063"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000063.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000063.html');return false;">
+					<span class="method-name">getText</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000056" class="method-detail">
+				<a name="M000056"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000056.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000056.html');return false;">
+					<span class="method-name">goto</span><span class="method-args">( url )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method causes the Internet Explorer browser to navigate to the
+specified URL.
+</p>
+<pre>
+ * url  - string - the URL to navigate to
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000080" class="method-detail">
+				<a name="M000080"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000080.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000080.html');return false;">
 					<span class="method-name">image</span><span class="method-args">( how , what)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing images
+This is the main method for accessing images.
 </p>
 <pre>
  *  how   - symbol - how we access the image, :index, :id, :name , :src
@@ -616,19 +751,33 @@ returns an <a href="Image.html">Image</a> object
 				</div>
 			</div>
 
-			<div id="method-M000061" class="method-detail">
-				<a name="M000061"></a>
+			<div id="method-M000042" class="method-detail">
+				<a name="M000042"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000061.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000061.html');return false;">
+					<a href="IE.src/M000042.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000042.html');return false;">
+					<span class="method-name">isEventThreadRunning?</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000079" class="method-detail">
+				<a name="M000079"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000079.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000079.html');return false;">
 					<span class="method-name">link</span><span class="method-args">( how , what)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a link.
+This is the main method for accessing a link.
 </p>
 <pre>
  *  how   - symbol - how we access the link, :index, :id, :name etc
@@ -646,13 +795,27 @@ returns a <a href="Link.html">Link</a> object
 				<div class="method-heading">
 					<a href="IE.src/M000044.html" target="Code" class="method-signature"
 						onclick="popupCode('IE.src/M000044.html');return false;">
+					<span class="method-name">log</span><span class="method-args">( what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000053" class="method-detail">
+				<a name="M000053"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000053.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000053.html');return false;">
 					<span class="method-name">pageContainsText</span><span class="method-args">(text)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method returns true or false if the specified text was found
+This method returns true or false if the specified text was found.
 </p>
 <pre>
  * text - string or regular expression - the string to look for
@@ -660,19 +823,38 @@ this method returns true or false if the specified text was found
 				</div>
 			</div>
 
-			<div id="method-M000035" class="method-detail">
-				<a name="M000035"></a>
+			<div id="method-M000081" class="method-detail">
+				<a name="M000081"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000035.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000035.html');return false;">
+					<a href="IE.src/M000081.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000081.html');return false;">
+					<span class="method-name">popup</span><span class="method-args">( )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This is the main method for accessing JavaScript popups. returns a <a
+href="PopUp.html">PopUp</a> object
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000048" class="method-detail">
+				<a name="M000048"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000048.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000048.html');return false;">
 					<span class="method-name">presetFrame</span><span class="method-args">( frameName )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-This method is used to set the frame to use for multiple object actions
+This method is used to set the html frame to use for multiple object
+actions.
 </p>
 <pre>
   *   frameName  - string with the name of the frame to use
@@ -680,23 +862,24 @@ This method is used to set the frame to use for multiple object actions
 				</div>
 			</div>
 
-			<div id="method-M000060" class="method-detail">
-				<a name="M000060"></a>
+			<div id="method-M000078" class="method-detail">
+				<a name="M000078"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000060.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000060.html');return false;">
+					<a href="IE.src/M000078.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000078.html');return false;">
 					<span class="method-name">radio</span><span class="method-args">( how , what , value=nil)</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a radio button.
+This is the main method for accessing a radio button. Usually an &lt;input
+type = radio&gt; HTML tag.
 </p>
 <pre>
  *  how   - symbol - how we access the radio button, :index, :id, :name etc
- *  what  - string, int or re , what we are looking for,
+ *  what  - string, int or regexp , what we are looking for,
  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
 </pre>
 <p>
@@ -705,19 +888,20 @@ returns a <a href="RadioButton.html">RadioButton</a> object
 				</div>
 			</div>
 
-			<div id="method-M000058" class="method-detail">
-				<a name="M000058"></a>
+			<div id="method-M000076" class="method-detail">
+				<a name="M000076"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000058.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000058.html');return false;">
+					<a href="IE.src/M000076.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000076.html');return false;">
 					<span class="method-name">selectBox</span><span class="method-args">( how , what )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a select box.
+This is the main method for accessing a select box. Usually a
+&lt;select&gt; HTML tag.
 </p>
 <pre>
  *  how   - symbol - how we access the select box , :index, :id, :name etc
@@ -729,49 +913,69 @@ returns a <a href="SelectBox.html">SelectBox</a> object
 				</div>
 			</div>
 
-			<div id="method-M000050" class="method-detail">
-				<a name="M000050"></a>
+			<div id="method-M000064" class="method-detail">
+				<a name="M000064"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000050.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000050.html');return false;">
+					<a href="IE.src/M000064.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000064.html');return false;">
 					<span class="method-name">showAllObjects</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method shows the available objects on the current page really only
-used for debugging
+This method shows the available objects on the current page. This is
+usually only used for debugging or writing new test scripts. This is a nice
+feature to help find out what HTML objects are on a page when developing a
+test case using Watir.
 </p>
 				</div>
 			</div>
 
-			<div id="method-M000049" class="method-detail">
-				<a name="M000049"></a>
+			<div id="method-M000059" class="method-detail">
+				<a name="M000059"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000049.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000049.html');return false;">
+					<a href="IE.src/M000059.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000059.html');return false;">
+					<span class="method-name">showForms</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+Show all forms displays all the forms that are on a web page.
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000058" class="method-detail">
+				<a name="M000058"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000058.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000058.html');return false;">
 					<span class="method-name">showFrames</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this method is used to display the available frames that Internet Explorer
-currently has loaded. really only used for debugging
+This method is used to display the available html frames that Internet
+Explorer currently has loaded. This method is usually only used for
+debugging test scripts.
 </p>
 				</div>
 			</div>
 
-			<div id="method-M000039" class="method-detail">
-				<a name="M000039"></a>
+			<div id="method-M000060" class="method-detail">
+				<a name="M000060"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000039.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000039.html');return false;">
-					<span class="method-name">submit</span><span class="method-args">()</span>
+					<a href="IE.src/M000060.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000060.html');return false;">
+					<span class="method-name">showImages</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
@@ -779,19 +983,51 @@ currently has loaded. really only used for debugging
 				</div>
 			</div>
 
-			<div id="method-M000057" class="method-detail">
-				<a name="M000057"></a>
+			<div id="method-M000061" class="method-detail">
+				<a name="M000061"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000057.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000057.html');return false;">
+					<a href="IE.src/M000061.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000061.html');return false;">
+					<span class="method-name">showLinks</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+				</div>
+			</div>
+
+			<div id="method-M000073" class="method-detail">
+				<a name="M000073"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000073.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000073.html');return false;">
+					<span class="method-name">table</span><span class="method-args">( how, what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+this is the main method for acessing a table
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000075" class="method-detail">
+				<a name="M000075"></a>
+
+				<div class="method-heading">
+					<a href="IE.src/M000075.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000075.html');return false;">
 					<span class="method-name">textField</span><span class="method-args">( how , what )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-this is the main method for accessing a text field.
+This is the main method for accessing a text field. Usually an &lt;input
+type = text&gt; HTML tag.
 </p>
 <pre>
  *  how   - symbol - how we access the field , :index, :id, :name etc
@@ -803,12 +1039,12 @@ returns a TextFieldobject
 				</div>
 			</div>
 
-			<div id="method-M000046" class="method-detail">
-				<a name="M000046"></a>
+			<div id="method-M000055" class="method-detail">
+				<a name="M000055"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000046.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000046.html');return false;">
+					<a href="IE.src/M000055.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000055.html');return false;">
 					<span class="method-name">wait</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -817,20 +1053,20 @@ returns a TextFieldobject
 				</div>
 			</div>
 
-			<div id="method-M000045" class="method-detail">
-				<a name="M000045"></a>
+			<div id="method-M000054" class="method-detail">
+				<a name="M000054"></a>
 
 				<div class="method-heading">
-					<a href="IE.src/M000045.html" target="Code" class="method-signature"
-						onclick="popupCode('IE.src/M000045.html');return false;">
+					<a href="IE.src/M000054.html" target="Code" class="method-signature"
+						onclick="popupCode('IE.src/M000054.html');return false;">
 					<span class="method-name">waitForIE</span><span class="method-args">( noSleep = false )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-This method is used internally to cause execution to stop until the page
-has loaded in Internet Explorer
+This method is used internally to cause an execution to stop until the page
+has loaded in Internet Explorer.
 </p>
 				</div>
 			</div>

@@ -15,11 +15,14 @@
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 1107</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 1484</span>
     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">ieController</span>,  <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span> , <span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span> )
         <span class="ruby-ivar">@ieController</span> = <span class="ruby-identifier">ieController</span>
         <span class="ruby-ivar">@o</span> = <span class="ruby-identifier">ieController</span>.<span class="ruby-identifier">getObject</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> , <span class="ruby-value str">&quot;radio&quot;</span> , <span class="ruby-identifier">value</span>)
         <span class="ruby-keyword kw">super</span>( <span class="ruby-ivar">@o</span> )
+        <span class="ruby-ivar">@how</span> = <span class="ruby-identifier">how</span>
+        <span class="ruby-ivar">@what</span> = <span class="ruby-identifier">what</span>
+        <span class="ruby-ivar">@value</span> = <span class="ruby-identifier">value</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

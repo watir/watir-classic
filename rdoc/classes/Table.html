@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Class: Table</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+	<script type="text/javascript">
+	// <![CDATA[
+
+	function popupCode( url ) {
+		window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+	}
+
+	function toggleCode( id ) {
+		if ( document.getElementById )
+			elem = document.getElementById( id );
+		else if ( document.all )
+			elem = eval( "document.all." + id );
+		else
+			return false;
+
+		elemStyle = elem.style;
+		
+		if ( elemStyle.display != "block" ) {
+			elemStyle.display = "block"
+		} else {
+			elemStyle.display = "none"
+		}
+
+		return true;
+	}
+	
+	// Make codeblocks hidden by default
+	document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+	
+	// ]]>
+	</script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <h1>Table <sup class="type-note">(Class)</sup></h1>
+        <table class="header-table">
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/watir_rb.html">
+                watir.rb
+                </a>
+				<br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="ObjectActions.html">
+                ObjectActions
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+	<div id="bodyContent">
+
+
+	<div id="contextContent">
+
+		<div id="description">
+			<p>
+This class is used for dealing with tables. This will not be normally used
+by users, as the table method of IEController would return an initialised
+instance of a table.
+</p>
+
+		</div>
+
+
+		<div id="method-list">
+			<h2 class="section-bar">Methods</h2>
+
+			<div class="name-list">
+			<a href="#M000015">columns</a>&nbsp;&nbsp;
+			<a href="#M000013">new</a>&nbsp;&nbsp;
+			<a href="#M000014">rows</a>&nbsp;&nbsp;
+			<a href="#M000016">to_a</a>&nbsp;&nbsp;
+			</div>
+		</div>
+
+
+
+
+			
+
+	</div>
+
+
+
+		<!-- if includes -->
+
+
+		<!-- if method_list -->
+		<div id="methods">
+			<h2 class="section-bar">Public Class methods</h2>
+
+			<div id="method-M000013" class="method-detail">
+				<a name="M000013"></a>
+
+				<div class="method-heading">
+					<a href="Table.src/M000013.html" target="Code" class="method-signature"
+						onclick="popupCode('Table.src/M000013.html');return false;">
+					<span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+Returns an initialized instance of a table object
+</p>
+<pre>
+  * ieController  - an instance of an IEController
+  * how           - symbol - how we access the table
+  * what          - what we use to access the table - id, name index etc
+</pre>
+				</div>
+			</div>
+
+			<h2 class="section-bar">Public Instance methods</h2>
+
+			<div id="method-M000015" class="method-detail">
+				<a name="M000015"></a>
+
+				<div class="method-heading">
+					<a href="Table.src/M000015.html" target="Code" class="method-signature"
+						onclick="popupCode('Table.src/M000015.html');return false;">
+					<span class="method-name">columns</span><span class="method-args">( rowToUse = 1)</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns the number of columns in the table. Raises an <a
+href="UnknownTableException.html">UnknownTableException</a> if the table
+doesn&#8217;t exist.
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000014" class="method-detail">
+				<a name="M000014"></a>
+
+				<div class="method-heading">
+					<a href="Table.src/M000014.html" target="Code" class="method-signature"
+						onclick="popupCode('Table.src/M000014.html');return false;">
+					<span class="method-name">rows</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns the number of rows in the table. Raises an <a
+href="UnknownTableException.html">UnknownTableException</a> if the table
+doesnt exist.
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000016" class="method-detail">
+				<a name="M000016"></a>
+
+				<div class="method-heading">
+					<a href="Table.src/M000016.html" target="Code" class="method-signature"
+						onclick="popupCode('Table.src/M000016.html');return false;">
+					<span class="method-name">to_a</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns the table as a 2 dimensional array. Dont expect too
+much if there are nested tables, colspan etc. Raises an <a
+href="UnknownTableException.html">UnknownTableException</a> if the table
+doesn&#8217;t exist.
+</p>
+				</div>
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

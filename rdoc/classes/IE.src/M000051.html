@@ -5,68 +5,28 @@
 
 <!--
 
-    getImage (IE)
+    form (IE)
 
   -->
 <html>
 <head>
-	<title>getImage (IE)</title>
+	<title>form (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 539</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getImage</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> )
-        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
-
-        <span class="ruby-identifier">puts</span><span class="ruby-node">&quot;Finding an image how: #{how} What #{what}&quot;</span>
-
-        <span class="ruby-identifier">images</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">images</span>
-        <span class="ruby-identifier">o</span>=<span class="ruby-keyword kw">nil</span>
-        <span class="ruby-identifier">images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">img</span><span class="ruby-operator">|</span>
-
-            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Image on page: src = #{img.src}&quot;</span>
-
-            <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-      
-
-            <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:src</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">src</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Regexp</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">src</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">what</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">end</span>
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Regexp</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">what</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">end</span>
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Regexp</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">img</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>).<span class="ruby-identifier">match</span>(<span class="ruby-identifier">what</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
-                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span>
-                        <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">end</span>
-
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:index</span>
-
-            <span class="ruby-keyword kw">end</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 417</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">form</span>( <span class="ruby-identifier">how</span> , <span class="ruby-identifier">formName</span>=<span class="ruby-keyword kw">nil</span> )
+        <span class="ruby-comment cmt"># If only one value is supplied, it is a form name</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">formName</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+            <span class="ruby-identifier">formName</span> = <span class="ruby-identifier">how</span>
+            <span class="ruby-identifier">formHow</span> = <span class="ruby-identifier">:name</span>
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">formName</span> = <span class="ruby-identifier">formName</span>
+            <span class="ruby-identifier">formHow</span> = <span class="ruby-identifier">how</span>
         <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+        <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;form how is #{formHow} name is #{formName}&quot;</span>        
+        <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Form</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">formHow</span>, <span class="ruby-identifier">formName</span>)        
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

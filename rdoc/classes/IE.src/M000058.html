@@ -5,19 +5,31 @@
 
 <!--
 
-    selectBox (IE)
+    showFrames (IE)
 
   -->
 <html>
 <head>
-	<title>selectBox (IE)</title>
+	<title>showFrames (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 844</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">selectBox</span>( <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span> )
-        <span class="ruby-identifier">s</span> = <span class="ruby-constant">SelectBox</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span> , <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span>)
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 565</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showFrames</span>()
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>
+            <span class="ruby-identifier">allFrames</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>
+            <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-identifier">allFrames</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>
+                <span class="ruby-keyword kw">begin</span>
+                    <span class="ruby-identifier">fname</span> = <span class="ruby-identifier">allFrames</span>[<span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
+                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;frame  index: #{i} name: #{fname}&quot;</span>
+                <span class="ruby-keyword kw">rescue</span>
+
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">log</span> <span class="ruby-value str">&quot;no frames&quot;</span>
+        <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    click (ObjectActions)
+
+  -->
+<html>
+<head>
+	<title>click (ObjectActions)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 246</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">click</span>()
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownObjectException</span> ,<span class="ruby-node">&quot;Unable to locate object, using #{@how.to_s} and #{@what.to_s}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@o</span><span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">ObjectDisabledException</span> ,<span class="ruby-node">&quot;object #{@how.to_s} and #{@what.to_s} is disabled&quot;</span>   <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">enabled?</span>
+
+        <span class="ruby-identifier">highLight</span>(<span class="ruby-identifier">:set</span>)
+        <span class="ruby-ivar">@o</span>.<span class="ruby-identifier">click</span>()
+        <span class="ruby-ivar">@ieController</span>.<span class="ruby-identifier">waitForIE</span>()
+        <span class="ruby-identifier">highLight</span>(<span class="ruby-identifier">:clear</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
