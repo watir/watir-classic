@@ -9,10 +9,13 @@ $HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
 
 def start_ie( url=$DEFAULT_URL, visible = ! $HIDE_IE )
   "Start the IE Controller at the specified URL."
-  @iec = ClIEController.new({ :visible => visible })
-  @iec.navigate(url)
-  $iec = @iec
-  return @iec
+  $iec = ClIEController.new({ :visible => visible })
+  $iec.navigate(url)
+  return $iec
+end
+
+def wait() 
+  $iec.wait
 end
 
 def form # block
@@ -22,20 +25,19 @@ def form # block
   form ? IEDomFormWrapper.new( form ) : nil
 end
 
-def get_forms()
+def forms()
   "Return the Forms on the current page of IE as an array."
   page_forms = []
-  for form in @iec.document.forms
+  for form in $iec.document.forms
     page_forms << IEDomFormWrapper.new(form)
   end
   return page_forms
 end
-alias forms get_forms
 
 def show_forms()
   "Print the actions for each of the forms on the current page."
   page_forms = []
-  for form in @iec.document.forms
+  for form in $iec.document.forms
     puts "action: " + form.action
   end
 end
@@ -83,19 +85,19 @@ end
 def button_click_by_name(form_action, button_name)
   "Click the button named button_name in the form with action form_action." 
   form {|f| f.action == form_action }.elements(button_name).click
-  @iec.wait
+  wait
 end
 
 def button_click_by_value(form_action, button_value)
   "Click the button with the value button_value in the form with action form_action." 
   form {|f| f.action == form_action }.element{|e| e.value == button_value }.click
-  @iec.wait
+  wait
 end
 
 
 def get_html
   "Return the full html of the current page."
-  @iec.document.getElementsByTagName("HTML").item(0).outerHtml
+  $iec.document.getElementsByTagName("HTML").item(0).outerHtml
 end
 
 def show_ole_methods(ole_object)

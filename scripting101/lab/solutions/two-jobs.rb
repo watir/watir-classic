@@ -4,27 +4,27 @@ require 'toolkit'
 
 # login
 start_ie("http://localhost:8080")
-form = get_forms[0]
+form = forms[0]
 form.name = "ruby"
 form.submit
-@iec.wait
+wait
 
 # create a background job
 new_job = get_form_by_action("job")
 new_job.name = "background"
 new_job.submit
-@iec.wait
+wait
 
 # create two non-background jobs
 new_job = get_form_by_action("job")
 new_job.name = "job1"
 new_job.submit
-@iec.wait
+wait
 
 new_job = get_form_by_action("job")
 new_job.name = "job2"
 new_job.submit
-@iec.wait
+wait
 
 # alternate between the two jobs
 3.times do

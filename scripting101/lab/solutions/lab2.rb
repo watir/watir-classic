@@ -1,28 +1,28 @@
 # Suggested solution to lab 2.
 
+# Note: This lab uses IRB, where the 'waits' aren't really necessary
+
 require 'toolkit'
 
-# login
-start_ie("http://localhost:8080")
-form = get_forms[0]
-form.name = "bret"
-form.submit
-@iec.wait
+# 1. Login using existing account
+start_ie # may have to specify URL
+forms[0].name = "bret"
+forms[0].submit
+wait
 
-# create a new job
-new_job = get_form_by_action("job")
+# 2. Create a new job
+new_job = form{|f| f.action == 'job'}
 new_job.name = "ruby article"
 new_job.submit
-@iec.wait
+wait
 
-# start the new job
-all_jobs = get_form_by_action("start")
-get_element_by_value(all_jobs, "ruby article").click
-@iec.wait
+# 3. Start the new job
+form{|f| f.action == 'start'}.element{|e| e.value == 'ruby article'}.click
+wait
 
-# stop the day
-top_form = get_form_by_action("pause_or_stop_day")
-top_form.elements("stop_day").click
-@iec.wait
+# 4. Stop the day
+top_form = form{|f| f.action == 'pause_or_stop_day'}
+top_form.elements('stop_day').click
+wait
 
 puts "COMPLETE"
