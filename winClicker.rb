@@ -55,6 +55,16 @@ class WinClicker
 
     end
 
+    def getShortFileName(longName)
+        size = 255
+        buffer = " " * 255
+        returnSize = Win32API.new("kernel32" , "GetShortPathNameA" , 'ppl'  , 'L').Call(longName ,  buffer , size )
+        a = ""
+        a = a + buffer[0...returnSize]        
+
+        return a
+
+    end
 
 
     # file requester dialog box
