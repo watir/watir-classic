@@ -92,7 +92,7 @@ class Regexp
     end
 end
 
-# ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
+# ARGV needs to be deleted to enable the Test::Unit functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
 def command_line_flag(switch)
     setting = ARGV.include?(switch) 

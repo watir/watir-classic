@@ -1,4 +1,4 @@
-Watir Relase How To
+Watir Release How To
 
 Check everything out of cvs
 -- Do an export. This means you won't get the CVS directories.
