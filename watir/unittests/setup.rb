@@ -4,7 +4,7 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
 # local
-require 'unittests/testUnitAddons'
+require 'watir/testUnitAddons'
 
 logger = WatirLogger.new(File.join(File.dirname(__FILE__), 'test.txt') ,5, 65535 * 2)
 $ie = IE.new(logger)
