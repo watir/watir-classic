@@ -7,9 +7,7 @@ require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
 require 'unittests/setup'
 
-$myDir = Dir.getwd
-
-class TC_Buttons < Test::Unit::TestCase
+class TC_Images < Test::Unit::TestCase
 
 
     def gotoImagePage()
