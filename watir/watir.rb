@@ -502,8 +502,8 @@ module Watir
                     begin
                         fname = allFrames[i.to_s].name.to_s
                         log "frame  index: #{i} name: #{fname}"
-                    rescue
-                        
+                    rescue => e
+                        log "frame  index: #{i} --Access Denied--" if e.to_s.match(/Access is denied/)
                     end
                 end
             else
