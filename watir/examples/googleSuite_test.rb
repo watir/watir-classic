@@ -20,14 +20,7 @@ require 'watir'   # the controller
 require 'test/unit' 
 require 'test/unit/ui/console/testrunner'
 
-
-#code to set your current path in Windows
-$myDir = File.dirname(__FILE__)
-$LOAD_PATH << $myDir
-
 class TC_google_suite < Test::Unit::TestCase
-
-
 
  def test_a_simplesearch
   #--------------------------------------------------------
