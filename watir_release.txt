@@ -1,0 +1,35 @@
+Watir Relase How To
+
+Check everything out of cvs
+
+in Watir.rb, change the VERSION constant to be the release number
+
+run install
+run the unit tests, if they pass, check watir.rb back in
+tag the files
+cvs tag -c -R "new version number" *.*     watir version numbers are like this: v1_8
+
+build the rdoc
+
+delete all the CVS directories
+   delete watir\cvs
+   then use  dir /s /A:D /b CVS > delcvs.bat
+   then edit this file, adding rmdir /s /q at the begining of each line 
+   run this batch file
+   delete this batch file
+
+delete this file!
+
+zip up. Note the filename is watir_v1_1.zip
+
+delete the watir_bonus directories
+delete the files in C:\ruby\lib\ruby\site_ruby\1.8\watir and C:\ruby\lib\ruby\site_ruby\1.8\watir.rb
+
+unzip and test
+
+
+Release Notes
+
+You can use 
+cvs log -r1.94:1.119  watir.rb  
+to get just the logs for revisions 1.94 to 1.119
