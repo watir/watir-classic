@@ -11,91 +11,79 @@ class TC_Fields < Test::Unit::TestCase
         $ie.goto($htmlRoot + "textfields1.html")
     end
 
-    def test_textField_Exists
-       assert($ie.textField(:name, "text1").exists?)   
-       assert_false($ie.textField(:name, "missing").exists?)   
+    def test_text_field_exists
+       assert($ie.text_field(:name, "text1").exists?)   
+       assert_false($ie.text_field(:name, "missing").exists?)   
 
-       assert($ie.textField(:id, "text2").exists?)   
-       assert_false($ie.textField(:id, "alsomissing").exists?)   
+       assert($ie.text_field(:id, "text2").exists?)   
+       assert_false($ie.text_field(:id, "alsomissing").exists?)   
 
-        assert($ie.textField(:beforeText , "This Text After").exists? )
-        assert($ie.textField(:afterText , "This Text Before").exists? )
+        assert($ie.text_field(:beforeText , "This Text After").exists? )
+        assert($ie.text_field(:afterText , "This Text Before").exists? )
 
-        assert($ie.textField(:beforeText , /after/i).exists? )
-        assert($ie.textField(:afterText , /before/i).exists? )
-
-
-
+        assert($ie.text_field(:beforeText , /after/i).exists? )
+        assert($ie.text_field(:afterText , /before/i).exists? )
 
     end
 
-    def atest_textField_dragContentsTo
+    def test_text_field_dragContentsTo
 
-        $ie.textField(:name, "text1").dragContentsTo(:id, "text2")
-        assert_equal($ie.textField(:name, "text1").getContents, "" ) 
-        assert_equal($ie.textField(:id, "text2").getContents, "goodbye allHello World" ) 
+        $ie.text_field(:name, "text1").dragContentsTo(:id, "text2")
+        assert_equal($ie.text_field(:name, "text1").getContents, "" ) 
+        assert_equal($ie.text_field(:id, "text2").getContents, "goodbye allHello World" ) 
 
     end
 
 
-    def atest_textField_VerifyContents
-       assert($ie.textField(:name, "text1").verify_contains("Hello World") )  
-       assert($ie.textField(:name, "text1").verify_contains(/Hello\sW/ ) )  
-       assert_false($ie.textField(:name, "text1").verify_contains("Ruby") )  
-       assert_false($ie.textField(:name, "text1").verify_contains(/R/) )  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.textField(:name, "NoName").verify_contains("No field to get a value of") }  
+    def test_text_field_VerifyContents
+       assert($ie.text_field(:name, "text1").verify_contains("Hello World") )  
+       assert($ie.text_field(:name, "text1").verify_contains(/Hello\sW/ ) )  
+       assert_false($ie.text_field(:name, "text1").verify_contains("Ruby") )  
+       assert_false($ie.text_field(:name, "text1").verify_contains(/R/) )  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.text_field(:name, "NoName").verify_contains("No field to get a value of") }  
 
-       assert($ie.textField(:id, "text2").verify_contains("goodbye all") )  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.textField(:id, "noID").verify_contains("No field to get a value of") }  
-
-       
-
-
+       assert($ie.text_field(:id, "text2").verify_contains("goodbye all") )  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.text_field(:id, "noID").verify_contains("No field to get a value of") }  
 
     end
 
-    def atest_textField_enabled
-       assert_false($ie.textField(:name, "disabled").enabled? )  
-       assert($ie.textField(:name, "text1").enabled? )  
-       assert($ie.textField(:id, "text2").enabled? )  
+    def test_text_field_enabled
+       assert_false($ie.text_field(:name, "disabled").enabled? )  
+       assert($ie.text_field(:name, "text1").enabled? )  
+       assert($ie.text_field(:id, "text2").enabled? )  
 
     end
 
-    def atest_textField_readOnly
-       assert_false($ie.textField(:name, "disabled").readOnly? )  
-       assert($ie.textField(:name, "readOnly").readOnly? )  
-       assert($ie.textField(:id, "readOnly2").readOnly? )  
+    def test_text_field_readOnly
+       assert_false($ie.text_field(:name, "disabled").readOnly? )  
+       assert($ie.text_field(:name, "readOnly").readOnly? )  
+       assert($ie.text_field(:id, "readOnly2").readOnly? )  
 
     end
 
 
-    def atest_textField_getContents()
-         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
-         assert_equal(  "Hello World" , $ie.textField(:name, "text1").getContents )  
-
-
+    def test_text_field_getContents()
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "missing_field").append("Some Text") }  
+         assert_equal(  "Hello World" , $ie.text_field(:name, "text1").getContents )  
     end
 
-    def atest_TextField_to_s
+    def test_TextField_to_s
          puts "---------------- To String test -------------"
-         puts $ie.textField(:index , 1).to_s
+         puts $ie.text_field(:index , 1).to_s
          puts "---------------- To String test -------------"
-         puts $ie.textField(:index , 2).to_s
+         puts $ie.text_field(:index , 2).to_s
          puts "---------------- To String test -------------"
-         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.textField(:index, 999 ).to_s}  
-
-
- 
+         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 999 ).to_s}  
     end
 
 
-    def atest_textField_Append
-         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
-         assert_raises(ObjectDisabledException   , "ObjectDisabledException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
-         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+    def test_text_field_Append
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectDisabledException   was supposed to be thrown" ) {   $ie.text_field(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:name, "missing_field").append("Some Text") }  
 
-         $ie.textField(:name, "text1").append(" Some Text")
-         assert_equal(  "Hello World Some Text" , $ie.textField(:name, "text1").getContents )  
+         $ie.text_field(:name, "text1").append(" Some Text")
+         assert_equal(  "Hello World Some Text" , $ie.text_field(:name, "text1").getContents )  
 
          # may need this to see that it really happened
          #puts "press return to continue"
@@ -104,27 +92,13 @@ class TC_Fields < Test::Unit::TestCase
     end
 
 
-    def atest_textField_Clear
-         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
-         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
-         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+    def test_text_field_Clear
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "missing_field").append("Some Text") }  
 
-         $ie.textField(:name, "text1").clear()
-         assert_equal(  "" , $ie.textField(:name, "text1").getContents )  
-
-         # may need this to see that it really happened
-         #puts "press return to continue"
-         #gets 
-
-    end
-
-    def atest_textField_Set
-         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
-         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
-         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
-
-         $ie.textField(:name, "text1").set("watir IE Controller")
-         assert_equal(  "watir IE Controller" , $ie.textField(:name, "text1").getContents )  
+         $ie.text_field(:name, "text1").clear()
+         assert_equal(  "" , $ie.text_field(:name, "text1").getContents )  
 
          # may need this to see that it really happened
          #puts "press return to continue"
@@ -132,28 +106,18 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
-    def aaatest_adjacentTExt
+    def test_text_field_Set
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "missing_field").append("Some Text") }  
 
-        d = $ie.getIE.document.body.all
-        d.each do |dd|
+         $ie.text_field(:name, "text1").set("watir IE Controller")
+         assert_equal(  "watir IE Controller" , $ie.text_field(:name, "text1").getContents )  
 
-            begin
-                if dd.invoke("type").to_s.downcase == "text"
-                    puts "text afterEnd is: " + dd.getAdjacentText("afterEnd")
-                    puts "text beforeBegin is: " + dd.getAdjacentText("beforeBegin")
-
-                    puts "text beforeEnd is: " + dd.getAdjacentText("beforeEnd")
-                    puts "text afterBegin is: " + dd.getAdjacentText("afterBegin")
-
-                end
-            rescue => e
-
-                puts e if e.to_s.match(/Unknown property or method/) == nil
-            end
-
-        end 
+         # may need this to see that it really happened
+         #puts "press return to continue"
+         #gets 
 
     end
-
 
 end

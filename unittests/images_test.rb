@@ -56,7 +56,7 @@ class TC_Images < Test::Unit::TestCase
 
         $ie.image(:src, /button/).click
 
-        assert($ie.pageContainsText("PASS") )
+        assert($ie.contains_text("PASS") )
 
 
     end

@@ -24,6 +24,6 @@ class TC_FileField < Test::Unit::TestCase
 	#click the upload button
 	$ie.button(:name,"upload").click
 
-	assert($ie.pageContainsText("PASS"))	
+	assert($ie.contains_text("PASS"))	
   end
 end
