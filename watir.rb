@@ -323,10 +323,11 @@ class IE
     attr_accessor :newWindow
 
     attr_accessor :eventThread
-    
+
    def createBrowser
 	return WIN32OLE.new('InternetExplorer.Application')
-   end
+    end
+
 
   def initialize( logger=nil, how = nil ,what = nil )
         @logger = logger
@@ -374,6 +375,22 @@ class IE
         return ieTemp
     end
 
+    # this method goes to the previous page - the same as clicking the browsers back button
+    # an WIN32OLERuntimeError exception is raised if the browser cant go back
+    def back
+        @ie.GoBack()
+    end
+    # this method goes to the next page - the same as clicking the browsers forward button
+    # an WIN32OLERuntimeError exception is raised if the browser cant go forward
+    def forward
+        @ie.GoForward()
+    end
+
+    # this method refreshes the current page - the same as clicking the browsers refresh button
+    # an WIN32OLERuntimeError exception is raised if the browser cant refresh
+    def refresh
+        @ie.refresh2(3)
+    end
 
     def captureEvents
         ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
