@@ -41,7 +41,7 @@ class TC_yahoo < Test::Unit::TestCase
    #open the IE browser
    $ie = IE.new
 
-   puts '## Beginning of test: Yahoo search'
+   puts '## Beginning of test: Yahoo simple search'
    puts '  '
   
    puts 'Step 1: go to the yahoo site: www.yahoo.com'
@@ -63,7 +63,7 @@ class TC_yahoo < Test::Unit::TestCase
    assert($ie.pageContainsText("Programming Ruby") )
 
    puts '  '
-   puts '## End of test: yahoo search'
+   puts '## End of test: yahoo simple search'
   
  end # end of test_simplesearch
 
@@ -78,7 +78,7 @@ class TC_yahoo < Test::Unit::TestCase
    #variables
    testSite = 'http://search.yahoo.com'
 
-   puts '## Beginning of test: yahoo advanced search'
+   puts '## Beginning of test: Yahoo Edit Check Maps'
    puts '  '
   
    puts 'Step 1: go to the yahoo site: search.yahoo.com'
@@ -91,6 +91,10 @@ class TC_yahoo < Test::Unit::TestCase
    
    $ie.checkBox(:name, "tab[]", "maps").set
    assert($ie.checkBox(:name, "tab[]", "maps").isSet?)   
+   
+   puts '  '
+   puts '## End of test: yahoo simple search'
+
 
  end
 
@@ -98,6 +102,8 @@ class TC_yahoo < Test::Unit::TestCase
     #-------------------------------------------------------------------------
     # Test to Save Yahoo preferences after checking "Maps" above
     #
+   puts '## Beginning of test: Yahoo Save Maps Edit'
+   puts '  '
    
    puts 'Step 1: click the "Save" button'
    $ie.button(:caption, "Save").click
@@ -105,32 +111,48 @@ class TC_yahoo < Test::Unit::TestCase
   
    puts 'Step 2: Check that the "Maps" link actually appears on the Yahoo Search page by using an assertion'
    assert($ie.pageContainsText("Maps") )
+   
+   puts '  '
+   puts '## End of test: Yahoo Save Maps Edit'
+   
  end
 
  def test_d_UncheckMaps
-    #-------------------------------------------------------------------------
-    # Test to demo unchecking a check box
-    #
-    
+   #-------------------------------------------------------------------------
+   # Test to demo unchecking a check box
+   #
+   puts '## Beginning of test: Yahoo Uncheck Maps Edit'
+   puts '  '   
+   
    puts 'Step 1: click the Edit link on the yahoo home page'
    $ie.link(:text, "Edit").click
    puts '  Action: clicked the Edit link'
 
    $ie.checkBox(:name, "tab[]", "maps").clear
-   assert_false($ie.checkBox(:name, "tab[]", "maps").isSet?)   
+   assert_false($ie.checkBox(:name, "tab[]", "maps").isSet?) 
+
+   puts '  '
+   puts '## End of test: Yahoo Uncheck Maps Edit'
+   
  end
 
  def test_e_VerifyMapsUncheck
-    #-------------------------------------------------------------------------
-    # Test to verify that the actions are saved after unchecking the Maps check box
-    #
-    
+   #-------------------------------------------------------------------------
+   # Test to verify that the actions are saved after unchecking the Maps check box
+   #
+   puts '## Beginning of test: Yahoo Verify Edit Actions saved'
+   puts '  '
+   
    puts 'Step 1: click the "Save" button'
    $ie.button(:caption, "Save").click
    puts '  Action: clicked the Save button.'
    
    puts 'Step 2: Check that the "Maps" link does not appear on the Yahoo Search page by using an assertion'
    assert_false($ie.pageContainsText("Maps") )
+   
+   puts '  '
+   puts '## End of test: Verify Edit Actions saved'
+   
  end   
 
 
