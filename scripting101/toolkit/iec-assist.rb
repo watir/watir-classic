@@ -1,4 +1,4 @@
-# iec-assist.rb
+# iec-assist.rb - extends CL/IEC
 require 'cl/iec'
 require 'toolkit/config'
 
@@ -96,11 +96,14 @@ class NilClass
   end
 end
 
+def ie_load ( html_file )
+  path = File.join( File.dirname(__FILE__), html_file ) # relative path
+  path = File.expand_path( path ) # full path
+  path.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
+  start_ie( 'file://' + path, false )
+end
 
 
-
-
-
-
-
-
+def get_document()
+  $iec.document
+end

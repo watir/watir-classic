@@ -1,8 +1,11 @@
-# tests 'table-array.rb'
+# tests 'table-array.rb' - now works with watir
 
+require 'toolkit/table-array'
 require 'test/unit'
-require 'toolkit'
 require 'toolkit/iostring'
+
+require 'toolkit/watir-assist'
+#require 'toolkit/iec-assist'
 
 class TestTable < Test::Unit::TestCase
   def test_table_array
