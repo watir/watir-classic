@@ -245,18 +245,18 @@ functionality.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> puts <font color="purple">"Step 3: click the
 'Google Search' button"<br>
-</font> $ie.button(:value, <font color="purple">"Google Search"</font>).click<font
- color="green"> # Google Search is the value of the button</font><br>
+</font> $ie.button(:name, <font color="purple">"btnG"</font>).click<font
+ color="green"> # "btnG" is the name of the button</font><br>
 puts <font color="purple">&nbsp;&nbsp;&nbsp;" Action: clicked the
 Google Search button."</font><br>
 </div>
 <p>The first line prints the step we are on to the screen. The second
 line clicks the Google Search button. The third line prints what Watir
 just executed to the screen.</p>
-<p>This is the tag in the HTML source with the <i>value</i> (or
-caption) attribute we used highlighted:</p>
+<p>This is the tag in the HTML source with the <i>name</i> 
+attribute we used highlighted:</p>
 <div class="htmlexample">
-&lt;input type=submit value="<b>Google Search</b>" name=btnG&gt;</div>
+&lt;input type=submit value="Google Search" name=<b>btnG</b>&gt;</div>
 <h2>Section 6: Evaluating the Results</h2>
 <h3>The Expected Result</h3>
 <p>This test case prints out what the Expected Result should be prior
@@ -264,7 +264,7 @@ to the test case using Watir to evaluate the results.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> puts <font color="purple">"Expected Result: "</font><br>
 puts <font color="purple">" - a Google page with results should be
-shown. "Pragmatic Programmers LLC" should be high on the list."</font>
+shown. "Programming Ruby" should be high on the list."</font>
 </div>
 <p>These two statements simply print the Expected Result of the test to
 the screen.</p>
@@ -272,16 +272,16 @@ the screen.</p>
 <p>Using Watir and a little Ruby, we can evaluate the results to verify
 whether the test case passed or failed.</p>
 <div class="testexample">
-puts <font color="purple">"Actual Result: Check that the 'The
-Pragmatic Programmers, LLC' link appears on the search results page"<br>
-</font> a = $ie.pageContainsText("<font color="purple">The Pragmatic
-Programmers, LLC</font>")<br>
+puts <font color="purple">"Actual Result: Check that the 'Programming Ruby' link 
+appears on the search results page"<br>
+</font> a = $ie.pageContainsText("<font color="purple">Programming Ruby</font>")
+<br>
 <font color="darkblue">if</font> !a <br>
 &nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Failed! Could not
-find: The Pragmatic Programmers, LLC"</font> <br>
+find: Programming Ruby"</font> <br>
 <font color="darkblue">else</font><br>
 &nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Passed. Found the
-test string: The Pragmatic Programmers, LLC. Actual Results match
+test string: Programming Ruby. Actual Results match
 Expected Results."</font><br>
 <font color="darkblue">end</font><br>
 </div>
@@ -290,7 +290,7 @@ Expected Results."</font><br>
   <li>The first line prints out the "Actual Result" heading to the
 screen.</li>
   <li>The second line calls the "pageContainsText" method, and asks it
-to verify that <i>The Pragmatic Programmers, LLC</i> appears on the
+to verify that <i>Programming Ruby</i> appears on the
 first page.</li>
   <ul>
     <li>We assign the result of that method call to a variable called <b>a</b>,
@@ -299,11 +299,11 @@ so we can evaluate the result and print a PASS or FAILURE message.</li>
   <li>Using an <i>if</i> statement, we evaluate whether the
 pageContainsText method was True or False.</li>
   <ul>
-    <li>If pageContainsText returns false, the text <i>The Pragmatic
-Programmers, LLC</i> does not appear. The test case fails and we print
+    <li>If pageContainsText returns false, the text <i>Programming
+Ruby</i> does not appear. The test case fails and we print
 the "Test Failed!" message.</li>
-    <li>Else, if pageContainsText returns true, the text <i>The
-Pragmatic Programmers, LLC</i> appears. The test case passes and we
+    <li>Else, if pageContainsText returns true, the text <i>Programming
+Ruby</i> appears. The test case passes and we
 print the "Test Passed." message.</li>
     <li>We close the conditional <i>if</i> section with an <i>end</i>
 statement.</li>
