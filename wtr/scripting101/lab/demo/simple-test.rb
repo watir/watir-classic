@@ -1,25 +1,30 @@
 require '../toolkit'
 
 # Start with a user that has no time records. 
-start_ie("http://localhost:8080")
+ensure_no_user_data('ruby')
+
+# Go to the application home page
+start_ie('http://localhost:8080')
+
+# Login with user 'ruby'
 forms[0].name = 'ruby'
 forms[0].submit
 $iec.wait
 
-# create a background job
+# Create a background job
 def new_job 
   form{|f| f.action == 'job'}
 end
-new_job.name = "background"
+new_job.name = 'background'
 new_job.submit
 $iec.wait
 
-# create two jobs
-new_job.name = "job1"
+# Create two jobs
+new_job.name = 'job1'
 new_job.submit
 $iec.wait
 
-new_job.name = "job2"
+new_job.name = 'job2'
 new_job.submit
 $iec.wait
 
@@ -35,18 +40,19 @@ form{|f| f.action == 'pause_or_stop_day' }.elements('stop_day').click
 $iec.wait
 
 # Verify that two time records appear.
-tables = $iec.document.getElementsByTagName("TABLE")
+tables = $iec.document.getElementsByTagName('TABLE')
 results_table = tables.item(tables.length - 1) # last table
-table_rows = results_table.getElementsByTagName("TR")
-if table_rows.length == 3 # two rows plus header
-  puts "PASS"
-else
-  puts "FAIL"
-end
+table_rows = results_table.getElementsByTagName('TR')
+
+recent_records = get_results_table_array
+assert_equal(3, recent_records.length) # two rows plus header
+assert_equal('Recent Records ', recent_records[0][0])
+assert_equal('job2 ', recent_records[1][0])
+assert_equal('job1 ', recent_records[2][0])
 
 # Display the time records
 for row in table_rows
-  for td in row.getElementsbyTagName("TD")
+  for td in row.getElementsbyTagName('TD')
     puts td.innerHtml
   end
 end
