@@ -1,5 +1,5 @@
+# Convert the DOM table object into a two-dimensional array. - works with WATIR
 def table_array (table, y=[])
-  "Convert the DOM table object into a two-dimensional array."
   table_rows = table.getElementsByTagName("TR")
   for row in table_rows
     x = []
@@ -20,8 +20,8 @@ class RecentRecordsArray < Array
   end
 end
 
-def get_results_table_array
-  tables = $iec.document.getElementsByTagName("TABLE")
+def get_results_table_array (document=get_document())
+  tables = document.getElementsByTagName("TABLE")
   results_table = tables.item(tables.length - 1) # last
   result = table_array(results_table, RecentRecordsArray.new)
 #  assert_equal ["Recent Records"], result[0]
