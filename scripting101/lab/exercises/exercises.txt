@@ -1,0 +1,33 @@
+h1. Scripting for Testers
+
+h2. Timeclock Lab Exercises
+
+h3. Lab 1. "Getting Started":getting-started-lab.html
+
+Test Timeclock manually and develop test ideas.
+
+h3. Lab 2. "Driving Timeclock Using IRB":irb-iec-lab.html
+
+Use IRB and the WTR toolkit to drive the Timeclock application.
+
+h3. Lab 3. "Writing Scripts":iec-scripts-lab.html
+
+Create simple scripts.
+
+h3. Lab 4. Verifying Results
+
+Add verification steps to your test scripts.
+
+This lab has not yet been written.
+
+h3. Lab 5. Defining Base States
+
+Use a base state between tests when you group them into a suite.
+
+This lab has not yet been written.
+
+h3. Lab 6. "Testing Web Services":web-services-lab.html
+
+Test the web services interface to the Timeclock application.
+
+This is an advanced lab that is usually not included in the one-day Scripting for Testers class.
