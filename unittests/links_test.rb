@@ -30,6 +30,12 @@ class TC_Links < Test::Unit::TestCase
        assert($ie.link(:id, /_id/).exists?)   
        assert_false($ie.link(:id, /alsomissing/).exists?)   
 
+       assert($ie.link(:name, "link_name").exists?)   
+       assert_false($ie.link(:name, "alsomissing").exists?)   
+
+       assert($ie.link(:name, /_n/).exists?)   
+       assert_false($ie.link(:name, /missing/).exists?)   
+
 
 
 
