@@ -1,6 +1,7 @@
 # tests for Links
 # revision: $Revision$
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_Links < Test::Unit::TestCase

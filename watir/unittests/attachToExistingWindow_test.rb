@@ -1,14 +1,10 @@
 # tests for attaching to existing IE windows
 # revision: $Revision$
 
-#require 'setup'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_ExistingWindow< Test::Unit::TestCase
-
-
-   
-
 
     def test_ExistingWindow
 

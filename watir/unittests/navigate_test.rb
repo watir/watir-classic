@@ -1,18 +1,15 @@
 # tests for navigation
 # revision: $Revision$
 
-#require 'setup'
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_Navigate< Test::Unit::TestCase
-
-
    
     def gotoPage( a )
 
        $ie.goto($htmlRoot + a)
     end
-
 
     def test_navigation
        gotoPage( 'buttons1.html')
