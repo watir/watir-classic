@@ -4,18 +4,15 @@ require 'thread'
 require 'watir'  
 
 def test_google
-   testSite = 'http://www.google.com'
-   ie = Watir::IE.new
-   ie.goto(testSite)
-   ie.textField(:name, "q").set("pickaxe")    
-   ie.button(:value, "Google Search").click   
-   ie.close
+  ie = Watir::IE.start('http://www.google.com')
+  ie.textField(:name, "q").set("pickaxe")    
+  ie.button(:value, "Google Search").click   
+  ie.close
 end
 
+# run the same test three times concurrently in separate browsers
 threads = []
 3.times do
-  threads << Thread.new do
-    test_google
-  end
+  threads << Thread.new {test_google}
 end
 threads.each {|x| x.join}
