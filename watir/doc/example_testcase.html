@@ -147,29 +147,25 @@ change it in one place.
 <p>What you see in the text editor:</p>
 <div class="testexample">
 <font color="green"> #variables:</font><br>
-testSite = <font color="purple">'http://www.google.com'</font>
+test_site = <font color="purple">'http://www.google.com'</font>
 </div>
 <p>The test case author has chosen to assign the URL to a variable
-called <b>testSite</b>. It may not be much of an issue in this test
+called <b>test_site</b>. It may not be much of an issue in this test
 case, but using variables for test URLs is often a good practice. </p>
 <h2>Section 4: Open an Internet Explorer Browser</h2>
 <p>To begin driving Internet Explorer, we need to tell Watir to open an
 instance for testing.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> <font color="green">#open the IE browser</font><br>
-$ie = IE.new<br>
+ie = IE.new<br>
 </div>
 <p>To explain what this is doing, we can start from the right of the
 "=" operator. We send a message "new" to the "IE" (Internet Explorer)
-object, and assign it to a variable called "$ie".
-The "$ie" variable is a global variable which means we can access it
-anywhere in our script. the $ in front of the variable name tells the
-Ruby interpreter that it is global.
-We want this to be a global variable so we can access the Internet
-Explorer browser at any time in our script. Now we can refer to the
-Internet Explorer object in our script by using
-the "$ie" variable. This saves typing and helps make the script more
-readable.</p>
+class, and assign it to a variable called "ie".
+The "ie" variable is a local variable (like "test_site"). This means it
+can be accessed from our script, but not from other Ruby functions or
+methods.<br>
+</p>
 <h2>Section 5: Interacting With Google</h2>
 <p>Now we are ready to start automating the steps we ran manually using
 Watir.</p>
@@ -199,15 +195,15 @@ useful for tracking down test case
 failures quickly.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> puts <font color="purple">"Step 1: go to the
-test site: "</font> + testSite<br>
-$ie.goto(testSite)<br>
+test site: "</font> + test_site<br>
+ie.goto(test_site)<br>
 puts <font color="purple">&nbsp;&nbsp;&nbsp;"Action: entered "</font>
-+ testSite + <font color="purple">"in the address bar."</font><br>
++ test_site + <font color="purple">"in the address bar."</font><br>
 </div>
 <p>The first line uses a <i>puts</i> statement to print out the test
 case step we are attempting to the screen. The second line uses the
 Watir method "goto" to direct the test
-case to the test site: http://www.google.com (stored in the variable <b>testSite</b>).
+case to the test site: http://www.google.com (stored in the variable <b>test_site</b>).
 The third line prints the action that Watir just executed to the
 screen.
 When we print out the variable, we concatenate it to the string (the
@@ -246,7 +242,7 @@ functionality.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> puts <font color="purple">"Step 3: click the
 'Google Search' button"<br>
-</font> $ie.button(:name, <font color="purple">"btnG"</font>).click<font
+</font> ie.button(:name, <font color="purple">"btnG"</font>).click<font
  color="green"> # "btnG" is the name of the button</font><br>
 puts <font color="purple">&nbsp;&nbsp;&nbsp;" Action: clicked the
 Google Search button."</font><br>
@@ -275,35 +271,32 @@ whether the test case passed or failed.</p>
 <div class="testexample">
 puts <font color="purple">"Actual Result: Check that the 'Programming
 Ruby' link appears on the search results page"<br>
-</font> a = $ie.contains_text("<font color="purple">Programming Ruby</font>")
+</font><font color="darkblue">if</font> ie.contains_test("<font
+ color="purple">Programming Ruby</font>")
 <br>
-<font color="darkblue">if</font> !a <br>
-&nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Failed! Could not
-find: Programming Ruby"</font> <br>
-<font color="darkblue">else</font><br>
-&nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Passed. Found the
+&nbsp;&nbsp; puts <font color="purple">"Test Passed. Found the
 test string: Programming Ruby. Actual Results match
 Expected Results."</font><br>
+<font color="darkblue">else</font><br>
+&nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Failed! Could not
+find: Programming Ruby"</font> <br>
 <font color="darkblue">end</font><br>
 </div>
 <p>There is a lot more in this section, but we can break it down.</p>
 <ul>
   <li>The first line prints out the "Actual Result" heading to the
 screen.</li>
-  <li>The second line calls the "pageContainsText" method, and asks it
+  <li>The second line calls the "contains_text" method, and asks it
 to verify that <i>Programming Ruby</i> appears on the
 first page.</li>
-  <ul>
-    <li>We assign the result of that method call to a variable called <b>a</b>,
-so we can evaluate the result and print a PASS or FAILURE message.</li>
-  </ul>
   <li>Using an <i>if</i> statement, we evaluate whether the
-pageContainsText method was True or False.</li>
+"contains_text" method was True or False.</li>
   <ul>
     <li>If pageContainsText returns false, the text <i>Programming
 Ruby</i> does not appear. The test case fails and we print
 the "Test Failed!" message.</li>
-    <li>Else, if pageContainsText returns true, the text <i>Programming
+    <li>Else, if pageContainsText returns true (or actually anything
+but false), the text <i>Programming
 Ruby</i> appears. The test case passes and we
 print the "Test Passed." message.</li>
     <li>We close the conditional <i>if</i> section with an <i>end</i>
