@@ -9,29 +9,33 @@ form.submit
 wait
 
 # create a background job
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == "job"}
 new_job.name = "background"
 new_job.submit
 wait
 
 # create two jobs
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == "job"}
 new_job.name = "job1"
 new_job.submit
 wait
 
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == "job"}
 new_job.name = "job2"
 new_job.submit
 wait
 
 # Record time sessions for two separate jobs, one session for each.
-button_click_by_value("start","job1")
+form{|f| f.action == 'start'}.element{|e| e.value == 'job1'}.click
+wait
 sleep 3
-button_click_by_value("start","job2")
+form{|f| f.action == 'start'}.element{|e| e.value == 'job2'}.click
+wait
 sleep 3
-button_click_by_name("pause_or_stop_job","quick_stop")
-button_click_by_name("pause_or_stop_day","stop_day")
+form{|f| f.action == 'pause_or_stop_job'}.elements('quick_stop').click
+wait
+form{|f| f.action == 'pause_or_stop_day'}.elements('stop_day').click
+wait
 
 # Verify that two time records appear.
 tables = $iec.document.getElementsByTagName("TABLE")

@@ -19,7 +19,8 @@ module Timeclock
         return "#{ENV['HOME']}/Library/Timeclock"
       end
       
-      if Config::CONFIG['target_os'] == 'mswin32'
+      if Config::CONFIG['target_os'] == 'mswin32' or
+	Config::CONFIG['target_os'] == 'cygwin'
 	return "c:/timeclock_data"
       end
         

@@ -111,7 +111,7 @@ class Lab3Part4 < Test::Unit::TestCase
   end
 end
 
-class LittleTest < Test::Unit::TestCase
+class Test1 < Test::Unit::TestCase
   def setup
     ensure_no_user_data("STANZ")
     initialize_user "STANZ", "background"
@@ -149,7 +149,7 @@ class LoginStart < Test::Unit::TestCase
   end
 end
 
-class ExtraTest < Test::Unit::TestCase
+class StartStop < Test::Unit::TestCase
   def setup
     ensure_no_user_data("ruby")
   end

@@ -8,24 +8,24 @@ form.submit
 wait
 
 # create a background job
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "background"
 new_job.submit
 wait
 
 # create a non-background job
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "foreground"
 new_job.submit
 wait
 
 # start the job
-all_jobs = get_form_by_action("start")
-get_element_by_value(all_jobs, "foreground").click
+all_jobs = form{|f| f.action == 'start'}
+all_jobs.element{|e| e.value == 'foreground'}.click
 wait
 
 # pause the job
-pause_or_stop_form = get_form_by_action("pause_or_stop_job")
+pause_or_stop_form = form{|f| f.action == 'pause_or_stop_job'}
 pause_or_stop_form.elements("pause").click
 wait
 
@@ -35,11 +35,11 @@ for form in $iec.document.forms
     paused_form = IEDomFormWrapper.new(form)
   end
 end
-get_element_by_value(paused_form, "foreground").click
+paused_form.element{|e| e.value == 'foreground'}.click
 wait
 
 # stop the job
-pause_or_stop_form = get_form_by_action("pause_or_stop_job")
+pause_or_stop_form = form{|f| f.action == 'pause_or_stop_job'}
 pause_or_stop_form.elements("quick_stop").click
 wait
 

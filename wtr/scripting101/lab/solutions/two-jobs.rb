@@ -10,27 +10,29 @@ form.submit
 wait
 
 # create a background job
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "background"
 new_job.submit
 wait
 
 # create two non-background jobs
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "job1"
 new_job.submit
 wait
 
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "job2"
 new_job.submit
 wait
 
 # alternate between the two jobs
 3.times do
-  button_click_by_value("start","job1")
+  form{|f| f.action == 'start'}.element{|e| e.value == 'job1'}.click
+  wait
   sleep 2
-  button_click_by_value("start","job2")
+  form{|f| f.action == 'start'}.element{|e| e.value == 'job2'}.click
+  wait
   sleep 2
 end
 
