@@ -78,18 +78,41 @@ class TC_Images < Test::Unit::TestCase
 
     end
 
-    def test_to_s
+    def test_image_properties
 
         gotoImagePage()
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").hasLoaded? }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).hasLoaded? }
+
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).name }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).id }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).src }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).value }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).height }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).width }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileCreatedDate }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileSize }
+
+        assert_equal( "image"  , $ie.image(:index, 2).type ) 
+        assert_equal( ""       , $ie.image(:index, 2).name ) 
+        assert_equal( "square" , $ie.image(:index, 2).id )
+        assert_match( /square\.jpg/i ,$ie.image(:index, 2).src )
+        assert_equal( "" , $ie.image(:index, 2).value )
+        assert_equal( "88" , $ie.image(:index, 2).height )
+        assert_equal( "88" , $ie.image(:index, 2).width )
+        assert_equal( "03/10/2005" , $ie.image(:index, 2).fileCreatedDate )
+        assert_equal( "788",  $ie.image(:index, 2).fileSize )
 
         puts"--------------------- To String tests -------------------"
 
-        puts $ie.image(:name , "circle").to_s
+        puts $ie.image(:name  , "circle").to_s
+        puts $ie.image(:index , 2).to_s
+
+       
+
 
     end
-
 end
 
