@@ -20,7 +20,10 @@ module Timeclock
                          :name => 'name',
                          :value => '',
                          :size => '20',
-                         :maxlength => '100'})),
+                         :maxlength => '100'}),
+		input( { :type =>"submit" , 
+                            :name => "submit_logon",
+			    :value =>"Login" } ) ), 		
             p("If you have never logged in before, simply type
                in a name and an account will be created for you."),
             p("(There are no passwords in this program because it's
