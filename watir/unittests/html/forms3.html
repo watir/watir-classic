@@ -3,6 +3,18 @@
 <title>
 Test page for Forms
 </title>
+
+<script>
+function showHidden(){
+
+document.all.vis1.value = document.all.hid1.value;
+document.all.vis2.value = document.getElementById("hidden_1").value;
+
+}
+
+
+</script>
+
 </head>
 <body>
 CVS Revision: "$Revision$"
@@ -91,6 +103,23 @@ This form  is has a submit button that is an image
 <input type = text name = tt1>
 <input type = image src = images/button.jpg alt = "submit" name=imm>
 </form>
+
+<form name = has_a_hidden>
+This is in a form. The form has hidden objects. 
+<br>
+The first has a name - hid1<input type = hidden name = hid1>
+<br>
+The second has an id- hidden_1<input type = hidden id= hidden_1>
+
+Click This Button to see the values in these boxes
+<input type = button value='Show Hidden' onClick='javascript:showHidden();'>
+<br>
+<input type = text name = vis1> 
+<br>
+<input type = text name = vis2> 
+
+</form
+
 
 
 </body>

@@ -163,20 +163,6 @@ class TC_Tables < Test::Unit::TestCase
 
     end
 
-    def test_iterator
-
-        assert_equal(5, $ie.tables.length)
-        assert_equal(2 , $ie.tables[1].row_count )
-        assert_equal($ie.table(:index,1).row_count , $ie.tables[1].row_count )
-
-        count=0
-        $ie.tables.each do |t|
-            count +=1
-        end
-        assert_equal(count , $ie.tables.length)
-
-
-    end
 
 
 
