@@ -1126,6 +1126,14 @@ class IE
                link = thisLink if link == nil
             end
          end
+      when :name
+         links.each do |thisLink|
+            if what.matches(thisLink.invoke("name"))
+               link = thisLink if link == nil
+            end
+         end
+
+
 
       else
          raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
