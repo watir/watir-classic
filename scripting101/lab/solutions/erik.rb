@@ -13,13 +13,13 @@ forms[0].submit
 wait
 
 # Main Page
-job_form = get_form_by_action("job")
-job_form.name = "learning"
+job_form = form{|f| f.action == 'job'}
+job_form.name = 'learning'
 job_form.submit
 wait
 
-all_jobs = get_form_by_action("start")
-get_element_by_value(all_jobs, "learning").click
+all_jobs = form{|f| f.action == 'start'}
+all_jobs.element{|e| e.value == 'learning'}.click
 wait
 
 # verify that the job record appears in the bottom

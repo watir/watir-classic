@@ -10,11 +10,11 @@ form.submit
 wait
 
 # create a background job
-new_job = get_form_by_action("job")
+new_job = form{|f| f.action == 'job'}
 new_job.name = "background"
 new_job.submit
 wait
 
 # start the day
-button_click_by_name("start_day", "start_day")
-
+form{|f| f.action == 'start_day'}.elements('start_day').click
+wait
