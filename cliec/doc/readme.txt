@@ -19,6 +19,9 @@
   things in action.
 * cleaned up the readme.txt some, and included it in the build
 * Source re-org and move to RubyForge.net/projects/wtr
+* Added mozaxc to cliec/contrib folder with some scripts to help tinker
+  around with controlling the mozaxc ActiveX control embedded in a web page.
+* Added an example folder with sample code.  
 
 ====2003.027.0
 * No Change Log being kept up to this point. Sorry.
@@ -82,85 +85,4 @@ getting to use the built in text box wrapper, we have to also reference the
 - The iec.form call takes an index argument that defaults to 0, but you can
 set it to reference other forms on a multiple form page.
 
-Here's another example, using Google and helper routines that probably need
-to find their way into the lib:
-
-  require 'cl/iec'
-
-  def form
-    IEDomFormWrapper.new(@iec.form)
-  end
-
-  def submit
-    form.submit
-    @iec.wait
-  end
-
-  VISIBLE = true
-  @iec = ClIEController.new(VISIBLE)
-  @iec.navigate 'http://www.google.com'
-  form.q = 'cLabs'
-  submit
-
-Neither of these websites seems to have easily testable output. But, ugly as
-it is, here's a way to get the first returned link and click it using the
-ClIEDomViewer. First time requires a dump to find the path to the first
-link:
-
-  dv = ClIEDomViewer.new(@iec)
-  File.open('dom.dump.txt', 'w') do |f| dv.outputDom(f) end
-
-Digging through dom.dump.txt, we find the first link here:
-
-[snip]
-nodeName: -HTML-BODY1-DIV1
-nodeName: -HTML-BODY1-DIV1-P1
-nodeName: -HTML-BODY1-DIV1-P1-A1
-nodeName: -HTML-BODY1-DIV1-P1-A1-B1
-nodeName: -HTML-BODY1-DIV1-P1-A1-B1-#text1
-nodeValue: Programming
-nodeName: -HTML-BODY1-DIV1-P1-A1-#text1
-nodeValue:
-nodeName: -HTML-BODY1-DIV1-P1-A1-B2
-nodeName: -HTML-BODY1-DIV1-P1-A1-B2-#text1
-nodeValue: Ruby
-nodeName: -HTML-BODY1-DIV1-P1-A1-#text2
-nodeValue: : The Pragmatic Programmer's Guide
-[snip]
-
-so, we now have a path to the first link: "-HTML-BODY1-DIV1-P1-A1" and we
-can do:
-
-  root = dv.htmlRootNode
-  dv.buildNodeWrapperTree(root)
-  link = dv.getNodeWrapperFromPath('HTML-BODY1-DIV1-P1-A1', root)
-  link.node.click
-  @iec.wait
-
-Obviously, this is fragile should Google ever change their layout, but
-without consistent ids on the <a> tags, or other somesuch, I don't know of
-another way to do it.
-
-BTW, here's the raw form of the example, to see what pieces IEC helps with:
-
-  require 'win32ole'
-
-  ie = WIN32OLE.new('InternetExplorer.Application')
-  ie.visible = true
-  ie.gohome
-  ie.navigate "http://google.com"
-
-  while ie.busy
-  end
-
-  # sometimes this isn't necessary, but I've found in some cases ie.busy
-  # returns too quickly. But checking for READYSTATE_COMPLETE by itself isn't
-  # enough, because the browser won't go out of READYSTATE_COMPLETE quickly
-  # enough just after a new navigate call.
-  READYSTATE_COMPLETE = 4
-  until ie.readyState == READYSTATE_COMPLETE
-  end
-
-  form = ie.document.forms(0)
-  form.q.value = 'cLabs'
-  form.submit
+See the examples folder for more stuff.
