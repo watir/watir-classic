@@ -99,8 +99,46 @@ class TC_Selectbox < Test::Unit::TestCase
        assert($ie.pageContainsText("PASS") )
        gotoPage()
 
+    end
+
+
+    def test_selectBox_select_using_value
+       gotoPage()
+
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.selectBox(:name, "NoName").getSelectedItems}  
+
+       assert_raises(NoValueFoundException , "NoValueFoundException was supposed to be thrown" ) {   $ie.selectBox(:name, "sel1").select_value("missing item") }  
+       assert_raises(NoValueFoundException , "NoValueFoundException was supposed to be thrown" ) {   $ie.selectBox(:name, "sel1").select_value(/missing/) }  
+
+       # the select method keeps any currently selected items - use the clear selectcion method first
+       $ie.selectBox( :name , "sel1").clearSelection
+       $ie.selectBox( :name , "sel1").select_value("o1")
+       assert_arrayEquals( ["Option 1" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
+
+       $ie.selectBox( :name , "sel1").clearSelection
+       $ie.selectBox( :name , "sel1").select_value(/2/)
+       assert_arrayEquals( ["Option 2" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
+
+       $ie.selectBox( :name , "sel2").clearSelection
+       $ie.selectBox( :name , "sel2").select_value([ /2/ , /4/ ])
+       assert_arrayEquals( ["Option 2" , "Option 4" ] , $ie.selectBox(:name, "sel2").getSelectedItems)   
+
+
+        # these are to test the onchange event
+
+       # the event shouldnt get fired, as this is the selected item
+       $ie.selectBox( :name , "sel3").select_value( /3/ )
+       assert_false($ie.pageContainsText("Pass") )
+       gotoPage()
+
+       # the event should get fired
+       $ie.selectBox( :name , "sel3").select_value( /2/ )
+       assert($ie.pageContainsText("PASS") )
+       gotoPage()
+
 
 
 
     end
+
 end
