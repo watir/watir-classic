@@ -691,9 +691,21 @@ class IE
       sleep 0.2
    end
 
+   # this method closes the Internet Explorer
    def close
       @ie.quit
    end
+
+   # this method returns the HTML of the current page
+   def getHTML()
+       return getDocument().body.innerHTML
+   end
+
+   # this method returns the text of the current document
+   def getText()
+       return getDocument().body.innerText
+   end
+
 
    # This method is used to display the available html frames that Internet Explorer currently has loaded.
    # This method is usually only used for debugging test scripts.
@@ -758,13 +770,28 @@ class IE
 
    end
 
-   def getHTML()
-      return getDocument().body.innerHTML
-   end
-
-   def getText()
-      return getDocument().body.innerText
-   end
+  
+   # this method shows the name, id etc of the object that is currently active - ie the element that has focus
+   # its mostly used in irb when creating a script
+   def showActive
+       s = "" 
+     
+       current = getDocument.activeElement
+        begin
+            s=s+current.invoke("type").to_s.ljust(16)
+        rescue
+        end
+        props=["name" ,"id" , "value" , "alt" , "src","innerText","href"]
+        props.each do |prop|
+            begin
+                p = current.invoke(prop)
+                s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
+            rescue
+                 #this object probably doesnt have this property
+            end
+        end
+        s=s+"\n"
+    end
 
 
    # This method shows the available objects on the current page.
