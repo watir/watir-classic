@@ -419,8 +419,8 @@ module Watir
                 print "\b"
                 #puts "waitForIE Complete"
                 s=nil
-#            rescue WINOLE32RuntimeError
- 
+            rescue WIN32OLERuntimeError
+              
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
@@ -1202,14 +1202,14 @@ module Watir
         include FormWrapperMethods
 
         attr_accessor :form
-        def initialize( ieController, how, what )
-            @ieController = ieController
+        def initialize( container, how, what )
+            @container = container
             @formHow = how
             @formName = what
             
             log "Get form  formHow is #{@formHow}  formName is #{@formName} "
             count = 1
-            doc = @ieController.getDocument()
+            doc = @container.getDocument()
             doc.forms.each do |thisForm|
                 next unless @form == nil
 
@@ -1235,8 +1235,8 @@ module Watir
                 count = count +1
             end
             
-            @typingspeed = ieController.typingspeed      
-            @activeObjectHighLightColor = ieController.activeObjectHighLightColor      
+            @typingspeed = @container.typingspeed      
+            @activeObjectHighLightColor = @container.activeObjectHighLightColor      
         end
 
         def exists?

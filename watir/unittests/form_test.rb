@@ -162,4 +162,14 @@ class TC_Forms4 < Test::Unit::TestCase
         assert_equal($ie.form(:index, 1).textField(:name, 'name').getContents, 'apple')
         assert_equal($ie.form(:index, 2).textField(:name, 'name').getContents, 'banana')
     end
+    
+    def test_using_text_on_form
+        $ie.form(:name, 'apple_form').textField(:name, 'name').set('strudel')
+        assert_equal($ie.form(:index, 1).textField(:name, 'name').getContents, 'strudel')
+    end 
+    
+    def test_submit
+        $ie.form(:name, 'apple_form').submit
+        assert( $ie.pageContainsText("PASS") )
+    end
 end
