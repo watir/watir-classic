@@ -39,21 +39,12 @@ form{|f| f.action == 'pause_or_stop_day'}.elements('stop_day').click
 wait
 
 # Verify that two time records appear.
-tables = $iec.document.getElementsByTagName('TABLE')
-results_table = tables.item(tables.length - 1) # last table
-table_rows = results_table.getElementsByTagName('TR')
-if table_rows.length == 3 # two rows plus header
-  puts 'PASS'
-else
-  puts 'FAIL'
-end
+assert_total_job_records 2
 
-# Display the time records
-for row in table_rows
-  for td in row.getElementsbyTagName('TD')
-    puts td.innerHtml
-  end
-end
+# Verify the time records
+assert_job_record 1, 'job2', ''
+assert_job_record 2, 'job1', ''
+
     
   
 

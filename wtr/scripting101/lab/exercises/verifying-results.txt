@@ -2,13 +2,56 @@ h2=. Scripting for Testers
 
 h2=. Lab 4: Verifying Results
 
-* Assertions
-* Using a Script-based test harness??
+You've written some scripts that demonstrate your ability to automate
+an internet browser. But they aren't really tests. Because they don't
+really check the results. Now it is time to take care of that.
+
+We'll use assertions to check values. An assertion will check a
+value. If it passes, nothing happens. But if it fails an exception
+will be raised, which can be caught and logged by a test
+harness. Refer to page 2 of the "Web Testing with Ruby Cheat Sheet":../../doc/Internet%20Explorer%20Cheat%20Sheet.doc for several
+assertions and testing methods.
+
+#   *Experimenting with Assertions.* In IRB, load your "start the day"
+     test script and then experiment with the different assertions and
+     test methods. Update the script so that it now includes
+     verifications. 
+
+#   *Start, Stop, and Verify.* Revise the start, stop and pause test
+     script so that it contains assertions.
 
 #   *Record Check.* Start with a user that has no time records. Record
      time sessions for two separate jobs, one session for each. Verify
-     that two time records appear. (This last part is a challenge.) 
+     that two time records appear.
 
-#   *Test Strategy.* Look over the test ideas you developed at the
-     beginning of class.  Write a script for one of them--or more. 
+#    *Test Harness.* Now that you have multiple test scripts, you
+      probably want to have them run together. The following code
+      demonstrates how to create a simple test harness that loads one
+      test script ('check-records.rb'). 
+
+<pre>
+require 'test/unit'
+class LoadTestScript < Test::Unit::TestCase
+  def test_check_records
+    load 'check-records.rb'
+  end
+  def teardown
+    $iec.close if $iec
+  end
+end
+</pre>
+
+      You can add additional tests,
+      by defining additional methods whose names begin with 'test'
+      that load the desired scripts. Create a test harness that
+      executes all of your test scripts.
+
+5. *Test Strategy.* Look over the test ideas you developed at the
+beginning of class.  Write a test script for one or more of your
+ideas.
+
+
+
+
+
 
