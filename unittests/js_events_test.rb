@@ -39,10 +39,6 @@ class TC_JSEvents < Test::Unit::TestCase
 
 #onMouseOver tests
  #window status
-
-    def gotoJavaScriptEventsPage()
-        $ie.goto($htmlRoot + "javascriptevents.html")
-    end
     
     def test_page_nostatus
        gotoJavaScriptEventsPage()
