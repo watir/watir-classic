@@ -15,6 +15,9 @@ class TC_Divs < Test::Unit::TestCase
     def test_Divs
 
        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").click }
+       assert_raises(UnknownObjectException) {$ie.div(:title , "div77").click }
+
+
 
        assert($ie.textField(:name, "text1").verify_contains("0") )  
        $ie.div(:id , "div3").click
@@ -26,7 +29,11 @@ class TC_Divs < Test::Unit::TestCase
 
     def test_getText
        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").getText }
+       assert_raises(UnknownObjectException) {$ie.div(:title , "div77").getText }
+
        assert_equal("This div has an onClick that increments text1" ,   $ie.div(:id , "div3").getText.strip )
+       assert_equal("This text is in a div with an id of div1 and title of test1" ,   $ie.div(:title , "Test1").getText.strip )
+
     end
 
     def test_getStyle

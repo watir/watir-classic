@@ -1001,6 +1001,8 @@ module Watir
                     attribute = "id"
                 when :name
                     attribute = "id"
+                when :title
+                    attribute = "title"
              end
 
              parts.each do | p |
