@@ -2,28 +2,21 @@
 # tests for Buttons
 # revision: $Revision$
 
-require '../watir'
-
+require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
 require 'testUnitAddons'
 
-$myDir = Dir.getwd
-
-
-
+$myDir = File.dirname(__FILE__)
 
 class TC_Buttons < Test::Unit::TestCase
-
 
     def gotoButtonPage()
         $ie.goto("file://#{$myDir}/html/buttons1.html")
     end
 
     def gotoFramesPage()
-
-    $ie.goto("file://#{$myDir}/html/frame_buttons.html")
+        $ie.goto("file://#{$myDir}/html/frame_buttons.html")
     end
 
     def aatest_Spinner
@@ -35,11 +28,10 @@ class TC_Buttons < Test::Unit::TestCase
             i+=1
         end
         s = nil
-
-
     end
+
     def test_Button_to_s
-       gotoButtonPage()
+        gotoButtonPage()
 
         puts "Testing to_s   "
         line = "-"*30
@@ -70,9 +62,13 @@ class TC_Buttons < Test::Unit::TestCase
 
     end
 
+    def test_Button_click_only
+       gotoButtonPage()
+       $ie.button(:caption, "Click Me").click
+       assert($ie.pageContainsText("PASS") )
+    end
 
     def test_Button_click
-
        gotoButtonPage()
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:caption, "Missing Caption").click   }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:id, "missingID").click   }  
@@ -84,7 +80,6 @@ class TC_Buttons < Test::Unit::TestCase
 
        $ie.button(:caption, "Click Me").click
        assert($ie.pageContainsText("PASS") )
-
     end
 
     def test_Button_Exists

@@ -20,7 +20,7 @@
 #
 
 #includes
-require '../watir.rb'   # the controller
+require 'watir.rb'   # the controller
 
 #test::unit includes
 require 'test/unit' 
