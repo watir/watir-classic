@@ -221,26 +221,56 @@ Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here
 <p>We can also use the <i>clear</i> method using both of these attributes.</p>
 
 <h3>Selection Boxes</h3>
-<p>Watir selects an item in a selection box (or dropdown box) based on attributes provided in the <i>select</i> HTML tag.</p>
+<p>Watir <i>selects</i> an item in a selection box (or dropdown box) based on the <i>name</i> and <i>option value</i> attributes provided in the <i>select</i> HTML tag.
+Or we can identify it based on the <i>name</i> attribute, and the value we want to set.</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Select Me:  <select name = "selectme" >
-<option name=1>Web Testing
-<option name=2>in Ruby
-<option name=3>is fun
+<option name=1>
+<option name=2>Web Testing
+<option name=3>in Ruby
+<option name=4>is fun
 </select> </div>
-
+<p>Watir code to <i>set</i> a select box item using the <i>name</i> attribute and the value to set: 
+<div class = "testexample"> $ie.selectBox( :name , "selectme").select("is fun")</div>
+<p>This is the tag in the HTML source with the attributes highlighted:</p>
+<div class = "htmlexample">&lt;select name = "<b>selectme</b>" &gt;
+&lt;option name=1&gt;
+&lt;option name=2&gt;Web Testing
+&lt;option name=3&gt;in Ruby
+&lt;option name=4&gt;<b>is fun</b>
+&lt;/select&gt;</div>
+<p>Watir can also <i>clear</i> a select box:</p>
+<div class = "testexample">$ie.selectBox( :name , "selectme").clearSelection </div>
 <h2>Entering Data into a Web Page</h2>
-
+<p>Watir <i>sets</i> text in an input field on a web page based on the <i>name</i> and <i>id</i> attributes provided in the <i>input type = text</i> HTML tag.
 <h3>Text Fields</h3>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Type in Me:  <input type = "text" name = "typeinme"> </div>
+<p>Watir code to <i>set</i> the text string "Watir World" using the <i>name</i> attribute: 
+<div class = "testexample">$ie.textField(:name, "typeinme").set("Watir World")</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;input type = "text" name = "<b>typeinme</b>" &gt;</div>
+<p>Watir can also <i>clear</i> a text field:</p>
+<div class = "testexample">$ie.textField(:name, "typeinme").clear</div>
 
 <h2>Submitting Data from a Web Page</h2>
-<p>Send test scenarios to application</p>
+<p>In web applications, we generally submit information we have entered or selected in the web page by clicking hyperlinks (see above example), 
+clicking buttons, or images that look and act like HTML buttons, or by hitting Enter/Return on  our keyboard.</p>
 <h3>Buttons:</h3>
+<p>Watir <i>clicks</i> buttons on a web page based on the <i>name</i>, <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input type = button</i> HTML tag.
 <h4>HTML Buttons</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><input type = "button" name = "clickme" value = "Click Me"> </div>
+<h4><i>Value</i> or <i>Caption</i> Attribute </h4>
+<p>This is the Watir code you need to click a button using the <i>caption</i> attribute:</p>
+<div class = "testexample">$ie.button(:caption, "Click Me").click</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;input type = "button" name = "clickme" value = "<b>Click Me</b>"&gt;</div>
+<h4><i>Name</i> Attribute </h4>
+<p>This is the Watir code you need to click a button using the <i>name</i> attribute:</p>
+<div class = "testexample">$ie.button(:name, "clickme").click</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;input type = "button" name = "<b>clickme</b>" value = "<b>Click Me</b>"&gt;</div>
 <h4>Image Buttons</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><img src = "images/doit.gif"> </div>
