@@ -39,7 +39,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
   
    puts "Step 1: go to the yahoo site: www.yahoo.com"
    $ie.goto(testSite)
-   puts "  Action: entered ' + testSite + 'in the address bar."
+   puts "  Action: entered " + testSite + " in the address bar."
 
    puts "Step 2: enter 'pickaxe' in the search text field"
    $ie.textField(:name, "p").set("pickaxe")
