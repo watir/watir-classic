@@ -429,7 +429,7 @@ module Watir
                             end
                         end
                     rescue=>e
-                        @logger.warn 'frame error in wait' + e.to_S
+                        @logger.warn 'frame error in wait' #  + e.to_S
                     end
                 end
                 @down_load_time =  Time.now - pageLoadStart 
@@ -440,7 +440,7 @@ module Watir
                 log "waitForIE Complete"
                 s=nil
             rescue WIN32OLERuntimeError => e
-                @logger.warn 'runtime error in wait' + e.to_s
+                @logger.warn 'runtime error in wait' #  + e.to_s
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
