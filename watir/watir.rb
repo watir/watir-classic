@@ -650,67 +650,41 @@ class IE
 
     def getImage( how, what )
         doc = getDocument()
-
+        
         log"Finding an image how: #{how} What #{what}"
-
+        
         images = doc.images
         o=nil
         images.each do |img|
-
+            
             log "Image on page: src = #{img.src}"
-
+            
             next unless o == nil
-      
-
+            
             case how
-                when :src
-                    if what.kind_of? String
-                        if img.src == what
-                            o = img
-                        end
-                    elsif what.kind_of? Regexp
-                        if img.src.match(what) != nil
-                            o = img
-                        end
-                    end
-                when :name
-                    if what.kind_of? String
-                        if img.name == what
-                            o = img
-                        end
-                    elsif what.kind_of? Regexp
-                        if img.name.match(what) != nil
-                            o = img
-                        end
-                    end
-                when :id
-                    if what.kind_of? String
-                        if img.invoke("id") == what
-                            o = img
-                        end
-                    elsif what.kind_of? Regexp
-                        if img.invoke("id").match(what) != nil
-                            o = img
-                        end
-                    end
-
-                when :alt
-                    if what.kind_of? String
-                        if img.invoke("alt") == what
-                            o = img
-                        end
-                    elsif what.kind_of? Regexp
-                        if img.invoke("alt").match(what) != nil
-                            o = img
-                        end
-                    end
-
-
-
-                when :index
-
+            when :src
+                attribute = img.src
+            when :name
+                attribute = img.name
+            when :id
+                attribute = img.invoke("id")
+            when :alt
+                attribute = img.invoke("alt")
+            else
+                next
             end
-        end
+            
+            if what.kind_of? String
+                if attribute == what
+                    o = img
+                end
+            elsif what.kind_of? Regexp
+                if attribute.match(what) != nil
+                    o = img
+                end
+            end
+            
+        end # do
         return o
     end
 
@@ -882,41 +856,38 @@ class IE
     #   * what              - what we are looking for - normally the src or alt of a button
     #   * container         - the container that we are searching in ( a form or the body of a document )
     #   * htmlObjectTypes  - an array of the objects we are interested in
-    def getObjectWithSrcOrAlt(what , how , container   , htmlObjectTypes )
-
-        o = nil
-        container.each do |r|
-            next unless o ==nil
-            begin
-                if how ==:alt
-                    if what.kind_of?( String )
-                        if r.alt == what and htmlObjectTypes.include?(r.invoke("type").downcase)
-                            o = r
-                        end
-                    elsif what.kind_of? Regexp
-                        if r.alt.match( what ) and htmlObjectTypes.include?(r.invoke("type").downcase)
-                            o = r
-                        end
-                    end
-                elsif how ==:src
-                    if what.kind_of? String
-                        if r.src == what and htmlObjectTypes.include?(r.invoke("type").downcase)
-                            o = r
-                        end
-                     elsif what.kind_of? Regexp
-                        if r.src.match( what ) and htmlObjectTypes.include?(r.invoke("type").downcase)
-                            o = r
-                        end
-                    end
-                end
-            rescue=>e
-                # may not have a value...
-                #puts e
-                #puts e.backtrace.join("\n")
-            end 
-        end
-        return o
-
+    def getObjectWithSrcOrAlt( what , how , container , htmlObjectTypes )
+      o = nil
+      
+      container.each do |r|
+        next unless o == nil
+        begin
+          next unless htmlObjectTypes.include?(r.invoke("type").downcase)
+          
+          case how
+          when :alt
+            attribute = r.alt
+          when :src
+            attribute = r.src
+          else
+            next
+          end
+          
+          if what.kind_of?( String )
+            if attribute == what
+              o = r
+            end
+          elsif what.kind_of? Regexp
+            if attribute.match( what )
+              o = r
+            end
+          end
+          
+        rescue
+        end 
+      end
+      return o
+      
     end
 
 
