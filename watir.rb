@@ -466,7 +466,7 @@ module Watir
                 print "\b"
                 #puts "waitForIE Complete"
                 s=nil
-            rescue WINOLE32RuntimeError
+            rescue
  
             end
             sleep 0.01
@@ -985,9 +985,10 @@ module Watir
         #
 
         def focus()
+            getDocument.activeElement.blur
             doc = getDocument()
-            doc.focus
             clearFrame()
+            doc.focus
         end
 
        
