@@ -1052,6 +1052,11 @@ module Watir
         end
         alias textField text_field
         
+        def text_fields
+            return Text_Fields.new(self)
+        end
+
+
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -1135,6 +1140,10 @@ module Watir
         
         def div( how , what )
             return Div.new(self , how , what)
+        end
+
+        def divs
+            return Divs.new(self)
         end
 
         def span( how , what )
@@ -1548,6 +1557,21 @@ module Watir
         end
     end
 
+    class Divs< Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("DIV").length > 0 
+                @objects= @ieController.ie.document.body.getElementsByTagName("DIV")
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.div( :index , i+1)
+        end
+    end
+
     class Buttons < Iterators
 
         def initialize( ieController )
@@ -1663,9 +1687,24 @@ module Watir
 
     end
 
+    class Text_Fields < Iterators
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
 
+                objects.each do |o|
+                    @objects << o  if ["text"].include?(o.invoke("type").downcase )
+                end
+ 
+            end        
 
-
+        end
+       
+        def iterator_object(i)
+            @ieController.text_field( :index , i+1)
+        end
+    end
 
     class SpanDivCommon < ObjectActions
         def initialize( ieController,  how , what )
