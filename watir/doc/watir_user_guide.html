@@ -532,7 +532,7 @@ form using the <i>name</i> attribute:</p>
 <div class="testexample">$ie.button(:name, "doit").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class="htmlexample">&lt;form action = "submit" name = "doitform"
-method="post"&gt;&lt;img src = "images/doit.gif" name = "<b>doit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+method="post"&gt;&lt;input type="image" src = "images/doit.gif" name = "<b>doit</b>"&gt;&lt;/form&gt;</div>
 <p>If the form uses an image as a button to submit, we can also treat
 it the same way as we do with a form that does not have a button.</p>
 <h4>Forms With No Buttons</h4>
@@ -595,8 +595,8 @@ has an <b>attach</b> method that allows you to access and control the new window
 click a button or link that opens a new window, you can attach to it by identifying the
 window by its URL or by the Window title:</p>
 
-<div class="testexample">$ie.attach(:url, 'http://mytestsite')</div>
-<div class="testexample">$ie.attach(:title, 'Test New Window')</div>
+<div class="testexample">$new_window.attach(:url, 'http://mytestsite')</div>
+<div class="testexample">$new_window.attach(:title, 'Test New Window')</div>
 
 <h2>Validating Test Results</h2>
 <p>How do we tell whether the test passed or failed? It is good
@@ -609,7 +609,7 @@ Explorer DOM</a>, and can check to see if a page contains the objects
 that are expected for the test to pass.</p>
 <p></p>
 <h3>Object Exists</h3>
-<p>A simple verification point is to use the Watir method <i>pageContainsText</i>:</p>
+<p>A simple verification point is to use the Watir method <i>contains_text</i>:</p>
 <p>In our test, imagine we have gone through a sequence of steps to
 reach the desired point. This is a web page that contains the following
 text:</p>
@@ -705,7 +705,7 @@ assertions to check of objects <i>exist</i>, are <i>enabled</i> or <i>disabled</
 or any other state that the DOM tells the web browser about an object.</p>
 <h4>Printing Results When Using Assertions</h4>
 <p>In the simple example above, we were able to evaluate whether
-"pageContainsText" returned true or false. Based on the result from
+"contains_text" returned true or false. Based on the result from
 this method, we could print out a pass or failure. When we wrap that
 method call in an assertion, we need to do something different.
 Test::unit assertsions don't necessarily
@@ -770,6 +770,10 @@ to allow for tests on pages using CSS as part of the application. </p>
 the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
 <h4>Multiple Windows</h4>
 <p>Watir now handles multiple browser windows with the <b>attach</b> method.</p>
+<h4>File Upload</h4>
+<p>Watir now has a mechanism to support file uploads. Use the file_field method.
+Run and view the Ruby source in:"filefield_test.rb" in the unittests folder for usage.</p>
+
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in
 the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i>
@@ -808,11 +812,6 @@ irb(main):006:0> <b>ie.text_field(:name, "test_text").flash</b><br>
 way of testing whether you have identified the right object, and if you have used the right attribute. Using this in IRB
 is a quick way of finding out what objects can be used in a test script before commiting the script to a file.</p>
 
-
-<h3>Coming Soon</h3>
-<h4>File Upload</h4>
-<p><i>Coming Soon!</i> Watir will support uploading files for tests
-that require data files.</p>
 <h2>Glossary</h2>
 <p><b>Controller</b> the Watir scripting package that controls a web
 browser</p>
