@@ -17,7 +17,7 @@
 
    #variables:
    testSite = 'http://www.google.com'
-
+  
    #open the IE browser
    $ie = IE.new
 
@@ -33,18 +33,18 @@
    puts "  Action: entered pickaxe in the search field"
 
    puts "Step 3: click the 'Google Search' button"
-   $ie.button(:value, "Google Search").click   # Google Search is the caption of the button
+   $ie.button(:name, "btnG").click   # "btnG" is the name of the Search button
    puts "  Action: clicked the Google Search button."
 
    puts "Expected Result: "
    puts " - a Google page with results should be shown. 'Pragmatic Programmers LLC' should be high on the list."
   
-   puts "Actual Result: Check that the 'The Pragmatic Programmers, LLC' link appears on the results page "
-   a = $ie.pageContainsText("The Pragmatic Programmers, LLC") 
+   puts "Actual Result: Check that the 'Programming Ruby, 2nd Ed.' link appears on the results page "
+   a = $ie.pageContainsText("Programming Ruby") 
    if !a 
       puts "Test Failed! Could not find: 'The Pragmatic Programmers, LLC'" 
    else
-      puts "Test Passed. Found the test string: 'The Pragmatic Programmers, LLC'. Actual Results match Expected Results."
+      puts "Test Passed. Found the test string: 'Programming Ruby, 2nd Ed.'. Actual Results match Expected Results."
    end
    
    puts "  "
