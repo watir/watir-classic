@@ -135,6 +135,19 @@ class UnknownTableException < WatirException
     end
 end
 
+class String
+    def matches (x)
+        return self == x
+    end
+end
+
+class Regexp
+    def matches (x)
+        return self.match( x )
+    end
+end
+
+
 # This class is the base class for most actions ( click etc ) that happen on an object
 # this is not a class that uses would normally access. 
 class ObjectActions
@@ -673,17 +686,9 @@ class IE
             else
                 next
             end
-            
-            if what.kind_of? String
-                if attribute == what
-                    o = img
-                end
-            elsif what.kind_of? Regexp
-                if attribute.match(what) != nil
-                    o = img
-                end
-            end
-            
+
+            o = img if what.matches(attribute)
+                        
         end # do
         return o
     end
@@ -756,53 +761,39 @@ class IE
             #log "How is #{how}"
             container.each do |object|
                 next  unless o == nil
-                case how
+                
+                begin
+                    
+                    case how
                     when :id
-                        begin
-                            if object.invoke("id") == what
-                                if types
-
-                                    if elementTypes.include?(object.invoke("type"))
-                                        if value
-                                            #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                                            if object.value.to_s == value.to_s
-                                                o = object
-                                            end
-                                        else
-                                            o= object
-                                        end
-                                    end
-                                else
-                                     o= object
-                                end
-                            end
-                       rescue => e
-                           #log e.to_s + "\n" + e.backtrace.join("\n")
-                       end
+                        attribute = object.invoke("id")
                     when :name
-                        begin
-                            #log "Comparing #{object.invoke("name")} with #{what}"
-                            if object.invoke("name") == what
-                                if types
-                                    #log "Supplied objects is : " + elementTypes.join( " ")
-                                    if elementTypes.include?(object.invoke("type"))
-                                        if value
-                                            #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                                            if object.value.to_s == value.to_s
-                                                o = object
-                                            end
-                                        else
-                                            o= object
-                                        end
+                        attribute = object.invoke("name")
+                    else
+                        next
+                    end
+                    
+                    if attribute == what
+                        if types
+                            if elementTypes.include?(object.invoke("type"))
+                                if value
+                                    #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                    if object.value.to_s == value.to_s
+                                        o = object
                                     end
-                                else
-                                     o= object
+                                else # no value
+                                    o = object
                                 end
                             end
-                       rescue => e
-                           #log e.to_s + "\n" + e.backtrace.join("\n")
-                       end
+                        else # no types
+                            o = object
+                        end
                     end
+                rescue => e
+                    #log e.to_s + "\n" + e.backtrace.join("\n")
+                end
+                
+                
             end
         end
 
@@ -835,15 +826,8 @@ class IE
         container.each do |r|
             next unless o ==nil
             begin
-                if what.kind_of? String
-                    if r.value == what and htmlObjectTypes.include?(r.invoke("type").downcase)
-                        o = r
-                    end
-                elsif what.kind_of? Regexp 
-                   if r.value.match(what) !=nil and htmlObjectTypes.include?(r.invoke("type").downcase) 
-                       o = r 
-                   end 
-               end 
+                next unless htmlObjectTypes.include?(r.invoke("type").downcase)
+                o = r if what.matches(r.value)
             rescue
                 # may not have a value...
             end 
@@ -872,16 +856,8 @@ class IE
           else
             next
           end
-          
-          if what.kind_of?( String )
-            if attribute == what
-              o = r
-            end
-          elsif what.kind_of? Regexp
-            if attribute.match( what )
-              o = r
-            end
-          end
+ 
+          o = r if what.matches( attribute )         
           
         rescue
         end 
@@ -946,48 +922,37 @@ class IE
         links = doc.links
 
         link = nil
-
         case how
+            
+        when :index
+            begin
+                link = links[ (what-1).to_s ]
+            rescue
+                link=nil
+            end
+        when :url
+            links.each do |thisLink|
+                if thisLink.href.match(Regexp.escape(what)) 
+                    link = thisLink if link == nil
+                end
+            end
+            
+        when :text
+            links.each do |thisLink|
+                if what.matches(thisLink.innerText) 
+                    link = thisLink if link == nil
+                end
+            end
 
-            when :index
-                begin
-                    link = links[ (what-1).to_s ]
-                rescue
-                    link=nil
+        when :id
+            links.each do |thisLink|
+                if what.matches(thisLink.invoke("id"))
+                    link = thisLink if link == nil
                 end
-            when :url
-                links.each do |thisLink|
-                    if thisLink.href.match(Regexp.escape(what)) 
-                        link = thisLink if link == nil
-                    end
-                end
+            end
 
-            when :text
-                links.each do |thisLink|
-                    if what.kind_of?( String )
-                        if thisLink.innerText==what 
-                            link = thisLink if link == nil
-                        end
-                    elsif what.kind_of?( Regexp)
-                        if thisLink.innerText.match(  what)
-                            link = thisLink if link == nil
-                        end
-                    end
-                end
-            when :id
-			links.each do |thisLink|
-                      if what.kind_of?( String )
-                          if thisLink.invoke("id") == what
-                              link = thisLink if link == nil
-                          end
-                      elsif what.kind_of?( Regexp)
-                          if thisLink.invoke("id").match(what)
-                             link = thisLink if link == nil
-                          end
-                      end
-		      end
-            else
-                log "unknown way of finding a link ( #{what} ) "
+        else
+            log "unknown way of finding a link ( #{what} ) "
         end
         #reset the frame reference
         clearFrame()
@@ -1173,12 +1138,11 @@ class Form < IE
 
             case @formHow
                 when :name 
-                    
                     if thisForm.name == @formName
                         @form = thisForm
                     end
+
                 when :id
-                    
                     if thisForm.invoke("id").to_s == @formName.to_s
                         @form = thisForm
                     end
@@ -1194,15 +1158,10 @@ class Form < IE
                     end
 
                 when :action
-                   if @formName.kind_of? String
-                        if thisForm.action == @formName
-                             @form = thisForm
-                        end
-                   elsif 
-                        if thisForm.action.match( @formName ) != nil
-                             @form = thisForm
-                        end
-                   end
+                    if @formName.matches(thisForm.action)
+                        @form = thisForm
+                    end
+
            end
            count = count +1
         end
