@@ -1,5 +1,4 @@
-This is an early release of the watir web testing framework for Internet Explorer and Ruby.
-This release is to evaluate how well the api would work, and to gain feedback on it.
+This is Watir - Web Application Testing In Ruby
 
 To Install:
 -----------
@@ -20,7 +19,6 @@ See the user guide if you are having problems with security blocking.
 Things Still to be Done:
 ------------------------
 waitForIE may change to use the events from Internet Explorer. This will help detect page changes that are very quick ( from a local file system)
-Pluggable error checker - I have some classes that continually check for errors, and report on them. These need to be incorporated.
 RDoc - I always need to add documentation to the classes and methods
 Javascript pop ups
 New browser windows - experimental at the moment
