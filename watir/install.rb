@@ -124,14 +124,14 @@ def install(dirSelected, startMenu, desktop)
     if startMenu==1
         puts "Creating start menu shortcuts"
         make_startmenu_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
-        make_startmenu_shortcut( "RDocs", dirSelected + "\\rdoc\\index.html" )
+        make_startmenu_shortcut( "Watir API Reference", dirSelected + "\\rdoc\\index.html" )
     end
     
     # Create desktop shortcut
     if desktop==1
         puts "Creating desktop shortcuts"
         make_desktop_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
-        make_desktop_shortcut( "RDocs", dirSelected + "\\rdoc\\index.html" ) 
+        make_desktop_shortcut( "Watir API Reference", dirSelected + "\\rdoc\\index.html" ) 
     end
 
 end
