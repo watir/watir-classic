@@ -1,5 +1,5 @@
 # push all the buttons on the main timeclock page
-require '../toolkit'
+require 'toolkit'
 
 # Start with a user that has no time records. 
 ensure_no_user_data('ruby')

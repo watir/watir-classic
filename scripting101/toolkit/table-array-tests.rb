@@ -1,8 +1,8 @@
 # tests 'table-array.rb'
 
-require '../toolkit'
+require 'toolkit'
 require 'test/unit'
-require 'iostring'
+require 'toolkit/iostring'
 
 class TestTable < Test::Unit::TestCase
   def test_table_array

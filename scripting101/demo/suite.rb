@@ -1,8 +1,6 @@
+$: << File.join( File.dirname( __FILE__ ), '..' )
 require 'test/unit'
-require '../toolkit/iostring'
-require '../toolkit/table-array'
-require '../toolkit/testhook'
-require '../toolkit'
+require 'toolkit'
 
 class DemoSuite < Test::Unit::TestCase
   def teardown
