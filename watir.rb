@@ -1009,6 +1009,13 @@ module Watir
             end
         end
 
+        def buttons()
+            return Buttons.new(self)
+        end
+
+
+
+
         # This is the main method for accessing a reset button ( <input type = reset> ).
         #  *  how   - symbol - how we access the button , :index, :caption, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -1053,6 +1060,12 @@ module Watir
             s = SelectBox.new(self , how, what)
         end
         alias selectBox select_list
+
+        def select_lists()
+            return Select_Lists.new(self)
+        end
+
+
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
         #  *  how   - symbol - how we access the check box , :index, :id, :name etc
@@ -1064,6 +1077,10 @@ module Watir
         end
         alias checkBox checkbox
         
+        def checkboxes
+            return Check_Boxes.new(self)
+        end
+
         # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
         #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
         #  *  what  - string, int or regexp , what we are looking for, 
@@ -1071,6 +1088,10 @@ module Watir
         # returns a RadioCheckCommon object
         def radio( how , what , value=nil)
             r = RadioCheckCommon.new( self, how, what, "radio", value)
+        end
+
+        def radios
+            return Radios.new(self)
         end
         
         # This is the main method for accessing a link.
@@ -1097,6 +1118,15 @@ module Watir
             i = Image.new(self , how, what )
         end
         
+        # this is the factory method for accessing the imagescollection
+        def images
+            l = Images.new(self)
+        end
+
+        
+
+
+
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
         def popup( )
@@ -1109,6 +1139,10 @@ module Watir
 
         def span( how , what )
             return Span.new(self , how , what)
+        end
+
+        def spans()
+            return Spans.new(self)
         end
 
     end # class IE
@@ -1473,6 +1507,165 @@ module Watir
             return true
         end
     end
+
+
+    # this class is the super class for the iterator classes ( buttons, links, spans etc
+    # it would normally only be accessed by the iterator methods ( spans , links etc) of IEController
+    class Iterators
+        # Super class for all the iteractor classes
+        #   * ieController  - an instance of an IEController
+        def initialize( ieController)
+            @ieController = ieController
+            @objects= []
+        end
+ 
+        def each
+            0.upto( @objects.length-1 ) { |i | yield iterator_object(i)   }
+        end
+
+        def length
+            return @objects.length
+        end
+ 
+        def [](n)
+            return @objects[(n-1).to_s]
+        end
+
+    end
+
+    class Spans < Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("SPAN").length > 0 
+                @objects= @ieController.ie.document.body.getElementsByTagName("SPAN")
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.span( :index , i+1)
+        end
+    end
+
+    class Buttons < Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
+
+                objects.each do |o|
+                    @objects << o  if ["image", "submit", "button"].include?(o.invoke("type").downcase )
+                end
+ 
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.button( :index , i+1)
+        end
+    end
+
+    class Check_Boxes < Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
+
+                objects.each do |o|
+                    @objects << o  if ["checkbox"].include?(o.invoke("type").downcase )
+                end
+ 
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.checkbox( :index , i+1)
+        end
+    end
+
+    class Radios < Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
+
+                objects.each do |o|
+                    @objects << o  if ["radio"].include?(o.invoke("type").downcase )
+                end
+ 
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.radio( :index , i+1)
+        end
+    end
+
+
+
+    class Select_Lists< Iterators
+
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("SELECT").length > 0 
+                @objects= @ieController.ie.document.body.getElementsByTagName("SELECT")
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.select_list( :index , i+1)
+        end
+    end
+
+    # this class accesses the links in the document as a collection
+    # it would normally only be accessed by the links method of IEController
+    class Links<Iterators
+        # Returns an initialized instance of a links object
+        #   * ieController  - an instance of an IEController
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("A").length > 0 
+                @objects= @ieController.ie.document.body.getElementsByTagName("A")
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.link( :index , i+1)
+        end
+
+    end
+
+    # this class accesses the imnages in the document as a collection
+    # it would normally only be accessed by the images method of IEController
+    class Images<Iterators
+        # Returns an initialized instance of a links object
+        #   * ieController  - an instance of an IEController
+        def initialize( ieController )
+            super
+            if   @ieController.ie.document.body.getElementsByTagName("IMG").length > 0 
+                @objects= @ieController.ie.document.body.getElementsByTagName("IMG")
+            end        
+
+        end
+       
+        def iterator_object(i)
+            @ieController.image( :index , i+1)
+        end
+
+    end
+
+
+
+
 
     class SpanDivCommon < ObjectActions
         def initialize( ieController,  how , what )
@@ -1913,33 +2106,6 @@ module Watir
 
     end
     
-
-    # this class accesses the links in the document as a collection
-    # it would normally only be accessed by the links method of IEController
-    class Links 
-        # Returns an initialized instance of a links object
-        #   * ieController  - an instance of an IEController
-        def initialize( ieController)
-            @ieController = ieController
-            @links = []
-            if   @ieController.ie.document.invoke("links").length > 0 
-                @links = @ieController.ie.document.invoke("links")
-            end        
-        end
- 
-        def each
-            0.upto( @links.length-1 ) { |i | yield @ieController.link( :index , i+1)   }
-        end
-
-        def length
-            return @links.length
-        end
- 
-        def [](n)
-            return @links[(n-1).to_s]
-        end
-
-    end
 
     
     # This class is the way in which select boxes are manipulated.
