@@ -567,14 +567,14 @@ module Watir
         
         #
         # Searching for Page Elements
+        # Not for external consumption
         #        
         
         def getContainer()
             return getDocument.body.all
         end
         private :getContainer
-        
-        
+                
         # This is the main method for finding objects on a web page.
         #   * how - symbol - the way we look for the object. Supported values are
         #                  - :name
@@ -671,7 +671,6 @@ module Watir
         #   * container         - the container that we are searching in ( a form or the body of a document )
         #   * *htmlObjectTypes  - an array of the objects we are interested in
         def getObjectWithValue(what , container , *htmlObjectTypes )
-            
             o = nil
             container.each do |r|
                 next unless o == nil
@@ -683,7 +682,6 @@ module Watir
                 end 
             end
             return o
-            
         end
         
         # This method is used on buttons that are of type "image". Usually an <img src=""> or <input type="image"> HTML tag.
@@ -693,12 +691,10 @@ module Watir
         #   * htmlObjectTypes  - an array of the objects we are interested in
         def getObjectWithSrcOrAlt( what , how , container , htmlObjectTypes )
             o = nil
-            
             container.each do |r|
                 next unless o == nil
                 begin
                     next unless htmlObjectTypes.include?(r.invoke("type").downcase)
-                    
                     case how
                     when :alt
                         attribute = r.alt
@@ -716,8 +712,6 @@ module Watir
             return o
         end
         
-        
-        
         # This method is used to locate an object when an "index" is used. 
         # It is used internally.
         #   * container  - the container we are looking in
@@ -725,7 +719,6 @@ module Watir
         #   * types      - an array of the type of objects to look at
         #   * value      - the value of the object to get, used when getting itens like checkboxes and radios
         def getObjectAtIndex(container , index , types , value=nil)
-            
             log" getting object #{types.to_s}  at index( #{index}"
             
             o = nil
@@ -827,9 +820,6 @@ module Watir
                     end
                 end
 
-                
-
-                
             else
                 raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
             end
@@ -854,7 +844,6 @@ module Watir
              return n
         end
 
-
         def getNonControlObject(part , how, what )
 
              doc = getDocument()
@@ -875,7 +864,6 @@ module Watir
              end
              return n
 
-
         end
 
 
@@ -890,7 +878,6 @@ module Watir
         end
 
        
-        
         #
         # Factory Methods
         #
@@ -966,32 +953,32 @@ module Watir
         end
         alias textField text_field
         
-        # This is the main method for accessing a select box. Usually a <select> HTML tag.
-        #  *  how   - symbol - how we access the select box , :index, :id, :name etc
+        # This is the main method for accessing a selection list. Usually a <select> HTML tag.
+        #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # returns a SelectBox object
-        def select_box( how , what )
+        def select_list( how , what )
             s = SelectBox.new(self , how, what)
         end
-        alias selectBox select_box
+        alias selectBox select_list
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
         #  *  how   - symbol - how we access the check box , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
-        # returns a CheckBox object
-        def check_box( how , what , value=nil)
-            c = CheckBox.new( self, how, what , value)
+        # returns a RadioCheckCommon object
+        def checkbox( how , what , value=nil)
+            c = RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
-        alias checkBox check_box
+        alias checkBox checkbox
         
         # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
         #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
         #  *  what  - string, int or regexp , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
-        # returns a RadioButton object
+        # returns a RadioCheckCommon object
         def radio( how , what , value=nil)
-            r = RadioButton.new( self, how, what , value)
+            r = RadioCheckCommon.new( self, how, what, "radio", value)
         end
         
         # This is the main method for accessing a link.
@@ -1618,19 +1605,27 @@ module Watir
         #   * what         - what we use to access the select box, name, id etc
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getObject( how, what , ["select-one","select-multiple"] )
+            @o = ieController.getObject(how, what, ["select-one", "select-multiple"])
             super( @o )
             @how = how
             @what = what
         end
+
+        def assert_exists
+            unless @o
+                raise UnknownObjectException,  
+                    "Unable to locate a selectbox using #{@how} and #{@what}"
+            end
+        end
+        private :assert_exists
         
         # This method clears the selected items in the select box
         def clearSelection
-            raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
+            assert_exists
             highLight( :set)
             @o.each do |selectBoxItem|
                 selectBoxItem.selected = false
-                @ieController.waitForIE()
+                @ieController.wait
             end
             highLight( :clear)
         end
@@ -1642,7 +1637,6 @@ module Watir
             select_item_in_select_list( :text , item )
         end
 
-
         # This method selects an item, or items in a select box.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
@@ -1650,22 +1644,17 @@ module Watir
             select_item_in_select_list( :value , item )
         end
 
-
-
         # this method is used internally to select something from the select box
         #  * name  - symbol  :vale or :text - how we find an item in the select box
         #  * item  - string or reg exp - what we are looking for
         def select_item_in_select_list( name_or_value, item )
-
-            raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
+            assert_exists
             if item.kind_of?( Array ) == false
                 items = [item]
             else
                 items = item 
             end
             
-            
-
             highLight( :set)
             doBreak = false
             items.each do |thisItem|
@@ -1685,44 +1674,31 @@ module Watir
                             @o.fireEvent("onChange")
                             doBreak = true
                         end
-                        @ieController.waitForIE()
+                        @ieController.wait
                         break if doBreak
                     end
                 end
                 
-                raise NoValueFoundException , "Selectbox was found, but didnt find item with #{name_or_value.to_s} of #{item} "   if doBreak == false
+                raise NoValueFoundException, "Selectbox was found, but didn't find item with #{name_or_value.to_s} of #{item} "  if doBreak == false
             end
             highLight( :clear )
         end
-
         private :select_item_in_select_list
-
-
-
-
-
-
-
         
         # This method returns all the items in the select list as an array. An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
         def getAllContents()
-            raise UnknownObjectException  ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
-            returnArray = []
-            
+            assert_exists
             @ieController.log "There are #{@o.length} items"
-            
-            @o.each do |thisItem|
-                returnArray << thisItem.text
-            end
+            returnArray = []
+            @o.each { |thisItem| returnArray << thisItem.text }
             return returnArray 
-            
         end
         
         # This method returns all the selected items from the select box as an array.
         # Raises UnknownObjectException if the select box is not found.
         def getSelectedItems
-            raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
+            assert_exists
             returnArray = []
             @ieController.log "There are #{@o.length} items"
             @o.each do |thisItem|
@@ -1735,6 +1711,7 @@ module Watir
         end
     end
     
+
     # This is the main class for accessing buttons.
     # Normally a user would not need to create this object as it is returned by the IEController Button method.
     class Button < ObjectActions
@@ -1772,92 +1749,71 @@ module Watir
         end
     end
 
-    # This class is the parent class for radio buttons and check boxes. It contains methods common to both.
+    # This class is the class for radio buttons and check boxes. 
+    # It contains methods common to both.
     # It should not be created by users.
     class RadioCheckCommon < ObjectActions
-        # Constant for setting, or determining if a check box or radio button is set.
-        CHECKED = true
-        # Constant for unsetting, or determining if a check box or radio button is unset.
-        UNCHECKED = false
-        
-        def initialize( o )
-            super(o)
+
+        def initialize( ieController,  how , what , type, value=nil )
+            @ieController = ieController
+            @o = ieController.getObject( how, what , type, value)
+            super( @o )
+            @how = how
+            @what = what
+            @value = value
         end
-        
+
+        def assert_exists
+            unless @o
+                raise UnknownObjectException,  
+                    "Unable to locate a radio button using #{@how} and #{@what}"
+            end
+        end
+
+        def assert_enabled
+            unless self.enabled?
+                raise ObjectDisabledException,  
+                    "object #{@how} and #{@what} is disabled"
+            end
+        end
+
         # This method determines if a radio button or check box is set.
-        # Returns true is set or false if not set.
+        # Returns true is set/checked or false if not set/checked.
         # Raises UnknownObjectException if its unable to locate an object.
         def isSet?
-            raise UnknownObjectException ,  "Unable to locate a radio button using #{@how} and #{@what} "if @o==nil
-            return true if @o.checked
-            return false
+            assert_exists
+            return @o.checked
         end
+        alias getState isSet?
+        alias checked? isSet?
         
         # This method clears a radio button or check box. Note, with radio buttons one of them will almost always be set.
         # Returns true if set or false if not set.
         #   Raises UnknownObjectException if its unable to locate an object
         #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
         def clear
-            raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
-            raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
+            assert_exists
+            assert_enabled
             @o.checked = false
             @o.fireEvent("onClick")
-            @ieController.waitForIE()
+            @ieController.wait
         end
         
         # This method sets the radio list item or check box.
         #   Raises UnknownObjectException  if its unable to locate an object
         #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
         def set
-            raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
-            raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
+            assert_exists
+            assert_enabled
             highLight( :set)
             @o.checked = true
             @o.fireEvent("onClick")
-            @ieController.waitForIE()
+            @ieController.wait
             highLight( :clear )
         end
         
-        # This method gets the state of a radio list item or check box.
-        # Returns CHECKED or UNCHECKED
-        #   Raises UnknownObjectException  if its unable to locate an object
-        def getState
-            raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
-            return CHECKED if @o.checked == true
-            return UNCHECKED 
-        end
-        
     end
-    
-    # This class is the main class for radio buttons.
-    # It shouldn't normally be created, as the radio method of IEController will return an initialized object.
-    class RadioButton < RadioCheckCommon
         
-        def initialize( ieController,  how , what , value=nil )
-            @ieController = ieController
-            @o = ieController.getObject( how, what , "radio" , value)
-            super( @o )
-            @how = how
-            @what = what
-            @value = value
-        end
-    end
-    
-    # This class is the main class for Check boxes.
-    # It shouldnt normally be created, as the checkBox method of IEController will return an initialized object.
-    class CheckBox < RadioCheckCommon
-        
-        def initialize( ieController,  how , what , value=nil )
-            @ieController = ieController
-            @o = ieController.getObject( how, what , "checkbox", value)
-            super( @o )
-            @how = how
-            @what = what
-            @value = value
-        end
-        
-    end
-    
     # This class is the main class for Text Fields
     # It shouldn't normally be created, as the textField method of IEController will return an initialized object.
     class TextField < ObjectActions
