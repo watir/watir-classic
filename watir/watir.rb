@@ -1016,6 +1016,13 @@ module Watir
                 raise MissingWayOfFindingObjectException
             end
         end
+        # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
+        #  *  how   - symbol - how we access the field , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns a FileField object
+        def fileField( how , what )
+            f = FileField.new(self , how, what)
+        end
         
         # This is the main method for accessing a text field. Usually an <input type = text> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
@@ -1752,6 +1759,30 @@ module Watir
         end
     end
     
+    # File dialog
+    class FileField < ObjectActions
+        # Create an instance of the file object
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+            @o = ieController.getObject( how, what , ["file"] )
+            super( @o )
+            @how = how
+            @what = what
+        end
+        
+        def set(setPath)	        
+            Thread.new {
+                clicker = WinClicker.new
+                clicker.setFileRequesterFileName_newProcess(setPath)
+            }
+            # may need to experiment with this value.  if it takes longer than this
+            # to open the new external Ruby process, the current thread may become
+            # blocked by the file chooser.
+            sleep(1)	
+            self.click
+        end
+    end
+
     # This class is the parent class for radio buttons and check boxes. It contains methods common to both.
     # It should not be created by users.
     class RadioCheckCommon < ObjectActions
