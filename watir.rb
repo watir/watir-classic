@@ -480,8 +480,6 @@ class IE
     #  Raises UnknownFrameException if a specified frame cannot be found.
     def getDocument()
 
-     puts "frame empty"    if @frame == ""
-      puts "preset empty"  if @presetFrame == ""
         if @frame == "" and @presetFrame == ""
 
             doc = @ie.document
@@ -1416,11 +1414,15 @@ class SelectBox < ObjectActions
                         matchedAnItem = true
                         if selectBoxItem.selected == true
                             @ieController.log " #{selectBoxItem.text} is already selected"
+                            doBreak = true
                         else
                             @ieController.log " #{selectBoxItem.text} is being selected"
                             selectBoxItem.selected = true
                             @o.fireEvent("onChange")
+                            doBreak = true
                         end
+                        @ieController.waitForIE()
+                        break if doBreak
                     end
                 end
             end
