@@ -114,8 +114,7 @@ Unzip the watir tarball to a working directory (ex. C:\). You will now have a wa
 <p>The goal of this user guide is to help you get started writing test cases quickly. Each section below describes the methods for driving a web
 application. Select the ones you need for each page of your web application based on the content of each page in the application.</p>
 
-<p>Plan what you need to get Watir
-to do before you begin scripting. Open your web browser with the application under test in front of you, and pay close attention to the objects on that page. What text fields require entries? What buttons need to be pushed? What links need to be clicked on? It sometimes helps to write out
+<p>Plan what you need to get Watir to do before you begin scripting. Open your web browser with the application under test in front of you, and pay close attention to the objects on that page. What text fields require entries? What buttons need to be pushed? What links need to be clicked on? It sometimes helps to write out
 the steps it will take to exercise a test first, and then filling in the Watir scripting code to satisfy each of those steps.</p> 
 <p>It is a good idea to view the source of the page (in IE, right click and select View Source) and get an idea of what the attributes of the objects you need to interact with are.
 For example, on the Google home page, if you search the source for "Google Search", you will find the tag with the following attributes:
@@ -159,14 +158,14 @@ declared by different application developers. With Watir, identify objects and s
 <div class = "testexample">$ie = IE.new</div>
 <p>Watir sends a message to IE, telling to create a new instance of itself, and assigns that instance to "$ie".</p>
 <h2>Site Navigation</h2>
-<p>To direct your test to the web application you are testing, enter the URL in this command:</p>
+<p>To direct your test script to the web application you are testing, enter the URL in this command:</p>
 <div class = "testexample"> $ie.goto("http://mytestsite")</div>
 <p>In the example above, enter in your application's URL in place of <i>mytestsite</i>.</p>
 <p>Watir sends the goto message to IE, telling it to enter the address you entered as a method argument in the Address bar, and to direct the browser to that site.</p>
 <h2>Manipulating Web Page Objects</h2>
 <p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
-<p>You can use Watir to click hyperlinks in a variety of ways. Watir can click links by looking what the link text you see in the browser (text attribute) or by looking at the attributes available in the HTML tag. 
+<p>You can use Watir to click hyperlinks in a variety of ways. Watir can click links by looking at the link text you see in the browser (text attribute) or by looking at the attributes available in the HTML tag. 
 Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here as URL) among others.</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a></div>
@@ -192,7 +191,7 @@ Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here
 <p>Watir code to <i>clear</i> a checkbox using the <i>name</i> attribute: 
 <div class = "testexample">$ie.checkBox(:name, "checkme").clear</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
-<div class = "htmlexample">$lt;input type = "checkbox" name = "<b>checkme</b>" value = "1"&gt;</div>
+<div class = "htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>" value = "1"&gt;</div>
 <h4><i>Name</i> and <i>Value</i> Attributes</h4>
 <p>We can also use both attributes:</p>
 <p>Watir code to <i>set</i> a checkbox using both the <i>name</i> and <i>value</i> attributes: 
@@ -270,7 +269,7 @@ clicking buttons, or images that look and act like HTML buttons, or by hitting E
 <p>This is the Watir code you need to click a button using the <i>name</i> attribute:</p>
 <div class = "testexample">$ie.button(:name, "clickme").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
-<div class = "htmlexample">&lt;input type = "button" name = "<b>clickme</b>" value = "<b>Click Me</b>"&gt;</div>
+<div class = "htmlexample">&lt;input type = "button" name = "<b>clickme</b>" value = "Click Me"&gt;</div>
 
 <h3>Forms</h3>
 <p>Forms aren't visible through the browser, but are used a lot in web applications. To find them, look at the HTML source for &lt;form&gt;&lt;/form&gt; tags. Watir can submit forms in a variety of ways. </p>
@@ -329,7 +328,7 @@ else<br>
 &nbsp;     puts: "Test passed. Page contains the text: Reached test verification point."<br>
 end</div>
    <p>
-<p>This is what the method above does:</p>
+<p>This is what the scripting code above does:</p>
 <ol>
    <li>assign this method call to, and store results in variable <i>a</i></li>
    <li>if <i>a</i> is false, the page did not contain the text: "Reached test verification point."</li>
