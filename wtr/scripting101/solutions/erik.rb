@@ -28,13 +28,13 @@ results_table = tables.item(tables.length - 1) # last table
 require 'toolkit/table-array'
 a = table_array(results_table)
 
-if a[1][0] == "learning "
+if a[1][0] == "learning"
   print "PASS"
 else
   print "FAIL"
 end
 
-if a[1][3] == "<B>running</B> "
+if a[1][3] == "running"
   print "PASS"
 else
   print "FAIL"

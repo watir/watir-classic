@@ -6,15 +6,13 @@
 
 	<p>The following code demonstrates how to create a simple test harness that loads one test script.</p>
 
-<pre> require 'test/unit'
- class LoadTestScript &lt; Test::Unit::TestCase
+<pre> require 'test/unit' class LoadTestScript &lt; Test::Unit::TestCase
   def test_login_start
     load 'login-start.rb'
   end
   def teardown
     $iec.close if $iec
-  end
- end </pre>
+  end end </pre>
 
 	<p>You can add additional tests, by defining additional methods to the class whose names begin with &#8216;test_&#8217; that load the desired scripts. </p>
 

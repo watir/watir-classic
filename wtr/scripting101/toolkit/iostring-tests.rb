@@ -1,4 +1,4 @@
-require 'iostring'
+require 'toolkit/iostring'
 require 'test/unit'
 
 class IOStringTests < Test::Unit::TestCase

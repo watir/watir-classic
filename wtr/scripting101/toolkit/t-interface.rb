@@ -1,20 +1,12 @@
 require 'test/unit'
-require 'iec-assist'
-require 'iostring'
-
-class CLabs::IEC::IEDomFormWrapper
-  def element
-  end
-end
-
+require 'toolkit/iec-assist'
+require 'toolkit/iostring'
+require 'toolkit/timeclock-assist'
 
 class TestInterface < Test::Unit::TestCase
 
   def teardown
     $iec.close if $iec
-  end
-
-  def element
   end
 
   def setup
@@ -25,12 +17,12 @@ class TestInterface < Test::Unit::TestCase
     buttons = form{|f| f.action == 'pause_or_stop_day'}.elements
     assert_equal( 3, buttons.length )
     assert_equal( 'pause_day', buttons['pause_day'].name )
-    assert_equal( 'pause_day', buttons.items(1).name )
+    assert_equal( 'pause_day', buttons.item(1).name )
   end
     
   def test_simple
-    form{|f| f.action == 'pause_or_stop_day'}.element{|e| e.name == 'pause_day' } 
-    fail
+    element = form{|f| f.action == 'pause_or_stop_day'}.element{|e| e.name == 'pause_day' }
+    assert_equal( 'Pause the Day', element.value)
   end
 
 end
