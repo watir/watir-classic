@@ -7,6 +7,7 @@ require 'unittests/ie_mock'
 require 'test/unit'
 
 class TC_ie < Test::Unit::TestCase
+    include Watir
 
    def setup
       @fakedIE = TestIE.new

@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Radios < Test::Unit::TestCase
-
+    include Watir
 
     def gotoRadioPage()
         $ie.goto($htmlRoot + "radioButtons1.html")
@@ -36,6 +36,12 @@ class TC_Radios < Test::Unit::TestCase
 
 
     end
+
+   def test_little
+       gotoRadioPage()
+       #$ie.wait
+       assert_false($ie.button("foo").enabled?)
+   end
 
    def test_onClick
 

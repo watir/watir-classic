@@ -5,6 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Frames < Test::Unit::TestCase
+    include Watir
 
     def gotoFramesPage()
        $ie.clearFrame
