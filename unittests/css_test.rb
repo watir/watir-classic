@@ -47,7 +47,7 @@ class TC_CSS < Test::Unit::TestCase
 
 
     def gotoCSSPage()
-        $ie.goto("file://#{$myDir}/html/cssTest.html")
+        $ie.goto($htmlRoot + "cssTest.html")
 
     end
 

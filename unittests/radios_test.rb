@@ -12,7 +12,7 @@ class TC_Radios < Test::Unit::TestCase
 
 
     def gotoRadioPage()
-        $ie.goto("file://#{$myDir}/html/radioButtons1.html")
+        $ie.goto($htmlRoot + "radioButtons1.html")
     end
 
    

@@ -12,7 +12,7 @@ class TC_Selectbox < Test::Unit::TestCase
 
 
     def gotoPage()
-        $ie.goto("file://#{$myDir}/html/selectboxes1.html")
+        $ie.goto($htmlRoot + "selectboxes1.html")
     end
 
     

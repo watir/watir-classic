@@ -12,7 +12,7 @@ class TC_IFrames < Test::Unit::TestCase
 
 
     def gotoPage()
-        $ie.goto("file://#{$myDir}/html/iframeTest.html")
+        $ie.goto($htmlRoot + "iframeTest.html")
     end
 
 

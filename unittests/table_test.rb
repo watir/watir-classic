@@ -12,7 +12,7 @@ class TC_Tables < Test::Unit::TestCase
 
 
     def gotoTablePage()
-        $ie.goto("file://#{$myDir}/html/table1.html")
+        $ie.goto($htmlRoot + "table1.html")
     end
 
 
