@@ -1807,17 +1807,17 @@ module Watir
 
         def fileSize
             object_exist_check
-            return @o.invoke("fileSize")
+            return @o.invoke("fileSize").to_s
         end
 
         def width
             object_exist_check
-            return @o.invoke("width")
+            return @o.invoke("width").to_s
         end
 
         def height
             object_exist_check
-            return @o.invoke("height")
+            return @o.invoke("height").to_s
         end
 
         def type 
