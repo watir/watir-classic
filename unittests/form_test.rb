@@ -1,4 +1,4 @@
-# tests for Forms
+# feature tests for Forms
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
@@ -29,8 +29,7 @@ class TC_Forms2 < Test::Unit::TestCase
     end
     
     def xtest_showforms
-        gotoFormsPage()
-        puts"--------------------------- forms----------------------"
+    
         $ie.showForms
     end
     

@@ -1,4 +1,4 @@
-# tests for nested Frames
+# feature tests for nested Frames
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')

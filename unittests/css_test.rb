@@ -1,4 +1,4 @@
-#  test file for css
+# feature tests for css
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

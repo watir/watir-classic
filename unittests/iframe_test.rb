@@ -1,4 +1,4 @@
-# tests for IFrames
+# feature tests for IFrames
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

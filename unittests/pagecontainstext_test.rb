@@ -1,4 +1,4 @@
-# tests for IE::pageContainsText
+# feature tests for IE::pageContainsText
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

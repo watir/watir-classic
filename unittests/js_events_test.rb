@@ -1,4 +1,4 @@
-# tests for JavaScript events
+# feature tests for JavaScript events
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
