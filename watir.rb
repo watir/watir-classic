@@ -1545,7 +1545,7 @@ class TextField < ObjectActions
     
     def initialize( ieController,  how , what )
         @ieController = ieController
-        @o = ieController.getObject( how, what , ["text" , "password"] )
+        @o = ieController.getObject( how, what , ["text" , "password","textarea"] )
         super( @o )
         @how = how
         @what = what
@@ -1558,7 +1558,8 @@ class TextField < ObjectActions
     # This method returns true or false if the text field is read only.
     #    Raises  UnknownObjectException if the object can't be found.
     def readOnly?
-        raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "   if @o==nil
+
+	raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "   if @o==nil
         return @o.readOnly 
     end    
 
