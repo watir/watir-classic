@@ -58,7 +58,8 @@ see any error messages.)
 
 h4. Scripting Class Materials.
 
-# Copy the contents of the scripting101 into your hard drive, to c:/scripting101. 
+# Copy the contents of the scripting101 archive into your hard drive,
+  to c:/scripting101.  
 
 h3. Running the Timeclock Server.
 

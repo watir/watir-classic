@@ -1,180 +1,23 @@
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
+<h2 style="text-align:center;">Scripting for Testers</h2>
 
-<head>
-<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-<meta name=ProgId content=Word.Document>
-<meta name=Generator content="Microsoft Word 9">
-<meta name=Originator content="Microsoft Word 9">
-<link rel=File-List href="./iec-scripts-lab_files/filelist.xml">
-<title>Writing Scripts</title>
-<!--[if gte mso 9]><xml>
- <o:DocumentProperties>
-  <o:Author>Bret Pettichord</o:Author>
-  <o:LastAuthor>Bret Pettichord</o:LastAuthor>
-  <o:Revision>2</o:Revision>
-  <o:TotalTime>99</o:TotalTime>
-  <o:Created>2004-04-05T18:52:00Z</o:Created>
-  <o:LastSaved>2004-04-05T18:52:00Z</o:LastSaved>
-  <o:Pages>1</o:Pages>
-  <o:Words>193</o:Words>
-  <o:Characters>1105</o:Characters>
-  <o:Company>Pettichord Consulting LLC</o:Company>
-  <o:Lines>9</o:Lines>
-  <o:Paragraphs>2</o:Paragraphs>
-  <o:CharactersWithSpaces>1357</o:CharactersWithSpaces>
-  <o:Version>9.2720</o:Version>
- </o:DocumentProperties>
-</xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
-@font-face
-	{font-family:Times;
-	panose-1:2 2 6 3 5 4 5 2 3 4;
-	mso-font-charset:0;
-	mso-generic-font-family:roman;
-	mso-font-pitch:variable;
-	mso-font-signature:536902279 -2147483648 8 0 511 0;}
-@font-face
-	{font-family:Helvetica;
-	panose-1:2 11 6 4 2 2 2 2 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:swiss;
-	mso-font-pitch:variable;
-	mso-font-signature:536902279 -2147483648 8 0 511 0;}
- /* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-h1
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:1;
-	font-size:16.0pt;
-	font-family:Arial;
-	mso-font-kerning:16.0pt;}
-h2
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:2;
-	font-size:14.0pt;
-	font-family:Arial;
-	font-style:italic;}
-p.MsoList, li.MsoList, div.MsoList
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:0in;
-	margin-left:.25in;
-	margin-bottom:.0001pt;
-	text-indent:-.25in;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-p.MsoTitle, li.MsoTitle, div.MsoTitle
-	{margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	text-align:center;
-	mso-pagination:widow-orphan;
-	mso-outline-level:1;
-	font-size:16.0pt;
-	mso-bidi-font-size:10.0pt;
-	font-family:Helvetica;
-	mso-fareast-font-family:Times;
-	mso-bidi-font-family:"Times New Roman";
-	mso-font-kerning:14.0pt;
-	font-weight:bold;
-	mso-bidi-font-weight:normal;}
-p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:6.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-p.MsoBodyTextIndent, li.MsoBodyTextIndent, div.MsoBodyTextIndent
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:6.0pt;
-	margin-left:.25in;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	mso-header-margin:.5in;
-	mso-footer-margin:.5in;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-</head>
+	<h2 style="text-align:center;">Lab 3: Writing Scripts</h2>
 
-<body lang=EN-US style='tab-interval:.5in'>
+	<p>Now that you&#8217;ve used <span class="caps">IRB</span> to drive Internet Explorer, it is time to create a script. Actually, you&#8217;ll create several. Create each script using Scite, the ruby editor. You may wish to try the commands in <span class="caps">IRB</span> first, to make sure they are right. </p>
 
-<div class=Section1>
+	<p>There are two ways to run scripts. One is from the system command line. Type &#8220;ruby script-name.rb&#8221; at the <span class="caps">DOS</span> prompt. The other is to load them into <span class="caps">IRB</span>. Type &#8220;load &#8216;script-name.rb&#8217;&#8221; at the <span class="caps">IRB</span> prompt. Either will run the script, but the latter method may make it easier for you to debug your scripts, because you can check variables and interact with the <span class="caps">IE </span>Controller after the script has run.</p>
 
-<p class=MsoTitle>Scripting for Testers</p>
+	<p>Write these scripts with your partner. As you complete each script, demonstrate it to your instructors.</p>
 
-<h1 align=center style='text-align:center'>Lab 3: Writing Scripts</h1>
+	<ol>
+	<li>   <strong>Start The Day.</strong> Create and execute a script that logs in and
+     navigates to the main time clock page, and then starts the day.  </li>
+		<li>   <strong>Job Switching.</strong> Create and execute a script that creates two jobs
+     and then switches back and forth between them every 5 seconds.  </li>
+		<li>  <strong>Test Strategy.</strong> Look over the test ideas you developed at the
+     beginning of class.  Write a script for one of them&#8212;or more.  </li>
+		<li>  <strong>Record Check.</strong> Start with a user that has no time records. Record
+     time sessions for two separate jobs, one session for each. Verify
+     that two time records appear. (This last part is a challenge.) </li>
+	</ol>
 
-<p class=MsoBodyText>Now that you’ve used IRB to drive Internet Explorer, it is
-time to create a script. Actually, you’ll create several. Create each script
-using Scite, the ruby editor. You may wish to try the commands in IRB first, to
-make sure they are right.</p>
-
-<p class=MsoBodyText>There are two ways to run scripts. One is from the system
-command line. Type “ruby script-name.rb” at the DOS prompt. The other is to
-load them into IRB. Type “load ‘script-name.rb’” at the IRB prompt. The latter
-method, however, may make it easier for you to debug your scripts, because you
-can still check variables and interact with the IE Controller.</p>
-
-<p class=MsoBodyText>Here are the scripts for you to write with your pair. As
-you complete each script, demonstrate it to your instructors.</p>
-
-<p class=MsoList>1.<span style='mso-tab-count:1'>   </span>Start The Day.
-Create and execute a script that logs in and navigates to the main time clock
-page, and then starts the day.</p>
-
-<p class=MsoList>2.<span style='mso-tab-count:1'>   </span>Job Switching.
-Create and execute a script that creates two jobs and then switches back and
-forth between them every 5 seconds.</p>
-
-<p class=MsoList>3.<span style='mso-tab-count:1'>   </span>Test Strategy. Look
-over the test ideas you developed at the beginning of class.<span
-style="mso-spacerun: yes">  </span>Write a script for one of them—or more.</p>
-
-<p class=MsoList>4.<span style='mso-tab-count:1'>   </span>Record Check. Start
-with a user that has no time records. Record time sessions for two separate
-jobs, one session for each. Verify that two time records appear. (This last
-part is a challenge.)</p>
-
-</div>
-
-</body>
-
-</html>
+	<p><strong>Note:</strong> When you automate tests, you need to be able to repeat tests much more precisely than when you are testing manually. The &#8216;ensure_no_user_data&#8217; method has been specifically provided as a testability feature for timeclock. You may find it useful.</p>

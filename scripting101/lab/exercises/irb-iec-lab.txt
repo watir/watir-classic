@@ -1,6 +1,6 @@
-h1. Scripting for Testers
+h2=. Scripting for Testers
 
-h2. Lab 2: Driving Web Applications using IRB
+h2=. Lab 2: Driving Web Applications using IRB
 
 Your instructor has demonstrated how drive the web application using
 Ruby and IRB. Now it is your turn. Enter ruby commands into IRB to
