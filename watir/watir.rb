@@ -161,9 +161,6 @@ module Watir
         
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
-        
-        # this is used when forms are used. It shouldnt be used otherwise
-        attr_accessor :frameHandler
                         
         def initialize(suppress_new_window=nil)
             unless suppress_new_window
@@ -195,7 +192,6 @@ module Watir
         end        
         
         def set_defaults
-            @frameHandler = FrameHandler.new
             @form = nil
 
             @ie.visible = ! $HIDE_IE
@@ -275,7 +271,6 @@ module Watir
             @ie.navigate(url)
             waitForIE()
             sleep 0.2
-            clearFrame()
         end
         
         # Goes to the previous page - the same as clicking the browsers back button
@@ -339,56 +334,14 @@ module Watir
         end
         
         #
-        # Frame Crap
-        #
-
-        # This method sets the html frame to use for a single object to access.
-        #   *   frameName  - string with the name of the frame to use
-        def frame( frameName)
-            @frameHandler.addFrame( frameName)
-            return self
-        end
-        
-        # This method is used internally to clear the name of the html frame to use.
-        def clearFrame()
-            @frameHandler.clear
-        end
-        
-        # This method is used to set the html frame to use for multiple object actions.
-        #   *   frameName  - string with the name of the frame to use
-        def presetFrame( frameName )
-            @frameHandler.addPresetFrame( frameName)
-        end
-        
-        # This method is used to clear the html frame that is used on multiple object accesses.
-        def clearPresetFrame( )
-            @frameHandler.clearPresetFrame
-        end
-        
-        # This method returns the name of the currently used frame. Only applies when the presetFrame method is used.
-        def getCurrentFrame()
-            return @frameHandler.presetFrame 
-        end
-        
-       
-        #
         # Document and Document Data
         #
         
-        # This method is used internally to set the document for Watir to use.
-        #  Raises UnknownFrameException if a specified frame cannot be found.
-        def getDocument(frameNameIndex= 0  , doc = nil)
-            
-            if @frameHandler.usingFrames
-                doc = @frameHandler.getDocument( self )
-            else
-                doc = @ie.document
-            end
-            @doc = doc
-            return doc
+        # Return the current document
+        def getDocument()
+            return @ie.document
         end
-        
-        
+                
         # Search the current page for specified text or regexp.
         # Returns true if the specified text was found.
         # Returns matchdata object if the specified regexp was found.
@@ -414,7 +367,6 @@ module Watir
             rescue
                 retry if retryCount < 2 
             end
-            clearFrame()
             return returnValue
         end
         
@@ -466,7 +418,7 @@ module Watir
                 print "\b"
                 #puts "waitForIE Complete"
                 s=nil
-            rescue WINOLE32RuntimeError
+#            rescue WINOLE32RuntimeError
  
             end
             sleep 0.01
@@ -480,14 +432,12 @@ module Watir
         # this method returns the HTML of the current page
         def getHTML()
             n=getDocument().body.innerHTML
-            clearFrame()
             return n
         end
         
         # this method returns the text of the current document
         def getText()
             n= getDocument().body.innerText
-            clearFrame()
             return n
         end
 
@@ -498,10 +448,10 @@ module Watir
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
         def showFrames()
-            if getDocument().frames
-                allFrames = @ie.document.frames
-                puts "there are #{allFrames.length} frames"
-                0.upto( allFrames.length-1 ) do |i| 
+            if allFrames = getDocument().frames
+                count = allFrames.length
+                puts "there are #{count} frames"
+                for i in 0..count-1 do  
                     begin
                         fname = allFrames[i.to_s].name.to_s
                         log "frame  index: #{i} name: #{fname}"
@@ -512,13 +462,11 @@ module Watir
             else
                 log "no frames"
             end
-            clearFrame()
         end
         
         # Show all forms displays all the forms that are on a web page.
         def showForms()
-            if getDocument().forms
-                allForms = @ie.document.forms
+            if allForms = getDocument.forms
                 count = allForms.length
                 log "There are #{count} forms"
                 for i in 0..count-1 do
@@ -531,7 +479,6 @@ module Watir
             else
                 log "No forms"
             end
-            clearFrame()
         end
         
         
@@ -542,7 +489,6 @@ module Watir
                 log "         id: #{l.invoke("id")}"
                 log "      src: #{l.src}"
             end
-            clearFrame()
         end
         
         
@@ -554,7 +500,6 @@ module Watir
                 log "      href: #{l.href}"
                 log "      text: #{l.innerText}"
             end
-            clearFrame()
         end
         
         
@@ -607,7 +552,6 @@ module Watir
                 s=s+"\n"
             end
             log s+"\n\n\n"
-            clearFrame()
         end
 
         def showDivs( )
@@ -660,7 +604,6 @@ module Watir
                 end
                 count +=1
             end # do
-            clearFrame()
             return o
         end
         
@@ -701,7 +644,6 @@ module Watir
                 tableIndex = tableIndex + 1
             end
             #puts "table - #{what}, #{how} Not found " if table ==  nil
-            clearFrame()
             return table
         end
         
@@ -792,8 +734,6 @@ module Watir
                 end
             end
             
-            #reset the frame reference
-            clearFrame()
             return o
         end
         
@@ -965,12 +905,9 @@ module Watir
             else
                 raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
             end
-            #reset the frame reference
-            clearFrame()
             
             # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
             # the nil-related exceptions and provide useful information to the user.
-            clearFrame()
             return link
         end
 
@@ -986,7 +923,6 @@ module Watir
                  next unless n==nil
                  n = p if what.matches( p.invoke("id") )
              end
-             clearFrame()
              return n
         end
 
@@ -1009,7 +945,6 @@ module Watir
                  next unless n==nil
                  n = p if what.matches( p.invoke(attribute) )
              end
-             clearFrame()
              return n
 
 
@@ -1023,7 +958,6 @@ module Watir
         def focus()
             getDocument.activeElement.blur
             doc = getDocument()
-            clearFrame()
             doc.focus
         end
 
@@ -1037,6 +971,10 @@ module Watir
         # Factory Methods
         #
 
+        def frame( frameName)
+            return Frame.new(self, frameName)
+        end
+        
         def form( how , formName=nil )
             # If only one value is supplied, it is a form name
             if formName == nil
@@ -1188,106 +1126,43 @@ module Watir
     # 
     # Module Watir::Control or Watir::BrowserDriver
     #
+
+    class Frame < IE
     
-    class FrameHandler
-        include Watir::Exception
+        def initialize(container, name)
+            @container = container
+            @frame = nil
         
-        def initialize()
-            @frame = []
-            @presetFrame = []
-        end
-        
-        def clear
-            @frame.clear
-        end
-        
-        def clearPresetFrame
-            @presetFrame.clear
-        end
-        
-        def clearAll
-            @frame.clear
-            @presetFrame.clear
-        end
-        
-        def addFrame( f)
-            @frame << f
-        end
-        
-        def addPresetFrame( f)
-            @presetFrame << f
-        end
-        
-        def usingFrame?
-            return true if @frame.length > 0
-            return false
-        end
-        
-        def usingPresetFrame?
-            return true if @presetFrame.length > 0
-            return false
-        end
-        
-        def usingFrames
-            return true if usingFrame? | usingPresetFrame?
-            return false
-        end
-        
-        def presetFrame
-            if @presetFrame[0] == nil
-                return ""
-            end
-            return @presetFrame[0]
-        end
-        
-        def getDocument( ie , doc = nil , frameNameIndex=0 )
-            
-            if @frame.length == 0 
-                # using a preset frame
-                frameToUse = @presetFrame[0]
-                tempArray = @presetFrame
-                puts "Using preset frame name is #{frameToUse }"
-            elsif @frame.length == 1
-                frameToUse = @frame[0]
-                tempArray = @frame
-            else
-                # we are using multiple nested frames
-                frameToUse = @frame[frameNameIndex ] 
-                tempArray = @frame
-            end
-            
-            if doc != nil
-                allFrames = doc.frames
-            else
-                doc = ie.getIE.document
-                allFrames = doc.frames
-            end
-            frameExists = false
-            
-            for i in 0 .. allFrames.length-1
+            frames = @container.getDocument.frames
+
+            for i in 0 .. frames.length-1
+                this_frame = frames[i.to_s]
                 begin
-                    if frameToUse  == allFrames[i.to_s].name.to_s
-                        frameExists = true   
+                    if name == this_frame.name.to_s
+                          @frame = this_frame
                     end
                 rescue
                     # probably no name on this object
                 end
             end
             
-            if frameExists == false
-                clearAll
-                raise UnknownFrameException , "Unable to locate a frame with name #{ frameToUse } " 
+            unless @frame
+                raise UnknownFrameException , "Unable to locate a frame with name #{ name } " 
             end
-            doc = doc.frames[frameToUse.to_s].document
-            if tempArray.length > 0 and frameNameIndex < tempArray.length-1 
-                doc=getDocument(ie ,doc , frameNameIndex+1   )
-            end
-            return doc
-            
+
+            @typingspeed = container.typingspeed      
+            @activeObjectHighLightColor = container.activeObjectHighLightColor      
         end
-        
-        
+
+        def getDocument
+            @frame.document
+        end
+
+        def waitForIE(no_sleep = false)
+            @container.waitForIE(no_sleep)
+        end
     end
+    
 
     # Forms
 
@@ -1336,11 +1211,6 @@ module Watir
                 wrapped = FormWrapper.new(thisForm)
 
                 log "form on page, name is " + wrapped.name
-                begin
-                    log "its a collection of forms - length is: " + thisForm.invoke("name").length.to_s
-                rescue
-                    log "not a collection of forms"
-                end
                 
                 @form =
                 case @formHow
@@ -1360,31 +1230,30 @@ module Watir
                 count = count +1
             end
             
-            @frameHandler = @ieController.frameHandler
-
             @typingspeed = ieController.typingspeed      
             @activeObjectHighLightColor = ieController.activeObjectHighLightColor      
         end
 
         def exists?
-            @ieController.clearFrame()
             @form ? true : false
         end
         
         # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
         def submit()
             raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @ieController.clearFrame()
             @form.submit 
-            @ieController.waitForIE
+            @container.waitForIE
         end   
 
         def getContainer()
             raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @ieController.clearFrame()
             @form.elements.all
         end   
         private :getContainer
+
+        def waitForIE(no_sleep = false)
+            @container.waitForIE(no_sleep)
+        end
                                 
     end # class Form
     
@@ -1445,7 +1314,6 @@ module Watir
         end
         
         def getOLEObject()
-            @ieController.clearFrame()
             return @o
         end
         
@@ -1457,7 +1325,6 @@ module Watir
         #      value      Disabled Button
         #      disabled   true
         def to_s
-            @ieController.clearFrame()
             raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
             n = []
             @ieProperties.each_pair do |k,v|      
@@ -1493,7 +1360,6 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #   ObjectDisabledException if the object is currently disabled
         def click()
-            @ieController.clearFrame()
             raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
             raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
             
@@ -1504,7 +1370,6 @@ module Watir
         end
         
         def flash
-            @ieController.clearFrame()
             raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
             10.times do
                 highLight(:set)
@@ -1519,7 +1384,6 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def fireEvent(event)
-            @ieController.clearFrame()
             raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
             raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
             
@@ -1533,7 +1397,6 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def focus()
-            @ieController.clearFrame()
             raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
             raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
             @o.focus()
@@ -1541,15 +1404,12 @@ module Watir
         
         # This methods checks to see if the current element actually exists. 
         def exists?
-            @ieController.clearFrame()
-            return false if @o == nil
-            return true
+            @o? true: false
         end
         
         # This method returns true if the current element is enable, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
-            @ieController.clearFrame()
             raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
             return false if @o.invoke("disabled")
             return true
@@ -1568,14 +1428,12 @@ module Watir
         def getText()
             raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
             d = @o.innerText
-            @ieController.clearFrame()
             return d
         end
 
         def getStyle
             raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
             d = @o.invoke("className")
-            @ieController.clearFrame()
             return d
         end
 
@@ -1602,7 +1460,6 @@ module Watir
         # This method returns the number of rows in the table.
         # Raises an UnknownTableException if the table doesnt exist.
         def rows
-            @ieController.clearFrame()
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
             table_rows = @o.getElementsByTagName("TR")
             return table_rows.length
@@ -1611,7 +1468,6 @@ module Watir
         # This method returns the number of columns in the table.
         # Raises an UnknownTableException if the table doesn't exist.
         def columns( rowToUse = 1)
-            @ieController.clearFrame()
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
             table_rows = @o.getElementsByTagName("TR")
             cols = table_rows[rowToUse.to_s].getElementsByTagName("TD")
@@ -1621,7 +1477,6 @@ module Watir
         # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
         # Raises an UnknownTableException if the table doesn't exist.
         def to_a
-            @ieController.clearFrame()
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
             y = []
             table_rows = @o.getElementsByTagName("TR")
@@ -1709,7 +1564,6 @@ module Watir
         # We look for these missing properties to see if the image is really there or not. 
         # If the Disk cache is full ( tools menu -> Internet options -> Temporary Internet Files) , it may produce incorrect responses.
         def hasLoaded?
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate image using #{@how} and #{@what} " if @o==nil
             return false  if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
             return true
@@ -1776,7 +1630,6 @@ module Watir
         
         # This method clears the selected items in the select box
         def clearSelection
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
             highLight( :set)
             @o.each do |selectBoxItem|
@@ -1808,7 +1661,6 @@ module Watir
         #  * item  - string or reg exp - what we are looking for
         def select_item_in_select_list( name_or_value, item )
 
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
             if item.kind_of?( Array ) == false
                 items = [item]
@@ -1859,7 +1711,6 @@ module Watir
         # This method returns all the items in the select list as an array. An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
         def getAllContents()
-            @ieController.clearFrame()
             raise UnknownObjectException  ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
             returnArray = []
             
@@ -1917,7 +1768,6 @@ module Watir
         # Returns true is set or false if not set.
         # Raises UnknownObjectException if its unable to locate an object.
         def isSet?
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate a radio button using #{@how} and #{@what} "if @o==nil
             return true if @o.checked
             return false
@@ -1928,7 +1778,6 @@ module Watir
         #   Raises UnknownObjectException if its unable to locate an object
         #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
         def clear
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
             raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
             @o.checked = false
@@ -1940,7 +1789,6 @@ module Watir
         #   Raises UnknownObjectException  if its unable to locate an object
         #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
         def set
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
             raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
             highLight( :set)
@@ -1954,7 +1802,6 @@ module Watir
         # Returns CHECKED or UNCHECKED
         #   Raises UnknownObjectException  if its unable to locate an object
         def getState
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
             return CHECKED if @o.checked == true
             return UNCHECKED 
@@ -2010,7 +1857,6 @@ module Watir
         # This method returns true or false if the text field is read only.
         #   Raises  UnknownObjectException if the object can't be found.
         def readOnly?
-            @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "   if @o==nil
             return @o.readOnly 
         end   
@@ -2018,7 +1864,6 @@ module Watir
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
-            @ieController.clearFrame()
             raise UnknownObjectException if @o==nil
             return self.getProperty("value")
         end
@@ -2035,7 +1880,6 @@ module Watir
             elsif containsThis.kind_of? Regexp
                 return true if self.getProperty("value").match(containsThis) != nil
             end
-            @ieController.clearFrame()
             return false
         end
 
@@ -2087,7 +1931,6 @@ module Watir
             @o.fireEvent("onChange")
             @ieController.waitForIE()
             highLight(:clear)
-            @ieController.clearFrame()
             
         end
         
@@ -2107,7 +1950,6 @@ module Watir
             @o.focus
             doKeyPress( setThis )
             highLight(:clear)
-            @ieController.clearFrame()
             
         end
         
@@ -2130,7 +1972,6 @@ module Watir
             @o.fireEvent("onKeyPress")
             doKeyPress( setThis )
             highLight(:clear)
-            @ieController.clearFrame()
         end
         
         # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
