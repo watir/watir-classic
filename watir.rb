@@ -456,12 +456,16 @@ class IE
         end
 
         if @ie.document.frames.length > 0 
-            0.upto @ie.document.frames.length-1 do |i|
-                until @ie.document.frames[i.to_s].document.readyState == "complete"
-                    sleep 0.02
-                    print s.next
+            begin
+                0.upto @ie.document.frames.length-1 do |i|
+                    until @ie.document.frames[i.to_s].document.readyState == "complete"
+                        sleep 0.02
+                        print s.next
+                    end
                 end
-            end
+             rescue
+
+             end
         else
             until @ie.document.readyState == "complete"
                 sleep 0.02
@@ -530,6 +534,18 @@ class IE
         end
 
     end
+
+
+    def showImages()
+        doc = getDocument()
+        doc.images.each do |l|
+            log "image: name: #{l.name}"
+            log "         id: #{l.invoke("id")}"
+            log "        src: #{l.src}"
+        end
+
+    end
+
 
     def showLinks()
         doc = getDocument()
@@ -1213,12 +1229,15 @@ class SelectBox < ObjectActions
                         matchedAnItem = true
                         if selectBoxItem.selected == true
                             @ieController.log " #{selectBoxItem.text} is already selected"
+                            doBreak = true
                         else
                             @ieController.log " #{selectBoxItem.text} is being selected"
                             selectBoxItem.selected = true
                             @o.fireEvent("onChange")
+                            doBreak = true
                         end
                         @ieController.waitForIE()
+                        break if doBreak
                     end
                 end
 
