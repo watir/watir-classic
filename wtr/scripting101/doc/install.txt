@@ -5,12 +5,11 @@ h2. Installation Instructions
 These instructions describe how to install the software we'll use in
 our Scripting for Testers class.
 
-We will be using Ruby (a programming language) and the IE Controller
-(a library) on your machine to test server software running on your
-instructor's machine. You can also run the server software on your own
-machine, if you prefer. This may come in handy if you can't get on the
-classroom network, or if you want to use a test technique that
-requires a dedicated server.
+We will be using Ruby (a programming language) and WTR
+(a library) on your machine to test server software. You can run the
+server software on your computer. In some cases, we use a classroom
+network so that you can access the same server software running on
+your instructor's machine.
 
 h3. Hardware Requirements
 
@@ -19,10 +18,11 @@ or Windows XP. You should have Administrator privileges.</B>
 
 We believe that it will also work on Windows NT and Windows 98, but we
 don't support these in our classes. (Our experience has been that
-machines that are still running these operating systems are either too
-slow or have other problems and are a drain on our attention. Sorry.)
+machines that are still running these operating systems often are too
+slow or have other problems that we don't have time for in a class
+environment. Sorry.)
 
-The IE Controller software requires Internet Explorer and therefore
+The WTR software requires Internet Explorer and therefore
 only runs on Windows. The Timeclock server was developed on a
 Macintosh, and should run on any machine supporting Ruby (Unix, Linux,
 Windows). The Timeclock "product tests" will not run on Windows using
@@ -35,6 +35,7 @@ h4. Ruby
 
 We are currently using this Ruby installer: 
 "ruby181-12.exe.":http://rubyforge.org/frs/?group_id=167&release_id=414 
+(There are known problems with ruby 1.8.1-13; don't use it.)
 
 #      Double-click this exe file to install.
 #      Select the default installation options (choose all options;
@@ -44,7 +45,7 @@ We are currently using this Ruby installer:
 
 h4. IE Controller
 
-You will need to install one Ruby library:
+You will need to install this Ruby library:
 "iec.2004.054.0.zip":http://rubyforge.org/frs/?group_id=104&release_id=305    
 
 #      Unzip this file onto your hard drive (c:). An "iec" directory
@@ -72,7 +73,7 @@ instructor's server. Otherwise, here is how to start up a timeclock
 server on your machine. 
 
 #      Start a command shell. (Start-> Run, enter "cmd".)
-#      Enter "cd c:\scripting101\installs\timeclock\bin".
+#      Enter "cd c:\scripting101\timeclock\bin".
 #      Enter "ruby http-server.rb". The server is now running.
 
 Note: If you close this command window, the server will stop.
@@ -81,9 +82,10 @@ You can verify that the server is running correctly by running some
 sample tests.
 
 #      Start a new command shell.
-#      Enter "ruby c:\scripting101\lab\solutions\suite.rb -b".
+#      Enter "ruby c:\scripting101\solutions\suite.rb -b".
 
-
+Note: These tests will run unbearably slowly if Internet Explorer is 
+configured to use a proxy server that is unavailable.
 
 
 

@@ -4,21 +4,21 @@
 
 	<p>These instructions describe how to install the software we&#8217;ll use in our Scripting for Testers class.</p>
 
-	<p>We will be using Ruby (a programming language) and the <span class="caps">IE </span>Controller (a library) on your machine to test server software running on your instructor&#8217;s machine. You can also run the server software on your own machine, if you prefer. This may come in handy if you can&#8217;t get on the classroom network, or if you want to use a test technique that requires a dedicated server.</p>
+	<p>We will be using Ruby (a programming language) and <span class="caps">WTR</span> (a library) on your machine to test server software. You can run the server software on your computer. In some cases, we use a classroom network so that you can access the same server software running on your instructor&#8217;s machine.</p>
 
 	<h3>Hardware Requirements</h3>
 
 	<p><B>The class software runs on Windows machines. We recommend Windows 2000 or Windows XP. You should have Administrator privileges.</B></p>
 
-	<p>We believe that it will also work on Windows NT and Windows 98, but we don&#8217;t support these in our classes. (Our experience has been that machines that are still running these operating systems are either too slow or have other problems and are a drain on our attention. Sorry.)</p>
+	<p>We believe that it will also work on Windows NT and Windows 98, but we don&#8217;t support these in our classes. (Our experience has been that machines that are still running these operating systems often are too slow or have other problems that we don&#8217;t have time for in a class environment. Sorry.)</p>
 
-	<p>The <span class="caps">IE </span>Controller software requires Internet Explorer and therefore only runs on Windows. The Timeclock server was developed on a Macintosh, and should run on any machine supporting Ruby (Unix, Linux, Windows). The Timeclock &#8220;product tests&#8221; will not run on Windows using the mswin build (the one you use for the class). They will run on Windows using the cygwin build.</p>
+	<p>The <span class="caps">WTR</span> software requires Internet Explorer and therefore only runs on Windows. The Timeclock server was developed on a Macintosh, and should run on any machine supporting Ruby (Unix, Linux, Windows). The Timeclock &#8220;product tests&#8221; will not run on Windows using the mswin build (the one you use for the class). They will run on Windows using the cygwin build.</p>
 
 	<h3>Installing the Software</h3>
 
 	<h4>Ruby</h4>
 
-	<p>We are currently using this Ruby installer:  <a href="http://rubyforge.org/frs/?group_id=167&#38;release_id=414">ruby181-12.exe.</a> </p>
+	<p>We are currently using this Ruby installer:  <a href="http://rubyforge.org/frs/?group_id=167&#38;release_id=414">ruby181-12.exe.</a>  (There are known problems with ruby 1.8.1-13; don&#8217;t use it.)</p>
 
 	<ol>
 	<li>     Double-click this exe file to install.</li>
@@ -30,7 +30,7 @@
 
 	<h4><span class="caps">IE </span>Controller</h4>
 
-	<p>You will need to install one Ruby library: <a href="http://rubyforge.org/frs/?group_id=104&#38;release_id=305">iec.2004.054.0.zip</a>    </p>
+	<p>You will need to install this Ruby library: <a href="http://rubyforge.org/frs/?group_id=104&#38;release_id=305">iec.2004.054.0.zip</a>    </p>
 
 	<ol>
 	<li>     Unzip this file onto your hard drive (c:). An &#8220;iec&#8221; directory</li>
@@ -57,7 +57,7 @@
 
 	<ol>
 	<li>     Start a command shell. (Start-> Run, enter &#8220;cmd&#8221;.)</li>
-		<li>     Enter &#8220;cd c:\scripting101\installs\timeclock\bin&#8221;.</li>
+		<li>     Enter &#8220;cd c:\scripting101\timeclock\bin&#8221;.</li>
 		<li>     Enter &#8220;ruby http-server.rb&#8221;. The server is now running.</li>
 	</ol>
 
@@ -67,5 +67,7 @@
 
 	<ol>
 	<li>     Start a new command shell.</li>
-		<li>     Enter &#8220;ruby c:\scripting101\lab\solutions\suite.rb -b&#8221;.</li>
+		<li>     Enter &#8220;ruby c:\scripting101\solutions\suite.rb -b&#8221;.</li>
 	</ol>
+
+	<p>Note: These tests will run unbearably slowly if Internet Explorer is  configured to use a proxy server that is unavailable.</p>
