@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>setTextBoxText (WinClicker)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir/winClicker.rb, line 429</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">setTextBoxText</span>(<span class="ruby-identifier">hWnd</span> , <span class="ruby-identifier">textToSet</span>)
+
+        <span class="ruby-identifier">send_message</span> = <span class="ruby-ivar">@User32</span>[<span class="ruby-value str">'SendMessage'</span>,  <span class="ruby-value str">'ILISS'</span>]  
+        <span class="ruby-identifier">r</span>  ,<span class="ruby-identifier">rs</span>  = <span class="ruby-identifier">send_message</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">hWnd</span> , <span class="ruby-constant">WM_SETTEXT</span> ,   <span class="ruby-value str">''</span> ,    <span class="ruby-identifier">textToSet</span>   )
+        <span class="ruby-identifier">puts</span> <span class="ruby-value str">'setTextBoxText: send message returned: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_s</span> 
+     
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

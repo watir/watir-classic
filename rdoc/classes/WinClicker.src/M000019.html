@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>clickWindowsButton_hwnd (WinClicker)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir/winClicker.rb, line 242</span>
+     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clickWindowsButton_hwnd</span> (<span class="ruby-identifier">hwnd</span> , <span class="ruby-identifier">buttonCaption</span> )
+
+         <span class="ruby-identifier">makeWindowActive</span>(<span class="ruby-identifier">hwnd</span>)
+
+         <span class="ruby-identifier">d</span> = <span class="ruby-identifier">getChildHandle</span>( <span class="ruby-identifier">hwnd</span> , <span class="ruby-identifier">buttonCaption</span> )
+         <span class="ruby-identifier">puts</span> (<span class="ruby-value str">&quot;clickWindowsButton: handle for button: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">buttonCaption</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot; is &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">to_s</span> )
+
+         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">d</span> <span class="ruby-operator">!=</span> <span class="ruby-value">-1</span> 
+             <span class="ruby-identifier">makeWindowActive</span>(<span class="ruby-identifier">hwnd</span>)
+             <span class="ruby-identifier">clickButtonWithHandle</span> (<span class="ruby-identifier">d</span>)
+         <span class="ruby-keyword kw">else</span>
+             <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+         <span class="ruby-keyword kw">end</span>
+
+         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+     <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
