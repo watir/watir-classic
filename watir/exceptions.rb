@@ -84,6 +84,17 @@ module Watir
             super(message)
         end
     end
+
+    # This exception is thrown if an attemp is made to acces the status bar of the browser when it doesnt exist
+    class NoStatusBarException < WatirException
+        def initialize(message="")
+            super(message)
+        end
+    end
+
+
+
+
     
   end
 end
