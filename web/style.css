@@ -1,0 +1,117 @@
+	body {
+		margin: 0px;
+		background: #fff;
+		color:  #000;
+		font-family: Arial, Trebuchet MS, Helvetica, sans-serif;
+		font-size: 12pt;
+	}
+
+	#content {
+		position: absolute;
+		left: 1%;
+		width: 95%;
+		top: 125px;
+	
+        }
+	
+	#content p {
+		margin-bottom: 1em 
+	
+	}
+
+
+	#banner {
+		background: #fff;
+		margin: 0px;
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		padding-top: 5px;
+		padding-bottom: 5px;
+
+		
+	}
+
+	#banner h1 {
+		color: #000;
+		font-family: Arial, Trebuchet MS, Helvetica, sans-serif;
+		font-size: 20pt;
+		padding-left: 5px;
+		margin-bottom:3px;
+		padding-bottom: 5px;
+		
+	}
+
+	#banner a {
+		color: #9cf;
+		font-weight: bold;
+		text-decoration: none;
+	}
+
+	#banner a:hover {
+		text-decoration: underline;
+	}
+
+	.description {
+		color: #fff;
+		font-family: Arial, Trebuchet MS, Helvetica, sans-serif;
+		font-size:10pt;
+		padding-left: 15px;
+		margin-bottom: 10px;
+	}
+
+	.lb {
+		width: 100%;
+		background: #fff;
+		font-family: Arial, Trebuchet MS, Helvetica, sans-serif;
+		padding-bottom: 10px;
+		margin-bottom: 20px;
+		
+	}
+
+	.lb h1 {
+		font-size: 18pt;
+		font-weight: bold;
+		color: #000;
+		margin: 5px 10px 3px 10px;
+	}
+
+	.lb h2 {
+		font-size: 16pt;
+		margin-left: 15px;
+	}
+
+	
+	.lb h3{
+		font-size: 12pt;
+		margin-left: 15px;
+	}
+	
+	.lb a {
+		color: #000099;
+		text-decoration: none;
+	}
+
+	.lb a:hover {
+		text-decoration: underline;
+	}
+
+	p {
+		font-size: 12pt;
+		color: #000;
+		margin: 0px 15px 3px 15px;
+		line-height: 125%;
+	}
+	
+	
+	
+	p.i1 {
+		margin-left: 25px;
+	}
+
+   	 .lb p {
+        font-size: 12pt;
+        line-height: 125%;
+   	 }
+ 	
