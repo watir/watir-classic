@@ -22,7 +22,14 @@ class TC_Links < Test::Unit::TestCase
        assert_false($ie.link(:text, "missing").exists?)   
        assert_false($ie.link(:text, /miss/).exists?)   
 
-       assert($ie.link(:url, "link_pass.html").exists?)   
+
+       # this assert we have to build up the path
+       #  this is what it looks like if you do a to_s on the link  file:///C:/watir_bonus/unitTests/html/links1.HTML
+       # but what we get back from $htmlRoot is a mixed case, so its almost impossible for use to test this correctly
+       # assert($ie.link(:url,'file:///C:/watir_bonus/unitTests/html/links1.HTML' ).exists?)   
+
+
+       assert($ie.link(:url, /link_pass.html/).exists?)   
        assert_false($ie.link(:url, "alsomissing.html").exists?)   
 
        assert($ie.link(:id, "link_id").exists?)   
@@ -42,6 +49,8 @@ class TC_Links < Test::Unit::TestCase
 
        assert_false($ie.link(:title, /missing/).exists?)   
 
+       assert($ie.link(:url, /_pass/).exists?)   
+       assert_false($ie.link(:url, /dont_exist/).exists?)   
 
 
 
@@ -55,8 +64,7 @@ class TC_Links < Test::Unit::TestCase
         assert( $ie.contains_text("Links2-Pass") ) 
 
         gotoLinksPage()
-
-        $ie.link(:url, "link_pass.html").click
+        $ie.link(:url, /link_pass.html/).click
         assert( $ie.contains_text("Links3-Pass") ) 
 
         gotoLinksPage()
