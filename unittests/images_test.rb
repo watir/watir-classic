@@ -39,6 +39,13 @@ class TC_Images < Test::Unit::TestCase
 #        assert(       $ie.image(:src , "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
         assert(       $ie.image(:src , /triangle/ ).exists?  )
 
+        assert(       $ie.image(:alt , "circle" ).exists?  )
+        assert(       $ie.image(:alt , /cir/ ).exists?  )
+
+        assert_false(  $ie.image(:alt , "triangle" ).exists?  )
+        assert_false(  $ie.image(:alt , /tri/ ).exists?  )
+
+
 
     end
 
@@ -48,6 +55,8 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").click }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").click }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").click}
+        assert_raises(UnknownObjectException ) { $ie.image(:alt, "no_image_with_this").click}
+
 
         $ie.image(:src, /button/).click
 
@@ -61,10 +70,15 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").hasLoaded? }
+        assert_raises(UnknownObjectException ) { $ie.image(:alt, "no_image_with_this").hasLoaded? }
 
 
         assert_false( $ie.image(:name, "themissingimage").hasLoaded?  )
         assert( $ie.image(:name, "circle").hasLoaded?  )
+
+        assert( $ie.image(:alt, "circle").hasLoaded?  )
+        assert( $ie.image(:alt, /cir/ ).hasLoaded?  )
+
 
     end
 
