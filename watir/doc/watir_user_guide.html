@@ -137,7 +137,15 @@ download (for example, <i>cd C:\temp\watir</i> if you downloaded to
 C:\temp).</li>
   <li>To start the installer, type <b>install.rb</b> and hit Enter at
 the command prompt.</li>
-  <li>Watir should install into your Ruby directory.</li>
+  <li>A Window should pop up that provides installation options for icons and 
+  the target for the "watir_bonus" directory. When you are happy with the options
+  selections you have made, click the <b>Install</b> button.</li>
+  <li>Watir should install into your Ruby library directory. The output of the install
+  actions will be printed to the DOS console.</li>
+  <li>When the DOS console output reads: "Installation Complete", Watir will be ready
+  for you to start using it.</li>
+  <li>When installation is complete, the command prompt will return and the
+  DOS console, and the popup window will disappear.</li>
 </ol>
 <p></p>
 <h4>Latest Version</h4>
@@ -194,7 +202,7 @@ newer version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
   <li>Change directories to the <b>examples</b> directory in your
 Watir install.</li>
   <li>Type the name of the test at the command prompt (ex. <b>googleSearch.rb</b>),
-and hit Enter to run it. </li>
+and press Enter to run it. </li>
   <li>Look at the source code of the examples and compare it to the web
 application that it tests</li>
   <ul>
@@ -245,12 +253,14 @@ methods into your test script</li>
   <li>Verify the results</li>
 </ol>
 <h2>Interacting With a Web Page</h2>
-<p>You will notice a global variable <b>$ie</b> is used a lot in Watir
+<p>You will notice a global variable <b>$ie</b> is used in Watir
 test scripts. This is the variable for the Internet Explorer browser.
 It is a global variable because it needs to be accessed throughout our
 test script at any time. It tells the Watir controller to exercise test
 scripts against
-an instance of the Internet Explorer web browser.</p>
+an instance of the Internet Explorer web browser.</p><p><i>Note:</i>If you would like to
+run tests concurrently, don't use a global variable. Use something like <b>ie</b>
+instead.</p>
 <p>In Ruby, think of programming in terms of objects and messages.
 Watir was also developed with objects and messages in mind. If you
 think of the <b>$ie</b> variable as an object, you can send messages
@@ -265,15 +275,14 @@ object by separating the object you are calling from the message you
 are sending to it with a dot. For example, <b>dog.bark</b> would tell
 the object <i>dog</i> that it must <i>bark</i>.</p>
 <p>This isn't very specific though. What dog should bark? In the Watir
-world, you could identify the test area to be our <b>yard</b>, or by
-using the global variable notation: <b>$yard</b>. Like <i>$ie</i>,
+world, you could identify the test area to be our <b>yard</b>. Like <i>ie</i>,
 treat it as an object with attributes containing other objects with
 attributes. For example, in our yard, there are two dogs: Heidi and
 Megabyte. Each of these dog objects have attributes that identify them.
 They have names, breeds, shapes and sizes and colors. To be more
 specific, and interacting
 with them the Watir way, you could send the message "bark" to the dog
-Heidi like this: <b>$yard.dog(:name, "Heidi").bark</b>. This says in
+Heidi like this: <b>yard.dog(:name, "Heidi").bark</b>. This says in
 Watir syntax: in the yard, identify the dog Heidi by her name
 attribute, and send her the "bark" message. The expected outcome would
 be Heidi responding to the message by barking.</p>
@@ -286,8 +295,8 @@ must be very specific when you send messages to objects on a web page.
 You must also be able to identify objects on a web page by using a
 variety of different attributes due to the diversity in how tags are
 declared by different application developers. With Watir, identify
-objects and send them messages by using the dot notation. For example <b>$ie.button</b>,
-narrows down the type of object to send a message to. <b>$ie.button(:value,
+objects and send them messages by using the dot notation. For example <b>ie.button</b>,
+narrows down the type of object to send a message to. <b>ie.button(:value,
 "Click Me").click</b> identifies the object on the page as a button
 within the instance of Internet Explorer that has the value attribute
 (caption) "Click Me". When you send the message (the verb) <b>click</b>,
@@ -364,10 +373,10 @@ and <i>value</i> attributes provided in the <i>checkbox</i> HTML tag.</p>
  type="checkbox"> </div>
 <p>Watir code to <i>set</i> a checkbox using the <i>name</i>
 attribute: </p>
-<div class="testexample">$ie.checkBox(:name, "checkme").set</div>
+<div class="testexample">$ie.checkbox(:name, "checkme").set</div>
 <p>Watir code to <i>clear</i> a checkbox using the <i>name</i>
 attribute: </p>
-<div class="testexample">$ie.checkBox(:name, "checkme").clear</div>
+<div class="testexample">$ie.checkbox(:name, "checkme").clear</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class="htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>"
 value = "1"&gt;</div>
@@ -375,7 +384,7 @@ value = "1"&gt;</div>
 <p>We can also use both attributes:</p>
 <p>Watir code to <i>set</i> a checkbox using both the <i>name</i> and
 <i>value</i> attributes: </p>
-<div class="testexample">$ie.checkBox(:name, "checkme", "1").set</div>
+<div class="testexample">$ie.checkbox(:name, "checkme", "1").set</div>
 <p>This is the tag in the HTML source with both the attributes
 highlighted:</p>
 <div class="htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>"
@@ -429,7 +438,7 @@ value we want to set.</p>
 </div>
 <p>Watir code to <i>set</i> a select box item using the <i>name</i>
 attribute and the value to set: </p>
-<div class="testexample"> $ie.selectBox( :name , "selectme").select("is
+<div class="testexample"> $ie.select_list( :name , "selectme").select("is
 fun")</div>
 <p>This is the tag in the HTML source with the attributes highlighted:</p>
 <div class="htmlexample">&lt;select name = "<b>selectme</b>" &gt;
@@ -439,7 +448,7 @@ fun")</div>
 &lt;option name=4&gt;<b>is fun</b>
 &lt;/select&gt;</div>
 <p>Watir can also <i>clear</i> a select box:</p>
-<div class="testexample">$ie.selectBox( :name ,
+<div class="testexample">$ie.select_list( :name ,
 "selectme").clearSelection </div>
 <h2>Entering Data into a Web Page</h2>
 <p>Watir <i>sets</i> text in an input field on a web page based on the
@@ -452,13 +461,13 @@ text</i> HTML tag.
  type="text"> </div>
 <p>Watir code to <i>set</i> the field with the text string: "Watir
 World" using the <i>name</i> attribute: </p>
-<div class="testexample">$ie.textField(:name, "typeinme").set("Watir
+<div class="testexample">$ie.text_field(:name, "typeinme").set("Watir
 World")</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class="htmlexample">&lt;input type = "text" name = "<b>typeinme</b>"
 &gt;</div>
 <p>Watir can also <i>clear</i> a text field:</p>
-<div class="testexample">$ie.textField(:name, "typeinme").clear</div>
+<div class="testexample">$ie.text_field(:name, "typeinme").clear</div>
 <h2>Submitting Data from a Web Page</h2>
 <p>In web applications, we generally submit information we have entered
 or selected in the web page by clicking hyperlinks (see above example),
@@ -607,15 +616,15 @@ text:</p>
 <div class="browserexample">Reached test verification point.</div>
 <p>Our test will pass if this is what is displayed on the page at our
 verification point.</p>
-<p>Watir code to check that the text exists on the web page <i>pageContainsText</i>
+<p>Watir code to check that the text exists on the web page <i>contains_text</i>
 method: </p>
-<div class="testexample">$ie.pageContainsText("Reached test
+<div class="testexample">$ie.contains_text("Reached test
 verification point.") </div>
 <p>We will need to add some scripting code to validate that this
 occurred, or use Ruby's test::unit testing framework.</p>
 Scripting code to let us know whether the test passed or not:
 <p></p>
-<div class="testexample">a = $ie.pageContainsText("Reached test
+<div class="testexample">a = $ie.contains_text("Reached test
 verification point.")<br>
 if !a <br>
 &nbsp; puts: "Test failed! Page didn't contain text: Reached test
@@ -643,7 +652,8 @@ results. (For a good explanation of assertions, visit this NUnit page
 which <a href="http://www.nunit.org/assertions.html">explains
 assertions</a>.)</p>
 <p>Ruby has an xUnit framework called <b>test::unit</b> that we can
-use with Watir.</p>
+use with Watir. The test::unit API is avaiable in the project <a href="http://www.ruby-doc.org/stdlib/libdoc/test/unit/rdoc/">
+RDoc</a>.</p> <i>Note:</i>Look at the Watir examples and unit tests for executable examples.</p>
 <p>To use test::unit in your test scripts, enter the following in your
 test script:</p>
 <h4>Include test::unit</h4>
@@ -658,20 +668,37 @@ require 'watir/testUnitAddons'<br>
 test::unit <b>TestCase</b> class.</p>
 <p></p>
 <div class="testexample">class TC_myTest &lt; Test::Unit::TestCase<br>
-&nbsp;&nbsp;<i>fill in Test Case methods here</i><br>
+&nbsp;&nbsp;<i>...fill in Test Case methods here...</i><br>
 end </div>
 <h4>Create a Test Case Method</h4>
-<p>test::unit uses reflection to go through our test class and execute
-all the methods (test cases)</p>
+<p>Within our test case class, we need to declare test cases like this:<br>
+</p>
 <div class="testexample">def test_myTestCase<br>
 &nbsp;&nbsp;<i>fill in Watir method and assertion here</i><br>
 end</div>
+<p>Test cases must be prefixed with the word <i>test</i>.</p>
+<p>When we run the test script from the command line, test::unit uses reflection to go through 
+our test class and execute all the test cases declared in it. The runner by default executes the test cases randomly, 
+so if you need to chain test cases, prefix letters from the alphabet or numbers after the "test" 
+prefix to force them to run in order. ex. "test_a_mytest"</p>
+<p>The test case class with test cases defined will look like this:</p>
+<div class="testexample">class TC_myTest &lt; Test::Unit::TestCase<br>
+&nbsp;&nbsp;def test_ myTestCase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Watir code and assertion here...</i><br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;def test_anotherTestCase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Watir code and assertion here...</i><br>
+&nbsp;&nbsp;end<br>
+&nbsp;&nbsp;def test_aTestCase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>Watir code and assertion here...</i><br>
+&nbsp;&nbsp;end<br>
+end </div
 <h4>Use Assertions</h4>
 <p>Watir can support assertions by wrapping Watir methods within an <i>assert</i>
 or <i>assert_false</i>:</p>
-<div class="testexample">assert($ie.pageContainsText("Reached test
+<div class="testexample">assert($ie.contains_text("Reached test
 verification point.")</div>
-<div class="testexample">assert_false($ie.pageContainsText("Did not
+<div class="testexample">assert_false($ie.contains_text("Did not
 reach test verification point.")</div>
 <p>Watir can test for many different states of objects. We can use
 assertions to check of objects <i>exist</i>, are <i>enabled</i> or <i>disabled</i>,
@@ -685,10 +712,10 @@ Test::unit assertsions don't necessarily
 return a true or a false.</p>
 <p>Here is an example of how to print the results of an assertion:</p>
 <div class="testexample">begin<br>
-&nbsp; assert($ie.pageContainsText("Test verification point.") )<br>
+&nbsp; assert($ie.contains_text("Test verification point.") )<br>
 &nbsp;&nbsp; puts("TEST PASSED. Found test string: 'Test verification
 point.' ")<br>
-&nbsp; rescue =&gt; e <br>
+rescue =&gt; e <br>
 &nbsp;&nbsp; puts("TEST FAILED." + e.message + "\n" +
 e.backtrace.join("\n")) <br>
 end<br>
@@ -761,10 +788,10 @@ irb(main):002:0> <b>ie = Watir::IE.start("http://<i>mytestsite.com</i>")</b><br>
 <h3>Use IRB to Find Page Objects</h3>
 <p>To find out what objects are on a page you are writing a test script for, use IRB to 
 get instant feedback.</p>
-<p>The <b>showAllObjects</b> method is a useful way to identify the attributes of objects
+<p>The <b>show_all_objects</b> method is a useful way to identify the attributes of objects
 you will need to use in a test script.</p>
 <div class="testexample">
-irb(main):003:0><b> ie.showAllObjects</b><br>
+irb(main):003:0><b> ie.show_all_objects</b><br>
 -----------Objects in  page -------------<br>
 text              name=test_text            id= 11                value=          alt=                src=<br>
 submit            name=test_button          id=   12              value=Click Me  alt=  click          src=<br>
@@ -775,7 +802,7 @@ objects. A text field named <b>test_text</b> and a button (submit) named <b>test
 <p>The <b>flash</b> method can be used to test whether you have identified the object correctly. The
 flash method causes an object in the web browser to flash yellow ten times.</p>
 <div class="testexample">
-irb(main):006:0> <b>ie.textField(:name, "test_text").flash</b><br>
+irb(main):006:0> <b>ie.text_field(:name, "test_text").flash</b><br>
 => 10</div>
 <p>This would cause the text field with the name attribute "test_text" to flash yellow ten times. This is an effective
 way of testing whether you have identified the right object, and if you have used the right attribute. Using this in IRB
