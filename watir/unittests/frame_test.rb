@@ -22,11 +22,15 @@ class TC_Frames < Test::Unit::TestCase
        assert_raises(UnknownObjectException, "UnknownObjectException supposed to be thrown" ) {   $ie.frame("buttonFrame2").button(:id, "b2").enabled?  }  
 
        assert($ie.frame("buttonFrame").button(:id, "b2").enabled?)   
+
     end
 
     def test_presetFrame
 
         # with the preset frame functionality we are able to use the same frame for saeveral actions
+
+        gotoFramesPage()
+
         $ie.presetFrame( "buttonFrame" )
         assert_equal( "buttonFrame" , $ie.getCurrentFrame )
 
