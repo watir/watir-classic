@@ -253,6 +253,7 @@ class ObjectActions
    end
 
    def getOLEObject()
+      @ieController.clearFrame()
       return @o
    end
 
@@ -264,6 +265,7 @@ class ObjectActions
    #      value      Disabled Button
    #      disabled   true
    def to_s
+      @ieController.clearFrame()
       raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
       n = []
       @ieProperties.each_pair do |k,v|      
@@ -299,6 +301,7 @@ class ObjectActions
    #   raises: UnknownObjectException  if the object is not found
    #   ObjectDisabledException if the object is currently disabled
    def click()
+      @ieController.clearFrame()
       raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
       raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
 
@@ -309,6 +312,7 @@ class ObjectActions
    end
 
    def flash
+      @ieController.clearFrame()
       raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
       10.times do
          highLight(:set)
@@ -323,6 +327,7 @@ class ObjectActions
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
    def fireEvent(event)
+      @ieController.clearFrame()
       raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
       raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
        
@@ -336,6 +341,7 @@ class ObjectActions
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
    def focus()
+      @ieController.clearFrame()
       raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
       raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
       @o.focus()
@@ -343,6 +349,7 @@ class ObjectActions
 
    # This methods checks to see if the current element actually exists. 
    def exists?
+      @ieController.clearFrame()
       return false if @o == nil
       return true
    end
@@ -350,11 +357,114 @@ class ObjectActions
    # This method returns true if the current element is enable, false if it isn't.
    #   raises: UnknownObjectException  if the object is not found
    def enabled?
+      @ieController.clearFrame()
       raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
       return false if @o.invoke("disabled")
       return true
    end
 end
+
+
+class FrameHandler
+
+    def initialize()
+        @frame = []
+        @presetFrame = []
+    end
+
+    def clear
+        @frame.clear
+    end
+
+    def clearPresetFrame
+        @presetFrame.clear
+    end
+
+    def clearAll
+        @frame.clear
+        @presetFrame.clear
+    end
+
+    def addFrame( f)
+        @frame << f
+    end
+
+    def addPresetFrame( f)
+        @presetFrame << f
+    end
+
+    def usingFrame?
+        return true if @frame.length > 0
+        return false
+    end
+
+    def usingPresetFrame?
+        return true if @presetFrame.length > 0
+        return false
+    end
+
+    def usingFrames
+        return true if usingFrame? | usingPresetFrame?
+        return false
+    end
+
+    def presetFrame
+        if @presetFrame[0] == nil
+            return ""
+        end
+        return @presetFrame[0]
+    end
+
+    def getDocument( ie , doc = nil , frameNameIndex=0 )
+
+        if @frame.length == 0 
+            # using a preset frame
+            frameToUse = @presetFrame[0]
+            tempArray = @presetFrame
+            puts "Using preset frame name is #{frameToUse }"
+        elsif @frame.length == 1
+            frameToUse = @frame[0]
+            tempArray = @frame
+        else
+            # we are using multiple nested frames
+            frameToUse = @frame[frameNameIndex ] 
+            tempArray = @frame
+        end
+
+        if doc != nil
+            allFrames = doc.frames
+        else
+            doc = ie.getIE.document
+            allFrames = doc.frames
+        end
+        frameExists = false
+
+        for i in 0 .. allFrames.length-1
+            begin
+                if frameToUse  == allFrames[i.to_s].name.to_s
+                    frameExists = true   
+                end
+            rescue
+                # probably no name on this object
+            end
+        end
+
+        if frameExists == false
+            clearAll
+            raise UnknownFrameException , "Unable to locate a frame with name #{ frameToUse } " 
+        end
+        doc = doc.frames[frameToUse.to_s].document
+        if tempArray.length > 0 and frameNameIndex < tempArray.length-1 
+             doc=getDocument(ie ,doc , frameNameIndex+1   )
+        end
+        return doc
+
+    end
+
+
+end
+
+
 
 # ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
 # the remaining ARGV as a filter on what tests to run.
@@ -390,6 +500,9 @@ class IE
 
    attr_accessor :eventThread
 
+   # this is used when forms are used. It shouldnt be used otherwise
+   attr_accessor :frameHandler
+
    def createBrowser
    return WIN32OLE.new('InternetExplorer.Application')
    end
@@ -405,8 +518,7 @@ class IE
          @ie =  createBrowser
       end
       @ie.visible = ! $HIDE_IE
-      @frame = ""
-      @presetFrame = ""
+      @frameHandler = FrameHandler.new
       @form = nil
       @typingspeed = DEFAULT_TYPING_SPEED
       @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
@@ -519,34 +631,34 @@ class IE
       return @ie
    end
 
-   # This method sets the html frame to use for a single object to access.
-   #   *   frameName  - string with the name of the frame to use
-   def frame( frameName)
-      @frame  = frameName
-      return self
-   end
+    # This method sets the html frame to use for a single object to access.
+    #   *   frameName  - string with the name of the frame to use
+    def frame( frameName)
 
-   # This method is used internally to clear the name of the html frame to use.
-   def clearFrame()
-      @frame = ""
-   end
+        @frameHandler.addFrame( frameName)
+        return self
+    end
 
-   # This method is used to set the html frame to use for multiple object actions.
-   #   *   frameName  - string with the name of the frame to use
-   def presetFrame( frameName )
-      @presetFrame = frameName
-   end
+    # This method is used internally to clear the name of the html frame to use.
+    def clearFrame()
+        @frameHandler.clear
+    end
 
-   # This method is used to clear the html frame that is used on multiple object accesses.
-   def clearPresetFrame( )
-      @presetFrame = ""
-   end
+    # This method is used to set the html frame to use for multiple object actions.
+    #   *   frameName  - string with the name of the frame to use
+    def presetFrame( frameName )
+        @frameHandler.addPresetFrame( frameName)
+    end
 
-   # This method returns the name of the currently used frame. Only applies when the presetFrame method is used.
-   def getCurrentFrame()
-      return @presetFrame 
-   end
+    # This method is used to clear the html frame that is used on multiple object accesses.
+    def clearPresetFrame( )
+        @frameHandler.clearPresetFrame
+    end
 
+    # This method returns the name of the currently used frame. Only applies when the presetFrame method is used.
+    def getCurrentFrame()
+        return @frameHandler.presetFrame 
+    end
 
    def form( how , formName=nil )
       # If only one value is supplied, it is a form name
@@ -562,40 +674,19 @@ class IE
    end
 
 
-   # This method is used internally to set the document for Watir to use.
-   #  Raises UnknownFrameException if a specified frame cannot be found.
-   def getDocument()
+ # This method is used internally to set the document for Watir to use.
+    #  Raises UnknownFrameException if a specified frame cannot be found.
+    def getDocument(frameNameIndex= 0  , doc = nil)
 
-      if @frame == "" and @presetFrame == ""
+        if @frameHandler.usingFrames
+            doc = @frameHandler.getDocument( self )
+        else
+            doc = @ie.document
+        end
+        @doc = doc
+        return doc
+    end
 
-         doc = @ie.document
-      else
-         if @frame == "" 
-            # using a preset frame
-            frameToUse = @presetFrame
-         else
-            frameToUse = @frame
-         end
-
-         log "Getting a document in a frame - frameName is: #{frameToUse} "
-
-         allFrames = @ie.document.frames
-         frameExists = false
-
-         for i in 0 .. allFrames.length-1
-            begin
-               frameExists = true   if frameToUse  == allFrames[i.to_s].name.to_s
-            rescue
-               # probably no name on this object
-            end
-         end
-
-         raise UnknownFrameException , "Unable to locate a frame with name #{ frameToUse } " if frameExists == false
-         doc = @ie.document.frames[frameToUse.to_s].document
-      end
-      @doc = doc
-      return doc
-   end
 
    # This method returns true or false if the specified text was found.
    #  * text - string or regular expression - the string to look for
@@ -603,7 +694,7 @@ class IE
       #log "-------------"
       #log getDocument().body.innerText
       #log "-------------"
-
+      returnValue = false
       retryCount = 0
       begin
          retryCount += 1
@@ -611,26 +702,28 @@ class IE
 
             if ( getDocument().body.innerText.match(text)  ) != nil
                log  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
-               return true
+               returnValue= true
             else
                log "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
-               return false
+               returnValue= false
             end
 
          elsif text.kind_of? String
 
             if ( getDocument().body.innerText.index(text)  ) != nil
                log "pageContainsText: Looking for: #{text} (string) - found it ok" 
-               return true
+               returnValue= true
             else
                log  "pageContainsText: Looking for: #{text} (string)  - Didnt Find it" 
-               return false
+               returnValue= false
             end
 
          end 
       rescue
          retry if retryCount < 2 
       end
+      clearFrame()
+      return returnValue
    end
 
    # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
@@ -654,6 +747,8 @@ class IE
          sleep 0.02
          print s.next
       end
+      sleep 0.02
+
 
       if @ie.document.frames.length > 0 
          begin
@@ -689,6 +784,7 @@ class IE
       @ie.navigate(url)
       waitForIE()
       sleep 0.2
+      clearFrame()
    end
 
    # this method closes the Internet Explorer
@@ -698,12 +794,16 @@ class IE
 
    # this method returns the HTML of the current page
    def getHTML()
-       return getDocument().body.innerHTML
+      n=getDocument().body.innerHTML
+      clearFrame()
+      return n
    end
 
    # this method returns the text of the current document
    def getText()
-       return getDocument().body.innerText
+      n= getDocument().body.innerText
+      clearFrame()
+      return n
    end
 
 
@@ -712,7 +812,8 @@ class IE
    def showFrames()
       if @ie.document.frames
          allFrames = @ie.document.frames
-         for i in allFrames.length-1..0
+         puts "there are #{allFrames.length} frames"
+         0.upto( allFrames.length-1 ) do |i| 
             begin
                fname = allFrames[i.to_s].name.to_s
                log "frame  index: #{i} name: #{fname}"
@@ -723,6 +824,7 @@ class IE
       else
          log "no frames"
       end
+      clearFrame()
    end
 
    # Show all forms displays all the forms that are on a web page.
@@ -744,7 +846,7 @@ class IE
       else
          log " No forms"
       end
-
+      clearFrame()
    end
 
 
@@ -755,7 +857,7 @@ class IE
          log "         id: #{l.invoke("id")}"
          log "      src: #{l.src}"
       end
-
+      clearFrame()
    end
 
 
@@ -767,7 +869,7 @@ class IE
          log "      href: #{l.href}"
          log "      text: #{l.innerText}"
       end
-
+      clearFrame()
    end
 
   
@@ -820,7 +922,7 @@ class IE
          s=s+"\n"
       end
       log s+"\n\n\n"
-
+      clearFrame()
    end
 
 
@@ -856,6 +958,7 @@ class IE
          o = img if what.matches(attribute)
                         
       end # do
+      clearFrame()
       return o
    end
 
@@ -894,6 +997,7 @@ class IE
          end
       end
       #puts "table - #{what}, #{how} Not found " if table ==  nil
+      clearFrame()
       return table
    end
   
@@ -1143,6 +1247,7 @@ class IE
       
       # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
       # the nil-related exceptions and provide useful information to the user.
+      clearFrame()
       return link
    end
 
@@ -1278,6 +1383,7 @@ class Form < IE
       @ieController = ieController
       @formHow = how
       @formName = what
+      @frameHandler = @ieController.frameHandler
 
       log "Get form  formHow is #{@formHow}  formName is #{@formName} "
       count = 1
@@ -1342,16 +1448,19 @@ class Form < IE
    end
 
    def getContainer()
+      @ieController.clearFrame()
       raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
       @form.elements.all
    end   
 
    def exists?
+      @ieController.clearFrame()
       @form ? true : false
    end
 
    # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
    def submit()
+      @ieController.clearFrame()
       raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
       @form.submit 
       @ieController.waitForIE
@@ -1380,6 +1489,7 @@ class Table < ObjectActions
    # This method returns the number of rows in the table.
    # Raises an UnknownTableException if the table doesnt exist.
    def rows
+      @ieController.clearFrame()
       raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
       table_rows = @o.getElementsByTagName("TR")
       return table_rows.length
@@ -1388,6 +1498,7 @@ class Table < ObjectActions
    # This method returns the number of columns in the table.
    # Raises an UnknownTableException if the table doesn't exist.
    def columns( rowToUse = 1)
+      @ieController.clearFrame()
       raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
       table_rows = @o.getElementsByTagName("TR")
       cols = table_rows[rowToUse.to_s].getElementsByTagName("TD")
@@ -1397,6 +1508,7 @@ class Table < ObjectActions
    # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
    # Raises an UnknownTableException if the table doesn't exist.
    def to_a
+      @ieController.clearFrame()
       raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
       y = []
       table_rows = @o.getElementsByTagName("TR")
@@ -1444,6 +1556,7 @@ class Image < ObjectActions
    # We look for these missing properties to see if the image is really there or not. 
    # If the Disk cache is full ( tools menu -> Internet options -> Temporary Internet Files) , it may produce incorrect responses.
    def hasLoaded?
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate image using #{@how} and #{@what} " if @o==nil
       return false  if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
       return true
@@ -1490,6 +1603,7 @@ class SelectBox < ObjectActions
 
    # This method clears the selected items in the select box
    def clearSelection
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
       highLight( :set)
       @o.each do |selectBoxItem|
@@ -1504,6 +1618,7 @@ class SelectBox < ObjectActions
    #  * item   - the thing to select, string, reg exp or an array of string and reg exps
 
    def select( item )
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
       if item.kind_of?( Array ) == false
             items = [item]
@@ -1543,6 +1658,7 @@ class SelectBox < ObjectActions
    # This method returns all the items in the select list as an array. An empty array is returned if the select box has no contents.
    # Raises UnknownObjectException if the select box is not found
    def getAllContents()
+      @ieController.clearFrame()
       raise UnknownObjectException  ,  "Unable to locate a selectbox  using #{@how} and #{@what} " if @o==nil
       returnArray = []
 
@@ -1600,6 +1716,7 @@ class RadioCheckCommon < ObjectActions
    # Returns true is set or false if not set.
    # Raises UnknownObjectException if its unable to locate an object.
    def isSet?
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate a radio button using #{@how} and #{@what} "if @o==nil
       return true if @o.checked
       return false
@@ -1610,6 +1727,7 @@ class RadioCheckCommon < ObjectActions
    #   Raises UnknownObjectException if its unable to locate an object
    #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
    def clear
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
       raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
       @o.checked = false
@@ -1621,6 +1739,7 @@ class RadioCheckCommon < ObjectActions
    #   Raises UnknownObjectException  if its unable to locate an object
    #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
    def set
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
       raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
       highLight( :set)
@@ -1634,6 +1753,7 @@ class RadioCheckCommon < ObjectActions
    # Returns CHECKED or UNCHECKED
    #   Raises UnknownObjectException  if its unable to locate an object
    def getState
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
       return CHECKED if @o.checked == true
       return UNCHECKED 
@@ -1689,7 +1809,7 @@ class TextField < ObjectActions
    # This method returns true or false if the text field is read only.
    #   Raises  UnknownObjectException if the object can't be found.
    def readOnly?
-
+      @ieController.clearFrame()
       raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "   if @o==nil
       return @o.readOnly 
    end   
@@ -1697,6 +1817,7 @@ class TextField < ObjectActions
    # This method returns the current contents of the text field as a string.
    #   Raises  UnknownObjectException if the object can't be found
    def getContents()
+      @ieController.clearFrame()
       raise UnknownObjectException if @o==nil
       return self.getProperty("value")
    end
@@ -1713,6 +1834,7 @@ class TextField < ObjectActions
       elsif containsThis.kind_of? Regexp
          return true if self.getProperty("value").match(containsThis) != nil
       end
+      @ieController.clearFrame()
       return false
    end
   
@@ -1736,6 +1858,7 @@ class TextField < ObjectActions
       @o.fireEvent("onChange")
       @ieController.waitForIE()
       highLight(:clear)
+      @ieController.clearFrame()
 
    end
 
@@ -1755,6 +1878,8 @@ class TextField < ObjectActions
       @o.focus
       doKeyPress( setThis )
       highLight(:clear)
+      @ieController.clearFrame()
+
    end
 
    # This method sets the contents of the text box to the supplied text 
@@ -1776,6 +1901,8 @@ class TextField < ObjectActions
       @o.fireEvent("onKeyPress")
       doKeyPress( setThis )
       highLight(:clear)
+      @ieController.clearFrame()
+
    end
 
    # This method is used internally by setText and appendText
