@@ -12,7 +12,7 @@ class TC_Images < Test::Unit::TestCase
 
 
     def gotoImagePage()
-        $ie.goto("file://#{$myDir}/html/images1.html")
+        $ie.goto($htmlRoot + "images1.html")
     end
 
 

@@ -11,7 +11,7 @@ class TC_CheckBox < Test::Unit::TestCase
 
 
     def gotoCheckBoxPage()
-        $ie.goto("file://#{$myDir}/html/checkboxes1.html")
+        $ie.goto($htmlRoot + "checkboxes1.html")
     end
 
 

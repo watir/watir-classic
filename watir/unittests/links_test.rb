@@ -12,7 +12,7 @@ class TC_Links < Test::Unit::TestCase
 
 
     def gotoLinksPage()
-        $ie.goto("file://#{$myDir}/html/links1.html")
+        $ie.goto($htmlRoot + "links1.html")
     end
 
     

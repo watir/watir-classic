@@ -12,7 +12,7 @@ class TC_Fields < Test::Unit::TestCase
 
 
     def gotoPage()
-        $ie.goto("file://#{$myDir}/html/textfields1.html")
+        $ie.goto($htmlRoot + "textfields1.html")
     end
 
     

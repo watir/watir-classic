@@ -11,11 +11,11 @@ require 'unittests/setup'
 class TC_Buttons < Test::Unit::TestCase
 
     def gotoButtonPage()
-        $ie.goto("file://#{$myDir}/html/buttons1.html")
+        $ie.goto($htmlRoot + "buttons1.html")
     end
 
     def gotoFramesPage()
-        $ie.goto("file://#{$myDir}/html/frame_buttons.html")
+        $ie.goto($htmlRoot + "frame_buttons.html")
     end
 
     def aatest_Spinner

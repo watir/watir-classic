@@ -14,7 +14,7 @@ class TC_Frames < Test::Unit::TestCase
    
     def gotoFramesPage()
 
-       $ie.goto("file://#{$myDir}/html/frame_buttons.html")
+       $ie.goto($htmlRoot + "frame_buttons.html")
     end
 
 
