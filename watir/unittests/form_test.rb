@@ -1,17 +1,13 @@
-
-# tests for Buttons
+# tests for Forms
 # revision: $Revision$
 
 require 'watir'
-
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
 require 'testUnitAddons'
+require 'unittests/setup'
 
 $myDir = Dir.getwd
-
-
 
 class TC_CheckBox < Test::Unit::TestCase
 
@@ -164,4 +160,3 @@ class TC_CheckBox < Test::Unit::TestCase
 
 end
 
-$ie = IE.new

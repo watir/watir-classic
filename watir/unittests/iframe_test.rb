@@ -1,18 +1,13 @@
-
-# tests for Buttons
+# tests for IFrames
 # revision: $Revision$
 
 require 'watir'
-
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
 require 'testUnitAddons'
+require 'unittests/setup'
 
 $myDir = Dir.getwd
-
-
-
 
 class TC_Buttons < Test::Unit::TestCase
 
@@ -35,4 +30,3 @@ class TC_Buttons < Test::Unit::TestCase
    
 end
 
-$ie = IE.new

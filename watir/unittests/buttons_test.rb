@@ -1,4 +1,3 @@
-
 # tests for Buttons
 # revision: $Revision$
 
@@ -6,6 +5,7 @@ require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
+require 'unittests/setup'
 
 $myDir = File.dirname(__FILE__)
 
@@ -118,4 +118,3 @@ class TC_Buttons < Test::Unit::TestCase
 
 end
 
-$ie = IE.new
