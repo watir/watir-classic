@@ -108,4 +108,34 @@ class TC_Selectbox < Test::Unit::TestCase
        assert($ie.contains_text("PASS") )
     end
 
+    def test_select_list_properties
+
+
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.select_list(:index, 199).value}  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.select_list(:index, 199).name }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.select_list(:index, 199).id }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.select_list(:index, 199).disabled }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.select_list(:index, 199).type }  
+
+        assert_equal("o3"   ,    $ie.select_list(:index, 1).value)  
+        assert_equal("sel1" ,    $ie.select_list(:index, 1).name )  
+        assert_equal(""     ,    $ie.select_list(:index, 1).id )  
+        assert_equal("select-one",         $ie.select_list(:index, 1).type )  
+        assert_equal("select-multiple",    $ie.select_list(:index, 2).type )  
+
+
+        $ie.select_list(:index,1).select(/1/)
+        assert_equal("o1"   ,    $ie.select_list(:index, 1).value)  
+
+
+        assert_equal( false, $ie.select_list(:index, 1).disabled )
+        assert_equal( true,  $ie.select_list(:index, 4).disabled )
+        assert_equal( true,  $ie.select_list(:id, 'selectbox_4').disabled )
+
+
+
+    end
+
+
+
 end
