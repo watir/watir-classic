@@ -1,6 +1,9 @@
 <html>
 <head>
 <title>WATIR User Guide</title>
+<meta name="author" content="Jonathan Kohl" />
+<meta name="generator" content="By hand, with a text editor." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 </head>
 <style type="text/css">
@@ -13,18 +16,37 @@ body {
 	font: normal small Geneva, Verdana, Arial, sans-serif;
      }
 h1   {
-       font-size: 200%; 
+       font-size: 175%; 
      }
 h2   {
-       font-size: 150%; 
+       font-size: 135%; 
      }
 h3   {
        font-size: 100%; 
      }
 p    { 
-       margin-top: 0; 
-       margin-bottom: 0; 
+       margin-bottom: 10px; 
       }
+div.testexample 
+     { 
+       background: #fff;
+       margin-left:  10%;
+       margin-right: 10%;
+       padding: 1em;
+       font-family: Courier;
+       font-size: 10pt;
+       font-weight: bold;
+       border: 1px solid #000;
+       border-width: thin; 
+       margin-bottom: 10px;
+     }
+div.htmlexample 
+     { 
+       background: #ccc;
+       border: 1px solid #000; 
+       border-width: thin; 
+       width: 100% 
+     }
 </style>
 <body>
 <h1>WATIR User Guide</h1>
@@ -49,29 +71,54 @@ If you prefer, you can download and install a Windows version of ruby Ruby from 
 <p>Download the Watir tarball from the WTR RubyForge site <a href="http://rubyforge.org/cgi-bin/viewcvs.cgi/watir/?cvsroot=wtr">here</a> (click download tarball).
 Unzip the watir tarball to a working directory (ie. C:). You will now have a watir folder containing the source code and unit tests in a unittests folder.</p>
 <h3>Step 3 - Run the Watir Unit Tests</h3>
-<p>To run the unit tests, open a DOS command prompt (Start menu/Run... enter "cmd" in the "Open" field and click OK)</p>
-change directories to the unittests directory in your watir install (ie. cd C:\watir\unittests if you installed to C:\)
-<p>
-To run all the tests, type "all_tests.rb" and hit Enter at the command prompt. The tests should all run and pass.
-</p>
+<p>To run the unit tests, open a DOS command prompt: Start menu/Run... enter "cmd" in the "Open" field and click OK</p>
+<p>change directories to the unittests directory in your watir install ex. cd C:\watir\unittests if you installed to C:\</p>
+<p>To run all the tests, type "all_tests.rb" and hit Enter at the command prompt. The tests should all run and pass.</p>
 
 <h1>Developing Test Cases</h1>
-<h3>Site Navigation</h3>
-<h3>Get to the page</h3>
-<h3>Manipulating Web Page Objects</h3>
-<h3>Interact with objects on the page</h3>
+<p>The goal of this user guide is to help you get started writing test cases quickly. Each section below describes the methods needed to drive a web
+application. Select what is needed for each page of your web application based on what appears on that page.</p>
+<p>To start developing a test, open your text editor, and name your test file giving it a ".rb" (Ruby) extension. Using the Watir methods below, enter in what is needed
+to open Internet Explorer, go to your test web site, interact with it to exercise your test case, and verify the results.</p>
+<p>Open your web browser with the application under test in front of you, and pay close attention to the objects on that page. Plan what you need to get Watir
+to do before you begin scripting. What text fields require entries? What buttons need to be pushed? What links need to be clicked on? It sometimes helps to write out
+the steps it will take to exercise a test first, and then filling in the Watir scripting code to satisfy each of those steps.</p> 
+
+<h3><i>Note:</i> A Bit About Objects and Messages</h3>
+<p>You will notice a global variable "$ie" is used a lot in these scripts. This is the variable for the Internet Explorer browser.
+It is a global variable because it needs to be accessed throughout our test script at any time. It tells the Watir controller to exercise test scripts against
+an instance of the Internet Explorer web browser.</p>
+<p>In Ruby, we can think of programming in terms of objects and messages. If we think of the "$ie" variable as an object, we can then send messages to it.
+An object is usually thought of as a noun, which is natural when we start up an Internet Explorer instance. If we send a message to that object, 
+it will respond to that message. We can think of the messages as verbs. In Ruby, we send a message to an object by separating the object we are calling
+and the message we are sending to it with a dot. ex. "Dog.bark" would tell the object "Dog" that it must "bark".</p>
+<p>Watir was written with objects and messages in mind. Since the IE browser contains objects, we access the objects within IE itself by using the
+dot notation. ex. "$ie.button" narrows down the type of object that we can send a message to in our tests. "$ie.button(:caption, "Click Me").click"
+identifies the object on the page as a button within the instance of Internet Explorer that has the caption "Click Me". We send the message (the verb) "click", which
+Watir interprets and tells IE to click for us. </p>
+
+<h2>Create a Test Instance of Internet Explorer</h2>
+<p>To create a test instance of Internet Explorer, enter the following in your test script:</p>
+<div class = "testexample">$ie = IE.new</div>
+<p>This is the command that watir uses to open a new instance of IE.</p>
+<h2>Site Navigation</h2>
+<p>To direct your test to the web application you are testing, enter the URL in this command:</p>
+<div class = "testexample"> $ie.goto(http://mytestsite)</div>
+<p>In the example above, enter in your application's URL in place of <i>mytestsite</i>.</p>
+<h2>Manipulating Web Page Objects</h2>
+<p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
 <h3>Checkboxes</h3>
 <h3>Radio Buttons</h3>
 
-<h3>Entering Data into a Web Page</h3>
-<h3>Put test data into page</h3>
+<h2>Entering Data into a Web Page</h2>
+<p>Put test data into page</p>
 <h3>Text Fields</h3>
-<h3>Submitting Data from a Web Page</h3>
-<h3>Send test scenarios to application</h3>
+<h2>Submitting Data from a Web Page</h2>
+<p>Send test scenarios to application</p>
 <h3>Buttons</h3>
-<h3>Validating Test Results</h3>
-<h3>Did the test pass or fail?</h3>
+<h2>Validating Test Results</h2>
+<p>Did the test pass or fail?</p>
 <h3>Object Exists</h3>
 <h3>Assertions</h3>
 
