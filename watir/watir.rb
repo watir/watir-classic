@@ -1525,7 +1525,7 @@ module Watir
                     elements << td
                 end
             end
-      
+            
             return TableRow.new(elements,@ieController)
         end
 
@@ -1587,7 +1587,7 @@ module Watir
         #   * row  - an Array with the elements of the row
         #   * ieController  - an instance of an IEController
         def initialize(row,ieController)
-            row = row
+            @row = row
             @ieController = ieController
         end
    
