@@ -573,7 +573,7 @@ class IE
         log "-----------Objects in  page -------------" 
         doc = getDocument()
         s = ""
-        props=["name" ,"id" , "value"]
+        props=["name" ,"id" , "value" , "alt" , "src"]
         doc.all.each do |n|
             begin
                 s=s+n.invoke("type").to_s.ljust(16)
@@ -583,7 +583,7 @@ class IE
             props.each do |prop|
                 begin
                     p = n.invoke(prop)
-                    s =s+ "  " + "#{prop}=#{p}".to_s.ljust(12)
+                    s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
                 rescue
                     # this object probably doesnt have this property
                 end
@@ -725,6 +725,8 @@ class IE
             o = getObjectAtIndex( container, what , types , value)
         elsif how == :caption || how == :value # only applies to button
             o = getObjectWithValue( what, container , "submit" , "button" )
+        elsif how == :src || how ==:alt
+            o = getObjectWithSrcOrAlt(what , how , container   , types)
         else
             #log "How is #{how}"
             container.each do |object|
@@ -818,6 +820,49 @@ class IE
         return o
 
     end
+
+    # this method is used on buttons that are of type image
+    #   * what              - what we are looking for - normally the src or alt of a button
+    #   * container         - the container that we are searching in ( a form or the body of a document )
+    #   * htmlObjectTypes  - an array of the objects we are interested in
+    def getObjectWithSrcOrAlt(what , how , container   , htmlObjectTypes )
+
+        o = nil
+        container.each do |r|
+            next unless o ==nil
+            begin
+                if how ==:alt
+                    if what.kind_of?( String )
+                        if r.alt == what and htmlObjectTypes.include?(r.invoke("type").downcase)
+                            o = r
+                        end
+                    elsif what.kind_of? Regexp
+                        if r.alt.match( what ) and htmlObjectTypes.include?(r.invoke("type").downcase)
+                            o = r
+                        end
+                    end
+                elsif how ==:src
+                    if what.kind_of? String
+                        if r.src == what and htmlObjectTypes.include?(r.invoke("type").downcase)
+                            o = r
+                        end
+                     elsif what.kind_of? Regexp
+                        if r.src.match( what ) and htmlObjectTypes.include?(r.invoke("type").downcase)
+                            o = r
+                        end
+                    end
+                end
+            rescue=>e
+                # may not have a value...
+                #puts e
+                #puts e.backtrace.join("\n")
+            end 
+        end
+        return o
+
+    end
+
+
 
     # this method is used to locate an object when indexes are used. 
     # used internally.
@@ -1311,7 +1356,7 @@ class Button < ObjectActions
     # create an instance of the button object
     def initialize( ieController,  how , what )
         @ieController = ieController
-        @o = ieController.getObject( how, what , ["button" , "submit"] )
+        @o = ieController.getObject( how, what , ["button" , "submit" , "image"] )
         super( @o )
         @how = how
         @what = what
