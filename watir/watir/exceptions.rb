@@ -69,6 +69,14 @@ module Watir
             super(message)
         end
     end
+
+    # this exception is raised if an attempt is made to  access a table cell that doesnt exist
+    class UnknownCellException < WatirException
+        def initialize(message="")
+            super(message)
+        end
+    end
+
     
     # This exception is thrown if the window cannot be found
     class NoMatchingWindowFoundException < WatirException
