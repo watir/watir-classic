@@ -130,15 +130,11 @@ and to help others who may be using the test understand what it does.</p>
 tell the program where to find the library.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> <font color="green"> #includes:</font><br>
-require <font color="purple">'../watir'</font><font color="green"> #
+require <font color="purple">'watir'</font><font color="green"> #
 the watir controller</font>
 </div>
-<p>In this case, we used a relative path to the watir file "../watir".
-Since the examples folder is one folder down from the watir.rb file, we
-can use this notation
-instead of the full path: "../". This reads: "Go back out of the folder
-we are in, and look for the file we need there." We can also use a full
-path such as: "C:\my folder\Watir\watir"</p>
+<p>When we run our test script, the Watir library is loaded so that our
+test cases can use it.</p>
 <h2>Section 3: Declare Variables</h2>
 <p>If we are going to use something in our script more than once, or
 something that could change, we can declare it as a variable and reuse
