@@ -1,6 +1,10 @@
 require 'win32ole'
 
 
+#
+#  Version "$Revision $"
+#
+
 class Spinner
 
     def initialize
