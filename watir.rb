@@ -977,7 +977,7 @@ class IE
                         link = thisLink if link == nil
                     end
                 elsif what.kind_of?( Regexp)
-                    if what.innerText.match( thisLink )
+                    if thisLink.innerText.match( what)
                         link = thisLink if link == nil
                     end
                 end
