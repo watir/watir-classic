@@ -1305,7 +1305,14 @@ module Watir
         def setProperty(name , val)
             @ieProperties[name] = val
         end
-        
+
+        # this method is used to delete a property
+        # the property to delete
+        def deleteProperty( name )
+            @ieProperties.delete( name )
+        end        
+
+
         # This method retrieves the value of the specified property.
         #   * name  - string - the name of the property to retrieve
         def getProperty(name)
@@ -1670,6 +1677,13 @@ module Watir
                 @o = nil
             end
             super( @o )
+            property = {
+             "innerText"        =>  "innerText" ,
+             "href"             =>  "href" 
+            }
+            setProperties(property )
+            deleteProperty("type")
+
             @how = how
             @what = what
         end
@@ -1690,7 +1704,7 @@ module Watir
         end
  
         def each
-            @links.each { |x| yield x }
+            0.upto( @links.length-1 ) { |i | yield @ieController.link( :index , i+1)   }
         end
     end
 
