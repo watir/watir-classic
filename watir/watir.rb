@@ -33,8 +33,8 @@
   (based on BSD Open Source License)
 =end
 
-#  This is WATIR the web application testing framework for ruby
-#  Home page is http://rubyforge.com/projects/wtr
+#  This is Watir, a web application testing tool for Ruby
+#  Home page is http://wtr.rubyforge.com
 #
 #  Version "$Revision$"
 #
@@ -42,7 +42,7 @@
 #   # include the controller 
 #   require 'watir' 
 #   # create an instance of the controller 
-#   ie = IE.new  
+#   ie = Watir::IE.new  
 #   # go to the page you want to test 
 #   ie.goto("http://myserver/mypage") 
 #   # to enter text into a text field - assuming the field is name "username" 
@@ -61,6 +61,7 @@
 require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
+require 'watir/exceptions'
 
 class String
     def matches (x)
@@ -75,6 +76,7 @@ class Regexp
 end
 
 module Watir
+    include Watir::Exception
     
     # this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods.
     class WatirLogger < Logger
@@ -87,7 +89,6 @@ module Watir
             self.datetime_format = "%d-%b-%Y %H:%M:%S"
             self.debug("Watir starting")
         end
-        
         
         alias log info
         
@@ -114,93 +115,7 @@ module Watir
             return @s[@i]
         end
     end
-    
-    # 
-    # MOVETO: watir/exceptions.rb
-    # Module Watir::Exceptions
-    # 
-    
-    # Root class for all Watir Exceptions
-    class WatirException < RuntimeError  
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access an object that doesn't exist
-    class UnknownObjectException < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access a property that either does not exist or has not been found
-    class UnknownPropertyException < WatirException
-        def initialize(message = "")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access an object that is in a disabled state
-    class ObjectDisabledException   < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access a frame that cannot be found 
-    class UnknownFrameException< WatirException
-        def initialize(message = "")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access a form that cannot be found 
-    class UnknownFormException< WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access an object that is in a read only state
-    class ObjectReadOnlyException  < WatirException
-        def initialize(message = "")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if an attempt is made to access an object when the specified value cannot be found
-    class NoValueFoundException < WatirException
-        def initialize(message = "")
-            super(message)
-        end
-    end
-    
-    # This exception gets raised if part of finding an object is missing
-    class MissingWayOfFindingObjectException < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    # This exception is raised if an attempt is made to access a table that doesn't exist
-    class UnknownTableException < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    # This exception is thrown if the window cannot be found
-    class NoMatchingWindowFoundException < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-    
-    #
-    #
-    #
-    #
-    
+        
     #
     # MOVETO: watir/cookie_manager.rb
     # Module Watir::CookieManager
@@ -263,6 +178,7 @@ module Watir
     # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
     # This is not a class that users would normally access. 
     class ObjectActions
+        include Watir::Exception
         
         # Creates an instance of this class.
         # The "initialize" method creates several default properties for the object.
@@ -423,6 +339,7 @@ module Watir
     
     
     class FrameHandler
+        include Watir::Exception
         
         def initialize()
             @frame = []
@@ -533,6 +450,7 @@ module Watir
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
     class IE
+        include Watir::Exception
         
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4         
@@ -1451,6 +1369,7 @@ module Watir
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
     #   * what         - what we use to access the form
     class Form < IE
+
         def initialize( ieController, how, what )
             @ieController = ieController
             @formHow = how
