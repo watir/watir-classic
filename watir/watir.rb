@@ -86,20 +86,22 @@ $HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
 module Watir
     include Watir::Exception
     
-    # this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods.
     class WatirLogger < Logger
-        
         def initialize(  filName , logsToKeep, maxLogSize )
-            
             super( filName , logsToKeep, maxLogSize )
-            #@log = Logger.new( fileName ,5, 1024 * 1024)
             self.level = Logger::DEBUG
             self.datetime_format = "%d-%b-%Y %H:%M:%S"
             self.debug("Watir starting")
         end
-        
-        alias log info
-        
+    end
+    
+    class DefaultLogger < Logger
+        def initialize()
+            super(STDERR)
+            self.level = Logger::WARN
+            self.datetime_format = "%d-%b-%Y %H:%M:%S"
+            self.info "Log started"
+        end
     end
     
     
@@ -113,10 +115,10 @@ module Watir
         
         # reverse the direction of spinning
         def reverse
-            @s.reverse
+            @s.reverse!
         end
         
-        # get the nextr character to display
+        # get the next character to display
         def next
             @i=@i+1
             @i=0 if @i>@s.length-1
@@ -160,6 +162,7 @@ module Watir
         attr_accessor :newWindow
         
         attr_reader :ie
+        attr_accessor :logger
                         
         def initialize(suppress_new_window=nil)
             unless suppress_new_window
@@ -198,7 +201,7 @@ module Watir
             @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
             @defaultSleepTime = DEFAULT_SLEEP_TIME
 
-            @logger = nil
+            @logger = DefaultLogger.new()
         end
         private :set_defaults        
         
@@ -208,13 +211,13 @@ module Watir
         private :create_browser_window
 
         def attach_browser_window( how, what )
-            puts "Seeking Window with #{how}: #{ what }"
+            log "Seeking Window with #{how}: #{ what }"
             shell = WIN32OLE.new("Shell.Application")
             appWindows = shell.Windows()
             
             ieTemp = nil
             appWindows.each do |aWin| 
-                print "Found a window: #{aWin}. "
+                log "Found a window: #{aWin}. "
                 
                 case how
                 when :url
@@ -242,10 +245,22 @@ module Watir
         end
         private :attach_browser_window
 
+        # deprecated: use logger= instead
         def set_logger( logger )
             @logger = logger
         end
 
+        def log ( what )
+            @logger.debug( what ) if @logger
+        end
+        
+        # Deprecated: Use IE#.ie instead
+        # This method returns the Internet Explorer object. 
+        # Methods, properties,  etc. that the IEController does not support can be accessed.
+        def getIE()
+            return @ie
+        end
+        
         #
         # Accessing data outside the document
         #
@@ -323,18 +338,6 @@ module Watir
             return File.expand_path(File.dirname(__FILE__))
         end
         
-        def log ( what )
-            @logger.debug( what ) if @logger
-            puts what
-        end
-        
-        # Deprecated: Use IE#.ie instead
-        # This method returns the Internet Explorer object. 
-        # Methods, properties,  etc. that the IEController does not support can be accessed.
-        def getIE()
-            return @ie
-        end
-        
         #
         # Document and Document Data
         #
@@ -383,7 +386,6 @@ module Watir
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
                 
-                #puts "waitForIE: busy" + @ie.busy.to_s
                 s= Spinner.new
                 while @ie.busy
                     @pageHasReloaded = true
@@ -392,7 +394,7 @@ module Watir
                 end
                 s.reverse
                 
-                #puts "waitForIE: readystate=" + @ie.readyState.to_s 
+                log "waitForIE: readystate=" + @ie.readyState.to_s 
                 until @ie.readyState == READYSTATE_COMPLETE
                     @pageHasReloaded = true
                     sleep 0.02
@@ -415,14 +417,14 @@ module Watir
                             end
                         end
                     rescue
-                        
+                        @logger.warn 'frame error in wait'
                     end
                 end
                 print "\b"
-                #puts "waitForIE Complete"
+                log "waitForIE Complete"
                 s=nil
             rescue WIN32OLERuntimeError
-              
+                @logger.warn 'runtime error in wait'
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
@@ -454,13 +456,13 @@ module Watir
                 for i in 0..count-1 do  
                     begin
                         fname = allFrames[i.to_s].name.to_s
-                        log "frame  index: #{i} name: #{fname}"
+                        puts "frame  index: #{i} name: #{fname}"
                     rescue => e
-                        log "frame  index: #{i} --Access Denied--" if e.to_s.match(/Access is denied/)
+                        puts "frame  index: #{i} --Access Denied--" if e.to_s.match(/Access is denied/)
                     end
                 end
             else
-                log "no frames"
+                puts "no frames"
             end
         end
         alias showFrames show_frames
@@ -469,16 +471,16 @@ module Watir
         def show_forms()
             if allForms = getDocument.forms
                 count = allForms.length
-                log "There are #{count} forms"
+                puts "There are #{count} forms"
                 for i in 0..count-1 do
                     wrapped = FormWrapper.new(allForms.item(i))
-                    log "Form name: #{wrapped.name}"
-                    log "       id: #{wrapped.id}"
-                    log "   method: #{wrapped.method}"
-                    log "   action: #{wrapped.action}"
+                    puts "Form name: #{wrapped.name}"
+                    puts "       id: #{wrapped.id}"
+                    puts "   method: #{wrapped.method}"
+                    puts "   action: #{wrapped.action}"
                 end
             else
-                log "No forms"
+                puts "No forms"
             end
         end
         alias showForms show_forms
@@ -486,9 +488,9 @@ module Watir
         def show_images()
             doc = getDocument()
             doc.images.each do |l|
-                log "image: name: #{l.name}"
-                log "         id: #{l.invoke("id")}"
-                log "      src: #{l.src}"
+                puts "image: name: #{l.name}"
+                puts "         id: #{l.invoke("id")}"
+                puts "      src: #{l.src}"
             end
         end
         alias showImages show_images
@@ -496,10 +498,10 @@ module Watir
         def show_links()
             doc = getDocument()
             doc.links.each do |l|
-                log "Link: name: #{l.name}"
-                log "      id: #{l.invoke("id")}"
-                log "      href: #{l.href}"
-                log "      text: #{l.innerText}"
+                puts "Link: name: #{l.name}"
+                puts "      id: #{l.invoke("id")}"
+                puts "      href: #{l.href}"
+                puts "      text: #{l.innerText}"
             end
         end
         alias showLinks show_links
@@ -532,7 +534,7 @@ module Watir
         # This is a nice feature to help find out what HTML objects are on a page
         # when developing a test case using Watir.
         def show_all_objects()
-            log "-----------Objects in  page -------------" 
+            puts "-----------Objects in  page -------------" 
             doc = getDocument()
             s = ""
             props=["name" ,"id" , "value" , "alt" , "src"]
@@ -552,7 +554,7 @@ module Watir
                 end
                 s=s+"\n"
             end
-            log s+"\n\n\n"
+            puts s+"\n\n\n"
         end
         alias showAllObjects show_all_objects
 
@@ -1396,10 +1398,9 @@ module Watir
         #   * ieController  - an instance of an IEController
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
-        def initialize( ieController,  how , what )
-            @ieController = ieController
-            allTables = @ieController.getDocument.body.getElementsByTagName("TABLE")
-            #log "There are #{ allTables.length } tables"
+        def initialize( parent,  how , what )
+            allTables = parent.getDocument.body.getElementsByTagName("TABLE")
+            parent.log "There are #{ allTables.length } tables"
             table = nil
             tableIndex = 1
             allTables.each do |t|
@@ -1416,7 +1417,7 @@ module Watir
                 end
                 tableIndex = tableIndex + 1
             end
-            #puts "table - #{what}, #{how} Not found " if table ==  nil
+            parent.log "table - #{what}, #{how} Not found " if table ==  nil
             @o = table
             super( @o )
             @how = how

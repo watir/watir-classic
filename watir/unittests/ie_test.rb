@@ -15,12 +15,13 @@ class TC_ie < Test::Unit::TestCase
     
    def test_waitForIE
       wait_time = 5
+#      @faked_ie.logger.level = Logger::DEBUG
     
       @faked_ie.setTimeToWait wait_time
       begin_time = Time.now
-      @faked_ie.waitForIE
+      @faked_ie.wait
       elapsed_time = Time.now - begin_time
-      assert_number_in_range(elapsed_time, wait_time, 0.5)
+      assert_in_delta(wait_time, elapsed_time, 0.5)
    end
     
    # is this correct? 
@@ -44,9 +45,5 @@ class TC_ie < Test::Unit::TestCase
    # is this correct? 
    def test_getLink_ByTextReturnsNilOnNoLinks
       assert_nil(@faked_ie.getLink(:text, "whatever"))
-   end
-    
-   def assert_number_in_range( elapsed_time, expectedTime, tolerance )
-      assert( (elapsed_time - expectedTime).abs < tolerance )
    end
 end
