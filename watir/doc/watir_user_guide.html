@@ -24,6 +24,9 @@ h2   {
 h3   {
        font-size: 110%; 
      }
+h4   {
+       font-size: 100%; 
+     }
 p    {
        margin-bottom: 10px; 
       }
@@ -49,6 +52,19 @@ div.htmlexample
        font-family: "Courier New", monospace;
        font-size: 11pt;
        color: blue;
+       border: 1px solid #000;
+       border-width: thin; 
+       margin-bottom: 10px;
+     }
+     div.browserexample 
+     {
+       background: #fff;
+       margin-left:  10%;
+       margin-right: 10%;
+       padding: 1em;
+       font: normal small Geneva, Verdana, Arial, sans-serif;
+       font-size: 11pt;
+       color: green;
        border: 1px solid #000;
        border-width: thin; 
        margin-bottom: 10px;
@@ -105,7 +121,8 @@ It is a global variable because it needs to be accessed throughout our test scri
 an instance of the Internet Explorer web browser.</p>
 <p>In Ruby, we can think of programming in terms of objects and messages. Watir was also developed with objects and messages in mind. If we think of the "$ie" variable as an object, we can send messages to it.
 An object is usually thought of as a noun, which is natural when we start up an Internet Explorer instance - we refer to it as a thing. If we send a message to that object, 
-it will respond to that message if it recognizes it. We can think of the messages as verbs. In Ruby, we send a message to an object by separating the object we are calling
+it will respond to that message if it recognizes it.</p>
+<p>We can think of the messages as verbs. In Ruby, we send a message to an object by separating the object we are calling
 and the message we are sending to it with a dot. ex. "Dog.bark" would tell the object "Dog" that it must "bark". This isn't very specific though. What dog should bark?
 In the Watir world, we could identify our test area to be our "yard" or by using our global variable notation: "$yard". Like "$ie", we could treat it as an object with attributes containing other objects with attributes. In our yard, we
 have two dogs: Heidi and Megabyte. Each of these dog objects have attributes that we can identify them by. They have names, breeds, shapes and sizes and colors. To be more specific, and interacting
@@ -114,7 +131,7 @@ and send her the "bark" message. The expected outcome would be Heidi responding 
 <p>When we develop test scripts with Watir, we interact with objects on a web page by sending them messages. Like our yard example, the IE browser itself contains objects, we access the objects within IE itself by identifying them by different attributes. 
 Just like in the dog example above,  we have to be very specific when we send messages to objects on a web page. We also need to be able to identify objects on a web page by a being able to use a variety of different attributes due to the diversity in how tags are 
 declared by different application developers. With Watir, we identify objects and send them messages by using the dot notation. ex. "$ie.button" narrows down the type of object that we can send a message to in our tests. 
-"$ie.button(:caption, "Click Me").click" identifies the object on the page as a button within the instance of Internet Explorer that has the caption (or attribute) "Click Me". We send the message (the verb) "click", which
+"$ie.button(:caption, "Click Me").click" identifies the object on the page as a button within the instance of Internet Explorer that has the caption (or value attribute) "Click Me". We send the message (the verb) "click", which
 Watir interprets and tells IE to click for us. </p>
 
 <h2>Create a Test Instance of Internet Explorer</h2>
@@ -128,15 +145,22 @@ Watir interprets and tells IE to click for us. </p>
 <h2>Manipulating Web Page Objects</h2>
 <p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
-<p>Hyperlinks can be clicked by identifying them by the text that we see in the hyperlink. If we wanted to click <a href="">This link</a>, 
-we identify the link object by using the text attribute "This link".</p>
-<div class = "testexample">$ie.link(:text, "This link").click</div>
-<p> Related tag and attribute:</p>
-<div class = "htmlexample">&lt;a href="http://www.testsite.com"&gt;<b>Test Site</b>&lt;/a&gt;</div>
-<p>To click a link object by identifying it by the URL attribute: 
-<div class = "testexample">$ie.link(:url, "http://www.testsite.com").click</div>
-<p> Related tag and attribute:</p>
-<div class = "htmlexample">&lt;a href="<b>http://www.testsite.com</b>"&gt;Test Site&lt;/a&gt;</div>
+<p>Hyperlinks can be clicked by identifying them by the text that we see in the hyperlink. If we wanted to click <a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a>, 
+we identify the link object by using the text attribute "Pickaxe".</p>
+<p>What we see in the web browser:
+<div class = "browserexample"><a href="<b>http://pragmaticprogrammer.com/titles/ruby/</b>">Pickaxe</a></div>
+<h4>Text</h4>
+<p>Watir code to click a link using the "text" attribute:</p>
+<div class = "testexample">$ie.link(:text, "Pickaxe").click</div>
+<p>What we see in the HTML source (attribute highlighted):</p>
+<div class = "htmlexample">&lt;a href="http://pragmaticprogrammer.com/titles/ruby/"&gt;<b>Pickaxe</b>&lt;/a&gt;</div>
+
+<h4>URL</h4>
+<p>Watir code to click a link using the URL attribute: 
+<div class = "testexample">$ie.link(:url, "http://pragmaticprogrammer.com/titles/ruby/").click</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;a href="<b>http://pragmaticprogrammer.com/titles/ruby/</b>"&gt;Test Site&lt;/a&gt;</div>
+
 <h3>Checkboxes</h3>
 <h3>Radio Buttons</h3>
 
