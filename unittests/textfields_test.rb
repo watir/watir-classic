@@ -139,6 +139,10 @@ class TC_Fields < Test::Unit::TestCase
 
         assert(  $ie.text_field(:index, 3).disabled )
 
+        assert_equal( "This used to test :afterText" , $ie.text_field(:name, "aftertest"  ).title )
+        assert_equal( "" , $ie.text_field(:index, 1  ).title )
+
+
     end
 
     def test_text_field_iterators
