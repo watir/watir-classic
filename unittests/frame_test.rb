@@ -7,7 +7,8 @@ require 'unittests/setup'
 class TC_Frames < Test::Unit::TestCase
 
     def gotoFramesPage()
-
+       $ie.clearFrame
+       $ie.clearPresetFrame
        $ie.goto($htmlRoot + "frame_buttons.html")
     end
 
