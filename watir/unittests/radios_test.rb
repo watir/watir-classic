@@ -7,13 +7,11 @@ require 'unittests/setup'
 class TC_Radios < Test::Unit::TestCase
     include Watir
 
-    def gotoRadioPage()
+    def setup()
         $ie.goto($htmlRoot + "radioButtons1.html")
     end
-
    
     def test_Radio_Exists
-       gotoRadioPage()
        assert($ie.radio(:name, "box1").exists?)   
        assert($ie.radio(:id, "box5").exists?)   
 
@@ -22,69 +20,46 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_Radio_Enabled
-       gotoRadioPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").enabled?  }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:id, "noName").enabled?  }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "box4" , 6).enabled?  }  
 
-
-
        assert_false($ie.radio(:name, "box2").enabled?)   
        assert($ie.radio(:id, "box5").enabled?)   
        assert($ie.radio(:name, "box1").enabled?)   
-
-
     end
 
    def test_little
-       gotoRadioPage()
-       #$ie.wait
        assert_false($ie.button("foo").enabled?)
    end
 
    def test_onClick
-
-       gotoRadioPage()
        assert_false($ie.button("foo").enabled?)
        $ie.radio(:name, "box5" , 1).set
        assert($ie.button("foo").enabled?)
 
        $ie.radio(:name, "box5", 2).set
        assert_false($ie.button("foo").enabled?)
-
-
     end
 
     def test_Radio_isSet
-
-       gotoRadioPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").isSet?  }  
 
        puts "radio 1 is set : #{ $ie.radio(:name, 'box1').isSet? } "
        assert_false($ie.radio(:name, "box1").isSet?)   
 
-
        assert( $ie.radio(:name, "box3").isSet?)   
        assert_false($ie.radio(:name, "box2").isSet?)   
 
-
        assert( $ie.radio(:name, "box4" , 1 ).isSet?)   
        assert_false($ie.radio(:name, "box4" , 2 ).isSet?)   
-
     end
 
     def test_radio_clear
-
-       gotoRadioPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").clear  }  
-
 
        $ie.radio(:name, "box1").clear
        assert_false($ie.radio(:name, "box1").isSet?)   
-
 
        assert_raises(ObjectDisabledException, "ObjectDisabledException was supposed to be thrown" ) {   $ie.radio(:name, "box2").clear  } 
        assert_false($ie.radio(:name, "box2").isSet?)   
@@ -92,36 +67,23 @@ class TC_Radios < Test::Unit::TestCase
        $ie.radio(:name, "box3").clear
        assert_false($ie.radio(:name, "box3").isSet?)   
 
-
        $ie.radio(:name, "box4" , 1).clear
        assert_false($ie.radio(:name, "box4" , 1).isSet?)   
-
-
     end
 
-    def test_radio_getSTate
-
-       gotoRadioPage()
-
+    def test_radio_getState
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").getState  }  
 
-       assert_equal( RadioButton::UNCHECKED , $ie.radio(:name, "box1").getState )   
-       assert_equal( RadioButton::CHECKED , $ie.radio(:name, "box3").getState)   
+       assert_equal( false , $ie.radio(:name, "box1").getState )   
+       assert_equal( true , $ie.radio(:name, "box3").getState)   
 
-       # radioes that have the sme name but different values
-
-       assert_equal( RadioButton::UNCHECKED , $ie.radio(:name, "box4" , 2).getState )   
-       assert_equal( RadioButton::CHECKED , $ie.radio(:name, "box4" , 1).getState)   
-
-
+       # radioes that have the same name but different values
+       assert_equal( false , $ie.radio(:name, "box4" , 2).getState )   
+       assert_equal( true , $ie.radio(:name, "box4" , 1).getState)   
     end
 
     def test_radio_set
-
-       gotoRadioPage()
-
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").set  }  
-
        $ie.radio(:name, "box1").set
        assert($ie.radio(:name, "box1").isSet?)   
 
@@ -130,10 +92,9 @@ class TC_Radios < Test::Unit::TestCase
        $ie.radio(:name, "box3").set
        assert($ie.radio(:name, "box3").isSet?)   
 
-       # radioes that have the sme name but different values
+       # radioes that have the same name but different values
        $ie.radio(:name, "box4" , 3).set
        assert($ie.radio(:name, "box4" , 3).isSet?)   
-
     end
 
 end
