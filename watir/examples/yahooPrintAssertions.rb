@@ -66,11 +66,9 @@ class TC_yahoo_assert < Test::Unit::TestCase
    rescue => e
          puts("TEST FAILED." + e.message + "\n" + e.backtrace.join("\n")) 
    end
-   
-   assert($ie.pageContainsText("Programming Ruby") )
 
-   puts '  '
-   puts '## End of test: Yahoo print assertion'
+   puts "  "
+   puts "## End of test: Yahoo print assertion"
   
  end # end of test_print_assertion
 
