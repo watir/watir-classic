@@ -2,7 +2,7 @@
 # revision: $Revision$
 require 'unittests/setup'
 
-class TextArea_Fields < Test::Unit::TestCase
+class TC_TextArea < Test::Unit::TestCase
 
 
 
