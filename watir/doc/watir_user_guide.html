@@ -314,7 +314,7 @@ instance of itself, and assigns that instance to "$ie".</p>
 <div class="testexample">$ie = Watir::IE.start("http://mytestsite")</div>
 <p>Watir uses the <i>start</i> method to both create a browser instance and navigate to a site.</p>
 <h3>Starting Options</h3>
-<p>To use the syntax in versions 1.0.1 through 1.0.3, you need to include the
+<p>To use the <b>ie = IE.new</b> syntax in versions 1.0.1 through 1.0.3, you need to include the
 Watir module after the <i>require 'watir'</i> statement:
 <div class="testexample">include Watir</div>
 <p>You can then create a new instance of Internet Explorer like this:</p>
@@ -551,6 +551,44 @@ type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <div class="htmlexample">&lt;form action = "<b>login</b>" name =
 "loginform" method="get"&gt;&lt;input name="username"
 type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+<h2>Frames</h2>
+<p>Many web applications use frames. If you are having trouble accessing objects
+on a web page, be sure to check to see if the application is using frames. To
+find out, view the source of the page. It will look something like this:
+<div class="htmlexample">&lt;frameset cols="120,*"&gt;<br>
+&lt;frame src="menu.html" name="menu" &gt;<br>
+&lt;frame src="main.html" name="main" &gt;
+&lt;/frameset&gt; 
+</div>
+<p>In the HTML above, we have a menu frame on the left that is 120 pixels wide, 
+and a main frame that makes up the rest of the page.</p>
+<p>You can use Watir to find out if your page has frames:</p>
+<div class="testexample">$ie.showFrames</div>
+<p>This is a good method to use with IRB. It prints out the number and the names
+of the frames in the current page.</p>
+<p>Watir allows access to frame objects by identifying them by their name attribute. 
+This is the form that Watir takes to access a frame:</p>
+<div class="testexample">$ie.frame(:name, "menu")</div>
+<p>To access individual objects within that frame, you prefix the object using the
+Watir code above. If we had a hyperlink in the menu frame: <a href="">Click Menu Item</a>, 
+we could click it like this:</p>
+<div class="testexample">$ie.frame(:name, "menu").link(:text, "Click Menu Item").click</div>
+<h4>Nested Frames</h4>
+<p>Sometimes a web page that is referenced by the <b>frame src=</b> attribute is also a page
+that contains a <b>frameset</b> tag. This is a nested frame. To deal with this, simply
+access the nested frame like this:</p>
+<div class="testexample">$ie.frame(:name, "frame1").frame(:name, "nested_frame")</div>
+
+
+<h2>New Windows</h2>
+<p>Some web applications will have popup windows or new windows that contain HTML. Watir
+has an <b>attach</b> method that allows you to access and control the new window. If you
+click a button or link that opens a new window, you can attach to it by identifying the
+window by its URL or by the Window title:</p>
+
+<div class="testexample">$ie.attach(:url, 'http://mytestsite')</div>
+<div class="testexample">$ie.attach(:title, 'Test New Window')</div>
+
 <h2>Validating Test Results</h2>
 <p>How do we tell whether the test passed or failed? It is good
 practice to use a verification point in your test case.</p>
@@ -703,7 +741,7 @@ to allow for tests on pages using CSS as part of the application. </p>
 <p>Watir now supports JavaScript treeviews such as
 the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
 <h4>Multiple Windows</h4>
-<p>Watir now handles multiple browser windows.</p>
+<p>Watir now handles multiple browser windows with the <b>attach</b> method.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in
 the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i>
