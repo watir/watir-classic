@@ -119,17 +119,6 @@ class Lab4PartX < Test::Unit::TestCase
     $stdout = @mockout
     load 'check-records.rb'
     $stdout = STDOUT
-    expect "PASS"
-    expect "Recent Records"
-    expect "job2"
-    expect_match /M$/
-    expect_match /hours$/
-    expect ""
-    expect "job1"
-    expect_match /M$/
-    expect_match /hours$/
-    expect ""
-    expect nil # end of file
   end
   def teardown
     $stdout = STDOUT

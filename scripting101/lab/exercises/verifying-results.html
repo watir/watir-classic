@@ -1,9 +1,39 @@
 <h2 style="text-align:center;">Scripting for Testers</h2>
 
 	<h2 style="text-align:center;">Lab 4: Verifying Results</h2>
- &#8211; Assertions &#8211; Using a Script-based test harness??
+
+	<p>You&#8217;ve written some scripts that demonstrate your ability to automate an internet browser. But they aren&#8217;t really tests. Because they don&#8217;t really check the results. Now it is time to take care of that.</p>
+
+	<p>We&#8217;ll use assertions to check values. An assertion will check a value. If it passes, nothing happens. But if it fails an exception will be raised, which can be caught and logged by a test harness. Refer to page 2 of the <a href="../../doc/Internet%20Explorer%20Cheat%20Sheet.doc">Web Testing with Ruby Cheat Sheet</a> for several assertions and testing methods.</p>
 
 	<ol>
-	<li>  <strong>Test Strategy.</strong> Look over the test ideas you developed at the
-     beginning of class.  Write a script for one of them&#8212;or more. </li>
+	<li>  <strong>Experimenting with Assertions.</strong> In <span class="caps">IRB</span>, load your &#8220;start the day&#8221; 
+     test script and then experiment with the different assertions and
+     test methods. Update the script so that it now includes
+     verifications.  </li>
+		<li>  <strong>Start, Stop, and Verify.</strong> Revise the start, stop and pause test
+     script so that it contains assertions. </li>
+		<li>  <strong>Record Check.</strong> Start with a user that has no time records. Record
+     time sessions for two separate jobs, one session for each. Verify
+     that two time records appear. </li>
+		<li>   <strong>Test Harness.</strong> Now that you have multiple test scripts, you
+      probably want to have them run together. The following code
+      demonstrates how to create a simple test harness that loads one
+      test script (&#8216;check-records.rb&#8217;). </li>
 	</ol>
+
+<pre> require 'test/unit'
+ class LoadTestScript &lt; Test::Unit::TestCase
+  def test_check_records
+    load 'check-records.rb'
+  end
+  def teardown
+    $iec.close if $iec
+  end end </pre>
+
+      You can add additional tests,
+      by defining additional methods whose names begin with &#8216;test&#8217;
+      that load the desired scripts. Create a test harness that
+      executes all of your test scripts.
+
+	<p>5. <strong>Test Strategy.</strong> Look over the test ideas you developed at the beginning of class.  Write a test script for one or more of your ideas.</p>
