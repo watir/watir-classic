@@ -251,7 +251,7 @@ module Watir
         
         # Returns the title of the window
         def title
-            @ie.locationName
+            @ie.document.title
         end
         
         # this method returns the status of the window

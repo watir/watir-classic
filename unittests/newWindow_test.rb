@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Links < Test::Unit::TestCase
     include Watir
    
-    def xtest_newWindows 
+    def test_newWindows 
         $ie.goto($htmlRoot + 'links1.html')
         $ie.capture_events
         $ie.link(:index, 5).click
