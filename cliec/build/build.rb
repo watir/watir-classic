@@ -11,7 +11,7 @@ def zipfn
 end
 
 def dl_url
-  "http://clabs.org/dl/iec/#{zipfn}"
+  "http://clabs.org/dl/iec/#{File.basename(zipfn)}"
 end
 
 root_dir = './iec'
@@ -47,11 +47,11 @@ if clabs_build
   slist = get_slist
   slist.groups.each do |group|
     group.items.each do |sitem|
-      if sitem.name =~ /cLabs IEController/
+      if sitem.name =~ /Internet Explorer Controller/
         sitem.version = @v.to_s
         sitem.date = Time.now.strftime("%m/%d/%Y")
         dl = sitem.downloads[0]
-        dl.name = zipfn
+        dl.name = File.basename(zipfn)
         dl.link = dl_url
         dl.size = fsize
       end
