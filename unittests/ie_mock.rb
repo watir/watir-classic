@@ -61,7 +61,7 @@ end
 
 class TestIE < Watir::IE
 
-   def createBrowser
+   def create_browser
       return StubExplorer.new()
    end
    
