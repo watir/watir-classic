@@ -27,7 +27,7 @@ class TC_Tables < Test::Unit::TestCase
     def test_rows
        gotoTablePage()
        assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').row_count }
-       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).row_count }
+       assert_raises( UnknownTableException  ){ $ie.table(:index , 66).row_count }
 
         assert_equal( 2 , $ie.table(:index , 1).row_count)
         assert_equal( 5 , $ie.table(:id, 't1').row_count)   # 4 rows and a header 
@@ -40,7 +40,7 @@ class TC_Tables < Test::Unit::TestCase
        gotoTablePage()
 
        assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').column_count }
-       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).column_count }
+       assert_raises( UnknownTableException  ){ $ie.table(:index , 77).column_count }
 
 
         assert_equal( 2 , $ie.table(:index , 1).column_count)
