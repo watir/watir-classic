@@ -303,89 +303,22 @@ class IE
 
 
     def form( how , formName=nil )
-        clearForm()
         # if only one value is supplied, its a form name
         if formName == nil
-            @formName = how
-            @formHow = :name
+            formName = how
+            formHow = :name
         else
-            @formName = formName
-            @formHow = how
+            formName = formName
+            formHow = how
         end
-        puts "form how is #{@formHow} name is #{@formName}"
-        getForm()
-        return self # the IE object
-    end
-
-    def submit()
-        getForm()
-        raise UnknownFormException if @form == nil
-        @form.submit 
-        waitForIE
-        clearForm()
-    end   
- 
-    # this applies to a form. - it will be refactored into a Form object eventually
-    def exists?
-        @doc = getDocument(false)  
-        getForm()
-        formExists = false
-        formExists = true if @form
-        clearForm()
-        return false if formExists == false
-        return true
-    end
-
-    def clearForm()
-        @formName = nil
-        @formHow = nil
-        @form = nil
-    end
-
-    def getForm()
-        puts "Get form  formHow is #{@formHow}  formName is #{@formName} "
-        count = 1
-        doc = getDocument(false)
-        doc.forms.each do |thisForm|
-            next unless @form == nil
-            puts "form on page, name is " + thisForm.name.to_s
-            case @formHow
-                when :name
-                    if thisForm.name == @formName
-                        @form = thisForm
-                    end
-                when :index
-                    if count == @formName.to_i
-                        @form = thisForm
-                    end
-
-                when :method
-                    if thisForm.invoke("method").downcase == @formName.downcase
-                        @form = thisForm
-                    end
-
-                when :action
-                   if @formName.kind_of? String
-                        if thisForm.action == @formName
-                             @form = thisForm
-                        end
-                   elsif 
-                        if thisForm.action.match( @formName ) != nil
-                             @form = thisForm
-                        end
-                   end
-           end
-           count = count +1
-        end
-        puts "set @form "   #to form with name #{@form.name}"
-        return @form
+        puts "form how is #{formHow} name is #{formName}"        
+        return Form.new(self, formHow, formName)        
     end
 
 
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
-    #  * useForm is currently unimplemented
-    def getDocument(useForm = true)
+    def getDocument()
         #if @formName and useForm
         #    doc = getForm()
         #    puts "Getting a form #{@formName} "
@@ -584,8 +517,10 @@ class IE
     end
 
 
-
-
+    def getContainer()
+      return getDocument.body.all
+    end
+  
     # this is the main method for finding objects on a page
     #   * how - symbol - the way we look for the object. Supported values are
     #                  - :name
@@ -595,15 +530,8 @@ class IE
     #   * types - what object types we will look at. Only used when index is specified as the how
     #   * value - used for objects that have one name, but many values, for example radios and checkboxes
     def getObject( how, what , types=nil ,  value=nil )
-        doc = getDocument()
+        container = getContainer()
 
-        if @form
-            container  = @form.elements.all
-            puts "Container is form.elements.all"
-        else
-            container = doc.body.all
-            puts "Container is doc.body.all"
-        end
         if types
             if types.kind_of?(Array)
                 elementTypes = types
@@ -676,7 +604,7 @@ class IE
             end
         end
 
-        # if a value has been supplied, for exampe with a check box or a radio button, we need to go through the collection and get the correct one
+        # if a value has been supplied, for example with a check box or a radio button, we need to go through the collection and get the correct one
         if value
             begin 
                 n.each do |thisObject|
@@ -691,7 +619,6 @@ class IE
 
         #reset the frame reference
         clearFrame()
-        clearForm()
         return o
     end
 
@@ -873,10 +800,89 @@ class IE
         i = Image.new(self , how, what )
     end
 
-    
+   
+end # class IE
 
+# Form object 
+#   * ieController  - an instance of an IEController
+#   * how           - symbol - how we access the form (:name, :index, :action, :method)
+#   * what          - what we use to access the form
+class Form < IE
+    def initialize( ieController, how, what )
+        @ieController = ieController
+        @formHow = how
+        @formName = what
+        @form = getForm()
 
-end
+        @typingspeed = ieController.typingspeed        
+        @activeObjectHighLightColor = ieController.activeObjectHighLightColor       
+    end
+
+    def waitForIE
+        @ieController.waitForIE
+    end
+
+    def getContainer()
+        @form.elements.all
+    end    
+
+    # this applies to a form. - it will be refactored into a Form object eventually
+    def exists?
+        formExists = false
+        formExists = true if @form
+        return false if formExists == false
+        return true
+    end
+
+    # Submit the data -- equivalent to pressing return
+    def submit()
+        raise UnknownFormException if @form == nil
+        @form.submit 
+        @ieController.waitForIE
+    end   
+
+    # Find the specified form  
+    def getForm()
+        puts "Get form  formHow is #{@formHow}  formName is #{@formName} "
+        count = 1
+        doc = @ieController.getDocument()
+        doc.forms.each do |thisForm|
+            next unless @form == nil
+            puts "form on page, name is " + thisForm.name.to_s
+            case @formHow
+                when :name
+                    if thisForm.name == @formName
+                        @form = thisForm
+                    end
+                when :index
+                    if count == @formName.to_i
+                        @form = thisForm
+                    end
+
+                when :method
+                    if thisForm.invoke("method").downcase == @formName.downcase
+                        @form = thisForm
+                    end
+
+                when :action
+                   if @formName.kind_of? String
+                        if thisForm.action == @formName
+                             @form = thisForm
+                        end
+                   elsif 
+                        if thisForm.action.match( @formName ) != nil
+                             @form = thisForm
+                        end
+                   end
+           end
+           count = count +1
+        end
+        puts "set @form "   #to form with name #{@form.name}"
+        return @form
+    end
+  
+end # class Form
+
 
 # this class is the means of accessing an image on a page
 # it would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link
