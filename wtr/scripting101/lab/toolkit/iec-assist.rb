@@ -43,6 +43,7 @@ def show_forms()
 end
 alias show_form_actions show_forms
   
+#obsolete
 def get_form_by_action( action )
   "Return the first Form on the current page that has the specified Action."
   form { |f| f.action == action }
@@ -70,30 +71,34 @@ def elements
 end
 =end
   
-def show_elements(form = $iec)
+def show_elements(form)
   "Print the Name and Value of the Elements in the Form."
   for element in form.elements
     puts "name: " + element.name + " value: " + element.value
   end
 end
 
+#obsolete
 def get_element_by_value(form, value)
   "Return the first Element of the Form with the specified Value"
   form.element {|e| e.value == value }
 end
 
+#obsolete
 def button_click_by_name(form_action, button_name)
   "Click the button named button_name in the form with action form_action." 
   form {|f| f.action == form_action }.elements(button_name).click
   wait
 end
 
+#obsolete
 def button_click_by_value(form_action, button_value)
   "Click the button with the value button_value in the form with action form_action." 
   form {|f| f.action == form_action }.element{|e| e.value == button_value }.click
   wait
 end
 
+###
 
 def get_html
   "Return the full html of the current page."

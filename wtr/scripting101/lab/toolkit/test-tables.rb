@@ -29,7 +29,7 @@ ruby article
 
 END
               )
-@iec.close
+$iec.close
 
 
 end
