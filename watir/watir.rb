@@ -1152,35 +1152,7 @@ class Form < IE
         @ieController = ieController
         @formHow = how
         @formName = what
-        @form = getForm()
 
-        @typingspeed = ieController.typingspeed        
-        @activeObjectHighLightColor = ieController.activeObjectHighLightColor       
-    end
-
-    def waitForIE(arg = false)
-        @ieController.waitForIE(arg)
-    end
-
-    def getContainer()
-        raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-        @form.elements.all
-    end    
-
-
-    def exists?
-        @form ? true : false
-    end
-
-    # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
-    def submit()
-        raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-        @form.submit 
-        @ieController.waitForIE
-    end   
-
-    # Find the specified form  
-    def getForm()
         log "Get form  formHow is #{@formHow}  formName is #{@formName} "
         count = 1
         doc = @ieController.getDocument()
@@ -1229,10 +1201,38 @@ class Form < IE
         else      
             log "set @form "   #to form with name #{@form.name}"
         end
-        return @form
+        
+        @typingspeed = ieController.typingspeed        
+        @activeObjectHighLightColor = ieController.activeObjectHighLightColor       
+    end
+
+    # Find the specified form  
+    def getForm()
+
     end
   
+    def waitForIE(arg = false)
+        @ieController.waitForIE(arg)
+    end
+
+    def getContainer()
+        raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+        @form.elements.all
+    end    
+
+    def exists?
+        @form ? true : false
+    end
+
+    # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
+    def submit()
+        raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+        @form.submit 
+        @ieController.waitForIE
+    end   
+
 end # class Form
+
 
 # This class is used for dealing with tables.
 # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
