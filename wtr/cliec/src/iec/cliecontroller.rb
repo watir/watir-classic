@@ -398,7 +398,7 @@ module CLabs
         /checkbox/i    
       end
       
-      def initialize(checkbox_node)
+      def initialize(node)
         @node = node
         @default_attribute = 'checked'
       end
