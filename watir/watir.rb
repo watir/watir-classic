@@ -165,8 +165,8 @@ module Watir
         def createBrowser
             return WIN32OLE.new('InternetExplorer.Application')
         end
-        
-        
+        private :createBrowser
+                
         def initialize( logger=nil, how = nil ,what = nil )
             @logger = logger
             if ((how != nil) and (what != nil))
@@ -185,7 +185,6 @@ module Watir
         end
         
         def SeekWindow(how,what)
-            
             puts "Seeking Window with #{how}: #{ what }"
             shell = WIN32OLE.new("Shell.Application")
             appWindows = shell.Windows()
@@ -209,6 +208,7 @@ module Watir
             }
             return ieTemp
         end
+        private :SeekWindow
 
         #
         # Accessing data outside the document
@@ -285,14 +285,14 @@ module Watir
             }
         end
         
-        # used by the popup code
+        # used by the popup code only
         def dir
             return File.expand_path(File.dirname(__FILE__))
         end
         
         def log ( what )
             @logger.debug( what ) if @logger
-            puts what
+#            puts what
         end
         
         # This method returns the Internet Explorer object. 
@@ -625,6 +625,7 @@ module Watir
         def getContainer()
             return getDocument.body.all
         end
+        private :getContainer
         
         
         # This method is used to get a table from the page. 
@@ -1231,6 +1232,7 @@ module Watir
             raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.elements.all
         end   
+        private :getContainer
         
         def exists?
             @ieController.clearFrame()
