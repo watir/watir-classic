@@ -96,6 +96,19 @@ If you prefer, you can download and install a Windows version of Ruby from <a hr
 <p>Once Ruby is installed on your machine, you can run files with the ".rb" extension by clicking them or running them from the command line.</p>
 
 <h3>Step 2 - Install Watir</h3>
+<h4>Watir Releases</h4>
+<p>To download the latest fully tested release, go to the <a href="http://rubyforge.org/projects/wtr/">Project Home Page</a>. Under the <b>Latest File Releases</b> section, 
+find the <i>Watir</i> Package, and click the <b>Download</b> link for that package.</p>
+<p>Run the Watir installer:
+<ol><li>Select <B>Start > Run</B> and enter <i>cmd</i> in the Open field to open a DOS command prompt. Click OK. </li>
+<li>Change directories to the directory that contains the Watir download (for example, <i>cd C:\temp\watir</i> if you downloaded to C:\temp).</li>
+<li>To start the installer, type <b>install.rb</b> and hit Enter at the command prompt.</li>
+<li>Watir should install into your Ruby directory.</li>
+</ol></p>
+
+<h4>Latest Version</h4>
+<p>This is the latest version that is currently being worked on by the Watir development team. It is on the cutting edge, so it may have problems that haven't been fixed yet, or partially completed new features.
+Unless you really want the latest and greatest version, it is recommended to use a regular Watir release.</p>
 <p>Download the Watir tarball from the <a href="http://rubyforge.org/cgi-bin/viewcvs.cgi/watir/?cvsroot=wtr">WTR RubyForge site</a> (click <b>download tarball</b>).
 Unzip the watir tarball to a working directory (ex. C:\). You will now have a watir folder containing the source code, unit tests, examples and documentation.</p>
 <h3>Step 3 - Run the Watir Unit Tests</h3>
@@ -106,7 +119,7 @@ Unzip the watir tarball to a working directory (ex. C:\). You will now have a wa
 <li>To run all the tests, type <b>all_tests.rb</b> and hit Enter at the command prompt. The tests should all run and pass.</li>
 </ol></p>
 <h4>Having Problems?</h4> <p>Running on Windows XP and Internet Explorer prevents you from running the unit tests? If you are using Windows XP with Service Pack 2, you may not be able to run the tests unless you follow the workaround on <a href="http://www.winxptutor.com/lmzunlock.htm">this page</a>.
-<p>Seeing a Runtime Error running the unit tests? There have been problems with Ruby 1.8.1-13. Try either a newer version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
+<p>Seeing a Runtime Error running the unit tests? There have been problems with a package in the Ruby 1.8.1-13 release. Try either a newer version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
 <h3>Step 4 - Run the Watir Examples</h3>
 <p>To run the Watir example tests:
 <ol>
@@ -115,6 +128,7 @@ Unzip the watir tarball to a working directory (ex. C:\). You will now have a wa
 <li>Look at the source code of the examples and compare it to the web application that it tests</li>
 <ul><li>Right click on the Ruby test file and select <i>Edit</i> to view its source code in the SciTE editor.</li></ul>
 </ol>
+<p>To inspect <b>googleSearch.rb</b> with a detailed explanation, read the <a href="example_testcase.html">WATIR Example Test Case</a> guide.</p>
 
 <h1>Developing Test Cases</h1>
 <p>The goal of this user guide is to help you get started writing test cases quickly. Each section below describes the methods for driving a web
@@ -391,13 +405,13 @@ send an email to the wtr-general mailing list. The Watir development team will h
 to allow for tests on pages using CSS as part of the application. </p>
 <p>Check out the unit test <b>css_test.rb</b> for usage.</p>
 <h4>Tree Views</h4>
-<p><i>Coming Soon!</i>Watir supports JavaScript treeviews such as the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
+<p><i>Coming Soon!</i> Watir will support JavaScript treeviews such as the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i> directory and click on <b>index.html</b></p>
 
 <h2>Glossary</h2>
 <p><b>Controller</b>  the Watir scripting package that controls a web browser</p>
-<p><b>Instance</b>  an object that has been instantiated</p>
+<p><b>Instance</b>  an object that has been created for use by a program and is stored in memory</p>
 <p><b>Message</b>  an action descriptor that can be sent to an object. If the object recognizes the message, it will respond and display related behavior.</p>
 <p><b>Object</b>  something that <i>contains</i> attributes and <i>displays</i> behavior according to what messages have been sent to it.</p>
 <p><b>Ruby</b>  object oriented scripting language</p>
