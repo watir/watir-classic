@@ -37,6 +37,26 @@ class TC_JSEvents < Test::Unit::TestCase
     end
 #end of button enabled/disabled tests
 
+#onMouseOver tests
+ #window status
+
+    def gotoJavaScriptEventsPage()
+        $ie.goto($htmlRoot + "javascriptevents.html")
+    end
+    
+    def test_page_nostatus
+       gotoJavaScriptEventsPage()
+       assert_false($ie.getStatus == "Here is your status") 
+    end
+  
+    def test_page_status
+       gotoJavaScriptEventsPage()
+       $ie.link(:text, "Check the Status").fireEvent("onMouseOver")
+       assert($ie.getStatus == "Here is your status") 
+    end
+ #end of window status
+
+#end of onMouseOver tests
 
 end
 
