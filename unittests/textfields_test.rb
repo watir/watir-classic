@@ -54,13 +54,78 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_textField_enabled
-
+       gotoPage()
        assert_false($ie.textField(:name, "disabled").enabled? )  
        assert($ie.textField(:name, "text1").enabled? )  
        assert($ie.textField(:id, "text2").enabled? )  
 
+    end
+
+    def test_textField_readOnly
+       gotoPage()
+       assert_false($ie.textField(:name, "disabled").readOnly? )  
+       assert($ie.textField(:name, "readOnly").readOnly? )  
+       assert($ie.textField(:id, "readOnly2").readOnly? )  
 
     end
+
+
+    def test_textField_getContents()
+         gotoPage()
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+         assert_equal(  "Hello World" , $ie.textField(:name, "text1").getContents )  
+
+
+    end
+
+
+    def test_textField_Append
+         gotoPage()
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+
+         $ie.textField(:name, "text1").append(" Some Text")
+         assert_equal(  "Hello World Some Text" , $ie.textField(:name, "text1").getContents )  
+
+         # may need this to see that it really happened
+         #puts "press return to continue"
+         #gets 
+
+    end
+
+
+    def test_textField_Clear
+         gotoPage()
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+
+         $ie.textField(:name, "text1").clear()
+         assert_equal(  "" , $ie.textField(:name, "text1").getContents )  
+
+         # may need this to see that it really happened
+         puts "press return to continue"
+         gets 
+
+    end
+
+    def test_textField_Set
+         gotoPage()
+         assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
+         assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
+         assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
+
+         $ie.textField(:name, "text1").set("watir IE Controleer")
+         assert_equal(  "watir IE Controleer" , $ie.textField(:name, "text1").getContents )  
+
+         # may need this to see that it really happened
+         puts "press return to continue"
+         gets 
+
+    end
+
+
 
 
 
