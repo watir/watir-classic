@@ -24,6 +24,27 @@
 #  :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based
 
 require 'win32ole'
+require 'logger'
+
+
+# this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods
+class WatirLogger < Logger
+
+
+    def initialize(  filName , logsToKeep, maxLogSize )
+
+        super( filName , logsToKeep, maxLogSize )
+        #@log = Logger.new( fileName ,5, 1024 * 1024)
+        self.level = Logger::DEBUG
+        self.datetime_format = "%d-%b-%Y %H:%M:%S"
+        self.debug("Watir starting")
+    end
+
+      
+    alias log info
+      
+end
+
 
 # This class is used to display the spinner that appears when a page is being loaded
 class Spinner
@@ -53,7 +74,7 @@ end
 
 # This exception is thrown if an attempt is made to access an object that doesnt exist
 class UnknownObjectException < WatirException
-    def initialize()
+    def initialize(message="")
     end
 end
 
@@ -65,7 +86,7 @@ end
 
 # this exception is thrown if an attempt is made to access an object that is in a disabled state
 class ObjectDisabledException   < WatirException
-    def initialize()
+    def initialize(message="")
     end
 end
 
@@ -98,7 +119,11 @@ class MissingWayOfFindingObjectException < WatirException
     def initialize()
     end
 end
-
+# this exception is raised if an attempt is made to access a table that doesnt exist
+class UnknownTableException < WatirException
+    def initialize()
+    end
+end
 
 # This class is the base class for most actions ( click etc ) that happen on an object
 # this is not a class that uses would normally access. 
@@ -145,8 +170,12 @@ class ObjectActions
     # this method retreives the value of the specified property
     #   * name  - string - the name of the property to get
     def getProperty(name)
-        raise UnknownPropertyException if !@ieProperties.has_key?(name)
+        raise UnknownPropertyException("Unable to locate property, #{name}") if !@ieProperties.has_key?(name)
         return @ieProperties[name]
+    end
+
+    def getOLEObject()
+        return @o
     end
 
     # this method displays basic details about the object. Sample output for a button is shown
@@ -157,7 +186,7 @@ class ObjectActions
     #      value       Disabled Button
     #      disabled    true
     def to_s
-        raise UnknownObjectException if @o==nil
+        raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
         n = []
         @ieProperties.each_pair do |k,v|        
              n << "#{k}".ljust(18) + "#{v}"
@@ -192,20 +221,33 @@ class ObjectActions
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def click()
-        raise UnknownObjectException if @o==nil
-        raise ObjectDisabledException if !self.enabled?
+        raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+        raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
+
         highLight(:set)
         @o.click()
         @ieController.waitForIE()
         highLight(:clear)
     end
 
+
+
+    def flash
+        raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+        10.times do
+            highLight(:set)
+            sleep 0.05
+            highLight(:clear)
+            sleep 0.05
+        end
+    end
+
     # this methods gives focus to the active element
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def focus()
-        raise UnknownObjectException if @o==nil
-        raise ObjectDisabledException   if !self.enabled?
+        raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
+        raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
         @o.focus()
     end
 
@@ -218,7 +260,7 @@ class ObjectActions
     # this method returns true if the current element is enable, false if it isnt
     #   raises: UnknownObjectException  if the object is not found
     def enabled?
-        raise UnknownObjectException if @o==nil
+        raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
         return false if @o.invoke("disabled")
         return true
     end
@@ -239,28 +281,24 @@ class IE
     # the default delay when typing 
     DEFAULT_TYPING_SPEED = 0.08
 
+    # the default time we wait after a page has loaded
+    DEFAULT_SLEEP_TIME = 0.1
+
     # the default color for highlighting objects
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
 
     # this is used to change the speed that typing goes at
     attr_accessor :typingspeed
 
+    # this is used to change how long after a page has finished loading that we wait for.
+    attr_accessor :defaultSleepTime
+
     # the color we want to use for the active object. This can be any valid html color
     attr_accessor :activeObjectHighLightColor
 
     # this method creates an instance of the IE controller
-    def initialize()
-
-#        puts "##########################################################################"
-#        puts "#                                                                        #"
-#        puts "# This is a new version of WATIR. It is very untested.                   #"
-#        puts "# It provides functionality like ie.form("form1").button("Submit").click #"
-#        puts "# The existing unit tests work, and new ones are being created for this  #"
-#        puts "# functionality. Please report any problems to the wtr mailing list      #"
-#        puts "#  Thanks, Paul                                                          #"
-#        puts "#                                                                        #"
-#        puts "##########################################################################"
-
+    def initialize( logger=nil )
+        @logger = logger
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = ! $HIDE_IE
         @frame = ""
@@ -268,6 +306,13 @@ class IE
         @form = nil
         @typingspeed = DEFAULT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
+        @defaultSleepTime = DEFAULT_SLEEP_TIME
+    end
+
+    def log ( what )
+
+        @logger.debug( what ) if @logger
+        puts what
     end
 
     # This method returns the internet explorer object, so that methods, properties etc that the IEController does not support can be accessedcan be 
@@ -313,7 +358,7 @@ class IE
             formName = formName
             formHow = how
         end
-        puts "form how is #{formHow} name is #{formName}"        
+        log "form how is #{formHow} name is #{formName}"        
         return Form.new(self, formHow, formName)        
     end
 
@@ -321,10 +366,6 @@ class IE
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
     def getDocument()
-        #if @formName and useForm
-        #    doc = getForm()
-        #    puts "Getting a form #{@formName} "
-        #elsif @frame == "" and @presetFrame == ""
         if @frame == "" and @presetFrame == ""
 
             doc = @ie.document
@@ -336,7 +377,7 @@ class IE
                 frameToUse = @frame
             end
 
-            puts "Getting a document in a frame - frameName is: #{frameToUse} "
+            log "Getting a document in a frame - frameName is: #{frameToUse} "
 
             allFrames = @ie.document.frames
             frameExists = false
@@ -359,31 +400,37 @@ class IE
     # this method returns true or false if the specified text was found
     #  * text - string or regular expression - the string to look for
     def pageContainsText(text)
-        puts "-------------"
-        puts getDocument().body.innerText
-        puts "-------------"
+        #log "-------------"
+        #log getDocument().body.innerText
+        #log "-------------"
 
-        if text.kind_of? Regexp
+        retryCount = 0
+        begin
+            retryCount += 1
+            if text.kind_of? Regexp
 
-            if ( getDocument().body.innerText.match(text)  ) != nil
-                puts  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
-                return true
-            else
-                puts "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
-                return false
-            end
+                if ( getDocument().body.innerText.match(text)  ) != nil
+                    log  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
+                    return true
+                else
+                    log "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
+                    return false
+                end
 
-        elsif text.kind_of? String
+            elsif text.kind_of? String
 
-            if ( getDocument().body.innerText.index(text)  ) != nil
-                puts "pageContainsText: Looking for: #{text} (string) - found it ok" 
-                return true
-            else
-                puts  "pageContainsText: Looking for: #{text} (string)  - Didnt Find it" 
-                return false
-            end
+                if ( getDocument().body.innerText.index(text)  ) != nil
+                    log "pageContainsText: Looking for: #{text} (string) - found it ok" 
+                    return true
+                else
+                    log  "pageContainsText: Looking for: #{text} (string)  - Didnt Find it" 
+                    return false
+                end
 
-        end 
+            end 
+        rescue
+            retry if retryCount < 2 
+        end
     end
 
     # This method is used internally to cause execution to stop until the page has loaded in Internet Explorer
@@ -410,6 +457,7 @@ class IE
         print "\b"
         #puts "waitForIE Complete"
         s=nil
+        sleep @defaultSleepTime
     end
 
     def wait
@@ -433,32 +481,74 @@ class IE
     def showFrames()
         if @ie.document.frames
             allFrames = @ie.document.frames
-            for i in 0 .. allFrames.length-1
+            for i in allFrames.length-1..0
                 begin
                     fname = allFrames[i.to_s].name.to_s
-                    puts "frame  index: #{i} name: #{fname}"
+                    log "frame  index: #{i} name: #{fname}"
                 rescue
 
                 end
             end
         else
-            puts "no frames"
+            log "no frames"
         end
     end
+
+    # show all forms, shows us all the forms we have
+    def showForms()
+        if @ie.document.forms
+            allForms = @ie.document.forms
+            log "There are #{allForms.length} forms"
+            for i in 0..allForms.length-1
+                begin
+                    log "Form name: #{allForms[i.to_s].invoke("name").to_s}"
+                    log "       id: #{allForms[i.to_s].invoke("id").to_s}"
+                    log "   method: #{allForms[i.to_s].invoke("method").to_s}"
+                    log "   action: #{allForms[i.to_s].invoke("action").to_s}"
+
+                rescue
+                    log "Form caused an exception!"
+                end
+            end
+        else
+            log " No forms"
+        end
+
+    end
+
+    def getHTML()
+        return getDocument().body.innerHTML
+    end
+
+    def getText()
+        return getDocument().body.innerText
+    end
+
 
     # this method shows the available objects on the current page
     # really only used for debugging
     def showAllObjects()
-        puts "elements in  page:" 
+        log "-----------Objects in  page -------------" 
         doc = getDocument()
+        s = ""
+        props=["name" ,"id" , "value"]
         doc.all.each do |n|
             begin
-                puts n.invoke("type") + "  #{n.name}"
+                s=s+n.invoke("type").to_s.ljust(16)
             rescue
-                # no name probably
+                next
             end
+            props.each do |prop|
+                begin
+                    p = n.invoke(prop)
+                    s =s+ "  " + "#{prop}=#{p}".to_s.ljust(12)
+                rescue
+                    # this object probably doesnt have this property
+                end
+            end
+            s=s+"\n"
         end
-        puts "\n\n\n"
+        log s+"\n\n\n"
 
     end
 
@@ -468,13 +558,13 @@ class IE
     def getImage( how, what )
         doc = getDocument()
 
-        puts"Finding an image how: #{how} What #{what}"
+        log"Finding an image how: #{how} What #{what}"
 
         images = doc.images
         o=nil
         images.each do |img|
 
-            puts "Image on page: src = #{img.src}"
+            log "Image on page: src = #{img.src}"
 
             next unless o == nil
       
@@ -522,6 +612,35 @@ class IE
     def getContainer()
       return getDocument.body.all
     end
+
+
+    # this method is used to get a table from the page. :index (1 based)  and :id are supported - :name is not for tables, as it is not part of the dom
+    #   * how - symbol - the way we look for the table. Supported values are
+    #                  - :id
+    #                  - :index
+    #   * what  - string the thing we are looking for, ie id or index of the object we are looking for
+    def getTable( how, what )
+        allTables = getDocument.body.getElementsByTagName("TABLE")
+        #log "There are #{ allTables.length } tables"
+        table = nil
+        tableIndex = 1
+        allTables.each do |t|
+            next  unless table == nil
+            case how
+                when :id
+                    if t.invoke("id").to_s == what.to_s
+                        table = t
+                    end
+
+                when :index
+                    if tableIndex == what.to_i
+                        table = t
+                    end
+            end
+        end
+        #puts "table - #{what}, #{how} Not found " if table ==  nil
+        return table
+    end
   
     # this is the main method for finding objects on a page
     #   * how - symbol - the way we look for the object. Supported values are
@@ -545,14 +664,14 @@ class IE
 
         o = nil
 
-        puts "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
+        #log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
 
         if how == :index
             o = getObjectAtIndex( container, what , types , value)
         elsif how == :caption || how == :value # only applies to button
             o = getObjectWithValue( what, container , "submit" , "button" )
         else
-            #puts "How is #{how}"
+            #log "How is #{how}"
             container.each do |object|
                 next  unless o == nil
                 case how
@@ -560,48 +679,46 @@ class IE
                         begin
                             if object.invoke("id") == what
                                 if types
-                                    if types.include?(object.invoke("type"))
+
+                                    if elementTypes.include?(object.invoke("type"))
                                         if value
-                                            puts "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                            #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
                                             if object.value.to_s == value.to_s
                                                 o = object
                                             end
                                         else
                                             o= object
                                         end
-                                    else
-                                        o= object
                                     end
                                 else
                                      o= object
                                 end
                             end
                        rescue => e
-                           #puts e.to_s + "\n" + e.backtrace.join("\n")
+                           #log e.to_s + "\n" + e.backtrace.join("\n")
                        end
                     when :name
                         begin
-                            #puts "Comparing #{object.invoke("name")} with @{what}"
+                            #log "Comparing #{object.invoke("name")} with #{what}"
                             if object.invoke("name") == what
                                 if types
-                                    if types.include?(object.invoke("type"))
+                                    #log "Supplied objects is : " + elementTypes.join( " ")
+                                    if elementTypes.include?(object.invoke("type"))
                                         if value
-                                            puts "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                            #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
                                             if object.value.to_s == value.to_s
                                                 o = object
                                             end
                                         else
                                             o= object
                                         end
-                                    else
-                                        o= object
                                     end
                                 else
                                      o= object
                                 end
                             end
                        rescue => e
-                           #puts e.to_s + "\n" + e.backtrace.join("\n")
+                           #log e.to_s + "\n" + e.backtrace.join("\n")
                        end
                     end
             end
@@ -655,7 +772,7 @@ class IE
     #    * value      - the value of the object to get, used when getting itens like checkboxes and radios
     def getObjectAtIndex(container , index , types , value=nil)
 
-        #puts" getting object #{types.to_s}  at index( #{index}"
+        #log" getting object #{types.to_s}  at index( #{index}"
 
         o = nil
         objectIndex = 1
@@ -668,7 +785,7 @@ class IE
                     rescue
                         oName = "unknown"
                     end
-                    #puts "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
+                    #log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
 
                     if objectIndex.to_s == index.to_s
                         o = thisObject
@@ -730,13 +847,19 @@ class IE
                     end
                 end
             else
-                puts "unknown way of finding a link...."
+                log "unknown way of finding a link...."
         end
         #reset the frame reference
         clearFrame()
 
         return link
 
+    end
+
+    # this is the main method for acessing a table
+    def table( how, what )
+        t = Table.new( self , how, what)
+        return t
     end
 
     # this is the main method for accessing a button.
@@ -748,7 +871,7 @@ class IE
             raise MissingWayOfFindingObjectException if what==nil
             b = Button.new(self, how , what )
         elsif how.kind_of? String
-            puts "how is a string - #{how}"
+            log "how is a string - #{how}"
             b = Button.new(self, :caption, how)
        end
     end
@@ -826,10 +949,11 @@ class Form < IE
     end
 
     def getContainer()
+        raise UnknownFormException if @form == nil
         @form.elements.all
     end    
 
-    # does the form exist?
+
     def exists?
         @form ? true : false
     end
@@ -843,17 +967,32 @@ class Form < IE
 
     # Find the specified form  
     def getForm()
-        puts "Get form  formHow is #{@formHow}  formName is #{@formName} "
+        log "Get form  formHow is #{@formHow}  formName is #{@formName} "
         count = 1
         doc = @ieController.getDocument()
         doc.forms.each do |thisForm|
+        #0.upto(doc.forms.length -1 ) do |i|
+            #thisForm = doc.forms[i.to_s]
             next unless @form == nil
-            puts "form on page, name is " + thisForm.name.to_s
+            log "form on page, name is " + thisForm.invoke("name").to_s
+            begin
+                log "its a collection of forms - length is: " + thisForm.invoke("name").length.to_s
+            rescue
+                log "not a collection of forms"
+            end
+
             case @formHow
-                when :name
+                when :name 
+                    
                     if thisForm.name == @formName
                         @form = thisForm
                     end
+                when :id
+                    
+                    if thisForm.invoke("id").to_s == @formName.to_s
+                        @form = thisForm
+                    end
+
                 when :index
                     if count == @formName.to_i
                         @form = thisForm
@@ -877,15 +1016,75 @@ class Form < IE
            end
            count = count +1
         end
-        puts "set @form "   #to form with name #{@form.name}"
+        if @form == nil
+            log "No form found!"
+        else      
+            log "set @form "   #to form with name #{@form.name}"
+        end
         return @form
     end
   
 end # class Form
 
+# this class is used for dealing with tables
+# it would not normally be used by users, as the table method of IEController would returned an initialised instance of a table
+class Table < ObjectActions
+
+    # returns an initialized instance of a table object
+    #   * ieController  - an instance of an IEController
+    #   * how           - symbol - how we access the table
+    #   * what          - what we use to access the table - id, name index etc 
+    def initialize( ieController,  how , what )
+        @ieController = ieController
+        @o = ieController.getTable( how, what )
+        super( @o )
+        @how = how
+        @what = what
+    end
+
+
+    # this method returns the number of rows in the table
+    # raises an UnknownTableException if the table doesnt exist
+    def rows
+        raise UnknownTableException if @o == nil
+        table_rows = @o.getElementsByTagName("TR")
+        return table_rows.length
+    end
+
+    # this method returns the number of cols in the table
+    # raises an UnknownTableException if the table doesnt exist
+    def columns( rowToUse = 1)
+
+        raise UnknownTableException if @o == nil
+        table_rows = @o.getElementsByTagName("TR")
+        cols = table_rows[rowToUse.to_s].getElementsByTagName("TD")
+        return cols.length
+
+    end
+
+    # this method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc
+    # raises an UnknownTableException if the table doesnt exist
+    def to_a
+        raise UnknownTableException if @o == nil
+        y = []
+        table_rows = @o.getElementsByTagName("TR")
+        for row in table_rows
+          x = []
+          for td in row.getElementsbyTagName("TD")
+            x << td.innerText.strip
+          end
+          y << x
+        end
+        return y
+
+    end
+
+end
+
+
 
 # this class is the means of accessing an image on a page
-# it would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link
+# it would not normally be used by users, as the image method of IEController would return an initialised instance of an image
 class Image < ObjectActions
 
     # returns an initialized instance of a image  object
@@ -893,19 +1092,19 @@ class Image < ObjectActions
     #   * how           - symbol - how we access the image
     #   * what          - what we use to access the image, text, url, index etc
     def initialize( ieController,  how , what )
-       @ieController = ieController
-       @o = ieController.getImage( how, what )
-       super( @o )
-       property = {
+        @ieController = ieController
+        @o = ieController.getImage( how, what )
+        super( @o )
+        @how = how
+        @what = what
+        property = {
             "src"             =>  "src" ,
             "fileCreatedDate" => "fileCreatedDate" ,
             "fileSize"        => "fileSize" ,
             "width"           => "width" ,
             "height"          => "height"
-       }
-
-       setProperties(property )
-
+        }
+        setProperties(property )
 
     end
 
@@ -928,9 +1127,11 @@ class Link < ObjectActions
     #   * how           - symbol - how we access the link
     #   * what          - what we use to access the link, text, url, index etc
     def initialize( ieController,  how , what )
-       @ieController = ieController
-       @o = ieController.getLink( how, what )
-       super( @o )
+        @ieController = ieController
+        @o = ieController.getLink( how, what )
+        super( @o )
+        @how = how
+        @what = what
     end
 end
 
@@ -943,9 +1144,11 @@ class SelectBox < ObjectActions
     #   * how           - symbol - how we access the select box
     #   * what          - what we use to access the select box, name, id etc
     def initialize( ieController,  how , what )
-       @ieController = ieController
-       @o = ieController.getObject( how, what , "select" )
-       super( @o )
+        @ieController = ieController
+        @o = ieController.getObject( how, what , ["select-one","select-multiple"] )
+        super( @o )
+        @how = how
+        @what = what
     end
 
     # this method clears the selected items in the select box
@@ -975,7 +1178,7 @@ class SelectBox < ObjectActions
         highLight( :set)
         items.each do |thisItem|
 
-            puts "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
+            @ieController.log "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
 
             matchedAnItem = false
             if thisItem.kind_of?( Regexp )
@@ -983,17 +1186,17 @@ class SelectBox < ObjectActions
                     if thisItem.match( selectBoxItem.text)
                         matchedAnItem = true
                         selectBoxItem.selected = true
-                        puts " #{selectBoxItem.text} is being selected"
+                        @ieController.log " #{selectBoxItem.text} is being selected"
                         @ieController.waitForIE()
                     end
                 end
 
             elsif thisItem.kind_of?( String )
                 @o.each do |selectBoxItem|
-                    puts " comparing #{thisItem } to #{selectBoxItem.text}"
+                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.text}"
                     if thisItem == selectBoxItem.text 
                         matchedAnItem = true
-                        puts " #{selectBoxItem.text} is being selected"
+                        @ieController.log " #{selectBoxItem.text} is being selected"
                         selectBoxItem.selected = true     
                     end
                 end
@@ -1009,7 +1212,7 @@ class SelectBox < ObjectActions
         raise UnknownObjectException if @o==nil
         returnArray = []
 
-        puts "There are #{@o.length} items"
+        @ieController.log "There are #{@o.length} items"
 
         @o.each do |thisItem|
             returnArray << thisItem.text
@@ -1023,10 +1226,10 @@ class SelectBox < ObjectActions
     def getSelectedItems
         raise UnknownObjectException if @o==nil
         returnArray = []
-        puts "There are #{@o.length} items"
+        @ieController.log "There are #{@o.length} items"
         @o.each do |thisItem|
             if thisItem.selected == true
-                puts "Item ( #{thisItem.text} ) is selected"
+                @ieController.log "Item ( #{thisItem.text} ) is selected"
                 returnArray << thisItem.text 
             end
         end
@@ -1042,6 +1245,8 @@ class Button < ObjectActions
         @ieController = ieController
         @o = ieController.getObject( how, what , ["button" , "submit"] )
         super( @o )
+        @how = how
+        @what = what
     end
 end
 
@@ -1108,6 +1313,9 @@ class RadioButton < RadioCheckCommon
         @ieController = ieController
         @o = ieController.getObject( how, what , "radio" , value)
         super( @o )
+        @how = how
+        @what = what
+        @value = value
     end
 end
 
@@ -1119,6 +1327,9 @@ class CheckBox < RadioCheckCommon
         @ieController = ieController
         @o = ieController.getObject( how, what , "checkbox", value)
         super( @o )
+        @how = how
+        @what = what
+        @value = value
     end
 
 end
@@ -1131,7 +1342,8 @@ class TextField < ObjectActions
         @ieController = ieController
         @o = ieController.getObject( how, what , ["text" , "password"] )
         super( @o )
-
+        @how = how
+        @what = what
         @properties = {
             "maxLength"  => "maxLength" ,
             "length"  => "length" 
@@ -1235,7 +1447,7 @@ class TextField < ObjectActions
             maxLength = @o.maxLength
             if value.length > maxLength
                 value = suppliedValue[0 .. maxLength ]
-                puts " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
+                log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
             end
         rescue
             # its probably a text area - so it doesnt have a max Length
