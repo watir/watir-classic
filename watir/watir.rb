@@ -915,16 +915,27 @@ module Watir
                 when :id
                     attribute = "id"
                 when :name
-                    attribute = "id"
+                    attribute = "name"
                 when :title
                     attribute = "title"
-             end
+              end
 
-             parts.each do | p |
-                 next unless n==nil
-                 n = p if what.matches( p.invoke(attribute) )
-             end
-             return n
+              if attribute
+                 parts.each do | p |
+                     next unless n==nil
+                     n = p if what.matches( p.invoke(attribute) )
+                 end
+              elsif how == :index
+                  count = 1
+                  parts.each do | p |
+                     next unless n==nil
+                     n = p if what == count
+                     count +=1
+                  end
+              else
+                  raise MissingWayOfFindingObjectException, "unknown way of finding a #{ part} ( {what} )"
+              end
+            return n
 
         end
 
@@ -1292,62 +1303,80 @@ module Watir
     # This is not a class that users would normally access. 
     class ObjectActions
         include Watir::Exception
+
+
+        # this constant is used to determine how many spaces are used to seperate the property from the value in the to_s method
+        TO_S_SIZE = 14
         
         # Creates an instance of this class.
-        # The "initialize" method creates several default properties for the object.
-        # These properties are accessed using the setProperty and getProperty methods
         #   o  - the object that watir is using
         def initialize( o )
             @o = o
-            @defaultProperties = { 
-         "type"     =>  "type" ,
-         "id"       =>  "id" ,
-         "name"     => "name",
-         "value"    => "value"  ,
-         "disabled" => "disabled"
-            }
-            @ieProperties = Hash.new
-            setProperties(@defaultProperties)
             @originalColor = nil
         end
-        
-        # This method sets the properties for the object
-        def setProperties(propertyHash )
-            if @o 
-                propertyHash.each_pair do |a,b|
-                    begin
-                        setProperty(a , @o.invoke("#{b}" ) )
-                    rescue
-                        # Object probably doesn't support this item, so rescue
-                    end 
-                end
-            end  #if @o
+
+        def object_exist_check
+            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
         end
-        
-        # This method is used to set a property
-        #   * name  - string - the name of the property to set
-        #   * val   - string - the value to set
-        def setProperty(name , val)
-            @ieProperties[name] = val
+        private :object_exist_check
+
+        def object_disabled_check
+            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
+        end
+        private :object_disabled_check
+
+        def type
+            object_exist_check
+            begin 
+                object_type = @o.type
+            rescue
+                object_type = ""
+            end
+            return object_type
         end
 
-        # this method is used to delete a property
-        # the property to delete
-        def deleteProperty( name )
-            @ieProperties.delete( name )
-        end        
-
-
-        # This method retrieves the value of the specified property.
-        #   * name  - string - the name of the property to retrieve
-        def getProperty(name)
-            raise UnknownPropertyException("Unable to locate property, #{name}") if !@ieProperties.has_key?(name)
-            return @ieProperties[name]
+        def name
+            object_exist_check
+            return @o.invoke("name")
         end
+
+        def id
+            object_exist_check
+            return @o.invoke("id")
+        end
+  
+        def disabled
+            object_exist_check
+            return @o.invoke("disabled")
+        end
+         
+        def value
+            object_exist_check
+            return @o.invoke("value")
+        end
+
+        def type
+            object_exist_check
+            return @o.invoke("type")
+        end
+
         
         def getOLEObject()
             return @o
         end
+
+        def string_creator
+
+            n = []
+            n <<   "type:".ljust(TO_S_SIZE) + self.type
+            n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
+            n <<   "name:".ljust(TO_S_SIZE) +       self.name.to_s
+            n <<   "value:".ljust(TO_S_SIZE) +      self.value.to_s
+            n <<   "disabled:".ljust(TO_S_SIZE) +   self.disabled.to_s
+
+            return n
+        end
+
         
         # This method displays basic details about the object. Sample output for a button is shown.
         # Raises UnknownObjectException if the object is not found.
@@ -1357,12 +1386,8 @@ module Watir
         #      value      Disabled Button
         #      disabled   true
         def to_s
-            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-            n = []
-            @ieProperties.each_pair do |k,v|      
-                n << "#{k}".ljust(18) + "#{v}"
-            end
-            return n
+            object_exist_check
+            return string_creator.join("\n")
         end
         
         # This method is responsible for setting and clearing the colored highlighting on the currently active element.
@@ -1392,9 +1417,10 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #   ObjectDisabledException if the object is currently disabled
         def click()
-            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
-            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
-            
+
+            object_exist_check
+            object_disabled_check
+           
             highLight(:set)
             @o.click()
             @ieController.waitForIE()
@@ -1402,7 +1428,7 @@ module Watir
         end
         
         def flash
-            raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+            object_exist_check
             10.times do
                 highLight(:set)
                 sleep 0.05
@@ -1416,9 +1442,9 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def fireEvent(event)
-            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
-            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
-            
+            object_exist_check
+            object_disabled_check
+
             highLight(:set)
             @o.fireEvent("#{event}")
             @ieController.waitForIE()
@@ -1429,8 +1455,8 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def focus()
-            raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-            raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
+            object_exist_check
+            object_disabled_check
             @o.focus()
         end
         
@@ -1442,7 +1468,7 @@ module Watir
         # This method returns true if the current element is enable, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
-            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
+            object_exist_check
             return false if @o.invoke("disabled")
             return true
         end
@@ -1458,17 +1484,48 @@ module Watir
         end
 
         def text()
-            raise UnknownObjectException ,  "Unable to locate a #{self.class} using #{@how} and #{@what} "  if @o == nil
+            object_exist_check
             d = @o.innerText
             return d
         end
 
         def style
-            raise UnknownObjectException ,  "Unable to locate a #{self.class} using #{@how} and #{@what} "  if @o == nil
+            object_exist_check
             d = @o.invoke("className")
             return d
         end
 
+        def type
+            object_exist_check
+            return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
+        end
+
+
+        def name
+            object_exist_check
+            return ""
+        end
+
+        def value
+            object_exist_check
+            return ""
+        end
+
+
+
+        def span_div_string_creator
+            n = []
+            n <<   "style:".ljust(TO_S_SIZE) + self.style
+            n <<   "text:".ljust(TO_S_SIZE) + self.text
+            return n
+         end
+
+         def to_s
+            object_exist_check
+            r = string_creator
+            r=r + span_div_string_creator
+            return r.join("\n")
+         end
     end
 
     class Div < SpanDivCommon 
@@ -1476,6 +1533,7 @@ module Watir
             @objectType = "div"
             super( ieController, how, what)
         end
+
     end
 
     class Span < SpanDivCommon 
@@ -1710,16 +1768,63 @@ module Watir
             super( @o )
             @how = how
             @what = what
-            property = {
-         "src"             =>  "src" ,
-         "fileCreatedDate" => "fileCreatedDate" ,
-         "fileSize"        => "fileSize" ,
-         "width"           => "width" ,
-         "height"          => "height"
-            }
-            setProperties(property )
+           
         end
-        
+
+        def image_string_creator
+            n = []
+            n <<   "src:".ljust(TO_S_SIZE) + self.src.to_s
+            n <<   "file date:".ljust(TO_S_SIZE) + self.fileCreatedDate.to_s
+            n <<   "file size:".ljust(TO_S_SIZE) + self.fileSize.to_s
+            n <<   "width:".ljust(TO_S_SIZE) + self.width.to_s
+            n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
+
+            return n
+
+        end
+
+        def to_s
+            object_exist_check
+            r = string_creator
+            r=r + image_string_creator
+            return r.join("\n")
+        end
+
+        def value
+            object_exist_check
+            return ""
+        end
+
+        def src
+            object_exist_check
+            return @o.invoke("src")
+        end
+
+        def fileCreatedDate
+            object_exist_check
+            return @o.invoke("fileCreatedDate")
+        end
+
+        def fileSize
+            object_exist_check
+            return @o.invoke("fileSize")
+        end
+
+        def width
+            object_exist_check
+            return @o.invoke("width")
+        end
+
+        def height
+            object_exist_check
+            return @o.invoke("height")
+        end
+
+        def type 
+            object_exist_check
+            return "image"
+        end
+ 
         # This method attempts to find out if the image was actually loaded by the web browser. 
         # If the image was not loaded, the browser is unable to determine some of the properties. 
         # We look for these missing properties to see if the image is really there or not. 
@@ -1768,16 +1873,39 @@ module Watir
                 @o = nil
             end
             super( @o )
-            property = {
-             "innerText"        =>  "innerText" ,
-             "href"             =>  "href" 
-            }
-            setProperties(property )
-            deleteProperty("type")
-
             @how = how
             @what = what
         end
+
+        def type
+            object_exist_check
+            return "link"
+        end
+        def innerText
+            object_exist_check
+            return @o.innerText
+        end
+
+        def href
+            object_exist_check
+            return @o.href
+        end
+
+        def link_string_creator
+            n = []
+            n <<   "href:".ljust(TO_S_SIZE) + self.href
+            n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
+            return n
+         end
+
+         def to_s
+            object_exist_check
+            r = string_creator
+            r=r + link_string_creator
+            return r.join("\n")
+         end
+
+
     end
     
 
@@ -1927,11 +2055,11 @@ module Watir
             if(how == :from_object) then
               @o = what
             else
-              @o = ieController.getObject( how, what , objectTypes)
+                @how = how
+                @what = what
+                @o = ieController.getObject( how, what , objectTypes)
             end              
             super( @o )
-            @how = how
-            @what = what
         end
         def objectTypes
             return ["button" , "submit" , "image"] 
@@ -1959,7 +2087,8 @@ module Watir
             @what = what
         end
         
-        def set(setPath)	        
+        def set(setPath)
+            object_exist_check	        
             Thread.new {
                 clicker = WinClicker.new
                 clicker.setFileRequesterFileName_newProcess(setPath)
@@ -2051,16 +2180,39 @@ module Watir
             super( @o )
             @how = how
             @what = what
-            @properties = {
-         "maxLength"  =>      "maxLength" ,
-         "length"     =>      "length" 
-            }
         end
+
+        def size
+            object_exist_check
+            return @o.size
+        end
+
+        def maxLength
+            object_exist_check
+            return @o.maxlength
+        end
+
+        def text_string_creator
+            n = []
+            n <<   "length:".ljust(TO_S_SIZE) + self.size.to_s
+            n <<   "max length:".ljust(TO_S_SIZE) + self.maxLength.to_s
+            n <<   "read only:".ljust(TO_S_SIZE) + self.readOnly?.to_s
+
+            return n
+         end
+
+         def to_s
+            object_exist_check
+            r = string_creator
+            r=r + text_string_creator
+            return r.join("\n")
+         end
+
         
         # This method returns true or false if the text field is read only.
         #   Raises  UnknownObjectException if the object can't be found.
         def readOnly?
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "   if @o==nil
+            object_exist_check
             return @o.readOnly 
         end   
         
@@ -2068,8 +2220,8 @@ module Watir
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
-            raise UnknownObjectException if @o==nil
-            return self.getProperty("value")
+            object_exist_check
+            return self.value
         end
         
         # This method returns true orfalse if the text field contents is either a string match 
@@ -2077,12 +2229,11 @@ module Watir
         #   Raises  UnknownObjectException if the object can't be found
         #   * containsThis - string or reg exp  -  the text to verify 
         def verify_contains( containsThis )
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
-            
+            object_exist_check            
             if containsThis.kind_of? String
-                return true if self.getProperty("value") == containsThis
+                return true if self.value == containsThis
             elsif containsThis.kind_of? Regexp
-                return true if self.getProperty("value").match(containsThis) != nil
+                return true if self.value.match(containsThis) != nil
             end
             return false
         end
@@ -2092,15 +2243,15 @@ module Watir
         #   * destination_how   - symbol, :id, :name how we identify the drop target 
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
         def dragContentsTo( destination_how , destination_what)
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
 
+            object_exist_check
             destination = @ieController.textField(destination_how , destination_what)
 
             raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
             @o.select()
-            value = self.getProperty("value")
+            value = self.value
 
             @o.fireEvent("onSelect")
             @o.fireEvent("ondragstart")
@@ -2120,7 +2271,8 @@ module Watir
         #   Raises  ObjectDisabledException if the object is disabled
         #   Raises  ObjectReadOnlyException if the object is read only
         def clear()
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
+
+            object_exist_check
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
@@ -2144,7 +2296,7 @@ module Watir
         #   Raises  ObjectReadOnlyException if the object is read only
         #   * setThis  - string - the text to append
         def append( setThis)
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
+            object_exist_check
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
@@ -2163,7 +2315,7 @@ module Watir
         #   Raises  ObjectReadOnlyException if the object is read only
         #   * setThis  - string - the text to set 
         def set( setThis )
-            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
+            object_exist_check
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
@@ -2181,15 +2333,9 @@ module Watir
         # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
         # it is preffered to use the set method.
         def value=(v)
+            object_exist_check
             @o.value = v.to_s
         end
-
-
-        # returns the current value of the text field
-        def value
-            return @o.value.to_s
-        end
-
 
 
         # This method is used internally by setText and appendText
