@@ -40,9 +40,9 @@ module CLabs
     # VERSION auto generated section
     begin                                                            
       require 'cl/util/version'                                      
-      VERSION = CLabs::Version.new(2003, 362, 0)
+      VERSION = CLabs::Version.new(2004, 009, 0)
     rescue LoadError                                                 
-      VERSION = '2003.362.0'                                            
+      VERSION = '2004.009.0'                                            
     end                                                              
     # END_VERSION
 

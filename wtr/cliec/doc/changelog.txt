@@ -1,6 +1,6 @@
 ===Change Log
 
-====2004.xxx.x
+====2004.009.0
 * Fixed visible and auto_form_wrap assignments from options hash. If the
   options were set to false in the hash, they still showed as true in IEC.
 * Added a node.focus call inside the highlight method, to ensure the control
