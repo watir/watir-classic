@@ -1,3 +1,5 @@
+This readme.txt, like the code, is still a work in progress.
+
 ===How-To
 
 From a response on the Ruby mailing list. http://samie.sf.net, the Perl
@@ -58,3 +60,19 @@ getting to use the built in text box wrapper, we have to also reference the
 set it to reference other forms on a multiple form page.
 
 See the examples folder for more stuff.
+
+===Supported Wrapped Nodes
+
+* Any node where a default attribute of 'value' makes sense, that isn't
+  explicitly supported in the following list.
+* [see ClIEController.wrap_classes for definitive list ... this readme.txt
+   may not get updated -- but this should obviously be linked automagically
+   to the code...]
+   
+  - checkbox
+  - select-one
+  - input:button
+  - input:submit
+  - span
+  - a
+   

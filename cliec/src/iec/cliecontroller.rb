@@ -1,7 +1,7 @@
 # $Id$
 =begin
 --------------------------------------------------------------------------
-Copyright (c) 2001-2002, Chris Morris All rights reserved.
+Copyright (c) 2001-2004, Chris Morris All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -94,21 +94,35 @@ module CLabs
     end
 
     class ClIEController
-      attr_reader :ie
+      attr_reader :ie, :options
+      attr_accessor :auto_wrap_form
 
+      READYSTATE_UNINITIALIZED = 0
+      READYSTATE_LOADING = 1
+      READYSTATE_LOADED = 2
+      READYSTATE_INTERACTIVE = 3
       READYSTATE_COMPLETE = 4
 
-      def initialize(visible = false)
+      def initialize(options = {})
         @ie = WIN32OLE.new('InternetExplorer.Application')
-        @ie.visible = visible
+        if ((options.is_a? TrueClass) || (options.is_a? FalseClass))
+          # backward compatibility
+          @ie.visible = options
+        else
+          @options = options.dup
+          @ie.visible = !@options[:visible].nil?
+          @auto_wrap_form = !@options[:auto_wrap_form].nil?
+        end
       end
 
       def close
         @ie.quit
       end
 
-      def form(index = 0)
-        @ie.document.forms(index)
+      def form(index = 0, wrap = false)
+        f = @ie.document.forms(index)
+        f = IEDomFormWrapper.new(f) if wrap || @auto_wrap_form
+        f
       end
 
       def ClIEController.get_active_element_name(activeElement)
@@ -126,9 +140,44 @@ module CLabs
       end
       alias activeElement active_element
 
-      def method_missing(methID, *args)
-        # forward on to ie
-        @ie.send(methID, *args)
+      @@wrap_classes = []
+      def ClIEController.wrap_classes
+        @@wrap_classes
+      end
+      
+      def ClIEController.wrap_node(node)
+        wrapped_node = nil
+        @@wrap_classes.each do |cls|
+          # form inputs all have the same tagName (INPUT), but 'type' 
+          # defines which type of input node it is.
+          # <a...> tags, however, have no type defined, so you must go with
+          # tagName
+          node_type = node.invoke('type')
+          node_type = node.invoke('tagName') if node_type.empty?
+          if node_type =~ cls.wrap_type_re 
+            wrapped_node = cls.new(node)
+            break
+          end
+        end
+        wrapped_node = IEDomNodeWrapper.new(node) if wrapped_node.nil?
+        wrapped_node
+      end
+      
+      def method_missing(methID, *args, &block)
+        # if we're not in this state, then there's probably not a page loaded,
+        # and trying to work with the DOM raises an exception.
+        if (@ie.readyState == ClIEController::READYSTATE_COMPLETE)
+          method = methID.id2name
+          node = @ie.document.all(method)
+          if node
+            node = ClIEController.wrap_node(node)
+            node.send(node.default_attribute(method[-1..-2] == '='), *args)
+          else
+            @ie.send(methID, *args, &block)
+          end
+        else
+          @ie.send(methID, *args, &block)
+        end
       end
 
       def navigate(href)
@@ -162,15 +211,16 @@ module CLabs
         # direct to another check of readyState is too fast,
         # browser can still be in READYSTATE_COMPLETE
         while @ie.busy
-          sleep 0.1
+          sleep 0.01
         end
 
         until @ie.readyState == READYSTATE_COMPLETE
-          sleep 0.1
+          sleep 0.01
         end
       end
     end
 
+    # this class and IEDomNodeWrapper have something in common, eh?
     class ClDomNodeWrapper
       attr_accessor :name
       attr_reader :node, :childArray
@@ -206,7 +256,11 @@ module CLabs
       end
     end
 
+    # this doesn't belong here, inside IEC module, since WindowsForm 
+    # descends from it
     class GUIFormWrapper
+      attr_reader :form
+     
       def initialize(form)
         @form = form
       end
@@ -219,8 +273,8 @@ module CLabs
         methodName = methID.id2name
         setter = methodIsSetter(methodName)
         methodName.chop! if setter
-        if methodIsFormField(methodName)
-          sendToFormField(methodName, setter, *args)
+        if methodIsFormNode(methodName)
+          sendToFormNode(methodName, setter, *args)
         else
           @form.send(methID, *args)
         end
@@ -230,74 +284,89 @@ module CLabs
         raise "abstract method methodIsFormField in GUIFormWrapper"
       end
 
-      def getFormField(fieldName)
-        @form.send(fieldName.intern)
+      def sendToFormNode(methodName, setter, *args)
+        raise 'abstract'
       end
-
-      def sendToFormField(methodName, setter, *args)
-        @field = getFormField(methodName)
-        methodName = getDefaultAttributeForField
-        methodName = methodName + '=' if setter
-        @field.send(methodName, *args)
-      end
+      alias sendToFormField sendToFormNode # backward compat
     end
 
     class IEDomFormWrapper < GUIFormWrapper
-      def getDefaultAttributeForField
-        element = @field  # dom form fields are called elements
-        # type is a Ruby Object method, so invoke must be called to make sure
-        # it actually goes over to the WIN32OLE instance
-        case element.invoke('type')
-          when 'checkbox' then 'checked'
-          when 'select-one' then @field = IEDomSelectWrapper.new(@field); 'value'
-          else 'value'
-        end
+      def sendToFormNode(methodName, setter, *args)
+        @field = get_node_wrapper(methodName) 
+        @field.send(@field.default_attribute(setter), *args)
       end
-
-      def sendToFormField(methodName, setter, *args)
-        if methodIsDotNetLabel(methodName)
-          raise 'cannot set ASP.NET label ' + methodName if setter
-          @form.all(methodName).innerText
-        else
-          super(methodName, setter, *args)
-        end
+      
+      def get_node_wrapper(node_name)
+        node = ClIEController.wrap_node(@form.all(node_name))
       end
-
-      def methodIsFormElement(methodName)
-        return @form.elements(methodName) != nil
+    
+      def methodIsFormNode(methodName)
+        return @form.all(methodName) != nil
       end
-
-      def methodIsDotNetLabel(methodName)
-        # terminology is confusing. All nodes are either nodeType 1 (element)
-        # or nodeType 3 (text) [see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/nodetype.asp]
-
-        # but span elements are not included in form.elements, only
-        # button, input, textArea and select elements are
-        # see [http://msdn.microsoft.com/workshop/author/dhtml/reference/collections/elements.asp]
-
-        element = @form.all(methodName)
-        if !element.nil?
-          # ASP.NET labels are rendered as SPAN tags in html
-          return (element.outerHtml =~ /^<SPAN/)
-        else
-          return false
-        end
-      end
-
-      def methodIsFormField(methodName)
-        return methodIsFormElement(methodName) || methodIsDotNetLabel(methodName)
-      end
+      alias methodIsFormElement methodIsFormNode # backwards compat
+      alias methodIsFormField methodIsFormNode   # backwards compat
 
       def active_element
         ClIEController.get_active_element_name(@form.ownerDocument.activeElement)
       end
-
       alias activeElement active_element
     end
 
-    class IEDomSelectWrapper
+    # All IE DOM nodes are either nodeType 1 (element)
+    # or nodeType 3 (text) 
+    # see:
+    #   http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/nodetype.asp]
+    #   http://msdn.microsoft.com/workshop/author/dhtml/reference/collections/elements.asp]
+    
+    # this class and ClDomNodeWrapper have something in common, eh?
+    class IEDomNodeWrapper
+      ClIEController.wrap_classes << self
+      def self.inherited(sub_class)
+        ClIEController.wrap_classes << sub_class
+      end 
+    
+      def IEDomNodeWrapper.wrap_type_re
+        nil
+      end
+    
+      def default_attribute(is_setter)
+        result = @default_attribute
+        if is_setter
+          raise 'node is read-only' if @read_only 
+          result << '=' 
+        end
+        result
+      end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'value'
+      end
+      
+      def method_missing(methID, *args, &block)
+        @node.send(methID, *args, &block)
+      end
+    end
+    
+    class IEDomCheckboxWrapper < IEDomNodeWrapper
+      def IEDomCheckboxWrapper.wrap_type_re
+        /checkbox/i    
+      end
+      
+      def initialize(checkbox_node)
+        @node = node
+        @default_attribute = 'checked'
+      end
+    end
+    
+    class IEDomSelectWrapper < IEDomNodeWrapper
+      def IEDomSelectWrapper.wrap_type_re
+        /select-one/i
+      end
+    
       def initialize(selectElement)
         @select = selectElement
+        @default_attribute = 'value'
       end
 
       def value=(aValue)
@@ -318,52 +387,46 @@ module CLabs
         end
       end
     end
-
-    # .Net System.Windows.Forms.Form registered as COM (regasm.exe)
-    class WindowsFormWrapper < GUIFormWrapper
-      def getDefaultAttributeForField
-        # type is an Object method, so invoke must be called to make sure
-        # it actually goes over to the WIN32OLE instance
-        case @field.gettype.tostring
-          when 'textbox' then 'text'
-          else 'text'
-        end
+    
+    class IEDomAWrapper < IEDomNodeWrapper
+      def IEDomAWrapper.wrap_type_re
+        /a/i
       end
-
-      # keeping this method, because it's better. But, while it worked in VS.Net Beta 2
-      # it's not working in RC1.
-      def methodIsFormField_Old(methodName)
-        controls = @form.controls
-        result = false
-        controls.count.times { | index |
-          result = (controls.item(index).name == methodName)
-          break if result
-        }
-        result
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'click'
       end
-
-      # current workaround method requiring some hooks in the form code itself
-      def methodIsFormField(methodName)
-        @form.IsFieldOrProperty(methodName)
+    end
+    
+    class IEDomSpanWrapper < IEDomNodeWrapper
+      def IEDomSpanWrapper.wrap_type_re
+        /span/i
       end
-
-      # current workaround method
-      # for VS.Net RC1
-      def sendToFormField(methodName, setter, *args)
-        if setter
-          @form.SetValue(methodName, *args)
-        else
-          @form.GetValue(methodName)
-        end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'innerText'
+        @read_only = true
       end
-
-      def submit(btnName)
-        # @form.send(btnName.intern).PerformClick
-        # workaround for RC1
-        @form.DoButtonClick(btnName)
+    end
+    
+    class IEDomAspDotNetLabel < IEDomSpanWrapper
+      # this is just for reference. ASP.NET renders labels as SPAN tags.
+    end
+    
+    class IEDomButtonWrapper < IEDomNodeWrapper
+      def IEDomButtonWrapper.wrap_type_re
+        /button|submit/i
+      end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'click'
       end
     end
   end
 end
 
-include CLabs::IEC
+# backwards compatibility
+include CLabs::IEC 
