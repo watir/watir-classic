@@ -14,7 +14,9 @@ Useful information you'll need to complete the tutorial labs.
   Ruby language.  
 * "Scripting Web Tests Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. 
   Overview of the WATIR toolkit and a few extensions for Timeclock.
-* WATIR User Guide
+* Watir User Guide (installed with Watir)
+* An online copy of the Pickaxe Book is installed with Ruby if you would like
+  more detail about the language.
 
 h3. Lab Exercises
 
@@ -42,23 +44,25 @@ Timeclock software.
 * Bonus Lab. "Testing Web Services":exercises/web-services-lab.html
   Test the web services interface to the Timeclock application.
 
+h2. Online Documentation
+
+Further information that can be found on the web.
+
 h3. Web Testing with Ruby
 
-More information about the Web Testing with Ruby project.
+More information about Watir and the Web Testing with Ruby project.
 
-* "Project Wiki":http://www.clabs.org/wtr/.
-  Project website. A "wiki" is a website that anyone can update.
+* "Watir Homepage":http://wtr.rubyforge.org/.
 * "RubyForge Repository":http://rubyforge.org/projects/wtr/.
   The latest downloads.
 * "Mailing List":http://rubyforge.org/pipermail/wtr-general/.
   
 h3. Further Reading
 
-Articles that develop themes and topics introduced in this tutorial, available
-on the web.
+Articles that develop themes and topics introduced in this tutorial.
 
 * "Wireless Matrix AutoTests.":Wireless%20Matrix%20AutoTests.doc. Paul Rogers 
-  describes how the use Web Testing for Ruby for production testing at Wireless
+  describes how they use Web Testing for Ruby for production testing at Wireless
   Matrix.
 * "Programming in Ruby":http://www.pragmaticprogrammer.com/articles/ddj_ruby.pdf.
   Dave Thomas and Andy Hunt provide programmers with a succinct overview of the 

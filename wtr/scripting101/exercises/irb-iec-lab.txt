@@ -1,4 +1,4 @@
-h2=. Scripting for Testers
+h2=. Scripting Web Tests
 
 h2=. Lab 2: Driving Web Applications using IRB
 
@@ -6,7 +6,8 @@ Your instructor has demonstrated how drive the web application using
 Ruby and IRB. Now it is your turn. Enter ruby commands into IRB to
 drive the Timeclock application. 
 
-Use the "Web Testing with Ruby Cheat Sheet":../../doc/Internet%20Explorer%20Cheat%20Sheet.doc and the WATIR User Guide as references.
+Use the "Web Testing with Ruby Cheat Sheet":../doc/Internet%20Explorer%20Cheat%20Sheet.doc and 
+the Watir User Guide as references.
 
 We suggest that you execute the following steps:
 

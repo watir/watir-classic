@@ -1,4 +1,4 @@
-h2=. Scripting for Testers
+h2=. Scripting Web Tests
 
 h2=. Lab 4: Verifying Results
 
