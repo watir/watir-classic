@@ -18,7 +18,7 @@ require 'watir'   # the controller
 #test::unit includes
 require 'test/unit' 
 require 'test/unit/ui/console/testrunner'
-require 'unittests/testUnitAddons'
+require 'watir/testUnitAddons'
 
 #code to set your current path in Windows
 $myDir = File.dirname(__FILE__)
