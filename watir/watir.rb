@@ -1,3 +1,38 @@
+=begin
+  license
+  ---------------------------------------------------------------------------
+  Copyright (c) 2004-2005, Paul Rogers and Bret Pettichord
+  All rights reserved.
+  
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+  
+  1. Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+  
+  2. Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+  
+  3. Neither the names Paul Rogers, Bret Pettichord nor the names of contributors to
+  this software may be used to endorse or promote products derived from this
+  software without specific prior written permission.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS
+  IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  --------------------------------------------------------------------------
+  (based on BSD Open Source License)
+=end
+
 #  This is WATIR the web application testing framework for ruby
 #  Home page is http://rubyforge.com/projects/wtr
 #
@@ -27,9 +62,22 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 
+class String
+   def matches (x)
+      return self == x
+   end
+end
+
+class Regexp
+   def matches (x)
+      return self.match( x )
+   end
+end
+
+module Watir
+
 # this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods.
 class WatirLogger < Logger
-
 
    def initialize(  filName , logsToKeep, maxLogSize )
 
@@ -46,7 +94,7 @@ class WatirLogger < Logger
 end
 
 
-# This class is used to display the spinner object that appears in the console when a page is being loaded
+# This class displays the spinner object that appears in the console when a page is being loaded
 class Spinner
 
    def initialize
@@ -58,6 +106,7 @@ class Spinner
    def reverse
       @s.reverse
    end
+
    # get the nextr character to display
    def next
       @i=@i+1
@@ -65,6 +114,11 @@ class Spinner
       return @s[@i]
    end
 end
+
+# 
+# MOVETO: watir/exceptions.rb
+# Module Watir::Exceptions
+# 
 
 # Root class for all Watir Exceptions
 class WatirException < RuntimeError  
@@ -142,18 +196,15 @@ class NoMatchingWindowFoundException < WatirException
    end
 end
 
+#
+#
+#
+#
 
-class String
-   def matches (x)
-      return self == x
-   end
-end
-
-class Regexp
-   def matches (x)
-      return self.match( x )
-   end
-end
+#
+# MOVETO: watir/cookie_manager.rb
+# Module Watir::CookieManager
+#
 
 class Dir
   def Dir.visit(dir = '.', files_first = false, &block)
@@ -202,6 +253,12 @@ class WatirHelper
   end
 
 end
+
+#
+# MOVETO: watir/controls.rb
+# Module Watir::Controls
+#
+
 
 # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
 # This is not a class that users would normally access. 
@@ -464,7 +521,10 @@ class FrameHandler
 
 end
 
-
+#
+# MOVETO: watir/browser_driver.rb
+# Module Watir::BrowserDriver
+#
 
 # ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
 # the remaining ARGV as a filter on what tests to run.
@@ -1261,14 +1321,15 @@ class IE
    #  *  how   - symbol - how we access the button , :index, :caption, :name etc
    #  *  what  - string, int or re , what we are looking for, 
    # Returns a Button object.
-   def button( how , what=nil  )
-      if how.kind_of? Symbol
-         raise MissingWayOfFindingObjectException   if what==nil
-         b = Button.new(self, how , what )
-      elsif how.kind_of? String
-         log "how is a string - #{how}"
-         b = Button.new(self, :caption, how)
-      end
+   def button( how , what=nil )
+       if how.kind_of? Symbol and what != nil
+           return Button.new(self, how , what )
+       elsif how.kind_of? String and what == nil
+           log "how is a string - #{how}"
+           return Button.new(self, :caption, how)
+       else
+           raise MissingWayOfFindingObjectException
+       end
    end
 
    # This is the main method for accessing a text field. Usually an <input type = text> HTML tag.  
@@ -1332,6 +1393,12 @@ class IE
    
 end # class IE
 
+
+# 
+# MOVETO: watir/popup.rb
+# Module Watir::Popup
+#
+
 # POPUP object
 class PopUp
    def initialize( ieController )
@@ -1353,7 +1420,6 @@ class JSCommon
 end
 
 
-
 class JSButton < JSCommon
    def initialize( hWnd , caption )
       @hWnd = hWnd
@@ -1372,6 +1438,12 @@ class JSButton < JSCommon
    end
 
 end
+
+#
+# 
+# Module Watir::Control or Watir::BrowserDriver
+#
+
 
 
 #   Form object 
@@ -1468,6 +1540,10 @@ class Form < IE
 
 end # class Form
 
+#
+# MOVETO: watir/control_drivers.rb
+# Module Watir::ControlDrivers
+#
 
 # This class is used for dealing with tables.
 # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
@@ -1931,3 +2007,4 @@ class TextField < ObjectActions
    end
 end
 
+end

@@ -5,8 +5,8 @@ require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
 
 def start_ie_with_logger
-  logger = WatirLogger.new(File.join(File.dirname(__FILE__), 'test.txt') ,5, 65535 * 2)
-  $ie = IE.new(logger)
+  logger = Watir::WatirLogger.new(File.join(File.dirname(__FILE__), 'test.txt') ,5, 65535 * 2)
+  $ie = Watir::IE.new(logger)
 end
 
 def set_local_dir
