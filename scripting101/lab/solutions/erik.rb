@@ -1,5 +1,5 @@
 require 'toolkit'
-start_ie ("http://localhost:8080")
+start_ie 
 
 # Login page
 login_form = forms[0]

@@ -2,7 +2,8 @@
 require 'toolkit'
 
 # Start with a user that has no time records. 
-start_ie 'http://localhost:8080'
+ensure_no_user_data 'ruby'
+start_ie 
 form = forms[0]
 form.name = 'ruby'
 form.submit

@@ -6,7 +6,7 @@ require 'toolkit'
 ensure_no_user_data 'ruby'
 
 # login
-start_ie 'http://localhost:8080'
+start_ie 
 form = forms[0]
 form.name = 'ruby'
 form.submit
