@@ -16,7 +16,7 @@ class TC_Navigate< Test::Unit::TestCase
        $ie.clear_url_list
        gotoPage( 'buttons1.html')
        url = $ie.url.downcase.gsub('///' , '//')   # no idea why this happens - we get 3 / after file:
-       assert_equal(url , $htmlRoot + 'buttons1.html') 
+       assert_equal(url.downcase , ( $htmlRoot + 'buttons1.html' ).downcase )  # the downcase is that sometimes we get capital drivee letters 
 
        assert_equal( 1, $ie.url_list.length )
        assert_equal( url , $ie.url_list[0].gsub('\\', '/').downcase )
