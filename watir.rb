@@ -225,7 +225,9 @@ class ObjectActions
 
 end
 
-
+# ARGV need to be deleted to enable the Test::Unit functionatily that grabs
+# the remaining ARGV as a filter on what tests to run
+$HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
 
 # This class is the main Internet Explorer Controller
 # An instance of this should be created to access IE
@@ -260,7 +262,7 @@ class IE
 #        puts "##########################################################################"
 
         @ie =   WIN32OLE.new('InternetExplorer.Application')
-        @ie.visible = TRUE
+        @ie.visible = ! $HIDE_IE
         @frame = ""
         @presetFrame = ""
         @form = nil
