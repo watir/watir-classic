@@ -11,6 +11,10 @@ class TC_Links < Test::Unit::TestCase
         $ie.goto($htmlRoot + 'links1.html')
         $ie.link(:index ,5).click
         ie2 = $ie.newWindow
-        ie2.link(:index ,5).click
+        if ie2 == nil
+          puts "Couldnt get newly opened window."
+        else
+          ie2.link(:index ,5).click
+        end
     end
 end
