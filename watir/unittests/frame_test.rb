@@ -8,23 +8,18 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
 require 'testUnitAddons'
-$myDir = File.dirname(__FILE__)
 
-$LOAD_PATH << $myDir
-
+$myDir = Dir.getwd
 
 
 
-class TC_Buttons < Test::Unit::TestCase
+class TC_Frames < Test::Unit::TestCase
 
 
-    def gotoButtonPage()
-        $ie.goto("file://#{$myDir}/html/buttons1.html")
-    end
-
+   
     def gotoFramesPage()
 
-    $ie.goto("file://#{$myDir}/html/frame_buttons.html")
+       $ie.goto("file://#{$myDir}/html/frame_buttons.html")
     end
 
 
@@ -39,6 +34,22 @@ class TC_Buttons < Test::Unit::TestCase
        assert($ie.frame("buttonFrame").button(:id, "b2").enabled?)   
     end
 
+    def test_presetFrame
+
+        # with the preset frame functionality we are able to use the same frame for saeveral actions
+        $ie.presetFrame( "buttonFrame" )
+        assert_equal( "buttonFrame" , $ie.getCurrentFrame )
+
+
+        assert($ie.button(:id, "b2").enabled?)
+        assert_false($ie.button(:caption, "Disabled Button").enabled?)
+
+        $ie.clearPresetFrame( )
+        assert_equal( "" , $ie.getCurrentFrame )
+
+
+
+    end
 
 end
 

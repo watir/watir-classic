@@ -8,9 +8,8 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
 require 'testUnitAddons'
-$myDir = File.dirname(__FILE__)
 
-$LOAD_PATH << $myDir
+$myDir = Dir.getwd
 
 
 
