@@ -20,8 +20,7 @@ end
 
 module MockStdoutTestCase
   def setup
-        @mockout = IOString.new ""
-        $stdout = @mockout
+    @mockout = IOString.new ""
   end
   def teardown
     $stdout = STDOUT
