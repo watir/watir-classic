@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html 
      PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "DTD/xhtml1-transitional.dtd">
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>Class: Dir</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-	<meta http-equiv="Content-Script-Type" content="text/javascript" />
-	<link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
-	<script type="text/javascript">
-	// <![CDATA[
+  <title>Class: Dir</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
 
-	function popupCode( url ) {
-		window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
-	}
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
 
-	function toggleCode( id ) {
-		if ( document.getElementById )
-			elem = document.getElementById( id );
-		else if ( document.all )
-			elem = eval( "document.all." + id );
-		else
-			return false;
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
 
-		elemStyle = elem.style;
-		
-		if ( elemStyle.display != "block" ) {
-			elemStyle.display = "block"
-		} else {
-			elemStyle.display = "none"
-		}
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
 
-		return true;
-	}
-	
-	// Make codeblocks hidden by default
-	document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
-	
-	// ]]>
-	</script>
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
 
 </head>
 <body>
@@ -47,15 +47,18 @@
 
 
     <div id="classHeader">
-        <h1>Dir <sup class="type-note">(Class)</sup></h1>
         <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Dir</td>
+        </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../files/watir_rb.html">
-                watir.rb
+                <a href="../files/watir/cookiemanager_rb.html">
+                watir\cookiemanager.rb
                 </a>
-				<br />
+        <br />
             </td>
         </tr>
 
@@ -69,74 +72,79 @@
     </div>
   <!-- banner header -->
 
-	<div id="bodyContent">
-
-
-	<div id="contextContent">
+  <div id="bodyContent">
 
 
 
-		<div id="method-list">
-			<h2 class="section-bar">Methods</h2>
-
-			<div class="name-list">
-			<a href="#M000022">rm_rf</a>&nbsp;&nbsp;
-			<a href="#M000021">visit</a>&nbsp;&nbsp;
-			</div>
-		</div>
+  <div id="contextContent">
 
 
 
+   </div>
 
-			
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
 
-	</div>
+      <div class="name-list">
+      <a href="#M000003">rm_rf</a>&nbsp;&nbsp;
+      <a href="#M000002">visit</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
 
 
 
-		<!-- if includes -->
 
 
-		<!-- if method_list -->
-		<div id="methods">
-			<h2 class="section-bar">Public Class methods</h2>
+      
 
-			<div id="method-M000022" class="method-detail">
-				<a name="M000022"></a>
 
-				<div class="method-heading">
-					<a href="Dir.src/M000022.html" target="Code" class="method-signature"
-						onclick="popupCode('Dir.src/M000022.html');return false;">
-					<span class="method-name">rm_rf</span><span class="method-args">(dir)</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-					<p>
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+          <a href="Dir.src/M000003.html" target="Code" class="method-signature"
+            onclick="popupCode('Dir.src/M000003.html');return false;">
+          <span class="method-name">rm_rf</span><span class="method-args">(dir)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
 simulates unix rm -rf command
 </p>
-				</div>
-			</div>
+        </div>
+      </div>
 
-			<div id="method-M000021" class="method-detail">
-				<a name="M000021"></a>
+      <div id="method-M000002" class="method-detail">
+        <a name="M000002"></a>
 
-				<div class="method-heading">
-					<a href="Dir.src/M000021.html" target="Code" class="method-signature"
-						onclick="popupCode('Dir.src/M000021.html');return false;">
-					<span class="method-name">visit</span><span class="method-args">(dir = '.', files_first = false, &amp;block) {|path}| ...}</span>
-					</a>
-				</div>
-			
-				<div class="method-description">
-				</div>
-			</div>
-
-
-		</div>
+        <div class="method-heading">
+          <a href="Dir.src/M000002.html" target="Code" class="method-signature"
+            onclick="popupCode('Dir.src/M000002.html');return false;">
+          <span class="method-name">visit</span><span class="method-args">(dir = '.', files_first = false) {|path| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
 
 
-	</div>
+    </div>
+
+
+  </div>
 
 
 <div id="validator-badges">
