@@ -90,7 +90,10 @@ module Timeclock
                                          input({:type => 'text',
                                                  :name => 'name',
                                                  :size => '16',
-                                                 :maxlength => '100'})))))
+                                                 :maxlength => '100'}) , 
+						 input({:type => 'submit',
+                                                 :name => 'create_a_job',
+                                                 :value => 'Create'})	 ))))
         end
 
 
