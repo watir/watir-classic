@@ -39,7 +39,7 @@ class StubExplorer
 	def initialize()
 		@timeToWait = 1
 		@visible = $HIDE_IE
-      @document = FakeDoc.new()
+        @document = FakeDoc.new()
 	end
 	
 	def document

@@ -13,7 +13,7 @@ module Test::Unit::Assertions
      def compareArrays( expectArray, actualArray)
              result = true
              expectArray.each_with_index do |element,i|
-                 puts "Comparing #{element} #{element.class} with #{actualArray[i]} #{actualArray[i].class} "
+                 #puts "Comparing #{element} #{element.class} with #{actualArray[i]} #{actualArray[i].class} "
                  if element != actualArray[i]
                      result = false
                      break
