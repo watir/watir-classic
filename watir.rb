@@ -643,6 +643,19 @@ class IE
                         end
                     end
 
+                when :alt
+                    if what.kind_of? String
+                        if img.invoke("alt") == what
+                            o = img
+                        end
+                    elsif what.kind_of? Regexp
+                        if img.invoke("alt").match(what) != nil
+                            o = img
+                        end
+                    end
+
+
+
                 when :index
 
             end
