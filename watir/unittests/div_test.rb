@@ -28,19 +28,19 @@ class TC_Divs < Test::Unit::TestCase
     end
 
     def test_getText
-       assert_raises(UnknownObjectException) {$ie.div(:id , "div77").getText }
-       assert_raises(UnknownObjectException) {$ie.div(:title , "div77").getText }
+       assert_raises(UnknownObjectException) {$ie.div(:id , "div77").text }
+       assert_raises(UnknownObjectException) {$ie.div(:title , "div77").text }
 
-       assert_equal("This div has an onClick that increments text1" ,   $ie.div(:id , "div3").getText.strip )
-       assert_equal("This text is in a div with an id of div1 and title of test1" ,   $ie.div(:title , "Test1").getText.strip )
+       assert_equal("This div has an onClick that increments text1" ,   $ie.div(:id , "div3").text.strip )
+       assert_equal("This text is in a div with an id of div1 and title of test1" ,   $ie.div(:title , "Test1").text.strip )
 
     end
 
     def test_getStyle
 
-        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").getStyle }
-        assert_equal("blueText" ,   $ie.div(:id , "div2").getStyle )
-        assert_equal("" ,   $ie.div(:id , "div1").getStyle )
+        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").style }
+        assert_equal("blueText" ,   $ie.div(:id , "div2").style )
+        assert_equal("" ,   $ie.div(:id , "div1").style )
 
     end
 
