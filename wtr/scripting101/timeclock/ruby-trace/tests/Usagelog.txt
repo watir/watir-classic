@@ -1,2 +1,0 @@
-usage-example-2.rb:15:in `task_completes' at 2002/06/05 16:56:35
-= usage task: User has turned off all helpful suggestions.

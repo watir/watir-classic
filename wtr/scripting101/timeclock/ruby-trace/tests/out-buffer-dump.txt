@@ -1,2 +1,0 @@
-./BufferDestination.rb:110:in `test_dump_to_IO'
-=  event: this is an event
