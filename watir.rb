@@ -193,7 +193,7 @@ class ObjectActions
     #           ObjectDisabledException if the object is currently disabled
     def click()
         raise UnknownObjectException if @o==nil
-        raise ObjectDisabledException   if !self.enabled?
+        raise ObjectDisabledException if !self.enabled?
         highLight(:set)
         @o.click()
         @ieController.waitForIE()
@@ -526,6 +526,7 @@ class IE
     #                  - :name
     #                  - :id
     #                  - :index
+    #                  - :value
     #   * what  - string the thing we are looking for, ie the name, or id or index of the object we are looking for
     #   * types - what object types we will look at. Only used when index is specified as the how
     #   * value - used for objects that have one name, but many values, for example radios and checkboxes
@@ -546,7 +547,7 @@ class IE
 
         if how == :index
             o = getObjectAtIndex( container, what , types , value)
-        elsif how ==:caption  #only applies to button
+        elsif how == :caption || how == :value # only applies to button
             o = getObjectWithValue( what, container , "submit" , "button" )
         else
             #puts "How is #{how}"
@@ -826,12 +827,9 @@ class Form < IE
         @form.elements.all
     end    
 
-    # this applies to a form. - it will be refactored into a Form object eventually
+    # does the form exist?
     def exists?
-        formExists = false
-        formExists = true if @form
-        return false if formExists == false
-        return true
+        @form ? true : false
     end
 
     # Submit the data -- equivalent to pressing return
