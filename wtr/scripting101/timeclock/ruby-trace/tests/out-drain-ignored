@@ -1,0 +1,2 @@
+drain-example.rb:16: undefined method `upcase' for nil:NilClass (NoMethodError)
+Trace log is in Tracelog.txt.
