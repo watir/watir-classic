@@ -1475,11 +1475,12 @@ module Watir
             @what = what
         end
 
-        def getContents()
+        def text()
             raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
             return @o.innerText
  
         end
+        alias getContents text
 
     end
 
@@ -1882,6 +1883,7 @@ module Watir
             return @o.readOnly 
         end   
         
+        # TODO: rename me
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
@@ -2000,12 +2002,14 @@ module Watir
         def value=(v)
             @o.value = v.to_s
         end
+        private :value=
 
 
         # returns the current value of the text field
         def value
             return @o.value.to_s
         end
+        private :value
 
 
 
