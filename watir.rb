@@ -83,6 +83,10 @@ end
 # the remaining ARGV as a filter on what tests to run.
 $HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
 
+$ENABLE_SPINNER = !ARGV.include?('-s'); ARGV.delete('-s')
+
+
+
 module Watir
     include Watir::Exception
     
@@ -169,7 +173,7 @@ module Watir
         attr_accessor :logger
                         
         def initialize(suppress_new_window=nil)
-            @enable_spinner == false
+            @enable_spinner = $ENABLE_SPINNER
             unless suppress_new_window
                 create_browser_window
                 set_defaults
