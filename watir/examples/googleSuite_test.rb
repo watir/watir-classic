@@ -47,14 +47,14 @@ class TC_google_suite < Test::Unit::TestCase
    puts '  Action: entered pickaxe in the search field'
 
    puts 'Step 3: click the "Google Search" button'
-   $ie.button(:caption, "Google Search").click
+   $ie.button(:name, "btnG").click
    puts '  Action: clicked the Google Search button.'
 
    puts 'Expected Result: '
-   puts ' - a google page with results should be shown. "Pragmatic Programmers LLC" should be high on the list.'
+   puts ' - a google page with results should be shown. "Programming Ruby" should be high on the list.'
   
-   puts 'Actual Result: Check that the "The Pragmatic Programmers, LLC" link actually appears on the page by using an assertion'
-   assert($ie.pageContainsText("The Pragmatic Programmers, LLC") )
+   puts 'Actual Result: Check that the "Programming Ruby" link actually appears on the page by using an assertion'
+   assert($ie.pageContainsText("Programming Ruby") )
 
    puts '  '
    puts '## End of test: google search'
