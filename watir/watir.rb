@@ -219,6 +219,7 @@ class ObjectActions
         raise ObjectDisabledException   if !self.enabled?
         highLight(:set)
         @o.click()
+        @ieController.waitForIE()
         highLight(:clear)
     end
 
@@ -721,6 +722,7 @@ class SelectBox < ObjectActions
         highLight( :set)
         @o.each do |selectBoxItem|
             selectBoxItem.selected = false
+            @ieController.waitForIE()
         end
         highLight( :clear)
 
@@ -751,6 +753,7 @@ class SelectBox < ObjectActions
                         matchedAnItem = true
                         selectBoxItem.selected = true
                         puts " #{selectBoxItem.text} is being selected"
+                        @ieController.waitForIE()
                     end
                 end
 
@@ -849,6 +852,7 @@ class RadioCheckCommon < ObjectActions
         raise UnknownObjectException if @o==nil
         raise ObjectDisabledException   if !self.enabled?
         @o.checked = false
+        @ieController.waitForIE()
    end
 
 
@@ -860,6 +864,7 @@ class RadioCheckCommon < ObjectActions
         raise ObjectDisabledException   if !self.enabled?
         highLight( :set)
         @o.checked = true
+        @ieController.waitForIE()
         highLight( :clear )
    end
 
@@ -958,7 +963,7 @@ class TextField < ObjectActions
         @o.value = ""
         @o.fireEvent("onKeyPress")
         @o.fireEvent("onChange")
-
+        @ieController.waitForIE()
         highLight(:clear)
 
     end
