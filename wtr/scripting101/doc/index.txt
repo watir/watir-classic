@@ -4,17 +4,24 @@ h2. Tutorial Documentation Index
 
 This documentation accompanies the one-day tutorial.
 
-* "Installation":install.html. Installing Ruby, Timeclock, and the WTR toolkit.
+* "Installation":install.html. Installing Ruby, Timeclock, and the WTR
+  toolkit. 
 
-* "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the Ruby language. 
+* "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
+  Ruby language.  
 
-* "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. Overview of the WTR toolkit. As of 4/21/04 page 2 still needs updates.
+* "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. Overview of the WTR
+  toolkit. As of 4/21/04 page 2 still needs updates. 
 
-* "Using IRB to Drive Internet Explorer":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc. An annotated example of using IRB and WTR to drive Timeclock. As of 4/5/2004, this is out of date.
+* "Using IRB to Drive Internet Explorer":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc. An
+  annotated example of using IRB and WTR to drive Timeclock. 
 
-* "IE Controller Example":iecontroller%20ruby%20garden.pdf. An annotated example of using the IE Controller to drive Amazon. Captured from RubyGarden.com.
+* "IE Controller Example":iecontroller%20ruby%20garden.pdf. An
+  annotated example of using the IE Controller to drive
+  Amazon. Captured from RubyGarden.com. 
 
-* "Lab Exercises":../lab/exercises/exercises.html. An index of the Exercises used in the class. fix this link!
+* "Lab Exercises":../lab/exercises/exercises.html. An index of the
+  Exercises used in the class. 
 
 h2. Advanced Material
 

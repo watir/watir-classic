@@ -37,8 +37,10 @@ The Ruby installer is
 "ruby181-12.exe.":http://rubyforge.org/frs/?group_id=167&release_id=414 
 
 #      Double-click this exe file to install.
-#      Select the default installation options (choose all options; install in c:/ruby). 
-#      If you are installing as Administrator you don't need to restart windows. Otherwise, you should. 
+#      Select the default installation options (choose all options;
+       install in c:/ruby).  
+#      If you are installing as Administrator you don't need to
+       restart windows. Otherwise, you should.  
 
 h4. IE Controller
 

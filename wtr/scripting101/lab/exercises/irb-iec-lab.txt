@@ -6,7 +6,7 @@ Your instructor has demonstrated how drive the web application using
 Ruby and IRB. Now it is your turn. Enter ruby commands into IRB to
 drive the Timeclock application. 
 
-Use the "Web Testing with Ruby Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc and the "Annotated Example":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc as references.
+Use the "Web Testing with Ruby Cheat Sheet":../../doc/Internet%20Explorer%20Cheat%20Sheet.doc and the "Annotated Example":../../doc/Using%20IRB%20to%20Drive%20Internet%20Explorer.doc as references.
 
 We suggest that you execute the following steps:
 
