@@ -877,7 +877,7 @@ class IE
     # returns an Image object
     def image( how , what)
         i = Image.new(self , how, what )
-end
+    end
 
     
 
