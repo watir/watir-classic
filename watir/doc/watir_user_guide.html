@@ -22,7 +22,7 @@ h2   {
        font-size: 135%; 
      }
 h3   {
-       font-size: 100%; 
+       font-size: 110%; 
      }
 p    {
        margin-bottom: 10px; 
@@ -129,11 +129,14 @@ Watir interprets and tells IE to click for us. </p>
 <p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
 <p>Hyperlinks can be clicked by identifying them by the text that we see in the hyperlink. If we wanted to click <a href="">This link</a>, 
-we name the link object by using the text "This link".</p>
+we identify the link object by using the text attribute "This link".</p>
 <div class = "testexample">$ie.link(:text, "This link").click</div>
-<p> Related tag:</p>
-<div class = "htmlexample">&lt;a href="http://www.testsite.com"&gt;Test Site&lt;/a&gt;</div>
-<p></p>
+<p> Related tag and attribute:</p>
+<div class = "htmlexample">&lt;a href="http://www.testsite.com"&gt;<b>Test Site</b>&lt;/a&gt;</div>
+<p>To click a link object by identifying it by the URL attribute: 
+<div class = "testexample">$ie.link(:url, "http://www.testsite.com").click</div>
+<p> Related tag and attribute:</p>
+<div class = "htmlexample">&lt;a href="<b>http://www.testsite.com</b>"&gt;Test Site&lt;/a&gt;</div>
 <h3>Checkboxes</h3>
 <h3>Radio Buttons</h3>
 
