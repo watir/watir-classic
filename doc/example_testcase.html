@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>WATIR Example Test Case</title>
+<meta name="author" content="Jonathan Kohl" />
+<meta name="generator" content="By hand, with a text editor." />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<style type="text/css">
+body {
+	margin-left:	5%;
+	margin-right: 5%;
+	padding: 0;
+	background:	#fff;
+	color: #333;
+	font: normal small Geneva, Verdana, Arial, sans-serif;
+     }
+h1   {
+       font-size: 175%; 
+     }
+h2   {
+       font-size: 135%; 
+     }
+h3   {
+       font-size: 110%; 
+     }
+h4   {
+       font-size: 100%; 
+     }
+p    {
+       margin-bottom: 10px; 
+      }
+div.testexample 
+     {
+       background: #fff;
+       margin-left:  10%;
+       margin-right: 10%;
+       padding: 1em;
+       font-family: "Courier New", monospace;
+       font-size: 11pt;
+       color: black;
+       border: 1px solid #000;
+       border-width: thin; 
+       margin-bottom: 10px;
+     }
+div.htmlexample 
+     {
+       background: #ccc;
+       margin-left:  10%;
+       margin-right: 10%;
+       padding: 1em;
+       font-family: "Courier New", monospace;
+       font-size: 11pt;
+       color: blue;
+       border: 1px solid #000;
+       border-width: thin; 
+       margin-bottom: 10px;
+     }
+     div.browserexample 
+     {
+       background: #fff;
+       margin-left:  10%;
+       margin-right: 10%;
+       padding: 1em;
+       font: normal small Geneva, Verdana, Arial, sans-serif;
+       font-size: 11pt;
+       color: #000;
+       border: 1px solid #000;
+       border-width: thin; 
+       margin-bottom: 10px;
+     }
+</style>
+<body>
+<h1>WATIR Example Test Case</h1>
+<h2>Google Test Search</h2>
+<p>This document walks through a very simple test case: <b>googleSearch.rb</b>. To begin, from the <b>examples</b> folder in your Watir installation directory, open the 
+googleSearch.rb file in a text editor. To open it with SciTE, simply right-click the file in Windows Explorer, and select <b>Edit</b> from the popup menu.</p>
+<p>The format of this example will be to show the Ruby test case scripting code in a box as you would see it in a text editor, with an explanation after it.<p>
+<h2>Section 1: Comments</h2>
+<p>Test cases should be commented, just as program code should be commented.</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample"><font color = "green">
+#-------------------------------------------------------------#<br>
+# demo test for the WATIR controller<br>                                           
+# <br>                                                                             
+#  Simple Google test written by Jonathan Kohl   10/10/04  <br>                    
+# Purpose: to demonstrate the following WATIR functionality: <br>                 
+#   * entering text into a text field  <br>                                        
+#   * clicking a button<br>
+#   * checking to see if a page contains text.    <br>                             
+# Test will search Google for the "pickaxe" Ruby book<br>
+#<br>
+#-------------------------------------------------------------#<br>
+</font>
+</div>
+<h2>Section 2: Includes</h2>
+<p>To use Watir, or any other library in our test case requires us to tell the program where to find the library.</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+  <font color = "green"> #includes</font><br>
+   require <font color = "purple">'../watir'</font><font color = "green">   # the watir controller</font>
+</div>
+<p>In this case, we used a relative path to the watir file "../watir". Since the examples folder is one folder down from the watir.rb file, we can use this notation
+instead of the full path: "../". This reads: "Go back out of the folder we are in, and look for the file we need there." We can also use a full path such as: "C:\my folder\Watir\watir"</p>
+</body>
+</html>
