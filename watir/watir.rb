@@ -620,7 +620,7 @@ module Watir
             doc = getDocument()
             
             log "Finding an image how: #{how} What #{what}"
-            
+            count = 1
             images = doc.images
             o=nil
             images.each do |img|
@@ -628,22 +628,26 @@ module Watir
                 log "Image on page: src = #{img.src}"
                 
                 next unless o == nil
-                
-                case how
-                when :src
-                    attribute = img.src
-                when :name
-                    attribute = img.name
-                when :id
-                    attribute = img.invoke("id")
-                when :alt
-                    attribute = img.invoke("alt")
-                else
-                    next
+                if how == :index
+                    o = img if count == what.to_i
+                else                
+                    case how
+                        
+                    when :src
+                        attribute = img.src
+                    when :name
+                        attribute = img.name
+                    when :id
+                        attribute = img.invoke("id")
+                    when :alt
+                        attribute = img.invoke("alt")
+                    else
+                        next
+                    end
+                    
+                    o = img if what.matches(attribute)
                 end
-                
-                o = img if what.matches(attribute)
-                
+                count +=1
             end # do
             clearFrame()
             return o
@@ -1644,7 +1648,27 @@ module Watir
             return false  if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
             return true
         end
-        
+
+        def highLight( setOrClear )
+            if setOrClear == :set
+                begin
+                    @original_border = @o.border
+                    @o.border = 1
+                rescue
+                    @original_border = nil
+                end
+            else
+                begin 
+                    @o.border = @original_border 
+                    @original_border = nil
+                rescue
+                    # we could be here for a number of reasons...
+                ensure
+                    @original_border = nil
+                end
+            end
+        end
+
     end
     
     
