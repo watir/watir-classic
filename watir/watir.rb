@@ -296,6 +296,10 @@ class IE
     # the color we want to use for the active object. This can be any valid html color
     attr_accessor :activeObjectHighLightColor
 
+    # when a new window is created newWindow contains it
+    attr_accessor :newWindow
+
+
     # this method creates an instance of the IE controller
     def initialize( logger=nil )
         @logger = logger
@@ -307,6 +311,24 @@ class IE
         @typingspeed = DEFAULT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
         @defaultSleepTime = DEFAULT_SLEEP_TIME
+
+        ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
+
+        ev.on_event_with_outargs("NewWindow3") {|ppdisp, cancel, flags, formURL, toURL , args| 
+
+            # http://msdn.microsoft.com/workshop/browser/webbrowser/reference/ifaces/dwebbrowserevents2/newwindow2.asp
+            # http://groups.google.ca/groups?q=on_event_with_outargs&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=e249d8e7.0410060843.3f55fa05%40posting.google.com&rnum=1
+            # http://groups.google.ca/groups?q=on_event&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=200202211155.UAA05077%40ums509.nifty.ne.jp&rnum=8
+
+            puts "New Window!"
+            puts "New URL: #{toURL }"
+            puts "Flags: #{flags}"
+            args[1] = true
+            @newWindow = IE.new
+            @newWindow.goto(toURL)
+        }
+
+
     end
 
     def dir
