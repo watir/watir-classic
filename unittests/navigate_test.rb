@@ -8,7 +8,6 @@ class TC_Navigate< Test::Unit::TestCase
     include Watir
    
     def gotoPage( a )
-
        $ie.goto($htmlRoot + a)
     end
 
@@ -16,8 +15,6 @@ class TC_Navigate< Test::Unit::TestCase
        gotoPage( 'buttons1.html')
        gotoPage( 'checkboxes1.html')
        assert($ie.title , "Test page for Check Boxes") 
-
-
 
        $ie.back
        assert($ie.title , "Test page for buttons")   
@@ -30,11 +27,6 @@ class TC_Navigate< Test::Unit::TestCase
  
        $ie.refresh
        # Not sure how we test this. Text fields and checkboxes dont get reset if you click the browser refresh button
-
-
     end
-
-    
-
 end
 
