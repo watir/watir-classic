@@ -1949,9 +1949,10 @@ module Watir
                     end
                     tableIndex = tableIndex + 1
                 end
-	    else
+	      else
 		    table = what
-	    end
+	      end
+
             parent.log "table - #{what}, #{how} Not found " if table ==  nil
             @o = table
             super( @o )
@@ -1963,16 +1964,7 @@ module Watir
         #   * index         - the index of the row
         def [](index)
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
-            elements = []
-            for td in row(index).children
-                if(td.children.length > 0) then 
-                    elements << TableCell.new(@ieController, :direct, td.children(0) )
-                else
-                    elements << TableCell.new(@ieController, :direct, td )
-                end
-            end
-            return TableRow.new(@ieController ,:direct, elements)
+            return  TableRow.new(@ieController ,:direct, row(index) )
         end
 
         # This method returns the number of rows in the table.
@@ -1988,12 +1980,10 @@ module Watir
         def column_count(index=1) 
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
 
-            columns = 0
-            for td in row(index).children
-                columns += td.colSpan
-            end
-
-            return columns
+            this_row = row(index)
+            count = this_row.cells.length
+            puts "Row has #{count} cells"
+            return count
         end
 
         # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
@@ -2019,7 +2009,9 @@ module Watir
         private :table_body
    
         def row(index)
-            return table_body.children(index - 1)
+            table_rows = @o.getElementsByTagName("TR")   # this line causes the failing unit test
+            puts "there are #{table_rows.length} rows"
+            return table_rows[(index-1).to_s]
         end
         private :row
 
@@ -2028,28 +2020,41 @@ module Watir
     # this class is a table row
     class TableRow < ObjectActions
 
-        # Returns an initialized instance of a table cell          
-        #   * o  - the object contained in the cell 
+        # Returns an initialized instance of a table row          
+        #   * o  - the object contained in the row
         #   * ieController  - an instance of an IEController       
-        #   * how          - symbol - how we access the cell        
-        #   * what         - what we use to access the cell - id, name index etc. If how is :direct then what is a Internet Explorer Raw Row 
+        #   * how          - symbol - how we access the row        
+        #   * what         - what we use to access the wor - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
         def initialize(ieController , how, what)
             @ieController = ieController
+            @how = how   
+            @what = what   
+
             if how == :direct
                 @o = what
             else
                 @o = ieController.getTablePart( "TR" , how , what )   
             end
+            update_row_cells
             super( @o )   
-            @how = how   
-            @what = what   
         end
    
+
+        # this method updates the internal list of cells. 
+        def update_row_cells
+            object_exist_check
+            @cells=[]
+            @o.cells.each do |oo|
+                @cells << TableCell.new(@ieController, :direct, oo)
+            end
+        end
+
+
 	  # Returns an element from the row
         def [](index)
             object_exist_check
-            raise UnknownCellException , "Unable to locate a cell at index #{index}" if @o.length < index
-            return @o[(index-1)]
+            raise UnknownCellException , "Unable to locate a cell at index #{index}" if @cells.length < index
+            return @cells[(index-1)]
         end
 
         #defaults all missing methods to the array of elements, to be able to
@@ -2079,8 +2084,10 @@ module Watir
         #   * what         - what we use to access the cell - id, name index etc
         def initialize( ieController,  how , what )   
             @ieController = ieController    
+            #puts "How = #{how}"
              if how == :direct
                  @o = what
+                 #puts "@o.class=#{@o.class}"
              else
                  @o = ieController.getTablePart( "TD" , how , what )   
              end
@@ -2097,24 +2104,19 @@ module Watir
  
         # Returns the object contained in the cell as a Button
         def button
-            return Button.new(@ieController,:from_object,@o)
+            return Button.new(@ieController,:from_object,@o.children(0))
         end
 
         # Returns the object contained in the cell as a Table
         def table
-            return Table.new(@ieController,:from_object,@o)
+            return Table.new(@ieController,:from_object,@o.children(0))
         end
      
-        # Returns the text of the object contained in the cell
-        def text
-            return @o.innerText
-        end
-
         # Returns the object contained in the cell as a TextField
-        def textField
-            return TextField.new(@ieController,:from_object,@o)
+        def text_field
+            return TextField.new(@ieController,:from_object,@o.children(0))
         end
- 
+        alias textField text_field 
    end
 
 
@@ -2459,11 +2461,12 @@ module Watir
     class Button < ObjectActions
         def initialize( ieController,  how , what )
             @ieController = ieController
+            @how = how
+            @what = what
+            #puts "Button - how is #{@how}"
             if(how == :from_object) then
-              @o = what
+                @o = what
             else
-                @how = how
-                @what = what
                 @o = ieController.getObject( how, what , objectTypes)
             end              
             super( @o )

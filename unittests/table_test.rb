@@ -44,7 +44,7 @@ class TC_Tables < Test::Unit::TestCase
 
 
         assert_equal( 2 , $ie.table(:index , 1).column_count)
-        assert_equal( 2 , $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
+        assert_equal( 1 , $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
     end
 
     def test_to_a
@@ -55,14 +55,14 @@ class TC_Tables < Test::Unit::TestCase
     end
 
   def test_simple_table_access
-   $ie.goto($htmlRoot + "simple_table.html")
+      $ie.goto($htmlRoot + "simple_table.html")
  
-   table = $ie.table(:index,1)
-   
-   assert_equal("Row 3 Col1",table[3][1].text.strip)
-   assert_equal("Row 1 Col1",table[1][1].text.strip)
-   assert_equal("Row 3 Col2",table[3][2].text.strip)
-   assert_equal(2,table.column_count)
+       table = $ie.table(:index,1)
+    
+       assert_equal("Row 3 Col1",table[3][1].text.strip)
+       assert_equal("Row 1 Col1",table[1][1].text.strip)
+       assert_equal("Row 3 Col2",table[3][2].text.strip)
+       assert_equal(2,table.column_count)
    
   end
   
@@ -76,8 +76,10 @@ class TC_Tables < Test::Unit::TestCase
    table[2][1].button.click
    assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
    
-   
-  
+   $ie.table(:index,1)[4][1].text_field.set("123")
+   assert($ie.text_field(:index,2).verify_contains("123"))
+
+
   end
 
   def test_table_from_element
@@ -98,9 +100,26 @@ class TC_Tables < Test::Unit::TestCase
    
    assert_equal("subtable1 Row 1 Col1",table[1][1].table[1][1].text.strip)
    assert_equal("subtable1 Row 1 Col2",table[1][1].table[1][2].text.strip)
-   assert_equal("subtable2 Row 1 Col1",table[2][1].table[1][1].text.strip)
    assert_equal("subtable2 Row 1 Col2",table[2][1].table[1][2].text.strip)
+
+   assert_equal("subtable2 Row 1 Col1",table[2][1].table[1][1].text.strip)
    
   end
+
+    def cell_directly
+
+        assert( $ie.cell(:id, 'cell1').exists? )
+        assert_false( $ie.cell(:id, 'no_exist').exists? )
+        assert_equal( "Row 1 Col1",  $ie.cell(:id, 'cell1').to_s.strip )
+
+        # not really cell directly, but just to show another way of geting the cell
+        assert_equal( "Row 1 Col1",  $ie.table(:index,1)[1][1].to_s.strip )
+
+
+    end
+
+    def row_directly
+
+    end
 
 end
