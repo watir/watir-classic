@@ -2009,7 +2009,7 @@ module Watir
         private :table_body
    
         def row(index)
-            table_rows = @o.getElementsByTagName("TR")   # this line causes the failing unit test
+            table_rows = table_rows = @o.invoke("rows")
             puts "there are #{table_rows.length} rows"
             return table_rows[(index-1).to_s]
         end
