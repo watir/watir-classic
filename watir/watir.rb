@@ -162,10 +162,10 @@ module Watir
         # this is used when forms are used. It shouldnt be used otherwise
         attr_accessor :frameHandler
         
-        def createBrowser
+        def create_browser
             return WIN32OLE.new('InternetExplorer.Application')
         end
-        private :createBrowser
+        private :create_browser
                 
         def initialize( logger=nil, how = nil ,what = nil )
             @logger = logger
@@ -174,7 +174,7 @@ module Watir
                 #if it can not find window
                 raise NoMatchingWindowFoundException ,"Unable to locate a window with #{ how} of #{what}"   if @ie == nil
             else
-                @ie =  createBrowser
+                @ie = create_browser            
             end
             @ie.visible = ! $HIDE_IE
             @frameHandler = FrameHandler.new
@@ -214,7 +214,7 @@ module Watir
         # Accessing data outside the document
         #
         
-        # this method returns the title of the window
+        # Returns the title of the window
         def title
             @ie.locationName
         end
@@ -230,7 +230,7 @@ module Watir
         # Navigation
         #
 
-        # This method causes the Internet Explorer browser to navigate to the specified URL.
+        # Causes the Internet Explorer browser to navigate to the specified URL.
         #  * url  - string - the URL to navigate to
         def goto( url )
             @ie.navigate(url)
@@ -239,28 +239,28 @@ module Watir
             clearFrame()
         end
         
-        # this method goes to the previous page - the same as clicking the browsers back button
+        # Goes to the previous page - the same as clicking the browsers back button
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
         def back
             @ie.GoBack()
             waitForIE
         end
 
-        # this method goes to the next page - the same as clicking the browsers forward button
+        # Goes to the next page - the same as clicking the browsers forward button
         # an WIN32OLERuntimeError exception is raised if the browser cant go forward
         def forward
             @ie.GoForward()
             waitForIE
         end
         
-        # this method refreshes the current page - the same as clicking the browsers refresh button
+        # Refreshes the current page - the same as clicking the browsers refresh button
         # an WIN32OLERuntimeError exception is raised if the browser cant refresh
         def refresh
             @ie.refresh2(3)
             waitForIE
         end
         
-        # this method closes the Internet Explorer
+        # Closes the Browser
         def close
             @ie.quit
         end
