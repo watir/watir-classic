@@ -3,8 +3,9 @@ require 'redcloth'
 
 def convert( textile_file )
   "Convert file in textile to html."
-  html = RedCloth.new( File.read( textile_file )).to_html
-  html.gsub(/<br \/>/, '') # because i like auto-fill mode
+  r = RedCloth.new( File.read( textile_file ))
+  r.fold_lines = true
+  html = r.to_html
 end
 
 (Dir["*.txt"] + Dir["../lab/exercises/*.txt"]).each do |textile_file|
