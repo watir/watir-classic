@@ -20,7 +20,6 @@ Things Still to be Done:
 ------------------------
 waitForIE may change to use the events from Internet Explorer. This will help detect page changes that are very quick ( from a local file system)
 Pluggable error checker - I have some classes that continually check for errors, and report on them. These need to be incorporated.
-Support for textarea
 RDoc - I always need to add documentation to the classes and methods
 Javascript pop ups
 New browser windows - experimental at the moment
@@ -42,6 +41,7 @@ Peter Chau
 Danny Faught
 Andy Tinkham
 Atilla Ozgur
+Lorenzo Jorquera
 
 Coding Conventions:
 -------------------
