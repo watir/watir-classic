@@ -399,9 +399,9 @@ class IE
 
     # this method returns the status of the window
     def getStatus
-      status = @ie.statusText()
-      raise NoStatusBarException if !@ie.statusBar
-      return status
+       status = @ie.statusText()
+       raise NoStatusBarException if !@ie.statusBar
+       return status
     end
 
    # this method goes to the previous page - the same as clicking the browsers back button
