@@ -68,7 +68,9 @@ module Timeclock
 
         def command_form(command, *args)
           form({:method => 'get',
-                 :action => command},
+                 :action => command,
+                 :id => command,
+                 :name => command},
                hidden('session', "#{session_id}"),
                *args)
         end
@@ -115,16 +117,26 @@ module Timeclock
 
         # Split optional hash of attributes away from trailing texts.
         def attributes_and_contents(args)
-          if args[0].is_a? Hash
-            pairs = args[0].to_a
+          all_attributes = {}
+          contents = []
+          args.each { | arg |
+            if arg.is_a? Hash
+              all_attributes.merge!(arg)
+            else
+              contents << arg
+            end
+          }
+
+          if all_attributes.empty?
+            return [], contents
+          else
+            pairs = all_attributes.to_a
             # sorting makes tests deterministic. It would be terser
             # to sort the constructed string, but that would confusingly
             # put "arg2=foo" before "arg=foo".
             pairs.sort! { | one, two | one[0].to_s<=>two[0].to_s }
             return pairs.collect { | pair | " #{pair[0]}=\"#{pair[1]}\""},
-                   args[1..-1]
-          else
-            return [], args
+                   contents
           end
         end
 

@@ -35,9 +35,10 @@ end
 
 def show_forms()
   "Print the actions for each of the forms on the current page."
-  page_forms = []
+  i = 0
   for form in $iec.document.forms
-    puts "action: " + form.action
+    puts "#{i} name: " + form.invoke('id') + "    action: " + form.action
+    i += 1
   end
 end
 alias show_form_actions show_forms
@@ -48,6 +49,9 @@ class CLabs::IEC::IEDomFormWrapper
     elements.extend( Enumerable )
     elements.find{ |e| yield e }
   end
+  def show_elements
+    show_elements_function( self )
+  end  
 end
 
 =begin
@@ -70,6 +74,7 @@ def show_elements(form)
     puts "name: " + element.name + " value: " + element.value
   end
 end
+alias show_elements_function show_elements
 
 ###
 

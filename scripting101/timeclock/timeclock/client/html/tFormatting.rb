@@ -1,4 +1,5 @@
 require 'timeclock/client/html/Formatting'
+require 'timeclock/client/html/PageSketch'
 require 'timeclock/client/tutil.rb'
 
 module Timeclock
@@ -148,6 +149,42 @@ module Timeclock
                        p.expansive("head", 
                                    p.tight("title", "my title")))
         end
+
+
+        def test_no_attributes_to_separate
+          attributes, content = attributes_and_contents(["1", "2"])
+          assert_equal([], attributes)
+          assert_equal(["1", "2"], content)
+        end
+
+        def test_one_hash_of_attributes_to_separate
+          attributes, content = attributes_and_contents([{'align'=>'center',
+                                                          'size'=>4},
+                                                         "1", "2"])
+          assert_equal([' align="center"', ' size="4"'], attributes)
+          assert_equal(["1", "2"], content)
+        end
+
+        def test_two_hashes_of_attributes_to_separate
+          # Note that we are in reverse alphabetical order. Attributes are
+          # sorted to make testing deterministic.
+          attributes, content = attributes_and_contents([{'size'=>4},
+                                                         {'align'=>'center'},
+                                                         "2", "1"])
+          assert_equal([' align="center"', ' size="4"'], attributes)
+          assert_equal(["2", "1"], content)
+        end
+
+        def test_all_hashes_of_attributes_are_separated
+          attributes, content = attributes_and_contents([{'size'=>4}, 
+                                                         "2", 
+                                                         {'align'=>'center'},
+                                                         "1"])
+          assert_equal([' align="center"', ' size="4"'], attributes)
+          assert_equal(["2", "1"], content)
+        end
+
+        todo 'Should it be an error when the hashes contain the same key?'
 
       end
     end
