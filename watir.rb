@@ -495,7 +495,7 @@ module Watir
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
         def showFrames()
-            if @ie.document.frames
+            if getDocument().frames
                 allFrames = @ie.document.frames
                 puts "there are #{allFrames.length} frames"
                 0.upto( allFrames.length-1 ) do |i| 
@@ -514,7 +514,7 @@ module Watir
         
         # Show all forms displays all the forms that are on a web page.
         def showForms()
-            if @ie.document.forms
+            if getDocument().forms
                 allForms = @ie.document.forms
                 count = allForms.length
                 log "There are #{count} forms"
