@@ -123,8 +123,8 @@ class TC_Fields < Test::Unit::TestCase
          assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
          assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
 
-         $ie.textField(:name, "text1").set("watir IE Controleer")
-         assert_equal(  "watir IE Controleer" , $ie.textField(:name, "text1").getContents )  
+         $ie.textField(:name, "text1").set("watir IE Controller")
+         assert_equal(  "watir IE Controller" , $ie.textField(:name, "text1").getContents )  
 
          # may need this to see that it really happened
          #puts "press return to continue"
