@@ -116,6 +116,15 @@ class NoValueFoundException < WatirException
 end
 
 
+# this exception gets raised if part of finding an object is missing
+class MissingWayOfFindingObjectException < WatirException
+    def initialize()
+
+    end
+end
+
+
+
 
 # This class is the base class for most actions ( click etc ) that happen on an object
 # this is not a class that uses would normally access. 
@@ -635,8 +644,15 @@ class IE
     #  *  how   - symbol - how we access the button , :index, :caption, :name etc
     #  *  what  - string, int or re , what we are looking for, 
     # returns a Button object
-    def button( how , what  )
-        b = Button.new(self , how , what )
+    def button( how , what=nil  )
+
+        if how.kind_of? Symbol
+            raise MissingWayOfFindingObjectException if what==nil
+            b = Button.new(self, how , what )
+        elsif how.kind_of? String
+            puts "how is a string - #{how}"
+            b = Button.new(self, :caption, how)
+       end
     end
 
     # this is the main method for accessing a text field.
@@ -817,7 +833,6 @@ class Button < ObjectActions
         @o = ieController.getObject( how, what , ["button" , "submit"] )
         super( @o )
     end
-
 end
 
 # this class is the parent class for radio buttons and check boxes. It contains methods common to both
