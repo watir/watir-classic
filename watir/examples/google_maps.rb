@@ -31,7 +31,7 @@ class TC_google_maps < Test::Unit::TestCase
         ie.goto(testSite)
 
         puts "getting map for Durango"
-        ie.textField(:id,"q").set("Durango,CO")
+        ie.text_field(:id,"q").set("Durango,CO")
         ie.button(:index, 1).click
 
         puts "showing the HTML inside the frame, where View Source does not work:"
@@ -43,16 +43,16 @@ class TC_google_maps < Test::Unit::TestCase
         matchlong = '-107.879444'
 
         begin
-            assert_match(matchlat,ie.frame("vp").getHTML.to_s)
+            assert_match(matchlat,ie.frame("vp").html.to_s)
             puts("PASS latitude OK\n")
-           rescue => e
+        rescue => e
             puts("FAIL Didn't find latitude")
         end
  
         begin
-            assert_match(matchlong,ie.frame("vp").getHTML.to_s)
+            assert_match(matchlong,ie.frame("vp").html.to_s)
             puts("PASS longitude OK\n")
-           rescue => e
+        rescue => e
             puts("FAIL Didn't find longitude")
         end
 

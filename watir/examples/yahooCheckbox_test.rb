@@ -33,7 +33,7 @@ class TC_yahoo < Test::Unit::TestCase
   #
   
    #variables
-   testSite = 'http://www.yahoo.com'
+   test_site = 'http://www.yahoo.com'
 
    #open the IE browser
    $ie = IE.new
@@ -42,11 +42,11 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  '
   
    puts 'Step 1: go to the yahoo site: www.yahoo.com'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + ' in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + ' in the address bar.'
 
    puts 'Step 2: enter "pickaxe: in the search text field'
-   $ie.textField(:name, "p").set("pickaxe")
+   $ie.text_field(:name, "p").set("pickaxe")
    puts '  Action: entered pickaxe in the search field'
 
    puts 'Step 3: click the "Yahoo Search" button'
@@ -57,7 +57,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts ' - a Yahoo page with results should be shown. A result containing "Programming Ruby" should be high on the list.'
   
    puts 'Actual Result: Check that the "Programming Ruby" link actually appears on the page by using an assertion'
-   assert($ie.pageContainsText("Programming Ruby") )
+   assert($ie.contains_text("Programming Ruby") )
 
    puts '  '
    puts '## End of test: yahoo simple search'
@@ -73,21 +73,21 @@ class TC_yahoo < Test::Unit::TestCase
    #
    
    #variables
-   testSite = 'http://search.yahoo.com'
+   test_site = 'http://search.yahoo.com'
 
    puts '## Beginning of test: Yahoo Edit Check Maps'
    puts '  '
   
    puts 'Step 1: go to the yahoo site: search.yahoo.com'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + 'in the address bar.'
 
    puts 'Step 2: click the Edit link on the yahoo home page'
    $ie.link(:text, "Edit").click
    puts '  Action: clicked the Edit link'
    
-   $ie.checkBox(:name, "tab[]", "maps").set
-   assert($ie.checkBox(:name, "tab[]", "maps").isSet?)   
+   $ie.checkbox(:name, "tab[]", "maps").set
+   assert($ie.checkbox(:name, "tab[]", "maps").checked?)   
    
    puts '  '
    puts '## End of test: yahoo simple search'
@@ -107,7 +107,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Save button.'
   
    puts 'Step 2: Check that the "Maps" link actually appears on the Yahoo Search page by using an assertion'
-   assert($ie.pageContainsText("Maps") )
+   assert($ie.contains_text("Maps") )
    
    puts '  '
    puts '## End of test: Yahoo Save Maps Edit'
@@ -125,8 +125,8 @@ class TC_yahoo < Test::Unit::TestCase
    $ie.link(:text, "Edit").click
    puts '  Action: clicked the Edit link'
 
-   $ie.checkBox(:name, "tab[]", "maps").clear
-   assert_false($ie.checkBox(:name, "tab[]", "maps").isSet?) 
+   $ie.checkbox(:name, "tab[]", "maps").clear
+   assert_false($ie.checkbox(:name, "tab[]", "maps").checked?) 
 
    puts '  '
    puts '## End of test: Yahoo Uncheck Maps Edit'
@@ -145,7 +145,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Save button.'
    
    puts 'Step 2: Check that the "Maps" link does not appear on the Yahoo Search page by using an assertion'
-   assert_false($ie.pageContainsText("Maps") )
+   assert_false($ie.contains_text("Maps") )
    
    puts '  '
    puts '## End of test: Verify Edit Actions saved'

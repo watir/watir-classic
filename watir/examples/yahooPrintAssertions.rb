@@ -30,7 +30,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
   #   * print assertion results
   
    #variables
-   testSite = 'http://www.yahoo.com'
+   test_site = 'http://www.yahoo.com'
 
    #open the IE browser
    $ie = IE.new
@@ -39,11 +39,11 @@ class TC_yahoo_assert < Test::Unit::TestCase
    puts "  "
   
    puts "Step 1: go to the yahoo site: www.yahoo.com"
-   $ie.goto(testSite)
-   puts "  Action: entered " + testSite + " in the address bar."
+   $ie.goto(test_site)
+   puts "  Action: entered " + test_site + " in the address bar."
 
    puts "Step 2: enter 'pickaxe' in the search text field"
-   $ie.textField(:name, "p").set("pickaxe")
+   $ie.text_field(:name, "p").set("pickaxe")
    puts "  Action: entered 'pickaxe' in the search field"
 
    puts "Step 3: click the 'Yahoo Search' button"
@@ -57,7 +57,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    
    #use this block for our assertion, and printing the results to the screen. You could also easily print results to a file with this method.
    begin
-      assert($ie.pageContainsText("Programming Ruby") )
+      assert($ie.contains_text("Programming Ruby") )
 	 puts("TEST PASSED. Found test string 'Programming Ruby' ")
    rescue => e
          puts("TEST FAILED." + e.message + "\n" + e.backtrace.join("\n")) 
