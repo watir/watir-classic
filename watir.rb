@@ -1158,8 +1158,8 @@ class Form < IE
         @activeObjectHighLightColor = ieController.activeObjectHighLightColor       
     end
 
-    def waitForIE
-        @ieController.waitForIE
+    def waitForIE(arg = false)
+        @ieController.waitForIE(arg)
     end
 
     def getContainer()
