@@ -90,5 +90,21 @@ class TC_Selectbox < Test::Unit::TestCase
        $ie.selectBox( :name , "sel2").select([ /2/ , /4/ ])
        assert_arrayEquals( ["Option 2" , "Option 4" ] , $ie.selectBox(:name, "sel2").getSelectedItems)   
 
+
+        # these are to test the onchange event
+
+       # the event shouldnt get fired, as this is the selected item
+       $ie.selectBox( :name , "sel3").select( /3/ )
+       assert_false($ie.pageContainsText("Pass") )
+       gotoPage()
+
+       # the event should get fired
+       $ie.selectBox( :name , "sel3").select( /2/ )
+       assert($ie.pageContainsText("PASS") )
+       gotoPage()
+
+
+
+
     end
 end

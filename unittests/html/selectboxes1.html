@@ -5,7 +5,7 @@ Test page for select boxes
 </title>
 </head>
 <body>
-CVS Revision: $Revision $
+CVS Revision: $Revision" $
 <br>
 <br>
 <table>
@@ -30,7 +30,20 @@ CVS Revision: $Revision $
 
 
 </form>
+
+<tr>
+<td>
+<select name = sel3 onChange = 'javascript:document.location="pass.html";'>
+<option name = o1>Option 1
+<option name = o2>Option 2
+<option name = o3 selected>Option 3
+<option name = o4>Option 4
+</select>
+
+<td> This box is used for testing the onchange event
 </table>
+
+
 
 
 </html>
