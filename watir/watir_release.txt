@@ -14,7 +14,16 @@ cvs tag -c -R "new version number" *.*     watir version numbers are like this: 
 -- Do this first, before the export. Then you export using the TAG.
 -- (Otherwise it is possible someone checks something in between the extract and the tag.)
 
-build the rdoc
+build the rdoc - there seems to be a few bugs in rdoc. 
+   To get round them, copy the contents of the readme.txt file to readme.rb
+   add the following on the first line:
+        =begin rdoc
+
+   after the readme.txt contents, add the following
+        =end
+        class ReadMe
+        end
+
 
 delete all the CVS directories
    delete watir\cvs
