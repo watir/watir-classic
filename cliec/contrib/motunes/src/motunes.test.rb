@@ -46,19 +46,11 @@ class TestMoTunesBase < Test::Unit::TestCase
   end
   
   def setup
-    nav_setup
-  end
-  
-  def show_ie
-    false
-  end
-  
-  def leave_ie_showing
-    false
+    nav_setup unless(self.class == TestMoTunesBase)
   end
   
   def teardown
-    nav_teardown
+    nav_teardown unless(self.class == TestMoTunesBase)
   end
   
   def assert_album_view(album, artist)

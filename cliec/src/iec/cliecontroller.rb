@@ -70,8 +70,8 @@ module CLabs
           @ie.visible = options
         else
           @options = options.dup
-          @ie.visible = !@options[:visible].nil?
-          @auto_wrap_form = !@options[:auto_wrap_form].nil?
+          @ie.visible = @options[:visible]
+          @auto_wrap_form = @options[:auto_wrap_form]
         end
       end
 
@@ -384,6 +384,7 @@ module CLabs
         @orig_border = @node.style.border
         @node.style.color = 'red'
         @node.style.border = '2px solid red'
+        @node.focus
       end
       
       def un_highlight
@@ -435,7 +436,7 @@ module CLabs
     
     class IEDomAWrapper < IEDomNodeWrapper
       def IEDomAWrapper.wrap_type_re
-        /a/i
+        /\Aa\z/i
       end
       
       def initialize(node)

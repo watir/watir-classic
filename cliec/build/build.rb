@@ -62,7 +62,8 @@ BUILD_MANIFEST = {
   '../src/**/*'                   => File.join(root_dir, 'src'),
   '../doc/*'                      => File.join(root_dir, 'doc'),
   '../example/*'                  => File.join(root_dir, 'example'),
-  '../contrib/motunes/**/*'       => File.join(root_dir, 'contrib/motunes')
+  '../contrib/motunes/**/*'       => File.join(root_dir, 'contrib/motunes'),
+  '../contrib/mozaxc/**/*'       => File.join(root_dir, 'contrib/mozaxc')
 }
 
 @v = CLabs::Version.new(

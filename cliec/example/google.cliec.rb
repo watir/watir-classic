@@ -43,10 +43,8 @@
 
 require 'cl/iec'
 
-VISIBLE = true
-@iec = ClIEController.new(VISIBLE)
+opts = { :visible => true, :auto_wrap_form => true }
+@iec = ClIEController.new(opts)
 @iec.navigate 'http://www.google.com'
-form = IEDomFormWrapper.new(@iec.form)
-form.q = 'web testing ruby'
-form.submit
-@iec.wait
+@iec.form.q = 'web testing ruby'
+@iec.submit  
