@@ -53,6 +53,13 @@ class UnknownFormException< WatirException
     end
 end
 
+class ObjectReadOnlyException  < WatirException
+    def initialize()
+
+    end
+end
+
+
 
 class ObjectActions
 
@@ -68,6 +75,8 @@ class ObjectActions
 
         @ieProperties = Hash.new
         setProperties
+        @originalColor = nil
+
     end
 
     def setProperties
@@ -103,11 +112,28 @@ class ObjectActions
         return n
     end
 
+    def highLight( setOrClear )
+ 
+        if setOrClear == :set
+            begin
+                @originalColor = @o.style.backgroundColor
+                @o.style.backgroundColor = @ieController.activeObjectHighLightColor
+            rescue
+                @originalColor = nil
+            end
+        else
+            @o.style.backgroundColor  = @originalColor unless @originalColor == nil
+            @originalColor = nil
+        end
+    end
+
 
     def click()
         raise UnknownObjectException if @o==nil
         raise ObjectDisabledException   if !self.enabled?
+        highLight(:set)
         @o.click()
+        highLight(:clear)
     end
 
     def focus()
@@ -136,7 +162,17 @@ class IE
     # Used internaly to determine when IE has fiished loading a page
     READYSTATE_COMPLETE = 4          
 
+    # the default delay when typing 
+    DEFUALT_TYPING_SPEED = 0.08
 
+    # the default color for highlighting objects
+    DEFAULT_HIGHLIGHT_COLOR = "yellow"
+
+    # this is used to change the speed that typing goues at
+    attr_accessor :typingspeed
+
+    # the color we want to use for the active object
+    attr_accessor :activeObjectHighLightColor
 
     def initialize()
 
@@ -144,6 +180,8 @@ class IE
         @ie.visible = TRUE
         @frame = ""
         @form = ""
+        @typingspeed = DEFUALT_TYPING_SPEED
+        @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
     end
 
     def getIE()
@@ -345,7 +383,10 @@ class TextField < ObjectActions
 
     end
 
-    
+
+    def readOnly?
+        return @o.readOnly 
+    end    
 
 
     def getContents()
@@ -364,12 +405,80 @@ class TextField < ObjectActions
         end
         return false
     end
- 
-    
+  
+    def clear()
+        raise UnknownObjectException if @o==nil
+        raise ObjectDisabledException   if !self.enabled?
+        raise ObjectReadOnlyException   if self.readOnly?
 
-    def set( setThis )
+        highLight(:set)
+
+        @o.scrollIntoView
+        @o.focus
+        @o.select()
+        @o.fireEvent("onSelect")
+        @o.value = ""
+        @o.fireEvent("onKeyPress")
+        @o.fireEvent("onChange")
+
+        highLight(:clear)
 
     end
+
+
+    def append( setThis)
+        raise UnknownObjectException if @o==nil
+        raise ObjectDisabledException   if !self.enabled?
+        raise ObjectReadOnlyException   if self.readOnly?
+
+        highLight(:set)
+        @o.scrollIntoView
+        @o.focus
+        doKeyPress( setThis )
+        highLight(:clear)
+
+    end
+
+    def set( setThis )
+        raise UnknownObjectException if @o==nil
+        raise ObjectDisabledException   if !self.enabled?
+        raise ObjectReadOnlyException   if self.readOnly?
+
+        highLight(:set)
+        @o.scrollIntoView
+        @o.focus
+        @o.select()
+        @o.fireEvent("onSelect")
+        @o.value = ""
+        @o.fireEvent("onKeyPress")
+        doKeyPress( setThis )
+        highLight(:clear)
+
+    end
+
+    def doKeyPress( value )
+        begin
+            maxLength = @o.maxLength
+            if value.length > maxLength
+                value = suppliedValue[0 .. maxLength ]
+                puts " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
+            end
+        rescue
+            # its probably a text area - so it doesnt have a max Length
+            maxLength = -1
+        end
+
+        for i in 0 .. value.length-1   
+            sleep @ieController.typingspeed   # typing speed
+            c = value[i]
+            #log  " adding c.chr " + c.chr.to_s
+            @o.value = @o.value.to_s + c.chr
+            @o.fireEvent("onKeyPress")
+            @ieController.waitForIE()
+        end
+
+    end
+
 
 end
 
