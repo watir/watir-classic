@@ -1376,22 +1376,21 @@ class SelectBox < ObjectActions
 
     def select( item )
         raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
-        if item.kind_of?( Array )== false
-            items = [item ]
+        if item.kind_of?( Array ) == false
+            items = [item]
         else
             items = item 
         end
 
-        matchedAnItem = false
         highLight( :set)
+        doBreak = false
         items.each do |thisItem|
 
             @ieController.log "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
 
-            matchedAnItem = false
-            if thisItem.kind_of?( Regexp )
                 @o.each do |selectBoxItem|
-                    if thisItem.match( selectBoxItem.text)
+                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.text}"
+                    if thisItem.matches( selectBoxItem.text)
                         matchedAnItem = true
                         if selectBoxItem.selected == true
                             @ieController.log " #{selectBoxItem.text} is already selected"
@@ -1407,26 +1406,7 @@ class SelectBox < ObjectActions
                     end
                 end
 
-            elsif thisItem.kind_of?( String )
-                @o.each do |selectBoxItem|
-                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.text}"
-                    if thisItem == selectBoxItem.text 
-                        matchedAnItem = true
-                        if selectBoxItem.selected == true
-                            @ieController.log " #{selectBoxItem.text} is already selected"
-                            doBreak = true
-                        else
-                            @ieController.log " #{selectBoxItem.text} is being selected"
-                            selectBoxItem.selected = true
-                            @o.fireEvent("onChange")
-                            doBreak = true
-                        end
-                        @ieController.waitForIE()
-                        break if doBreak
-                    end
-                end
-            end
-            raise NoValueFoundException , "Selectbox was found, but didnt find item #(item) "   if matchedAnItem ==false
+            raise NoValueFoundException , "Selectbox was found, but didnt find item #(item) "   if doBreak == false
         end
         highLight( :clear )
     end
