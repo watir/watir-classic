@@ -121,15 +121,15 @@ class TC_Forms3 < Test::Unit::TestCase
     end 
 
     def test_objects_with_same_name
-        assert_equal('textfield' ,$ie.text_field( :name , 'g1').getProperty('value') )
-        assert_equal('button'    ,$ie.button(    :name , 'g1').getProperty('value') )
-        assert_equal('1'         ,$ie.checkbox(  :name , 'g1').getProperty('value') )
-        assert_equal('2'         ,$ie.radio(     :name , 'g1').getProperty('value') )
+        assert_equal('textfield' ,$ie.text_field( :name , 'g1').value )
+        assert_equal('button'    ,$ie.button(    :name , 'g1').value )
+        assert_equal('1'         ,$ie.checkbox(  :name , 'g1').value )
+        assert_equal('2'         ,$ie.radio(     :name , 'g1').value )
 
-        assert_equal('textfield_id' ,$ie.text_field( :id , 'g1').getProperty('value') )
-        assert_equal('button_id'    ,$ie.button(    :id , 'g1').getProperty('value') )
-        assert_equal('1_id'         ,$ie.checkbox(  :id , 'g1').getProperty('value') )
-        assert_equal('2_id'         ,$ie.radio(     :id , 'g1').getProperty('value') )
+        assert_equal('textfield_id' ,$ie.text_field( :id , 'g1').value )
+        assert_equal('button_id'    ,$ie.button(    :id , 'g1').value )
+        assert_equal('1_id'         ,$ie.checkbox(  :id , 'g1').value )
+        assert_equal('2_id'         ,$ie.radio(     :id , 'g1').value )
     end
 
     def test_flash
