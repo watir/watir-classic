@@ -19,7 +19,7 @@ require 'watir'   # the controller
 #test::unit includes
 require 'test/unit' 
 require 'test/unit/ui/console/testrunner'
-require 'unittests/testUnitAddons'
+
 
 #code to set your current path in Windows
 $myDir = File.dirname(__FILE__)
@@ -47,7 +47,7 @@ class TC_google_suite < Test::Unit::TestCase
   
    puts 'Step 1: go to the google site: www.google.com'
    $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   puts '  Action: entered ' + testSite + ' in the address bar.'
 
    puts 'Step 2: enter "pickaxe: in the search text field'
    $ie.textField(:name, "q").set("pickaxe")
@@ -85,7 +85,7 @@ class TC_google_suite < Test::Unit::TestCase
   
    puts 'Step 1: go to the google news site: news.google.com'
    $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   puts '  Action: entered ' + testSite + ' in the address bar.'
 
    puts 'Step 2: Select Canada from the Top Stories drop-down list'
    $ie.selectBox( :name , "meta").select("Canada English")
@@ -121,7 +121,7 @@ class TC_google_suite < Test::Unit::TestCase
   
    puts 'Step 1: go to the google Canada site: www.google.ca'
    $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   puts '  Action: entered ' + testSite + ' in the address bar.'
 
    
    puts 'Step 2: enter "WATIR: in the search text field'
@@ -163,7 +163,7 @@ class TC_google_suite < Test::Unit::TestCase
   
    puts 'Step 1: go to the google site: www.google.com'
    $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   puts '  Action: entered ' + testSite + ' in the address bar.'
 
    puts 'Step 2: click the Groups link on the google home page'
    $ie.link(:text, "Groups").click
@@ -174,8 +174,8 @@ class TC_google_suite < Test::Unit::TestCase
    puts '  Action: entered comp.lang.ruby in the search field'
 
    puts 'Step 4: click the "Google Search" button'
-   $ie.button(:caption, "Google Search").click
-   puts '  Action: clicked the Google Search button.'
+   $ie.button(:value, /Search/i).click
+   puts '  Action: clicked the Search button.'
 
    puts 'Expected Result: '
    puts ' - The Google Groups page for comp.lang.ruby should be shown.'
