@@ -166,40 +166,75 @@ declared by different application developers. With Watir, identify objects and s
 <h2>Manipulating Web Page Objects</h2>
 <p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
-<p>Hyperlinks can be clicked by identifying them by the text that you see in the hyperlink. If you wanted to click <a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a>, 
-you identify the link object by using the text attribute "Pickaxe".</p>
+<p>You can use Watir to click hyperlinks in a variety of ways. Watir can click links by looking what the link text you see in the browser (text attribute) or by looking at the attributes available in the HTML tag. 
+Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here as URL) among others.</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a></div>
-<h4>Text</h4>
-<p>Watir code to click a link using the <i>text</i> attribute:</p>
+<h4><i>Text</i> Attribute </h4>
+<p>This is the Watir code you need to click a hyperlink using the <i>text</i> attribute:</p>
 <div class = "testexample">$ie.link(:text, "Pickaxe").click</div>
 <p>What you see in the HTML source (attribute highlighted):</p>
 <div class = "htmlexample">&lt;a href="http://pragmaticprogrammer.com/titles/ruby/"&gt;<b>Pickaxe</b>&lt;/a&gt;</div>
 
-<h4>URL</h4>
+<h4><i>URL</i> Attribute</h4>
 <p>Watir code to click a link using the URL attribute: 
 <div class = "testexample">$ie.link(:url, "http://pragmaticprogrammer.com/titles/ruby/").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;a href="<b>http://pragmaticprogrammer.com/titles/ruby/</b>"&gt;Test Site&lt;/a&gt;</div>
 
 <h3>Checkboxes</h3>
+<p>Watir <i>sets</i> or <i>clears</i> checkboxes based on the <i>name</i> and <i>value</i> attributes provided in the <i>checkbox</i> HTML tag.</p>
+<h4><i>Name</i> Attribute</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Check Me:  <input type = "checkbox" name = "checkme" value = "1"> </div>
+<p>Watir code to <i>set</i> a checkbox using the <i>name</i> attribute: 
+<div class = "testexample">$ie.checkBox(:name, "checkme").set</div>
+<p>Watir code to <i>clear</i> a checkbox using the <i>name</i> attribute: 
+<div class = "testexample">$ie.checkBox(:name, "checkme").clear</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">$lt;input type = "checkbox" name = "<b>checkme</b>" value = "1"&gt;</div>
+<h4><i>Name</i> and <i>Value</i> Attributes</h4>
+<p>We can also use both attributes:</p>
+<p>Watir code to <i>set</i> a checkbox using both the <i>name</i> and <i>value</i> attributes: 
+<div class = "testexample">$ie.checkBox(:name, "checkme", "1").set</div>
+<p>This is the tag in the HTML source with both the attributes highlighted:</p>
+<div class = "htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>" value = "<b>1</b>"&gt;</div>
+<p>We can also use the <i>clear</i> method using both of these attributes.</p>
+
 <h3>Radio Buttons</h3>
+<p>Watir <i>sets</i> or <i>clears</i> radio list items based on the <i>name</i> and <i>value</i> attributes provided in the <i>radio</i> HTML tag.</p>
 <p>What you see in the web browser:</p>
-<div class = "browserexample">Click Me:   <input type = "radio" name = "clickme"> </div>
+<div class = "browserexample">Click Me:   <input type = "radio" name = "clickme" id = "1"> </div>
+<h4><i>Name</i> Attribute</h4>
+<p>Watir code to <i>set</i> a radio list item using the <i>name</i> attribute: 
+<div class = "testexample">$ie.radio(:name, "clickme").set</div>
+<p>Watir code to <i>clear</i> a radio list item using the <i>name</i> attribute: 
+<div class = "testexample">$ie.radio(:name, "clickme").clear</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;input type = "radio" name = "<b>clickme</b>" id = "1"&gt; </div>
+<h4><i>Name</i> and <i>id</i> Attributes</h4>
+<p>We can also use both attributes:</p>
+<p>Watir code to <i>set</i> a radio list item using both the <i>name</i> and <i>id</i> attributes: 
+<div class = "testexample">$ie.radio(:name, "clickme", "1").set</div>
+<p>This is the tag in the HTML source with both the attributes highlighted:</p>
+<div class = "htmlexample">&lt;input type = "radio" name = "<b>clickme</b>" id = "<b>1</b>"&gt;</div>
+<p>We can also use the <i>clear</i> method using both of these attributes.</p>
+
 <h3>Selection Boxes</h3>
+<p>Watir selects an item in a selection box (or dropdown box) based on attributes provided in the <i>select</i> HTML tag.</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Select Me:  <select name = "selectme" >
 <option name=1>Web Testing
 <option name=2>in Ruby
 <option name=3>is fun
 </select> </div>
+
 <h2>Entering Data into a Web Page</h2>
-<p>Put test data into page</p>
+
 <h3>Text Fields</h3>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Type in Me:  <input type = "text" name = "typeinme"> </div>
+
 <h2>Submitting Data from a Web Page</h2>
 <p>Send test scenarios to application</p>
 <h3>Buttons:</h3>
@@ -207,15 +242,24 @@ you identify the link object by using the text attribute "Pickaxe".</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><input type = "button" name = "clickme" value = "Click Me"> </div>
 <h4>Image Buttons</h4>
+<p>What you see in the web browser:</p>
+<div class = "browserexample"><img src = "images/doit.gif"> </div>
 <h3>Forms</h3>
 <p>There may be input fields on a web page, but no button to submit. Instead, they will allow you to hit Enter on your keyboard. When there is no button to submit the data, 
 we can just submit the form itself.</p>
+<p>Watir can submit a form by identifying it by its <i>name</i>, <i>action</i> and <i>method</i> attributes.</p>
+<h4><i>Name</i> Attribute</h4>
 <p>What you see in the web browser:</p>
-<div class = "browserexample">Enter name and hit Enter/Return: <form action = "login" method="get"><input name="username" type="text"></input></form> </div>
+<div class = "browserexample">Enter name and hit Enter/Return: <form action = "login" name = "loginform" method="get"><input name="username" type="text"></input></form> </div>
+<p>Watir code to submit the form using the <i>name</i> attribute: 
+<div class = "testexample">$ie.form(:name, "loginform").submit</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;form action = "login" name = "<b>loginform</b>" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+<h4><i>Action</i> Attribute</h4>
 <p>Watir code to submit the form using the <i>action</i> attribute: 
 <div class = "testexample">$ie.form(:action, "login").submit</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
-<div class = "htmlexample">&lt;form action = "<b>login</b>" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+<div class = "htmlexample">&lt;form action = "<b>login</b>" name = "loginform" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Validating Test Results</h2>
 <p>Did the test pass or fail?</p>
 <h3>Object Exists</h3>
