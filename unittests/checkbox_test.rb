@@ -6,8 +6,6 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
 
-$myDir = Dir.getwd
-
 class TC_CheckBox < Test::Unit::TestCase
 
 

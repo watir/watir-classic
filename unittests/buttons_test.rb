@@ -7,8 +7,6 @@ require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
 require 'unittests/setup'
 
-$myDir = File.dirname(__FILE__)
-
 class TC_Buttons < Test::Unit::TestCase
 
     def gotoButtonPage()

@@ -1,2 +1,2 @@
 $ie = IE.new 
-# END {$ie.close}
+$myDir = File.expand_path(File.dirname(__FILE__))

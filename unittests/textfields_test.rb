@@ -7,8 +7,6 @@ require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
 require 'unittests/setup'
 
-$myDir = Dir.getwd
-
 class TC_Fields < Test::Unit::TestCase
 
 
