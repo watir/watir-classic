@@ -71,7 +71,7 @@ Microsoft's OLE interface.</p>
 <h2>Installation</h2>
 <h3>Step 1 - Install Ruby</h3>
 <p>On Windows, the simplest way to install Ruby is to download the <a href="http://rubyforge.org/projects/rubyinstaller/">One Click Windows Installer</a>. 
-If you prefer, you can download and install a Windows version of ruby Ruby from <a href="http://ruby-lang.org">here</a>.
+If you prefer, you can download and install a Windows version of Ruby from <a href="http://ruby-lang.org">here</a>.
 
 <h3>Step 2 - Install Watir</h3>
 <p>Download the Watir tarball from the WTR RubyForge site <a href="http://rubyforge.org/cgi-bin/viewcvs.cgi/watir/?cvsroot=wtr">here</a> (click download tarball).
@@ -95,20 +95,26 @@ the steps it will take to exercise a test first, and then filling in the Watir s
 <p>It is a good idea to view the source of the page (in IE, right click and select View Source) and get an idea of what the attributes of the objects you need to interact with are.
 For example, on the Google home page, if you search the source for "Google Search", you will find the tag with the following attributes:
 &lt;input type=submit value="Google Search" name=btnG&gt; 
-The "type" attribute "submit" tells us that it is a button, the label or value that we see on the button is "Google Search", and the name of the button is "btnG".
-Watir can use different attributes of a tag to manipulate that object, so it is important to know what they are.</p>
+The "type" attribute "submit" tells us that it is a button, the caption or value that we see on the button is "Google Search", and the name of the button is "btnG".
+Watir can use different attributes of a tag to manipulate that object, so it is important to know what they are. In some cases the attributes are not explicit in the tag such as the "text" or "caption" attributes.
+</p>
 
 <h3><i>Note:</i> A Bit About Objects and Messages</h3>
-<p>You will notice a global variable "$ie" is used a lot in these scripts. This is the variable for the Internet Explorer browser.
+<p>You will notice a global variable "$ie" is used a lot in Watir test scripts. This is the variable for the Internet Explorer browser.
 It is a global variable because it needs to be accessed throughout our test script at any time. It tells the Watir controller to exercise test scripts against
 an instance of the Internet Explorer web browser.</p>
-<p>In Ruby, we can think of programming in terms of objects and messages. If we think of the "$ie" variable as an object, we can then send messages to it.
-An object is usually thought of as a noun, which is natural when we start up an Internet Explorer instance. If we send a message to that object, 
-it will respond to that message. We can think of the messages as verbs. In Ruby, we send a message to an object by separating the object we are calling
-and the message we are sending to it with a dot. ex. "Dog.bark" would tell the object "Dog" that it must "bark".</p>
-<p>Watir was written with objects and messages in mind. Since the IE browser contains objects, we access the objects within IE itself by using the
-dot notation. ex. "$ie.button" narrows down the type of object that we can send a message to in our tests. "$ie.button(:caption, "Click Me").click"
-identifies the object on the page as a button within the instance of Internet Explorer that has the caption "Click Me". We send the message (the verb) "click", which
+<p>In Ruby, we can think of programming in terms of objects and messages. Watir was also developed with objects and messages in mind. If we think of the "$ie" variable as an object, we can send messages to it.
+An object is usually thought of as a noun, which is natural when we start up an Internet Explorer instance - we refer to it as a thing. If we send a message to that object, 
+it will respond to that message if it recognizes it. We can think of the messages as verbs. In Ruby, we send a message to an object by separating the object we are calling
+and the message we are sending to it with a dot. ex. "Dog.bark" would tell the object "Dog" that it must "bark". This isn't very specific though. What dog should bark?
+In the Watir world, we could identify our test area to be our "yard" or by using our global variable notation: "$yard". Like "$ie", we could treat it as an object with attributes containing other objects with attributes. In our yard, we
+have two dogs: Heidi and Megabyte. Each of these dog objects have attributes that we can identify them by. They have names, breeds, shapes and sizes and colors. To be more specific, and interacting
+with them the Watir way, we could send the message "bark" to the dog Heidi like this: "$yard.dog(:name, "Heidi").bark". This says in Watir syntax, in our yard, identify the dog Heidi by her name attribute, 
+and send her the "bark" message. The expected outcome would be Heidi responding to the message by barking.</p>
+<p>When we develop test scripts with Watir, we interact with objects on a web page by sending them messages. Like our yard example, the IE browser itself contains objects, we access the objects within IE itself by identifying them by different attributes. 
+Just like in the dog example above,  we have to be very specific when we send messages to objects on a web page. We also need to be able to identify objects on a web page by a being able to use a variety of different attributes due to the diversity in how tags are 
+declared by different application developers. With Watir, we identify objects and send them messages by using the dot notation. ex. "$ie.button" narrows down the type of object that we can send a message to in our tests. 
+"$ie.button(:caption, "Click Me").click" identifies the object on the page as a button within the instance of Internet Explorer that has the caption (or attribute) "Click Me". We send the message (the verb) "click", which
 Watir interprets and tells IE to click for us. </p>
 
 <h2>Create a Test Instance of Internet Explorer</h2>
