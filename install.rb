@@ -120,8 +120,13 @@ FileUtils.cp_r('unitTests' , bonus_location, {:verbose=> true} )
 # copy the documentation
 FileUtils.cp_r('doc' , bonus_location, {:verbose=> true} )
 
+# copy the rdocs
+FileUtils.cp_r('rdoc' , bonus_location, {:verbose=> true} )
+
+
 # make shortcuts
 puts "Creating Shortcuts" if startMenu or deskTop
 make_startmenu_shortcut( "Watir Documentation" , bonus_location + "/doc/watir_user_guide.html" ) if startMenu 
+make_startmenu_shortcut( "Watir API reference" , bonus_location + "/rdoc/index.html" ) if startMenu 
 make_desktop_shortcut( "Watir Documentation" , bonus_location + "/doc/watir_user_guide.html" )   if deskTop
 
