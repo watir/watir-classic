@@ -37,14 +37,14 @@
    puts "  Action: clicked the Google Search button."
 
    puts "Expected Result: "
-   puts " - a Google page with results should be shown. 'Pragmatic Programmers LLC' should be high on the list."
+   puts " - a Google page with results should be shown. 'Programming Ruby' should be high on the list."
   
-   puts "Actual Result: Check that the 'Programming Ruby, 2nd Ed.' link appears on the results page "
+   puts "Actual Result: Check that the 'Programming Ruby' link appears on the results page "
    a = $ie.pageContainsText("Programming Ruby") 
    if !a 
-      puts "Test Failed! Could not find: 'The Pragmatic Programmers, LLC'" 
+      puts "Test Failed! Could not find: 'Programming Ruby'" 
    else
-      puts "Test Passed. Found the test string: 'Programming Ruby, 2nd Ed.'. Actual Results match Expected Results."
+      puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
    end
    
    puts "  "
