@@ -103,7 +103,14 @@ module CLabs
       READYSTATE_INTERACTIVE = 3
       READYSTATE_COMPLETE = 4
 
+      @@closed_last = nil
+      
       def initialize(options = {})
+        # creating a new IE instance immediately after quiting a previous one
+        # causes intermittent RPC unavailable errors and other weirdness.
+        # Make sure to wait 1 second after eating before swimming...
+        until (Time.now - @@closed_last) > 1; sleep 0.1; end if @@closed_last
+        
         @ie = WIN32OLE.new('InternetExplorer.Application')
         if ((options.is_a? TrueClass) || (options.is_a? FalseClass))
           # backward compatibility
@@ -116,6 +123,7 @@ module CLabs
       end
 
       def close
+        @@closed_last = Time.now
         @ie.quit
       end
 
@@ -150,10 +158,11 @@ module CLabs
         @@wrap_classes.each do |cls|
           # form inputs all have the same tagName (INPUT), but 'type' 
           # defines which type of input node it is.
-          # <a...> tags, however, have no type defined, so you must go with
-          # tagName
-          node_type = node.invoke('type')
-          node_type = node.invoke('tagName') if node_type.empty?
+          # <a...> tags, however, have a type of "", so you must go with
+          # tagName. <h#> tags don't even have a property called type, so
+          # it errors out.
+          node_type = node.invoke('tagName') 
+          node_type = node.invoke('type') if node_type =~ /input/i
           if node_type =~ cls.wrap_type_re 
             wrapped_node = cls.new(node)
             break
@@ -163,15 +172,23 @@ module CLabs
         wrapped_node
       end
       
+      # perhaps a refactoring is in order with GUIFormWrapper.method_missing
       def method_missing(methID, *args, &block)
         # if we're not in this state, then there's probably not a page loaded,
         # and trying to work with the DOM raises an exception.
         if (@ie.readyState == ClIEController::READYSTATE_COMPLETE)
           method = methID.id2name
-          node = @ie.document.all(method)
+          node = @ie.document.all(method.chop_setter)
           if node
             node = ClIEController.wrap_node(node)
-            node.send(node.default_attribute(method[-1..-2] == '='), *args)
+            if @options[:demo_mode]
+              node.highlight 
+              demo_wait
+              node.un_highlight
+            end
+            res = node.send(node.default_attribute(method[-1..-1] == '='), *args)
+            wait
+            res
           else
             @ie.send(methID, *args, &block)
           end
@@ -202,6 +219,11 @@ module CLabs
         @ie.visible = true
       end
 
+      def submit
+        form.submit
+        wait
+      end
+      
       def wait
         waitForIE
       end
@@ -217,6 +239,15 @@ module CLabs
         until @ie.readyState == READYSTATE_COMPLETE
           sleep 0.01
         end
+      end
+      
+      def demo_wait  
+        sleep @options[:demo_wait] if @options[:demo_mode]
+      end
+      
+      def dump_dom(io=$stdout)
+        dv = ClIEDomViewer.new(self)
+        dv.outputDom(io)
       end
     end
 
@@ -269,6 +300,7 @@ module CLabs
         return methodName[-1, 1] == '='
       end
 
+      # seems a refactoring is in order with ClIEController.method_missing
       def method_missing(methID, *args)
         methodName = methID.id2name
         setter = methodIsSetter(methodName)
@@ -346,6 +378,18 @@ module CLabs
       def method_missing(methID, *args, &block)
         @node.send(methID, *args, &block)
       end
+      
+      def highlight
+        @orig_color = @node.style.color
+        @orig_border = @node.style.border
+        @node.style.color = 'red'
+        @node.style.border = '2px solid red'
+      end
+      
+      def un_highlight
+        @node.style.color = @orig_color if @orig_color
+        @node.style.border = @orig_border if @orig_border
+      end
     end
     
     class IEDomCheckboxWrapper < IEDomNodeWrapper
@@ -361,11 +405,12 @@ module CLabs
     
     class IEDomSelectWrapper < IEDomNodeWrapper
       def IEDomSelectWrapper.wrap_type_re
-        /select-one/i
+        /select/i
       end
     
       def initialize(selectElement)
         @select = selectElement
+        @node = @select
         @default_attribute = 'value'
       end
 
@@ -424,6 +469,49 @@ module CLabs
         @node = node
         @default_attribute = 'click'
       end
+    end
+    
+    class IEDomHNWrapper < IEDomNodeWrapper
+      def IEDomHNWrapper.wrap_type_re
+        /h[1-6]/i
+      end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'innerText'
+      end
+    end
+    
+    class IEDomItalicWrapper < IEDomNodeWrapper
+      def IEDomItalicWrapper.wrap_type_re
+        /\Ai\z/i
+      end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'innerText'
+      end
+    end
+    
+    class IEDomInputTextWrapper < IEDomNodeWrapper
+      def IEDomInputTextWrapper.wrap_type_re
+        /text/i
+      end
+      
+      def initialize(node)
+        @node = node
+        @default_attribute = 'value'
+      end
+    end
+  end
+end
+
+class String
+  def chop_setter
+    if (self[-1..-1] == '=')
+      self.chop 
+    else
+      self
     end
   end
 end
