@@ -41,11 +41,10 @@
    puts " - a Google page with results should be shown. 'Programming Ruby' should be high on the list."
   
    puts "Actual Result: Check that the 'Programming Ruby' link appears on the results page "
-   a = ie.contains_text("Programming Ruby") 
-   if !a 
-      puts "Test Failed! Could not find: 'Programming Ruby'" 
-   else
+   if ie.contains_text("Programming Ruby")  
       puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
+   else
+      puts "Test Failed! Could not find: 'Programming Ruby'" 
    end
    
    puts "  "
