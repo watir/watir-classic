@@ -471,7 +471,8 @@ class IE
         print "\b"
         #puts "waitForIE Complete"
         s=nil
-        sleep @defaultSleepTime
+        sleep 0.01
+        sleep @defaultSleepTime unless noSleep  == true
     end
 
     def wait
@@ -1199,8 +1200,13 @@ class SelectBox < ObjectActions
                 @o.each do |selectBoxItem|
                     if thisItem.match( selectBoxItem.text)
                         matchedAnItem = true
-                        selectBoxItem.selected = true
-                        @ieController.log " #{selectBoxItem.text} is being selected"
+                        if selectBoxItem.selected == true
+                            @ieController.log " #{selectBoxItem.text} is already selected"
+                        else
+                            @ieController.log " #{selectBoxItem.text} is being selected"
+                            selectBoxItem.selected = true
+                            @o.fireEvent("onChange")
+                        end
                         @ieController.waitForIE()
                     end
                 end
@@ -1210,8 +1216,13 @@ class SelectBox < ObjectActions
                     @ieController.log " comparing #{thisItem } to #{selectBoxItem.text}"
                     if thisItem == selectBoxItem.text 
                         matchedAnItem = true
-                        @ieController.log " #{selectBoxItem.text} is being selected"
-                        selectBoxItem.selected = true     
+                        if selectBoxItem.selected == true
+                            @ieController.log " #{selectBoxItem.text} is already selected"
+                        else
+                            @ieController.log " #{selectBoxItem.text} is being selected"
+                            selectBoxItem.selected = true
+                            @o.fireEvent("onChange")
+                        end
                     end
                 end
             end
@@ -1474,7 +1485,7 @@ class TextField < ObjectActions
             #log  " adding c.chr " + c.chr.to_s
             @o.value = @o.value.to_s + c.chr
             @o.fireEvent("onKeyPress")
-            @ieController.waitForIE()
+            @ieController.waitForIE(true)
         end
     end
 end
