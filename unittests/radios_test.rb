@@ -97,5 +97,32 @@ class TC_Radios < Test::Unit::TestCase
        assert($ie.radio(:name, "box4" , 3).isSet?)   
     end
 
+    def test_radio_properties
+
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).value}  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).name }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).id }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).disabled }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).type }  
+
+        assert_equal("on"   ,    $ie.radio(:index, 1).value)  
+        assert_equal("box1" ,    $ie.radio(:index, 1).name )  
+        assert_equal(""     ,    $ie.radio(:index, 1).id )  
+        assert_equal("radio",    $ie.radio(:index, 1).type )  
+
+        assert_equal( false, $ie.radio(:index, 1).disabled )
+        assert_equal( true,  $ie.radio(:index, 3).disabled )
+
+        assert_equal("box5"  ,    $ie.radio(:index, 2).id )  
+        assert_equal(""      ,    $ie.radio(:index, 2).name )  
+
+
+
+
+
+
+
+    end
+
 end
 
