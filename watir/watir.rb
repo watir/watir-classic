@@ -353,9 +353,6 @@ module Watir
         # Returns matchdata object if the specified regexp was found.
         #  * text - string or regular expression - the string to look for
         def pageContainsText(text)
-            #log "-------------"
-            #log getDocument().body.innerText
-            #log "-------------"
             returnValue = false
             retryCount = 0
             begin
@@ -600,7 +597,7 @@ module Watir
             
             o = nil
             
-            #log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
+            log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
             if how == :index
                 o = getObjectAtIndex( container, what , types , value)
@@ -609,7 +606,7 @@ module Watir
             elsif how == :src || how ==:alt
                 o = getObjectWithSrcOrAlt(what , how , container, types)
             else
-                #log "How is #{how}"
+                log "How is #{how}"
                 container.each do |object|
                     next  unless o == nil
                     
@@ -632,7 +629,7 @@ module Watir
                             if types
                                 if elementTypes.include?(object.invoke("type"))
                                     if value
-                                        #log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                        log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
                                         if object.value.to_s == value.to_s
                                             o = object
                                         end
@@ -645,7 +642,7 @@ module Watir
                             end
                         end
                     rescue => e
-                        #log e.to_s + "\n" + e.backtrace.join("\n")
+                        log 'IE#getObject error ' + e.to_s 
                     end
                     
                 end
@@ -729,7 +726,7 @@ module Watir
         #   * value      - the value of the object to get, used when getting itens like checkboxes and radios
         def getObjectAtIndex(container , index , types , value=nil)
             
-            #log" getting object #{types.to_s}  at index( #{index}"
+            log" getting object #{types.to_s}  at index( #{index}"
             
             o = nil
             objectIndex = 1
@@ -742,7 +739,7 @@ module Watir
                         rescue
                             oName = "unknown"
                         end
-                        #log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
+                        log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
                         
                         if objectIndex.to_s == index.to_s
                             o = thisObject
@@ -2022,7 +2019,7 @@ module Watir
                 maxLength = @o.maxLength
                 if value.length > maxLength
                     value = suppliedValue[0 .. maxLength ]
-                    log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
+                    @ieController.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
                 end
             rescue
                 # probably a text area - so it doesnt have a max Length
@@ -2032,7 +2029,7 @@ module Watir
             for i in 0 .. value.length-1   
                 sleep @ieController.typingspeed   # typing speed
                 c = value[i]
-                #log  " adding c.chr " + c.chr.to_s
+                @ieController.log  " adding c.chr " + c.chr.to_s
                 @o.value = @o.value.to_s + c.chr
                 @o.fireEvent("onKeyPress")
                 @ieController.waitForIE(true)
