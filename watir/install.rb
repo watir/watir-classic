@@ -59,7 +59,7 @@ def make_startmenu_shortcut( name , targetURL )
     oShellLink = wshShell.CreateShortcut(strStartMenu +  '\\Programs\\' + "watir\\#{name}.lnk")
     oShellLink.TargetPath =  targetURL 
     oShellLink.WindowStyle = 1
-    oShellLink.Hotkey = "CTRL+SHIFT+F"
+    #oShellLink.Hotkey = "CTRL+SHIFT+F"
     oShellLink.Description = name
     oShellLink.WorkingDirectory = strStartMenu 
     oShellLink.Save
@@ -72,7 +72,7 @@ def make_desktop_shortcut( name , targetURL )
     oShellLink = wshShell.CreateShortcut(strDesktop +  '\\' + name +  '.lnk')
     oShellLink.TargetPath =  targetURL 
     oShellLink.WindowStyle = 1
-    oShellLink.Hotkey = "CTRL+SHIFT+F"
+    #oShellLink.Hotkey = "CTRL+SHIFT+F"
     oShellLink.Description = name
     oShellLink.WorkingDirectory = strDesktop
     oShellLink.Save
