@@ -1,7 +1,14 @@
 # Suggested solution to Lab 4, Part 1, Start The Day w/ Test Methods. (watir)
 
-require 'toolkit/watir'
-require 'toolkit/testhook'
+
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..')
+
+require 'watir'
+require '../toolkit/testhook'
+
+include Watir
+
+
 
 # make sure we have a new user
 ensure_no_user_data 'ruby'
@@ -28,8 +35,8 @@ end
 
 # verify that the job appears in the recent records table
 require 'toolkit/timeclock-recent-records'
-if get_results_table_array.job_name(1) == 'background' and
-   get_results_table_array.status(1) == 'running'
+if get_results_table_array($ie.ie.document).job_name(1) == 'background' and
+   get_results_table_array($ie.ie.document).status(1) == 'running'
 then
   puts 'PASS - background job is running'
 else

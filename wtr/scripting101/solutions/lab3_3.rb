@@ -1,7 +1,14 @@
 # Suggested solution to Lab 3, Part 3: Job Switching. (watir)
 
-require 'toolkit/watir'
-require 'toolkit/testhook'
+
+$LOAD_PATH << File.join(File.dirname(__FILE__), '..')
+
+require 'watir'
+require '../toolkit/testhook'
+
+include Watir
+
+
 
 # make sure we have a new user
 ensure_no_user_data 'ruby'
