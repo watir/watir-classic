@@ -1,9 +1,8 @@
-# libraries
+# tests for TextArea Fields
+# revision: $Revision$
 require 'unittests/setup'
 
-#require 'unittests/testUnitAddons'
-
-class TC_Fields < Test::Unit::TestCase
+class TextArea_Fields < Test::Unit::TestCase
 
 
 
