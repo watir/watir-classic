@@ -466,7 +466,7 @@ module Watir
                 print "\b"
                 #puts "waitForIE Complete"
                 s=nil
-            rescue
+            rescue WINOLE32RuntimeError
  
             end
             sleep 0.01
