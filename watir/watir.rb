@@ -165,6 +165,8 @@ module Watir
         # use this to switch the spinner on and off
         attr_accessor :enable_spinner
 
+        # use this to get the time for the last page download
+        attr_reader :down_load_time
         
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
@@ -173,7 +175,6 @@ module Watir
         attr_accessor :logger
                         
         def initialize(suppress_new_window=nil)
-            @enable_spinner = $ENABLE_SPINNER
             unless suppress_new_window
                 create_browser_window
                 set_defaults
@@ -204,6 +205,9 @@ module Watir
         
         def set_defaults
             @form = nil
+
+            @enable_spinner = $ENABLE_SPINNER
+            @error_checkers= []
 
             @ie.visible = ! $HIDE_IE
             @typingspeed = DEFAULT_TYPING_SPEED
@@ -425,22 +429,43 @@ module Watir
                             end
                         end
                     rescue=>e
-                        @logger.warn 'frame error in wait' 
+                        @logger.warn 'frame error in wait' + e.to_S
                     end
                 end
                 @down_load_time =  Time.now - pageLoadStart 
 
+                run_error_checks()
+
                 print "\b" unless @enable_spinner == false
                 log "waitForIE Complete"
                 s=nil
-            rescue WIN32OLERuntimeError
-                @logger.warn 'runtime error in wait'
+            rescue WIN32OLERuntimeError => e
+                @logger.warn 'runtime error in wait' + e.to_s
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
         end
         alias waitForIE wait
+
+        # Error checkers
+
+        # this method runs the predefined error checks
+        def run_error_checks()
+            @error_checkers.each do |e|
+                e.call(self)
+            end
+        end
+
+        def add_checker( checker) 
+            @error_checkers << checker
+        end
         
+        def disable_checker( checker )
+            @error_checkers.delete(checker)
+        end
+
+        # Getting Page as text or HTML
+
         # this method returns the HTML of the current page
         def html()
             return getDocument().body.innerHTML
@@ -506,13 +531,24 @@ module Watir
         alias showImages show_images
         
         def show_links()
+
+            props=["name" ,"id" , "href" , "innerText" ]
             doc = getDocument()
-            doc.links.each do |l|
-                puts "Link: name: #{l.name}"
-                puts "      id: #{l.invoke("id")}"
-                puts "      href: #{l.href}"
-                puts "      text: #{l.innerText}"
+            s = ""
+            doc.links.each do |n|
+                props.each do |prop|
+                    begin
+                        p = n.invoke(prop)
+                        s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
+                    rescue
+                        # this object probably doesnt have this property
+                    end
+                end
+                s=s+"\n"
+                
             end
+            puts  s
+
         end
         alias showLinks show_links
         
