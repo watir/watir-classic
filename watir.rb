@@ -325,7 +325,7 @@ class IE
     attr_accessor :eventThread
 
     # This method creates an instance of the IE controller
-    def initialize( logger=nil )
+    def original_initialize( logger=nil )
         @logger = logger
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = ! $HIDE_IE
@@ -336,6 +336,54 @@ class IE
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
         @defaultSleepTime = DEFAULT_SLEEP_TIME
     end
+
+
+  def initialize( logger=nil, how = nil ,what = nil )
+        @logger = logger
+        if ((how != nil) and (what != nil))
+           @ie = SeekWindow(how,what)
+           #if it can not find window
+           if @ie == nil
+               @ie =   WIN32OLE.new('InternetExplorer.Application')
+            end
+        else
+            @ie =   WIN32OLE.new('InternetExplorer.Application')
+        end
+        @ie.visible = ! $HIDE_IE
+        @frame = ""
+        @presetFrame = ""
+        @form = nil
+        @typingspeed = DEFAULT_TYPING_SPEED
+        @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
+        @defaultSleepTime = DEFAULT_SLEEP_TIME
+    end
+
+    def SeekWindow(how,what)
+
+        puts "Seeking Window with #{how}: #{ what }"
+        shell = WIN32OLE.new("Shell.Application")
+        appWindows = shell.Windows()
+		
+        ieTemp = nil
+        appWindows.each{|aWin| 
+            print "Found a window: #{aWin}. "
+
+            case how
+                when :url
+                    print " url is: #{aWin.locationURL}\n"
+                    ieTemp = aWin if (what.matches(aWin.locationURL) )
+                when :title
+                    # need rescue since normal windows explorer shells do not have document model.
+                    begin
+                        print " url is: #{aWin.locationURL}\n"
+                        ieTemp = aWin if (what.matches( aWin.document.title ) )
+                    rescue
+                    end
+                end
+            }
+        return ieTemp
+    end
+
 
     def captureEvents
         ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
@@ -431,6 +479,9 @@ class IE
     # This method is used internally to set the document for Watir to use.
     #  Raises UnknownFrameException if a specified frame cannot be found.
     def getDocument()
+
+     puts "frame empty"    if @frame == ""
+      puts "preset empty"  if @presetFrame == ""
         if @frame == "" and @presetFrame == ""
 
             doc = @ie.document
