@@ -88,7 +88,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts '  Action: entered ' + testSite + 'in the address bar.'
 
    puts 'Step 2: Select Canada from the Top Stories drop-down list'
-   $ie.selectBox( :name , "meta").select("Canada")
+   $ie.selectBox( :name , "meta").select("Canada English")
    puts '  Action: selected Canada from the drop-down list.'
 
    puts 'Step 3: click the "Go" button'
