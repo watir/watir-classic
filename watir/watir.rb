@@ -115,275 +115,9 @@ module Watir
             return @s[@i]
         end
     end
+
         
-    #
-    # MOVETO: watir/controls.rb
-    # Module Watir::Controls
-    #
     
-    
-    # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
-    # This is not a class that users would normally access. 
-    class ObjectActions
-        include Watir::Exception
-        
-        # Creates an instance of this class.
-        # The "initialize" method creates several default properties for the object.
-        # These properties are accessed using the setProperty and getProperty methods
-        #   o  - the object that watir is using
-        def initialize( o )
-            @o = o
-            @defaultProperties = { 
-         "type"     =>  "type" ,
-         "id"       =>  "id" ,
-         "name"     => "name",
-         "value"    => "value"  ,
-         "disabled" => "disabled"
-            }
-            @ieProperties = Hash.new
-            setProperties(@defaultProperties)
-            @originalColor = nil
-        end
-        
-        # This method sets the properties for the object
-        def setProperties(propertyHash )
-            if @o 
-                propertyHash.each_pair do |a,b|
-                    begin
-                        setProperty(a , @o.invoke("#{b}" ) )
-                    rescue
-                        # Object probably doesn't support this item, so rescue
-                    end 
-                end
-            end  #if @o
-        end
-        
-        # This method is used to set a property
-        #   * name  - string - the name of the property to set
-        #   * val   - string - the value to set
-        def setProperty(name , val)
-            @ieProperties[name] = val
-        end
-        
-        # This method retrieves the value of the specified property.
-        #   * name  - string - the name of the property to retrieve
-        def getProperty(name)
-            raise UnknownPropertyException("Unable to locate property, #{name}") if !@ieProperties.has_key?(name)
-            return @ieProperties[name]
-        end
-        
-        def getOLEObject()
-            @ieController.clearFrame()
-            return @o
-        end
-        
-        # This method displays basic details about the object. Sample output for a button is shown.
-        # Raises UnknownObjectException if the object is not found.
-        #      name      b4
-        #      type      button
-        #      id         b5
-        #      value      Disabled Button
-        #      disabled   true
-        def to_s
-            @ieController.clearFrame()
-            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-            n = []
-            @ieProperties.each_pair do |k,v|      
-                n << "#{k}".ljust(18) + "#{v}"
-            end
-            return n
-        end
-        
-        # This method is responsible for setting and clearing the colored highlighting on the currently active element.
-        # use :set   to set the highlight
-        #   :clear  to clear the highlight
-        def highLight( setOrClear )
-            if setOrClear == :set
-                begin
-                    @originalColor = @o.style.backgroundColor
-                    @o.style.backgroundColor = @ieController.activeObjectHighLightColor
-                rescue
-                    @originalColor = nil
-                end
-            else
-                begin 
-                    @o.style.backgroundColor  = @originalColor unless @originalColor == nil
-                    @originalColor = nil
-                rescue
-                    # we could be here for a number of reasons...
-                ensure
-                    @originalColor = nil
-                end
-            end
-        end
-        
-        #   This method clicks the active element.
-        #   raises: UnknownObjectException  if the object is not found
-        #   ObjectDisabledException if the object is currently disabled
-        def click()
-            @ieController.clearFrame()
-            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
-            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
-            
-            highLight(:set)
-            @o.click()
-            @ieController.waitForIE()
-            highLight(:clear)
-        end
-        
-        def flash
-            @ieController.clearFrame()
-            raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
-            10.times do
-                highLight(:set)
-                sleep 0.05
-                highLight(:clear)
-                sleep 0.05
-            end
-        end
-        
-        # This method executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
-        #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
-        #   raises: UnknownObjectException  if the object is not found
-        #           ObjectDisabledException if the object is currently disabled
-        def fireEvent(event)
-            @ieController.clearFrame()
-            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
-            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
-            
-            highLight(:set)
-            @o.fireEvent("#{event}")
-            @ieController.waitForIE()
-            highLight(:clear)
-        end
-        
-        # This method sets focus on the active element.
-        #   raises: UnknownObjectException  if the object is not found
-        #           ObjectDisabledException if the object is currently disabled
-        def focus()
-            @ieController.clearFrame()
-            raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-            raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
-            @o.focus()
-        end
-        
-        # This methods checks to see if the current element actually exists. 
-        def exists?
-            @ieController.clearFrame()
-            return false if @o == nil
-            return true
-        end
-        
-        # This method returns true if the current element is enable, false if it isn't.
-        #   raises: UnknownObjectException  if the object is not found
-        def enabled?
-            @ieController.clearFrame()
-            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-            return false if @o.invoke("disabled")
-            return true
-        end
-    end
-    
-    
-    class FrameHandler
-        include Watir::Exception
-        
-        def initialize()
-            @frame = []
-            @presetFrame = []
-        end
-        
-        def clear
-            @frame.clear
-        end
-        
-        def clearPresetFrame
-            @presetFrame.clear
-        end
-        
-        def clearAll
-            @frame.clear
-            @presetFrame.clear
-        end
-        
-        def addFrame( f)
-            @frame << f
-        end
-        
-        def addPresetFrame( f)
-            @presetFrame << f
-        end
-        
-        def usingFrame?
-            return true if @frame.length > 0
-            return false
-        end
-        
-        def usingPresetFrame?
-            return true if @presetFrame.length > 0
-            return false
-        end
-        
-        def usingFrames
-            return true if usingFrame? | usingPresetFrame?
-            return false
-        end
-        
-        def presetFrame
-            if @presetFrame[0] == nil
-                return ""
-            end
-            return @presetFrame[0]
-        end
-        
-        def getDocument( ie , doc = nil , frameNameIndex=0 )
-            
-            if @frame.length == 0 
-                # using a preset frame
-                frameToUse = @presetFrame[0]
-                tempArray = @presetFrame
-                puts "Using preset frame name is #{frameToUse }"
-            elsif @frame.length == 1
-                frameToUse = @frame[0]
-                tempArray = @frame
-            else
-                # we are using multiple nested frames
-                frameToUse = @frame[frameNameIndex ] 
-                tempArray = @frame
-            end
-            
-            if doc != nil
-                allFrames = doc.frames
-            else
-                doc = ie.getIE.document
-                allFrames = doc.frames
-            end
-            frameExists = false
-            
-            for i in 0 .. allFrames.length-1
-                begin
-                    if frameToUse  == allFrames[i.to_s].name.to_s
-                        frameExists = true   
-                    end
-                rescue
-                    # probably no name on this object
-                end
-            end
-            
-            if frameExists == false
-                clearAll
-                raise UnknownFrameException , "Unable to locate a frame with name #{ frameToUse } " 
-            end
-            doc = doc.frames[frameToUse.to_s].document
-            if tempArray.length > 0 and frameNameIndex < tempArray.length-1 
-                doc=getDocument(ie ,doc , frameNameIndex+1   )
-            end
-            return doc
-            
-        end
-        
-        
-    end
     
     #
     # MOVETO: watir/browser_driver.rb
@@ -475,6 +209,10 @@ module Watir
             }
             return ieTemp
         end
+
+        #
+        # Accessing data outside the document
+        #
         
         # this method returns the title of the window
         def title
@@ -487,6 +225,19 @@ module Watir
             raise NoStatusBarException if !@ie.statusBar
             return status
         end
+
+        #
+        # Navigation
+        #
+
+        # This method causes the Internet Explorer browser to navigate to the specified URL.
+        #  * url  - string - the URL to navigate to
+        def goto( url )
+            @ie.navigate(url)
+            waitForIE()
+            sleep 0.2
+            clearFrame()
+        end
         
         # this method goes to the previous page - the same as clicking the browsers back button
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
@@ -494,6 +245,7 @@ module Watir
             @ie.GoBack()
             waitForIE
         end
+
         # this method goes to the next page - the same as clicking the browsers forward button
         # an WIN32OLERuntimeError exception is raised if the browser cant go forward
         def forward
@@ -508,6 +260,13 @@ module Watir
             waitForIE
         end
         
+        # this method closes the Internet Explorer
+        def close
+            @ie.quit
+        end
+        
+
+        # WHAT IS THIS FOR?
         def captureEvents
             ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
             
@@ -524,28 +283,14 @@ module Watir
                 @newWindow = IE.new
                 @newWindow.goto(toURL)
             }
-            #@eventThread = Thread.new{
-            #   while(1)
-            #      sleep 0.01
-            #      puts "checking event.."
-            #      WIN32OLE_EVENT.message_loop
-            #   end
-            # }
         end
         
-        def isEventThreadRunning?
-            return false if @eventThread==nil
-            return @eventThread.status
-        end
-        
-        
-        
+        # used by the popup code
         def dir
             return File.expand_path(File.dirname(__FILE__))
         end
         
         def log ( what )
-            
             @logger.debug( what ) if @logger
             puts what
         end
@@ -556,10 +301,13 @@ module Watir
             return @ie
         end
         
+        #
+        # Frame Crap
+        #
+
         # This method sets the html frame to use for a single object to access.
         #   *   frameName  - string with the name of the frame to use
         def frame( frameName)
-            
             @frameHandler.addFrame( frameName)
             return self
         end
@@ -585,19 +333,10 @@ module Watir
             return @frameHandler.presetFrame 
         end
         
-        def form( how , formName=nil )
-            # If only one value is supplied, it is a form name
-            if formName == nil
-                formName = how
-                formHow = :name
-            else
-                formName = formName
-                formHow = how
-            end
-            log "form how is #{formHow} name is #{formName}"      
-            return Form.new(self, formHow, formName)      
-        end
-        
+       
+        #
+        # Document and Document Data
+        #
         
         # This method is used internally to set the document for Watir to use.
         #  Raises UnknownFrameException if a specified frame cannot be found.
@@ -651,6 +390,10 @@ module Watir
             return returnValue
         end
         
+        # 
+        # Synchronization
+        #
+        
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
         def waitForIE( noSleep  = false )
             
@@ -703,20 +446,6 @@ module Watir
             waitForIE
         end
         
-        # This method causes the Internet Explorer browser to navigate to the specified URL.
-        #  * url  - string - the URL to navigate to
-        def goto( url )
-            @ie.navigate(url)
-            waitForIE()
-            sleep 0.2
-            clearFrame()
-        end
-        
-        # this method closes the Internet Explorer
-        def close
-            @ie.quit
-        end
-        
         # this method returns the HTML of the current page
         def getHTML()
             n=getDocument().body.innerHTML
@@ -730,7 +459,10 @@ module Watir
             clearFrame()
             return n
         end
-        
+
+        #
+        # Show me state
+        #        
         
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
@@ -850,7 +582,9 @@ module Watir
             clearFrame()
         end
         
-        
+        #
+        # Searching for Page Elements
+        #        
         
         #This method retrieves an image on a web page for use.
         #Uses an <img src="image.gif"> HTML tag.
@@ -1176,10 +910,26 @@ module Watir
             return link
         end
         
-        # this is the main method for acessing a table
+        #
+        # Factory Methods
+        #
+
+        def form( how , formName=nil )
+            # If only one value is supplied, it is a form name
+            if formName == nil
+                formName = how
+                formHow = :name
+            else
+                formName = formName
+                formHow = how
+            end
+            log "form how is #{formHow} name is #{formName}"      
+            return Form.new(self, formHow, formName)      
+        end
+
+         # this is the main method for acessing a table
         def table( how, what )
-            t = Table.new( self , how, what)
-            return t
+            return Table.new( self , how, what)
         end
         
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
@@ -1274,13 +1024,10 @@ module Watir
             return JSButton.new(  @ieController.getIE.hwnd , caption )
         end
         
-        
     end
     
     class JSCommon
-        
         def initialize()
-            
         end
     end
     
@@ -1309,6 +1056,105 @@ module Watir
     # Module Watir::Control or Watir::BrowserDriver
     #
     
+    class FrameHandler
+        include Watir::Exception
+        
+        def initialize()
+            @frame = []
+            @presetFrame = []
+        end
+        
+        def clear
+            @frame.clear
+        end
+        
+        def clearPresetFrame
+            @presetFrame.clear
+        end
+        
+        def clearAll
+            @frame.clear
+            @presetFrame.clear
+        end
+        
+        def addFrame( f)
+            @frame << f
+        end
+        
+        def addPresetFrame( f)
+            @presetFrame << f
+        end
+        
+        def usingFrame?
+            return true if @frame.length > 0
+            return false
+        end
+        
+        def usingPresetFrame?
+            return true if @presetFrame.length > 0
+            return false
+        end
+        
+        def usingFrames
+            return true if usingFrame? | usingPresetFrame?
+            return false
+        end
+        
+        def presetFrame
+            if @presetFrame[0] == nil
+                return ""
+            end
+            return @presetFrame[0]
+        end
+        
+        def getDocument( ie , doc = nil , frameNameIndex=0 )
+            
+            if @frame.length == 0 
+                # using a preset frame
+                frameToUse = @presetFrame[0]
+                tempArray = @presetFrame
+                puts "Using preset frame name is #{frameToUse }"
+            elsif @frame.length == 1
+                frameToUse = @frame[0]
+                tempArray = @frame
+            else
+                # we are using multiple nested frames
+                frameToUse = @frame[frameNameIndex ] 
+                tempArray = @frame
+            end
+            
+            if doc != nil
+                allFrames = doc.frames
+            else
+                doc = ie.getIE.document
+                allFrames = doc.frames
+            end
+            frameExists = false
+            
+            for i in 0 .. allFrames.length-1
+                begin
+                    if frameToUse  == allFrames[i.to_s].name.to_s
+                        frameExists = true   
+                    end
+                rescue
+                    # probably no name on this object
+                end
+            end
+            
+            if frameExists == false
+                clearAll
+                raise UnknownFrameException , "Unable to locate a frame with name #{ frameToUse } " 
+            end
+            doc = doc.frames[frameToUse.to_s].document
+            if tempArray.length > 0 and frameNameIndex < tempArray.length-1 
+                doc=getDocument(ie ,doc , frameNameIndex+1   )
+            end
+            return doc
+            
+        end
+        
+        
+    end
     
     
     #   Form object 
@@ -1375,12 +1221,7 @@ module Watir
             @typingspeed = ieController.typingspeed      
             @activeObjectHighLightColor = ieController.activeObjectHighLightColor      
         end
-        
-        # Find the specified form  
-        def getForm()
-            
-        end
-        
+                
         def waitForIE(arg = false)
             @ieController.waitForIE(arg)
         end
@@ -1406,11 +1247,175 @@ module Watir
         
     end # class Form
     
+
     #
-    # MOVETO: watir/control_drivers.rb
-    # Module Watir::ControlDrivers
+    # MOVETO: watir/driver.rb
+    # Module Watir::Driver
     #
     
+    
+    # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
+    # This is not a class that users would normally access. 
+    class ObjectActions
+        include Watir::Exception
+        
+        # Creates an instance of this class.
+        # The "initialize" method creates several default properties for the object.
+        # These properties are accessed using the setProperty and getProperty methods
+        #   o  - the object that watir is using
+        def initialize( o )
+            @o = o
+            @defaultProperties = { 
+         "type"     =>  "type" ,
+         "id"       =>  "id" ,
+         "name"     => "name",
+         "value"    => "value"  ,
+         "disabled" => "disabled"
+            }
+            @ieProperties = Hash.new
+            setProperties(@defaultProperties)
+            @originalColor = nil
+        end
+        
+        # This method sets the properties for the object
+        def setProperties(propertyHash )
+            if @o 
+                propertyHash.each_pair do |a,b|
+                    begin
+                        setProperty(a , @o.invoke("#{b}" ) )
+                    rescue
+                        # Object probably doesn't support this item, so rescue
+                    end 
+                end
+            end  #if @o
+        end
+        
+        # This method is used to set a property
+        #   * name  - string - the name of the property to set
+        #   * val   - string - the value to set
+        def setProperty(name , val)
+            @ieProperties[name] = val
+        end
+        
+        # This method retrieves the value of the specified property.
+        #   * name  - string - the name of the property to retrieve
+        def getProperty(name)
+            raise UnknownPropertyException("Unable to locate property, #{name}") if !@ieProperties.has_key?(name)
+            return @ieProperties[name]
+        end
+        
+        def getOLEObject()
+            @ieController.clearFrame()
+            return @o
+        end
+        
+        # This method displays basic details about the object. Sample output for a button is shown.
+        # Raises UnknownObjectException if the object is not found.
+        #      name      b4
+        #      type      button
+        #      id         b5
+        #      value      Disabled Button
+        #      disabled   true
+        def to_s
+            @ieController.clearFrame()
+            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
+            n = []
+            @ieProperties.each_pair do |k,v|      
+                n << "#{k}".ljust(18) + "#{v}"
+            end
+            return n
+        end
+        
+        # This method is responsible for setting and clearing the colored highlighting on the currently active element.
+        # use :set   to set the highlight
+        #   :clear  to clear the highlight
+        def highLight( setOrClear )
+            if setOrClear == :set
+                begin
+                    @originalColor = @o.style.backgroundColor
+                    @o.style.backgroundColor = @ieController.activeObjectHighLightColor
+                rescue
+                    @originalColor = nil
+                end
+            else
+                begin 
+                    @o.style.backgroundColor  = @originalColor unless @originalColor == nil
+                    @originalColor = nil
+                rescue
+                    # we could be here for a number of reasons...
+                ensure
+                    @originalColor = nil
+                end
+            end
+        end
+        
+        #   This method clicks the active element.
+        #   raises: UnknownObjectException  if the object is not found
+        #   ObjectDisabledException if the object is currently disabled
+        def click()
+            @ieController.clearFrame()
+            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
+            
+            highLight(:set)
+            @o.click()
+            @ieController.waitForIE()
+            highLight(:clear)
+        end
+        
+        def flash
+            @ieController.clearFrame()
+            raise UnknownObjectException , "Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+            10.times do
+                highLight(:set)
+                sleep 0.05
+                highLight(:clear)
+                sleep 0.05
+            end
+        end
+        
+        # This method executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
+        #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
+        #   raises: UnknownObjectException  if the object is not found
+        #           ObjectDisabledException if the object is currently disabled
+        def fireEvent(event)
+            @ieController.clearFrame()
+            raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
+            
+            highLight(:set)
+            @o.fireEvent("#{event}")
+            @ieController.waitForIE()
+            highLight(:clear)
+        end
+        
+        # This method sets focus on the active element.
+        #   raises: UnknownObjectException  if the object is not found
+        #           ObjectDisabledException if the object is currently disabled
+        def focus()
+            @ieController.clearFrame()
+            raise UnknownObjectException("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
+            raise ObjectDisabledException("Object #{@how.to_s} #{@what.to_s} is disabled ")   if !self.enabled?
+            @o.focus()
+        end
+        
+        # This methods checks to see if the current element actually exists. 
+        def exists?
+            @ieController.clearFrame()
+            return false if @o == nil
+            return true
+        end
+        
+        # This method returns true if the current element is enable, false if it isn't.
+        #   raises: UnknownObjectException  if the object is not found
+        def enabled?
+            @ieController.clearFrame()
+            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
+            return false if @o.invoke("disabled")
+            return true
+        end
+    end
+        
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
     class Table < ObjectActions
