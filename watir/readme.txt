@@ -15,7 +15,7 @@ Check out the mail lists and the documentation for the workarounds.
 Install ruby from http://ruby-lang.org
 Install the watir files, unit tests and sample html pages. 
 Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/all_tests.rb'.
-If you are using XP service pack2, you may have problems with the unit tests. 
+See the user guide if you are having problems with security blocking.
 
 Things Still to be Done:
 ------------------------
