@@ -47,7 +47,8 @@ h4. IE Controller
 You will need to install one Ruby library:
 "iec.2004.054.0.zip":http://rubyforge.org/frs/?group_id=104&release_id=305    
 
-#      Unzip this file into a new directory on your computer. 
+#      Unzip this file onto your hard drive (c:). An "iec" directory
+#      will be created automatically.
 #      Start up a command shell. (Start-> Run, enter "cmd".)
 #      Enter "cd iec".
 #      Enter "ruby install.rb".
@@ -61,8 +62,8 @@ h4. Scripting Class Materials.
 You will also need the materials hosted on rubyforge.org:
 "wtr/scripting101.tar.gz":http://rubyforge.org/cgi-bin/viewcvs/cgi/viewcvs.cgi/wtr/scripting101/scripting101.tar.gz?tarball=1&cvsroot=wtr
 
-# Extract the contents of this archive into your hard drive,
-  to c:/scripting101. 
+# Extract the contents of this archive into your hard drive (c:). A
+  "scripting101" directory will be created automatically.
 
 h3. Running the Timeclock Server.
 
@@ -74,11 +75,13 @@ server on your machine.
 #      Enter "cd c:\scripting101\installs\timeclock\bin".
 #      Enter "ruby http-server.rb". The server is now running.
 
+Note: If you close this command window, the server will stop.
+
 You can verify that the server is running correctly by running some
 sample tests.
 
 #      Start a new command shell.
-#      Enter "ruby c:\scripting101\lab\solutions\suite.rb".
+#      Enter "ruby c:\scripting101\lab\solutions\suite.rb -b".
 
 
 
