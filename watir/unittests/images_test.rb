@@ -2,7 +2,7 @@
 # tests for Buttons
 # revision: $Revision$
 
-require '../watir'
+require 'watir'
 
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
