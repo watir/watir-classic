@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
-class TC_Frames < Test::Unit::TestCase
+class TC_NestedFrames < Test::Unit::TestCase
 
 
    
