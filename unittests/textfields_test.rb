@@ -8,9 +8,10 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
 require 'testUnitAddons'
-$myDir = File.dirname(__FILE__)
 
-$LOAD_PATH << $myDir
+$myDir = Dir.getwd
+
+
 
 
 
@@ -119,8 +120,8 @@ class TC_Fields < Test::Unit::TestCase
          assert_equal(  "" , $ie.textField(:name, "text1").getContents )  
 
          # may need this to see that it really happened
-         puts "press return to continue"
-         gets 
+         #puts "press return to continue"
+         #gets 
 
     end
 
@@ -134,8 +135,8 @@ class TC_Fields < Test::Unit::TestCase
          assert_equal(  "watir IE Controleer" , $ie.textField(:name, "text1").getContents )  
 
          # may need this to see that it really happened
-         puts "press return to continue"
-         gets 
+         #puts "press return to continue"
+         #gets 
 
     end
 
