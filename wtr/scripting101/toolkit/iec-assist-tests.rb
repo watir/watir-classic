@@ -2,7 +2,7 @@
 # Assumes Timeclock server is already running.
 
 require 'English'
-require '../toolkit'
+require 'toolkit'
 require 'test/unit'
 
  
