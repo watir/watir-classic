@@ -205,5 +205,4 @@ class WRXApplicationErrorChecker
 
     end
 
-
 end

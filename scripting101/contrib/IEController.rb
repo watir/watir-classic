@@ -5,15 +5,13 @@
 
 require 'win32ole'
 require 'htmlHelpers'
-  require 'errorCheckers'
+require 'errorCheckers'
 
 
 # this class is the main IEcontroller
 # it uses the IE Dom[http://msdn.microsoft.com/workshop/author/dhtml/reference/dhtml_reference_entry.asp?frame=true]
 
 class IEController 
-
-    
 
     # an array of the URLs that we have been too
     attr_reader  :urlList  
@@ -24,10 +22,8 @@ class IEController
     # the download time of the last page
     attr_reader  :pageLoadTime
 
-
     #this is a sleep method to make everything go slow
     attr_accessor :sleepTime
-
 
     #this is a sleep method to make typing go slow
     attr_accessor :typingspeed 
@@ -112,12 +108,9 @@ class IEController
         @sleepTime = DEFAULTSLEEPTIME
         @urlList = []
         
-
         @pageLoadTime =0.0
         @typingspeed = DEFAULTTYPINGSPEED
 
- 
- 
         @useThreads = useThreads
         @myNumber   = threadNumber
 
@@ -135,9 +128,7 @@ class IEController
     end
 
     def log(s)
-
         puts s
-
     end
 
 
@@ -162,9 +153,6 @@ class IEController
           end
         end
       end
-
-
-
 
     # --
     # Methods to change and clear the background color of the active element
@@ -263,22 +251,15 @@ class IEController
         @availableCheckers.collect {|x| x.enabled = false if x.id == id} 
     end
 
-
-
-
-
     # ---------------------------   IE methods ----------------------------------------
-
 
     # set the position of the browser position is a IEWindowPosition object
     def setWindowPosition ( position  )
-
-        @ie.top=position.myTop
+        @ie.top = position.myTop
         @ie.left = position.myLeft
         @ie.height = position.myHeight
         @ie.width = position.myWidth
     end
-
 
     # use this method to hide the unnecessary toolbars
     def hideToolBars()
@@ -286,22 +267,17 @@ class IEController
         @ie.StatusBar = true
         @ie.ToolBar= false
         @ie.MenuBar = false
-        
     end
 
     # this method returns the index of the form that has the specified action
     # todo - Make this work with frames 
-    def getFormIndexFromAction(formAction  )
-
-         index = nil
+    def getFormIndexFromAction( formAction )
          i = 0
          @ie.document.forms.each do |f|
-             next unless index == nil
-             index = i   if f.action.to_s == formAction
+             return i if f.action.to_s == formAction
              i+=1
          end
-
-         return index
+         return nil
     end
 
     # closes IE
@@ -324,20 +300,14 @@ class IEController
         @ie.navigate(url)
         sleep 2
         return waitForIE()
-        
     end
-
 
     # returns true if IE is available, false if it is busy
     def ieIsAvailable()
-
         return false if @ie.busy 
         return false if @ie.readyState != READYSTATE_COMPLETE
- 
         return true
-
     end
-
 
     # wait for IE to complete it its current action. Should be a private method
     # returns false if an error was detected when the page has loaded
@@ -410,7 +380,6 @@ class IEController
             end
         end
 
-
         # add the current url to the list 
         #@urlList << @ie.locationURL
         # this only gets us the url of the frame, we want all the pages to do proper security checking
@@ -463,9 +432,6 @@ class IEController
            end 
           return frame
     end
-
-
-
 
     # this method displayes the names of the frames
     def showFrames()
@@ -603,9 +569,7 @@ class IEController
                return false , [OBJECTNOTFOUND]
            end
            setBackGround(buttonToUse)
-           buttonToUse.fireEvent("onMouseOver")
-           buttonToUse .click()
-           log "\nClicked button with name: #{name} "
+            log "\nClicked button with name: #{name} "
            if waitForIE()
                clearBackground
                return true, [""]
@@ -1583,7 +1547,7 @@ class IEController
 
         # we now have a reference to the checkbox we want!
 
-        if thisCheckBox.disabled
+        if thisCheckBox.disabled
             clearBackground
             return false, [ OBJECTDISABLED ] 
         end 
@@ -1641,30 +1605,25 @@ class IEController
     # this returns a string containing the text of the specified frame
     #  * frameName   the frame to use
     def getFrameText( frameName = "" )
-
         container = getObjectFrameReference( "" , frameName )
-        t = container.body.innerText
-        return t
+        return container.body.innerText
     end
 
     # this returns a string containing the text of the specified frame
     #  * frameName   the frame to use
     def getFrameHTML( frameName = "" )
-
         container = getObjectFrameReference( "" , frameName )
-        t = container.body.innerHTML
-        return t
+        return container.body.innerHTML
     end
 
-    # This returns the title of the page, or nill if it isnt available
+    # This returns the title of the page, or nil if it isn't available
     def getPageTitle(frameName = "" )
         container = getObjectFrameReference( "" , frameName )
         begin
-            t = container.title
+            return container.title
         rescue
-            t = nil
+            return nil
         end
-        return t
        
     end
 

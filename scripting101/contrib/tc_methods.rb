@@ -1,23 +1,17 @@
 class TimeClockTestCode
 
-
-    
-
     def initialize(ie)
         @ie = ie
     end
 
     def startTimeClock( url )
-
         @ie.goto( url )
-
     end
 
     def log(s)
         puts s
     end
 
-    
     def loginToTimeClock( loginName )
 
        messages = []
@@ -33,7 +27,6 @@ class TimeClockTestCode
 
         a, messages = @ie.setField("name" , loginName  , "" , "")
         if a
-
 
             # we must now submit the form
             # we would usually click a button to do that, but here we would press enter
@@ -82,7 +75,7 @@ class TimeClockTestCode
         end
 
         # did we really start the day?
-        return true , messages if @ie.isButtonOnPage_Caption ("Stop the Day" , "" )
+        return true , messages if @ie.isButtonOnPage_Caption("Stop the Day" , "" )
 
         return false, ["wasnt sure the day was started correctly"]
         
@@ -105,7 +98,7 @@ class TimeClockTestCode
         end
 
         # did we really start the day?
-        return true , messages if @ie.isButtonOnPage_Caption ("Start the Day" , "" )
+        return true , messages if @ie.isButtonOnPage_Caption("Start the Day" , "" )
 
         return false, ["wasnt sure the day was started correctly"]
     
