@@ -114,4 +114,22 @@ class TC_CheckBox < Test::Unit::TestCase
        $ie.checkbox(:name, "box4" , 3).set
        assert($ie.checkbox(:name, "box4" , 3).isSet?)   
     end
+
+    def test_checkbox_iterator
+
+        assert_equal(9, $ie.checkboxes.length)
+        assert_equal("box1" , $ie.checkboxes[1].name )
+
+        index=1
+        $ie.checkboxes.each do |c|
+            assert_equal( $ie.checkbox(:index, index).name , c.name )
+            assert_equal( $ie.checkbox(:index, index).id, c.id )
+            assert_equal( $ie.checkbox(:index, index).value, c.value )
+            index+=1
+        end
+        assert_equal(index-1, $ie.checkboxes.length)
+ 
+    end
+
+
 end

@@ -116,13 +116,26 @@ class TC_Radios < Test::Unit::TestCase
         assert_equal("box5"  ,    $ie.radio(:index, 2).id )  
         assert_equal(""      ,    $ie.radio(:index, 2).name )  
 
-
-
-
-
-
-
     end
+
+    def test_radio_iterators
+
+        assert_equal(11, $ie.radios.length)
+        assert_equal("box5" , $ie.radios[2].id )
+        assert_equal(true ,  $ie.radios[3].disabled )
+        assert_equal(false ,  $ie.radios[1].disabled )
+
+        index = 1
+        $ie.radios.each do |r|
+            assert_equal( $ie.radio(:index, index).name , r.name )
+            assert_equal( $ie.radio(:index, index).id , r.id )
+            assert_equal( $ie.radio(:index, index).value, r.value)
+            assert_equal( $ie.radio(:index, index).disabled , r.disabled )
+            index+=1
+        end
+        assert_equal(index -1, $ie.radios.length)
+    end
+
 
 end
 

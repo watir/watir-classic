@@ -7,6 +7,10 @@ require 'unittests/setup'
 class TC_Images < Test::Unit::TestCase
     include Watir
 
+    def setup
+        gotoImagePage
+    end
+
     def gotoImagePage()
         $ie.goto($htmlRoot + "images1.html")
     end
@@ -15,7 +19,6 @@ class TC_Images < Test::Unit::TestCase
 
     def test_imageExists
 
-        gotoImagePage()
 
 
         assert_false( $ie.image(:name , "missing_name").exists?  )
@@ -47,7 +50,6 @@ class TC_Images < Test::Unit::TestCase
 
 
     def test_image_click
-        gotoImagePage()
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").click }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").click }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").click}
@@ -62,7 +64,6 @@ class TC_Images < Test::Unit::TestCase
     end
 
     def test_imageHasLoaded
-        gotoImagePage()
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").hasLoaded? }
@@ -80,7 +81,6 @@ class TC_Images < Test::Unit::TestCase
 
     def test_image_properties
 
-        gotoImagePage()
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").hasLoaded? }
@@ -111,9 +111,26 @@ class TC_Images < Test::Unit::TestCase
 
         puts $ie.image(:name  , "circle").to_s
         puts $ie.image(:index , 2).to_s
+    end
 
-       
+    def test_image_iterator
 
+        assert_equal(6 , $ie.images.length)
+        assert_equal("" , $ie.images[2].name )
+        assert_equal("square" , $ie.images[2].id )
+        assert_match(/square/ , $ie.images[2].src )
+
+        index = 1
+        $ie.images.each do |i|
+            assert_equal( $ie.image(:index, index).id , i.id )
+            assert_equal( $ie.image(:index, index).name , i.name )
+            assert_equal( $ie.image(:index, index).src , i.src )
+            assert_equal( $ie.image(:index, index).height , i.height )
+            assert_equal( $ie.image(:index, index).width , i.width )
+
+            index+=1
+        end
+        assert_equal( index-1 , $ie.images.length )
 
     end
 end

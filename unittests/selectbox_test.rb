@@ -137,5 +137,25 @@ class TC_Selectbox < Test::Unit::TestCase
     end
 
 
+    def test_select_list_iterator
+
+        assert_equal(4, $ie.select_lists.length)
+        assert_equal("o3"   ,    $ie.select_lists[1].value)  
+        assert_equal("sel1" ,    $ie.select_lists[1].name )  
+        assert_equal("select-one",         $ie.select_lists[1].type )  
+        assert_equal("select-multiple" ,   $ie.select_lists[2].type )  
+
+        index=1
+        $ie.select_lists.each do |l|
+            assert_equal( $ie.select_list(:index, index).name , l.name )
+            assert_equal( $ie.select_list(:index, index).id , l.id )
+            assert_equal( $ie.select_list(:index, index).type , l.type )
+            assert_equal( $ie.select_list(:index, index).value , l.value )
+
+            index+=1
+        end
+        assert_equal( index-1, $ie.select_lists.length)
+
+    end
 
 end
