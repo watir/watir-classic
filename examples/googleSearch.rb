@@ -28,7 +28,7 @@
    $ie.goto(testSite)
    puts '  Action: entered ' + testSite + 'in the address bar.'
 
-   puts 'Step 2: enter "pickaxe: in the search text field'
+   puts 'Step 2: enter "pickaxe" in the search text field'
    $ie.textField(:name, "q").set("pickaxe")       # q is the name of the search field
    puts '  Action: entered pickaxe in the search field'
 
