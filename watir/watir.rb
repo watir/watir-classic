@@ -1040,8 +1040,6 @@ module Watir
 
     end # class IE
     
-
-
     
     # 
     # MOVETO: watir/popup.rb
@@ -1089,41 +1087,6 @@ module Watir
     # 
     # Module Watir::Control or Watir::BrowserDriver
     #
-
-    class Browser < IE
-        private_class_method :new
-        def initialize ()
-        end
-
-        # Create a new IE Window, starting at the specified url.
-        # If no url is given, start empty.
-        def Browser.start( url = nil )
-            bf = new
-            bf.start_init(url)
-            return bf
-        end
-        
-        def start_init( url )
-            create_browser_window
-            set_defaults                        
-            goto(url) if url
-        end        
-
-        # Attach to an existing IE window, either by url or title.
-        # Browser.attach(:url, 'http://www.google.com')
-        # Browser attach(:title, 'Google') 
-        def Browser.attach( how, what )
-            bf = new
-            bf.attach_init(how, what)
-            return bf
-        end   
-
-        def attach_init( how, what )
-            attach_browser_window(how, what)
-            set_defaults                        
-        end        
-    
-    end
     
     class FrameHandler
         include Watir::Exception
@@ -1225,38 +1188,43 @@ module Watir
         
     end
 
-    # wraps around a form ole object
-    class FormWrapper
-        def initialize ( ole_object )
-            @ole_object = ole_object
-        end
+    # Forms
+
+    module FormWrapperMethods
         def name
-            @ole_object.getAttributeNode('name').value
+            @form.getAttributeNode('name').value
         end
         def action
-            @ole_object.action
+            @form.action
         end
         def method
-            @ole_object.invoke('method')
+            @form.invoke('method')
         end
         def id
-            @ole_object.invoke("id").to_s
+            @form.invoke("id").to_s
         end
     end        
         
+    # wraps around a form ole object
+    class FormWrapper
+        include FormWrapperMethods
+        def initialize ( ole_object )
+            @form = ole_object
+        end
+    end
        
-    #   Form object 
+    #   Form Factory object 
     #   * ieController  - an instance of an IEController
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
     #   * what         - what we use to access the form
     class Form < IE
+        include FormWrapperMethods
 
         attr_accessor :form
         def initialize( ieController, how, what )
             @ieController = ieController
             @formHow = how
             @formName = what
-            @frameHandler = @ieController.frameHandler
             
             log "Get form  formHow is #{@formHow}  formName is #{@formName} "
             count = 1
@@ -1273,57 +1241,30 @@ module Watir
                     log "not a collection of forms"
                 end
                 
+                @form =
                 case @formHow
                 when :name 
-                    if wrapped.name == @formName
-                        @form = thisForm
-                    end
-                    
+                    wrapped.name == @formName ? thisForm : nil
                 when :id
-                    if wrapped.id == @formName.to_s
-                        @form = thisForm
-                    end
-                    
+                    wrapped.id == @formName.to_s ? thisForm : nil
                 when :index
-                    if count == @formName.to_i
-                        @form = thisForm
-                    end
-                    
+                    count == @formName.to_i ? thisForm : nil
                 when :method
-                    if wrapped.method.downcase == @formName.downcase
-                        @form = thisForm
-                    end
-                    
+                    wrapped.method.downcase == @formName.downcase ? thisForm : nil
                 when :action
-                    if @formName.matches(wrapped.action)
-                        @form = thisForm
-                    end
+                    @formName.matches(wrapped.action) ? thisForm : nil
                 else
                     raise MissingWayOfFindingObjectException
                 end
                 count = count +1
             end
-            if @form == nil
-                log "No form found!"
-            else      
-                log "set @form "   #to form with name #{@form.name}"
-            end
             
+            @frameHandler = @ieController.frameHandler
+
             @typingspeed = ieController.typingspeed      
             @activeObjectHighLightColor = ieController.activeObjectHighLightColor      
         end
-                
-        def waitForIE(arg = false)
-            @ieController.waitForIE(arg)
-        end
-        
-        def getContainer()
-            @ieController.clearFrame()
-            raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @form.elements.all
-        end   
-        private :getContainer
-        
+
         def exists?
             @ieController.clearFrame()
             @form ? true : false
@@ -1331,12 +1272,19 @@ module Watir
         
         # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
         def submit()
-            @ieController.clearFrame()
             raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+            @ieController.clearFrame()
             @form.submit 
             @ieController.waitForIE
         end   
-                
+
+        def getContainer()
+            raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+            @ieController.clearFrame()
+            @form.elements.all
+        end   
+        private :getContainer
+                                
     end # class Form
     
 
@@ -1344,8 +1292,7 @@ module Watir
     # MOVETO: watir/driver.rb
     # Module Watir::Driver
     #
-    
-    
+        
     # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
     # This is not a class that users would normally access. 
     class ObjectActions
