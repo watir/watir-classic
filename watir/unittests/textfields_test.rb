@@ -1,4 +1,4 @@
-# tests for Text Fields
+# feature tests for Text Fields
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
@@ -7,12 +7,11 @@ require 'unittests/setup'
 class TC_Fields < Test::Unit::TestCase
     include Watir
 
-    def gotoPage()
+    def setup()
         $ie.goto($htmlRoot + "textfields1.html")
     end
 
     def test_textField_Exists
-       gotoPage()
        assert($ie.textField(:name, "text1").exists?)   
        assert_false($ie.textField(:name, "missing").exists?)   
 
@@ -22,7 +21,6 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_textField_VerifyContents
-       gotoPage()
        assert($ie.textField(:name, "text1").verify_contains("Hello World") )  
        assert($ie.textField(:name, "text1").verify_contains(/Hello\sW/ ) )  
        assert_false($ie.textField(:name, "text1").verify_contains("Ruby") )  
@@ -39,7 +37,6 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_textField_enabled
-       gotoPage()
        assert_false($ie.textField(:name, "disabled").enabled? )  
        assert($ie.textField(:name, "text1").enabled? )  
        assert($ie.textField(:id, "text2").enabled? )  
@@ -47,7 +44,6 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_textField_readOnly
-       gotoPage()
        assert_false($ie.textField(:name, "disabled").readOnly? )  
        assert($ie.textField(:name, "readOnly").readOnly? )  
        assert($ie.textField(:id, "readOnly2").readOnly? )  
@@ -56,7 +52,6 @@ class TC_Fields < Test::Unit::TestCase
 
 
     def test_textField_getContents()
-         gotoPage()
          assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
          assert_equal(  "Hello World" , $ie.textField(:name, "text1").getContents )  
 
@@ -64,8 +59,6 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_TextField_to_s
-         gotoPage()
-
          puts "---------------- To String test -------------"
          puts $ie.textField(:index , 1).to_s
          puts "---------------- To String test -------------"
@@ -79,7 +72,6 @@ class TC_Fields < Test::Unit::TestCase
 
 
     def test_textField_Append
-         gotoPage()
          assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
          assert_raises(ObjectDisabledException   , "ObjectDisabledException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
          assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
@@ -95,7 +87,6 @@ class TC_Fields < Test::Unit::TestCase
 
 
     def test_textField_Clear
-         gotoPage()
          assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
          assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
          assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  
@@ -110,7 +101,6 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_textField_Set
-         gotoPage()
          assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:id, "readOnly2").append("Some Text") }  
          assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "disabled").append("Some Text") }  
          assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.textField(:name, "missing_field").append("Some Text") }  

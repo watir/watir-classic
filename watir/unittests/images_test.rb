@@ -1,4 +1,4 @@
-# tests for Images
+# feature tests for Images
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

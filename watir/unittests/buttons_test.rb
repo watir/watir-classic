@@ -1,4 +1,4 @@
-# tests for Buttons
+# feature tests for Buttons
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

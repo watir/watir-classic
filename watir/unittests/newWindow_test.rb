@@ -1,4 +1,4 @@
-# Test for new windows
+# feature Test for new windows (broken)
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

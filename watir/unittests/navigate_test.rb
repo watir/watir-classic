@@ -1,4 +1,4 @@
-# tests for navigation
+# feature tests for navigation
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__

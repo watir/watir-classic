@@ -1,4 +1,4 @@
-# tests for Check Boxes
+# feature tests for Check Boxes
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
