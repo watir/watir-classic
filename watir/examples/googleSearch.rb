@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------------------------------------#
 
    #includes:
-   require '../watir'   # the watir controller
+   require 'watir'   # the watir controller
 
    #variables:
    testSite = 'http://www.google.com'
