@@ -709,7 +709,39 @@ the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
 the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i>
 directory and click on <b>index.html</b></p>
 <h2>Using IRB and Watir</h2>
-<p>Use Ruby's Interactive Command Interpreter to test out script ideas.</p>
+<p>Use Ruby's Interactive Command Interpreter to test out script ideas.
+You can try out test script ideas interactively with irb.</p>
+<p>To start IRB on Windows, select Start > Run and type "irb" in the Open field.
+Click "OK", and a DOS console should open with a command prompt that looks like this:
+<b>irb(main):001:0></b></p>
+<p>Use the Watir library and enter commands to start driving a web browser interactively:</p>
+<div class="testexample">irb(main):001:0> <b>require 'watir'</b><br>
+=> true<br>
+irb(main):002:0> <b>ie = Watir::IE.start("http://<i>mytestsite.com</i>")</b><br>
+</div>
+<h3>Use IRB to Find Page Objects</h3>
+<p>To find out what objects are on a page you are writing a test script for, use IRB to 
+get instant feedback.</p>
+<p>The <b>showAllObjects</b> method is a useful way to identify the attributes of objects
+you will need to use in a test script.</p>
+<div class="testexample">
+irb(main):003:0><b> ie.showAllObjects</b><br>
+-----------Objects in  page -------------<br>
+text              name=test_text            id= 11                value=          alt=                src=<br>
+submit            name=test_button          id=   12              value=Click Me  alt=  click          src=<br>
+</div>
+<p>The objects on the page are shown with their attributes such as name, id, value, alt, src. You can use
+these attributes to uniquely identify the objects needed for a test script. In our example above, we have two 
+objects. A text field named <b>test_text</b> and a button (submit) named <b>test_button</b>.</p>
+<p>The <b>flash</b> method can be used to test whether you have identified the object correctly. The
+flash method causes an object in the web browser to flash yellow ten times.</p>
+<div class="testexample">
+irb(main):006:0> <b>ie.textField(:name, "test_text").flash</b><br>
+=> 10</div>
+<p>This would cause the text field with the name attribute "test_text" to flash yellow ten times. This is an effective
+way of testing whether you have identified the right object, and if you have used the right attribute. Using this in IRB
+is a quick way of finding out what objects can be used in a test script before commiting the script to a file.</p>
+
 
 <h3>Coming Soon</h3>
 <h4>File Upload</h4>
