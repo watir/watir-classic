@@ -75,6 +75,10 @@ div.htmlexample
 <h2>Introduction</h2>
 <p>"Watir" stands for "Web Application Testing in Ruby". Watir is an automated test tool which uses the <a href="http://www.rubycentral.com/">Ruby</a> scripting language to drive the Internet Explorer web browser using 
 Microsoft's OLE interface. Watir provides a toolkit for automated tests to be developed and run against a web browser.</p>
+<h3>What Does Watir Work With?</h3>
+<p>Watir will drive web applications that are served up as HTML pages in a web browser. Watir will not work with ActiveX plugin components, Java Applets, Macromedia Flash, or other plugin applications. To determine whether Watir can be used to automate
+a part of a web application, right click on the object and see if the <i>View Source</i> menu option is available. If you can view the HTML source, that object can be automated using Watir.</p>
+
 <h3>Prerequisites</h3>
 <p>To use the tool, users should have a basic understanding of:<ul>
 <li>HTML: <a href="http://www.w3.org/MarkUp/Guide/">this</a> is a basic HTML tutorial.</li>
@@ -88,7 +92,7 @@ Microsoft's OLE interface. Watir provides a toolkit for automated tests to be de
 <h2>Installation</h2>
 <h3>Step 1 - Install Ruby</h3>
 <p>On Windows, the simplest way to install Ruby is to download the <a href="http://rubyforge.org/projects/rubyinstaller/">One Click Windows Installer</a>. 
-If you prefer, you can download and install a Windows version of Ruby from <a href="http://ruby-lang.org">here</a></p>
+If you prefer, you can download and install a Windows version of Ruby from <a href="http://ruby-lang.org">here</a>.</p>
 <p>Once Ruby is installed on your machine, you can run files with the ".rb" extension by clicking them or running them from the command line.</p>
 
 <h3>Step 2 - Install Watir</h3>
@@ -127,6 +131,8 @@ Watir can use different attributes of a tag to manipulate that object, so it is 
 <li>Open your text editor.</li>
 <li>Name your test file with a <b>.rb</b> (Ruby) extension.</li>
 <li>Provide your new test file with access to the Watir tool by entering this statement at the beginning of your test script: <b>require 'watir'</b></li>
+<ul><li>In the 'require' statement, enter the path from the directory your script is in to the directory that contains the "watir.rb" file. If you are
+one directory away, you can use a relative path. ex. require '../watir'. This reads: "to find watir.rb, go back a directory".</li></ul>
 <li>Open Internet Explorer and navigate to the application you wish to test</li>
 <li>Interact with it to design your test case</li>
 <li>Using the Watir methods below, type the corresponding Watir methods into your test script</li> 
@@ -166,10 +172,11 @@ The third view is the object on the web page shown in its HTML form. This is the
 <p>In the example above, enter in your application's URL in place of <i>mytestsite</i>.</p>
 <p>Watir sends the goto message to Internet Explorer, telling it to enter the address you entered as a method argument in the Address bar, and to direct the browser to that site.</p>
 <h2>Manipulating Web Page Objects</h2>
-<p>Interact with objects on the page</p>
+<p>These examples will demonstrate how to use Watir to interact with objects on the page.</p>
+
 <h3>Hyperlinks</h3>
 <p>You can use Watir to click hyperlinks in a variety of ways. Watir can click links by looking at the link text you see in the browser (text attribute) or by looking at the attributes available in the HTML tag. 
-Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here as URL) among others.</p>
+Attributes in the tag can include: <i>name</i>, <i>href</i> (we refer to it here as URL) among others.</p><p>Here is an example using a link to the "Pickaxe" book by the Pragmatic Programmers:</p>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><a href="http://pragmaticprogrammer.com/titles/ruby/">Pickaxe</a></div>
 <h4><i>Text</i> Attribute </h4>
@@ -385,6 +392,9 @@ to allow for tests on pages using CSS as part of the application. </p>
 <p>Watir supports JavaScript treeviews such as the Joust tree view.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i> directory and click on <b>index.html</b></p>
+
+<h2>Glossary</h2>
+<p></p>
 <h2>Feedback</h2>
 <p>Questions? Comments? The Watir development team like to hear your comments and suggestions for improvement. Email questions and suggestions to the <a href="http://rubyforge.org/mailman/listinfo/wtr-general">wtr-general</a> mailing list.
 
