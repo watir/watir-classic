@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-class TC_Forms < Test::Unit::TestCase
+class TC_Forms1 < Test::Unit::TestCase
     include Watir
 
     def setup()

@@ -159,21 +159,14 @@ module Watir
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
         
-        attr_accessor :eventThread
-        
         # this is used when forms are used. It shouldnt be used otherwise
         attr_accessor :frameHandler
-        
-        def create_browser
-            return WIN32OLE.new('InternetExplorer.Application')
-        end
-        private :create_browser
-                
+                        
         def initialize( logger = nil, how = nil, what = nil )
             if ((how != nil) and (what != nil))
-                @ie = seek_window(how, what)
+                attach_browser_window(how, what)
             else
-                @ie = create_browser            
+                create_browser_window            
             end
             set_defaults
             @logger = logger
@@ -187,10 +180,17 @@ module Watir
             @typingspeed = DEFAULT_TYPING_SPEED
             @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
             @defaultSleepTime = DEFAULT_SLEEP_TIME
+
+            @logger = nil
         end
         private :set_defaults        
         
-        def seek_window( how, what )
+        def create_browser_window
+            @ie = WIN32OLE.new('InternetExplorer.Application')
+        end
+        private :create_browser_window
+
+        def attach_browser_window( how, what )
             puts "Seeking Window with #{how}: #{ what }"
             shell = WIN32OLE.new("Shell.Application")
             appWindows = shell.Windows()
@@ -218,9 +218,9 @@ module Watir
                  raise NoMatchingWindowFoundException,
                  "Unable to locate a window with #{ how} of #{what}"
             end
-            return ieTemp
+            @ie = ieTemp
         end
-        private :seek_window
+        private :attach_browser_window
 
         #
         # Accessing data outside the document
@@ -1019,6 +1019,8 @@ module Watir
 
     end # class IE
     
+
+
     
     # 
     # MOVETO: watir/popup.rb
@@ -1068,7 +1070,37 @@ module Watir
     #
 
     class BrowserFacade < IE
-    
+        private_class_method :new
+        def initialize ()
+        end
+
+        # Create a new IE Window, starting at the specified url.
+        # If no url is given, start empty.
+        def BrowserFacade.start( url = nil )
+            bf = new
+            bf.start_init(url)
+            return bf
+        end
+        
+        def start_init( url )
+            create_browser_window
+            set_defaults                        
+            goto(url) if url
+        end        
+
+        # Attach to an existing IE window, either by url or title.
+        # BrowserFacade.attach(:url, 'http://www.google.com')
+        # BrowserFacade attach(:title, 'Google') 
+        def BrowserFacade.attach( how, what )
+            bf = new
+            bf.attach_init(how, what)
+            return bf
+        end   
+
+        def attach_init( how, what )
+            attach_browser_window(how, what)
+            set_defaults                        
+        end        
     
     end
     
