@@ -609,6 +609,17 @@ module Watir
             log s+"\n\n\n"
             clearFrame()
         end
+
+        def showDivs( )
+
+               divs = getDocument().getElementsByTagName("DIV")
+               puts "Found #{divs.length} div tags"
+               divs.each do |d|
+                   puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+               end
+            end
+
+
         
         #
         # Searching for Page Elements
@@ -980,6 +991,29 @@ module Watir
         end
 
 
+        def getNonControlObject(part , how, what )
+
+             doc = getDocument()
+             parts = doc.all.tags( part )
+             n = nil
+             case how
+                when :id
+                    attribute = "id"
+                when :name
+                    attribute = "id"
+             end
+
+             parts.each do | p |
+                 next unless n==nil
+                 n = p if what.matches( p.invoke(attribute) )
+             end
+             clearFrame()
+             return n
+
+
+        end
+
+
         #
         # This method is to keep current users happy, until the frames object is implemented
         #
@@ -1099,6 +1133,9 @@ module Watir
             i = PopUp.new(self )
         end
         
+        def div( how , what )
+            return Div.new(self , how , what)
+        end
 
     end # class IE
     
@@ -1516,6 +1553,32 @@ module Watir
             return true
         end
     end
+
+    class Div < ObjectActions
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+            @o = ieController.getNonControlObject("div" , how, what )
+            super( @o )
+            @how = how
+            @what = what
+        end
+
+        def getText()
+            raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
+            d = @o.innerText
+            @ieController.clearFrame()
+            return d
+        end
+
+        def getStyle
+            raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
+            d = @o.invoke("className")
+            @ieController.clearFrame()
+            return d
+        end
+
+    end
+
         
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
