@@ -73,8 +73,8 @@ div.htmlexample
 <body>
 <h1>WATIR User Guide</h1>
 <h2>Introduction</h2>
-<p>Watir is a test tool which uses the <a href="http://www.rubycentral.com/">Ruby</a> scripting language to drive the Internet Explorer web browser using 
-Microsoft's OLE interface.</p>
+<p>"Watir" stands for "Web Application Testing in Ruby". Watir is an automated test tool which uses the <a href="http://www.rubycentral.com/">Ruby</a> scripting language to drive the Internet Explorer web browser using 
+Microsoft's OLE interface. Watir provides a toolkit for automated tests to be developed and run against a web browser.</p>
 <h3>Prerequisites</h3>
 <p>To use the tool, users should have a basic understanding of:<ul>
 <li>HTML: <a href="http://www.w3.org/MarkUp/Guide/">this</a> is a basic HTML tutorial.</li>
@@ -107,7 +107,7 @@ Unzip the watir tarball to a working directory (ex. C:\). You will now have a wa
 <li>Change directories to the <b>examples</b> directory in your Watir install.</li>
 <li>Type the name of the test at the command prompt (ex. <b>googleSearch.rb</b>), and hit Enter to run it.
 <li>Look at the source code of the examples and compare it to the web application that it tests</li>
-<ul><li>Right click on the ruby test file and select <i>Edit</i> to view its source code in the SciTE editor.</li></ul>
+<ul><li>Right click on the Ruby test file and select <i>Edit</i> to view its source code in the SciTE editor.</li></ul>
 </ol>
 
 <h1>Developing Test Cases</h1>
@@ -116,7 +116,7 @@ application. Select the ones you need for each page of your web application base
 
 <p>Plan what you need to get Watir to do before you begin scripting. Open your web browser with the application under test in front of you, and pay close attention to the objects on that page. What text fields require entries? What buttons need to be pushed? What links need to be clicked on? It sometimes helps to write out
 the steps it will take to exercise a test first, and then filling in the Watir scripting code to satisfy each of those steps.</p> 
-<p>It is a good idea to view the source of the page (in IE, right click and select View Source) and get an idea of what the attributes of the objects you need to interact with are.
+<p>It is a good idea to view the source of the page (in Internet Explorer, right click and select View Source) and get an idea of what the attributes of the objects you need to interact with are.
 For example, on the Google home page, if you search the source for "Google Search", you will find the tag with the following attributes:
 &lt;input type=submit value="Google Search" name=btnG&gt; 
 The "type" attribute "submit" tells us that it is a button, the caption or value that you see on the button is "Google Search", and the name of the button is "btnG".
@@ -139,16 +139,19 @@ Watir can use different attributes of a tag to manipulate that object, so it is 
 It is a global variable because it needs to be accessed throughout our test script at any time. It tells the Watir controller to exercise test scripts against
 an instance of the Internet Explorer web browser.</p>
 <p>In Ruby, think of programming in terms of objects and messages. Watir was also developed with objects and messages in mind. If you think of the <b>$ie</b> variable as an object, you can send messages to it.
-Think of objects as nouns. When you start up an Internet Explorer instance - you refer to it as a thing. If you send a message to that object, 
+Think of objects as nouns. When you start up Internet Explorer, the operating system starts the program which creates an instance of the Internet Explorer web browser. You refer to this Internet Explorer browser instance as a thing. If you send a message to that object, 
 it will respond to that message if it recognizes it.</p>
 <p>Think of the messages as verbs. In Ruby, you send a message to an object by separating the object you are calling from the message you are sending to it with a dot. For example, <b>Dog.bark</b> would tell the object <i>Dog</i> that it must <i>bark</i>.</p><p>This isn't very specific though. What dog should bark? In the Watir world, you could identify the test area to be our <b>yard</b>, or by using the global variable notation: <b>$yard</b>. Like <i>$ie</i>, treat it as an object with attributes containing other objects with attributes. For example, in our yard, there are two dogs: Heidi and Megabyte. Each of these dog objects have attributes that identify them. They have names, breeds, shapes and sizes and colors. To be more specific, and interacting
 with them the Watir way, you could send the message "bark" to the dog Heidi like this: <b>$yard.dog(:name, "Heidi").bark</b>. This says in Watir syntax: in the yard, identify the dog Heidi by her name attribute, 
 and send her the "bark" message. The expected outcome would be Heidi responding to the message by barking.</p>
-<p>When you develop test scripts with Watir, you interact with objects on a web page by sending them messages. Like the yard example, the IE browser itself contains objects. You can access these objects within an IE browser instance by identifying them by different attributes. 
+<p>When you develop test scripts with Watir, you interact with objects on a web page by sending them messages. Like the yard example, the Internet Explorer browser itself contains objects. You can access these objects within an Internet Explorer browser instance by identifying them by different attributes. 
 Just like in the dog example, above,  you must be very specific when you send messages to objects on a web page. You must also be able to identify objects on a web page by using a variety of different attributes due to the diversity in how tags are 
 declared by different application developers. With Watir, identify objects and send them messages by using the dot notation. For example <b>$ie.button</b>, narrows down the type of object to send a message to. 
-<b>$ie.button(:value, "Click Me").click</b> identifies the object on the page as a button within the instance of Internet Explorer that has the value attribute (caption) "Click Me". When you send the message (the verb) <b>click</b>, Watir interprets and tells IE to click. </p>
+<b>$ie.button(:value, "Click Me").click</b> identifies the object on the page as a button within the instance of Internet Explorer that has the value attribute (caption) "Click Me". When you send the message (the verb) <b>click</b>, Watir interprets and tells Internet Explorer to click. </p>
 
+<h2>Watir Syntax</h2>
+<p>The Watir syntax is shown below with three views. One is the view that we see objects on a web page while viewing them in a web browser. The next view is an example of the Watir code that would be needed to automate an action using that web page object.
+The third view is the object on the web page shown in its HTML form. This is the way it looks when we view the source of a web page, or open the file in a text editor.</p>
 <h2>Include the Watir Tool</h2>
 <p>To use the Watir tool, first enter the following in your test script:</p>
 <div class = "testexample">require 'watir'</div>
@@ -156,12 +159,12 @@ declared by different application developers. With Watir, identify objects and s
 <h2>Create a Test Instance of Internet Explorer</h2>
 <p>To create a test instance of Internet Explorer, enter the following in your test script:</p>
 <div class = "testexample">$ie = IE.new</div>
-<p>Watir sends a message to IE, telling to create a new instance of itself, and assigns that instance to "$ie".</p>
+<p>Watir sends a message to Internet Explorer, telling to create a new instance of itself, and assigns that instance to "$ie".</p>
 <h2>Site Navigation</h2>
 <p>To direct your test script to the web application you are testing, enter the URL in this command:</p>
 <div class = "testexample"> $ie.goto("http://mytestsite")</div>
 <p>In the example above, enter in your application's URL in place of <i>mytestsite</i>.</p>
-<p>Watir sends the goto message to IE, telling it to enter the address you entered as a method argument in the Address bar, and to direct the browser to that site.</p>
+<p>Watir sends the goto message to Internet Explorer, telling it to enter the address you entered as a method argument in the Address bar, and to direct the browser to that site.</p>
 <h2>Manipulating Web Page Objects</h2>
 <p>Interact with objects on the page</p>
 <h3>Hyperlinks</h3>
@@ -310,7 +313,7 @@ we can just submit the form itself.</p>
 <div class = "htmlexample">&lt;form action = "<b>login</b>" name = "loginform" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Validating Test Results</h2>
 <p>How do we tell whether the test passed or failed? It is good practice to use a verification point in your test case.</p>
-<p>To create a valid test case, we need to use some sort of validation. It isn't enough to have a sequence of events without validation in a test script. Watir can check the state of objects in the <a href="http://msdn.microsoft.com/workshop/author/om/doc_object.asp">IE DOM</a>, 
+<p>To create a valid test case, we need to use some sort of validation. It isn't enough to have a sequence of events without validation in a test script. Watir can check the state of objects in the <a href="http://msdn.microsoft.com/workshop/author/om/doc_object.asp">Internet Explorer DOM</a>, 
 and can check to see if a page contains the objects that are expected for the test to pass.<p>
 <h3>Object Exists</h3>
 <p>A simple verification point is to use the Watir method <i>pageContainsText</i>:</p>
@@ -367,7 +370,7 @@ are <i>enabled</i> or <i>disabled</i>, or any other state that the DOM tells the
 The tag may come with one attribute, or it may come with several. If you still have trouble, see if the developers will add a <i>name</i> attribute to the offending tag.</p>
 <h4>Choosing Attributes</h4>
 <p>If you are having difficulty getting Watir to interact with an object, try using the method with different tag attributes. Tag declarations in HTML are varied. Some developers use tools that generate HTML, and there are many variations on tag attributes. Watir is very flexible and 
-offers several variations on each method. There are also attributes that are part of the DOM within IE. Anything the DOM can see, you can access using Ruby. If you have exhausted the attributes on a tag and Watir still won't interact with it, 
+offers several variations on each method. There are also attributes that are part of the DOM within Internet Explorer. Anything the DOM can see, you can access using Ruby. If you have exhausted the attributes on a tag and Watir still won't interact with it, 
 send an email to the wtr-general mailing list. The Watir development team will help out, and if needed, add support for that situation within Watir.</p>
 <h4>Using Regular Expressions</h4>
 <p>Watir supports regular expressions in method calls.</p>
@@ -376,8 +379,10 @@ send an email to the wtr-general mailing list. The Watir development team will h
 <p>This will click the link that matches <i>shtml</i>.</p>
 <h4>CSS: Messages in Div tags</h4>
 <p>Watir supports div tags. Some web applications use one <i>div</i> for one state of the application, and another for a different state (such as error or success messages). Watir can check the status of the div
-to allow for tests on pages using CSS as part of the application. This is a big plus for Watir as traditional "capture/replay" tools are usually unable to support this.</p>
+to allow for tests on pages using CSS as part of the application. </p>
 <p>Check out the unit test <b>css_test.rb</b> for usage.</p>
+<h4>Tree Views</h4>
+<p>Watir supports JavaScript treeviews such as the Joust tree view.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i> directory and click on <b>index.html</b></p>
 <h2>Feedback</h2>
