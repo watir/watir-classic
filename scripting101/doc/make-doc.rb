@@ -8,8 +8,12 @@ def convert( textile_file )
 end
 
 (Dir["*.txt"] + Dir["../lab/exercises/*.txt"]).each do |textile_file|
-  html = convert( textile_file )
-  html_file = textile_file.sub(/\.txt$/, ".html")
-  File.open( html_file, "w" ) {| f | f.write(html)}
-  puts html_file
+  begin
+    html = convert( textile_file )
+    html_file = textile_file.sub(/\.txt$/, ".html")
+    File.open( html_file, "w" ) {| f | f.write(html)}
+    puts html_file
+  rescue StandardError => error
+    puts error.message
+  end
 end

@@ -4,7 +4,7 @@ h2. Tutorial Documentation Index
 
 This documentation accompanies the one-day tutorial.
 
-* "Installation":install.html. Installing Ruby, Timeclock, and the WTR toolkit. As of 4/5/2004, this is out of date.
+* "Installation":install.html. Installing Ruby, Timeclock, and the WTR toolkit. Updated as of 4/5/2004, although still sketchy in some details.
 
 * "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the Ruby language.
 
