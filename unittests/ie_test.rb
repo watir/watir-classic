@@ -1,7 +1,7 @@
-# Test for new windows
+# Test for Internet Explorer
 # revision: $Revision$
 
-require 'unittests/ie_mock.rb'
+require 'unittests/ie_mock'
 require 'unittests/setup'
 
 class TC_ie < Test::Unit::TestCase
@@ -26,4 +26,4 @@ class TC_ie < Test::Unit::TestCase
 	 
 end
 
-require 'watir.rb'
+#require 'watir.rb'
