@@ -139,8 +139,26 @@ class TC_Fields < Test::Unit::TestCase
 
         assert(  $ie.text_field(:index, 3).disabled )
 
+    end
 
+    def test_text_field_iterators
 
+        assert_equal( 8 , $ie.text_fields.length )
+
+        # watir is 1 based, so this is the first text field
+        assert_equal( "Hello World" , $ie.text_fields[1].value )
+        assert_equal( "text1" , $ie.text_fields[1].name )
+
+        index = 1
+        $ie.text_fields.each do |t|
+            assert_equal(  $ie.text_field(:index, index).value, t.value )
+            assert_equal(  $ie.text_field(:index, index).id, t.id )
+            assert_equal(  $ie.text_field(:index, index).name, t.name )
+            index +=1
+        end
+        assert_equal( index-1, $ie.text_fields.length) 
 
     end
+
+
 end
