@@ -2,6 +2,7 @@
 # revision: $Revision$
 
 require 'unittests/setup'
+#require 'setup'
 
 class TC_CheckBox < Test::Unit::TestCase
 
@@ -23,6 +24,19 @@ class TC_CheckBox < Test::Unit::TestCase
 
        
     end
+
+    def test_onClick
+
+       gotoCheckBoxPage()
+
+       assert_false($ie.button("foo").enabled?)
+       $ie.checkBox(:name, "box5").set
+       assert($ie.button("foo").enabled?)
+
+       $ie.checkBox(:name, "box5").clear
+       assert_false($ie.button("foo").enabled?)
+    end
+
 
     def test_CheckBox_Enabled
        gotoCheckBoxPage()

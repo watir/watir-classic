@@ -2,6 +2,8 @@
 # revision: $Revision$
 
 require 'unittests/setup'
+#require 'setup'
+
 
 class TC_Radios < Test::Unit::TestCase
 
@@ -32,6 +34,19 @@ class TC_Radios < Test::Unit::TestCase
        assert_false($ie.radio(:name, "box2").enabled?)   
        assert($ie.radio(:id, "box5").enabled?)   
        assert($ie.radio(:name, "box1").enabled?)   
+
+
+    end
+
+   def test_onClick
+
+       gotoRadioPage()
+       assert_false($ie.button("foo").enabled?)
+       $ie.radio(:name, "box5" , 1).set
+       assert($ie.button("foo").enabled?)
+
+       $ie.radio(:name, "box5", 2).set
+       assert_false($ie.button("foo").enabled?)
 
 
     end

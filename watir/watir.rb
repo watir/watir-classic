@@ -1509,6 +1509,7 @@ class RadioCheckCommon < ObjectActions
         raise UnknownObjectException ,  "Unable to locate an object using #{@how} and #{@what} " if @o==nil
         raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
         @o.checked = false
+        @o.fireEvent("onClick")
         @ieController.waitForIE()
    end
 
@@ -1520,6 +1521,7 @@ class RadioCheckCommon < ObjectActions
         raise ObjectDisabledException  ,  "object #{@how} and #{@what} is disabled " if !self.enabled?
         highLight( :set)
         @o.checked = true
+        @o.fireEvent("onClick")
         @ieController.waitForIE()
         highLight( :clear )
    end
