@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_JSEvents < Test::Unit::TestCase
     include Watir
 
-#button enabled/disabled tests
+    
     def gotoJavaScriptEventsPage()
         $ie.goto($htmlRoot + "javascriptevents.html")
     end
@@ -37,10 +37,21 @@ class TC_JSEvents < Test::Unit::TestCase
        $ie.button(:caption, "Button 1").click
        assert($ie.contains_text("PASS") )
     end
-#end of button enabled/disabled tests
 
 #onMouseOver tests
  #window status
+
+    def test_no_status_bar_exception
+        gotoJavaScriptEventsPage()
+        $ie.link(:text, "New Window No Status Bar").click
+        status_bar_test_win = nil
+        assert_nothing_raised { status_bar_test_win = Watir::IE.attach(:title, "Pass Page") }
+        assert_raises( Watir::NoStatusBarException ) { status_bar_test_win.status }
+        status_bar_test_win.close
+        status_bar_test_win = nil
+
+    end
+
     
     def test_page_nostatus
        gotoJavaScriptEventsPage()
