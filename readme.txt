@@ -24,18 +24,15 @@ RDoc - I need to add documentation to the classes and methods
 Contacts:
 ---------
 Paul Rogers (paul.rogers@shaw.ca)
-Bret Pettichord ( bret@pettichord.com )
+Bret Pettichord (bret@pettichord.com)
 
 Acknowledgements:
 -----------------
 Many people have been involved in getting to this point. If Ive forgotten you, its not because your contribution was small, but because I forget things.
 Chris Morris
-Brian Marrick
+Brian Marick
 Jonathan Kohl
 Penny Tonita
 Janet Gregory
 Peter Chau
-
-
-
 
