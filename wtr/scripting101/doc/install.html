@@ -2,56 +2,79 @@
 
 	<h2>Installation Instructions</h2>
 
-	<p>These instructions describe how to install the software we&#8217;ll use for our Scripting for Testers class.</p>
+	<p>These instructions describe how to install the software we&#8217;ll use in
+our Scripting for Testers class.</p>
 
-	<p>You will be using Ruby (a programming language) and the <span class="caps">IE </span>Controller (a library) on your machine to test server software running on your instructor&#8217;s machine. You can also run the server software on your own machine. This may come in handy if you can&#8217;t get on the classroom network, or if you want to use a test technique that requires a dedicated server.</p>
+	<p>We will be using Ruby (a programming language) and the <span class="caps">IE </span>Controller
+(a library) on your machine to test server software running on your
+instructor&#8217;s machine. You can also run the server software on your own
+machine, if you prefer. This may come in handy if you can&#8217;t get on the
+classroom network, or if you want to use a test technique that
+requires a dedicated server.</p>
 
 	<h3>Hardware Requirements</h3>
 
-	<p>The class software runs on Windows machines. We recommend Windows 2000 or Windows XP. We believe that it will also work on Windows NT and Windows 98, but we don&#8217;t support these in our classes. (Our experience has been that machines that are still running these operating systems are either too slow or have other problems and are a drain on our attention. Sorry.)</p>
+	<p><B>The class software runs on Windows machines. We recommend Windows 2000
+or Windows XP. You should have Administrator privileges.</B></p>
 
-	<p>The <span class="caps">IE </span>Controller software requires Internet Explorer and therefore only runs on Windows. The Timeclock server was developed on a Macintosh and also runs on Windows. We believe that it can also run on any Unix/Linux machine.</p>
+	<p>We believe that it will also work on Windows NT and Windows 98, but we
+don&#8217;t support these in our classes. (Our experience has been that
+machines that are still running these operating systems are either too
+slow or have other problems and are a drain on our attention. Sorry.)</p>
+
+	<p>The <span class="caps">IE </span>Controller software requires Internet Explorer and therefore
+only runs on Windows. The Timeclock server was developed on a
+Macintosh, and should run on any machine supporting Ruby (Unix, Linux,
+Windows). The Timeclock &#8220;product tests&#8221; will not run on Windows using
+the mswin build (the one you use for the class). They will run on
+Windows using the cygwin build.</p>
 
 	<h3>Installing the Software</h3>
 
 	<h4>Ruby</h4>
 
-	<p>The Ruby installer is ruby180-10.exe.</p>
+	<p>The Ruby installer is
+<a href="http://rubyforge.org/frs/?group_id=167&#38;release_id=414">ruby181-12.exe.</a> </p>
 
-	<p>1.      Double-click this exe file to install.</p>
-
-	<p>2.      Select the default installation options (choose all options; install in c:/ruby).</p>
-
-	<p>3.      If you are installing as Administrator you don&#8217;t need to restart windows. Otherwise, you should.</p>
+	<ol>
+	<li>     Double-click this exe file to install.</li>
+		<li>     Select the default installation options (choose all options; install in c:/ruby). </li>
+		<li>     If you are installing as Administrator you don&#8217;t need to restart windows. Otherwise, you should. </li>
+	</ol>
 
 	<h4><span class="caps">IE </span>Controller</h4>
 
-	<p>You will need to install one Ruby library: iec.2004.054.0.zip   </p>
+	<p>You will need to install one Ruby library:
+<a href="http://rubyforge.org/frs/?group_id=104&#38;release_id=305">iec.2004.054.0.zip</a>    </p>
 
-	<p>1.      Start up a command shell. (Start-> Run, enter cmd.)</p>
+	<ol>
+	<li>     Unzip this file into a new directory on your computer. </li>
+		<li>     Start up a command shell. (Start-> Run, enter &#8220;cmd&#8221;.)</li>
+		<li>     Change the current directory (cd) to the one you just created.</li>
+		<li>     Type &#8220;ruby install.rb&#8221; </li>
+	</ol>
 
-	<p>2.      Change the current directory (cd) to the one containing the utility.</p>
-
-	<p>3.      Type &#8220;ruby install.rb&#8221; </p>
-
-	<p>(You can also install this by just double-clicking the icon in windows explorer. The problem with this method is that you won&#8217;t see any error messages if there is a problem.)</p>
+	<p>(You can also install this by just double-clicking the install.rb icon
+in windows explorer. The problem with this method is that you won&#8217;t
+see any error messages.) </p>
 
 	<h4>Scripting Class Materials.</h4>
 
-	<p>1. Copy the contents of the scripting101 into your harddrive, to c:/wtr/scripting101.</p>
+	<ol>
+	<li>Copy the contents of the scripting101 into your hard drive, to c:/wtr/scripting101. </li>
+	</ol>
 
-	<h4>Running the Timeclock Server.</h4>
+	<h3>Running the Timeclock Server.</h3>
 
-	<p>You probably won&#8217;t need to do this in class, since you can use your instructor&#8217;s server. Otherwise, here is how to start up a timeclock server on your machine.</p>
+	<p>You probably won&#8217;t need to do this for class, since you can use your
+instructor&#8217;s server. Otherwise, here is how to start up a timeclock
+server on your machine. </p>
 
-	<p>1. Set VW_TIMECLOCK_DATA_DIR to be c:/tmp/timeclock.</p>
-
-	<p>2. In a command window, cd to c:/wtr/scripting101/installs/timeclock/bin.</p>
-
-	<p>3. In a command window, &#8220;ruby http-server.rb&#8221; </p>
-
-	<p>4. You can verify the installation by running some of the sample scripts:</p>
-
+	<ol>
+	<li>In a command window, cd to c:/wtr/scripting101/installs/timeclock/bin.</li>
+		<li>In a command window, &#8220;ruby http-server.rb&#8221; </li>
+		<li>You can verify the installation by running some of the sample scripts:
 	<ul>
-	<li>c:/wtr/scripting101/lab/solutions/suite.rb</li>
-	</ul>
+	<li>ruby c:/wtr/scripting101/lab/solutions/suite.rb</li>
+	</ul></li>
+	</ol>

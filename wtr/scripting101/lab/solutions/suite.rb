@@ -1,28 +1,27 @@
-# lab-suite.rb - run all the suggested solutions tests
+# suite.rb - run all the suggested solutions tests
 # This suite presumes timeclock http server is running on same machine.
 
 require 'test/unit'
-require '../toolkit/iostring'
-require '../toolkit/table-array'
-require '../toolkit/testhook'
+
+$: << File.join( File.dirname( __FILE__ ), '..' )
+require 'toolkit/iostring'
+require 'toolkit/table-array'
+require 'toolkit/testhook'
+require 'toolkit/iec-assist'
+require 'toolkit/timeclock-assist'
+
+$: << File.dirname( __FILE__ )
 
 ### Utility functions & classes
-class NilClass
-  def strip
-    nil
-  end
-end
-
 def initialize_user (user, initial_job)
   # presumes user is not already initialized
-  require 'toolkit/iec-assist'
   start_ie("http://localhost:8080")
-  login_form = get_forms[0]
+  login_form = forms[0]
   login_form.name = user
   login_form.submit
   $iec.wait
   
-  job_form = get_forms[0]
+  job_form = forms[0]
   job_form.name = initial_job
   job_form.submit
   $iec.wait
@@ -32,7 +31,7 @@ end
 
 ### Tests
 
-class Lab2CompleteTest < Test::Unit::TestCase
+class Lab2 < Test::Unit::TestCase
   def setup
     ensure_no_user_data("bret")
     # Note: test just happens to work whether this is a new or existing user. 
@@ -47,10 +46,8 @@ class Lab2CompleteTest < Test::Unit::TestCase
 
     # verify one job was created and it is no longer running.
     # (presumes ie isn't closed)
-    y = get_results_table_array
-    assert_equal 2, y.length
-    assert_equal "ruby article", y.job_name(1)
-    assert_equal "", y.status(1)
+    assert_total_job_records 1
+    assert_job_record 1, 'ruby article', ''
   end
   def teardown
     $stdout = STDOUT
@@ -58,7 +55,27 @@ class Lab2CompleteTest < Test::Unit::TestCase
   end
 end
 
-class Lab3dash4Test < Test::Unit::TestCase
+class Lab3Part2 < Test::Unit::TestCase
+  def setup
+    ensure_no_user_data("ruby")
+  end
+  def test_two_jobs
+    load 'two-jobs.rb'
+
+    y = get_results_table_array
+    assert_equal 3, y.length
+    assert_equal "job2", y.job_name(1)
+    assert_equal "<B>running</B>", y.status(1)
+    assert_equal "job1", y.job_name(2)
+    assert_equal "paused", y.status(2)
+  end
+  def teardown
+    $iec.close if $iec
+    ensure_no_user_data("ruby")
+  end
+end
+    
+class Lab3Part4 < Test::Unit::TestCase
   def setup
     # start with user with no time records
     ensure_no_user_data("ruby")
@@ -132,26 +149,6 @@ class LoginStart < Test::Unit::TestCase
   end
 end
 
-class Lab3Dash2 < Test::Unit::TestCase
-  def setup
-    ensure_no_user_data("ruby")
-  end
-  def test_two_jobs
-    load 'two-jobs.rb'
-
-    y = get_results_table_array
-    assert_equal 3, y.length
-    assert_equal "job2", y.job_name(1)
-    assert_equal "<B>running</B>", y.status(1)
-    assert_equal "job1", y.job_name(2)
-    assert_equal "paused", y.status(2)
-  end
-  def teardown
-    $iec.close if $iec
-    ensure_no_user_data("ruby")
-  end
-end
-    
 class ExtraTest < Test::Unit::TestCase
   def setup
     ensure_no_user_data("ruby")

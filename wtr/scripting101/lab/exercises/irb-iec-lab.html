@@ -1,273 +1,35 @@
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
+<h1>Scripting for Testers</h1>
 
-<head>
-<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-<meta name=ProgId content=Word.Document>
-<meta name=Generator content="Microsoft Word 9">
-<meta name=Originator content="Microsoft Word 9">
-<link rel=File-List href="./irb-iec-lab_files/filelist.xml">
-<title>Driving Timeclock using IRB</title>
-<!--[if gte mso 9]><xml>
- <o:DocumentProperties>
-  <o:Author>Bret Pettichord</o:Author>
-  <o:LastAuthor>Bret Pettichord</o:LastAuthor>
-  <o:Revision>2</o:Revision>
-  <o:TotalTime>8</o:TotalTime>
-  <o:Created>2004-04-05T18:52:00Z</o:Created>
-  <o:LastSaved>2004-04-05T18:52:00Z</o:LastSaved>
-  <o:Pages>1</o:Pages>
-  <o:Words>120</o:Words>
-  <o:Characters>684</o:Characters>
-  <o:Company>Pettichord Consulting LLC</o:Company>
-  <o:Lines>5</o:Lines>
-  <o:Paragraphs>1</o:Paragraphs>
-  <o:CharactersWithSpaces>840</o:CharactersWithSpaces>
-  <o:Version>9.2720</o:Version>
- </o:DocumentProperties>
-</xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
-@font-face
-	{font-family:Times;
-	panose-1:2 2 6 3 5 4 5 2 3 4;
-	mso-font-charset:0;
-	mso-generic-font-family:roman;
-	mso-font-pitch:variable;
-	mso-font-signature:536902279 -2147483648 8 0 511 0;}
-@font-face
-	{font-family:Helvetica;
-	panose-1:2 11 6 4 2 2 2 2 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:swiss;
-	mso-font-pitch:variable;
-	mso-font-signature:536902279 -2147483648 8 0 511 0;}
-@font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;
-	mso-font-charset:2;
-	mso-generic-font-family:auto;
-	mso-font-pitch:variable;
-	mso-font-signature:0 268435456 0 0 -2147483648 0;}
- /* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-h1
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:1;
-	font-size:16.0pt;
-	font-family:Arial;
-	mso-font-kerning:16.0pt;}
-h2
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:2;
-	font-size:14.0pt;
-	font-family:Arial;
-	font-style:italic;}
-h3
-	{mso-style-next:Normal;
-	margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	page-break-after:avoid;
-	mso-outline-level:3;
-	font-size:13.0pt;
-	font-family:Arial;}
-p.MsoList, li.MsoList, div.MsoList
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:0in;
-	margin-left:.25in;
-	margin-bottom:.0001pt;
-	text-indent:-.25in;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-p.MsoTitle, li.MsoTitle, div.MsoTitle
-	{margin-top:12.0pt;
-	margin-right:0in;
-	margin-bottom:3.0pt;
-	margin-left:0in;
-	text-align:center;
-	mso-pagination:widow-orphan;
-	mso-outline-level:1;
-	font-size:16.0pt;
-	mso-bidi-font-size:10.0pt;
-	font-family:Helvetica;
-	mso-fareast-font-family:Times;
-	mso-bidi-font-family:"Times New Roman";
-	mso-font-kerning:14.0pt;
-	font-weight:bold;
-	mso-bidi-font-weight:normal;}
-p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:6.0pt;
-	margin-left:0in;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	mso-header-margin:.5in;
-	mso-footer-margin:.5in;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
- /* List Definitions */
-@list l0
-	{mso-list-id:12539693;
-	mso-list-type:hybrid;
-	mso-list-template-ids:751479830 -167862836 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
-@list l0:level1
-	{mso-level-start-at:0;
-	mso-level-number-format:bullet;
-	mso-level-text:-;
-	mso-level-tab-stop:.75in;
-	mso-level-number-position:left;
-	margin-left:.75in;
-	text-indent:-.25in;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-@list l1
-	{mso-list-id:101196170;
-	mso-list-type:hybrid;
-	mso-list-template-ids:-1349081860 -167862836 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
-@list l1:level1
-	{mso-level-start-at:0;
-	mso-level-number-format:bullet;
-	mso-level-text:-;
-	mso-level-tab-stop:.75in;
-	mso-level-number-position:left;
-	margin-left:.75in;
-	text-indent:-.25in;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-@list l2
-	{mso-list-id:751856885;
-	mso-list-type:hybrid;
-	mso-list-template-ids:1640934654 -167862836 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
-@list l2:level1
-	{mso-level-start-at:0;
-	mso-level-number-format:bullet;
-	mso-level-text:-;
-	mso-level-tab-stop:.75in;
-	mso-level-number-position:left;
-	margin-left:.75in;
-	text-indent:-.25in;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-@list l3
-	{mso-list-id:804201023;
-	mso-list-type:hybrid;
-	mso-list-template-ids:955777184 -167862836 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
-@list l3:level1
-	{mso-level-start-at:0;
-	mso-level-number-format:bullet;
-	mso-level-text:-;
-	mso-level-tab-stop:.5in;
-	mso-level-number-position:left;
-	text-indent:-.25in;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-ol
-	{margin-bottom:0in;}
-ul
-	{margin-bottom:0in;}
--->
-</style>
-</head>
+	<h2>Lab 2: Driving Web Applications using <span class="caps">IRB</span></h2>
 
-<body lang=EN-US style='tab-interval:.5in'>
+	<p>Your instructor has demonstrated how drive the web application using
+Ruby and <span class="caps">IRB</span>. Now it is your turn. Enter ruby commands into <span class="caps">IRB</span> to
+drive the Timeclock application. </p>
 
-<div class=Section1>
+	<p>Use the <span class="caps">IE </span>Controller Cheat Sheet and the iec.rb utilities as references.</p>
 
-<p class=MsoTitle>Scripting for Testers</p>
+	<p>We suggest that you execute the following steps:</p>
 
-<p class=MsoTitle>Lab 2: Driving Web Applications using IRB</p>
+	<ol>
+	<li>  Log into the timeclock server using an existing account.</li>
+		<li>  Create a new job.</li>
+		<li>  Start the new job.</li>
+		<li>  Stop the day.</li>
+	</ol>
 
-<p class=MsoBodyText>Your instructor has demonstrated how drive the web
-application using Ruby and IRB. Now it is your turn. Enter ruby commands into
-IRB to drive the Timeclock application.</p>
+	<p>You will need to have Ruby and the IEController installed on your
+machine before starting.  </p>
 
-<p class=MsoBodyText>Use the IE Controller Cheat Sheet and the iec.rb utilities
-as references.</p>
+	<h3>Completion</h3>
 
-<p class=MsoBodyText>We suggest that you execute the following steps:</p>
+	<p>When you have completed this lab, you should be able to:</p>
 
-<p class=MsoList>1.<span style='mso-tab-count:1'>   </span>Log into the
-timeclock server using an existing account.</p>
-
-<p class=MsoList>2.<span style='mso-tab-count:1'>   </span>Create a new job.</p>
-
-<p class=MsoList>3.<span style='mso-tab-count:1'>   </span>Start the new job.</p>
-
-<p class=MsoList>4.<span style='mso-tab-count:1'>   </span>Stop the day.</p>
-
-<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
-
-<p class=MsoBodyText>You will need to have Ruby and the IEController installed
-on your machine before starting.</p>
-
-<h3>Completion</h3>
-
-<p class=MsoNormal>When you have completed this lab, you should be able to:</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>Start IE from IRB</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>View the forms on a page</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>Select a form by name or action</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>View the elements, or controls, in a form</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>Select an element by name or value</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>Enter text in a text field</p>
-
-<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;mso-list:l0 level1 lfo4;
-tab-stops:list .75in'><![if !supportLists]>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><![endif]>Click a button</p>
-
-</div>
-
-</body>
-
-</html>
+	<ul>
+	<li>        Start IE from <span class="caps">IRB</span></li>
+		<li>        View the forms on a page</li>
+		<li>        Select a form by name or action</li>
+		<li>        View the elements, or controls, in a form</li>
+		<li>        Select an element by name or value</li>
+		<li>        Enter text in a text field</li>
+		<li>        Click a button</li>
+	</ul>
