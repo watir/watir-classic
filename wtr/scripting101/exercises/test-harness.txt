@@ -16,7 +16,7 @@ class LoadTestScript < Test::Unit::TestCase
     load 'login-start.rb'
   end
   def teardown
-    $iec.close if $iec
+    $ie.close if $ie
   end
 end
 </pre>
@@ -36,8 +36,12 @@ it's as expected, nothing happens. When it isn't, an exception is
 raised, which will be caught and reported by the test harness. Several
 generic assertion methods are listed in the cheat sheet, along with
 some that are specific to the Timeclock application. Convert your
-tests to using assertions. These are detailed on page 2 of the Web
-Testing cheat sheet.
+tests to using assertions. These are detailed on page 2 of the Scripting Web
+Tests cheat sheet.
+
+h3=. Solution to Lab 4
+
+See solutions/lab4_1.rb for one suggested solution.
 
 h3=. Bonus Exercises
 
@@ -49,6 +53,3 @@ If you have time, you may want to try the following:
 
 # *Test Strategy.* Look over the test ideas you developed in Lab 1.
    Write a test script for one or more of your ideas.
-
-
-

@@ -7,3 +7,8 @@ $LOAD_PATH.unshift File.join( File.dirname( __FILE__ ), '..', '..', '..', 'watir
 $LOAD_PATH << File.join( File.dirname( __FILE__ ), '..', '..', 'watir' )
 
 require 'watir'
+
+def get_document()
+  $ie.getDocument
+end
+
