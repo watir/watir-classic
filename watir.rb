@@ -145,16 +145,16 @@ class ObjectActions
             }
 
         @ieProperties = Hash.new
-        setProperties
+        setProperties(@defaultProperties)
         @originalColor = nil
 
     end
 
-    # this method sets the default properties for the object
-    def setProperties
+    # this method sets the  properties for the object
+    def setProperties(propertyHash )
 
         if @o 
-            @defaultProperties.each_pair do |a,b|
+            propertyHash.each_pair do |a,b|
                 begin
                     setProperty(a , @o.invoke("#{b}" ) )
                 rescue
@@ -190,7 +190,7 @@ class ObjectActions
         raise UnknownObjectException if @o==nil
         n = []
         @ieProperties.each_pair do |k,v|        
-             n << "#{k}".ljust(12) + "#{v}"
+             n << "#{k}".ljust(18) + "#{v}"
         end
         return n
     end
@@ -476,7 +476,7 @@ class IE
     def goto( url )
         @ie.navigate(url)
         waitForIE()
-        sleep 3
+        sleep 0.2
     end
 
     def close
@@ -518,6 +518,64 @@ class IE
     end
 
 
+
+
+    def getImage( how, what )
+        doc = getDocument()
+
+        puts"Finding an image how: #{how} What #{what}"
+
+        images = doc.images
+        o=nil
+        images.each do |img|
+
+            puts "Image on page: src = #{img.src}"
+
+            next unless o == nil
+      
+
+            case how
+                when :src
+                    if what.kind_of? String
+                        if img.src == what
+                            o = img
+                        end
+                    elsif what.kind_of? Regexp
+                        if img.src.match(what) != nil
+                            o = img
+                        end
+                    end
+                when :name
+                    if what.kind_of? String
+                        if img.name == what
+                            o = img
+                        end
+                    elsif what.kind_of? Regexp
+                        if img.name.match(what) != nil
+                            o = img
+                        end
+                    end
+                when :id
+                    if what.kind_of? String
+                        if img.invoke("id") == what
+                            o = img
+                        end
+                    elsif what.kind_of? Regexp
+                        if img.invoke("id").match(what) != nil
+                            o = img
+                        end
+                    end
+
+                when :index
+
+            end
+        end
+        return o
+    end
+
+
+
+
     # this is the main method for finding objects on a page
     #   * how - symbol - the way we look for the object. Supported values are
     #                  - :name
@@ -557,6 +615,7 @@ class IE
             container.each do |object|
                 next unless object != nil
                 case how
+
                     when :id
                         begin
                             if object.invoke("id") == what
@@ -799,7 +858,54 @@ class IE
         l = Link.new(self , how, what )
     end
 
+    # this is the main method for accessing images
+    #  *  how   - symbol - how we access the image, :index, :id, :name , :src
+    #  *  what  - string, int or re , what we are looking for, 
+    # returns an Image object
+    def image( how , what)
+        i = Image.new(self , how, what )
+    end
+
+    
+
+
 end
+
+# this class is the means of accessing an image on a page
+# it would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link
+class Image < ObjectActions
+
+    # returns an initialized instance of a image  object
+    #   * ieController  - an instance of an IEController
+    #   * how           - symbol - how we access the image
+    #   * what          - what we use to access the image, text, url, index etc
+    def initialize( ieController,  how , what )
+       @ieController = ieController
+       @o = ieController.getImage( how, what )
+       super( @o )
+       property = {
+            "src"             =>  "src" ,
+            "fileCreatedDate" => "fileCreatedDate" ,
+            "fileSize"        => "fileSize" ,
+            "width"           => "width" ,
+            "height"          => "height"
+       }
+
+       setProperties(property )
+
+
+    end
+
+
+    def hasLoaded?
+        raise UnknownObjectException if @o==nil
+        return false  if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
+        return true
+    end
+
+
+end
+
 
 # this class is the means of accessing a link on a page
 # it would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link
