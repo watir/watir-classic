@@ -1,41 +1,28 @@
-#
 #  This is WATIR the web application testing framework for ruby
 #  Home page is http://rubyforge.com/projects/wtr
-#  
 #
 #  Version "$Revision$"
 #
 #
 #  Typical usage:
-#
 #  # include the controller
 #  require 'watir'
 #  # create an instance of the controller
-#  ie = Watir.new()
-#
+#  ie = IE.new()
 #  # goto the page you want to test
 #  ie.goto("http://myserver/mypage")
-#
 #  # to enter text into a text field - assuming the field is name "username"
 #  ie.textField(:name, "username").set("Paul")
-#
 #  # if there was a text field that had an id of "company_ID", you could set it to Ruby Co by:
 #  ie.textField(:id ,"company_ID").set("Ruby Co")
-#
-#
 #  # to click a button that has a caption of 'Cancel'
 #  ie.button(:caption, "Cancel").click()
 #
 #  The ways that are available to identify an html object depend upoon the object type.
-#
 #  :id         used for an object that has an ID attribute 
 #  :name       used for an object that has a name attribute
 #  :caption    used for finding buttons
 #  :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based
-#
-#
-
-
 
 require 'win32ole'
 
@@ -62,68 +49,56 @@ end
 # Root class for all Watir Exceptions
 class WatirException < RuntimeError  
     def initialize()
-
     end
 end
 
 # This exception is thrown if an attempt is made to access an object that doesnt exist
 class UnknownObjectException < WatirException
     def initialize()
-
     end
 end
 
 # this exception is thrown if an attempt is made to access a property that either does not exist or has not been found
 class UnknownPropertyException < WatirException
     def initialize()
-
     end
 end
 
 # this exception is thrown if an attempt is made to access an object that is in a disabled state
 class ObjectDisabledException   < WatirException
     def initialize()
-
     end
 end
 
 # This exception is thrown if an attempt is made to access a frame that cannot be found 
 class UnknownFrameException< WatirException
     def initialize()
-
     end
 end
 
 # This exception is thrown if an attempt is made to access a form that cannot be found 
 class UnknownFormException< WatirException
     def initialize()
-
     end
 end
 
 # this exception is thrown if an attempt is made to access an object that is in a read only state
 class ObjectReadOnlyException  < WatirException
     def initialize()
-
     end
 end
 
 # this exception is thrown if an attempt is made to access an object when the specified value cannot be found
 class NoValueFoundException < WatirException
     def initialize()
-
     end
 end
-
 
 # this exception gets raised if part of finding an object is missing
 class MissingWayOfFindingObjectException < WatirException
     def initialize()
-
     end
 end
-
-
 
 
 # This class is the base class for most actions ( click etc ) that happen on an object
@@ -134,7 +109,7 @@ class ObjectActions
     # The initialize method creates several default properties for the object.
     # these properties are accessed using the setProperty and getProperty methods
     #   o  - the object - normally found using
-    def initialize( o)
+    def initialize( o )
         @o = o
             @defaultProperties = { 
                 "type"   =>  "type" ,
@@ -143,11 +118,9 @@ class ObjectActions
                 "value"  => "value"  ,
                 "disabled" => "disabled"
             }
-
         @ieProperties = Hash.new
         setProperties(@defaultProperties)
         @originalColor = nil
-
     end
 
     # this method sets the  properties for the object
@@ -186,7 +159,6 @@ class ObjectActions
     #      value       Disabled Button
     #      disabled    true
     def to_s
-
         raise UnknownObjectException if @o==nil
         n = []
         @ieProperties.each_pair do |k,v|        
@@ -255,7 +227,6 @@ class ObjectActions
         return true
     end
 
-
 end
 
 
@@ -282,7 +253,6 @@ class IE
     # this method creates an instance of the IE controller
     def initialize()
 
-
 #        puts "##########################################################################"
 #        puts "#                                                                        #"
 #        puts "# This is a new version of WATIR. It is very untested.                   #"
@@ -292,7 +262,6 @@ class IE
 #        puts "#  Thanks, Paul                                                          #"
 #        puts "#                                                                        #"
 #        puts "##########################################################################"
-
 
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = TRUE
@@ -311,7 +280,6 @@ class IE
     # This method sets the frame to use for a single object access
     #   *   frameName  - string with the name of the frame to use
     def frame( frameName)
-        
         @frame  = frameName
         return self
     end
@@ -339,10 +307,8 @@ class IE
 
 
     def form( formName )
-
         @formName = nil
         temp = getDocument()
-
         @formName = formName
         puts "form - name set at #{formName}"
         return self
@@ -354,9 +320,7 @@ class IE
     end
 
     def getForm()
-
         puts "Get form"
-
         @doc.forms.each do |thisForm|
             puts "FORM name is " + thisForm.name
             if thisForm.name == @formName
@@ -371,7 +335,6 @@ class IE
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
     def getDocument()
-
         if @formName
             doc = getForm()
             puts "Getting a form #{@formName} "
@@ -408,14 +371,9 @@ class IE
     # this method returns true or false if the specified text was found
     #  * text - string or regular expression - the string to look for
     def pageContainsText(text)
-
-
-        
-
         puts "-------------"
         puts getDocument().body.innerText
         puts "-------------"
-
 
         if text.kind_of? Regexp
 
@@ -426,7 +384,6 @@ class IE
                 puts "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
                 return false
             end
-
 
         elsif text.kind_of? String
 
@@ -615,7 +572,6 @@ class IE
             container.each do |object|
                 next unless object != nil
                 case how
-
                     when :id
                         begin
                             if object.invoke("id") == what
@@ -805,7 +761,6 @@ class IE
     #  *  what  - string, int or re , what we are looking for, 
     # returns a Button object
     def button( how , what=nil  )
-
         if how.kind_of? Symbol
             raise MissingWayOfFindingObjectException if what==nil
             b = Button.new(self, how , what )
@@ -849,7 +804,6 @@ class IE
         r = RadioButton.new( self, how, what , value)
     end
 
-
     # this is the main method for accessing a link.
     #  *  how   - symbol - how we access the link, :index, :id, :name etc
     #  *  what  - string, int or re , what we are looking for, 
@@ -864,7 +818,7 @@ class IE
     # returns an Image object
     def image( how , what)
         i = Image.new(self , how, what )
-    end
+end
 
     
 
@@ -910,7 +864,6 @@ end
 # this class is the means of accessing a link on a page
 # it would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link
 class Link < ObjectActions
-
     # returns an initialized instance of a link object
     #   * ieController  - an instance of an IEController
     #   * how           - symbol - how we access the link
@@ -920,15 +873,12 @@ class Link < ObjectActions
        @o = ieController.getLink( how, what )
        super( @o )
     end
-
 end
 
 
 # This class is the way in which select boxes are manipulated.
 # it would not normally be created by a user, as it is returned by the selectBox method of IEController
 class SelectBox < ObjectActions
-
-
     # returns an initialized instance of a SelectBox object
     #   * ieController  - an instance of an IEController
     #   * how           - symbol - how we access the select box
@@ -948,7 +898,6 @@ class SelectBox < ObjectActions
             @ieController.waitForIE()
         end
         highLight( :clear)
-
     end
 
     # this method selects an item, or items in a select box.
@@ -1013,12 +962,9 @@ class SelectBox < ObjectActions
     # This method returns all the selected items from the select box as an array
     #   raises UnknownObjectException  if the select box is not found
     def getSelectedItems
-
         raise UnknownObjectException if @o==nil
         returnArray = []
-
         puts "There are #{@o.length} items"
-
         @o.each do |thisItem|
             if thisItem.selected == true
                 puts "Item ( #{thisItem.text} ) is selected"
@@ -1026,14 +972,12 @@ class SelectBox < ObjectActions
             end
         end
         return returnArray 
-
     end
 end
 
 # this is the main class for accessing buttons .
 # normally a user would not need to create this object as it is returned by the IEController Button method
 class Button < ObjectActions
-
     # create an instance of the button object
     def initialize( ieController,  how , what )
         @ieController = ieController
@@ -1045,17 +989,14 @@ end
 # this class is the parent class for radio buttons and check boxes. It contains methods common to both
 # It should not be created by users.
 class RadioCheckCommon < ObjectActions
-
     # Constant for setting, or determining if a check box or radio button is set
     CHECKED = true
-
     # Constant for unsetting, or determining if a check box or radio button is unset
     UNCHECKED = false
 
     def initialize( o )
         super(o)
     end
-
 
    # this method determines if a radio button or check box is set
    # returns true or false
@@ -1076,7 +1017,6 @@ class RadioCheckCommon < ObjectActions
         @o.checked = false
         @ieController.waitForIE()
    end
-
 
    # this method sets the radio or check box
    #   Raises UnknownObjectException  if its unable to locate an object
@@ -1205,7 +1145,6 @@ class TextField < ObjectActions
         @o.focus
         doKeyPress( setThis )
         highLight(:clear)
-
     end
 
     # This method sets the contents of the text box to the supplied text 
@@ -1227,7 +1166,6 @@ class TextField < ObjectActions
         @o.fireEvent("onKeyPress")
         doKeyPress( setThis )
         highLight(:clear)
-
     end
 
     # this method is used internally by setText and appendText
@@ -1255,5 +1193,4 @@ class TextField < ObjectActions
         end
     end
 end
-
 
