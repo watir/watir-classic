@@ -399,10 +399,17 @@ puts "-------------"
         s = SelectBox.new(self , how, what)
     end
 
-    def checkBox ( how , what , value=nil)
+    def checkBox( how , what , value=nil)
         c = CheckBox.new( self, how, what , value)
 
     end
+
+    def radio( how , what , value=nil)
+        r = RadioButton.new( self, how, what , value)
+    end
+
+
+ 
 
 end
 
@@ -511,19 +518,15 @@ class Button < ObjectActions
 
 end
 
-
-
-class CheckBox < ObjectActions
+class RadioCheckCommon < ObjectActions
 
     CHECKED = true
     UNCHECKED = false
 
-    def initialize( ieController,  how , what , value=nil )
-        @ieController = ieController
-        @o = ieController.getObject( how, what , value)
-        super( @o )
-    end
 
+    def initialize( o )
+        super(o)
+    end
 
    def isSet?
         raise UnknownObjectException if @o==nil
@@ -558,6 +561,32 @@ class CheckBox < ObjectActions
         return UNCHECKED 
 
    end
+
+
+
+end
+
+
+class RadioButton < RadioCheckCommon
+
+   
+    def initialize( ieController,  how , what , value=nil )
+        @ieController = ieController
+        @o = ieController.getObject( how, what , value)
+        super( @o )
+    end
+
+
+
+end
+
+class CheckBox < RadioCheckCommon
+
+    def initialize( ieController,  how , what , value=nil )
+        @ieController = ieController
+        @o = ieController.getObject( how, what , value)
+        super( @o )
+    end
 
 end
 
