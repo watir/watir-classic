@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>File: watir.rb</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+	<script type="text/javascript">
+	// <![CDATA[
+
+	function popupCode( url ) {
+		window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+	}
+
+	function toggleCode( id ) {
+		if ( document.getElementById )
+			elem = document.getElementById( id );
+		else if ( document.all )
+			elem = eval( "document.all." + id );
+		else
+			return false;
+
+		elemStyle = elem.style;
+		
+		if ( elemStyle.display != "block" ) {
+			elemStyle.display = "block"
+		} else {
+			elemStyle.display = "none"
+		}
+
+		return true;
+	}
+	
+	// Make codeblocks hidden by default
+	document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+	
+	// ]]>
+	</script>
+
+</head>
+<body>
+
+
+
+	<div id="fileHeader">
+		<h1>watir.rb</h1>
+		<table class="header-table">
+		<tr class="top-aligned-row">
+			<td><strong>Path:</strong></td>
+			<td>watir.rb
+			</td>
+		</tr>
+		<tr class="top-aligned-row">
+			<td><strong>Last Update:</strong></td>
+			<td>Thu Nov 11 20:50:30 Central Standard Time 2004</td>
+		</tr>
+		</table>
+	</div>
+  <!-- banner header -->
+
+	<div id="bodyContent">
+
+
+	<div id="contextContent">
+
+		<div id="description">
+			<p>
+This is WATIR the web application testing framework for ruby Home page is
+<a href="http://rubyforge.com/projects/wtr">rubyforge.com/projects/wtr</a>
+</p>
+<p>
+Version &quot;$Revision$&quot;
+</p>
+<p>
+Typical usage: # include the controller require &#8216;watir&#8217; #
+create an instance of the controller ie = <a
+href="../classes/IE.html#M000031">IE.new</a>() # goto the page you want to
+test ie.goto(&quot;<a
+href="http://myserver/mypage">myserver/mypage</a>&quot;) # to enter text
+into a text field - assuming the field is name &quot;username&quot;
+ie.textField(:name, &quot;username&quot;).set(&quot;Paul&quot;) # if there
+was a text field that had an id of &quot;company_ID&quot;, you could set it
+to Ruby Co by: ie.textField(:id ,&quot;company_ID&quot;).set(&quot;Ruby
+Co&quot;) # to click a button that has a caption of &#8216;Cancel&#8217;
+ie.button(:caption, &quot;Cancel&quot;).click()
+</p>
+<p>
+The ways that are available to identify an html object depend upoon the
+object type. :id used for an object that has an ID attribute :name used for
+an object that has a name attribute :caption used for finding buttons
+:index finds the object of a certain type at the index - eg button(:index ,
+2) finds the second button. This is 1 based
+</p>
+
+		</div>
+
+		<div id="requires-list">
+			<h2 class="section-bar">Required files</h2>
+
+			<div class="name-list">
+			win32ole&nbsp;&nbsp;
+			</div>
+		</div>
+
+
+
+
+
+			
+		<div id="class-list">
+			<h2 class="section-bar">Classes and Modules</h2>
+
+			Class <a href="../classes/Button.html" class="link">Button</a><br />
+Class <a href="../classes/CheckBox.html" class="link">CheckBox</a><br />
+Class <a href="../classes/IE.html" class="link">IE</a><br />
+Class <a href="../classes/Image.html" class="link">Image</a><br />
+Class <a href="../classes/Link.html" class="link">Link</a><br />
+Class <a href="../classes/MissingWayOfFindingObjectException.html" class="link">MissingWayOfFindingObjectException</a><br />
+Class <a href="../classes/NoValueFoundException.html" class="link">NoValueFoundException</a><br />
+Class <a href="../classes/ObjectActions.html" class="link">ObjectActions</a><br />
+Class <a href="../classes/ObjectDisabledException.html" class="link">ObjectDisabledException</a><br />
+Class <a href="../classes/ObjectReadOnlyException.html" class="link">ObjectReadOnlyException</a><br />
+Class <a href="../classes/RadioButton.html" class="link">RadioButton</a><br />
+Class <a href="../classes/RadioCheckCommon.html" class="link">RadioCheckCommon</a><br />
+Class <a href="../classes/SelectBox.html" class="link">SelectBox</a><br />
+Class <a href="../classes/Spinner.html" class="link">Spinner</a><br />
+Class <a href="../classes/TextField.html" class="link">TextField</a><br />
+Class <a href="../classes/UnknownFormException.html" class="link">UnknownFormException</a><br />
+Class <a href="../classes/UnknownFrameException.html" class="link">UnknownFrameException</a><br />
+Class <a href="../classes/UnknownObjectException.html" class="link">UnknownObjectException</a><br />
+Class <a href="../classes/UnknownPropertyException.html" class="link">UnknownPropertyException</a><br />
+Class <a href="../classes/WatirException.html" class="link">WatirException</a><br />
+
+		</div>
+
+	</div>
+
+
+
+		<!-- if includes -->
+
+
+		<!-- if method_list -->
+
+
+	</div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

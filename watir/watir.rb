@@ -3,7 +3,6 @@
 #
 #  Version "$Revision$"
 #
-#
 #  Typical usage:
 #  # include the controller
 #  require 'watir'
@@ -125,7 +124,6 @@ class ObjectActions
 
     # this method sets the  properties for the object
     def setProperties(propertyHash )
-
         if @o 
             propertyHash.each_pair do |a,b|
                 begin
@@ -167,12 +165,10 @@ class ObjectActions
         return n
     end
 
-
     # this method is responsible for setting and clearing the highlight on the currently active element
     # use :set    to set the highlight
     #     :clear  to clear the highlight
     def highLight( setOrClear )
- 
         if setOrClear == :set
             begin
                 @originalColor = @o.style.backgroundColor
@@ -235,7 +231,7 @@ end
 # An instance of this should be created to access IE
 class IE
 
-    # Used internaly to determine when IE has fiished loading a page
+    # Used internaly to determine when IE has finished loading a page
     READYSTATE_COMPLETE = 4          
 
     # the default delay when typing 
@@ -307,22 +303,18 @@ class IE
 
 
     def form( how , formName=nil )
-
+        clearForm()
         # if only one value is supplied, its a form name
         if formName == nil
             @formName = how
             @formHow = :name
-            puts "form  how is #{@formHow} name is #{@formName}"
-
         else
             @formName = formName
             @formHow = how
-            puts "form  how is #{@formHow} name is #{@formName}"
-
         end
-
-        #temp = getDocument()
-        return self
+        puts "form how is #{@formHow} name is #{@formName}"
+        getForm()
+        return self # the IE object
     end
 
     def submit()
@@ -352,8 +344,9 @@ class IE
 
     def getForm()
         puts "Get form  formHow is #{@formHow}  formName is #{@formName} "
-        count =1
-        @doc.forms.each do |thisForm|
+        count = 1
+        doc = getDocument(false)
+        doc.forms.each do |thisForm|
             next unless @form == nil
             puts "form on page, name is " + thisForm.name.to_s
             case @formHow
@@ -391,6 +384,7 @@ class IE
 
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
+    #  * useForm is currently unimplemented
     def getDocument(useForm = true)
         #if @formName and useForm
         #    doc = getForm()
@@ -605,7 +599,7 @@ class IE
 
         if @form
             container  = @form.elements.all
-            puts "getObject - using form #{@form.name} how is #{how} what is #{what}"
+            puts "Container is form.elements.all"
         else
             container = doc.body.all
             puts "Container is doc.body.all"
