@@ -1525,31 +1525,27 @@ module Watir
         #   * ieController  - an instance of an IEController
         def initialize( ieController)
             @ieController = ieController
-            @objects= []
+            @length=0
         end
  
         def each
-            0.upto( @objects.length-1 ) { |i | yield iterator_object(i)   }
+            0.upto( @length-1 ) { |i | yield iterator_object(i)   }
         end
 
         def length
-            return @objects.length
+            return @length
         end
  
         def [](n)
-            return @objects[(n-1).to_s]
+            return iterator_object(n-1)
         end
-
     end
 
     class Spans < Iterators
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("SPAN").length > 0 
-                @objects= @ieController.ie.document.body.getElementsByTagName("SPAN")
-            end        
-
+            @length =@ieController.ie.document.body.getElementsByTagName("SPAN").length
         end
        
         def iterator_object(i)
@@ -1561,10 +1557,7 @@ module Watir
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("DIV").length > 0 
-                @objects= @ieController.ie.document.body.getElementsByTagName("DIV")
-            end        
-
+            @length= @ieController.ie.document.body.getElementsByTagName("DIV").length
         end
        
         def iterator_object(i)
@@ -1576,17 +1569,14 @@ module Watir
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+            if @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
                 objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-
                 objects.each do |o|
-                    @objects << o  if ["image", "submit", "button"].include?(o.invoke("type").downcase )
+                    @length+=1 if ["button" , "submit", "image"].include?( o.invoke("type").downcase )
                 end
- 
             end        
-
         end
-       
+
         def iterator_object(i)
             @ieController.button( :index , i+1)
         end
@@ -1596,13 +1586,11 @@ module Watir
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+            if @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
                 objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-
                 objects.each do |o|
-                    @objects << o  if ["checkbox"].include?(o.invoke("type").downcase )
+                    @length+=1 if ["checkbox"].include?( o.invoke("type").downcase )
                 end
- 
             end        
 
         end
@@ -1616,13 +1604,11 @@ module Watir
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0
                 objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-
                 objects.each do |o|
-                    @objects << o  if ["radio"].include?(o.invoke("type").downcase )
+                    @length+=1 if ["radio"].include?( o.invoke("type").downcase )
                 end
- 
             end        
 
         end
@@ -1638,10 +1624,7 @@ module Watir
 
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("SELECT").length > 0 
-                @objects= @ieController.ie.document.body.getElementsByTagName("SELECT")
-            end        
-
+            @length= @ieController.ie.document.body.getElementsByTagName("SELECT").length
         end
        
         def iterator_object(i)
@@ -1656,10 +1639,7 @@ module Watir
         #   * ieController  - an instance of an IEController
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("A").length > 0 
-                @objects= @ieController.ie.document.body.getElementsByTagName("A")
-            end        
-
+            @length= @ieController.ie.document.body.getElementsByTagName("A").length
         end
        
         def iterator_object(i)
@@ -1675,10 +1655,7 @@ module Watir
         #   * ieController  - an instance of an IEController
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("IMG").length > 0 
-                @objects= @ieController.ie.document.body.getElementsByTagName("IMG")
-            end        
-
+            @length= @ieController.ie.document.images.length
         end
        
         def iterator_object(i)
@@ -1690,15 +1667,12 @@ module Watir
     class Text_Fields < Iterators
         def initialize( ieController )
             super
-            if   @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
                 objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-
                 objects.each do |o|
-                    @objects << o  if ["text"].include?(o.invoke("type").downcase )
+                    @length+=1 if ["text"].include?(o.invoke("type").downcase )
                 end
- 
             end        
-
         end
        
         def iterator_object(i)
@@ -2372,7 +2346,7 @@ module Watir
         
         # This method sets the radio list item or check box.
         #   Raises UnknownObjectException  if its unable to locate an object
-        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
+        #         ObjectDisabledException  if the object is disabled 
         def set
             assert_exists
             assert_enabled
