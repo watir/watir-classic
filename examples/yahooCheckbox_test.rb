@@ -20,13 +20,9 @@ require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
 
-#code to set your current path in Windows
-$myDir = File.dirname(__FILE__)
-$LOAD_PATH << $myDir
 
 class TC_yahoo < Test::Unit::TestCase
 
-#begin
 
  def test_a_simplesearch
   #--------------------------------------------------------
@@ -46,7 +42,7 @@ class TC_yahoo < Test::Unit::TestCase
   
    puts 'Step 1: go to the yahoo site: www.yahoo.com'
    $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + 'in the address bar.'
+   puts '  Action: entered ' + testSite + ' in the address bar.'
 
    puts 'Step 2: enter "pickaxe: in the search text field'
    $ie.textField(:name, "p").set("pickaxe")
