@@ -6,6 +6,10 @@ require 'test/unit'
 
 class IOStringTests < Test::Unit::TestCase
   include MockStdoutTestCase
+  def setup
+    @mockout = IOString.new ""
+    $stdout = @mockout
+  end
   def test_io_string_write
     puts "hello"
     assert_equal "hello\n", @mockout

@@ -38,8 +38,7 @@ class TC_Form_Display < Test::Unit::TestCase
     include MockStdoutTestCase                
     def test_showforms
         $ie.goto($htmlRoot + "forms2.html")
-    @mockout = IOString.new ""
-    $stdout = @mockout
+        $stdout = @mockout
         $ie.showForms
         assert_equal(<<END_OF_MESSAGE, @mockout)
 There are 4 forms
