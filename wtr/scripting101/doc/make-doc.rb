@@ -8,7 +8,7 @@ def convert( textile_file )
   html = r.to_html
 end
 
-(Dir["*.txt"] + Dir["../exercises/*.txt"] - ["using-irb.txt"]).each do
+(Dir["./*.txt"] + Dir["../exercises/*.txt"] - ["./using-irb.txt"]).each do
 |textile_file|
   begin
     html = convert( textile_file )

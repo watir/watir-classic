@@ -32,6 +32,17 @@ A series of labs based on the Timeclock application.
 * Lab 5. "Harnessing Tests":../exercises/test-harness.html.
   Collect your tests in a test harness. Use assertions.
 
+h3. Advanced Material
+
+This is advanced material that ordinarily is not used in the one-day
+tutorial. These describe other interfaces that can be used to test the
+Timeclock software.
+
+* "Timeclock Command Line Interface":Timeclock-cheat-sheet.doc
+* "Timeclock Web Services Interface":web-services-documentation.doc
+* Bonus Lab. "Testing Web Services":exercises/web-services-lab.html
+  Test the web services interface to the Timeclock application.
+
 h3. Web Testing with Ruby
 
 More information about the Web Testing with Ruby project.
@@ -44,27 +55,18 @@ More information about the Web Testing with Ruby project.
   
 h3. Further Reading
 
-Articles that develop themes and topics introduced in this tutorial.
+Articles that develop themes and topics introduced in this tutorial, available
+on the web.
 
 * "Programming in Ruby":http://www.pragmaticprogrammer.com/articles/ddj_ruby.pdf.
-  Dave Thomas and Andy Hunt provide a succinct overview of the 
-  Ruby language for programmers.
+  Dave Thomas and Andy Hunt provide programmers with a succinct overview of the 
+  Ruby language.
 * "Why's (Poignant) Guide to Ruby":http://poignantguide.net/ruby/.
   An introduction to Ruby for non-programmers, with cartoons. 
 * "Bypassing the GUI":http://www.testing.com/writings/bypassing-the-gui.pdf. 
-  Brian Marick demonstrates how to test an application like Microsoft Word 
-  using Ruby to interact with its COM interface.
+  Brian Marick demonstrates how to test applications like Microsoft Word 
+  using Ruby to interact with COM interfaces.
 * "Behind the Screens":http://www.testing.com/writings/behind-the-screens.pdf.
   Brian Marick demonstrates how to use Ruby to test and explore a web services 
   interface, such as Google's.
 
-h3. Advanced Material
-
-This is advanced material that ordinarily is not used in the one-day
-tutorial. These describe other interfaces that can be used to test the
-Timeclock software.
-
-* "Timeclock Command Line Interface":Timeclock-cheat-sheet.doc
-* "Timeclock Web Services Interface":web-services-documentation.doc
-* Bonus Lab. "Testing Web Services":exercises/web-services-lab.html
-  Test the web services interface to the Timeclock application.
