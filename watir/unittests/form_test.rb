@@ -124,13 +124,11 @@ end
 class TC_Forms3 < Test::Unit::TestCase
     include Watir
 
-    def gotoFormsPage()
+    def setup()
         $ie.goto($htmlRoot + "forms3.html")
     end
 
     def test_Form_Exists
-       gotoFormsPage()
-
        assert($ie.form(:name, "test2").exists?)   
        assert_false($ie.form(:name, "missing").exists?)   
 
@@ -148,19 +146,15 @@ class TC_Forms3 < Test::Unit::TestCase
     end
 
     def test_showforms
-       gotoFormsPage()
        puts"--------------------------- forms----------------------"
         $ie.showForms
     end
 
     def test_Flash
-       gotoFormsPage()
-
         $ie.form(:name ,"test2").button(:caption , "Submit").flash
     end 
 
     def test_objects_with_same_name
-        gotoFormsPage()
         assert_equal('textfield' ,$ie.textField( :name , 'g1').getProperty('value') )
         assert_equal('button'    ,$ie.button(    :name , 'g1').getProperty('value') )
         assert_equal('1'         ,$ie.checkBox(  :name , 'g1').getProperty('value') )
@@ -170,12 +164,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_equal('button_id'    ,$ie.button(    :id , 'g1').getProperty('value') )
         assert_equal('1_id'         ,$ie.checkBox(  :id , 'g1').getProperty('value') )
         assert_equal('2_id'         ,$ie.radio(     :id , 'g1').getProperty('value') )
-
-
-
     end
-
-
 
     def test_flash
         $ie.button( 'Click Me').flash
@@ -194,9 +183,7 @@ class TC_Forms3 < Test::Unit::TestCase
        puts $ie.getHTML
     end
 
-
     def test_submitWithImage
-
         assert( $ie.button(:alt , "submit").exists? )
         assert( $ie.button(:alt , /sub/).exists? )
 
@@ -211,10 +198,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
 
         assert( $ie.pageContainsText("PASS") )
-
     end
-
-
 end
 
 class TC_Forms4 < Test::Unit::TestCase

@@ -1210,26 +1210,21 @@ module Watir
         def initialize ( ole_object )
             @ole_object = ole_object
         end
-        
         def name
             @ole_object.getAttributeNode('name').value
         end
-
         def action
             @ole_object.action
         end
-        
         def method
             @ole_object.invoke('method')
         end
-        
         def id
             @ole_object.invoke("id").to_s
         end
-   end        
+    end        
         
-    
-    
+       
     #   Form object 
     #   * ieController  - an instance of an IEController
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
@@ -1250,7 +1245,10 @@ module Watir
                 #0.upto(doc.forms.length -1 ) do |i|
                 #thisForm = doc.forms[i.to_s]
                 next unless @form == nil
-                log "form on page, name is " + thisForm.invoke("name").to_s
+
+                wrapped = FormWrapper.new(thisForm)
+
+                log "form on page, name is " + wrapped.name
                 begin
                     log "its a collection of forms - length is: " + thisForm.invoke("name").length.to_s
                 rescue
@@ -1259,7 +1257,6 @@ module Watir
                 
                 case @formHow
                 when :name 
-                    wrapped = FormWrapper.new(thisForm)
                     if wrapped.name == @formName
                         @form = thisForm
                     end
@@ -1283,7 +1280,8 @@ module Watir
                     if @formName.matches(thisForm.action)
                         @form = thisForm
                     end
-                    
+                else
+                    raise MissingWayOfFindingObjectException
                 end
                 count = count +1
             end
