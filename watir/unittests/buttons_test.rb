@@ -75,6 +75,10 @@ class TC_Buttons < Test::Unit::TestCase
        assert_equal("Disabled Button"  , $ie.button(:index, 2).value  ) 
        assert_equal(true  , $ie.button(:index, 2).disabled  ) 
 
+       assert_equal( "" , $ie.button(:index, 2).title )
+       assert_equal( "this is button1" , $ie.button(:index, 1).title )
+
+
     end
    
 

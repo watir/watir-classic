@@ -37,6 +37,11 @@ class TC_Links < Test::Unit::TestCase
        assert($ie.link(:name, /_n/).exists?)   
        assert_false($ie.link(:name, /missing/).exists?)   
 
+       assert($ie.link(:title, /ti/).exists?)   
+       assert($ie.link(:title, "link_title").exists?)   
+
+       assert_false($ie.link(:title, /missing/).exists?)   
+
 
 
 
@@ -85,6 +90,11 @@ class TC_Links < Test::Unit::TestCase
         assert_equal( "link_id"   , $ie.link(:index, 6).id )
         assert_equal( "link_name" , $ie.link(:index, 7).name )
 
+        assert_equal( "" , $ie.link(:index, 7).title)
+
+
+        assert_equal( "link_title" , $ie.link(:index, 8).title)
+
 
     end
 
@@ -95,7 +105,7 @@ class TC_Links < Test::Unit::TestCase
 
     def test_link_iterator
 
-        assert_equal(7, $ie.links.length )
+        assert_equal(8, $ie.links.length )
         assert_equal("Link Using a name" , $ie.links[7].innerText)
 
         index = 1
