@@ -25,6 +25,7 @@ class TC_Tables < Test::Unit::TestCase
     end
 
     def test_rows
+       gotoTablePage()
        assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').row_count }
        assert_raises( UnknownTableException  ){ $ie.table(:index , 3).row_count }
 
@@ -47,8 +48,59 @@ class TC_Tables < Test::Unit::TestCase
     end
 
     def test_to_a
+       gotoTablePage()
 
         table1Expected = [ ["Row 1 Col1" , "Row 1 Col2"] ,[ "Row 2 Col1" , "Row 2 Col2"] ]
         assert_arrayEquals(table1Expected, $ie.table(:index , 1).to_a )
     end
+
+  def test_simple_table_access
+   $ie.goto($htmlRoot + "simple_table.html")
+ 
+   table = $ie.table(:index,1)
+   
+   assert_equal("Row 3 Col1",table[3][1].text.strip)
+   assert_equal("Row 1 Col1",table[1][1].text.strip)
+   assert_equal("Row 3 Col2",table[3][2].text.strip)
+   assert_equal(2,table.column_count)
+   
+  end
+  
+  def test_simple_table_buttons
+   $ie.goto($htmlRoot + "simple_table_buttons.html")
+ 
+   table = $ie.table(:index,1)
+   
+   table[1][1].button.click
+   assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
+   table[2][1].button.click
+   assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
+   
+   
+  
+  end
+
+  def test_table_from_element
+   $ie.goto($htmlRoot + "simple_table_buttons.html")
+ 
+   button = $ie.button(:id,"b1")
+   table = Table.create_from_element($ie,button)
+   
+   table[2][1].button.click
+   assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
+  
+  end
+
+  def test_complex_table_access
+   $ie.goto($htmlRoot + "complex_table.html")
+ 
+   table = $ie.table(:index,1)
+   
+   assert_equal("subtable1 Row 1 Col1",table[1][1].table[1][1].text.strip)
+   assert_equal("subtable1 Row 1 Col2",table[1][1].table[1][2].text.strip)
+   assert_equal("subtable2 Row 1 Col1",table[2][1].table[1][1].text.strip)
+   assert_equal("subtable2 Row 1 Col2",table[2][1].table[1][2].text.strip)
+   
+  end
+
 end
