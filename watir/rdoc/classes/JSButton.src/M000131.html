@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    startClicker (JSButton)
+
+  -->
+<html>
+<head>
+	<title>startClicker (JSButton)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 1363</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">startClicker</span>( <span class="ruby-identifier">waitTime</span> = <span class="ruby-value">3</span> )
+
+      <span class="ruby-identifier">clicker</span> = <span class="ruby-constant">WinClicker</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">clicker</span>.<span class="ruby-identifier">clickJSDialog_Thread</span>
+      <span class="ruby-comment cmt"># clickerThread = Thread.new( @caption ) {</span>
+      <span class="ruby-comment cmt">#   sleep waitTime</span>
+      <span class="ruby-comment cmt">#   puts &quot;After the wait time in startClicker&quot;</span>
+      <span class="ruby-comment cmt">#   clickWindowsButton_hwnd(hwnd , buttonCaption )</span>
+      <span class="ruby-comment cmt">#}</span>
+   <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

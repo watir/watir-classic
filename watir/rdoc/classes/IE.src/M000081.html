@@ -5,19 +5,21 @@
 
 <!--
 
-    popup (IE)
+    getHTML (IE)
 
   -->
 <html>
 <head>
-	<title>popup (IE)</title>
+	<title>getHTML (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 1046</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">popup</span>( )
-        <span class="ruby-identifier">i</span> = <span class="ruby-constant">PopUp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span> )
-    <span class="ruby-keyword kw">end</span></pre>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 796</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getHTML</span>()
+      <span class="ruby-identifier">n</span>=<span class="ruby-identifier">getDocument</span>().<span class="ruby-identifier">body</span>.<span class="ruby-identifier">innerHTML</span>
+      <span class="ruby-identifier">clearFrame</span>()
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">n</span>
+   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -56,7 +56,7 @@
 		</tr>
 		<tr class="top-aligned-row">
 			<td><strong>Last Update:</strong></td>
-			<td>Tue Jan 04 22:33:26 Central Standard Time 2005</td>
+			<td>Thu Jan 13 12:09:54 Central Standard Time 2005</td>
 		</tr>
 		</table>
 	</div>
@@ -79,28 +79,28 @@ Version &quot;$Revision$&quot;
 Typical usage:
 </p>
 <pre>
-  # include the controller
-  require 'watir'
-  # create an instance of the controller
-  ie = IE.new
-  # go to the page you want to test
-  ie.goto(&quot;http://myserver/mypage&quot;)
-  # to enter text into a text field - assuming the field is name &quot;username&quot;
-  ie.textField(:name, &quot;username&quot;).set(&quot;Paul&quot;)
-  # if there was a text field that had an id of &quot;company_ID&quot;, you could set it to Ruby Co:
-  ie.textField(:id ,&quot;company_ID&quot;).set(&quot;Ruby Co&quot;)
-  # to click a button that has a caption of 'Cancel'
-  ie.button(:caption, &quot;Cancel&quot;).click
+ # include the controller
+ require 'watir'
+ # create an instance of the controller
+ ie = IE.new
+ # go to the page you want to test
+ ie.goto(&quot;http://myserver/mypage&quot;)
+ # to enter text into a text field - assuming the field is name &quot;username&quot;
+ ie.textField(:name, &quot;username&quot;).set(&quot;Paul&quot;)
+ # if there was a text field that had an id of &quot;company_ID&quot;, you could set it to Ruby Co:
+ ie.textField(:id ,&quot;company_ID&quot;).set(&quot;Ruby Co&quot;)
+ # to click a button that has a caption of 'Cancel'
+ ie.button(:caption, &quot;Cancel&quot;).click
 </pre>
 <p>
 The ways that are available to identify an html object depend upon the
 object type.
 </p>
 <pre>
-  :id         used for an object that has an ID attribute
-  :name       used for an object that has a name attribute
-  :caption    used for finding buttons ( this is the value attribute of the button - &lt;input type = button value=&quot;Stop&quot;&gt; )
-  :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based. &lt;br&gt;
+ :id         used for an object that has an ID attribute
+ :name      used for an object that has a name attribute
+ :caption   used for finding buttons ( this is the value attribute of the button - &lt;input type = button value=&quot;Stop&quot;&gt; )
+ :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based. &lt;br&gt;
 </pre>
 
 		</div>
@@ -125,13 +125,16 @@ object type.
 
 			Class <a href="../classes/Button.html" class="link">Button</a><br />
 Class <a href="../classes/CheckBox.html" class="link">CheckBox</a><br />
+Class <a href="../classes/Dir.html" class="link">Dir</a><br />
 Class <a href="../classes/Form.html" class="link">Form</a><br />
+Class <a href="../classes/FrameHandler.html" class="link">FrameHandler</a><br />
 Class <a href="../classes/IE.html" class="link">IE</a><br />
 Class <a href="../classes/Image.html" class="link">Image</a><br />
 Class <a href="../classes/JSButton.html" class="link">JSButton</a><br />
 Class <a href="../classes/JSCommon.html" class="link">JSCommon</a><br />
 Class <a href="../classes/Link.html" class="link">Link</a><br />
 Class <a href="../classes/MissingWayOfFindingObjectException.html" class="link">MissingWayOfFindingObjectException</a><br />
+Class <a href="../classes/NoMatchingWindowFoundException.html" class="link">NoMatchingWindowFoundException</a><br />
 Class <a href="../classes/NoValueFoundException.html" class="link">NoValueFoundException</a><br />
 Class <a href="../classes/ObjectActions.html" class="link">ObjectActions</a><br />
 Class <a href="../classes/ObjectDisabledException.html" class="link">ObjectDisabledException</a><br />
@@ -151,6 +154,7 @@ Class <a href="../classes/UnknownObjectException.html" class="link">UnknownObjec
 Class <a href="../classes/UnknownPropertyException.html" class="link">UnknownPropertyException</a><br />
 Class <a href="../classes/UnknownTableException.html" class="link">UnknownTableException</a><br />
 Class <a href="../classes/WatirException.html" class="link">WatirException</a><br />
+Class <a href="../classes/WatirHelper.html" class="link">WatirHelper</a><br />
 Class <a href="../classes/WatirLogger.html" class="link">WatirLogger</a><br />
 
 		</div>

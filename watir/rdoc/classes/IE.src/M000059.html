@@ -5,36 +5,19 @@
 
 <!--
 
-    showForms (IE)
+    title (IE)
 
   -->
 <html>
 <head>
-	<title>showForms (IE)</title>
+	<title>title (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 582</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showForms</span>()
-        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">forms</span>
-            <span class="ruby-identifier">allForms</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">forms</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;There are #{allForms.length} forms&quot;</span>
-            <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">allForms</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
-                <span class="ruby-keyword kw">begin</span>
-                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Form name: #{allForms[i.to_s].invoke(&quot;name&quot;).to_s}&quot;</span>
-                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;       id: #{allForms[i.to_s].invoke(&quot;id&quot;).to_s}&quot;</span>
-                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;   method: #{allForms[i.to_s].invoke(&quot;method&quot;).to_s}&quot;</span>
-                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;   action: #{allForms[i.to_s].invoke(&quot;action&quot;).to_s}&quot;</span>
-
-                <span class="ruby-keyword kw">rescue</span>
-                    <span class="ruby-identifier">log</span> <span class="ruby-value str">&quot;Form caused an exception!&quot;</span>
-                <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">else</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-value str">&quot; No forms&quot;</span>
-        <span class="ruby-keyword kw">end</span>
-
-    <span class="ruby-keyword kw">end</span></pre>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 555</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
+      <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">locationName</span>
+   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

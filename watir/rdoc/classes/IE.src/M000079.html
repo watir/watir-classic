@@ -5,19 +5,22 @@
 
 <!--
 
-    link (IE)
+    goto (IE)
 
   -->
 <html>
 <head>
-	<title>link (IE)</title>
+	<title>goto (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 1032</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">link</span>( <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span>)
-        <span class="ruby-identifier">l</span> = <span class="ruby-constant">Link</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span> , <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> )
-    <span class="ruby-keyword kw">end</span></pre>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 783</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">goto</span>( <span class="ruby-identifier">url</span> )
+      <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">navigate</span>(<span class="ruby-identifier">url</span>)
+      <span class="ruby-identifier">waitForIE</span>()
+      <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.2</span>
+      <span class="ruby-identifier">clearFrame</span>()
+   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -5,40 +5,40 @@
 
 <!--
 
-    showAllObjects (IE)
+    captureEvents (IE)
 
   -->
 <html>
 <head>
-	<title>showAllObjects (IE)</title>
+	<title>captureEvents (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 639</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showAllObjects</span>()
-        <span class="ruby-identifier">log</span> <span class="ruby-value str">&quot;-----------Objects in  page -------------&quot;</span> 
-        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
-        <span class="ruby-identifier">s</span> = <span class="ruby-value str">&quot;&quot;</span>
-        <span class="ruby-identifier">props</span>=[<span class="ruby-value str">&quot;name&quot;</span> ,<span class="ruby-value str">&quot;id&quot;</span> , <span class="ruby-value str">&quot;value&quot;</span> , <span class="ruby-value str">&quot;alt&quot;</span> , <span class="ruby-value str">&quot;src&quot;</span>]
-        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">all</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
-            <span class="ruby-keyword kw">begin</span>
-                <span class="ruby-identifier">s</span>=<span class="ruby-identifier">s</span><span class="ruby-operator">+</span><span class="ruby-identifier">n</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-value">16</span>)
-            <span class="ruby-keyword kw">rescue</span>
-                <span class="ruby-keyword kw">next</span>
-            <span class="ruby-keyword kw">end</span>
-            <span class="ruby-identifier">props</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">prop</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword kw">begin</span>
-                    <span class="ruby-identifier">p</span> = <span class="ruby-identifier">n</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-identifier">prop</span>)
-                    <span class="ruby-identifier">s</span> =<span class="ruby-identifier">s</span><span class="ruby-operator">+</span> <span class="ruby-value str">&quot;  &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;#{prop}=#{p}&quot;</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-value">18</span>)
-                <span class="ruby-keyword kw">rescue</span>
-                    <span class="ruby-comment cmt"># this object probably doesnt have this property</span>
-                <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-            <span class="ruby-identifier">s</span>=<span class="ruby-identifier">s</span><span class="ruby-operator">+</span><span class="ruby-value str">&quot;\n&quot;</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-identifier">log</span> <span class="ruby-identifier">s</span><span class="ruby-operator">+</span><span class="ruby-value str">&quot;\n\n\n&quot;</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 586</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">captureEvents</span>
+      <span class="ruby-identifier">ev</span> = <span class="ruby-constant">WIN32OLE_EVENT</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@ie</span>, <span class="ruby-value str">'DWebBrowserEvents2'</span>)
 
-    <span class="ruby-keyword kw">end</span></pre>
+      <span class="ruby-identifier">ev</span>.<span class="ruby-identifier">on_event_with_outargs</span>(<span class="ruby-value str">&quot;NewWindow3&quot;</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">ppdisp</span>, <span class="ruby-identifier">cancel</span>, <span class="ruby-identifier">flags</span>, <span class="ruby-identifier">formURL</span>, <span class="ruby-identifier">toURL</span> , <span class="ruby-identifier">args</span><span class="ruby-operator">|</span> 
+
+         <span class="ruby-comment cmt"># http://msdn.microsoft.com/workshop/browser/webbrowser/reference/ifaces/dwebbrowserevents2/newwindow2.asp</span>
+         <span class="ruby-comment cmt"># http://groups.google.ca/groups?q=on_event_with_outargs&amp;hl=en&amp;lr=&amp;group=comp.lang.ruby&amp;safe=off&amp;selm=e249d8e7.0410060843.3f55fa05%40posting.google.com&amp;rnum=1</span>
+         <span class="ruby-comment cmt"># http://groups.google.ca/groups?q=on_event&amp;hl=en&amp;lr=&amp;group=comp.lang.ruby&amp;safe=off&amp;selm=200202211155.UAA05077%40ums509.nifty.ne.jp&amp;rnum=8</span>
+
+         <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;New Window!&quot;</span>
+         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;New URL: #{toURL }&quot;</span>
+         <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Flags: #{flags}&quot;</span>
+         <span class="ruby-identifier">args</span>[<span class="ruby-value">1</span>] = <span class="ruby-keyword kw">true</span>
+         <span class="ruby-ivar">@newWindow</span> = <span class="ruby-constant">IE</span>.<span class="ruby-identifier">new</span>
+         <span class="ruby-ivar">@newWindow</span>.<span class="ruby-identifier">goto</span>(<span class="ruby-identifier">toURL</span>)
+      }
+      <span class="ruby-comment cmt">#@eventThread = Thread.new{</span>
+      <span class="ruby-comment cmt">#   while(1)</span>
+      <span class="ruby-comment cmt">#      sleep 0.01</span>
+      <span class="ruby-comment cmt">#      puts &quot;checking event..&quot;</span>
+      <span class="ruby-comment cmt">#      WIN32OLE_EVENT.message_loop</span>
+      <span class="ruby-comment cmt">#   end</span>
+      <span class="ruby-comment cmt"># }</span>
+   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

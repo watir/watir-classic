@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    columns (Table)
+
+  -->
+<html>
+<head>
+	<title>columns (Table)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 1500</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">columns</span>( <span class="ruby-identifier">rowToUse</span> = <span class="ruby-value">1</span>)
+      <span class="ruby-ivar">@ieController</span>.<span class="ruby-identifier">clearFrame</span>()
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownTableException</span> ,  <span class="ruby-node">&quot;Unable to locate a table using #{@how} and #{@what} &quot;</span>  <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@o</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">table_rows</span> = <span class="ruby-ivar">@o</span>.<span class="ruby-identifier">getElementsByTagName</span>(<span class="ruby-value str">&quot;TR&quot;</span>)
+      <span class="ruby-identifier">cols</span> = <span class="ruby-identifier">table_rows</span>[<span class="ruby-identifier">rowToUse</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">getElementsByTagName</span>(<span class="ruby-value str">&quot;TD&quot;</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">cols</span>.<span class="ruby-identifier">length</span>
+   <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
