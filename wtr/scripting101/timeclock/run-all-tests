@@ -1,5 +1,0 @@
-echo "Unit tests:"
-(cd timeclock; ruby ./run-tests --quiet)
-echo "Product tests:"
-(cd product-tests; ruby ./run-tests --quiet)
-
