@@ -14,13 +14,13 @@ class TC_Navigate< Test::Unit::TestCase
     def test_navigation
        gotoPage( 'buttons1.html')
        gotoPage( 'checkboxes1.html')
-       assert($ie.title , "Test page for Check Boxes") 
+       assert_equal($ie.title , "Test page for Check Boxes") 
 
        $ie.back
-       assert($ie.title , "Test page for buttons")   
+       assert_equal($ie.title , "Test page for buttons")   
 
        $ie.forward
-       assert($ie.title , "Test page for Check Boxes")   
+       assert_equal($ie.title , "Test page for Check Boxes")   
 
        $ie.checkBox(:name , "box1").set
        assert($ie.checkBox(:name, "box1").isSet?)   
