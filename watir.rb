@@ -157,6 +157,10 @@ module Watir
         
         # The color we want to use for the active object. This can be any valid web-friendly color.
         attr_accessor :activeObjectHighLightColor
+
+        # use this to switch the spinner on and off
+        attr_accessor :enable_spinner
+
         
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
@@ -165,6 +169,7 @@ module Watir
         attr_accessor :logger
                         
         def initialize(suppress_new_window=nil)
+            @enable_spinner == false
             unless suppress_new_window
                 create_browser_window
                 set_defaults
@@ -389,7 +394,7 @@ module Watir
                 while @ie.busy
                     @pageHasReloaded = true
                     sleep 0.02
-                    print  s.next
+                    print  s.next unless @enable_spinner == false
                 end
                 s.reverse
                 
@@ -397,13 +402,13 @@ module Watir
                 until @ie.readyState == READYSTATE_COMPLETE
                     @pageHasReloaded = true
                     sleep 0.02
-                    print s.next
+                    print s.next unless @enable_spinner == false
                 end
                 sleep 0.02
                 
                 until @ie.document.readyState == "complete"
                     sleep 0.02
-                    print s.next
+                    print s.next unless @enable_spinner == false
                 end
                 
                 
@@ -412,7 +417,7 @@ module Watir
                         0.upto @ie.document.frames.length-1 do |i|
                             until @ie.document.frames[i.to_s].document.readyState == "complete"
                                 sleep 0.02
-                                print s.next
+                                print s.next unless @enable_spinner == false
                             end
                         end
                     rescue=>e
@@ -421,7 +426,7 @@ module Watir
                 end
                 @down_load_time =  Time.now - pageLoadStart 
 
-                print "\b"
+                print "\b" unless @enable_spinner == false
                 log "waitForIE Complete"
                 s=nil
             rescue WIN32OLERuntimeError
