@@ -568,16 +568,16 @@ and a main frame that makes up the rest of the page.</p>
 of the frames in the current page.</p>
 <p>Watir allows access to frame objects by identifying them by their name attribute. 
 This is the form that Watir takes to access a frame:</p>
-<div class="testexample">$ie.frame(:name, "menu")</div>
+<div class="testexample">$ie.frame("menu")</div>
 <p>To access individual objects within that frame, you prefix the object using the
 Watir code above. If we had a hyperlink in the menu frame: <a href="">Click Menu Item</a>, 
 we could click it like this:</p>
-<div class="testexample">$ie.frame(:name, "menu").link(:text, "Click Menu Item").click</div>
+<div class="testexample">$ie.frame("menu").link(:text, "Click Menu Item").click</div>
 <h4>Nested Frames</h4>
 <p>Sometimes a web page that is referenced by the <b>frame src=</b> attribute is also a page
 that contains a <b>frameset</b> tag. This is a nested frame. To deal with this, simply
 access the nested frame like this:</p>
-<div class="testexample">$ie.frame(:name, "frame1").frame(:name, "nested_frame")</div>
+<div class="testexample">$ie.frame("frame1").frame(:name, "nested_frame")</div>
 
 
 <h2>New Windows</h2>
@@ -650,8 +650,9 @@ test script:</p>
 <div class="testexample">#test::unit includes<br>
 require 'test/unit'<br>
 require 'test/unit/ui/console/testrunner'<br>
-require 'unittests/testUnitAddons'<br>
+require 'watir/testUnitAddons'<br>
 </div>
+<p><i>Note: <b>unittests/testUnitAddons</b> is required to do an <b>assert_false</b>.</i></p>
 <h4>Create a Test Instance</h4>
 <p>We create a new class for our test suite which is inherited from the
 test::unit <b>TestCase</b> class.</p>
