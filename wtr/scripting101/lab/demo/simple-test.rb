@@ -40,17 +40,17 @@ form{|f| f.action == 'pause_or_stop_day' }.elements('stop_day').click
 $iec.wait
 
 # Verify that two time records appear.
-tables = $iec.document.getElementsByTagName('TABLE')
-results_table = tables.item(tables.length - 1) # last table
-table_rows = results_table.getElementsByTagName('TR')
-
+assert_total_job_records 2
 recent_records = get_results_table_array
-assert_equal(3, recent_records.length) # two rows plus header
 assert_equal('Recent Records ', recent_records[0][0])
 assert_equal('job2 ', recent_records[1][0])
 assert_equal('job1 ', recent_records[2][0])
 
 # Display the time records
+tables = $iec.document.getElementsByTagName('TABLE')
+results_table = tables.item(tables.length - 1) # last table
+table_rows = results_table.getElementsByTagName('TR')
+
 for row in table_rows
   for td in row.getElementsbyTagName('TD')
     puts td.innerHtml

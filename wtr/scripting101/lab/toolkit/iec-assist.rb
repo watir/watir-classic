@@ -82,7 +82,6 @@ end
 
 def button_click_by_name(form_action, button_name)
   "Click the button named button_name in the form with action form_action." 
-#  form {|f| f.action == form_action }.element{|e| e.name == button_name}.click
   form {|f| f.action == form_action }.elements(button_name).click
   @iec.wait
 end
@@ -92,7 +91,6 @@ def button_click_by_value(form_action, button_value)
   form {|f| f.action == form_action }.element{|e| e.value == button_value }.click
   @iec.wait
 end
-
 
 
 def get_html
@@ -114,14 +112,6 @@ class NilClass
 end
 
 
-### Timeclock Specific
-
-def get_status_message
-  "Return the status message. Examples are:
-No job is recording time, or Job 'ruby article' is running."
-  text = $iec.document.getElementsByTagName("P").item(3).innerHtml
-  text[/^[^\.]*\./]
-end
 
 
 

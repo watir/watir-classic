@@ -1,7 +1,0 @@
-Exception caught: undefined method `upcase' for nil:NilClass
-=====Trace dump begins=========
-dump-example.rb:16
-=  event: This normally appears in the ring buffer.
-dump-example.rb:17
-=  verbose: This normally does not.
-=====Trace dump ends===========
