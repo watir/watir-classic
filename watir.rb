@@ -135,6 +135,14 @@ class UnknownTableException < WatirException
     end
 end
 
+# This exception is thrown if the window cannot be found
+class NoMatchingWindowFoundException < WatirException
+    def initialize(message="")
+        super(message)
+    end
+end
+
+
 class String
     def matches (x)
         return self == x
@@ -334,9 +342,7 @@ class IE
         if ((how != nil) and (what != nil))
            @ie = SeekWindow(how,what)
            #if it can not find window
-           if @ie == nil
-               @ie =  createBrowser
-            end
+           raise NoMatchingWindowFoundException ,"Unable to locate a window with #{ how} of #{what}"    if @ie == nil
         else
             @ie =  createBrowser
         end
