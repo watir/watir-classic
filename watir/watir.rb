@@ -454,6 +454,20 @@ class IE
             sleep 0.02
             print s.next
         end
+
+        if @ie.document.frames.length > 0 
+            0.upto @ie.document.frames.length-1 do |i|
+                until @ie.document.frames[i.to_s].document.readyState == "complete"
+                    sleep 0.02
+                    print s.next
+                end
+            end
+        else
+            until @ie.document.readyState == "complete"
+                sleep 0.02
+                print s.next
+            end
+        end
         print "\b"
         #puts "waitForIE Complete"
         s=nil
