@@ -33,15 +33,34 @@ class Lab2 < Test::Unit::TestCase
   end
 end
 
-class Lab3Part1 < Test::Unit::TestCase
+class Lab3 < Test::Unit::TestCase
+
   def test_login_start
     load 'lab3_1.rb'
-
     y = get_results_table_array
     assert_equal 2, y.length
     assert_equal "background", y.job_name(1)
     assert_equal "running", y.status(1)
   end
+
+  def test_start_stop
+    load 'lab3_2.rb'
+    y = get_results_table_array
+    assert_equal 2, y.length
+    assert_equal "foreground", y.job_name(1)
+    assert_equal "", y.status(1)
+  end
+
+  def test_two_jobs
+    load 'lab3_3.rb'
+    y = get_results_table_array
+    assert_equal 3, y.length
+    assert_equal "job2", y.job_name(1)
+    assert_equal "running", y.status(1)
+    assert_equal "job1", y.job_name(2)
+    assert_equal "paused", y.status(2)
+  end
+  
   def teardown
     $ie.close if $ie
     ensure_no_user_data("ruby")
