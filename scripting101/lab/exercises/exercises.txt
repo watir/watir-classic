@@ -16,7 +16,11 @@ Create simple scripts.
 
 h3. Lab 4. "Verifying Results":verifying-results.html
 
-Add verification steps to your test scripts.
+Check the expected results in your test scripts.
+
+h3. Lab 5. "Harnessing Tests":test-harness.html
+
+Collect your tests in a test harness. Use assertions.
 
 h3. Bonus Lab. "Testing Web Services":web-services-lab.html
 
