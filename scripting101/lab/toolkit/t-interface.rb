@@ -1,5 +1,5 @@
 require 'test/unit'
-require '../toolkit'
+require 'iec-assist'
 require 'iostring'
 
 class CLabs::IEC::IEDomFormWrapper
