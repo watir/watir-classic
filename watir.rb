@@ -25,6 +25,11 @@
 
 require 'win32ole'
 require 'logger'
+
+# fix the path that libraries use. This will go away when we get the installer done.
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__))
+
+
 require 'winClicker'
 
 # this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods
