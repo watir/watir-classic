@@ -222,10 +222,12 @@ module Watir
                     ieTemp = aWin if (what.matches(aWin.locationURL) )
                 when :title
                     # normal windows explorer shells do not have document
+                    title = nil
                     begin
-                        ieTemp = aWin if (what.matches( aWin.document.title ) ) 
+                        title = aWin.document.title
                     rescue WIN32OLERuntimeError
                     end
+                    ieTemp = aWin if (what.matches( title ) ) 
                 else
                     raise ArgumentError
                 end
@@ -880,19 +882,15 @@ module Watir
 
         #
         # This method is to keep current users happy, until the frames object is implemented
-        #
+        #     Paul, now that we have a frame object, what should we do? -Bret
 
         def focus()
-            getDocument.activeElement.blur
             doc = getDocument()
+            doc.activeElement.blur
             doc.focus
         end
 
        
-
-
-
-
         
         #
         # Factory Methods
@@ -955,34 +953,38 @@ module Watir
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # returns a FileField object
-        def fileField( how , what )
+        def file_field( how , what )
             f = FileField.new(self , how, what)
         end
+        alias fileField file_field
         
         # This is the main method for accessing a text field. Usually an <input type = text> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # returns a TextFieldobject
-        def textField( how , what )
+        def text_field( how , what )
             t = TextField.new(self , how, what)
         end
+        alias textField text_field
         
         # This is the main method for accessing a select box. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the select box , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # returns a SelectBox object
-        def selectBox( how , what )
+        def select_box( how , what )
             s = SelectBox.new(self , how, what)
         end
+        alias selectBox select_box
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
         #  *  how   - symbol - how we access the check box , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         # returns a CheckBox object
-        def checkBox( how , what , value=nil)
+        def check_box( how , what , value=nil)
             c = CheckBox.new( self, how, what , value)
         end
+        alias checkBox check_box
         
         # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
         #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
@@ -1102,9 +1104,10 @@ module Watir
             @frame.document
         end
 
-        def waitForIE(no_sleep = false)
-            @container.waitForIE(no_sleep)
+        def wait(no_sleep = false)
+            @container.wait(no_sleep)
         end
+        alias waitForIE wait
     end
     
 
@@ -1195,9 +1198,10 @@ module Watir
         end   
         private :getContainer
 
-        def waitForIE(no_sleep = false)
-            @container.waitForIE(no_sleep)
+        def wait(no_sleep = false)
+            @container.wait(no_sleep)
         end
+        alias waitForIE wait 
                                 
     end # class Form
     
@@ -1369,13 +1373,13 @@ module Watir
             @what = what
         end
 
-        def getText()
+        def text()
             raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
             d = @o.innerText
             return d
         end
 
-        def getStyle
+        def style
             raise UnknownObjectException ,  "Unable to locate a div using #{@how} and #{@what} "  if @o == nil
             d = @o.invoke("className")
             return d
@@ -1421,7 +1425,7 @@ module Watir
                 
         # This method returns the number of rows in the table.
         # Raises an UnknownTableException if the table doesnt exist.
-        def rows
+        def row_count
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
             table_rows = @o.getElementsByTagName("TR")
             return table_rows.length
@@ -1429,7 +1433,7 @@ module Watir
         
         # This method returns the number of columns in the table.
         # Raises an UnknownTableException if the table doesn't exist.
-        def columns( rowToUse = 1)
+        def column_count( rowToUse = 1)
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} "  if @o == nil
             table_rows = @o.getElementsByTagName("TR")
             cols = table_rows[rowToUse.to_s].getElementsByTagName("TD")
@@ -1507,13 +1511,13 @@ module Watir
             @ieController = ieController
             doc = ieController.getDocument()
             
-            log "Finding an image how: #{how} What #{what}"
+            puts "Finding an image how: #{how} What #{what}"
             count = 1
             images = doc.images
             o=nil
             images.each do |img|
                 
-                log "Image on page: src = #{img.src}"
+                puts "Image on page: src = #{img.src}"
                 
                 next unless o == nil
                 if how == :index

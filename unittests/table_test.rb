@@ -25,12 +25,12 @@ class TC_Tables < Test::Unit::TestCase
     end
 
     def test_rows
-       assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').rows }
-       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).rows }
+       assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').row_count }
+       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).row_count }
 
-        assert_equal( 2 , $ie.table(:index , 1).rows)
-        assert_equal( 5 , $ie.table(:id, 't1').rows)   # 4 rows and a header 
-        assert_equal( 5 , $ie.table(:index, 2).rows)   # same table as above, just accessed by index 
+        assert_equal( 2 , $ie.table(:index , 1).row_count)
+        assert_equal( 5 , $ie.table(:id, 't1').row_count)   # 4 rows and a header 
+        assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
 
 
     end
@@ -38,12 +38,12 @@ class TC_Tables < Test::Unit::TestCase
     def test_columns
        gotoTablePage()
 
-       assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').columns }
-       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).columns }
+       assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').column_count }
+       assert_raises( UnknownTableException  ){ $ie.table(:index , 3).column_count }
 
 
-        assert_equal( 2 , $ie.table(:index , 1).columns)
-        assert_equal( 2 , $ie.table(:id, 't1').columns)   # row one has 1 cell with a colspan of 2
+        assert_equal( 2 , $ie.table(:index , 1).column_count)
+        assert_equal( 2 , $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
     end
 
     def test_to_a
