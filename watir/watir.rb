@@ -900,7 +900,7 @@ module Watir
                 
             when :url
                 links.each do |thisLink|
-                    if thisLink.href.match(Regexp.escape(what)) 
+                    if what.matches(thisLink.href) 
                         link = thisLink if link == nil
                     end
                 end
