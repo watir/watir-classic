@@ -57,6 +57,12 @@ class TC_Links < Test::Unit::TestCase
 
     end
 
+    def test_showLinks
+
+        gotoLinksPage()
+        $ie.showLinks
+
+    end
 
 
 
