@@ -35,7 +35,7 @@ class TC_JSEvents < Test::Unit::TestCase
        $ie.button(:caption, "Button 1").click
        assert($ie.pageContainsText("PASS") )
     end
-   
+#end of button enabled/disabled tests
 
 
 end
