@@ -28,7 +28,7 @@ def make_startmenu_shortcut(name , targetURL )
     #http://msdn.microsoft.com/library/default.asp?url=/library/en-us/script56/html/wsobjwshshortcut.asp
     wshShell = WIN32OLE.new("WScript.Shell")
     strStartMenu = wshShell.SpecialFolders("AllUsersStartMenu")
-    d = File.makedirs(strStartMenu + '/Programs/Watir/' )
+    d = File.makedirs(strStartMenu + '\\Programs\\Watir\\' )
     oShellLink = wshShell.CreateShortcut(strStartMenu +  '\\Programs\\' + "watir\\#{name}.lnk")
     oShellLink.TargetPath =  targetURL 
     oShellLink.WindowStyle = 1
@@ -70,9 +70,9 @@ end
 def loadGifIcon(application, filename) 
     begin
         icon = nil
-        file = File.dirname(__FILE__) + "/" + filename
+        file = File.dirname(__FILE__) + "\\" + filename
        
-        puts file
+        puts file.gsub("/" , "\\")
        
         File.open(file.to_s, "rb") { |f|
             icon = FXGIFIcon.new(application, f.read, 0, 0, 16, 16) 
@@ -85,16 +85,16 @@ end
 
 
 # This method copies samples, unittests, documentation and Rdocs to the selected directory 'dirSelected'
-# A start menu item and desktop icon will be created if 'startMenu' and 'deskTop' are true
-def install(dirSelected, startMenu, deskTop)
-    puts "Going to install to #{dirSelected} with startMenu=#{startMenu}  desktop=#{deskTop}"
+# A start menu item and desktop icon will be created if 'startMenu' and 'desktop' are true
+def install(dirSelected, startMenu, desktop)
+    puts "Going to install to #{dirSelected} with startMenu=#{startMenu} and desktop=#{desktop}"
 
-    siteLib = Config::CONFIG['sitelibdir']
+    siteLib = (Config::CONFIG['sitelibdir']).gsub("/" , "\\")
 
     # copy the watir libs to siteLib 
     puts "Copying Files"
-    d = File.makedirs(siteLib + '/watir/')
-    copy_file( 'watir.rb' , siteLib )
+    d = File.makedirs(siteLib + '\\watir\\')
+    copy_file( 'watir.rb' , siteLib)
     FileUtils.cp_r('watir', siteLib, {:verbose=> true} )
 
     # copy the samples to dirSelected
@@ -110,14 +110,19 @@ def install(dirSelected, startMenu, deskTop)
     # copy the Rdocs to dirSelected
     FileUtils.cp_r('rdoc', dirSelected, {:verbose=> true} )
 
-    # make shortcuts if the flags are true
-    puts "Creating start menu shortcuts" if startMenu
-    make_startmenu_shortcut( "Watir Documentation" , dirSelected + "/doc/watir_user_guide.html" ) if startMenu 
-    make_startmenu_shortcut( "RDocs", dirSelected + "/rdoc/index.html" ) if startMenu
+    # Create start menu shortcut
+    if startMenu==1
+        puts "Creating start menu shortcuts"
+        make_startmenu_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
+        make_startmenu_shortcut( "RDocs", dirSelected + "\\rdoc\\index.html" )
+    end
     
-    puts "Creating desktop shortcuts" if deskTop
-    make_desktop_shortcut( "Watir Documentation" , dirSelected + "/doc/watir_user_guide.html" )   if deskTop
-    make_desktop_shortcut( "RDocs", dirSelected + "/rdoc/index.html" ) if deskTop
+    # Create desktop shortcut
+    if desktop==1
+        puts "Creating desktop shortcuts"
+        make_desktop_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
+        make_desktop_shortcut( "RDocs", dirSelected + "\\rdoc\\index.html" ) 
+    end
 
 end
 
@@ -125,7 +130,7 @@ end
 
 # Get info from client computer
 homeDrive = ENV["HOMEDRIVE"]
-bonus_location = homeDrive + "/watir_bonus/"   # the default bonus location
+bonus_location = homeDrive + "\\watir_bonus\\"   # the default bonus location
 
 
 # Creat an FXApplication
@@ -172,7 +177,7 @@ startMenuShortcut.checkState = true
 # install button
 installButton = FXButton.new(vFrame, "Install", nil, application, BUTTON_NORMAL)
 installButton.connect(SEL_COMMAND) do |sender, sel, checked|    
-    install(browseText.text, desktopIcon.checkState, startMenuShortcut.checkState)
+    install(browseText.text, startMenuShortcut.checkState, desktopIcon.checkState)
     puts "Installation Completed"
     application.exit()   
 end
