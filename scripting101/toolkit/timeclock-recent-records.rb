@@ -34,7 +34,7 @@ class RecentRecordsArray < Array
   end
 end
 
-def get_results_table_array (document=get_document())
+def get_results_table_array (document)
   tables = document.getElementsByTagName("TABLE")
   results_table = tables.item(tables.length - 1) # last
   result = table_array(results_table, RecentRecordsArray.new)
