@@ -1,0 +1,25 @@
+<HTML>
+<HEAD> 
+<SCRIPT LANGUAGE="JavaScript">
+
+function enable() {
+frm=document.forms[0]
+{frm.Button1.disabled=false}
+}
+
+</SCRIPT>
+
+</HEAD>
+<BODY TEXT="000000" BGCOLOR="FFFFFF">
+<p align="center"> 
+<form>
+
+<input type="text" name="entertext" onkeyup="javascript:enable();" > 
+
+
+<input type=button value="Button 1" name="Button1" disabled="true" onClick="javascript:document.location='pass.html';">
+
+</form>
+
+</BODY>
+</HTML>
