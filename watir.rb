@@ -34,7 +34,7 @@
 =end
 
 #  This is Watir, a web application testing tool for Ruby
-#  Home page is http://wtr.rubyforge.com
+#  Home page is http://wtr.rubyforge.org
 #
 #  Version "$Revision$"
 #
@@ -147,6 +147,12 @@ module Watir
     # An instance of this must be created to access Internet Explorer.
     class IE
         include Watir::Exception
+
+        # The revision number ( according to CVS )
+        REVISION = "$Revision$"
+
+        # the Release number
+        VERSION = "1.1"
         
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4         
@@ -373,7 +379,7 @@ module Watir
         # Returns true if the specified text was found.
         # Returns matchdata object if the specified regexp was found.
         #  * text - string or regular expression - the string to look for
-        def pageContainsText(text)
+        def contains_text(text)
             returnValue = false
             retryCount = 0
             begin
@@ -393,7 +399,7 @@ module Watir
             end
             return returnValue
         end
-        
+        alias pageContainsText contains_text
         # 
         # Synchronization
         #
@@ -427,7 +433,7 @@ module Watir
                 end
                 
                 
-                if @ie.document.frames.length > 0 
+                if @ie.document.frames.length > 1
                     begin
                         0.upto @ie.document.frames.length-1 do |i|
                             until @ie.document.frames[i.to_s].document.readyState == "complete"
@@ -436,7 +442,7 @@ module Watir
                             end
                         end
                     rescue=>e
-                        @logger.warn 'frame error in wait' #  + e.to_S
+                        @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
                     end
                 end
                 @down_load_time =  Time.now - pageLoadStart 
@@ -1656,7 +1662,7 @@ module Watir
             o=nil
             images.each do |img|
                 
-                puts "Image on page: src = #{img.src}"
+                #puts "Image on page: src = #{img.src}"
                 
                 next unless o == nil
                 if how == :index
