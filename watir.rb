@@ -25,7 +25,7 @@
 
 require 'win32ole'
 require 'logger'
-
+require 'winClicker'
 
 # this class is the simple WATIR logger. Any other logger can be used, however it must provide these methods
 class WatirLogger < Logger
@@ -307,6 +307,10 @@ class IE
         @typingspeed = DEFAULT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
         @defaultSleepTime = DEFAULT_SLEEP_TIME
+    end
+
+    def dir
+        return File.expand_path(File.dirname(__FILE__))
     end
 
     def log ( what )
@@ -1026,8 +1030,58 @@ class IE
         i = Image.new(self , how, what )
     end
 
+    # this is the main method for accessing java script popups
+    # returns a PopUp object
+    def popup( )
+        i = PopUp.new(self )
+    end
+
+
+
    
 end # class IE
+
+# POPUP object
+class PopUp
+    def initialize( ieController )
+        @ieController = ieController
+    end
+
+    def button( caption )
+        return JSButton.new(  @ieController.getIE.hwnd , caption )
+    end
+
+
+end
+
+class JSCommon
+
+    def initialize()
+
+    end
+end
+
+
+
+class JSButton < JSCommon
+    def initialize( hWnd , caption )
+        @hWnd = hWnd
+        @caption = caption
+    end
+
+    def startClicker( waitTime = 3 )
+
+            clicker = WinClicker.new
+            clicker.clickJSDialog_Thread
+       # clickerThread = Thread.new( @caption ) {
+       #     sleep waitTime
+       #     puts "After the wait time in startClicker"
+       #     clickWindowsButton_hwnd(hwnd , buttonCaption )
+        #}
+    end
+
+end
+
 
 # Form object 
 #   * ieController  - an instance of an IEController
