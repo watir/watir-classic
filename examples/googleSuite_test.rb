@@ -31,7 +31,7 @@ class TC_google_suite < Test::Unit::TestCase
   #
   
    #variables
-   testSite = 'http://www.google.com'
+   test_site = 'http://www.google.com'
 
    #open the IE browser
    $ie = IE.new
@@ -40,11 +40,11 @@ class TC_google_suite < Test::Unit::TestCase
    puts '  '
   
    puts 'Step 1: go to the google site: www.google.com'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + ' in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + ' in the address bar.'
 
    puts 'Step 2: enter "pickaxe: in the search text field'
-   $ie.textField(:name, "q").set("pickaxe")
+   $ie.text_field(:name, "q").set("pickaxe")
    puts '  Action: entered pickaxe in the search field'
 
    puts 'Step 3: click the "Google Search" button'
@@ -55,7 +55,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - a google page with results should be shown. "Programming Ruby" should be high on the list.'
   
    puts 'Actual Result: Check that the "Programming Ruby" link actually appears on the page by using an assertion'
-   assert($ie.pageContainsText("Programming Ruby") )
+   assert($ie.contains_text("Programming Ruby") )
 
    puts '  '
    puts '## End of test: google search'
@@ -72,17 +72,17 @@ class TC_google_suite < Test::Unit::TestCase
    #
    
    #variables
-   testSite = 'http://news.google.com'
+   test_site = 'http://news.google.com'
 
    puts '## Beginning of test: google news use drop-down box'
    puts '  '
   
    puts 'Step 1: go to the google news site: news.google.com'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + ' in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + ' in the address bar.'
 
    puts 'Step 2: Select Canada from the Top Stories drop-down list'
-   $ie.selectBox( :name , "meta").select("Canada English")
+   $ie.select_list( :index , 1).select("Canada English")
    puts '  Action: selected Canada from the drop-down list.'
 
    puts 'Step 3: click the "Go" button'
@@ -93,7 +93,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - The Google News Canada site should be displayed'
   
    puts 'Actual Result: Check that "Canada" appears on the page by using an assertion'
-   assert($ie.pageContainsText("Canada") )
+   assert($ie.contains_text("Canada") )
 
    puts '  '
    puts '## End of test: google news selection'
@@ -108,18 +108,18 @@ class TC_google_suite < Test::Unit::TestCase
    #
    
    #variables
-   testSite = 'http://www.google.ca'
+   test_site = 'http://www.google.ca'
 
    puts '## Beginning of test: google Canada - use radio button'
    puts '  '
   
    puts 'Step 1: go to the google Canada site: www.google.ca'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + ' in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + ' in the address bar.'
 
    
    puts 'Step 2: enter "WATIR: in the search text field'
-   $ie.textField(:name, "q").set("WATIR")
+   $ie.text_field(:name, "q").set("WATIR")
    puts '  Action: entered watir in the search field'
    
    puts 'Step 3: Select Search: pages from Canada from the radio list'
@@ -134,7 +134,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' a google page with results should be shown. "Collaborative Software Testing" should be high on the list.'
   
    puts 'Actual Result: Check that "Collaborative Software Testing" appears on the page by using an assertion'
-   assert($ie.pageContainsText("Collaborative Software Testing") )
+   assert($ie.contains_text("Collaborative Software Testing") )
 
    puts '  '
    puts '## End of test: google Canada search selection'
@@ -149,22 +149,22 @@ class TC_google_suite < Test::Unit::TestCase
    #
    
    #variables
-   testSite = 'http://www.google.com'
+   test_site = 'http://www.google.com'
 
 
    puts '## Beginning of test: google groups'
    puts '  '
   
    puts 'Step 1: go to the google site: www.google.com'
-   $ie.goto(testSite)
-   puts '  Action: entered ' + testSite + ' in the address bar.'
+   $ie.goto(test_site)
+   puts '  Action: entered ' + test_site + ' in the address bar.'
 
    puts 'Step 2: click the Groups link on the google home page'
    $ie.link(:text, "Groups").click
    puts '  Action: clicked the Groups link'
    
       puts 'Step 3: enter "comp.lang.ruby" in the search text field'
-   $ie.textField(:name, "q").set("comp.lang.ruby")
+   $ie.text_field(:name, "q").set("comp.lang.ruby")
    puts '  Action: entered comp.lang.ruby in the search field'
 
    puts 'Step 4: click the "Google Search" button'
@@ -175,7 +175,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - The Google Groups page for comp.lang.ruby should be shown.'
    
    puts 'Actual Result: Check that the "comp.lang.ruby" link actually appears on the page by using an assertion'
-   assert($ie.pageContainsText("comp.lang.ruby") )
+   assert($ie.contains_text("comp.lang.ruby") )
    
    puts '  '
    puts '## End of test: google groups'

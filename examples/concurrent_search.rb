@@ -5,7 +5,7 @@ require 'watir'
 
 def test_google
   ie = Watir::IE.start('http://www.google.com')
-  ie.textField(:name, "q").set("pickaxe")    
+  ie.text_field(:name, "q").set("pickaxe")    
   ie.button(:value, "Google Search").click   
   ie.close
 end
