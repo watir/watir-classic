@@ -1,5 +1,11 @@
 ===Change Log
 
+====2004.054.0
+* Newer cl/util/version used to get around syntax bug once the days rolled
+  to integers with leading zeros. d'oh!
+* Fixed bug in the new options hash that wasn't correctly reading in the
+  visible and auto_wrap_form settings.  
+
 ====2004.009.0
 * Fixed visible and auto_form_wrap assignments from options hash. If the
   options were set to false in the hash, they still showed as true in IEC.

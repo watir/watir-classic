@@ -38,12 +38,12 @@ require 'win32ole'
 module CLabs
   module IEC
     # VERSION auto generated section
-    begin                                                            
-      require 'cl/util/version'                                      
-      VERSION = CLabs::Version.new(2004, 009, 0)
-    rescue LoadError                                                 
-      VERSION = '2004.009.0'                                            
-    end                                                              
+    begin                                                                  
+      require 'cl/util/version'                                            
+      VERSION = CLabs::Version.new('2004', '054', '0')
+    rescue LoadError                                                       
+      VERSION = '2004.054.0'                                                  
+    end                                                                    
     # END_VERSION
 
     class ClIEController
@@ -70,8 +70,8 @@ module CLabs
           @ie.visible = options
         else
           @options = options.dup
-          @ie.visible = @options[:visible]
-          @auto_wrap_form = @options[:auto_wrap_form]
+          @ie.visible = (@options[:visible] == true)
+          @auto_wrap_form = (@options[:auto_wrap_form] == true)
         end
       end
 
