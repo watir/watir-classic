@@ -63,6 +63,9 @@ require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
 
+# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
+# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+
 class String
     def matches (x)
         return self == x
@@ -201,14 +204,12 @@ module Watir
                 
                 case how
                 when :url
-                    print " url is: #{aWin.locationURL}\n"
+                    log " url is: #{aWin.locationURL}\n"
                     ieTemp = aWin if (what.matches(aWin.locationURL) )
                 when :title
-                    # need rescue since normal windows explorer shells do not have document model.
+                    # normal windows explorer shells do not have document
                     begin
-                        print " url is: #{aWin.locationURL}\n"
                         ieTemp = aWin if (what.matches( aWin.document.title ) )
-                    rescue
                     end
                 end
             end
@@ -304,7 +305,7 @@ module Watir
         
         def log ( what )
             @logger.debug( what ) if @logger
-#            puts what
+            puts what
         end
         
         # This method returns the Internet Explorer object. 
@@ -503,7 +504,7 @@ module Watir
                 log "There are #{allForms.length} forms"
                 for i in 0..allForms.length-1
                     begin
-                        log "Form name: #{allForms[i.to_s].invoke("name").to_s}"
+                        log "Form name: #{allForms[i.to_s].invoke("name").invoke("name").to_s}"
                         log "      id: #{allForms[i.to_s].invoke("id").to_s}"
                         log "   method: #{allForms[i.to_s].invoke("method").to_s}"
                         log "   action: #{allForms[i.to_s].invoke("action").to_s}"
@@ -1203,6 +1204,30 @@ module Watir
         
         
     end
+
+    # wraps around a form ole object
+    class FormWrapper
+        def initialize ( ole_object )
+            @ole_object = ole_object
+        end
+        
+        def name
+            @ole_object.getAttributeNode('name').value
+        end
+
+        def action
+            @ole_object.action
+        end
+        
+        def method
+            @ole_object.invoke('method')
+        end
+        
+        def id
+            @ole_object.invoke("id").to_s
+        end
+   end        
+        
     
     
     #   Form object 
@@ -1211,6 +1236,7 @@ module Watir
     #   * what         - what we use to access the form
     class Form < IE
 
+        attr_accessor :form
         def initialize( ieController, how, what )
             @ieController = ieController
             @formHow = how
@@ -1233,7 +1259,8 @@ module Watir
                 
                 case @formHow
                 when :name 
-                    if thisForm.name == @formName
+                    wrapped = FormWrapper.new(thisForm)
+                    if wrapped.name == @formName
                         @form = thisForm
                     end
                     
@@ -1293,7 +1320,7 @@ module Watir
             @form.submit 
             @ieController.waitForIE
         end   
-        
+                
     end # class Form
     
 
