@@ -1,18 +1,14 @@
 # tests for Text Fields
 # revision: $Revision$
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
 
-
     def gotoPage()
         $ie.goto($htmlRoot + "textfields1.html")
     end
-
-    
-
-   
 
     def test_textField_Exists
        gotoPage()

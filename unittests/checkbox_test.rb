@@ -1,8 +1,8 @@
 # tests for Check Boxes
 # revision: $Revision$
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
-#require 'setup'
 
 class TC_CheckBox < Test::Unit::TestCase
 

@@ -1,8 +1,8 @@
 # tests for Images
 # revision: $Revision$
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
-
 
 class TC_Images < Test::Unit::TestCase
 

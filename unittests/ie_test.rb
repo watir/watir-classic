@@ -1,6 +1,7 @@
 # Test for Internet Explorer
 # revision: $Revision$
 
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
 require 'win32ole'
 require 'unittests/ie_mock'
 require 'test/unit'
