@@ -78,18 +78,20 @@ class Regexp
     end
 end
 
-
 # ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
 # the remaining ARGV as a filter on what tests to run.
-$HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
+def command_line_flag(switch)
+    setting = ARGV.include?(switch) 
+    ARGV.delete(switch)
+    return setting
+end            
 
-$ENABLE_SPINNER = !ARGV.include?('-s'); ARGV.delete('-s')
-
-
+$HIDE_IE = command_line_flag('-b') # background
+$ENABLE_SPINNER = !command_line_flag('-s') # suppress spinner
 
 module Watir
     include Watir::Exception
-    
+
     class WatirLogger < Logger
         def initialize(  filName , logsToKeep, maxLogSize )
             super( filName , logsToKeep, maxLogSize )
@@ -112,9 +114,10 @@ module Watir
     # This class displays the spinner object that appears in the console when a page is being loaded
     class Spinner
         
-        def initialize
+        def initialize(enabled = true)
             @s = [ "\b/" , "\b|" , "\b\\" , "\b-"]
             @i=0
+            @enabled = enabled
         end
         
         # reverse the direction of spinning
@@ -122,7 +125,12 @@ module Watir
             @s.reverse!
         end
         
+        def spin
+            print this.next if @enabled
+        end
+
         # get the next character to display
+        private 
         def next
             @i=@i+1
             @i=0 if @i>@s.length-1
@@ -267,7 +275,7 @@ module Watir
             @logger.debug( what ) if @logger
         end
         
-        # Deprecated: Use IE#.ie instead
+        # Deprecated: Use IE#ie instead
         # This method returns the Internet Explorer object. 
         # Methods, properties,  etc. that the IEController does not support can be accessed.
         def getIE()
@@ -398,11 +406,11 @@ module Watir
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
                 
-                s= Spinner.new
+                s= Spinner.new(@enable_spinner)
                 while @ie.busy
                     @pageHasReloaded = true
                     sleep 0.02
-                    print  s.next unless @enable_spinner == false
+                    s.spin
                 end
                 s.reverse
                 
@@ -410,13 +418,13 @@ module Watir
                 until @ie.readyState == READYSTATE_COMPLETE
                     @pageHasReloaded = true
                     sleep 0.02
-                    print s.next unless @enable_spinner == false
+                    s.spin
                 end
                 sleep 0.02
                 
                 until @ie.document.readyState == "complete"
                     sleep 0.02
-                    print s.next unless @enable_spinner == false
+                    s.spin
                 end
                 
                 
@@ -425,7 +433,7 @@ module Watir
                         0.upto @ie.document.frames.length-1 do |i|
                             until @ie.document.frames[i.to_s].document.readyState == "complete"
                                 sleep 0.02
-                                print s.next unless @enable_spinner == false
+                                s.spin
                             end
                         end
                     rescue=>e
@@ -650,7 +658,7 @@ module Watir
             
             if how == :index
                 o = getObjectAtIndex( container, what , types , value)
-            elsif how == :caption || how == :value # only applies to button
+            elsif how == :caption || how == :value 
                 o = getObjectWithValue( what, container , "submit" , "button" )
             elsif how == :src || how ==:alt
                 o = getObjectWithSrcOrAlt(what , how , container, types)
@@ -1758,6 +1766,9 @@ module Watir
             end
             return returnArray 
         end
+    end
+
+    class Option < ObjectActions
     end
     
 
