@@ -29,17 +29,20 @@ class TC_Buttons < Test::Unit::TestCase
     def test_Button_to_s
         gotoButtonPage()
 
-        puts "Testing to_s   "
-        line = "-"*30
-        puts line 
-        puts $ie.button(:name, "b4").to_s
-        puts line
+b4 = ['name              b4',
+'type              button',
+'id                b5',
+'value             Disabled Button',
+'disabled          true']
+b1 = ['name              b1',
+'type              button',
+'id                b2',
+'value             Click Me',
+'disabled          false']
 
-        puts $ie.button(:caption, "Click Me").to_s
-        puts line
-
-        puts $ie.button(:index, 1).to_s
-
+        assert_equal(b4, $ie.button(:name, "b4").to_s)
+        assert_equal(b1, $ie.button(:caption, "Click Me").to_s)
+        assert_equal(b1, $ie.button(:index, 1).to_s)
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").to_s   }  
 
     end
@@ -67,10 +70,7 @@ class TC_Buttons < Test::Unit::TestCase
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:caption, "Missing Caption").click   }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:id, "missingID").click   }  
 
-       puts "failing line next..."
        assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:caption, "Disabled Button").click   }  
-
-       puts "Clicking the button"
 
        $ie.button(:caption, "Click Me").click
        assert($ie.pageContainsText("PASS") )
