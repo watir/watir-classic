@@ -1,12 +1,7 @@
 # tests for Links
 # revision: $Revision$
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
-require 'watir'
-require 'test/unit'
-require 'test/unit/ui/console/testrunner'
-require 'testUnitAddons'
-require 'unittests/setup'
+require 'setup'
 
 class TC_Links < Test::Unit::TestCase
 
@@ -28,6 +23,15 @@ class TC_Links < Test::Unit::TestCase
 
        assert($ie.link(:url, "link_pass.html").exists?)   
        assert_false($ie.link(:url, "alsomissing.html").exists?)   
+
+       assert($ie.link(:id, "link_id").exists?)   
+       assert_false($ie.link(:id, "alsomissing").exists?)   
+
+       assert($ie.link(:id, /_id/).exists?)   
+       assert_false($ie.link(:id, /alsomissing/).exists?)   
+
+
+
 
     end
 
