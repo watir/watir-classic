@@ -14,6 +14,7 @@
 
    #includes:
    require 'watir'   # the watir controller
+   include Watir
 
    #variables:
    testSite = 'http://www.google.com'

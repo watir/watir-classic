@@ -1061,14 +1061,14 @@ module Watir
     # Module Watir::Control or Watir::BrowserDriver
     #
 
-    class BrowserFacade < IE
+    class Browser < IE
         private_class_method :new
         def initialize ()
         end
 
         # Create a new IE Window, starting at the specified url.
         # If no url is given, start empty.
-        def BrowserFacade.start( url = nil )
+        def Browser.start( url = nil )
             bf = new
             bf.start_init(url)
             return bf
@@ -1081,9 +1081,9 @@ module Watir
         end        
 
         # Attach to an existing IE window, either by url or title.
-        # BrowserFacade.attach(:url, 'http://www.google.com')
-        # BrowserFacade attach(:title, 'Google') 
-        def BrowserFacade.attach( how, what )
+        # Browser.attach(:url, 'http://www.google.com')
+        # Browser attach(:title, 'Google') 
+        def Browser.attach( how, what )
             bf = new
             bf.attach_init(how, what)
             return bf

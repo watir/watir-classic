@@ -12,6 +12,7 @@
 
 #includes
 require 'watir'   # the controller
+include Watir
 
 #test::unit includes
 require 'test/unit' 
