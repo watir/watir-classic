@@ -1,4 +1,5 @@
 require 'watir'
+include Watir
 require 'test/unit'
 
 class TC_article_example < Test::Unit::TestCase

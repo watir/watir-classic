@@ -131,8 +131,9 @@ tell the program where to find the library.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> <font color="green"> #includes:</font><br>
 require <font color="purple">'watir'</font><font color="green"> #
-the watir controller</font>
-</div>
+the watir controller<br>
+<span style="color: black;">include Watir</span><br>
+</font></div>
 <p>When we run our test script, the Watir library is loaded so that our
 test cases can use it.</p>
 <h2>Section 3: Declare Variables</h2>
@@ -253,8 +254,8 @@ Google Search button."</font><br>
 <p>The first line prints the step we are on to the screen. The second
 line clicks the Google Search button. The third line prints what Watir
 just executed to the screen.</p>
-<p>This is the tag in the HTML source with the <i>name</i> 
-attribute we used highlighted:</p>
+<p>This is the tag in the HTML source with the <i>name</i> attribute
+we used highlighted:</p>
 <div class="htmlexample">
 &lt;input type=submit value="Google Search" name=<b>btnG</b>&gt;</div>
 <h2>Section 6: Evaluating the Results</h2>
@@ -272,8 +273,8 @@ the screen.</p>
 <p>Using Watir and a little Ruby, we can evaluate the results to verify
 whether the test case passed or failed.</p>
 <div class="testexample">
-puts <font color="purple">"Actual Result: Check that the 'Programming Ruby' link 
-appears on the search results page"<br>
+puts <font color="purple">"Actual Result: Check that the 'Programming
+Ruby' link appears on the search results page"<br>
 </font> a = $ie.pageContainsText("<font color="purple">Programming Ruby</font>")
 <br>
 <font color="darkblue">if</font> !a <br>

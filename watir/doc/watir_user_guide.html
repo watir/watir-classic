@@ -73,8 +73,8 @@ div.htmlexample
 <body>
 <h1>WATIR User Guide</h1>
 <h2>Introduction</h2>
-<p>"Watir" (pronounced <em>water</em>) stands for "Web Application Testing in Ruby". 
-Watir is an automated test tool which uses the <a
+<p>"Watir" (pronounced <em>water</em>) stands for "Web Application
+Testing in Ruby". Watir is an automated test tool which uses the <a
  href="http://www.rubycentral.com/">Ruby</a> scripting language to
 drive the Internet Explorer web browser using Microsoft's OLE
 interface. Watir provides a toolkit for automated tests to be developed
@@ -93,8 +93,7 @@ that object can be automated using Watir.</p>
   <li>HTML: <a href="http://www.w3.org/MarkUp/Guide/">this</a> is a
 basic HTML tutorial.</li>
   <li>Programming: users should understand programming basics (ie. what
-a "for" loop is, etc.)
-  </li>
+a "for" loop is, etc.) </li>
   <li>Ruby: users do not need to know how to program in Ruby to use the
 tool, but it is recommended to learn some Ruby basics if they would
 like to write more powerful scripts</li>
@@ -120,11 +119,12 @@ version of Ruby from <a href="http://ruby-lang.org">here</a>.</p>
  href="http://rubyforge.org/projects/wtr/">Project Home Page</a> Under
 the <b>Latest File Releases</b> section, find the <i>Watir</i>
 Package, and click the <b>Download</b> link for that package.</p>
-<p>On the files list page, scroll down to the <b>watir</b> section. Click on
-the latest release ex. watir-v "n">.zip, (where "n" is the version number).
-The file will be downloaded on to your machine. Unzip it into a temprorary 
-directory, and then run the installer.</p>
-
+<p>On the files list page, scroll down to the <b>watir</b> section.
+Click on
+the latest release ex. watir-v "n"&gt;.zip, (where "n" is the version
+number).
+The file will be downloaded on to your machine. Unzip it into a
+temprorary directory, and then run the installer.</p>
 <p>Run the Watir installer:
 </p>
 <ol>
@@ -181,8 +181,7 @@ newer version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
   <li>Change directories to the <b>examples</b> directory in your
 Watir install.</li>
   <li>Type the name of the test at the command prompt (ex. <b>googleSearch.rb</b>),
-and hit Enter to run it.
-  </li>
+and hit Enter to run it. </li>
   <li>Look at the source code of the examples and compare it to the web
 application that it tests</li>
   <ul>
@@ -295,7 +294,7 @@ the file in a text editor.</p>
 <h2>Create a Test Instance of Internet Explorer</h2>
 <p>To create a test instance of Internet Explorer, enter the following
 in your test script:</p>
-<div class="testexample">$ie = IE.new</div>
+<div class="testexample">$ie = Watir::IE.new</div>
 <p>Watir sends a message to Internet Explorer, telling to create a new
 instance of itself, and assigns that instance to "$ie".</p>
 <h2>Site Navigation</h2>
@@ -680,8 +679,8 @@ directory and click on <b>index.html</b></p>
 <h4>Multiple Windows</h4>
 <p><i>Coming Soon!</i> Watir will handle multiple browser windows.</p>
 <h4>File Upload</h4>
-<p><i>Coming Soon!</i> Watir will support uploading files for tests that 
-require data files.</p>
+<p><i>Coming Soon!</i> Watir will support uploading files for tests
+that require data files.</p>
 <h4>Tree Views</h4>
 <p><i>Coming Soon!</i> Watir will support JavaScript treeviews such as
 the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
