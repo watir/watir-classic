@@ -1,0 +1,2 @@
+./LogfileDestination_basic.rb:122:in `test_more_than_one' at 2004/03/09 15:12:29
+=  error: appears in both
