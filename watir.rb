@@ -272,7 +272,21 @@ class ObjectActions
             sleep 0.05
         end
     end
-
+    
+    # This method executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
+    #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
+    #   raises: UnknownObjectException  if the object is not found
+    #           ObjectDisabledException if the object is currently disabled
+    def fireEvent(event)
+       raise UnknownObjectException ,"Unable to locate object, using #{@how.to_s} and #{@what.to_s}" if @o==nil
+       raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled"   if !self.enabled?
+       
+       highLight(:set)
+       @o.fireEvent("#{event}")
+       @ieController.waitForIE()
+       highLight(:clear)
+    end
+     
     # This method sets focus on the active element.
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
