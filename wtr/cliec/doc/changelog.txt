@@ -1,5 +1,9 @@
 ===Change Log
 
+====2004.227.0
+* [Bret] Fixed bug in checkbox wrapper. Thanks to Dan Knierim for the 
+  report. 
+
 ====2004.054.0
 * Newer cl/util/version used to get around syntax bug once the days rolled
   to integers with leading zeros. d'oh!
