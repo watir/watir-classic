@@ -1971,7 +1971,8 @@ module Watir
         # Raises an UnknownTableException if the table doesnt exist.
         def row_count 
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-            return table_body.children.length
+            #return table_body.children.length
+            return @o.getElementsByTagName("TR").length
         end
 
         # This method returns the number of columns in a row of the table.
@@ -2003,10 +2004,19 @@ module Watir
             
         end
 
-        def table_body
-            return @o.children(0)
+        def table_body(index=1)
+            return @o.getElementsByTagName('TBODY')[index]
         end
         private :table_body
+
+        def body( how , what )
+            return TableBody.new( @ieController, how, what , self)
+        end
+
+
+        def bodies
+            return TableBodies.new(@ieController,  :direct , @o)
+        end
    
         def row(index)
             table_rows = table_rows = @o.invoke("rows")
@@ -2015,7 +2025,70 @@ module Watir
         end
         private :row
 
-     end
+    end
+
+    class TableBodies<ObjectActions
+
+        def initialize(ieController, how, what )
+            @ieController = ieController
+            @o= nil
+            if how == :direct
+                @o = what     # in this case, @o is the parent table
+            end
+        end
+
+        def length
+            object_exist_check
+            return @o.tBodies.length
+        end
+
+        # returns the n'th Body as a Watir TableBody object
+        def []n
+            object_exist_check
+            return TableBody.new( @ieController , :direct , @o.tBodies[(n-1).to_s] )
+        end
+
+        def get_IE_table_body_at_index( n )
+            return @o.tBodies[(n-1).to_s]
+        end
+
+        def each
+            0.upto( @o.tBodies.length-1 ) { |i | yield TableBody.new( @ieController , :direct , @o.tBodies[i.to_s] )   }
+        end
+
+    end
+
+    class TableBody<ObjectActions
+        def initialize(ieController, how, what, parent_table=nil )
+            @ieController = ieController
+            @o= nil
+            if how == :direct
+                @o = what     # in this case, @o is the table body
+            elsif how == :index
+                @o=parent_table.bodies.get_IE_table_body_at_index( what )
+            end
+            @rows = []
+            update_rows
+            super(@o)
+        end
+
+        def update_rows
+            if @o
+                @o.rows.each do |oo|
+                    @rows << TableRow.new(@ieController, :direct, oo)
+                end
+            end
+        end
+
+
+        # returns the specified row as a TableRow object
+        def []n
+            object_exist_check
+            return TableRow.new( @ieController , :direct , @rows[n-1] )
+        end
+
+    end
+
 
     # this class is a table row
     class TableRow < ObjectActions
@@ -2029,7 +2102,7 @@ module Watir
             @ieController = ieController
             @how = how   
             @what = what   
-
+            @o=nil
             if how == :direct
                 @o = what
             else
@@ -2042,10 +2115,11 @@ module Watir
 
         # this method updates the internal list of cells. 
         def update_row_cells
-            object_exist_check
-            @cells=[]
-            @o.cells.each do |oo|
-                @cells << TableCell.new(@ieController, :direct, oo)
+            if @o   # cant call the object_exist_check here, as an exists? method call will fail
+                @cells=[]
+                @o.cells.each do |oo|
+                    @cells << TableCell.new(@ieController, :direct, oo)
+                end
             end
         end
 
@@ -2104,19 +2178,36 @@ module Watir
  
         # Returns the object contained in the cell as a Button
         def button
-            return Button.new(@ieController,:from_object,@o.children(0))
+            return Button.new(@ieController,:from_object,getChildThatIs( @o , ["button", "submit" , "image"] ) )
         end
 
         # Returns the object contained in the cell as a Table
         def table
-            return Table.new(@ieController,:from_object,@o.children(0))
+            return Table.new(@ieController,:from_object,getChildThatIs( @o , "table" ))
         end
      
         # Returns the object contained in the cell as a TextField
         def text_field
-            return TextField.new(@ieController,:from_object,@o.children(0))
+            return TextField.new(@ieController,:from_object, getChildThatIs( @o , "text" )  )
         end
         alias textField text_field 
+
+
+        # this method returns the child object that is the specified type
+        def getChildThatIs( o , find_object_types )
+
+            child_object = nil
+            o.children.each do |c| 
+                next unless child_object == nil
+                begin
+                    child_object = c if find_object_types.include?( c.invoke("type") )
+                rescue
+                end
+            end
+            return child_object
+
+        end
+
    end
 
 
@@ -2467,11 +2558,11 @@ module Watir
             if(how == :from_object) then
                 @o = what
             else
-                @o = ieController.getObject( how, what , objectTypes)
+                @o = ieController.getObject( how, what , object_types)
             end              
             super( @o )
         end
-        def objectTypes
+        def object_types
             return ["button" , "submit" , "image"] 
         end
 
@@ -2481,7 +2572,7 @@ module Watir
     # This is the main class for accessing reset buttons.
     # Normally a user would not need to create this object as it is returned by the IEController reset method.
     class Reset < Button
-        def objectTypes
+        def object_types
             return ["reset"] 
         end
     end
