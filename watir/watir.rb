@@ -930,7 +930,22 @@ module Watir
                     end
                 end
                 
+            when :beforeText
+                links.each do |thisLink|
+                    if what.matches(thisLink.getAdjacentText("afterEnd").strip)
+                        link = thisLink if link == nil
+                    end
+                end
+
+            when :afterText
+                links.each do |thisLink|
+                    if what.matches(thisLink.getAdjacentText("beforeBegin").strip)
+                        link = thisLink if link == nil
+                    end
+                end
+
                 
+
                 
             else
                 raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
