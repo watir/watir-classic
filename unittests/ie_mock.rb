@@ -30,6 +30,11 @@ class FakeDoc
 			@links << value
 		end
 	end
+ 
+      def url
+          return "file://fake"
+      end
+
 end
 
 class StubExplorer
