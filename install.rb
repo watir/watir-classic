@@ -2,14 +2,14 @@
 #  Installer for Watir
 #
 
-def getNewLocation( forWhat, default)
+def get_new_location( forWhat, default)
     puts "New location for #{forWhat}: [ #{default} ] "
     n = gets.chomp!
     n = default if n == ""
     return n
 end
 
-def getBooleanOption(label, default)
+def get_boolean_option(label, default)
     n = nil
     while n != 'true' and n != 'false'
         puts "New value for #{label}: [#{default}] "
@@ -21,7 +21,7 @@ def getBooleanOption(label, default)
     return nil # should never execute
 end
 
-def copyFile( from , to )
+def copy_file( from , to )
     c = File.cp(from , to, true)
     if !c
         puts "Problem copying #{from}"
@@ -29,7 +29,7 @@ def copyFile( from , to )
     end
 end
 
-def showBanner( bonusLocation , desktopIcon , startMenuIcon )
+def show_banner( bonus_location , desktopIcon , startMenuIcon )
 
     puts "\n"
     puts "*******************************************************************************"
@@ -40,19 +40,18 @@ def showBanner( bonusLocation , desktopIcon , startMenuIcon )
     puts "*  change them or just press enter to use these defaults.                     *"
     puts "*                                                                             *"
     puts "*  Bonus files include examples, documentation and unit tests.                *"
-    puts "*  " + ("Bonus files:     " + bonusLocation.gsub("/" , "\\")).ljust(75) + "*"
+    puts "*  " + ("Bonus files:     " + bonus_location.gsub("/" , "\\")).ljust(75) + "*"
     puts "*                                                                             *"
     puts "*  Create a desktop shortcut:    " +  desktopIcon.to_s.ljust(45)  + "*"
     puts "*  Create a start menu shortcut: " +  desktopIcon.to_s.ljust(45)  + "*"
     puts "*                                                                             *"
     puts "*******************************************************************************"
 
-    n = gets.chomp!
+    n = gets.chomp!.downcase
     return n
 end
 
-def makeStartMenuShortCut( name , targetURL )
-
+def make_startmenu_shortcut( name , targetURL )
     #http://msdn.microsoft.com/library/default.asp?url=/library/en-us/script56/html/wsobjwshshortcut.asp
     wshShell = WIN32OLE.new("WScript.Shell")
     strStartMenu = wshShell.SpecialFolders("AllUsersStartMenu")
@@ -67,8 +66,7 @@ def makeStartMenuShortCut( name , targetURL )
     wshShell = nil
 end
 
-def makeDeskTopShortCut( name , targetURL )
-
+def make_desktop_shortcut( name , targetURL )
     wshShell = WIN32OLE.new("WScript.Shell")
     strDesktop = wshShell.SpecialFolders("Desktop")
     oShellLink = wshShell.CreateShortcut(strDesktop +  '\\' + name +  '.lnk')
@@ -93,39 +91,37 @@ display_lib = siteLib.gsub("/" , "\\")
 
 # defaults
 homeDrive = ENV["HOMEDRIVE"]
-bonusLocation = homeDrive + "/watir_bonus/"
+bonus_location = homeDrive + "/watir_bonus/"
 deskTop  = true
 startMenu = true
 
-n = showBanner(bonusLocation , deskTop , startMenu  )
-while n.downcase == "c"
+while show_banner(bonus_location, deskTop, startMenu) == "c"
     puts "New directories selected!"
-    bonusLocation  = getNewLocation("Bonus Files"    , bonusLocation.gsub("/" , "\\"))
-    deskTop = getBooleanOption("Create a desktop shortcut", deskTop)
-    startMenu = getBooleanOption("Create a start menu shortcut" , startMenu)
-    n = showBanner(bonusLocation , deskTop , startMenu)
+    bonus_location  = get_new_location("Bonus Files", bonus_location.gsub("/" , "\\"))
+    deskTop = get_boolean_option("Create a desktop shortcut", deskTop)
+    startMenu = get_boolean_option("Create a start menu shortcut", startMenu)
 end
 
 # TODO: check to see if stuff already exists
 
 # copy the watir libs to siteLib 
 puts "Copying Files"
-d = File.makedirs(siteLib + '/watir/' )
-copyFile( 'watir.rb' , siteLib )
+d = File.makedirs(siteLib + '/watir/')
+copy_file( 'watir.rb' , siteLib )
 FileUtils.cp_r('watir', siteLib, {:verbose=> true} )
 
 # copy the samples
-d = File.makedirs(bonusLocation  )
-FileUtils.cp_r('examples' , bonusLocation, {:verbose=> true} )
+d = File.makedirs(bonus_location)
+FileUtils.cp_r('examples' , bonus_location, {:verbose=> true} )
 
 # copy the unittests
-FileUtils.cp_r('unitTests' , bonusLocation, {:verbose=> true} )
+FileUtils.cp_r('unitTests' , bonus_location, {:verbose=> true} )
 
 # copy the documentation
-FileUtils.cp_r('doc' , bonusLocation, {:verbose=> true} )
+FileUtils.cp_r('doc' , bonus_location, {:verbose=> true} )
 
 # make shortcuts
 puts "Creating Shortcuts" if startMenu or deskTop
-makeStartMenuShortCut( "Watir Documentation" , bonusLocation + "/doc/watir_user_guide.html" ) if startMenu 
-makeDeskTopShortCut( "Watir Documentation" , bonusLocation + "/doc/watir_user_guide.html" )   if deskTop
+make_startmenu_shortcut( "Watir Documentation" , bonus_location + "/doc/watir_user_guide.html" ) if startMenu 
+make_desktop_shortcut( "Watir Documentation" , bonus_location + "/doc/watir_user_guide.html" )   if deskTop
 
