@@ -1,7 +1,8 @@
 # tests for attaching to existing IE windows
 # revision: $Revision$
 
-require 'setup'
+#require 'setup'
+require 'unittests/setup'
 
 class TC_ExistingWindow< Test::Unit::TestCase
 

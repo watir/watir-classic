@@ -1,7 +1,8 @@
 # tests for navigation
 # revision: $Revision$
 
-require 'setup'
+#require 'setup'
+require 'unittests/setup'
 
 class TC_Navigate< Test::Unit::TestCase
 
