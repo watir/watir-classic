@@ -52,7 +52,7 @@ You probably won't need to do this in class, since you can use your instructor's
 
 4. You can verify the installation by running some of the sample scripts:
 
-* c:/wtr/scripting101/solutions/lab-suite.rb
+* c:/wtr/scripting101/lab/solutions/suite.rb
 
 
 
