@@ -6,6 +6,7 @@ require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'testUnitAddons'
+require 'unittests/setup'
 
 class TC_CheckBox < Test::Unit::TestCase
 
