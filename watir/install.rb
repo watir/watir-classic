@@ -1,8 +1,19 @@
 
-require 'fox12'
-require 'fox12/colors'
-include Fox
+# Support both versions of fxRuby
+begin
+    require 'fox'
+    require 'fox/colors'
+rescue Exception
+    begin
+        require 'fox12'
+        require 'fox12/colors'
+    rescue Exception
+        puts "Gui installer can not be executed on your system."
+        puts "Please run the command line installer"
+    end
+end
 
+include Fox 
 
 require 'win32ole'
 require 'ftools'
@@ -10,7 +21,6 @@ require 'FileUtils'
 include FileUtils::Verbose
 require 'rbconfig'
     
-
 
 
 # Copy files from a directory to another directory
