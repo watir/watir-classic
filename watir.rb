@@ -602,13 +602,13 @@ module Watir
             print_sizes= [12 , 12, 60]
             doc = getDocument()
             index=0
-
+            text_size = 60
             # draw the table header
             s = "index".ljust(6) 
             props.each_with_index do |p,i|
                 s=s+ p.ljust(print_sizes[i]) 
             end
-            s=s + "text/src".ljust(printsize)
+            s=s + "text/src".ljust(text_size)
             s=s+"\n"
 
             # now get the details of the links
@@ -1186,6 +1186,17 @@ module Watir
         def text_fields
             return Text_Fields.new(self)
         end
+
+
+        def hidden( how, what )
+            return Hidden.new(self, how, what)
+        end
+
+        # this is the method for accessing the hiddens iterator. It returns a Hiddens object
+        def hiddens
+            return Hiddens.new(self)
+        end
+
 
 
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
@@ -1858,6 +1869,35 @@ module Watir
         end
     end
 
+
+
+
+    # this class accesses the hidden fields in the document as a collection
+    # it would normally only be accessed by the hiddens method of IEController
+    class Hiddens < Iterators
+        def initialize( ieController )
+            super
+            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
+                objects.each do |o|
+                    @length+=1 if ["hidden"].include?(o.invoke("type").downcase )
+                end
+            end        
+        end
+       
+        def iterator_object(i)
+            @ieController.hidden( :index , i+1)
+        end
+    end
+
+
+
+
+
+
+
+
+
     # this class accesses the text fields in the document as a collection
     # it would normally only be accessed by the text_fields method of IEController
     class Tables< Iterators
@@ -2491,14 +2531,26 @@ module Watir
             return ""
         end
 
+       
+        def link_has_image
+            return true  if @o.getElementsByTagName("IMG").length > 0
+            return false
+        end
+
+        # this method returns the src of an image, if an image is used as part of the link
+        def src
+            if @o.getElementsByTagName("IMG").length > 0
+                return  @o.getElementsByTagName("IMG")[0.to_s].src
+            else
+                return ""
+            end
+        end
+
         def link_string_creator
             n = []
             n <<   "href:".ljust(TO_S_SIZE) + self.href
             n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
-            if @o.getElementsByTagName("IMG").length > 0
-                puts "found : #{@o.getElementsByTagName("IMG").length } link images"
-                n << "image src:".ljust(TO_S_SIZE) + @o.getElementsByTagName("IMG")[0.to_s].src
-            end
+            n <<   "img src:".ljust(TO_S_SIZE) + self.src if self.link_has_image
             return n
          end
 
@@ -2508,41 +2560,6 @@ module Watir
             r=r + link_string_creator
             return r.join("\n")
          end
-
-        # this method highlights the image ( in fact it adds or removes a border around the image)
-        #  * setOrClear   - symbol - :set to set the border, :clear to remove it
-        def highLight( setOrClear )
-             if @o.getElementsByTagName("IMG").length > 0 
-     
-
-                if setOrClear == :set
-                    begin
-                        @original_border = @o.border
-                        @o.border = 1
-                    rescue
-                        @original_border = nil
-                    end
-                else
-                    begin 
-                        @o.border = @original_border 
-                        @original_border = nil
-                    rescue
-                        # we could be here for a number of reasons...
-                    ensure
-                        @original_border = nil
-                    end
-                end
-            else
-                super
-            end
-
-
-        end
-
-         
-
-
-
 
     end
     
@@ -2802,7 +2819,7 @@ module Watir
         def initialize( ieController,  how , what )
             @ieController = ieController
 	    if(how != :from_object) then
-            	@o = ieController.getObject( how, what , ["text" , "password","textarea"] )
+            	@o = ieController.getObject( how, what , supported_types)
 	    else
 		@o = what
 	    end
@@ -2810,6 +2827,11 @@ module Watir
             @how = how
             @what = what
         end
+
+        def supported_types
+            return ["text" , "password","textarea"] 
+        end
+        private :supported_types
 
         def size
             object_exist_check
@@ -2992,6 +3014,32 @@ module Watir
 
         end
         private :doKeyPress
+    end
+
+    class Hidden  < TextField 
+
+        def initialize( ieController,  how , what )
+            super
+        end
+        def supported_types
+            return ["hidden"]
+        end
+        def set(n)
+            self.value=n
+        end
+ 
+        def append(n)
+            self.value = self.value.to_s + n.to_s
+        end
+
+        def clear
+            self.value = ""
+        end
+
+        def focus
+            # do nothing!
+        end
+
     end
     
 end

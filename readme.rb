@@ -19,7 +19,7 @@ How To Use:
 
 
 Typical Usage
-    # include the controller 
+   # include the controller 
    require 'watir' 
    include Watir
    # create an instance of the controller 
