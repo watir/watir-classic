@@ -1891,6 +1891,11 @@ module Watir
             return @o.href
         end
 
+        def value
+            object_exist_check
+            return ""
+        end
+
         def link_string_creator
             n = []
             n <<   "href:".ljust(TO_S_SIZE) + self.href
@@ -1925,6 +1930,15 @@ module Watir
         def each
             0.upto( @links.length-1 ) { |i | yield @ieController.link( :index , i+1)   }
         end
+
+        def length
+            return @links.length
+        end
+ 
+        def [](n)
+            return @links[(n-1).to_s]
+        end
+
     end
 
     
