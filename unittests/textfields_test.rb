@@ -20,6 +20,15 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
+    def test_textField_dragContentsTo
+
+        $ie.textField(:name, "text1").dragContentsTo(:id, "text2")
+        assert_equal($ie.textField(:name, "text1").getContents, "" ) 
+        assert_equal($ie.textField(:id, "text2").getContents, "goodbye allHello World" ) 
+
+    end
+
+
     def test_textField_VerifyContents
        assert($ie.textField(:name, "text1").verify_contains("Hello World") )  
        assert($ie.textField(:name, "text1").verify_contains(/Hello\sW/ ) )  
