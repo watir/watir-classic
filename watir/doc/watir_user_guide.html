@@ -121,7 +121,7 @@ the steps it will take to exercise a test first, and then filling in the Watir s
 For example, on the Google home page, if you search the source for "Google Search", you will find the tag with the following attributes:
 &lt;input type=submit value="Google Search" name=btnG&gt; 
 The "type" attribute "submit" tells us that it is a button, the caption or value that you see on the button is "Google Search", and the name of the button is "btnG".
-Watir can use different attributes of a tag to manipulate that object, so it is important to know what they are. In some cases the attributes are not explicit in the tag such as the "text" or "caption" attributes.
+Watir can use different attributes of a tag to manipulate that object, so it is important to know what they are. In some cases the attributes are not explicit in the tag such as the "text" attributes.
 </p>
 <p>To start developing a test:</p>
 <ol>
@@ -148,7 +148,7 @@ and send her the "bark" message. The expected outcome would be Heidi responding 
 <p>When you develop test scripts with Watir, you interact with objects on a web page by sending them messages. Like the yard example, the IE browser itself contains objects. You can access these objects within an IE browser instance by identifying them by different attributes. 
 Just like in the dog example, above,  you must be very specific when you send messages to objects on a web page. You must also be able to identify objects on a web page by using a variety of different attributes due to the diversity in how tags are 
 declared by different application developers. With Watir, identify objects and send them messages by using the dot notation. For example <b>$ie.button</b>, narrows down the type of object to send a message to. 
-<b>$ie.button(:caption, "Click Me").click</b> identifies the object on the page as a button within the instance of Internet Explorer that has the caption (or value attribute) "Click Me". When you send the message (the verb) <b>click</b>, Watir interprets and tells IE to click. </p>
+<b>$ie.button(:value, "Click Me").click</b> identifies the object on the page as a button within the instance of Internet Explorer that has the value attribute (caption) "Click Me". When you send the message (the verb) <b>click</b>, Watir interprets and tells IE to click. </p>
 
 <h2>Include the Watir Tool</h2>
 <p>To use the Watir tool, first enter the following in your test script:</p>
@@ -262,8 +262,8 @@ clicking buttons, or images that look and act like HTML buttons, or by hitting E
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><input type = "button" name = "clickme" value = "Click Me"> </div>
 <h4><i>Value</i> or <i>Caption</i> Attribute </h4>
-<p>This is the Watir code you need to click a button using the <i>caption</i> attribute:</p>
-<div class = "testexample">$ie.button(:caption, "Click Me").click</div>
+<p>This is the Watir code you need to click a button using the <i>value</i> attribute:</p>
+<div class = "testexample">$ie.button(:value, "Click Me").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;input type = "button" name = "clickme" value = "<b>Click Me</b>"&gt;</div>
 <h4><i>Name</i> Attribute </h4>
@@ -278,8 +278,8 @@ clicking buttons, or images that look and act like HTML buttons, or by hitting E
 <p>Watir can <i>submit</i> HTML buttons on a web page contained in a form based on the <i>name</i>, <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input type = submit</i> HTML tag.</p>
 <div class = "browserexample"> <form action = "submit" name = "submitform" method="post"><input type = submit value=Submit></form></div>
 <h4><i>Value</i> or <i>Caption</i> Attribute </h4>
-<p>This is the Watir code you need to click a button that will submit a form using the <i>caption</i> attribute:</p>
-<div class = "testexample">$ie.button(:caption, "Submit").click</div>
+<p>This is the Watir code you need to click a button that will submit a form using the <i>value</i> attribute:</p>
+<div class = "testexample">$ie.button(:value, "Submit").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;form action = "submit" name = "submitform" method="post"&gt;&lt;input type = "submit" value = "<b>Submit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <p>We can also just submit the form as shown below in the Forms With No Buttons examples.</p>
@@ -288,7 +288,7 @@ clicking buttons, or images that look and act like HTML buttons, or by hitting E
 <h4><i>Name</i> Attribute</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><form action = "submit" name = "domitform" method="post"><img src = "images/doit.gif" name = "doit"></form> </div>
-<p>This is the Watir code you need to click a button that will submit a form using the <i>caption</i> attribute:</p>
+<p>This is the Watir code you need to click a button that will submit a form using the <i>name</i> attribute:</p>
 <div class = "testexample">$ie.button(:name, "doit").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;form action = "submit" name = "doitform" method="post"&gt;&lt;img src = "images/doit.gif" name = "<b>doit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
