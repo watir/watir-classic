@@ -1,8 +1,7 @@
 # tests for JavaScript events
 # revision: $Revision$
- $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
-require 'watir'
-require 'setup'
+
+require 'unittests/setup'
 
 class TC_JSEvents < Test::Unit::TestCase
 
