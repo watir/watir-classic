@@ -445,7 +445,7 @@ module Watir
         
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
-        def showFrames()
+        def show_frames()
             if allFrames = getDocument().frames
                 count = allFrames.length
                 puts "there are #{count} frames"
@@ -461,9 +461,10 @@ module Watir
                 log "no frames"
             end
         end
+        alias showFrames show_frames
         
         # Show all forms displays all the forms that are on a web page.
-        def showForms()
+        def show_forms()
             if allForms = getDocument.forms
                 count = allForms.length
                 log "There are #{count} forms"
@@ -478,9 +479,9 @@ module Watir
                 log "No forms"
             end
         end
+        alias showForms show_forms
         
-        
-        def showImages()
+        def show_images()
             doc = getDocument()
             doc.images.each do |l|
                 log "image: name: #{l.name}"
@@ -488,9 +489,9 @@ module Watir
                 log "      src: #{l.src}"
             end
         end
+        alias showImages show_images
         
-        
-        def showLinks()
+        def show_links()
             doc = getDocument()
             doc.links.each do |l|
                 log "Link: name: #{l.name}"
@@ -499,11 +500,11 @@ module Watir
                 log "      text: #{l.innerText}"
             end
         end
-        
+        alias showLinks show_links
         
         # this method shows the name, id etc of the object that is currently active - ie the element that has focus
         # its mostly used in irb when creating a script
-        def showActive
+        def show_active
             s = "" 
             
             current = getDocument.activeElement
@@ -522,13 +523,13 @@ module Watir
             end
             s=s+"\n"
         end
-        
+        alias showActive show_active
         
         # This method shows the available objects on the current page.
         # This is usually only used for debugging or writing new test scripts.
         # This is a nice feature to help find out what HTML objects are on a page
         # when developing a test case using Watir.
-        def showAllObjects()
+        def show_all_objects()
             log "-----------Objects in  page -------------" 
             doc = getDocument()
             s = ""
@@ -551,16 +552,16 @@ module Watir
             end
             log s+"\n\n\n"
         end
+        alias showAllObjects show_all_objects
 
-        def showDivs( )
-
-               divs = getDocument().getElementsByTagName("DIV")
-               puts "Found #{divs.length} div tags"
-               divs.each do |d|
-                   puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
-               end
+        def show_divs( )
+            divs = getDocument().getElementsByTagName("DIV")
+            puts "Found #{divs.length} div tags"
+            divs.each do |d|
+                puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
             end
-
+        end
+        alias showDivs show_divs
 
         
         #
@@ -569,7 +570,7 @@ module Watir
         
         #This method retrieves an image on a web page for use.
         #Uses an <img src="image.gif"> HTML tag.
-        def getImage( how, what )
+        def image( how, what )
             doc = getDocument()
             
             log "Finding an image how: #{how} What #{what}"
@@ -604,7 +605,7 @@ module Watir
             end # do
             return o
         end
-        
+        alias getImage image
         
         def getContainer()
             return getDocument.body.all
