@@ -570,7 +570,7 @@ class IE
         else
             #puts "How is #{how}"
             container.each do |object|
-                next unless object != nil
+                next  unless o == nil
                 case how
                     when :id
                         begin
