@@ -206,7 +206,11 @@ module Watir
 
         # access to the logger object
         attr_accessor :logger
-                        
+
+
+        # this contains the list of unique urls that have been visited
+        attr_reader :url_list                        
+
         def initialize(suppress_new_window=nil)
             unless suppress_new_window
                 create_browser_window
@@ -250,6 +254,8 @@ module Watir
             @defaultSleepTime = DEFAULT_SLEEP_TIME
 
             @logger = DefaultLogger.new()
+
+            @url_list = []
         end
         private :set_defaults        
         
@@ -359,6 +365,10 @@ module Watir
             waitForIE
         end
         
+        # this method clears the list of urls that we have visited
+        def clear_url_list
+            @url_list.clear
+        end
         # Closes the Browser
         def close
             @ie.quit
@@ -400,7 +410,12 @@ module Watir
             return @ie.document
         end
         alias getDocument document
-                
+           
+        # returns the current url, as displayed in the address bar of the browser 
+        def url
+            return @ie.LocationURL
+        end
+
         # Search the current page for specified text or regexp.
         # Returns true if the specified text was found.
         # Returns matchdata object if the specified regexp was found.
@@ -466,17 +481,20 @@ module Watir
                                 sleep 0.02
                                 s.spin
                             end
+                            @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
                         end
                     rescue=>e
                         @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
                     end
+                else
+                    @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
                 end
                 @down_load_time =  Time.now - pageLoadStart 
 
                 run_error_checks()
 
                 print "\b" unless @enable_spinner == false
-                log "waitForIE Complete"
+                
                 s=nil
             rescue WIN32OLERuntimeError => e
                 @logger.warn 'runtime error in wait' #  + e.to_s
