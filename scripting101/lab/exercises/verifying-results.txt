@@ -1,0 +1,14 @@
+h2=. Scripting for Testers
+
+h2=. Lab 4: Verifying Results
+
+* Assertions
+* Using a Script-based test harness??
+
+#   *Record Check.* Start with a user that has no time records. Record
+     time sessions for two separate jobs, one session for each. Verify
+     that two time records appear. (This last part is a challenge.) 
+
+#   *Test Strategy.* Look over the test ideas you developed at the
+     beginning of class.  Write a script for one of them--or more. 
+
