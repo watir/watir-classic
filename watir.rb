@@ -943,6 +943,39 @@ module Watir
             clearFrame()
             return link
         end
+
+        # This method gets a table row or cell 
+        #   * how  - symbol - how we get the link row or cell types are:
+        #            id
+        #   * what -  a string or regexp 
+        def getTablePart( part , how , what )
+             doc = getDocument()
+             parts = doc.all.tags( part )
+             n = nil
+             parts.each do | p |
+                 next unless n==nil
+                 n = p if what.matches( p.invoke("id") )
+             end
+             clearFrame()
+             return n
+        end
+
+
+        #
+        # This method is to keep current users happy, until the frames object is implemented
+        #
+
+        def focus()
+            doc = getDocument()
+            doc.focus
+            clearFrame()
+        end
+
+       
+
+
+
+
         
         #
         # Factory Methods
@@ -965,7 +998,16 @@ module Watir
         def table( how, what )
             return Table.new( self , how, what)
         end
-        
+
+        def cell( how, what )
+           return Cell.new( self, how, what)
+        end
+
+        def row( how, what )
+           return Row.new( self, how, what)
+        end
+
+
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
         #  *  how   - symbol - how we access the button , :index, :caption, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -1509,6 +1551,46 @@ module Watir
             
         end
         
+    end
+
+
+# this class is a table cell
+    class Cell < ObjectActions
+
+        # Returns an initialized instance of a table cell
+        #   * ieController  - an instance of an IEController
+        #   * how         - symbol - how we access the cell
+        #   * what         - what we use to access the cell - id, name index etc 
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+            @o = ieController.getTablePart( "TD" , how , what )
+            super( @o )
+            @how = how
+            @what = what
+        end
+
+        def getContents()
+            raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
+            return @o.innerText
+ 
+        end
+
+    end
+
+    # this class is a table row
+    class Row < ObjectActions
+
+        # Returns an initialized instance of a table cell
+        #   * ieController  - an instance of an IEController
+        #   * how         - symbol - how we access the cell
+        #   * what         - what we use to access the cell - id, name index etc 
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+            @o = ieController.getTablePart( "TR" , how , what )
+            super( @o )
+            @how = how
+            @what = what
+        end
     end
     
     
