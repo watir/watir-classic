@@ -22,7 +22,9 @@ class TC_Links < Test::Unit::TestCase
     def test_Link_Exists
        gotoLinksPage()
        assert($ie.link(:text, "test1").exists?)   
+       assert($ie.link(:text, /TEST/i).exists?)   
        assert_false($ie.link(:text, "missing").exists?)   
+       assert_false($ie.link(:text, /miss/).exists?)   
 
        assert($ie.link(:url, "link_pass.html").exists?)   
        assert_false($ie.link(:url, "alsomissing.html").exists?)   
