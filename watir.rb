@@ -1044,6 +1044,12 @@ module Watir
         def link( how , what)
             l = Link.new(self , how, what )
         end
+
+        # this is the factory method for accessing the links collection
+        def links
+            l = Links.new(self)
+        end
+
         
         # This is the main method for accessing images.
         #  *  how   - symbol - how we access the image, :index, :id, :name , :src
@@ -1436,14 +1442,14 @@ module Watir
     class Div < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "div"
-            super ( ieController, how, what)
+            super( ieController, how, what)
         end
     end
 
     class Span < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "span"
-            super ( ieController, how, what)
+            super( ieController, how, what)
         end
     end
 
@@ -1669,6 +1675,25 @@ module Watir
         end
     end
     
+
+    # this class accesses the links in the document as a collection
+    # it would normally only be accessed by the links method of IEController
+    class Links 
+        # Returns an initialized instance of a links object
+        #   * ieController  - an instance of an IEController
+        def initialize( ieController)
+            @ieController = ieController
+            @links = []
+            if   @ieController.ie.document.invoke("links").length > 0 
+                @links = @ieController.ie.document.invoke("links")
+            end        
+        end
+ 
+        def each
+            @links.each { |x| yield x }
+        end
+    end
+
     
     # This class is the way in which select boxes are manipulated.
     # it would not normally be created by a user, as it is returned by the selectBox method of IEController
