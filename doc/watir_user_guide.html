@@ -262,8 +262,8 @@ browser instance as a thing. If you send a message to that object, it
 will respond to that message if it recognizes it.</p>
 <p>Think of the messages as verbs. In Ruby, you send a message to an
 object by separating the object you are calling from the message you
-are sending to it with a dot. For example, <b>Dog.bark</b> would tell
-the object <i>Dog</i> that it must <i>bark</i>.</p>
+are sending to it with a dot. For example, <b>dog.bark</b> would tell
+the object <i>dog</i> that it must <i>bark</i>.</p>
 <p>This isn't very specific though. What dog should bark? In the Watir
 world, you could identify the test area to be our <b>yard</b>, or by
 using the global variable notation: <b>$yard</b>. Like <i>$ie</i>,
@@ -310,6 +310,15 @@ in your test script:</p>
 <div class="testexample">$ie = Watir::IE.new</div>
 <p>Watir sends a message to Internet Explorer, telling to create a new
 instance of itself, and assigns that instance to "$ie".</p>
+<p>To create an instance of Internet Explorer and navigate to the site with one statement:</p>
+<div class="testexample">$ie = Watir::IE.start("http://mytestsite")</div>
+<p>Watir uses the <i>start</i> method to both create a browser instance and navigate to a site.</p>
+<h3>Starting Options</h3>
+<p>To use the syntax in versions 1.0.1 through 1.0.3, you need to include the
+Watir module after the <i>require 'watir'</i> statement:
+<div class="testexample">include Watir</div>
+<p>You can then create a new instance of Internet Explorer like this:</p>
+<div class="testexample">$ie = IE.new</div>
 <h2>Site Navigation</h2>
 <p>To direct your test script to the web application you are testing,
 enter the URL in this command:</p>
