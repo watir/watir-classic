@@ -365,7 +365,9 @@ module Watir
         end
         
         
-        # This method returns true or false if the specified text was found.
+        # Search the current page for specified text or regexp.
+        # Returns true if the specified text was found.
+        # Returns matchdata object if the specified regexp was found.
         #  * text - string or regular expression - the string to look for
         def pageContainsText(text)
             #log "-------------"
@@ -375,27 +377,16 @@ module Watir
             retryCount = 0
             begin
                 retryCount += 1
+                returnValue = 
                 if text.kind_of? Regexp
-                    
-                    if ( getDocument().body.innerText.match(text)  ) != nil
-                        log  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
-                        returnValue= true
-                    else
-                        log "pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it" 
-                        returnValue= false
-                    end
-                    
+                    getDocument().body.innerText.match(text)
                 elsif text.kind_of? String
-                    
-                    if ( getDocument().body.innerText.index(text)  ) != nil
-                        log "pageContainsText: Looking for: #{text} (string) - found it ok" 
-                        returnValue= true
-                    else
-                        log  "pageContainsText: Looking for: #{text} (string)  - Didnt Find it" 
-                        returnValue= false
-                    end
-                    
+                    getDocument().body.innerText.index(text)
+                else
+                    raise MissingWayOfFindingObjectException
                 end 
+            rescue MissingWayOfFindingObjectException => e
+                raise e
             rescue
                 retry if retryCount < 2 
             end
