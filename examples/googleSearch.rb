@@ -12,10 +12,10 @@
 #
 #------------------------------------------------------------------------------------------------------------#
 
-   #includes
+   #includes:
    require '../watir'   # the watir controller
 
-   #variables
+   #variables:
    testSite = 'http://www.google.com'
 
    #open the IE browser
@@ -24,7 +24,7 @@
    puts '## Beginning of test: google search'
    puts '  '
   
-   puts 'Step 1: go to the google site: www.google.com'
+   puts 'Step 1: go to the test site: ' + testSite
    $ie.goto(testSite)
    puts '  Action: entered ' + testSite + 'in the address bar.'
 
