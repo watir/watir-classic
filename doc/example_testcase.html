@@ -93,7 +93,7 @@ and view the page source: right mouse click > View Source. Now you can follow al
 Google search web application.</p>
 
 <h2>Section 1: Comments</h2>
-<p>Test cases should be commented, just as program code should be commented.</p>
+<p>Test cases should be commented, just as program code should be commented. In Ruby, any text on a single line that follows a <b>#</b> is a comment, and is ignored by the Ruby interpreter at run time.</p>
 <p>What you see in the text editor:</p>
 <div class = "testexample"><font color = "green">
 #-------------------------------------------------------------#<br>
@@ -142,5 +142,48 @@ we only have to change it in one place.
 The "$ie" variable is a global variable which means we can access it anywhere in our script. the $ in front of the variable name tells the Ruby interpreter that it is global.
 We want this to be a global variable so we can access the Internet Explorer browser at any time in our script. Now we can refer to the Internet Explorer object in our script by using
 the "$ie" variable. This saves typing and helps make the script more readable.</p>
+<h2>Section 5: Interacting With Google</h2>
+<p>Now we are ready to start automating the steps we ran manually using Watir.</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+   puts <font color = "purple">"## Beginning of test: google search"</font><br>
+   puts <font color = "purple">"  "</font>
+</div>
+<p><i>Puts</i> is a reserved word in the Ruby language that tells the Ruby Interpreter to print whatever comes after it contained in quotes to the screen.
+We could just as easily write this information to a file. These <i>puts</i> statements are in this test case to make it more self-explanatory. Not only to they
+tell the user what is happening in the test case, they double as comments. Printing what we are doing when we automate the test case is useful for debugging when developing
+test cases, and for debugging failures when the test case doesn't pass.</p>
+
+<h3>Step 1: Go to the Google site</h3>
+<p>This test case follows a pattern of printing out what we intend Watir to do on a web application, followed by the Watir scripting code to carry out 
+that action, and finally printing out the action that Watir just executed. This is a style of test case development that is useful for tracking down test case
+failures quickly.</p>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+ puts <font color = "purple">"Step 1: go to the test site: "</font> + testSite<br>
+ $ie.goto(testSite)
+ puts <font color = "purple">&nbsp;&nbsp;&nbsp;Action: entered "</font> + testSite + <font color = "purple">"in the address bar."</font><br>
+</div>
+<p>The first line uses a <i>puts</i> statemen to print out the test case step we are attempting to the screen. The second line uses the Watir method "goto" to direct the test
+case to the test site: http://www.google.com (stored in the variable "testSite"). The third line prints the action that Watir just executed to the screen.
+When we print out the variable, we concatenate it to the string (the part in quotes) by using the <b>+</b> sign. 
+</p>
+
+<h3>Step 2: Enter Search Term "pickaxe" in the search field</h3>
+<p>We need to enter the term to search in the text field on the Google home page.</p>
+<p>What you see in the web browser:</p>
+<div class = "browserexample">
+<input maxLength=256 size=55 name=q value=""></div>
+<p>What you see in the text editor:</p>
+<div class = "testexample">
+ puts <font color = "purple">"Step 2: enter "pickaxe" in the search text field"<br></font>
+ $ie.textField(:name, <font color = "purple">"q"</font>).set(<font color = "purple">"pickaxe"</font>)<font color = "green"> # q is the name of the search field</font><br> 
+ puts <font color = "purple">&nbsp;&nbsp;&nbsp;"  Action: entered pickaxe in the search field"</font><br>
+</div>
+<p>The first line prints the step we are on to the screen. The second line enters the text "pickaxe" in the text field named "q".The third line prints what Watir just executed 
+to the screen.</p>
+<p>This is the tag in the HTML source with the <i>name</i> attribute we used highlighted:</p>
+<div class = "htmlexample">
+&lt;input maxLength=256 size=55 name=<b>q</b> value=""&gt;</div>
 </body>
 </html>
