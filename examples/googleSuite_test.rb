@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------------------------------------ #
 
 #includes
-require '../watir.rb'   # the controller
+require '../watir'   # the controller
 
 #test::unit includes
 require 'test/unit' 
@@ -165,13 +165,11 @@ class TC_google_suite < Test::Unit::TestCase
    $ie.goto(testSite)
    puts '  Action: entered ' + testSite + 'in the address bar.'
 
-
    puts 'Step 2: click the Groups link on the google home page'
    $ie.link(:text, "Groups").click
    puts '  Action: clicked the Groups link'
    
-   #sleep 1
-   puts 'Step 3: enter "comp.lang.ruby" in the search text field'
+      puts 'Step 3: enter "comp.lang.ruby" in the search text field'
    $ie.textField(:name, "q").set("comp.lang.ruby")
    puts '  Action: entered comp.lang.ruby in the search field'
 
@@ -181,9 +179,12 @@ class TC_google_suite < Test::Unit::TestCase
 
    puts 'Expected Result: '
    puts ' - The Google Groups page for comp.lang.ruby should be shown.'
-   #sleep 1
+   
    puts 'Actual Result: Check that the "comp.lang.ruby" link actually appears on the page by using an assertion'
    assert($ie.pageContainsText("comp.lang.ruby") )
+   
+   puts '  '
+   puts '## End of test: google groups'
 
  end # end of test_googlegroups
  

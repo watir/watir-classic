@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------------------------------------#
 
    #includes
-   require '../watir.rb'   # the controller
+   require '../watir'   # the controller
 
    #variables
    testSite = 'http://www.google.com'
