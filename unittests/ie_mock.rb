@@ -1,4 +1,4 @@
-require 'watir.rb'
+require 'watir'
 
 class FakeFrame
 	def length
@@ -8,12 +8,22 @@ end
 
 class FakeDoc
 
+   attr_accessor :links
+   
+   def initialize()
+      @links = nil
+   end
+   
 	def frames
 		return FakeFrame.new()
 	end
 	
 	def readyState
 		return "complete"
+	end
+	
+	def links
+		return nil
 	end
 	
 end
@@ -47,12 +57,20 @@ end
 
 class TestIE < IE
 
-    def createBrowser
-        return StubExplorer.new()
-    end
+   def createBrowser
+      return StubExplorer.new()
+   end
+   
+   def addLink(link)
+      if (@ie.document.links == nil)
+         @ie.document.links = [link]
+      else
+         @ie.document.links = @ie.document.links + [link]
+      end
+   end
 	
-	def setTimeToWait(time = 1)
-		@ie.timeToWait = time
-	end
+   def setTimeToWait(time = 1)
+      @ie.timeToWait = time
+   end
 	
 end

@@ -986,6 +986,9 @@ class IE
     def getLink( how, what )
         doc = getDocument()
         links = doc.links
+	if (links == nil)
+	   raise UnknownObjectException, "Unknown Object in getLink: attempted to click a link when no links present"
+	end
 
         link = nil
         case how
@@ -996,6 +999,7 @@ class IE
             rescue
                 link=nil
             end
+	    
         when :url
             links.each do |thisLink|
                 if thisLink.href.match(Regexp.escape(what)) 
@@ -1005,11 +1009,11 @@ class IE
             
         when :text
             links.each do |thisLink|
-                if what.matches(thisLink.innerText) 
-                    link = thisLink if link == nil
-                end
+               if what.matches(thisLink.innerText) 
+                   link = thisLink if link == nil
+               end
             end
-
+ 
         when :id
             links.each do |thisLink|
                 if what.matches(thisLink.invoke("id"))
@@ -1018,7 +1022,7 @@ class IE
             end
 
         else
-            log "unknown way of finding a link ( #{what} ) "
+            raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
         end
         #reset the frame reference
         clearFrame()
