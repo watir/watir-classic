@@ -306,39 +306,98 @@ class IE
     end
 
 
-    def form( formName )
-        @formName = nil
-        temp = getDocument()
-        @formName = formName
-        puts "form - name set at #{formName}"
+    def form( how , formName=nil )
+
+        # if only one value is supplied, its a form name
+        if formName == nil
+            @formName = how
+            @formHow = :name
+            puts "form  how is #{@formHow} name is #{@formName}"
+
+        else
+            @formName = formName
+            @formHow = how
+            puts "form  how is #{@formHow} name is #{@formName}"
+
+        end
+
+        #temp = getDocument()
         return self
+    end
+
+    def submit()
+        getForm()
+        raise UnknownFormException if @form == nil
+        @form.submit 
+        waitForIE
+        clearForm()
+    end   
+ 
+    # this applies to a form. - it will be refactored into a Form object eventually
+    def exists?
+        @doc = getDocument(false)  
+        getForm()
+        formExists = false
+        formExists = true if @form
+        clearForm()
+        return false if formExists == false
+        return true
     end
 
     def clearForm()
         @formName = nil
+        @formHow = nil
         @form = nil
     end
 
     def getForm()
-        puts "Get form"
+        puts "Get form  formHow is #{@formHow}  formName is #{@formName} "
+        count =1
         @doc.forms.each do |thisForm|
-            puts "FORM name is " + thisForm.name
-            if thisForm.name == @formName
-                @form = thisForm
-            end
+            next unless @form == nil
+            puts "form on page, name is " + thisForm.name.to_s
+            case @formHow
+                when :name
+                    if thisForm.name == @formName
+                        @form = thisForm
+                    end
+                when :index
+                    if count == @formName.to_i
+                        @form = thisForm
+                    end
+
+                when :method
+                    if thisForm.invoke("method").downcase == @formName.downcase
+                        @form = thisForm
+                    end
+
+                when :action
+                   if @formName.kind_of? String
+                        if thisForm.action == @formName
+                             @form = thisForm
+                        end
+                   elsif 
+                        if thisForm.action.match( @formName ) != nil
+                             @form = thisForm
+                        end
+                   end
+           end
+           count = count +1
         end
-        puts "set @form to form with name #{@form.name}"
+        puts "set @form "   #to form with name #{@form.name}"
         return @form
     end
 
 
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
-    def getDocument()
-        if @formName
-            doc = getForm()
-            puts "Getting a form #{@formName} "
-        elsif @frame == "" and @presetFrame == ""
+    def getDocument(useForm = true)
+        #if @formName and useForm
+        #    doc = getForm()
+        #    puts "Getting a form #{@formName} "
+        #elsif @frame == "" and @presetFrame == ""
+        if @frame == "" and @presetFrame == ""
+
             doc = @ie.document
         else
             if @frame == "" 
