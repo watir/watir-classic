@@ -14,7 +14,7 @@ Best is to use Ruby 1.8.2-14.
 Check out the mail lists and the documentation for the workarounds.
 Install ruby from http://ruby-lang.org
 Install the watir files, unit tests and sample html pages. 
-run the unittests by going to the dir where you installed to, cd unittests, then run the tests.
+Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/all_tests.rb'.
 If you are using XP service pack2, you may have problems with the unit tests. 
 
 Things Still to be Done:
