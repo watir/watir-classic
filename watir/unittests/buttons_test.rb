@@ -1,7 +1,6 @@
 # tests for Buttons
 # revision: $Revision$
 
-$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_Buttons < Test::Unit::TestCase

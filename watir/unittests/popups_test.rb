@@ -1,7 +1,6 @@
 # tests for javascript PopUps
 # revision: $Revision$
 
-$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 class TC_PopUps < Test::Unit::TestCase
