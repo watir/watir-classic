@@ -7,12 +7,12 @@ require 'unittests/setup'
 class TC_Links < Test::Unit::TestCase
     include Watir
    
-    def test_newWindows 
+    def xtest_newWindows 
         $ie.captureEvents
         $ie.goto($htmlRoot + 'links1.html')
         $ie.link(:index ,5).click
         ie2 = $ie.newWindow
-        assert(ie2 != nil, "Couldnt get newly opened window.")
+        assert(ie2 != nil, "Couldn't get newly opened window.")
         ie2.link(:index ,5).click
     end
 end

@@ -8,43 +8,34 @@ class TC_ExistingWindow< Test::Unit::TestCase
     include Watir
 
     def test_ExistingWindow
-
        e = $htmlRoot + 'buttons1.html'
+       $ie.goto(e)
+       ie3=nil
 
-       ie2 = IE.new
-       ie2.goto(e)
+       assert_raises( NoMatchingWindowFoundException ) { ie3 = IE.attach(:title , "missing") }
+       assert_raises( NoMatchingWindowFoundException ) { ie3 = IE.attach(:title , /missing/) }
 
-
-       assert_raises( NoMatchingWindowFoundException  ) { ie3 = IE.new( nil , :title , "missing") }
-       assert_raises( NoMatchingWindowFoundException  ) { ie3 = IE.new( nil , :title , /missing/) }
-
-       assert_raises( NoMatchingWindowFoundException  ) { ie3 = IE.new( nil , :url , "missing") }
-       assert_raises( NoMatchingWindowFoundException  ) { ie3 = IE.new( nil , :url , /missing/) }
+       assert_raises( NoMatchingWindowFoundException ) { ie3 = IE.attach(:url , "missing") }
+       assert_raises( NoMatchingWindowFoundException ) { ie3 = IE.attach(:url , /missing/) }
 
 
-       ie3 = IE.new( nil , :title , /buttons/i )
+       ie3 = IE.attach(:title , /buttons/i )
        assert( "Test page for buttons" , ie3.title)
        ie3=nil
 
 
-       ie3 = IE.new( nil , :title , "Test page for buttons" )
+       ie3 = IE.attach(:title , "Test page for buttons" )
        assert( "Test page for buttons" , ie3.title)
        ie3=nil
 
-       ie3 = IE.new( nil , :url, /buttons1.html/ )
+       ie3 = IE.attach(:url, /buttons1.html/ )
        assert( "Test page for buttons" , ie3.title)
        ie3=nil
-
 
        # this is difficult to test, as the url gets munged
        #ie3 = IE.new( nil , :url, $htmlRoot + "buttons1.html" )
        #assert( "Test page for buttons" , ie3.title)
        #ie3=nil
-
-
-       ie2.close
-       ie2=nil
-       ie3=nil
 
 
 
