@@ -516,20 +516,17 @@ module Watir
         def showForms()
             if @ie.document.forms
                 allForms = @ie.document.forms
-                log "There are #{allForms.length} forms"
-                for i in 0..allForms.length-1
-                    begin
-                        log "Form name: #{allForms[i.to_s].invoke("name").invoke("name").to_s}"
-                        log "      id: #{allForms[i.to_s].invoke("id").to_s}"
-                        log "   method: #{allForms[i.to_s].invoke("method").to_s}"
-                        log "   action: #{allForms[i.to_s].invoke("action").to_s}"
-                        
-                    rescue
-                        log "Form caused an exception!"
-                    end
+                count = allForms.length
+                log "There are #{count} forms"
+                for i in 0..count-1 do
+                    wrapped = FormWrapper.new(allForms.item(i))
+                    log "Form name: #{wrapped.name}"
+                    log "       id: #{wrapped.id}"
+                    log "   method: #{wrapped.method}"
+                    log "   action: #{wrapped.action}"
                 end
             else
-                log " No forms"
+                log "No forms"
             end
             clearFrame()
         end
@@ -1257,8 +1254,6 @@ module Watir
             count = 1
             doc = @ieController.getDocument()
             doc.forms.each do |thisForm|
-                #0.upto(doc.forms.length -1 ) do |i|
-                #thisForm = doc.forms[i.to_s]
                 next unless @form == nil
 
                 wrapped = FormWrapper.new(thisForm)
@@ -1277,7 +1272,7 @@ module Watir
                     end
                     
                 when :id
-                    if thisForm.invoke("id").to_s == @formName.to_s
+                    if wrapped.id == @formName.to_s
                         @form = thisForm
                     end
                     
@@ -1287,12 +1282,12 @@ module Watir
                     end
                     
                 when :method
-                    if thisForm.invoke("method").downcase == @formName.downcase
+                    if wrapped.method.downcase == @formName.downcase
                         @form = thisForm
                     end
                     
                 when :action
-                    if @formName.matches(thisForm.action)
+                    if @formName.matches(wrapped.action)
                         @form = thisForm
                     end
                 else

@@ -27,16 +27,40 @@ class TC_Forms2 < Test::Unit::TestCase
         assert($ie.form(:action, "pass.html").exists?)   
         assert_false($ie.form(:action, "missing").exists?)   
     end
-    
-    def xtest_showforms
-    
-        $ie.showForms
-    end
-    
+        
     def test_ButtonInForm
         assert($ie.form(:name ,"test2").button(:caption , "Submit").exists?)
-    end 
-    
+    end     
+end
+
+require 'unittests/iostring'
+class TC_Form_Display < Test::Unit::TestCase
+    include MockStdoutTestCase                
+    def test_showforms
+        $ie.goto($htmlRoot + "forms2.html")
+    @mockout = IOString.new ""
+    $stdout = @mockout
+        $ie.showForms
+        assert_equal(<<END_OF_MESSAGE, @mockout)
+There are 4 forms
+Form name: 
+       id: 
+   method: get
+   action: pass.html
+Form name: test2
+       id: 
+   method: get
+   action: pass2.html
+Form name: test3
+       id: 
+   method: get
+   action: pass2.html
+Form name: test2
+       id: 
+   method: get
+   action: pass2.html
+END_OF_MESSAGE
+    end
 end
 
 class TC_Forms3 < Test::Unit::TestCase
