@@ -246,7 +246,7 @@ Or we can identify it based on the <i>name</i> attribute, and the value we want 
 <h3>Text Fields</h3>
 <p>What you see in the web browser:</p>
 <div class = "browserexample">Type in Me:  <input type = "text" name = "typeinme"> </div>
-<p>Watir code to <i>set</i> the text string "Watir World" using the <i>name</i> attribute: 
+<p>Watir code to <i>set</i> the field with the text string: "Watir World" using the <i>name</i> attribute: 
 <div class = "testexample">$ie.textField(:name, "typeinme").set("Watir World")</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;input type = "text" name = "<b>typeinme</b>" &gt;</div>
@@ -257,7 +257,7 @@ Or we can identify it based on the <i>name</i> attribute, and the value we want 
 <p>In web applications, we generally submit information we have entered or selected in the web page by clicking hyperlinks (see above example), 
 clicking buttons, or images that look and act like HTML buttons, or by hitting Enter/Return on  our keyboard.</p>
 <h3>Buttons:</h3>
-<p>Watir <i>clicks</i> buttons on a web page based on the <i>name</i>, <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input type = button</i> HTML tag.
+<p>Watir <i>clicks</i> buttons on a web page based on the <i>name</i>, <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input type = button</i> HTML tag.</p>
 <h4>HTML Buttons</h4>
 <p>What you see in the web browser:</p>
 <div class = "browserexample"><input type = "button" name = "clickme" value = "Click Me"> </div>
@@ -271,10 +271,29 @@ clicking buttons, or images that look and act like HTML buttons, or by hitting E
 <div class = "testexample">$ie.button(:name, "clickme").click</div>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;input type = "button" name = "<b>clickme</b>" value = "<b>Click Me</b>"&gt;</div>
-<h4>Image Buttons</h4>
-<p>What you see in the web browser:</p>
-<div class = "browserexample"><img src = "images/doit.gif"> </div>
+
 <h3>Forms</h3>
+<p>Forms aren't visible through the browser, but are used a lot in web applications. To find them, look at the HTML source for &lt;form&gt;&lt;/form&gt; tags. Watir can submit forms in a variety of ways. </p>
+<h4>Buttons in Forms</h4>
+<p>Watir can <i>submit</i> HTML buttons on a web page contained in a form based on the <i>name</i>, <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input type = submit</i> HTML tag.</p>
+<div class = "browserexample"> <form action = "submit" name = "submitform" method="post"><input type = submit value=Submit></form></div>
+<h4><i>Value</i> or <i>Caption</i> Attribute </h4>
+<p>This is the Watir code you need to click a button that will submit a form using the <i>caption</i> attribute:</p>
+<div class = "testexample">$ie.button(:caption, "Submit").click</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;form action = "submit" name = "submitform" method="post"&gt;&lt;input type = "submit" value = "<b>Submit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+<p>We can also just submit the form as shown below in the Forms With No Buttons examples.</p>
+<h4>Image Buttons in Forms</h4>
+<p>Watir can <i>submit</i> image buttons on a web page contained in a form based on the <i>name</i> attribute provided in the <i>img src</i> HTML tag.</p>
+<h4><i>Name</i> Attribute</h4>
+<p>What you see in the web browser:</p>
+<div class = "browserexample"><form action = "submit" name = "domitform" method="post"><img src = "images/doit.gif" name = "doit"></form> </div>
+<p>This is the Watir code you need to click a button that will submit a form using the <i>caption</i> attribute:</p>
+<div class = "testexample">$ie.button(:name, "doit").click</div>
+<p>This is the tag in the HTML source with the attribute highlighted:</p>
+<div class = "htmlexample">&lt;form action = "submit" name = "doitform" method="post"&gt;&lt;img src = "images/doit.gif" name = "<b>doit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+<p>If the form uses an image as a button to submit, we can also treat it the same way as we do with a form that does not have a button.</p>
+<h4>Forms With No Buttons</h4>
 <p>There may be input fields on a web page, but no button to submit. Instead, they will allow you to hit Enter on your keyboard. When there is no button to submit the data, 
 we can just submit the form itself.</p>
 <p>Watir can submit a form by identifying it by its <i>name</i>, <i>action</i> and <i>method</i> attributes.</p>
@@ -291,15 +310,76 @@ we can just submit the form itself.</p>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class = "htmlexample">&lt;form action = "<b>login</b>" name = "loginform" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Validating Test Results</h2>
-<p>Did the test pass or fail?</p>
+<p>How do we tell whether the test passed or failed? It is good practice to use a verification point in your test case.</p>
+<p>To create a valid test case, we need to use some sort of validation. It isn't enough to have a sequence of events without validation in a test script. Watir can check the state of objects in the IE DOM, 
+and can check to see if a page contains the objects that are expected for the test to pass.<p>
 <h3>Object Exists</h3>
-<h3>Assertions</h3>
+<p>A simple verification point is to use the Watir method <i>pageContainsText</i>:</p>
+<p>In our test, imagine we have gone through a sequence of steps to reach the desired point. This is a web page that contains the following text:</p>
+<div class = "browserexample">Reached test verification point.</div>
+<p>Our test will pass if this is what is displayed on the page at our verification point.</p>
+<p>Watir code to check that the text exists on the web page  <i>pageContainsText</i> method: 
+<div class = "testexample">$ie.pageContainsText("Reached test verification point.") </div>
+<p>We will need to create a small method to validate that this occurred, or use Ruby's test::unit testing framework.</p>
+To create a simple method to let us know whether the test passed or not:</p>
+<div class = "testexample">a = $ie.pageContainsText("Reached test verification point.")<br> 
+if !a <br>  
+&nbsp;     puts: "Test failed! Page didn't contain text: Reached test verification point."<br> 
+else<br>    
+&nbsp;     puts: "Test passed. Page contains the text: Reached test verification point."<br>
+end</div>
+   <p>
+<p>This is what the method above does:</p>
+<ol>
+   <li>assign this method call to, and store results in variable <i>a</i></li>
+   <li>if <i>a</i> is false, the page did not contain the text: "Reached test verification point."</li>
+   <li>print our failure message to the screen</li>
+   <li><i>a</i> is not false, meaning it is true; the page did contain the text we are looking for</li>
+   <li>print our passing message to the screen</li>
+   <li>end our method</li></ol></p>
+<h3>Using test::unit Assertions</h3>
+<p>Using xUnit assertions can be a more powerful way of validating test results. (For a good explanation of assertions, visit this NUnit page:  <a href= "http://www.nunit.org/assertions.html">explaining assertions</a>.</p>
+<p>Ruby has an xUnit framework called test::unit that we can use with Watir.</p>
+<p>To use test::unit in your test scripts, enter the following in your test script:</p>
+<h4>Include test::unit</h4>
+<div class = "testexample">#test::unit includes<br>
+require 'test/unit'<br> 
+require 'test/unit/ui/console/testrunner'<br>
+require 'unittests/testUnitAddons'<br></div>
+<h4>Create a Test Instance</h4>
+<p>We create a new class for our test suite which is inherited from the test::unit <b>TestCase</b> class.<p>
+<div class = "testexample">class TC_myTest < Test::Unit::TestCase<br>
+&nbsp;&nbsp;<i>fill in Test Case methods here</i><br>
+end </div>
+<h4>Create a Test Case Method</h4>
+<p>test::unit uses reflection to go through our test class and execute all the methods (test cases)</p>
+<div class = "testexample">def test_myTestCase<br>
+&nbsp;&nbsp;<i>fill in Watir methods here</i><br>
+end</div>
+<h4>Use Assertions</h4>
+<p>Watir supports assertions by wrapping Watir methods within an <i>assert</i> or <i>assert_false</i>:</p>
+<div class = "testexample">assert($ie.pageContainsText("Reached test verification point.")</div>
+<div class = "testexample">assert_false($ie.pageContainsText("Did not reach test verification point.")</div>
+<p>Watir can test for many different states of objects. We can use assertions to check of objects <i>exist</i>, 
+are <i>enabled</i> or <i>disabled</i>, or any other state that the DOM tells the web browser about an object.</p>
 <h2>Tips and Tricks</h2>
+<h4>Troubleshooting</h4>
+<p>Not all HTML tags will look the same. If you have difficulty getting Watir to interact with an object on your web page, try the Watir method with different attributes.
+The tag may come with one attribute, or it may come with several. If you still have trouble, see if the developers will add a <i>name</i> attribute to the offending tag.</p>
 <h4>Choosing Attributes</h4>
 <p>If you are having difficulty getting Watir to interact with an object, try using the method with different tag attributes. Tag declarations in HTML are varied. Some developers use tools that generate HTML, and there are many variations on tag attributes. Watir is very flexible and 
 offers several variations on each method. There are also attributes that are part of the DOM within IE. Anything the DOM can see, you can access using Ruby. If you have exhausted the attributes on a tag and Watir still won't interact with it, 
-send an email to the wtr-general mailing list. The Watir development team will gladly add support for you.</p>
+send an email to the wtr-general mailing list. The Watir development team will help out, and if needed, add support for that situation within Watir.</p>
 <h4>Using Regular Expressions</h4>
+<p>Watir supports regular expressions in method calls.</p>
+<p>Here is an example using the <i>link</i> method to click a hyperlink using the <i>url</i> attribute:</p>
+<div class = "testexample">$ie.link(:url, /shtml/).click</div>
+<p>This will click the link that matches <i>shtml</i>.</p>
+<h4>CSS: Messages in Div tags</h4>
+<p>Watir supports div tags. Some web applications use one <i>div</i> for one state of the application, and another for a different state (such as error or success messages). Watir can check the status of the div
+to allow for tests on pages using CSS as part of the application. This is a big plus for Watir as traditional "capture/replay" tools are usually unable to support this.</p>
+<p>Check out the unit test <b>css_test.rb</b> for usage.</p>
 <h4>RDoc</h4>
+<p>Watir has RDocs generated which describe the classes and methods in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i> directory and click on <b>index.html</b></p>
 </body>
 </html>
