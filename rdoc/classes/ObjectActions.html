@@ -88,18 +88,19 @@ normally access.
 			<h2 class="section-bar">Methods</h2>
 
 			<div class="name-list">
-			<a href="#M000100">click</a>&nbsp;&nbsp;
-			<a href="#M000104">enabled?</a>&nbsp;&nbsp;
-			<a href="#M000103">exists?</a>&nbsp;&nbsp;
-			<a href="#M000101">flash</a>&nbsp;&nbsp;
-			<a href="#M000102">focus</a>&nbsp;&nbsp;
-			<a href="#M000097">getOLEObject</a>&nbsp;&nbsp;
-			<a href="#M000096">getProperty</a>&nbsp;&nbsp;
-			<a href="#M000099">highLight</a>&nbsp;&nbsp;
-			<a href="#M000093">new</a>&nbsp;&nbsp;
-			<a href="#M000094">setProperties</a>&nbsp;&nbsp;
-			<a href="#M000095">setProperty</a>&nbsp;&nbsp;
-			<a href="#M000098">to_s</a>&nbsp;&nbsp;
+			<a href="#M000124">click</a>&nbsp;&nbsp;
+			<a href="#M000129">enabled?</a>&nbsp;&nbsp;
+			<a href="#M000128">exists?</a>&nbsp;&nbsp;
+			<a href="#M000126">fireEvent</a>&nbsp;&nbsp;
+			<a href="#M000125">flash</a>&nbsp;&nbsp;
+			<a href="#M000127">focus</a>&nbsp;&nbsp;
+			<a href="#M000121">getOLEObject</a>&nbsp;&nbsp;
+			<a href="#M000120">getProperty</a>&nbsp;&nbsp;
+			<a href="#M000123">highLight</a>&nbsp;&nbsp;
+			<a href="#M000117">new</a>&nbsp;&nbsp;
+			<a href="#M000118">setProperties</a>&nbsp;&nbsp;
+			<a href="#M000119">setProperty</a>&nbsp;&nbsp;
+			<a href="#M000122">to_s</a>&nbsp;&nbsp;
 			</div>
 		</div>
 
@@ -119,12 +120,12 @@ normally access.
 		<div id="methods">
 			<h2 class="section-bar">Public Class methods</h2>
 
-			<div id="method-M000093" class="method-detail">
-				<a name="M000093"></a>
+			<div id="method-M000117" class="method-detail">
+				<a name="M000117"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000093.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000093.html');return false;">
+					<a href="ObjectActions.src/M000117.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000117.html');return false;">
 					<span class="method-name">new</span><span class="method-args">( o )</span>
 					</a>
 				</div>
@@ -143,33 +144,33 @@ accessed using the setProperty and getProperty methods
 
 			<h2 class="section-bar">Public Instance methods</h2>
 
-			<div id="method-M000100" class="method-detail">
-				<a name="M000100"></a>
+			<div id="method-M000124" class="method-detail">
+				<a name="M000124"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000100.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000100.html');return false;">
+					<a href="ObjectActions.src/M000124.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000124.html');return false;">
 					<span class="method-name">click</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-This method clicks the active element.
+This method clicks the active element. raises: <a
+href="UnknownObjectException.html">UnknownObjectException</a> if the object
+is not found <a
+href="ObjectDisabledException.html">ObjectDisabledException</a> if the
+object is currently disabled
 </p>
-<pre>
-  raises: UnknownObjectException  if the object is not found
-          ObjectDisabledException if the object is currently disabled
-</pre>
 				</div>
 			</div>
 
-			<div id="method-M000104" class="method-detail">
-				<a name="M000104"></a>
+			<div id="method-M000129" class="method-detail">
+				<a name="M000129"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000104.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000104.html');return false;">
+					<a href="ObjectActions.src/M000129.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000129.html');return false;">
 					<span class="method-name">enabled?</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -185,12 +186,12 @@ isn&#8217;t.
 				</div>
 			</div>
 
-			<div id="method-M000103" class="method-detail">
-				<a name="M000103"></a>
+			<div id="method-M000128" class="method-detail">
+				<a name="M000128"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000103.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000103.html');return false;">
+					<a href="ObjectActions.src/M000128.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000128.html');return false;">
 					<span class="method-name">exists?</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -202,12 +203,35 @@ This methods checks to see if the current element actually exists.
 				</div>
 			</div>
 
-			<div id="method-M000101" class="method-detail">
-				<a name="M000101"></a>
+			<div id="method-M000126" class="method-detail">
+				<a name="M000126"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000101.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000101.html');return false;">
+					<a href="ObjectActions.src/M000126.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000126.html');return false;">
+					<span class="method-name">fireEvent</span><span class="method-args">(event)</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method executes a user defined &quot;fireEvent&quot; for objects with
+JavaScript events tied to them such as DHTML menus.
+</p>
+<pre>
+  usage: allows a generic way to fire javascript events on page objects such as &quot;onMouseOver&quot;, &quot;onClick&quot;, etc.
+  raises: UnknownObjectException  if the object is not found
+          ObjectDisabledException if the object is currently disabled
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000125" class="method-detail">
+				<a name="M000125"></a>
+
+				<div class="method-heading">
+					<a href="ObjectActions.src/M000125.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000125.html');return false;">
 					<span class="method-name">flash</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -216,12 +240,12 @@ This methods checks to see if the current element actually exists.
 				</div>
 			</div>
 
-			<div id="method-M000102" class="method-detail">
-				<a name="M000102"></a>
+			<div id="method-M000127" class="method-detail">
+				<a name="M000127"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000102.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000102.html');return false;">
+					<a href="ObjectActions.src/M000127.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000127.html');return false;">
 					<span class="method-name">focus</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -237,12 +261,12 @@ This method sets focus on the active element.
 				</div>
 			</div>
 
-			<div id="method-M000097" class="method-detail">
-				<a name="M000097"></a>
+			<div id="method-M000121" class="method-detail">
+				<a name="M000121"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000097.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000097.html');return false;">
+					<a href="ObjectActions.src/M000121.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000121.html');return false;">
 					<span class="method-name">getOLEObject</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -251,12 +275,12 @@ This method sets focus on the active element.
 				</div>
 			</div>
 
-			<div id="method-M000096" class="method-detail">
-				<a name="M000096"></a>
+			<div id="method-M000120" class="method-detail">
+				<a name="M000120"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000096.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000096.html');return false;">
+					<a href="ObjectActions.src/M000120.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000120.html');return false;">
 					<span class="method-name">getProperty</span><span class="method-args">(name)</span>
 					</a>
 				</div>
@@ -271,12 +295,12 @@ This method retrieves the value of the specified property.
 				</div>
 			</div>
 
-			<div id="method-M000099" class="method-detail">
-				<a name="M000099"></a>
+			<div id="method-M000123" class="method-detail">
+				<a name="M000123"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000099.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000099.html');return false;">
+					<a href="ObjectActions.src/M000123.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000123.html');return false;">
 					<span class="method-name">highLight</span><span class="method-args">( setOrClear )</span>
 					</a>
 				</div>
@@ -287,17 +311,17 @@ This method is responsible for setting and clearing the colored
 highlighting on the currently active element. use :set to set the highlight
 </p>
 <pre>
-    :clear  to clear the highlight
+  :clear  to clear the highlight
 </pre>
 				</div>
 			</div>
 
-			<div id="method-M000094" class="method-detail">
-				<a name="M000094"></a>
+			<div id="method-M000118" class="method-detail">
+				<a name="M000118"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000094.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000094.html');return false;">
+					<a href="ObjectActions.src/M000118.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000118.html');return false;">
 					<span class="method-name">setProperties</span><span class="method-args">(propertyHash )</span>
 					</a>
 				</div>
@@ -309,12 +333,12 @@ This method sets the properties for the object
 				</div>
 			</div>
 
-			<div id="method-M000095" class="method-detail">
-				<a name="M000095"></a>
+			<div id="method-M000119" class="method-detail">
+				<a name="M000119"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000095.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000095.html');return false;">
+					<a href="ObjectActions.src/M000119.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000119.html');return false;">
 					<span class="method-name">setProperty</span><span class="method-args">(name , val)</span>
 					</a>
 				</div>
@@ -330,12 +354,12 @@ This method is used to set a property
 				</div>
 			</div>
 
-			<div id="method-M000098" class="method-detail">
-				<a name="M000098"></a>
+			<div id="method-M000122" class="method-detail">
+				<a name="M000122"></a>
 
 				<div class="method-heading">
-					<a href="ObjectActions.src/M000098.html" target="Code" class="method-signature"
-						onclick="popupCode('ObjectActions.src/M000098.html');return false;">
+					<a href="ObjectActions.src/M000122.html" target="Code" class="method-signature"
+						onclick="popupCode('ObjectActions.src/M000122.html');return false;">
 					<span class="method-name">to_s</span><span class="method-args">()</span>
 					</a>
 				</div>
@@ -348,11 +372,11 @@ href="UnknownObjectException.html">UnknownObjectException</a> if the object
 is not found.
 </p>
 <pre>
-     name        b4
-     type        button
-     id          b5
-     value       Disabled Button
-     disabled    true
+     name      b4
+     type      button
+     id         b5
+     value      Disabled Button
+     disabled   true
 </pre>
 				</div>
 			</div>

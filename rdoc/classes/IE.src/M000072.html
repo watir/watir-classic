@@ -5,59 +5,19 @@
 
 <!--
 
-    getLink (IE)
+    clearPresetFrame (IE)
 
   -->
 <html>
 <head>
-	<title>getLink (IE)</title>
+	<title>clearPresetFrame (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 930</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getLink</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> )
-        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
-        <span class="ruby-identifier">links</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">links</span>
-
-        <span class="ruby-identifier">link</span> = <span class="ruby-keyword kw">nil</span>
-        <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
-            
-        <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:index</span>
-            <span class="ruby-keyword kw">begin</span>
-                <span class="ruby-identifier">link</span> = <span class="ruby-identifier">links</span>[ (<span class="ruby-identifier">what</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>).<span class="ruby-identifier">to_s</span> ]
-            <span class="ruby-keyword kw">rescue</span>
-                <span class="ruby-identifier">link</span>=<span class="ruby-keyword kw">nil</span>
-            <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:url</span>
-            <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">href</span>.<span class="ruby-identifier">match</span>(<span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">escape</span>(<span class="ruby-identifier">what</span>)) 
-                    <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-                <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-            
-        <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:text</span>
-            <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">innerText</span>) 
-                    <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-                <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
-            <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>))
-                    <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-                <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-keyword kw">else</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;unknown way of finding a link ( #{what} ) &quot;</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-comment cmt">#reset the frame reference</span>
-        <span class="ruby-identifier">clearFrame</span>()
-
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">link</span>
-
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 654</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clearPresetFrame</span>( )
+        <span class="ruby-ivar">@frameHandler</span>.<span class="ruby-identifier">clearPresetFrame</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

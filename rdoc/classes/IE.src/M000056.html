@@ -5,21 +5,19 @@
 
 <!--
 
-    goto (IE)
+    createBrowser (IE)
 
   -->
 <html>
 <head>
-	<title>goto (IE)</title>
+	<title>createBrowser (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 553</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">goto</span>( <span class="ruby-identifier">url</span> )
-        <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">navigate</span>(<span class="ruby-identifier">url</span>)
-        <span class="ruby-identifier">waitForIE</span>()
-        <span class="ruby-identifier">sleep</span> <span class="ruby-value">0</span><span class="ruby-value">.2</span>
-    <span class="ruby-keyword kw">end</span></pre>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 506</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">createBrowser</span>
+   <span class="ruby-keyword kw">return</span> <span class="ruby-constant">WIN32OLE</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'InternetExplorer.Application'</span>)
+   <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

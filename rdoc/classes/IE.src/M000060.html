@@ -5,25 +5,21 @@
 
 <!--
 
-    showImages (IE)
+    getStatus (IE)
 
   -->
 <html>
 <head>
-	<title>showImages (IE)</title>
+	<title>getStatus (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 604</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showImages</span>()
-        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
-        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;image: name: #{l.name}&quot;</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;         id: #{l.invoke(&quot;id&quot;)}&quot;</span>
-            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;        src: #{l.src}&quot;</span>
-        <span class="ruby-keyword kw">end</span>
-
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 560</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getStatus</span>
+       <span class="ruby-identifier">status</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">statusText</span>()
+       <span class="ruby-identifier">raise</span> <span class="ruby-constant">NoStatusBarException</span> <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">statusBar</span>
+       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">status</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

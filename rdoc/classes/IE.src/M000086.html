@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    showLinks (IE)
+
+  -->
+<html>
+<head>
+	<title>showLinks (IE)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 864</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showLinks</span>()
+      <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
+         <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Link: name: #{l.name}&quot;</span>
+         <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;      id: #{l.invoke(&quot;id&quot;)}&quot;</span>
+         <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;      href: #{l.href}&quot;</span>
+         <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;      text: #{l.innerText}&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">clearFrame</span>()
+   <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
