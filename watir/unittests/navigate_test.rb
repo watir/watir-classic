@@ -3,7 +3,7 @@
 
 require 'setup'
 
-class TC_Frames < Test::Unit::TestCase
+class TC_Navigate< Test::Unit::TestCase
 
 
    
