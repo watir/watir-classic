@@ -124,9 +124,6 @@ module Watir
         end
     end
 
-        
-    
-    
     #
     # MOVETO: watir/browser_driver.rb
     # Module Watir::BrowserDriver
@@ -161,6 +158,8 @@ module Watir
         
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
+        
+        attr_reader :ie
                         
         def initialize(suppress_new_window=nil)
             unless suppress_new_window
@@ -180,10 +179,10 @@ module Watir
         # Attach to an existing IE window, either by url or title.
         # IE.attach(:url, 'http://www.google.com')
         # IE.attach(:title, 'Google') 
-        def IE.attach( how, what )
-            bf = new(true) # don't create window
-            bf.attach_init(how, what)
-            return bf
+        def IE.attach(how, what)
+            ie = new(true) # don't create window
+            ie.attach_init(how, what)
+            return ie
         end   
 
         def attach_init( how, what )
@@ -327,6 +326,7 @@ module Watir
             puts what
         end
         
+        # Deprecated: Use IE#.ie instead
         # This method returns the Internet Explorer object. 
         # Methods, properties,  etc. that the IEController does not support can be accessed.
         def getIE()
@@ -568,83 +568,11 @@ module Watir
         # Searching for Page Elements
         #        
         
-        #This method retrieves an image on a web page for use.
-        #Uses an <img src="image.gif"> HTML tag.
-        def image( how, what )
-            doc = getDocument()
-            
-            log "Finding an image how: #{how} What #{what}"
-            count = 1
-            images = doc.images
-            o=nil
-            images.each do |img|
-                
-                log "Image on page: src = #{img.src}"
-                
-                next unless o == nil
-                if how == :index
-                    o = img if count == what.to_i
-                else                
-                    case how
-                        
-                    when :src
-                        attribute = img.src
-                    when :name
-                        attribute = img.name
-                    when :id
-                        attribute = img.invoke("id")
-                    when :alt
-                        attribute = img.invoke("alt")
-                    else
-                        next
-                    end
-                    
-                    o = img if what.matches(attribute)
-                end
-                count +=1
-            end # do
-            return o
-        end
-        alias getImage image
-        
         def getContainer()
             return getDocument.body.all
         end
         private :getContainer
         
-        
-        # This method is used to get a table from the page. 
-        # :index (1 based counting)and :id are supported. 
-        #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
-        # :index can be used when there are multiple forms on a page. 
-        # The first form can be accessed with :index 1, the second :index 2, etc. 
-        #   * how - symbol - the way we look for the table. Supported values are
-        #                  - :id
-        #                  - :index
-        #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
-        def getTable( how, what )
-            allTables = getDocument.body.getElementsByTagName("TABLE")
-            #log "There are #{ allTables.length } tables"
-            table = nil
-            tableIndex = 1
-            allTables.each do |t|
-                next  unless table == nil
-                case how
-                when :id
-                    if t.invoke("id").to_s == what.to_s
-                        table = t
-                    end
-                    
-                when :index
-                    if tableIndex == what.to_i
-                        table = t
-                    end
-                end
-                tableIndex = tableIndex + 1
-            end
-            #puts "table - #{what}, #{how} Not found " if table ==  nil
-            return table
-        end
         
         # This is the main method for finding objects on a web page.
         #   * how - symbol - the way we look for the object. Supported values are
@@ -987,7 +915,15 @@ module Watir
             return Form.new(self, formHow, formName)      
         end
 
-         # this is the main method for acessing a table
+        # This method is used to get a table from the page. 
+        # :index (1 based counting)and :id are supported. 
+        #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
+        # :index can be used when there are multiple forms on a page. 
+        # The first form can be accessed with :index 1, the second :index 2, etc. 
+        #   * how - symbol - the way we look for the table. Supported values are
+        #                  - :id
+        #                  - :index
+        #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
         def table( how, what )
             return Table.new( self , how, what)
         end
@@ -1069,6 +1005,8 @@ module Watir
         #  *  how   - symbol - how we access the image, :index, :id, :name , :src
         #  *  what  - string, int or re , what we are looking for, 
         # returns an Image object
+        #This method retrieves an image on a web page for use.
+        #Uses an <img src="image.gif"> HTML tag.
         def image( how , what)
             i = Image.new(self , how, what )
         end
@@ -1456,13 +1394,31 @@ module Watir
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getTable( how, what )
+            allTables = @ieController.getDocument.body.getElementsByTagName("TABLE")
+            #log "There are #{ allTables.length } tables"
+            table = nil
+            tableIndex = 1
+            allTables.each do |t|
+                next  unless table == nil
+                case how
+                when :id
+                    if t.invoke("id").to_s == what.to_s
+                        table = t
+                    end
+                when :index
+                    if tableIndex == what.to_i
+                        table = t
+                    end
+                end
+                tableIndex = tableIndex + 1
+            end
+            #puts "table - #{what}, #{how} Not found " if table ==  nil
+            @o = table
             super( @o )
             @how = how
             @what = what
         end
-        
-        
+                
         # This method returns the number of rows in the table.
         # Raises an UnknownTableException if the table doesnt exist.
         def rows
@@ -1538,9 +1494,7 @@ module Watir
             @what = what
         end
     end
-    
-    
-    
+        
     # This class is the means of accessing an image on a page.
     # It would not normally be used by users, as the image method of IEController would return an initialised instance of an image.
     class Image < ObjectActions
@@ -1551,7 +1505,40 @@ module Watir
         #   * what         - what we use to access the image, text, url, index etc
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getImage( how, what )
+            doc = ieController.getDocument()
+            
+            log "Finding an image how: #{how} What #{what}"
+            count = 1
+            images = doc.images
+            o=nil
+            images.each do |img|
+                
+                log "Image on page: src = #{img.src}"
+                
+                next unless o == nil
+                if how == :index
+                    o = img if count == what.to_i
+                else                
+                    case how
+                        
+                    when :src
+                        attribute = img.src
+                    when :name
+                        attribute = img.name
+                    when :id
+                        attribute = img.invoke("id")
+                    when :alt
+                        attribute = img.invoke("alt")
+                    else
+                        next
+                    end
+                    
+                    o = img if what.matches(attribute)
+                end
+                count +=1
+            end # do
+            @o = o
+
             super( @o )
             @how = how
             @what = what
