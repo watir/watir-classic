@@ -8,7 +8,6 @@ No job is recording time, or Job 'ruby article' is running."
 end
 
 def start_with_new_user( user )
-  
   # Start with a user that has no time records. 
   ensure_no_user_data( user )
 
@@ -28,3 +27,9 @@ def start_with_new_user( user )
   new_job.submit
   $iec.wait
 end
+
+
+
+
+
+

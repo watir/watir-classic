@@ -1,7 +1,6 @@
 # iec-assist.rb
 require 'cl/iec'
-
-$DEFAULT_URL = 'http://localhost:8080'
+require 'toolkit/config'
 
 # ARGV need to be deleted to enable the Test::Unit functionatily that grabs
 # the remaining ARGV as a filter on what tests to run

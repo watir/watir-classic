@@ -33,7 +33,7 @@ h3. Installing the Software
 
 h4. Ruby
 
-The Ruby installer is
+We are currently using this Ruby installer: 
 "ruby181-12.exe.":http://rubyforge.org/frs/?group_id=167&release_id=414 
 
 #      Double-click this exe file to install.
@@ -49,8 +49,8 @@ You will need to install one Ruby library:
 
 #      Unzip this file into a new directory on your computer. 
 #      Start up a command shell. (Start-> Run, enter "cmd".)
-#      Change the current directory (cd) to the one you just created.
-#      Type "ruby install.rb"
+#      Enter "cd iec".
+#      Enter "ruby install.rb".
 
 (You can also install this by just double-clicking the install.rb icon
 in windows explorer. The problem with this method is that you won't
@@ -58,8 +58,11 @@ see any error messages.)
 
 h4. Scripting Class Materials.
 
-# Copy the contents of the scripting101 archive into your hard drive,
-  to c:/scripting101.  
+You will also need the materials hosted on rubyforge.org:
+"wtr/scripting101.tar.gz":http://rubyforge.org/cgi-bin/viewcvs/cgi/viewcvs.cgi/wtr/scripting101/scripting101.tar.gz?tarball=1&cvsroot=wtr
+
+# Extract the contents of this archive into your hard drive,
+  to c:/scripting101. 
 
 h3. Running the Timeclock Server.
 
@@ -67,10 +70,15 @@ You probably won't need to do this for class, since you can use your
 instructor's server. Otherwise, here is how to start up a timeclock
 server on your machine. 
 
-# In a command window, cd to c:/scripting101/installs/timeclock/bin.
-# In a command window, "ruby http-server.rb"
-# You can verify the installation by running some of the sample scripts:
-** ruby c:/scripting101/lab/solutions/suite.rb
+#      Start a command shell. (Start-> Run, enter "cmd".)
+#      Enter "cd c:\scripting101\installs\timeclock\bin".
+#      Enter "ruby http-server.rb". The server is now running.
+
+You can verify that the server is running correctly by running some
+sample tests.
+
+#      Start a new command shell.
+#      Enter "ruby c:\scripting101\lab\solutions\suite.rb".
 
 
 

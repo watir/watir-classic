@@ -36,8 +36,8 @@ module Timeclock
         at_exit { user_manager.deactivate_all_sessions }
         request_handler = RequestHandler.new(user_manager)
 
-        puts DRb.start_service('druby://localhost:9000', request_handler).uri
-        user_manager.advertise('localhost', '9001')
+        puts DRb.start_service('druby://:9000', request_handler).uri
+        user_manager.advertise('', '9001')
 
         begin
           puts "Listening on #{listen.inspect}."

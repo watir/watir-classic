@@ -15,7 +15,7 @@ $: << File.dirname( __FILE__ )
 ### Utility functions & classes
 def initialize_user (user, initial_job)
   # presumes user is not already initialized
-  start_ie("http://localhost:8080")
+  start_ie
   login_form = forms[0]
   login_form.name = user
   login_form.submit
@@ -33,7 +33,7 @@ end
 
 class Lab2 < Test::Unit::TestCase
   def setup
-    ensure_no_user_data("bret")
+    ensure_no_user_data 'bret' 
     # Note: test just happens to work whether this is a new or existing user. 
     # It is spec'ed to only work with an existing user...
     @mockout = IOString.new ""
@@ -56,8 +56,6 @@ class Lab2 < Test::Unit::TestCase
 end
 
 class Lab3Part1 < Test::Unit::TestCase
-  def setup
-  end
   def test_login_start
     load 'login-start.rb'
 
@@ -73,8 +71,6 @@ class Lab3Part1 < Test::Unit::TestCase
 end
 
 class Lab3Part2 < Test::Unit::TestCase
-  def setup
-  end
   def test_start_stop
     load 'start-stop.rb'
 
@@ -90,8 +86,6 @@ class Lab3Part2 < Test::Unit::TestCase
 end
 
 class Lab3Part3 < Test::Unit::TestCase
-  def setup
-  end
   def test_two_jobs
     load 'two-jobs.rb'
 
@@ -111,7 +105,6 @@ end
 class Lab4PartX < Test::Unit::TestCase
   def setup
     # start with user with no time records
-    ensure_no_user_data("ruby")
     @mockout = IOString.new ""
   end
 
