@@ -997,6 +997,25 @@ module Watir
                 raise MissingWayOfFindingObjectException
             end
         end
+
+        # This is the main method for accessing a reset button ( <input type = reset> ).
+        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # Returns a Reset object.
+        def reset( how , what=nil )
+            if how.kind_of? Symbol and what != nil
+                return Reset.new(self, how , what )
+            elsif how.kind_of? String and what == nil
+                log "how is a string - #{how}"
+                return Reset.new(self, :caption, how)
+            else
+                raise MissingWayOfFindingObjectException
+            end
+        end
+
+
+
+
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -1006,7 +1025,7 @@ module Watir
         end
         alias fileField file_field
         
-        # This is the main method for accessing a text field. Usually an <input type = text> HTML tag.  
+        # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # returns a TextFieldobject
@@ -1908,11 +1927,24 @@ module Watir
             if(how == :from_object) then
               @o = what
             else
-              @o = ieController.getObject( how, what , ["button" , "submit" , "image"] )
+              @o = ieController.getObject( how, what , objectTypes)
             end              
             super( @o )
             @how = how
             @what = what
+        end
+        def objectTypes
+            return ["button" , "submit" , "image"] 
+        end
+
+    end
+
+
+    # This is the main class for accessing reset buttons.
+    # Normally a user would not need to create this object as it is returned by the IEController reset method.
+    class Reset < Button
+        def objectTypes
+            return ["reset"] 
         end
     end
     
@@ -2151,14 +2183,12 @@ module Watir
         def value=(v)
             @o.value = v.to_s
         end
-        private :value=
 
 
         # returns the current value of the text field
         def value
             return @o.value.to_s
         end
-        private :value
 
 
 
