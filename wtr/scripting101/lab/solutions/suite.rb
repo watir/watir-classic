@@ -55,9 +55,42 @@ class Lab2 < Test::Unit::TestCase
   end
 end
 
+class Lab3Part1 < Test::Unit::TestCase
+  def setup
+  end
+  def test_login_start
+    load 'login-start.rb'
+
+    y = get_results_table_array
+    assert_equal 2, y.length
+    assert_equal "background", y.job_name(1)
+    assert_equal "<B>running</B>", y.status(1)
+  end
+  def teardown
+    $iec.close if $iec
+    ensure_no_user_data("ruby")
+  end
+end
+
 class Lab3Part2 < Test::Unit::TestCase
   def setup
+  end
+  def test_start_stop
+    load 'start-stop.rb'
+
+    y = get_results_table_array
+    assert_equal 2, y.length
+    assert_equal "foreground", y.job_name(1)
+    assert_equal "", y.status(1)
+  end
+  def teardown
+    $iec.close if $iec
     ensure_no_user_data("ruby")
+  end
+end
+
+class Lab3Part3 < Test::Unit::TestCase
+  def setup
   end
   def test_two_jobs
     load 'two-jobs.rb'
@@ -75,7 +108,7 @@ class Lab3Part2 < Test::Unit::TestCase
   end
 end
     
-class Lab3Part4 < Test::Unit::TestCase
+class Lab4PartX < Test::Unit::TestCase
   def setup
     # start with user with no time records
     ensure_no_user_data("ruby")
@@ -122,48 +155,12 @@ class Test1 < Test::Unit::TestCase
     load 'test1.rb'
     sleep 2
     $stdout = STDOUT
-    # assert_no_match /FAIL/, @mockout 
+    assert_no_match /FAIL/, @mockout 
     assert @mockout !~ /FAIL/
   end
   def teardown
     $stdout = STDOUT
     $iec.close if $iec
-  end
-end
-
-class LoginStart < Test::Unit::TestCase
-  def setup
-    ensure_no_user_data("ruby")
-  end
-  def test_login_start
-    load 'login-start.rb'
-
-    y = get_results_table_array
-    assert_equal 2, y.length
-    assert_equal "background", y.job_name(1)
-    assert_equal "<B>running</B>", y.status(1)
-  end
-  def teardown
-    $iec.close if $iec
-    ensure_no_user_data("ruby")
-  end
-end
-
-class StartStop < Test::Unit::TestCase
-  def setup
-    ensure_no_user_data("ruby")
-  end
-  def test_start_stop
-    load 'start-stop.rb'
-
-    y = get_results_table_array
-    assert_equal 2, y.length
-    assert_equal "foreground", y.job_name(1)
-    assert_equal "", y.status(1)
-  end
-  def teardown
-    $iec.close if $iec
-    ensure_no_user_data("ruby")
   end
 end
 
@@ -176,7 +173,7 @@ class ErikTest < Test::Unit::TestCase
     $stdout = @mockout
     load 'erik.rb'
     $stdout = STDOUT
-    # assert_no_match /FAIL/, @mockout 
+    assert_no_match /FAIL/, @mockout 
     assert @mockout !~ /FAIL/
     assert_match /PASS.*PASS/, @mockout 
   end
@@ -185,3 +182,7 @@ class ErikTest < Test::Unit::TestCase
     $iec.close if $iec
   end
 end
+
+
+
+

@@ -14,20 +14,13 @@ h3. Lab 3. "Writing Scripts":iec-scripts-lab.html
 
 Create simple scripts.
 
-h3. Lab 4. Verifying Results
+h3. Lab 4. "Verifying Results":verifying-results.html
 
 Add verification steps to your test scripts.
 
-This lab has not yet been written.
+h3. Bonus Lab. "Testing Web Services":web-services-lab.html
 
-h3. Lab 5. Defining Base States
+Test the web services interface to the Timeclock application. This lab
+that is usually not included in the one-day Scripting for Testers
+class.
 
-Use a base state between tests when you group them into a suite.
-
-This lab has not yet been written.
-
-h3. Lab 6. "Testing Web Services":web-services-lab.html
-
-Test the web services interface to the Timeclock application.
-
-This is an advanced lab that is usually not included in the one-day Scripting for Testers class.

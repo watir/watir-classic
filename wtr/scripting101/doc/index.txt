@@ -16,16 +16,14 @@ This documentation accompanies the one-day tutorial.
 * "Using IRB to Drive Internet Explorer":Using%20IRB%20to%20Drive%20Internet%20Explorer.doc. An
   annotated example of using IRB and WTR to drive Timeclock. 
 
-* "IE Controller Example":iecontroller%20ruby%20garden.pdf. An
-  annotated example of using the IE Controller to drive
-  Amazon. Captured from RubyGarden.com. 
-
-* "Lab Exercises":../lab/exercises/exercises.html. An index of the
+* "*Lab Exercises*":../lab/exercises/exercises.html. An index of the
   Exercises used in the class. 
 
 h2. Advanced Material
 
-This is advanced material that ordinarily is not used in the one-day tutorial. 
+This is advanced material that ordinarily is not used in the one-day
+tutorial. These describe other interfaces that can be used to test the
+Timeclock software.
 
 * "Timeclock Command Line Interface":Timeclock-cheat-sheet.doc
 
