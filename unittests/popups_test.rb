@@ -1,9 +1,8 @@
 # tests for javascript PopUps
 # revision: $Revision$
 
-require 'setup'
-
-
+$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
+require 'unittests/setup'
 
 class TC_PopUps < Test::Unit::TestCase
 
@@ -16,7 +15,7 @@ class TC_PopUps < Test::Unit::TestCase
         w = WinClicker.new
         longName = $ie.dir.gsub("/" , "\\" )
         shortName = w.getShortFileName(longName)
-        c = "start #{shortName }\\clickJSDialog.rb #{button } #{ waitTime} "
+        c = "start rubyw #{shortName }\\watir\\clickJSDialog.rb #{button } #{ waitTime} "
         puts "Starting #{c}"
         w.winsystem(c )   
         w=nil
