@@ -39,7 +39,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    #open the IE browser
    $ie = IE.new
 
-   puts "## Beginning of test: Yahoo simple search"
+   puts "## Beginning of test: Yahoo print assertion"
    puts "  "
   
    puts "Step 1: go to the yahoo site: www.yahoo.com"
@@ -48,7 +48,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
 
    puts "Step 2: enter 'pickaxe' in the search text field"
    $ie.textField(:name, "p").set("pickaxe")
-   puts "  Action: entered pickaxe in the search field"
+   puts "  Action: entered 'pickaxe' in the search field"
 
    puts "Step 3: click the 'Yahoo Search' button"
    $ie.button(:value, "Yahoo! Search").click
@@ -70,7 +70,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    assert($ie.pageContainsText("Programming Ruby") )
 
    puts '  '
-   puts '## End of test: yahoo simple search'
+   puts '## End of test: Yahoo print assertion'
   
  end # end of test_print_assertion
 
