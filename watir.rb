@@ -126,11 +126,10 @@ module Watir
         end
         
         def spin
-            print this.next if @enabled
+            print self.next if @enabled
         end
 
         # get the next character to display
-        private 
         def next
             @i=@i+1
             @i=0 if @i>@s.length-1
