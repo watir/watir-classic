@@ -424,48 +424,51 @@ module Watir
         
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
         def waitForIE( noSleep  = false )
-            
-            pageLoadStart = Time.now
-            @pageHasReloaded= false
-            
-            #puts "waitForIE: busy" + @ie.busy.to_s
-            s= Spinner.new
-            while @ie.busy
-                @pageHasReloaded = true
-                sleep 0.02
-                print  s.next
-            end
-            s.reverse
-            
-            #puts "waitForIE: readystate=" + @ie.readyState.to_s 
-            until @ie.readyState == READYSTATE_COMPLETE
-                @pageHasReloaded = true
-                sleep 0.02
-                print s.next
-            end
-            sleep 0.02
-            
-            until @ie.document.readyState == "complete"
-                sleep 0.02
-                print s.next
-            end
-            
-            
-            if @ie.document.frames.length > 0 
-                begin
-                    0.upto @ie.document.frames.length-1 do |i|
-                        until @ie.document.frames[i.to_s].document.readyState == "complete"
-                            sleep 0.02
-                            print s.next
-                        end
-                    end
-                rescue
-                    
+            begin
+                pageLoadStart = Time.now
+                @pageHasReloaded= false
+                
+                #puts "waitForIE: busy" + @ie.busy.to_s
+                s= Spinner.new
+                while @ie.busy
+                    @pageHasReloaded = true
+                    sleep 0.02
+                    print  s.next
                 end
+                s.reverse
+                
+                #puts "waitForIE: readystate=" + @ie.readyState.to_s 
+                until @ie.readyState == READYSTATE_COMPLETE
+                    @pageHasReloaded = true
+                    sleep 0.02
+                    print s.next
+                end
+                sleep 0.02
+                
+                until @ie.document.readyState == "complete"
+                    sleep 0.02
+                    print s.next
+                end
+                
+                
+                if @ie.document.frames.length > 0 
+                    begin
+                        0.upto @ie.document.frames.length-1 do |i|
+                            until @ie.document.frames[i.to_s].document.readyState == "complete"
+                                sleep 0.02
+                                print s.next
+                            end
+                        end
+                    rescue
+                        
+                    end
+                end
+                print "\b"
+                #puts "waitForIE Complete"
+                s=nil
+            rescue
+ 
             end
-            print "\b"
-            #puts "waitForIE Complete"
-            s=nil
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
         end
