@@ -680,6 +680,7 @@ module Watir
                         table = t
                     end
                 end
+                tableIndex = tableIndex + 1
             end
             #puts "table - #{what}, #{how} Not found " if table ==  nil
             clearFrame()
@@ -1647,8 +1648,25 @@ module Watir
         # This method selects an item, or items in a select box.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the thing to select, string, reg exp or an array of string and reg exps
-        
         def select( item )
+            select_item_in_select_list( :text , item )
+        end
+
+
+        # This method selects an item, or items in a select box.
+        # Raises NoValueFoundException   if the specified value is not found.
+        #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
+        def select_value( item )
+            select_item_in_select_list( :value , item )
+        end
+
+
+
+        # this method is used internally to select something from the select box
+        #  * name  - symbol  :vale or :text - how we find an item in the select box
+        #  * item  - string or reg exp - what we are looking for
+        def select_item_in_select_list( name_or_value, item )
+
             @ieController.clearFrame()
             raise UnknownObjectException ,  "Unable to locate a selectbox  using #{@how} and #{@what} "  if @o==nil
             if item.kind_of?( Array ) == false
@@ -1657,6 +1675,8 @@ module Watir
                 items = item 
             end
             
+            
+
             highLight( :set)
             doBreak = false
             items.each do |thisItem|
@@ -1664,14 +1684,14 @@ module Watir
                 @ieController.log "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
                 
                 @o.each do |selectBoxItem|
-                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.text}"
-                    if thisItem.matches( selectBoxItem.text)
+                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.invoke(name_or_value.to_s) }"
+                    if thisItem.matches( selectBoxItem.invoke(name_or_value.to_s))
                         matchedAnItem = true
                         if selectBoxItem.selected == true
-                            @ieController.log " #{selectBoxItem.text} is already selected"
+                            @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is already selected"
                             doBreak = true
                         else
-                            @ieController.log " #{selectBoxItem.text} is being selected"
+                            @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is being selected"
                             selectBoxItem.selected = true
                             @o.fireEvent("onChange")
                             doBreak = true
@@ -1681,10 +1701,19 @@ module Watir
                     end
                 end
                 
-                raise NoValueFoundException , "Selectbox was found, but didnt find item #(item) "   if doBreak == false
+                raise NoValueFoundException , "Selectbox was found, but didnt find item with #{name_or_value.to_s} of #{item} "   if doBreak == false
             end
             highLight( :clear )
         end
+
+        private :select_item_in_select_list
+
+
+
+
+
+
+
         
         # This method returns all the items in the select list as an array. An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
