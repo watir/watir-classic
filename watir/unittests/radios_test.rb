@@ -1,7 +1,8 @@
 # tests for Radio Buttons
 # revision: $Revision$
 
-require 'setup'
+$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
+require 'unittests/setup'
 
 class TC_Radios < Test::Unit::TestCase
 

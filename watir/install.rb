@@ -144,10 +144,9 @@ end
 
 puts "Copying Files"
 d = File.makedirs(siteLib + '/watir/' )
-copyFile( 'watir.rb' , siteLib + '/watir/' )
-copyFile( 'winClicker.rb' , siteLib + '/watir/' )
-copyFile( 'clickJSDialog.rb' , siteLib + '/watir/' )
-
+copyFile( 'watir.rb' , siteLib )
+copyFile( 'watir/winClicker.rb' , siteLib + '/watir/' )
+copyFile( 'watir/clickJSDialog.rb' , siteLib + '/watir/' )
 
 
 # copy the samples

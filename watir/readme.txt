@@ -27,13 +27,19 @@ Paul Rogers (paul.rogers@shaw.ca)
 Bret Pettichord (bret@pettichord.com)
 The mailing list: http://rubyforge.org/mail/?group_id=104
 
-Acknowledgements:
------------------
-Many people have been involved in getting to this point. If Ive forgotten you, its not because your contribution was small, but because I forget things.
+Contributors:
+-------------
 Chris Morris
 Brian Marick
 Jonathan Kohl
 Penny Tonita
 Janet Gregory
 Peter Chau
+Danny Faught
+Andy Tinkham
+Atilla Ozgur
 
+Coding Conventions:
+-------------------
+All require paths should be relative to the top of the
+development hierarchy.

@@ -1,7 +1,8 @@
 # tests for Text Fields
 # revision: $Revision$
 
-require 'setup'
+$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
+require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
 

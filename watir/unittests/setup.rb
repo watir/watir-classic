@@ -1,9 +1,12 @@
-require 'watir/watir'
+# libraries
+require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-require 'testUnitAddons'
 
-logger = WatirLogger.new('test.txt' ,5, 65535 * 2)
+# local
+require 'unittests/testUnitAddons'
+
+logger = WatirLogger.new(File.join(File.dirname(__FILE__), 'test.txt') ,5, 65535 * 2)
 $ie = IE.new(logger)
 $myDir = File.expand_path(File.dirname(__FILE__))
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos

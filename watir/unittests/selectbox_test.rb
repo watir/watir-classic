@@ -1,7 +1,8 @@
 # tests for Select Boxes
 # revision: $Revision$
 
-require 'setup'
+$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
+require 'unittests/setup'
 
 class TC_Selectbox < Test::Unit::TestCase
 
