@@ -249,17 +249,17 @@ module Watir
         # Accessing data outside the document
         #
         
-        # Returns the title of the window
+        # Return the title of the window
         def title
             @ie.document.title
         end
         
-        # this method returns the status of the window
-        def getStatus
-            status = @ie.statusText()
+        # Return the status of the window, typically from the status bar at the bottom.
+        def status
             raise NoStatusBarException if !@ie.statusBar
-            return status
+            return @ie.statusText()
         end
+        alias getStatus status
 
         #
         # Navigation
@@ -338,9 +338,10 @@ module Watir
         #
         
         # Return the current document
-        def getDocument()
+        def document()
             return @ie.document
         end
+        alias getDocument document
                 
         # Search the current page for specified text or regexp.
         # Returns true if the specified text was found.
@@ -375,7 +376,7 @@ module Watir
         #
         
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
-        def waitForIE( noSleep  = false )
+        def wait( noSleep  = false )
             begin
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
@@ -424,22 +425,19 @@ module Watir
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
         end
-        
-        def wait
-            waitForIE
-        end
+        alias waitForIE wait
         
         # this method returns the HTML of the current page
-        def getHTML()
-            n=getDocument().body.innerHTML
-            return n
+        def html()
+            return getDocument().body.innerHTML
         end
+        alias getHTML html
         
         # this method returns the text of the current document
-        def getText()
-            n= getDocument().body.innerText
-            return n
+        def text()
+            return getDocument().body.innerText
         end
+        alias getText text
 
         #
         # Show me state
