@@ -924,6 +924,14 @@ module Watir
                         link = thisLink if link == nil
                     end
                 end
+
+            when :title
+                links.each do |thisLink|
+                    if what.matches(thisLink.invoke("title"))
+                        link = thisLink if link == nil
+                    end
+                end
+
                 
             when :beforeText
                 links.each do |thisLink|
@@ -938,6 +946,7 @@ module Watir
                         link = thisLink if link == nil
                     end
                 end
+
 
             else
                 raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
@@ -1482,6 +1491,12 @@ module Watir
         def value
             object_exist_check
             return @o.invoke("value")
+        end
+
+        # returns the value of the title attribute
+        def title
+            object_exist_check
+            return @o.invoke("title")
         end
 
         # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
@@ -2451,6 +2466,14 @@ module Watir
         end
         private :assert_exists
         
+        # returns the value of the title attribute - select boxes dont support this, so an empty string "" is returned
+        def title
+            object_exist_check
+            return ""
+        end
+
+
+
         # This method clears the selected items in the select box
         def clearSelection
             assert_exists
