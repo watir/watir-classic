@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    setProperties (ObjectActions)
+
+  -->
+<html>
+<head>
+	<title>setProperties (ObjectActions)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 174</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">setProperties</span>(<span class="ruby-identifier">propertyHash</span> )
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@o</span> 
+            <span class="ruby-identifier">propertyHash</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+                <span class="ruby-keyword kw">begin</span>
+                    <span class="ruby-identifier">setProperty</span>(<span class="ruby-identifier">a</span> , <span class="ruby-ivar">@o</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-node">&quot;#{b}&quot;</span> ) )
+                <span class="ruby-keyword kw">rescue</span>
+                   <span class="ruby-comment cmt"># Object probably doesn't support this item, so rescue</span>
+                <span class="ruby-keyword kw">end</span> 
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>  <span class="ruby-comment cmt">#if @o</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

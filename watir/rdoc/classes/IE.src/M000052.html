@@ -5,116 +5,47 @@
 
 <!--
 
-    getObject (IE)
+    getDocument (IE)
 
   -->
 <html>
 <head>
-	<title>getObject (IE)</title>
+	<title>getDocument (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 603</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getObject</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> , <span class="ruby-identifier">types</span>=<span class="ruby-keyword kw">nil</span> ,  <span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span> )
-        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 433</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getDocument</span>()
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@frame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@presetFrame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span>
 
-        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@form</span>
-            <span class="ruby-identifier">container</span>  = <span class="ruby-ivar">@form</span>.<span class="ruby-identifier">elements</span>.<span class="ruby-identifier">all</span>
-            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;getObject - using form #{@form.name} how is #{how} what is #{what}&quot;</span>
+            <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>
         <span class="ruby-keyword kw">else</span>
-            <span class="ruby-identifier">container</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">all</span>
-            <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;Container is doc.body.all&quot;</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>
-            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
-                <span class="ruby-identifier">elementTypes</span> = <span class="ruby-identifier">types</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@frame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span> 
+                <span class="ruby-comment cmt"># using a preset frame</span>
+                <span class="ruby-identifier">frameToUse</span> = <span class="ruby-ivar">@presetFrame</span>
             <span class="ruby-keyword kw">else</span>
-                <span class="ruby-identifier">elementTypes</span> = [<span class="ruby-identifier">types</span>]
+                <span class="ruby-identifier">frameToUse</span> = <span class="ruby-ivar">@frame</span>
             <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">end</span>
 
-        <span class="ruby-identifier">o</span> = <span class="ruby-keyword kw">nil</span>
+            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;Getting a document in a frame - frameName is: #{frameToUse} &quot;</span>
 
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;getting object - how is #{how} what is #{what} types = #{types} value = #{value}&quot;</span>
+            <span class="ruby-identifier">allFrames</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>
+            <span class="ruby-identifier">frameExists</span> = <span class="ruby-keyword kw">false</span>
 
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:index</span>
-            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">getObjectAtIndex</span>( <span class="ruby-identifier">container</span>, <span class="ruby-identifier">what</span> , <span class="ruby-identifier">types</span> , <span class="ruby-identifier">value</span>)
-        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span><span class="ruby-identifier">:caption</span>  <span class="ruby-comment cmt">#only applies to button</span>
-            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">getObjectWithValue</span>( <span class="ruby-identifier">what</span>, <span class="ruby-identifier">container</span> , <span class="ruby-value str">&quot;submit&quot;</span> , <span class="ruby-value str">&quot;button&quot;</span> )
-        <span class="ruby-keyword kw">else</span>
-            <span class="ruby-comment cmt">#puts &quot;How is #{how}&quot;</span>
-            <span class="ruby-identifier">container</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">object</span><span class="ruby-operator">|</span>
-                <span class="ruby-keyword kw">next</span>  <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-                <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
-                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
-                        <span class="ruby-keyword kw">begin</span>
-                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
-                                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>
-                                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>))
-                                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
-                                            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})&quot;</span>
-                                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>
-                                                <span class="ruby-identifier">o</span> = <span class="ruby-identifier">object</span>
-                                            <span class="ruby-keyword kw">end</span>
-                                        <span class="ruby-keyword kw">else</span>
-                                            <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                        <span class="ruby-keyword kw">end</span>
-                                    <span class="ruby-keyword kw">else</span>
-                                        <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                    <span class="ruby-keyword kw">end</span>
-                                <span class="ruby-keyword kw">else</span>
-                                     <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                <span class="ruby-keyword kw">end</span>
-                            <span class="ruby-keyword kw">end</span>
-                       <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-                           <span class="ruby-comment cmt">#puts e.to_s + &quot;\n&quot; + e.backtrace.join(&quot;\n&quot;)</span>
-                       <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
-                        <span class="ruby-keyword kw">begin</span>
-                            <span class="ruby-comment cmt">#puts &quot;Comparing #{object.invoke(&quot;name&quot;)} with @{what}&quot;</span>
-                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;name&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
-                                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>
-                                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>))
-                                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
-                                            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})&quot;</span>
-                                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>
-                                                <span class="ruby-identifier">o</span> = <span class="ruby-identifier">object</span>
-                                            <span class="ruby-keyword kw">end</span>
-                                        <span class="ruby-keyword kw">else</span>
-                                            <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                        <span class="ruby-keyword kw">end</span>
-                                    <span class="ruby-keyword kw">else</span>
-                                        <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                    <span class="ruby-keyword kw">end</span>
-                                <span class="ruby-keyword kw">else</span>
-                                     <span class="ruby-identifier">o</span>= <span class="ruby-identifier">object</span>
-                                <span class="ruby-keyword kw">end</span>
-                            <span class="ruby-keyword kw">end</span>
-                       <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-                           <span class="ruby-comment cmt">#puts e.to_s + &quot;\n&quot; + e.backtrace.join(&quot;\n&quot;)</span>
-                       <span class="ruby-keyword kw">end</span>
-                    <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-comment cmt"># if a value has been supplied, for exampe with a check box or a radio button, we need to go through the collection and get the correct one</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
-            <span class="ruby-keyword kw">begin</span> 
-                <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisObject</span><span class="ruby-operator">|</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisObject</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
-                        <span class="ruby-identifier">o</span> = <span class="ruby-identifier">thisObject</span>
-                    <span class="ruby-keyword kw">end</span> 
+            <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span> <span class="ruby-operator">..</span> <span class="ruby-identifier">allFrames</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
+                <span class="ruby-keyword kw">begin</span>
+                    <span class="ruby-identifier">frameExists</span> = <span class="ruby-keyword kw">true</span>   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">frameToUse</span>  <span class="ruby-operator">==</span> <span class="ruby-identifier">allFrames</span>[<span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword kw">rescue</span>
+                    <span class="ruby-comment cmt"># probably no name on this object</span>
                 <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">rescue</span>
-                <span class="ruby-comment cmt"># probably no value on this object</span>
             <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">end</span>
 
-        <span class="ruby-comment cmt">#reset the frame reference</span>
-        <span class="ruby-identifier">clearFrame</span>()
-        <span class="ruby-identifier">clearForm</span>()
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownFrameException</span> , <span class="ruby-node">&quot;Unable to locate a frame with name #{ frameToUse } &quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">frameExists</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>
+            <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>[<span class="ruby-identifier">frameToUse</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">document</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-ivar">@doc</span> = <span class="ruby-identifier">doc</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">doc</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

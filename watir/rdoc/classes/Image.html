@@ -78,9 +78,9 @@
 
 		<div id="description">
 			<p>
-this class is the means of accessing an image on a page it would not
-normally be used bt users, as the link method of IEController would
-returned an initialised instance of a link
+This class is the means of accessing an image on a page. It would not
+normally be used by users, as the image method of IEController would return
+an initialised instance of an image.
 </p>
 
 		</div>
@@ -90,8 +90,8 @@ returned an initialised instance of a link
 			<h2 class="section-bar">Methods</h2>
 
 			<div class="name-list">
-			<a href="#M000021">hasLoaded?</a>&nbsp;&nbsp;
-			<a href="#M000020">new</a>&nbsp;&nbsp;
+			<a href="#M000028">hasLoaded?</a>&nbsp;&nbsp;
+			<a href="#M000027">new</a>&nbsp;&nbsp;
 			</div>
 		</div>
 
@@ -111,19 +111,19 @@ returned an initialised instance of a link
 		<div id="methods">
 			<h2 class="section-bar">Public Class methods</h2>
 
-			<div id="method-M000020" class="method-detail">
-				<a name="M000020"></a>
+			<div id="method-M000027" class="method-detail">
+				<a name="M000027"></a>
 
 				<div class="method-heading">
-					<a href="Image.src/M000020.html" target="Code" class="method-signature"
-						onclick="popupCode('Image.src/M000020.html');return false;">
+					<a href="Image.src/M000027.html" target="Code" class="method-signature"
+						onclick="popupCode('Image.src/M000027.html');return false;">
 					<span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
 					<p>
-returns an initialized instance of a image object
+Returns an initialized instance of a image object
 </p>
 <pre>
   * ieController  - an instance of an IEController
@@ -135,17 +135,25 @@ returns an initialized instance of a image object
 
 			<h2 class="section-bar">Public Instance methods</h2>
 
-			<div id="method-M000021" class="method-detail">
-				<a name="M000021"></a>
+			<div id="method-M000028" class="method-detail">
+				<a name="M000028"></a>
 
 				<div class="method-heading">
-					<a href="Image.src/M000021.html" target="Code" class="method-signature"
-						onclick="popupCode('Image.src/M000021.html');return false;">
+					<a href="Image.src/M000028.html" target="Code" class="method-signature"
+						onclick="popupCode('Image.src/M000028.html');return false;">
 					<span class="method-name">hasLoaded?</span><span class="method-args">()</span>
 					</a>
 				</div>
 			
 				<div class="method-description">
+					<p>
+This method attempts to find out if the image was actually loaded by the
+web browser. If the image was not loaded, the browser is unable to
+determine some of the properties. We look for these missing properties to
+see if the image is really there or not. If the Disk cache is full ( tools
+menu -&gt; Internet options -&gt; Temporary Internet Files) , it may
+produce incorrect responses.
+</p>
 				</div>
 			</div>
 

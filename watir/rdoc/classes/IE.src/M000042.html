@@ -5,53 +5,20 @@
 
 <!--
 
-    getForm (IE)
+    isEventThreadRunning? (IE)
 
   -->
 <html>
 <head>
-	<title>getForm (IE)</title>
+	<title>isEventThreadRunning? (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 353</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getForm</span>()
-        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Get form  formHow is #{@formHow}  formName is #{@formName} &quot;</span>
-        <span class="ruby-identifier">count</span> =<span class="ruby-value">1</span>
-        <span class="ruby-ivar">@doc</span>.<span class="ruby-identifier">forms</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisForm</span><span class="ruby-operator">|</span>
-            <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@form</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-            <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;form on page, name is &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">thisForm</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
-            <span class="ruby-keyword kw">case</span> <span class="ruby-ivar">@formHow</span>
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisForm</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@formName</span>
-                        <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">thisForm</span>
-                    <span class="ruby-keyword kw">end</span>
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:index</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@formName</span>.<span class="ruby-identifier">to_i</span>
-                        <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">thisForm</span>
-                    <span class="ruby-keyword kw">end</span>
-
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:method</span>
-                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisForm</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;method&quot;</span>).<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@formName</span>.<span class="ruby-identifier">downcase</span>
-                        <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">thisForm</span>
-                    <span class="ruby-keyword kw">end</span>
-
-                <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:action</span>
-                   <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@formName</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisForm</span>.<span class="ruby-identifier">action</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@formName</span>
-                             <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">thisForm</span>
-                        <span class="ruby-keyword kw">end</span>
-                   <span class="ruby-keyword kw">elsif</span> 
-                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisForm</span>.<span class="ruby-identifier">action</span>.<span class="ruby-identifier">match</span>( <span class="ruby-ivar">@formName</span> ) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
-                             <span class="ruby-ivar">@form</span> = <span class="ruby-identifier">thisForm</span>
-                        <span class="ruby-keyword kw">end</span>
-                   <span class="ruby-keyword kw">end</span>
-           <span class="ruby-keyword kw">end</span>
-           <span class="ruby-identifier">count</span> = <span class="ruby-identifier">count</span> <span class="ruby-value">+1</span>
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;set @form &quot;</span>   <span class="ruby-comment cmt">#to form with name #{@form.name}&quot;</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@form</span>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 365</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">isEventThreadRunning?</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@eventThread</span><span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@eventThread</span>.<span class="ruby-identifier">status</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    new (WatirLogger)
+
+  -->
+<html>
+<head>
+	<title>new (WatirLogger)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 34</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(  <span class="ruby-identifier">filName</span> , <span class="ruby-identifier">logsToKeep</span>, <span class="ruby-identifier">maxLogSize</span> )
+
+        <span class="ruby-keyword kw">super</span>( <span class="ruby-identifier">filName</span> , <span class="ruby-identifier">logsToKeep</span>, <span class="ruby-identifier">maxLogSize</span> )
+        <span class="ruby-comment cmt">#@log = Logger.new( fileName ,5, 1024 * 1024)</span>
+        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span>
+        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">datetime_format</span> = <span class="ruby-value str">&quot;%d-%b-%Y %H:%M:%S&quot;</span>
+        <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-value str">&quot;Watir starting&quot;</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

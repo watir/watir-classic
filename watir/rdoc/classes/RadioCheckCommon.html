@@ -78,8 +78,8 @@
 
 		<div id="description">
 			<p>
-this class is the parent class for radio buttons and check boxes. It
-contains methods common to both It should not be created by users.
+This class is the parent class for radio buttons and check boxes. It
+contains methods common to both. It should not be created by users.
 </p>
 
 		</div>
@@ -110,7 +110,7 @@ contains methods common to both It should not be created by users.
 				<tr class="top-aligned-row context-row">
 					<td>&nbsp;</td>
 					<td colspan="2" class="context-item-desc">
-Constant for setting, or determining if a check box or radio button is set
+Constant for setting, or determining if a check box or radio button is set.
 
 </td>
 				</tr>
@@ -123,7 +123,7 @@ Constant for setting, or determining if a check box or radio button is set
 					<td>&nbsp;</td>
 					<td colspan="2" class="context-item-desc">
 Constant for unsetting, or determining if a check box or radio button is
-unset
+unset.
 
 </td>
 				</tr>
@@ -174,11 +174,12 @@ unset
 			
 				<div class="method-description">
 					<p>
-this method clears a radio button or check box - beware on radios, as one
-of them will always be set returns true or false
+This method clears a radio button or check box. Note, with radio buttons
+one of them will almost always be set. Returns true if set or false if not
+set.
 </p>
 <pre>
-  Raises UnknownObjectException  if its unable to locate an object
+  Raises UnknownObjectException if its unable to locate an object
          ObjectDisabledException  IF THE OBJECT IS DISABLED
 </pre>
 				</div>
@@ -196,8 +197,8 @@ of them will always be set returns true or false
 			
 				<div class="method-description">
 					<p>
-this method gets the state of radio or check box returns CHECKED or
-UNCHECKED
+This method gets the state of a radio list item or check box. Returns
+CHECKED or UNCHECKED
 </p>
 <pre>
   Raises UnknownObjectException  if its unable to locate an object
@@ -217,12 +218,11 @@ UNCHECKED
 			
 				<div class="method-description">
 					<p>
-this method determines if a radio button or check box is set returns true
-or false
+This method determines if a radio button or check box is set. Returns true
+is set or false if not set. Raises <a
+href="UnknownObjectException.html">UnknownObjectException</a> if its unable
+to locate an object.
 </p>
-<pre>
-  Raises UnknownObjectException  if its unable to locate an object
-</pre>
 				</div>
 			</div>
 
@@ -238,7 +238,7 @@ or false
 			
 				<div class="method-description">
 					<p>
-this method sets the radio or check box
+This method sets the radio list item or check box.
 </p>
 <pre>
   Raises UnknownObjectException  if its unable to locate an object

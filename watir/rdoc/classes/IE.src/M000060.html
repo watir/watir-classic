@@ -5,19 +5,25 @@
 
 <!--
 
-    radio (IE)
+    showImages (IE)
 
   -->
 <html>
 <head>
-	<title>radio (IE)</title>
+	<title>showImages (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 862</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">radio</span>( <span class="ruby-identifier">how</span> , <span class="ruby-identifier">what</span> , <span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span>)
-        <span class="ruby-identifier">r</span> = <span class="ruby-constant">RadioButton</span>.<span class="ruby-identifier">new</span>( <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> , <span class="ruby-identifier">value</span>)
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 604</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">showImages</span>()
+        <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;image: name: #{l.name}&quot;</span>
+            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;         id: #{l.invoke(&quot;id&quot;)}&quot;</span>
+            <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;        src: #{l.src}&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

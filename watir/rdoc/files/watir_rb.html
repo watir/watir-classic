@@ -56,7 +56,7 @@
 		</tr>
 		<tr class="top-aligned-row">
 			<td><strong>Last Update:</strong></td>
-			<td>Thu Nov 11 20:50:30 Central Standard Time 2004</td>
+			<td>Tue Jan 04 22:33:26 Central Standard Time 2005</td>
 		</tr>
 		</table>
 	</div>
@@ -76,25 +76,32 @@ This is WATIR the web application testing framework for ruby Home page is
 Version &quot;$Revision$&quot;
 </p>
 <p>
-Typical usage: # include the controller require &#8216;watir&#8217; #
-create an instance of the controller ie = <a
-href="../classes/IE.html#M000031">IE.new</a>() # goto the page you want to
-test ie.goto(&quot;<a
-href="http://myserver/mypage">myserver/mypage</a>&quot;) # to enter text
-into a text field - assuming the field is name &quot;username&quot;
-ie.textField(:name, &quot;username&quot;).set(&quot;Paul&quot;) # if there
-was a text field that had an id of &quot;company_ID&quot;, you could set it
-to Ruby Co by: ie.textField(:id ,&quot;company_ID&quot;).set(&quot;Ruby
-Co&quot;) # to click a button that has a caption of &#8216;Cancel&#8217;
-ie.button(:caption, &quot;Cancel&quot;).click()
+Typical usage:
 </p>
+<pre>
+  # include the controller
+  require 'watir'
+  # create an instance of the controller
+  ie = IE.new
+  # go to the page you want to test
+  ie.goto(&quot;http://myserver/mypage&quot;)
+  # to enter text into a text field - assuming the field is name &quot;username&quot;
+  ie.textField(:name, &quot;username&quot;).set(&quot;Paul&quot;)
+  # if there was a text field that had an id of &quot;company_ID&quot;, you could set it to Ruby Co:
+  ie.textField(:id ,&quot;company_ID&quot;).set(&quot;Ruby Co&quot;)
+  # to click a button that has a caption of 'Cancel'
+  ie.button(:caption, &quot;Cancel&quot;).click
+</pre>
 <p>
-The ways that are available to identify an html object depend upoon the
-object type. :id used for an object that has an ID attribute :name used for
-an object that has a name attribute :caption used for finding buttons
-:index finds the object of a certain type at the index - eg button(:index ,
-2) finds the second button. This is 1 based
+The ways that are available to identify an html object depend upon the
+object type.
 </p>
+<pre>
+  :id         used for an object that has an ID attribute
+  :name       used for an object that has a name attribute
+  :caption    used for finding buttons ( this is the value attribute of the button - &lt;input type = button value=&quot;Stop&quot;&gt; )
+  :index      finds the object of a certain type at the index - eg button(:index , 2) finds the second button. This is 1 based. &lt;br&gt;
+</pre>
 
 		</div>
 
@@ -103,6 +110,8 @@ an object that has a name attribute :caption used for finding buttons
 
 			<div class="name-list">
 			win32ole&nbsp;&nbsp;
+			logger&nbsp;&nbsp;
+			watir/winClicker&nbsp;&nbsp;
 			</div>
 		</div>
 
@@ -116,24 +125,33 @@ an object that has a name attribute :caption used for finding buttons
 
 			Class <a href="../classes/Button.html" class="link">Button</a><br />
 Class <a href="../classes/CheckBox.html" class="link">CheckBox</a><br />
+Class <a href="../classes/Form.html" class="link">Form</a><br />
 Class <a href="../classes/IE.html" class="link">IE</a><br />
 Class <a href="../classes/Image.html" class="link">Image</a><br />
+Class <a href="../classes/JSButton.html" class="link">JSButton</a><br />
+Class <a href="../classes/JSCommon.html" class="link">JSCommon</a><br />
 Class <a href="../classes/Link.html" class="link">Link</a><br />
 Class <a href="../classes/MissingWayOfFindingObjectException.html" class="link">MissingWayOfFindingObjectException</a><br />
 Class <a href="../classes/NoValueFoundException.html" class="link">NoValueFoundException</a><br />
 Class <a href="../classes/ObjectActions.html" class="link">ObjectActions</a><br />
 Class <a href="../classes/ObjectDisabledException.html" class="link">ObjectDisabledException</a><br />
 Class <a href="../classes/ObjectReadOnlyException.html" class="link">ObjectReadOnlyException</a><br />
+Class <a href="../classes/PopUp.html" class="link">PopUp</a><br />
 Class <a href="../classes/RadioButton.html" class="link">RadioButton</a><br />
 Class <a href="../classes/RadioCheckCommon.html" class="link">RadioCheckCommon</a><br />
+Class <a href="../classes/Regexp.html" class="link">Regexp</a><br />
 Class <a href="../classes/SelectBox.html" class="link">SelectBox</a><br />
 Class <a href="../classes/Spinner.html" class="link">Spinner</a><br />
+Class <a href="../classes/String.html" class="link">String</a><br />
+Class <a href="../classes/Table.html" class="link">Table</a><br />
 Class <a href="../classes/TextField.html" class="link">TextField</a><br />
 Class <a href="../classes/UnknownFormException.html" class="link">UnknownFormException</a><br />
 Class <a href="../classes/UnknownFrameException.html" class="link">UnknownFrameException</a><br />
 Class <a href="../classes/UnknownObjectException.html" class="link">UnknownObjectException</a><br />
 Class <a href="../classes/UnknownPropertyException.html" class="link">UnknownPropertyException</a><br />
+Class <a href="../classes/UnknownTableException.html" class="link">UnknownTableException</a><br />
 Class <a href="../classes/WatirException.html" class="link">WatirException</a><br />
+Class <a href="../classes/WatirLogger.html" class="link">WatirLogger</a><br />
 
 		</div>
 

@@ -5,32 +5,49 @@
 
 <!--
 
-    getObjectWithValue (IE)
+    pageContainsText (IE)
 
   -->
 <html>
 <head>
-	<title>getObjectWithValue (IE)</title>
+	<title>pageContainsText (IE)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
 </head>
 <body>
-	<pre><span class="ruby-comment cmt"># File watir.rb, line 709</span>
-    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getObjectWithValue</span>(<span class="ruby-identifier">what</span> , <span class="ruby-identifier">container</span> , <span class="ruby-operator">*</span><span class="ruby-identifier">htmlObjectTypes</span> )
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 467</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pageContainsText</span>(<span class="ruby-identifier">text</span>)
+        <span class="ruby-comment cmt">#log &quot;-------------&quot;</span>
+        <span class="ruby-comment cmt">#log getDocument().body.innerText</span>
+        <span class="ruby-comment cmt">#log &quot;-------------&quot;</span>
 
-        <span class="ruby-identifier">o</span> = <span class="ruby-keyword kw">nil</span>
-        <span class="ruby-identifier">container</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
-            <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
-            <span class="ruby-keyword kw">begin</span>
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">htmlObjectTypes</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>).<span class="ruby-identifier">downcase</span>)
-                    <span class="ruby-identifier">o</span> = <span class="ruby-identifier">r</span>
+        <span class="ruby-identifier">retryCount</span> = <span class="ruby-value">0</span>
+        <span class="ruby-keyword kw">begin</span>
+            <span class="ruby-identifier">retryCount</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Regexp</span>
+
+                <span class="ruby-keyword kw">if</span> ( <span class="ruby-identifier">getDocument</span>().<span class="ruby-identifier">body</span>.<span class="ruby-identifier">innerText</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">text</span>)  ) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-identifier">log</span>  <span class="ruby-node">&quot;pageContainsText: Looking for: #{text} (regexp) - found it ok&quot;</span> 
+                    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+                <span class="ruby-keyword kw">else</span>
+                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;pageContainsText: Looking for: #{text} (regexp)  - Didnt Find it&quot;</span> 
+                    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
                 <span class="ruby-keyword kw">end</span>
-            <span class="ruby-keyword kw">rescue</span>
-                <span class="ruby-comment cmt"># may not have a value...</span>
-            <span class="ruby-keyword kw">end</span> 
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
 
+            <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">String</span>
+
+                <span class="ruby-keyword kw">if</span> ( <span class="ruby-identifier">getDocument</span>().<span class="ruby-identifier">body</span>.<span class="ruby-identifier">innerText</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">text</span>)  ) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-identifier">log</span> <span class="ruby-node">&quot;pageContainsText: Looking for: #{text} (string) - found it ok&quot;</span> 
+                    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+                <span class="ruby-keyword kw">else</span>
+                    <span class="ruby-identifier">log</span>  <span class="ruby-node">&quot;pageContainsText: Looking for: #{text} (string)  - Didnt Find it&quot;</span> 
+                    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+                <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-keyword kw">end</span> 
+        <span class="ruby-keyword kw">rescue</span>
+            <span class="ruby-keyword kw">retry</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">retryCount</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">2</span> 
+        <span class="ruby-keyword kw">end</span>
     <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    getObject (IE)
+
+  -->
+<html>
+<head>
+	<title>getObject (IE)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 747</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getObject</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> , <span class="ruby-identifier">types</span>=<span class="ruby-keyword kw">nil</span> ,  <span class="ruby-identifier">value</span>=<span class="ruby-keyword kw">nil</span> )
+        <span class="ruby-identifier">container</span> = <span class="ruby-identifier">getContainer</span>()
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
+                <span class="ruby-identifier">elementTypes</span> = <span class="ruby-identifier">types</span>
+            <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">elementTypes</span> = [<span class="ruby-identifier">types</span>]
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">o</span> = <span class="ruby-keyword kw">nil</span>
+
+        <span class="ruby-comment cmt">#log &quot;getting object - how is #{how} what is #{what} types = #{types} value = #{value}&quot;</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:index</span>
+            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">getObjectAtIndex</span>( <span class="ruby-identifier">container</span>, <span class="ruby-identifier">what</span> , <span class="ruby-identifier">types</span> , <span class="ruby-identifier">value</span>)
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:caption</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:value</span> <span class="ruby-comment cmt"># only applies to button</span>
+            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">getObjectWithValue</span>( <span class="ruby-identifier">what</span>, <span class="ruby-identifier">container</span> , <span class="ruby-value str">&quot;submit&quot;</span> , <span class="ruby-value str">&quot;button&quot;</span> )
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:src</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span><span class="ruby-identifier">:alt</span>
+            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">getObjectWithSrcOrAlt</span>(<span class="ruby-identifier">what</span> , <span class="ruby-identifier">how</span> , <span class="ruby-identifier">container</span>   , <span class="ruby-identifier">types</span>)
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-comment cmt">#log &quot;How is #{how}&quot;</span>
+            <span class="ruby-identifier">container</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">object</span><span class="ruby-operator">|</span>
+                <span class="ruby-keyword kw">next</span>  <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                
+                <span class="ruby-keyword kw">begin</span>
+                    
+                    <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>)
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;name&quot;</span>)
+                    <span class="ruby-keyword kw">else</span>
+                        <span class="ruby-keyword kw">next</span>
+                    <span class="ruby-keyword kw">end</span>
+                    
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">attribute</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>
+                        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">types</span>
+                            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">elementTypes</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>))
+                                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
+                                    <span class="ruby-comment cmt">#log &quot;checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})&quot;</span>
+                                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>
+                                        <span class="ruby-identifier">o</span> = <span class="ruby-identifier">object</span>
+                                    <span class="ruby-keyword kw">end</span>
+                                <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># no value</span>
+                                    <span class="ruby-identifier">o</span> = <span class="ruby-identifier">object</span>
+                                <span class="ruby-keyword kw">end</span>
+                            <span class="ruby-keyword kw">end</span>
+                        <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># no types</span>
+                            <span class="ruby-identifier">o</span> = <span class="ruby-identifier">object</span>
+                        <span class="ruby-keyword kw">end</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                    <span class="ruby-comment cmt">#log e.to_s + &quot;\n&quot; + e.backtrace.join(&quot;\n&quot;)</span>
+                <span class="ruby-keyword kw">end</span>
+                
+                
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-comment cmt"># If a value has been supplied, such as with a check box or a radio button, </span>
+        <span class="ruby-comment cmt"># we need to go through the collection and get the correct one.</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span>
+            <span class="ruby-keyword kw">begin</span> 
+                <span class="ruby-identifier">n</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisObject</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">thisObject</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
+                        <span class="ruby-identifier">o</span> = <span class="ruby-identifier">thisObject</span>
+                    <span class="ruby-keyword kw">end</span> 
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">rescue</span>
+                <span class="ruby-comment cmt"># probably no value on this object</span>
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-comment cmt">#reset the frame reference</span>
+        <span class="ruby-identifier">clearFrame</span>()
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
