@@ -58,6 +58,23 @@
   interop enabled has been removed. This code lives in a file called 
   dotnet.form.rb that's back in the old cLabs scrapware cliecontroller CVS
   repository. 
+* Two additional options: :demo_mode and :demo_wait. Calls that fall through
+  iec.method_missing use these options (currently, call that fall through
+  iec.form.method_missing do not use these, but these two method_missing's
+  need to be refactored and merged). If :demo_mode is true, then selected
+  nodes will be highlighted (red text, red border) and will sleep for 
+  :demo_wait seconds. This is an eye-candy feature for being able to 
+  optionally visually follow a test script.
+* Added fix for the RPC intermittent bug that would occur of an instance
+  of ie/iec was created too soon after a previous one was killed. 
+* new submit method calls form.submit. Call to iec.form is with defaults, so
+  there's no control for multi-form pages, but it's a convenience method
+  anyway.
+* new dump_dom method in iec, takes care of using ClIEDomViewer without 
+  having to touch it directly. Default output is $stdout, but method accepts
+  an io instance.
+* minor fix on the Select node wrapper.
+* new node wrappers: Header, Italic, Input Text  
        
 ====2003.362.0
 * Builder and Installer working under new RubyForge src tree, etc. Woop.
