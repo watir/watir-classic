@@ -109,6 +109,7 @@ Google search web application.</p>
 #-------------------------------------------------------------#<br>
 </font>
 </div>
+<p>Styles differ with comments, but they can really help with test case maintenance. In this case, the author has provided their name, a date and a purpose of the test case. This is here to improve readability, and to help others who may be using the test understand what it does.</p>
 
 <h2>Section 2: Includes</h2>
 <p>To use Watir, or any other library in our test case requires us to tell the program where to find the library.</p>
@@ -130,6 +131,7 @@ we only have to change it in one place.
 <font color = "green"> #variables:</font><br>
    testSite = <font color = "purple">'http://www.google.com'</font>
 </div>
+<p>The test case author has chosen to assign the URL to a variable called <b>testSite</b>. It may not be much of an issue in this test case, but using variables for test URLs is often a good practice. </p>
 
 <h2>Section 4: Open an Internet Explorer Browser</h2>
 <p>To begin driving Internet Explorer, we need to tell Watir to open an instance for testing.</p>
@@ -166,8 +168,8 @@ failures quickly.</p>
  $ie.goto(testSite)<br>
  puts <font color = "purple">&nbsp;&nbsp;&nbsp;Action: entered "</font> + testSite + <font color = "purple">"in the address bar."</font><br>
 </div>
-<p>The first line uses a <i>puts</i> statemen to print out the test case step we are attempting to the screen. The second line uses the Watir method "goto" to direct the test
-case to the test site: http://www.google.com (stored in the variable "testSite"). The third line prints the action that Watir just executed to the screen.
+<p>The first line uses a <i>puts</i> statement to print out the test case step we are attempting to the screen. The second line uses the Watir method "goto" to direct the test
+case to the test site: http://www.google.com (stored in the variable <b>testSite</b>). The third line prints the action that Watir just executed to the screen.
 When we print out the variable, we concatenate it to the string (the part in quotes) by using the <b>+</b> sign. 
 </p>
 
@@ -182,12 +184,12 @@ When we print out the variable, we concatenate it to the string (the part in quo
  $ie.textField(:name, <font color = "purple">"q"</font>).set(<font color = "purple">"pickaxe"</font>)<font color = "green"> # q is the name of the search field</font><br> 
  puts <font color = "purple">&nbsp;&nbsp;&nbsp;"  Action: entered pickaxe in the search field"</font><br>
 </div>
-<p>The first line prints the step we are on to the screen. The second line enters the text "pickaxe" in the text field named "q". The third line prints what Watir just executed 
+<p>The first line prints the step we are on to the screen. The second line enters the text "pickaxe" in the text field named <b>q</b>. The third line prints what Watir just executed 
 to the screen.</p>
 <p>This is the tag in the HTML source with the <i>name</i> attribute we used highlighted:</p>
 <div class = "htmlexample">
 &lt;input maxLength=256 size=55 name=<b>q</b> value=""&gt;</div>
-<p>The text field has a <i>name</i> attribute "q", so we use that to tell Watir what object to interact with.</p>
+<p>The text field has a <i>name</i> attribute <b>q</b>, so we use that to tell Watir what object to interact with.</p>
 
 <h3>Step 3: Click the "Google Search" button</h3>
 <p>We need to click the search button to activate the Google Search functionality.</p>
@@ -197,7 +199,7 @@ to the screen.</p>
 <p>What you see in the text editor:</p>
 <div class = "testexample">
  puts <font color = "purple">"Step 3: click the 'Google Search' button"<br></font>
-  $ie.button(:caption,  <font color = "purple">"Google Search"</font>).click<font color = "green"> # Google Search is the caption of the button</font><br> 
+  $ie.button(:value,  <font color = "purple">"Google Search"</font>).click<font color = "green"> # Google Search is the value of the button</font><br> 
  puts <font color = "purple">&nbsp;&nbsp;&nbsp;"  Action: clicked the Google Search button."</font><br>
 </div>
 <p>The first line prints the step we are on to the screen. The second line clicks the Google Search button. The third line prints what Watir just executed 
@@ -212,8 +214,9 @@ to the screen.</p>
 <p>What you see in the text editor:</p>
 <div class = "testexample">
    puts <font color = "purple">"Expected Result: "</font><br>
-   puts <font color = "purple">" - a google page with results should be shown. "Pragmatic Programmers LLC" should be high on the list."</font>
+   puts <font color = "purple">" - a Google page with results should be shown. "Pragmatic Programmers LLC" should be high on the list."</font>
 </div>
+<p>These two statements simply print the Expected Result of the test to the screen.</p>
 <h3>Verify Results</h3>
 <p>Using Watir and a little Ruby, we can evaluate the results to verify whether the test case passed or failed.</p>
 <div class = "testexample">
@@ -225,6 +228,16 @@ puts <font color = "purple">"Actual Result: Check that the 'The Pragmatic Progra
       &nbsp;&nbsp;&nbsp;puts <font color = "purple">"Test Passed. Found the test string: The Pragmatic Programmers, LLC. Actual Results match Expected Results."</font><br>
    <font color = "darkblue">end</font><br>
 </div>
+<p>There is a lot more in this section, but we can break it down.<ul>
+<li>The first line prints out the "Actual Result" heading to the screen.</li>
+<li>The second line calls the "pageContainsText" method, and asks it to verify that <i>The Pragmatic Programmers, LLC</i> appears on the first page.</li>
+<ul><li>We assign the result of that method call to a variable called <b>a</b>, so we can evaluate the result and print a PASS or FAILURE message.</li></ul>
+<li>Using an <i>if</i> statement, we evaluate whether the pageContainsText method was True or False.</li>
+<ul><li>If pageContainsText returns false, the text <i>The Pragmatic Programmers, LLC</i> does not appear. The test case fails and we print the "Test Failed!" message.</li>
+<li>Else, if pageContainsText returns true, the text <i>The Pragmatic Programmers, LLC</i> appears. The test case passes and we print the "Test Passed." message.</li>
+<li>We close the conditional <i>if</i> section with an <i>end</i> statement.</li></ul>
+</ul>
+</p>
 <h3>End of Test Case</h3>
 <p>What you see in the text editor:</p>
 <div class = "testexample">
@@ -232,5 +245,8 @@ puts <font color = "purple">"Actual Result: Check that the 'The Pragmatic Progra
     puts <font color = "purple">"## end of test: google search"</font><br>
     puts <font color = "green"># -end of simple google search test</font>
 </div>
+<p>The first line prints a blank line for formatting, and a the second line prints message to the user that the test case has ended. The final line in green 
+is a comment that shows the end of the test case. 
+</p>
 </body>
 </html>
