@@ -41,30 +41,44 @@
 #  Typical usage: 
 #   # include the controller 
 #   require 'watir' 
+#   include Watir
 #   # create an instance of the controller 
 #   ie = Watir::IE.new  
 #   # go to the page you want to test 
 #   ie.goto("http://myserver/mypage") 
 #   # to enter text into a text field - assuming the field is name "username" 
-#   ie.textField(:name, "username").set("Paul") 
+#   ie.text_field(:name, "username").set("Paul") 
 #   # if there was a text field that had an id of "company_ID", you could set it to Ruby Co: 
-#   ie.textField(:id ,"company_ID").set("Ruby Co") 
+#   ie.text_field(:id ,"company_ID").set("Ruby Co") 
 #   # to click a button that has a caption of 'Cancel' 
 #   ie.button(:caption, "Cancel").click 
 #   
-#  The ways that are available to identify an html object depend upon the object type. 
-#   :id      used for an object that has an ID attribute -- this is the best way!
-#   :name    used for an object that has a name attribute. 
-#   :value   value of text fields, captions of buttons 
-#   :index   finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
+#  The ways that are available to identify an html object depend upon the object type, but include
+#   :id           used for an object that has an ID attribute -- this is the best way!
+#   :name         used for an object that has a name attribute. 
+#   :value        value of text fields, captions of buttons 
+#   :index        finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
+#   :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
+#   :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
+
+# These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
+# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
+# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+
+
+# command line options:
+#
+#  -b  (background)   Run Internet Explorer minimised
+#  -s  (Spinner off)  Use this when you dont want the spinner displyed. Most usful when using an ide like eclipse or scite
+
+
+
 
 require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
 
-# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
-# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
 
 class String
     def matches (x)
@@ -86,8 +100,11 @@ def command_line_flag(switch)
     return setting
 end            
 
-$HIDE_IE = command_line_flag('-b') # background
-$ENABLE_SPINNER = !command_line_flag('-s') # suppress spinner
+# Constant to make Internet explorer minimisez. -b stands for background
+$HIDE_IE = command_line_flag('-b') 
+
+# Constant to enable/disable the spinner
+$ENABLE_SPINNER = !command_line_flag('-s') 
 
 module Watir
     include Watir::Exception
@@ -183,8 +200,11 @@ module Watir
         
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
-        
+
+        # Use this to gain access to the 'raw' internet explorer object.        
         attr_reader :ie
+
+        # access to the logger object
         attr_accessor :logger
                         
         def initialize(suppress_new_window=nil)
@@ -211,6 +231,8 @@ module Watir
             return ie
         end   
 
+        # this method is used internally to attach to an existing window
+        # dont make private
         def attach_init( how, what )
             attach_browser_window(how, what)
             set_defaults                        
@@ -343,6 +365,10 @@ module Watir
         end
         
 
+        # this method can be used to capture events that occur in the browser
+        # It is only wired up for the NewWindow event right now, but could be easily expanded
+        # Do not use this when using irb
+        # the new window is available in  the newWindow variable:
         def capture_events
             ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
             
@@ -469,10 +495,14 @@ module Watir
             end
         end
 
+        # this method is used to add an error checker that gets executed on every page load
+        # *  checker   Proc Object, that contains the code to be run 
         def add_checker( checker) 
             @error_checkers << checker
         end
         
+        # this allows a checker to be disabled
+        # *  checker   Proc Object, the checker that is to be disabled
         def disable_checker( checker )
             @error_checkers.delete(checker)
         end
@@ -532,7 +562,8 @@ module Watir
             end
         end
         alias showForms show_forms
-        
+
+        # this method shows all the images availble in the document
         def show_images()
             doc = getDocument()
             doc.images.each do |l|
@@ -543,6 +574,7 @@ module Watir
         end
         alias showImages show_images
         
+        # this method shows all the links availble in the document
         def show_links()
 
             props=["name" ,"id" , "href" , "innerText" ]
@@ -617,6 +649,7 @@ module Watir
         end
         alias showAllObjects show_all_objects
 
+        # this method shows all the divs availble in the document
         def show_divs( )
             divs = getDocument().getElementsByTagName("DIV")
             puts "Found #{divs.length} div tags"
@@ -625,6 +658,18 @@ module Watir
             end
         end
         alias showDivs show_divs
+
+
+        # this method shows all the spans availble in the document
+        def show_spans( )
+            spans = getDocument().getElementsByTagName("SPAN")
+            puts "Found #{spans.length} div tags"
+            spans.each do |d|
+                puts "id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+            end
+        end
+        alias showSpans show_spans
+
 
         
         #
@@ -906,6 +951,10 @@ module Watir
              return n
         end
 
+        # this method is used to get elements like SPAN or DIV
+        #---
+        # Dont me make me private!
+        #+++
         def getNonControlObject(part , how, what )
 
              doc = getDocument()
@@ -939,11 +988,9 @@ module Watir
 
         end
 
-
         #
-        # This method is to keep current users happy, until the frames object is implemented
-        #     Paul, now that we have a frame object, what should we do? -Bret
-
+        # This method gives focus to the frame
+        # It may be removed and become part of the frame object
         def focus()
             doc = getDocument()
             doc.activeElement.blur
@@ -955,10 +1002,17 @@ module Watir
         # Factory Methods
         #
 
-        def frame( frameName)
-            return Frame.new(self, frameName)
+        # this method is the main way of accessing a frame 
+        #   * frame_name  - string, the name of the frame to access
+        def frame( frame_name)
+            return Frame.new(self, frame_name)
         end
-        
+
+ 
+        # this method is used to access a form.
+        # available ways of accessing it are, :index , :name, :id, :method, :action
+        #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if formName is not supplied this parameter is the NAME of the form
+        #  * formName   - String - the text associated with the symbol
         def form( how , formName=nil )
             # If only one value is supplied, it is a form name
             if formName == nil
@@ -985,10 +1039,14 @@ module Watir
             return Table.new( self , how, what)
         end
 
+        # this method accesses a table cell. 
+        # how - symbol - how we access the cell,  :id is supported
         def cell( how, what )
            return Cell.new( self, how, what)
         end
 
+        # this method accesses a table row. 
+        # how - symbol - how we access the row,  :id is supported
         def row( how, what )
            return Row.new( self, how, what)
         end
@@ -1009,11 +1067,10 @@ module Watir
             end
         end
 
+        # this is the main method for accessing the buttons iterator. It returns a Buttons object
         def buttons()
             return Buttons.new(self)
         end
-
-
 
 
         # This is the main method for accessing a reset button ( <input type = reset> ).
@@ -1030,7 +1087,6 @@ module Watir
                 raise MissingWayOfFindingObjectException
             end
         end
-
 
 
 
@@ -1051,7 +1107,8 @@ module Watir
             t = TextField.new(self , how, what)
         end
         alias textField text_field
-        
+
+        # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
         def text_fields
             return Text_Fields.new(self)
         end
@@ -1066,6 +1123,7 @@ module Watir
         end
         alias selectBox select_list
 
+        # this is the method for accessing thr select lists iterator. Returns a Select_Lists object
         def select_lists()
             return Select_Lists.new(self)
         end
@@ -1081,7 +1139,8 @@ module Watir
             c = RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
         alias checkBox checkbox
-        
+
+        # this is the method for accessing thr check boxes iterator. Returns a Check_Boxes object
         def checkboxes
             return Check_Boxes.new(self)
         end
@@ -1092,9 +1151,10 @@ module Watir
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         # returns a RadioCheckCommon object
         def radio( how , what , value=nil)
-            r = RadioCheckCommon.new( self, how, what, "radio", value)
+            return RadioCheckCommon.new( self, how, what, "radio", value)
         end
 
+        # this is the method for accessing the radio buttons iterator. Returns a Radios object
         def radios
             return Radios.new(self)
         end
@@ -1104,12 +1164,12 @@ module Watir
         #  *  what  - string, int or re , what we are looking for, 
         # returns a Link object
         def link( how , what)
-            l = Link.new(self , how, what )
+            return Link.new(self , how, what )
         end
 
-        # this is the factory method for accessing the links collection
+        # this is the factory method for accessing the links collection. Returns a Links object
         def links
-            l = Links.new(self)
+            return Links.new(self)
         end
 
         
@@ -1123,33 +1183,40 @@ module Watir
             i = Image.new(self , how, what )
         end
         
-        # this is the factory method for accessing the imagescollection
+        # this is the factory method for accessing the images collection. Returns an Images object
         def images
-            l = Images.new(self)
+            return Images.new(self)
         end
-
-        
-
-
 
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
         def popup( )
             i = PopUp.new(self )
         end
-        
+
+
+        # This is the main method for accessing divs.
+        #  *  how   - symbol - how we access the div, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        # returns an Div object
         def div( how , what )
             return Div.new(self , how , what)
         end
 
+        # this is the main method for accessing the divs iterator. Returns a Divs object
         def divs
             return Divs.new(self)
         end
 
+        # This is the main method for accessing span tags
+        #  *  how   - symbol - how we access the span, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        # returns an Span object
         def span( how , what )
             return Span.new(self , how , what)
         end
 
+        # this is the main method for accessing the spans iterator. Returns a Spans object
         def spans()
             return Spans.new(self)
         end
@@ -1368,46 +1435,47 @@ module Watir
         end
         private :object_disabled_check
 
+        # returns a string with the type of the object, or an empty string if it isnt supported. Many objects override this method anyway.
         def type
             object_exist_check
             begin 
-                object_type = @o.type
+                object_type = @o.invoke("type")
             rescue
                 object_type = ""
             end
             return object_type
         end
 
+        # returns the name of the object as a string
         def name
             object_exist_check
             return @o.invoke("name")
         end
 
+        # returns the id of the object
         def id
             object_exist_check
             return @o.invoke("id")
         end
   
+        # returns true if the object is disabled
         def disabled
             object_exist_check
             return @o.invoke("disabled")
         end
          
+        # returns the value of the object
         def value
             object_exist_check
             return @o.invoke("value")
         end
 
-        def type
-            object_exist_check
-            return @o.invoke("type")
-        end
-
-        
+        # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
         def getOLEObject()
             return @o
         end
-
+  
+        # Returns an array with many of the properties, in a format to be used by the to_s method
         def string_creator
 
             n = []
@@ -1469,7 +1537,9 @@ module Watir
             @ieController.waitForIE()
             highLight(:clear)
         end
-        
+
+
+        # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
             object_exist_check
             10.times do
@@ -1528,19 +1598,24 @@ module Watir
             @length=0
         end
  
+        # iterate through each of the elements in the collection in turn
         def each
             0.upto( @length-1 ) { |i | yield iterator_object(i)   }
         end
 
+        # returns how many objects are in the collection
         def length
             return @length
         end
  
+        # allows access to a specific item in the collection
         def [](n)
             return iterator_object(n-1)
         end
     end
 
+    # this class accesses the spans in the document as a collection
+    # it would normally only be accessed by the spans method of IEController
     class Spans < Iterators
 
         def initialize( ieController )
@@ -1548,11 +1623,15 @@ module Watir
             @length =@ieController.ie.document.body.getElementsByTagName("SPAN").length
         end
        
+        # this method creates an object of the correct type that the iterators use
         def iterator_object(i)
             @ieController.span( :index , i+1)
         end
+        private :iterator_object
     end
 
+    # this class accesses the divs in the document as a collection
+    # it would normally only be accessed by the divs method of IEController
     class Divs< Iterators
 
         def initialize( ieController )
@@ -1563,8 +1642,12 @@ module Watir
         def iterator_object(i)
             @ieController.div( :index , i+1)
         end
+        private :iterator_object
+
     end
 
+    # this class accesses the buttons in the document as a collection
+    # it would normally only be accessed by the buttons method of IEController
     class Buttons < Iterators
 
         def initialize( ieController )
@@ -1580,8 +1663,12 @@ module Watir
         def iterator_object(i)
             @ieController.button( :index , i+1)
         end
+        private :iterator_object
+
     end
 
+    # this class accesses the check boxes in the document as a collection
+    # it would normally only be accessed by the links method of IEController
     class Check_Boxes < Iterators
 
         def initialize( ieController )
@@ -1598,8 +1685,12 @@ module Watir
         def iterator_object(i)
             @ieController.checkbox( :index , i+1)
         end
+        private :iterator_object
+
     end
 
+    # this class accesses the radio buttons in the document as a collection
+    # it would normally only be accessed by the radios method of IEController
     class Radios < Iterators
 
         def initialize( ieController )
@@ -1616,10 +1707,13 @@ module Watir
         def iterator_object(i)
             @ieController.radio( :index , i+1)
         end
+        private :iterator_object
+
     end
 
 
-
+    # this class accesses the select boxes  in the document as a collection
+    # it would normally only be accessed by the select_lists method of IEController
     class Select_Lists< Iterators
 
         def initialize( ieController )
@@ -1629,7 +1723,9 @@ module Watir
        
         def iterator_object(i)
             @ieController.select_list( :index , i+1)
-        end
+        end
+        private :iterator_object
+
     end
 
     # this class accesses the links in the document as a collection
@@ -1664,6 +1760,8 @@ module Watir
 
     end
 
+    # this class accesses the text fields in the document as a collection
+    # it would normally only be accessed by the text_fields method of IEController
     class Text_Fields < Iterators
         def initialize( ieController )
             super
@@ -1680,6 +1778,9 @@ module Watir
         end
     end
 
+
+    # this class contains items that are common between the span and div objects
+    # it would not normally be used directly
     class SpanDivCommon < ObjectActions
         def initialize( ieController,  how , what )
             @ieController = ieController
@@ -1689,43 +1790,58 @@ module Watir
             @what = what
         end
 
+        # this method returns the innerText of the object
+        # raises an ObjectNotFound exception if the object cannot be found
         def text()
             object_exist_check
             d = @o.innerText
             return d
         end
+        alias innerText text
 
+        # returns the classname of the style that this san or div is using
+        # raises an ObjectNotFound exception if the object cannot be found
         def style
             object_exist_check
             d = @o.invoke("className")
             return d
         end
 
+        # this method returns the type of  object
+        # raises an ObjectNotFound exception if the object cannot be found
         def type
             object_exist_check
             return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
         end
 
 
+        # spans or divs do not support a name attribute, so this returns an empty string
+        # raises an ObjectNotFound exception if the object cannot be found
         def name
             object_exist_check
             return ""
         end
 
+ 
+        # spans or divs do not support a value attribute, so this returns an empty string
+        # raises an ObjectNotFound exception if the object cannot be found
         def value
             object_exist_check
             return ""
         end
 
 
-
+        # this method is used to ppulate the properties in the to_s method
         def span_div_string_creator
             n = []
             n <<   "style:".ljust(TO_S_SIZE) + self.style
             n <<   "text:".ljust(TO_S_SIZE) + self.text
             return n
          end
+         private :span_div_string_creator
 
+         # returns the properties of the object in a string
+         # raises an ObjectNotFound exception if the object cannot be found
          def to_s
             object_exist_check
             r = string_creator
@@ -1734,6 +1850,7 @@ module Watir
          end
     end
 
+    # this class is used to deal with Div tags in the html page. It would not normally be created by users
     class Div < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "div"
@@ -1742,6 +1859,7 @@ module Watir
 
     end
 
+    # this class is used to deal with Span tags in the html page. It would not normally be created by users
     class Span < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "span"
@@ -1749,7 +1867,244 @@ module Watir
         end
     end
 
-        
+=begin
+#---- pauls new table stuff        
+    # This class is used for dealing with tables.
+    # This will not be normally used by users, as the table method of IEController would return an initialised nstance of a table.
+    class Table < ObjectActions
+ 
+        # Returns an initialized instance of the table object to wich anElement belongs
+        #   * ieController  - an instance of an IEController
+        #   * anElement     - a Watir object (TextField, Button, etc.)
+        def Table.create_from_element(ieController,anElement)
+            o = anElement.getOLEObject.parentElement
+            while(o && o.tagName != 'TABLE')
+                o = o.parentElement
+            end
+            return Table.new(ieController,:from_object,o)
+        end
+
+        # Returns an initialized instance of a table object
+        #   * ieController  - an instance of an IEController
+        #   * how         - symbol - how we access the table
+        #   * what         - what we use to access the table - id, name index etc 
+        def initialize( parent,  how , what )
+            @ieController = parent
+            allTables = parent.getDocument.body.getElementsByTagName("TABLE")
+            parent.log "There are #{ allTables.length } tables"
+            table = nil
+            tableIndex = 1
+	    if(how != :from_object) then
+                allTables.each do |t|
+                    next  unless table == nil
+                    case how
+                        when :id
+                        if t.invoke("id").to_s == what.to_s
+                            table = t
+                        end
+                        when :index
+                        if tableIndex == what.to_i
+                            table = t
+                        end
+                        end
+                        tableIndex = tableIndex + 1
+                    end
+	    else
+		    table = what
+	    end
+            parent.log "table - #{what}, #{how} Not found " if table ==  nil
+            @o = table
+            super( @o )
+            @how = how
+            @what = what
+        end
+   
+        # Returns a row in the table
+        #   * index         - the index of the row
+        def [](index)
+            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+
+            elements = []
+            for td in row(index).children
+                if(td.children.length > 0) then 
+                    elements << td.children(0)
+                else
+                    elements << td
+                end
+            end
+            
+            return TableRow.new(@ieController , elements)
+        end
+
+        # This method returns the number of rows in the table.
+        # Raises an UnknownTableException if the table doesnt exist.
+        def row_count 
+            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+
+            return table_body.children.length
+        end
+
+        # This method returns the number of columns in a row of the table.
+        # Raises an UnknownTableException if the table doesn't exist.
+        #   * index         - the index of the row
+        def column_count(index=1) 
+            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+
+            columns = 0
+            for td in row(index).children
+                columns += td.colSpan
+            end
+
+            return columns
+        end
+
+        # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
+        # Raises an UnknownTableException if the table doesn't exist.
+        def to_a
+            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+            y = []
+            table_rows = @o.getElementsByTagName("TR")
+            for row in table_rows
+                x = []
+                for td in row.getElementsbyTagName("TD")
+                    x << td.innerText.strip
+                end
+                y << x
+            end
+            return y
+            
+        end
+
+        def table_body
+            return @o.children(0)
+        end
+	  private :table_body
+   
+        def row(index)
+            return table_body.children(index - 1)
+        end
+	private :row
+
+ end
+
+
+    # this class is a table cell
+    class Cell < ObjectActions
+
+        # Returns an initialized instance of a table cell
+        #   * ieController  - an instance of an IEController
+        #   * how         - symbol - how we access the cell
+        #   * what         - what we use to access the cell - id, name index etc 
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+
+            if how == :from_existing
+                @o = what
+            else
+                super( @o )
+                @how = how
+                @what = what
+                @o = ieController.getTablePart( "TD" , how , what )
+            end 
+        end
+
+
+        def text()
+            raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
+            return @o.innerText
+ 
+        end
+        alias getContents text
+        alias to_s text
+
+	# Returns the object contained in the cell as a Button
+        def button
+            return Button.new(@ieController,:from_object,@o)
+        end
+
+	# Returns the object contained in the cell as a Table
+        def table
+            return Table.new(@ieController,:from_object,@o)
+        end
+     
+	# Returns the text of the object contained in the cell
+        def text
+            return @o.innerText
+        end
+
+	# Returns the object contained in the cell as a TextField
+        def textField
+            return TextField.new(@ieController,:from_object,@o)
+        end
+
+    end
+
+    # this class is a table cell
+    class TableCell____
+
+        # Returns an initialized instance of a table cell
+        #   * o  - the object contained in the cell
+        #   * ieController  - an instance of an IEController
+        def initialize(ieController , o)
+            @o = o
+            @ieController = ieController
+        end
+ 
+	# Returns the object contained in the cell as a Button
+        def button
+            return Button.new(@ieController,:from_object,@o)
+        end
+
+	# Returns the object contained in the cell as a Table
+        def table
+            return Table.new(@ieController,:from_object,@o)
+        end
+     
+	# Returns the text of the object contained in the cell
+        def text
+            return @o.innerText
+        end
+
+	# Returns the object contained in the cell as a TextField
+        def textField
+            return TextField.new(@ieController,:from_object,@o)
+        end
+ 
+   end
+
+
+
+
+    # this class is a table row
+    class Row < ObjectActions
+
+        # Returns an initialized instance of a table cell
+        #   * ieController  - an instance of an IEController
+        #   * how         - symbol - how we access the cell
+        #   * what         - what we use to access the cell - id, name index etc 
+        def initialize( ieController,  how , what )
+            @ieController = ieController
+            @o = ieController.getTablePart( "TR" , how , what )
+            super( @o )
+            @how = how
+            @what = what
+        end
+   
+	# Returns an element from the row
+        def [](index)
+            raise UnknownCellException if (index > @o.length )
+            #return TableCell.new( @ieController , 2 , index -1])
+        end
+
+	# defaults all missing methods to the array of elements, to be able to
+	# use the row as an array
+        def method_missing(aSymbol,*args)
+            return @row.send(aSymbol,*args)
+        end
+   
+    end
+# --- end of pauls stuff
+=end
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
     class Table < ObjectActions
@@ -1927,6 +2282,7 @@ module Watir
    end
 
 
+
     # This class is the means of accessing an image on a page.
     # It would not normally be used by users, as the image method of IEController would return an initialised instance of an image.
     class Image < ObjectActions
@@ -1934,12 +2290,27 @@ module Watir
         # Returns an initialized instance of a image  object
         #   * ieController  - an instance of an IEController
         #   * how         - symbol - how we access the image
-        #   * what         - what we use to access the image, text, url, index etc
+        #   * what         - what we use to access the image, name, src, index, id or alt
         def initialize( ieController,  how , what )
             @ieController = ieController
             doc = ieController.getDocument()
             
-            puts "Finding an image how: #{how} What #{what}"
+            #puts "Finding an image how: #{how} What #{what}"
+
+            @o = getImage(doc, how, what)
+
+            super( @o )
+            @how = how
+            @what = what
+           
+        end
+
+        # this method finds the specified image
+        # doc  - where to look
+        # how  - symnol - how to look
+        # what - string or regexp - what to look ofr
+        def getImage( doc, how, what )
+
             count = 1
             images = doc.images
             o=nil
@@ -1969,14 +2340,11 @@ module Watir
                 end
                 count +=1
             end # do
-            @o = o
+            return o
 
-            super( @o )
-            @how = how
-            @what = what
-           
         end
 
+        # this method produces the properties for an image as an array
         def image_string_creator
             n = []
             n <<   "src:".ljust(TO_S_SIZE) + self.src.to_s
@@ -1986,9 +2354,10 @@ module Watir
             n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
 
             return n
-
         end
+        private :image_string_creator
 
+        # returns a string representation of the object
         def to_s
             object_exist_check
             r = string_creator
@@ -1996,36 +2365,43 @@ module Watir
             return r.join("\n")
         end
 
+        # a value doesnt exist for an image, so this will return an empty string
         def value
             object_exist_check
             return ""
         end
 
+        # this method returns the source url of the image
         def src
             object_exist_check
             return @o.invoke("src")
         end
 
+        # this method returns the file created date of the image
         def fileCreatedDate
             object_exist_check
             return @o.invoke("fileCreatedDate")
         end
 
+        # this method returns the filesize of the image
         def fileSize
             object_exist_check
             return @o.invoke("fileSize").to_s
         end
 
+        # returns the width in pixels of the image, as a string
         def width
             object_exist_check
             return @o.invoke("width").to_s
         end
 
+        # returns the height in pixels of the image, as a string
         def height
             object_exist_check
             return @o.invoke("height").to_s
         end
 
+        # returns the type of the object
         def type 
             object_exist_check
             return "image"
@@ -2041,6 +2417,8 @@ module Watir
             return true
         end
 
+        # this method highlights the image ( in fact it adds or removes a border around the image)
+        #  * setOrClear   - symbol - :set to set the border, :clear to remove it
         def highLight( setOrClear )
             if setOrClear == :set
                 begin
@@ -2545,15 +2923,15 @@ module Watir
                 # probably a text area - so it doesnt have a max Length
                 maxLength = -1
             end
-            
             for i in 0 .. value.length-1   
                 sleep @ieController.typingspeed   # typing speed
-                c = value[i]
-                @ieController.log  " adding c.chr " + c.chr.to_s
-                @o.value = @o.value.to_s + c.chr
+                c = value[i,1]
+                @ieController.log  " adding c.chr " + c  #.chr.to_s
+                @o.value = @o.value.to_s + c   #c.chr
                 @o.fireEvent("onKeyPress")
                 @ieController.waitForIE(true)
             end
+
         end
         private :doKeyPress
     end
