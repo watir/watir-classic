@@ -1,9 +1,37 @@
-require 'win32ole'
-
-
+#
+#  This WATIR the web application testing framework for ruby
+#  Home page is http://rubyforge.com/projects/wtr
+#  
 #
 #  Version "$Revision$"
 #
+#
+#  Typical usage:
+#
+#  # include the controller
+#  require 'watir'
+#  # create an instance of the controller
+#  ie = Watir.new()
+#
+#  # goto the page you want to test
+#  ie.goto("http://myserver/mypage")
+#
+#  # to enter text into a text field - assuming the field is name "username"
+#  ie.textField(:name, "username").set("Paul")
+#
+#  # if there was a text field that had an id of "company_ID", you could set it to Ruby Co by:
+#  ie.textField(:id ,"company_ID").set("Ruby Co")
+#
+#
+#  # to click a button that has a caption of 'Cancel'
+#  ie.button(:caption, "Cancel").click()
+#
+
+
+
+
+require 'win32ole'
+
 
 class Spinner
 
@@ -193,6 +221,7 @@ class IE
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = TRUE
         @frame = ""
+        @presetFrame = ""
         @form = ""
         @typingspeed = DEFUALT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
@@ -207,35 +236,58 @@ class IE
         return self
     end
 
-    
+        def presetFrame( frameName )
+        @presetFrame = frameName
+    end
+
+    def clearPresetFrame( )
+        @presetFrame = ""
+    end
+    def getCurrentFrame()
+        return @presetFrame 
+    end
+
+
 
 
     #def method_missing( method , args )
         #@ie.invoke( :method( args ) )
     #end
 
-    def getDocument()
-        if @frame == ""
+  def getDocument()
+        if @frame == "" and @presetFrame == ""
             doc = @ie.document
         else
-            puts "Getting a document in a frame #{@frame} "
+            if @frame == "" 
+                # using a preset frame
+                frameToUse = @presetFrame
+            else
+                frameToUse = @frame
+            end
+
+
+
+            puts "Getting a document in a frame #{frameToUse} "
             allFrames = @ie.document.frames
             frameExists = false
+
             for i in 0 .. allFrames.length-1
                 begin
-                    frameExists = true   if @frame  == allFrames[i.to_s].name.to_s
+                    frameExists = true   if frameToUse  == allFrames[i.to_s].name.to_s
                 rescue
                     # probably no name on this object
                 end
             end
 
             raise UnknownFrameException if frameExists == false
-            doc = @ie.document.frames[@frame.to_s].document
+            doc = @ie.document.frames[frameToUse.to_s].document
         end
 
         
         return doc
     end
+
+
 
     def pageContainsText(text)
 
@@ -329,11 +381,24 @@ puts "-------------"
     end
 
 
-    def getObject( how, what , value=nil )
+    def getObject( how, what , types=nil ,  value=nil )
         doc = getDocument()
+
+
+        if types
+            if types.kind_of?(Array)
+                elementTypes = types
+            else
+                elementTypes = [types]
+            end
+
+        end
 
         o = nil
         case how
+            when :index
+                o = getObjectAtIndex( doc , what , types , value)
+
             when :id
                 o = doc.getElementByID(what)
                 
@@ -354,8 +419,7 @@ puts "-------------"
                 end
             when :caption  #only applies to button
                 o = getObjectWithValue( what, doc , "submit" , "button" )
-            #when :index
-            #  we need to know what type of object
+            
         end
 
 
@@ -397,6 +461,47 @@ puts "-------------"
 
     end
 
+
+    def getObjectAtIndex(doc , index , types , value)
+
+        #puts" getting object #{types.to_s}  at index( #{index}"
+
+        o = nil
+        objectIndex = 1
+        doc.all.each do | thisObject |
+            begin
+
+                if types.include?( thisObject.invoke("type") )
+                    begin 
+                        oName = thisObject.invoke("name")
+                    rescue
+                        oName = "unknown"
+                    end
+                    #puts "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
+
+                    if objectIndex.to_s == index.to_s
+                        o = thisObject
+                        if value
+                            if value == thisObject.value
+                                break
+                            end
+                        else
+                            break
+                        end
+
+                    end
+                    objectIndex +=1
+                end
+            rescue
+                # probably doesnt support type
+            end
+            
+        end
+        return o
+
+    end
+
+
     def getLink( how, what )
         doc = getDocument()
         links = doc.links
@@ -405,6 +510,12 @@ puts "-------------"
 
         case how
 
+            when :index
+                begin
+                    link = links[ (what-1).to_s ]
+                rescue
+                    link=nil
+                end
             when :url
                 links.each do |thisLink|
                     if thisLink.href.match(Regexp.escape(what)) 
@@ -479,7 +590,7 @@ class SelectBox < ObjectActions
 
     def initialize( ieController,  how , what )
        @ieController = ieController
-       @o = ieController.getObject( how, what )
+       @o = ieController.getObject( how, what , "select" )
        super( @o )
     end
 
@@ -573,7 +684,7 @@ class Button < ObjectActions
     
     def initialize( ieController,  how , what )
         @ieController = ieController
-        @o = ieController.getObject( how, what )
+        @o = ieController.getObject( how, what , ["button" , "submit"] )
         super( @o )
     end
 
@@ -633,7 +744,7 @@ class RadioButton < RadioCheckCommon
    
     def initialize( ieController,  how , what , value=nil )
         @ieController = ieController
-        @o = ieController.getObject( how, what , value)
+        @o = ieController.getObject( how, what , "radio" , value)
         super( @o )
     end
 
@@ -645,7 +756,7 @@ class CheckBox < RadioCheckCommon
 
     def initialize( ieController,  how , what , value=nil )
         @ieController = ieController
-        @o = ieController.getObject( how, what , value)
+        @o = ieController.getObject( how, what , "checkbox", value)
         super( @o )
     end
 
@@ -656,7 +767,7 @@ class TextField < ObjectActions
     
     def initialize( ieController,  how , what )
         @ieController = ieController
-        @o = ieController.getObject( how, what )
+        @o = ieController.getObject( how, what , ["text" , "password"] )
         super( @o )
 
         @properties = {
