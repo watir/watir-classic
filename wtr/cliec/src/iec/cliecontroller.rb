@@ -38,12 +38,12 @@ require 'win32ole'
 module CLabs
   module IEC
     # VERSION auto generated section
-    begin
-      require 'cl/util/version'
-      VERSION = CLabs::Version.new(2003, 162, 0)
-    rescue LoadError
-      VERSION = '2003.162.0'
-    end
+    begin                                                            
+      require 'cl/util/version'                                      
+      VERSION = CLabs::Version.new(2003, 362, 0)
+    rescue LoadError                                                 
+      VERSION = '2003.362.0'                                            
+    end                                                              
     # END_VERSION
 
     class ClIEDomViewer
@@ -367,25 +367,3 @@ module CLabs
 end
 
 include CLabs::IEC
-
-if __FILE__ == $0
-  def form
-    IEDomFormWrapper.new(@iec.form)
-  end
-
-  VISIBLE = true
-  @iec = ClIEController.new(VISIBLE)
-  @iec.navigate 'http://www.google.com'
-  form.q = 'cLabs'
-  form.submit
-  @iec.wait
-
-  dv = ClIEDomViewer.new(@iec)
-  # File.open('dom.dump.txt', 'w') do |f| dv.outputDom(f) end
-  root = dv.htmlRootNode
-  puts 'building dom wrapper tree...'
-  dv.buildNodeWrapperTree(root)
-  link = dv.getNodeWrapperFromPath('HTML-BODY1-DIV1-P1-A1', root)
-  link.node.click
-  @iec.wait
-end
