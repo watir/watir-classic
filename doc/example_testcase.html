@@ -166,7 +166,7 @@ failures quickly.</p>
 <div class = "testexample">
  puts <font color = "purple">"Step 1: go to the test site: "</font> + testSite<br>
  $ie.goto(testSite)<br>
- puts <font color = "purple">&nbsp;&nbsp;&nbsp;Action: entered "</font> + testSite + <font color = "purple">"in the address bar."</font><br>
+ puts <font color = "purple">&nbsp;&nbsp;&nbsp;"Action: entered "</font> + testSite + <font color = "purple">"in the address bar."</font><br>
 </div>
 <p>The first line uses a <i>puts</i> statement to print out the test case step we are attempting to the screen. The second line uses the Watir method "goto" to direct the test
 case to the test site: http://www.google.com (stored in the variable <b>testSite</b>). The third line prints the action that Watir just executed to the screen.
@@ -180,12 +180,12 @@ When we print out the variable, we concatenate it to the string (the part in quo
 <input maxLength=256 size=55 name=q value=""></div>
 <p>What you see in the text editor:</p>
 <div class = "testexample">
- puts <font color = "purple">"Step 2: enter "pickaxe" in the search text field"<br></font>
+ puts <font color = "purple">"Step 2: enter 'pickaxe' in the search text field"<br></font>
  $ie.textField(:name, <font color = "purple">"q"</font>).set(<font color = "purple">"pickaxe"</font>)<font color = "green"> # q is the name of the search field</font><br> 
  puts <font color = "purple">&nbsp;&nbsp;&nbsp;"  Action: entered pickaxe in the search field"</font><br>
 </div>
 <p>The first line prints the step we are on to the screen. The second line enters the text "pickaxe" in the text field named <b>q</b>. The third line prints what Watir just executed 
-to the screen.</p>
+to the screen. The comment telling the user that "q" is the name of the text field is optional.</p>
 <p>This is the tag in the HTML source with the <i>name</i> attribute we used highlighted:</p>
 <div class = "htmlexample">
 &lt;input maxLength=256 size=55 name=<b>q</b> value=""&gt;</div>
@@ -242,8 +242,8 @@ puts <font color = "purple">"Actual Result: Check that the 'The Pragmatic Progra
 <p>What you see in the text editor:</p>
 <div class = "testexample">
     puts <font color = "purple">"  "</font><br>
-    puts <font color = "purple">"## end of test: google search"</font><br>
-    puts <font color = "green"># -end of simple google search test</font>
+    puts <font color = "purple">"##End of test: Google search"</font><br>
+    puts <font color = "green"># -end of simple Google search test</font>
 </div>
 <p>The first line prints a blank line for formatting, and a the second line prints message to the user that the test case has ended. The final line in green 
 is a comment that shows the end of the test case. 

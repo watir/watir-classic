@@ -33,11 +33,11 @@
    puts "  Action: entered pickaxe in the search field"
 
    puts "Step 3: click the 'Google Search' button"
-   $ie.button(:caption, "Google Search").click   # Google Search is the caption of the button
+   $ie.button(:value, "Google Search").click   # Google Search is the caption of the button
    puts "  Action: clicked the Google Search button."
 
    puts "Expected Result: "
-   puts " - a google page with results should be shown. 'Pragmatic Programmers LLC' should be high on the list."
+   puts " - a Google page with results should be shown. 'Pragmatic Programmers LLC' should be high on the list."
   
    puts "Actual Result: Check that the 'The Pragmatic Programmers, LLC' link appears on the results page "
    a = $ie.pageContainsText("The Pragmatic Programmers, LLC") 
@@ -51,6 +51,6 @@
    puts "## End of test: Google search"
   
 
-# -end of simple google search test
+# -end of simple Google search test
 
 
