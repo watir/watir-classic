@@ -1,0 +1,1 @@
+load 'run-tests'
