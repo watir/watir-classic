@@ -282,11 +282,23 @@ class IE
     # this method creates an instance of the IE controller
     def initialize()
 
+
+#        puts "##########################################################################"
+#        puts "#                                                                        #"
+#        puts "# This is a new version of WATIR. It is very untested.                   #"
+#        puts "# It provides functionality like ie.form("form1").button("Submit").click #"
+#        puts "# The existing unit tests work, and new ones are being created for this  #"
+#        puts "# functionality. Please report any problems to the wtr mailing list      #"
+#        puts "#  Thanks, Paul                                                          #"
+#        puts "#                                                                        #"
+#        puts "##########################################################################"
+
+
         @ie =   WIN32OLE.new('InternetExplorer.Application')
         @ie.visible = TRUE
         @frame = ""
         @presetFrame = ""
-        @form = ""
+        @form = nil
         @typingspeed = DEFAULT_TYPING_SPEED
         @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
     end
@@ -299,6 +311,7 @@ class IE
     # This method sets the frame to use for a single object access
     #   *   frameName  - string with the name of the frame to use
     def frame( frameName)
+        
         @frame  = frameName
         return self
     end
@@ -325,10 +338,44 @@ class IE
     end
 
 
+    def form( formName )
+
+        @formName = nil
+        temp = getDocument()
+
+        @formName = formName
+        puts "form - name set at #{formName}"
+        return self
+    end
+
+    def clearForm()
+        @formName = nil
+        @form = nil
+    end
+
+    def getForm()
+
+        puts "Get form"
+
+        @doc.forms.each do |thisForm|
+            puts "FORM name is " + thisForm.name
+            if thisForm.name == @formName
+                @form = thisForm
+            end
+        end
+        puts "set @form to form with name #{@form.name}"
+        return @form
+    end
+
+
     # This method is used internally to set the document to use.
     #  Raises UnknownFrameException if a specified frame cannot be found
     def getDocument()
-        if @frame == "" and @presetFrame == ""
+
+        if @formName
+            doc = getForm()
+            puts "Getting a form #{@formName} "
+        elsif @frame == "" and @presetFrame == ""
             doc = @ie.document
         else
             if @frame == "" 
@@ -354,6 +401,7 @@ class IE
             raise UnknownFrameException if frameExists == false
             doc = @ie.document.frames[frameToUse.to_s].document
         end
+        @doc = doc
         return doc
     end
 
@@ -362,14 +410,16 @@ class IE
     def pageContainsText(text)
 
 
+        
+
         puts "-------------"
-        puts getDocument.body.innerText
+        puts getDocument().body.innerText
         puts "-------------"
 
 
         if text.kind_of? Regexp
 
-            if ( getDocument.body.innerText.match(text)  ) != nil
+            if ( getDocument().body.innerText.match(text)  ) != nil
                 puts  "pageContainsText: Looking for: #{text} (regexp) - found it ok" 
                 return true
             else
@@ -380,7 +430,7 @@ class IE
 
         elsif text.kind_of? String
 
-            if ( getDocument.body.innerText.index(text)  ) != nil
+            if ( getDocument().body.innerText.index(text)  ) != nil
                 puts "pageContainsText: Looking for: #{text} (string) - found it ok" 
                 return true
             else
@@ -416,7 +466,7 @@ class IE
         #puts "waitForIE Complete"
         s=nil
     end
-    
+
     def wait
         waitForIE
     end
@@ -479,6 +529,13 @@ class IE
     def getObject( how, what , types=nil ,  value=nil )
         doc = getDocument()
 
+        if @form
+            container  = @form.elements.all
+            puts "getObject - using form #{@form.name} how is #{how} what is #{what}"
+        else
+            container = doc.body.all
+            puts "Container is doc.body.all"
+        end
         if types
             if types.kind_of?(Array)
                 elementTypes = types
@@ -488,32 +545,68 @@ class IE
         end
 
         o = nil
-        case how
-            when :index
-                o = getObjectAtIndex( doc , what , types , value)
 
-            when :id
-                o = doc.getElementByID(what)
-                
-            when :name
-                begin 
-                    #p "getobject by name  #{what}"
-                    n = doc.getElementsByName(what)
-                    if n.length == 0 
-                        o=nil
-                        #puts "getElementByName gets nothing!"
-                    else
-                        #puts "getelement by name returns len = #{n.length}"
-                        o=n["0"] if value ==nil
-                        #puts "o type is : " + o.invoke("type")
+        puts "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
+
+        if how == :index
+            o = getObjectAtIndex( container, what , types , value)
+        elsif how ==:caption  #only applies to button
+            o = getObjectWithValue( what, container , "submit" , "button" )
+        else
+            #puts "How is #{how}"
+            container.each do |object|
+                next unless object != nil
+                case how
+                    when :id
+                        begin
+                            if object.invoke("id") == what
+                                if types
+                                    if types.include?(object.invoke("type"))
+                                        if value
+                                            puts "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                            if object.value.to_s == value.to_s
+                                                o = object
+                                            end
+                                        else
+                                            o= object
+                                        end
+                                    else
+                                        o= object
+                                    end
+                                else
+                                     o= object
+                                end
+                            end
+                       rescue => e
+                           #puts e.to_s + "\n" + e.backtrace.join("\n")
+                       end
+                    when :name
+                        begin
+                            #puts "Comparing #{object.invoke("name")} with @{what}"
+                            if object.invoke("name") == what
+                                if types
+                                    if types.include?(object.invoke("type"))
+                                        if value
+                                            puts "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                            if object.value.to_s == value.to_s
+                                                o = object
+                                            end
+                                        else
+                                            o= object
+                                        end
+                                    else
+                                        o= object
+                                    end
+                                else
+                                     o= object
+                                end
+                            end
+                       rescue => e
+                           #puts e.to_s + "\n" + e.backtrace.join("\n")
+                       end
                     end
-                rescue => e
-                    puts e
-                end
-            when :caption  #only applies to button
-                o = getObjectWithValue( what, doc , "submit" , "button" )
+            end
         end
-
 
         # if a value has been supplied, for exampe with a check box or a radio button, we need to go through the collection and get the correct one
         if value
@@ -530,19 +623,19 @@ class IE
 
         #reset the frame reference
         clearFrame()
-
+        clearForm()
         return o
     end
 
     # This method is used internally to locate an object that has a value specified.
     # normally used for buttons with a caption
     #   * what              - what we are looking for - normally the caption of a button
-    #   * doc               - the document that we are searching
+    #   * container         - the container that we are searching in ( a form or the body of a document )
     #   * *htmlObjectTypes  - an array of the objects we are interested in
-    def getObjectWithValue(what , doc , *htmlObjectTypes )
+    def getObjectWithValue(what , container , *htmlObjectTypes )
 
         o = nil
-        doc.all.each do |r|
+        container.each do |r|
             next unless o ==nil
             begin
                 if r.value == what and htmlObjectTypes.include?(r.invoke("type").downcase)
@@ -558,17 +651,17 @@ class IE
 
     # this method is used to locate an object when indexes are used. 
     # used internally.
-    #    * doc    - the document we are looking in
-    #    * index  - the index of the element we want to get - 1 based
-    #    * types  - an array of the type of objects to look at
-    #    * value  - the value of the object to get, used when getting itens like checkboxes and radios
-    def getObjectAtIndex(doc , index , types , value=nil)
+    #    * container  - the container we are looking in
+    #    * index      - the index of the element we want to get - 1 based
+    #    * types      - an array of the type of objects to look at
+    #    * value      - the value of the object to get, used when getting itens like checkboxes and radios
+    def getObjectAtIndex(container , index , types , value=nil)
 
-        # puts "getting object #{types.to_s}  at index( #{index}"
+        #puts" getting object #{types.to_s}  at index( #{index}"
 
         o = nil
         objectIndex = 1
-        doc.all.each do | thisObject |
+        container.each do | thisObject |
             begin
 
                 if types.include?( thisObject.invoke("type") )
