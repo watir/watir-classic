@@ -11,6 +11,30 @@ class TC_CheckBox < Test::Unit::TestCase
         $ie.goto($htmlRoot + "checkboxes1.html")
     end
 
+    def test_checkbox_properties
+
+
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:name, "noName").id   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:name, "noName").name   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:name, "noName").disabled   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:name, "noName").type   }  
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:name, "noName").value   }  
+
+       assert_equal("box1"  , $ie.checkbox(:index, 1).name  ) 
+       assert_equal(""  , $ie.checkbox(:index, 1).id  ) 
+       assert_equal("checkbox"  , $ie.checkbox(:index, 1).type  ) 
+       assert_equal("on"  , $ie.checkbox(:index, 1).value  ) 
+       assert_equal(false  , $ie.checkbox(:index, 1).disabled  ) 
+
+       assert_equal("1" , $ie.checkbox(:name,"box4").value )
+       assert_equal("3" , $ie.checkbox(:name,"box4" , 3).value )
+       assert_equal("checkbox" , $ie.checkbox(:name,"box4" , 3).type )
+       assert_equal(false , $ie.checkbox(:name,"box4" , 3).disabled )
+       assert_equal("" , $ie.checkbox(:name,"box4" , 3).id )
+
+    end
+
+
     def test_onClick
        assert_false($ie.button("foo").enabled?)
        $ie.checkBox(:name, "box5").set
@@ -66,7 +90,7 @@ class TC_CheckBox < Test::Unit::TestCase
        assert_false($ie.checkbox(:name, "box4" , 1).isSet?)   
     end
 
-    def test_checkbox_getSTate
+    def test_checkbox_getState
        assert_raises(UnknownObjectException) { $ie.checkbox(:name, "noName").getState }  
        assert_equal( false , $ie.checkbox(:name, "box1").getState )   
        assert_equal( true , $ie.checkbox(:name, "box3").getState)   
