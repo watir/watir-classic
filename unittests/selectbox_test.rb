@@ -1,18 +1,13 @@
-
-# tests for Buttons
+# tests for Select Boxes
 # revision: $Revision$
 
 require 'watir'
-
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
 require 'testUnitAddons'
+require 'unittests/setup'
 
 $myDir = Dir.getwd
-
-
-
 
 class TC_Selectbox < Test::Unit::TestCase
 
@@ -98,5 +93,3 @@ class TC_Selectbox < Test::Unit::TestCase
 
     end
 end
-
-$ie = IE.new

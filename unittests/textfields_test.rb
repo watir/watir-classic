@@ -1,20 +1,13 @@
-
-# tests for Buttons
+# tests for Text Fields
 # revision: $Revision$
 
 require 'watir'
-
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
 require 'testUnitAddons'
+require 'unittests/setup'
 
 $myDir = Dir.getwd
-
-
-
-
-
 
 class TC_Fields < Test::Unit::TestCase
 
@@ -140,10 +133,4 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
-
-
-
-
 end
-
-$ie = IE.new
