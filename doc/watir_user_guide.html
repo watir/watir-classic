@@ -311,7 +311,7 @@ we can just submit the form itself.</p>
 <div class = "htmlexample">&lt;form action = "<b>login</b>" name = "loginform" method="get"&gt;&lt;input name="username" type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Validating Test Results</h2>
 <p>How do we tell whether the test passed or failed? It is good practice to use a verification point in your test case.</p>
-<p>To create a valid test case, we need to use some sort of validation. It isn't enough to have a sequence of events without validation in a test script. Watir can check the state of objects in the IE DOM, 
+<p>To create a valid test case, we need to use some sort of validation. It isn't enough to have a sequence of events without validation in a test script. Watir can check the state of objects in the <a href="http://msdn.microsoft.com/workshop/author/om/doc_object.asp">IE DOM</a>, 
 and can check to see if a page contains the objects that are expected for the test to pass.<p>
 <h3>Object Exists</h3>
 <p>A simple verification point is to use the Watir method <i>pageContainsText</i>:</p>
@@ -338,8 +338,8 @@ end</div>
    <li>print our passing message to the screen</li>
    <li>end our method</li></ol></p>
 <h3>Using test::unit Assertions</h3>
-<p>Using xUnit assertions can be a more powerful way of validating test results. (For a good explanation of assertions, visit this NUnit page:  <a href= "http://www.nunit.org/assertions.html">explaining assertions</a>.</p>
-<p>Ruby has an xUnit framework called test::unit that we can use with Watir.</p>
+<p>Using xUnit assertions can be a more powerful way of validating test results. (For a good explanation of assertions, visit this NUnit page which  <a href= "http://www.nunit.org/assertions.html">explains assertions</a>.)</p>
+<p>Ruby has an xUnit framework called <b>test::unit</b> that we can use with Watir.</p>
 <p>To use test::unit in your test scripts, enter the following in your test script:</p>
 <h4>Include test::unit</h4>
 <div class = "testexample">#test::unit includes<br>
@@ -381,5 +381,8 @@ to allow for tests on pages using CSS as part of the application. This is a big 
 <p>Check out the unit test <b>css_test.rb</b> for usage.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i> directory and click on <b>index.html</b></p>
+<h2>Feedback</h2>
+<p>Questions? Comments? The Watir development team like to hear your comments and suggestions for improvement. Email questions and suggestions to the <a href="http://rubyforge.org/mailman/listinfo/wtr-general">wtr-general</a> mailing list.
+
 </body>
 </html>
