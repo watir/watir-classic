@@ -130,8 +130,14 @@ class ObjectActions
                 @originalColor = nil
             end
         else
-            @o.style.backgroundColor  = @originalColor unless @originalColor == nil
-            @originalColor = nil
+            begin 
+                @o.style.backgroundColor  = @originalColor unless @originalColor == nil
+                @originalColor = nil
+            rescue
+                # we could be here for a number of reasons...
+            ensure
+                @originalColor = nil
+            end
         end
     end
 
@@ -391,6 +397,46 @@ puts "-------------"
 
     end
 
+    def getLink( how, what )
+        doc = getDocument()
+        links = doc.links
+
+        link = nil
+
+        case how
+
+            when :url
+                links.each do |thisLink|
+                    if thisLink.href.match(Regexp.escape(what)) 
+                        link = thisLink if link == nil
+                    end
+                end
+
+            when :text
+                links.each do |thisLink|
+                    if what.kind_of?( String )
+                        if thisLink.innerText==what 
+                            link = thisLink if link == nil
+                        end
+                    elsif what.kind_of?( Regexp)
+                        if what.innerText.match( thisLink )
+                            link = thisLink if link == nil
+                        end
+                    end
+
+
+                end
+
+            else
+                puts "unknown way of finding a link...."
+        end
+        #reset the frame reference
+        frame("")
+
+        return link
+
+    end
+
     def button( how , what  )
         b = Button.new(self , how , what )
     end
@@ -412,11 +458,22 @@ puts "-------------"
         r = RadioButton.new( self, how, what , value)
     end
 
-
- 
+    def link( how , what)
+        l = Link.new(self , how, what )
+    end
 
 end
 
+
+class Link < ObjectActions
+
+    def initialize( ieController,  how , what )
+       @ieController = ieController
+       @o = ieController.getLink( how, what )
+       super( @o )
+    end
+
+end
 
 class SelectBox < ObjectActions
 
