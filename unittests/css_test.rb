@@ -1,7 +1,6 @@
 #  test file for css
 # revision: $Revision$
 
-$LOAD_PATH.<< File.join(File.dirname(__FILE__), '..')
 require 'unittests/setup'
 
 

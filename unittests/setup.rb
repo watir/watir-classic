@@ -2,8 +2,6 @@
 require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-
-# local
 require 'watir/testUnitAddons'
 
 logger = WatirLogger.new(File.join(File.dirname(__FILE__), 'test.txt') ,5, 65535 * 2)
