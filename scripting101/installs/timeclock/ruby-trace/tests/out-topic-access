@@ -1,8 +1,0 @@
-topic-access-example.rb:16:in `example' at 2004/03/09 15:12:22
-= using module constant announce: here's an example of using a module constant.
-topic-access-example.rb:27:in `initialize' at 2004/03/09 15:12:22
-= using class variables announce: here's an example of using class variables.
-topic-access-example.rb:35:in `initialize' at 2004/03/09 15:12:22
-= using class variables announce: topics are singletons.
-topic-access-example.rb:46:in `installing_on_connector_example' at 2004/03/09 15:12:23
-= installing_on_connector announce: Topics can be installed on the connector.
