@@ -1868,7 +1868,35 @@ module Watir
             @ieController.clearFrame()
             return false
         end
-        
+
+        # this method is used to drag the entire contents of the text field to another text field
+        #  19 Jan 2005 - It is added as prototype functionality, and may change
+        #   * destination_how   - symbol, :id, :name how we identify the drop target 
+        #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
+        def dragContentsTo( destination_how , destination_what)
+            raise UnknownObjectException ,  "Unable to locate a textfield using #{@how} and #{@what} "  if @o==nil
+
+            destination = @ieController.textField(destination_how , destination_what)
+
+            raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
+
+            @o.focus
+            @o.select()
+            value = self.getProperty("value")
+
+            @o.fireEvent("onSelect")
+            @o.fireEvent("ondragstart")
+            @o.fireEvent("ondrag")
+            destination.fireEvent("onDragEnter")
+            destination.fireEvent("onDragOver")
+            destination.fireEvent("ondrop")
+
+            @o.fireEvent("ondragend")
+            destination.value= ( destination.value + value.to_s  )
+            self.value = ""
+        end
+
+
         # This method clears the contents of the text box.
         #   Raises  UnknownObjectException if the object can't be found
         #   Raises  ObjectDisabledException if the object is disabled
@@ -1935,6 +1963,20 @@ module Watir
             @ieController.clearFrame()
         end
         
+        # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
+        # it is preffered to use the set method.
+        def value=(v)
+            @o.value = v.to_s
+        end
+
+
+        # returns the current value of the text field
+        def value
+            return @o.value.to_s
+        end
+
+
+
         # This method is used internally by setText and appendText
         # It should not be used externally.
         #   * value   - string  - The string to enter into the text field
