@@ -68,12 +68,12 @@ class TC_CheckBox < Test::Unit::TestCase
 
     def test_checkBox_getSTate
        assert_raises(UnknownObjectException) { $ie.checkBox(:name, "noName").getState }  
-       assert_equal( CheckBox::UNCHECKED , $ie.checkBox(:name, "box1").getState )   
-       assert_equal( CheckBox::CHECKED , $ie.checkBox(:name, "box3").getState)   
+       assert_equal( false , $ie.checkBox(:name, "box1").getState )   
+       assert_equal( true , $ie.checkBox(:name, "box3").getState)   
 
        # checkboxes that have the same name but different values
-       assert_equal( CheckBox::UNCHECKED , $ie.checkBox(:name, "box4" , 2).getState )   
-       assert_equal( CheckBox::CHECKED , $ie.checkBox(:name, "box4" , 1).getState)   
+       assert_equal( false , $ie.checkBox(:name, "box4" , 2).getState )   
+       assert_equal( true , $ie.checkBox(:name, "box4" , 1).getState)   
     end
 
     def test_checkBox_set
