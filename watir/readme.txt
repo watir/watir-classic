@@ -45,6 +45,8 @@ Justin McCarthy
 Chris McMahon
 Elisabeth Hendrickson
 Michael Kelly
+Peter Chau
+Danny Faught
 
 
 Acknowledgements:
@@ -54,8 +56,6 @@ Brian Marick
 Jonathan Kohl
 Penny Tonita
 Janet Gregory
-Peter Chau
-Danny Faught
 Andy Tinkham
 Jacinda Scott (logo creator)
 
