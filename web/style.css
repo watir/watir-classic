@@ -34,7 +34,7 @@
 	}
 
 	#banner h1 {
-		color: #000;
+		color: #235B98;
 		font-family: Arial, Trebuchet MS, Helvetica, sans-serif;
 		font-size: 20pt;
 		padding-left: 5px;
@@ -89,7 +89,7 @@
 	}
 	
 	.lb a {
-		color: #000099;
+		color: #235B98;
 		text-decoration: none;
 	}
 
@@ -114,4 +114,22 @@
         font-size: 12pt;
         line-height: 125%;
    	 }
+	 
+	 p.navigation-bar {
+        background-color: #97C6DD;
+	border: medium #ffffff solid;
+	text-align: center
+
+        }
+
+        p.navigation-bar a:link {
+	color: white;
+        text-decoration: none
+        }
+
+        p.navigation-bar a:hover {
+	background-color: #205996;
+        color: white;
+        text-decoration: none
+        }
  	
