@@ -1,2 +1,0 @@
-Version 1.3:
-- The todo shard is a module instead of a class.
