@@ -75,6 +75,11 @@ class Regexp
     end
 end
 
+
+# ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
+# the remaining ARGV as a filter on what tests to run.
+$HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
+
 module Watir
     include Watir::Exception
     
@@ -124,9 +129,6 @@ module Watir
     # Module Watir::BrowserDriver
     #
     
-    # ARGV needs to be deleted to enable the Test::Unit functionatily that grabs
-    # the remaining ARGV as a filter on what tests to run.
-    $HIDE_IE = ARGV.include?('-b'); ARGV.delete('-b')
     
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
@@ -167,30 +169,34 @@ module Watir
         end
         private :create_browser
                 
-        def initialize( logger=nil, how = nil ,what = nil )
-            @logger = logger
+        def initialize( logger = nil, how = nil, what = nil )
             if ((how != nil) and (what != nil))
-                @ie = SeekWindow(how,what)
-                #if it can not find window
-                raise NoMatchingWindowFoundException ,"Unable to locate a window with #{ how} of #{what}"   if @ie == nil
+                @ie = seek_window(how, what)
             else
                 @ie = create_browser            
             end
-            @ie.visible = ! $HIDE_IE
+            set_defaults
+            @logger = logger
+        end
+        
+        def set_defaults
             @frameHandler = FrameHandler.new
             @form = nil
+
+            @ie.visible = ! $HIDE_IE
             @typingspeed = DEFAULT_TYPING_SPEED
             @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
             @defaultSleepTime = DEFAULT_SLEEP_TIME
         end
+        private :set_defaults        
         
-        def SeekWindow(how,what)
+        def seek_window( how, what )
             puts "Seeking Window with #{how}: #{ what }"
             shell = WIN32OLE.new("Shell.Application")
             appWindows = shell.Windows()
             
             ieTemp = nil
-            appWindows.each{|aWin| 
+            appWindows.each do |aWin| 
                 print "Found a window: #{aWin}. "
                 
                 case how
@@ -205,10 +211,16 @@ module Watir
                     rescue
                     end
                 end
-            }
+            end
+
+            #if it can not find window
+            if ieTemp == nil
+                 raise NoMatchingWindowFoundException,
+                 "Unable to locate a window with #{ how} of #{what}"
+            end
             return ieTemp
         end
-        private :SeekWindow
+        private :seek_window
 
         #
         # Accessing data outside the document
@@ -1004,9 +1016,7 @@ module Watir
             i = PopUp.new(self )
         end
         
-        
-        
-        
+
     end # class IE
     
     
@@ -1056,6 +1066,11 @@ module Watir
     # 
     # Module Watir::Control or Watir::BrowserDriver
     #
+
+    class BrowserFacade < IE
+    
+    
+    end
     
     class FrameHandler
         include Watir::Exception
