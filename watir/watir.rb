@@ -2,7 +2,7 @@ require 'win32ole'
 
 
 #
-#  Version "$Revision $"
+#  Version "$Revision$"
 #
 
 class Spinner
