@@ -93,6 +93,24 @@ class TC_Links < Test::Unit::TestCase
     end
 
 
+    def test_link_iterator
+
+        assert_equal(7, $ie.links.length )
+        assert_equal("Link Using a name" , $ie.links[7].innerText)
+
+        index = 1
+        $ie.links.each do |link|
+
+            assert_equal( $ie.link(:index, index).href      , link.href )
+            assert_equal( $ie.link(:index, index).id        , link.id )
+            assert_equal( $ie.link(:index, index).name      , link.name )
+            assert_equal( $ie.link(:index, index).innerText , link.innerText )
+
+            index+=1
+        end
+
+    end
+
 
 end
 
