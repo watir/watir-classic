@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Watir</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Watir</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/watir_rb.html">
+                watir.rb
+                </a>
+        <br />
+                <a href="../files/watir/cookiemanager_rb.html">
+                watir\cookiemanager.rb
+                </a>
+        <br />
+                <a href="../files/watir/exceptions_rb.html">
+                watir\exceptions.rb
+                </a>
+        <br />
+                <a href="../files/watir/watir_simple_rb.html">
+                watir\watir_simple.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name"><a href="Watir/Exception.html">Watir::Exception</a></span>
+      </div>
+    </div>
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Watir/CookieManager.html" class="link">Watir::CookieManager</a><br />
+Module <a href="Watir/Exception.html" class="link">Watir::Exception</a><br />
+Module <a href="Watir/FormWrapperMethods.html" class="link">Watir::FormWrapperMethods</a><br />
+Module <a href="Watir/Simple.html" class="link">Watir::Simple</a><br />
+Class <a href="Watir/Button.html" class="link">Watir::Button</a><br />
+Class <a href="Watir/DefaultLogger.html" class="link">Watir::DefaultLogger</a><br />
+Class <a href="Watir/Div.html" class="link">Watir::Div</a><br />
+Class <a href="Watir/FileField.html" class="link">Watir::FileField</a><br />
+Class <a href="Watir/Form.html" class="link">Watir::Form</a><br />
+Class <a href="Watir/FormWrapper.html" class="link">Watir::FormWrapper</a><br />
+Class <a href="Watir/Frame.html" class="link">Watir::Frame</a><br />
+Class <a href="Watir/IE.html" class="link">Watir::IE</a><br />
+Class <a href="Watir/Image.html" class="link">Watir::Image</a><br />
+Class <a href="Watir/JSButton.html" class="link">Watir::JSButton</a><br />
+Class <a href="Watir/JSCommon.html" class="link">Watir::JSCommon</a><br />
+Class <a href="Watir/Link.html" class="link">Watir::Link</a><br />
+Class <a href="Watir/Links.html" class="link">Watir::Links</a><br />
+Class <a href="Watir/ObjectActions.html" class="link">Watir::ObjectActions</a><br />
+Class <a href="Watir/Option.html" class="link">Watir::Option</a><br />
+Class <a href="Watir/PopUp.html" class="link">Watir::PopUp</a><br />
+Class <a href="Watir/RadioCheckCommon.html" class="link">Watir::RadioCheckCommon</a><br />
+Class <a href="Watir/SelectBox.html" class="link">Watir::SelectBox</a><br />
+Class <a href="Watir/Span.html" class="link">Watir::Span</a><br />
+Class <a href="Watir/SpanDivCommon.html" class="link">Watir::SpanDivCommon</a><br />
+Class <a href="Watir/Spinner.html" class="link">Watir::Spinner</a><br />
+Class <a href="Watir/Table.html" class="link">Watir::Table</a><br />
+Class <a href="Watir/TableCell.html" class="link">Watir::TableCell</a><br />
+Class <a href="Watir/TableRow.html" class="link">Watir::TableRow</a><br />
+Class <a href="Watir/TextField.html" class="link">Watir::TextField</a><br />
+Class <a href="Watir/WatirLogger.html" class="link">Watir::WatirLogger</a><br />
+
+    </div>
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
