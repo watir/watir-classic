@@ -39,7 +39,7 @@
    puts 'Expected Result: '
    puts ' - a google page with results should be shown. "Pragmatic Programmers LLC" should be high on the list.'
   
-   puts 'Actual Result: Check that the "The Pragmatic Programmers, LLC" link actually appears on the page by using an assertion'
+   puts 'Actual Result: Check that the "The Pragmatic Programmers, LLC" link appears on the results page '
    a = $ie.pageContainsText("The Pragmatic Programmers, LLC") 
    if !a 
       puts "Test Failed! Could not find test string: The Pragmatic Programmers, LLC" 
