@@ -120,4 +120,27 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
+    def test_text_field_properties
+
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 199).value}  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 199).name }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 199).id }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 199).disabled }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 199).type }  
+
+        assert_equal( "Hello World" , $ie.text_field(:index, 1).value )
+        assert_equal( "text"        , $ie.text_field(:index, 1).type)
+        assert_equal( "text1"       , $ie.text_field(:index, 1).name )
+        assert_equal( ""            , $ie.text_field(:index, 1).id )
+        assert_equal( false         , $ie.text_field(:index, 1).disabled )
+
+        assert_equal( ""            , $ie.text_field(:index, 2).name )
+        assert_equal( "text2"       , $ie.text_field(:index, 2).id )
+
+        assert(  $ie.text_field(:index, 3).disabled )
+
+
+
+
+    end
 end
