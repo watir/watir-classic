@@ -74,7 +74,7 @@ end
 
 class Regexp
     def matches (x)
-        return self.match( x )
+        return self.match(x) 
     end
 end
 
@@ -165,15 +165,34 @@ module Watir
         # this is used when forms are used. It shouldnt be used otherwise
         attr_accessor :frameHandler
                         
-        def initialize( logger = nil, how = nil, what = nil )
-            if ((how != nil) and (what != nil))
-                attach_browser_window(how, what)
-            else
-                create_browser_window            
+        def initialize(suppress_new_window=nil)
+            unless suppress_new_window
+                create_browser_window
+                set_defaults
             end
-            set_defaults
-            @logger = logger
         end
+        
+        # Create a new IE Window, starting at the specified url.
+        # If no url is given, start empty.
+        def IE.start( url = nil )
+            ie = new
+            ie.goto(url) if url
+            return ie
+        end
+        
+        # Attach to an existing IE window, either by url or title.
+        # IE.attach(:url, 'http://www.google.com')
+        # IE.attach(:title, 'Google') 
+        def IE.attach( how, what )
+            bf = new(true) # don't create window
+            bf.attach_init(how, what)
+            return bf
+        end   
+
+        def attach_init( how, what )
+            attach_browser_window(how, what)
+            set_defaults                        
+        end        
         
         def set_defaults
             @frameHandler = FrameHandler.new
@@ -209,8 +228,11 @@ module Watir
                 when :title
                     # normal windows explorer shells do not have document
                     begin
-                        ieTemp = aWin if (what.matches( aWin.document.title ) )
+                        ieTemp = aWin if (what.matches( aWin.document.title ) ) 
+                    rescue WIN32OLERuntimeError
                     end
+                else
+                    raise ArgumentError
                 end
             end
 
@@ -222,6 +244,10 @@ module Watir
             @ie = ieTemp
         end
         private :attach_browser_window
+
+        def set_logger( logger )
+            @logger = logger
+        end
 
         #
         # Accessing data outside the document
@@ -289,9 +315,8 @@ module Watir
                 # http://groups.google.ca/groups?q=on_event_with_outargs&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=e249d8e7.0410060843.3f55fa05%40posting.google.com&rnum=1
                 # http://groups.google.ca/groups?q=on_event&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=200202211155.UAA05077%40ums509.nifty.ne.jp&rnum=8
                 
-                puts "New Window!"
-                puts "New URL: #{toURL }"
-                puts "Flags: #{flags}"
+                log "New Window URL: #{toURL }"
+                log "Flags: #{flags}"
                 args[1] = true
                 @newWindow = IE.new
                 @newWindow.goto(toURL)
