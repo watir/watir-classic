@@ -749,6 +749,11 @@ class IE
       end
       sleep 0.02
 
+      until @ie.document.readyState == "complete"
+         sleep 0.02
+         print s.next
+      end
+
 
       if @ie.document.frames.length > 0 
          begin
@@ -760,11 +765,6 @@ class IE
             end
          rescue
 
-         end
-      else
-         until @ie.document.readyState == "complete"
-            sleep 0.02
-            print s.next
          end
       end
       print "\b"
