@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Class: SelectBox</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	<link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+	<script type="text/javascript">
+	// <![CDATA[
+
+	function popupCode( url ) {
+		window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+	}
+
+	function toggleCode( id ) {
+		if ( document.getElementById )
+			elem = document.getElementById( id );
+		else if ( document.all )
+			elem = eval( "document.all." + id );
+		else
+			return false;
+
+		elemStyle = elem.style;
+		
+		if ( elemStyle.display != "block" ) {
+			elemStyle.display = "block"
+		} else {
+			elemStyle.display = "none"
+		}
+
+		return true;
+	}
+	
+	// Make codeblocks hidden by default
+	document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+	
+	// ]]>
+	</script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <h1>SelectBox <sup class="type-note">(Class)</sup></h1>
+        <table class="header-table">
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/watir_rb.html">
+                watir.rb
+                </a>
+				<br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="ObjectActions.html">
+                ObjectActions
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+	<div id="bodyContent">
+
+
+	<div id="contextContent">
+
+		<div id="description">
+			<p>
+This class is the way in which select boxes are manipulated. it would not
+normally be created by a user, as it is returned by the selectBox method of
+IEController
+</p>
+
+		</div>
+
+
+		<div id="method-list">
+			<h2 class="section-bar">Methods</h2>
+
+			<div class="name-list">
+			<a href="#M000015">clearSelection</a>&nbsp;&nbsp;
+			<a href="#M000017">getAllContents</a>&nbsp;&nbsp;
+			<a href="#M000018">getSelectedItems</a>&nbsp;&nbsp;
+			<a href="#M000014">new</a>&nbsp;&nbsp;
+			<a href="#M000016">select</a>&nbsp;&nbsp;
+			</div>
+		</div>
+
+
+
+
+			
+
+	</div>
+
+
+
+		<!-- if includes -->
+
+
+		<!-- if method_list -->
+		<div id="methods">
+			<h2 class="section-bar">Public Class methods</h2>
+
+			<div id="method-M000014" class="method-detail">
+				<a name="M000014"></a>
+
+				<div class="method-heading">
+					<a href="SelectBox.src/M000014.html" target="Code" class="method-signature"
+						onclick="popupCode('SelectBox.src/M000014.html');return false;">
+					<span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+returns an initialized instance of a <a href="SelectBox.html">SelectBox</a>
+object
+</p>
+<pre>
+  * ieController  - an instance of an IEController
+  * how           - symbol - how we access the select box
+  * what          - what we use to access the select box, name, id etc
+</pre>
+				</div>
+			</div>
+
+			<h2 class="section-bar">Public Instance methods</h2>
+
+			<div id="method-M000015" class="method-detail">
+				<a name="M000015"></a>
+
+				<div class="method-heading">
+					<a href="SelectBox.src/M000015.html" target="Code" class="method-signature"
+						onclick="popupCode('SelectBox.src/M000015.html');return false;">
+					<span class="method-name">clearSelection</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+this method clears the selected items in the select box
+</p>
+				</div>
+			</div>
+
+			<div id="method-M000017" class="method-detail">
+				<a name="M000017"></a>
+
+				<div class="method-heading">
+					<a href="SelectBox.src/M000017.html" target="Code" class="method-signature"
+						onclick="popupCode('SelectBox.src/M000017.html');return false;">
+					<span class="method-name">getAllContents</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns all the items in the select list as an array. An empty
+array is returned if the select box has no contents
+</p>
+<pre>
+  raises UnknownObjectException  if the select box is not found
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000018" class="method-detail">
+				<a name="M000018"></a>
+
+				<div class="method-heading">
+					<a href="SelectBox.src/M000018.html" target="Code" class="method-signature"
+						onclick="popupCode('SelectBox.src/M000018.html');return false;">
+					<span class="method-name">getSelectedItems</span><span class="method-args">()</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+This method returns all the selected items from the select box as an array
+</p>
+<pre>
+  raises UnknownObjectException  if the select box is not found
+</pre>
+				</div>
+			</div>
+
+			<div id="method-M000016" class="method-detail">
+				<a name="M000016"></a>
+
+				<div class="method-heading">
+					<a href="SelectBox.src/M000016.html" target="Code" class="method-signature"
+						onclick="popupCode('SelectBox.src/M000016.html');return false;">
+					<span class="method-name">select</span><span class="method-args">( item )</span>
+					</a>
+				</div>
+			
+				<div class="method-description">
+					<p>
+this method selects an item, or items in a select box. raises <a
+href="NoValueFoundException.html">NoValueFoundException</a> if the
+specified value is not found
+</p>
+<pre>
+ * item   - the thing to select, string, reg exp or an array of string and reg exps
+</pre>
+				</div>
+			</div>
+
+
+		</div>
+
+
+	</div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    getObjectWithValue (IE)
+
+  -->
+<html>
+<head>
+	<title>getObjectWithValue (IE)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 709</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getObjectWithValue</span>(<span class="ruby-identifier">what</span> , <span class="ruby-identifier">container</span> , <span class="ruby-operator">*</span><span class="ruby-identifier">htmlObjectTypes</span> )
+
+        <span class="ruby-identifier">o</span> = <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-identifier">container</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span><span class="ruby-keyword kw">nil</span>
+            <span class="ruby-keyword kw">begin</span>
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">htmlObjectTypes</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">r</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;type&quot;</span>).<span class="ruby-identifier">downcase</span>)
+                    <span class="ruby-identifier">o</span> = <span class="ruby-identifier">r</span>
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">rescue</span>
+                <span class="ruby-comment cmt"># may not have a value...</span>
+            <span class="ruby-keyword kw">end</span> 
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "DTD/xhtml1-transitional.dtd">
+
+<!--
+
+    getDocument (IE)
+
+  -->
+<html>
+<head>
+	<title>getDocument (IE)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link rel="stylesheet" href="http://www.FaerieMUD.org/stylesheets/rdoc.css" type="text/css" />
+</head>
+<body>
+	<pre><span class="ruby-comment cmt"># File watir.rb, line 394</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getDocument</span>(<span class="ruby-identifier">useForm</span> = <span class="ruby-keyword kw">true</span>)
+        <span class="ruby-comment cmt">#if @formName and useForm</span>
+        <span class="ruby-comment cmt">#    doc = getForm()</span>
+        <span class="ruby-comment cmt">#    puts &quot;Getting a form #{@formName} &quot;</span>
+        <span class="ruby-comment cmt">#elsif @frame == &quot;&quot; and @presetFrame == &quot;&quot;</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@frame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span> <span class="ruby-keyword kw">and</span> <span class="ruby-ivar">@presetFrame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span>
+
+            <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@frame</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span> 
+                <span class="ruby-comment cmt"># using a preset frame</span>
+                <span class="ruby-identifier">frameToUse</span> = <span class="ruby-ivar">@presetFrame</span>
+            <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">frameToUse</span> = <span class="ruby-ivar">@frame</span>
+            <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Getting a document in a frame - frameName is: #{frameToUse} &quot;</span>
+
+            <span class="ruby-identifier">allFrames</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>
+            <span class="ruby-identifier">frameExists</span> = <span class="ruby-keyword kw">false</span>
+
+            <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span> <span class="ruby-operator">..</span> <span class="ruby-identifier">allFrames</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
+                <span class="ruby-keyword kw">begin</span>
+                    <span class="ruby-identifier">frameExists</span> = <span class="ruby-keyword kw">true</span>   <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">frameToUse</span>  <span class="ruby-operator">==</span> <span class="ruby-identifier">allFrames</span>[<span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
+                <span class="ruby-keyword kw">rescue</span>
+                    <span class="ruby-comment cmt"># probably no name on this object</span>
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownFrameException</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">frameExists</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>
+            <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@ie</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">frames</span>[<span class="ruby-identifier">frameToUse</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">document</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-ivar">@doc</span> = <span class="ruby-identifier">doc</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">doc</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
