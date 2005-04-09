@@ -159,12 +159,602 @@ module Watir
     # Module Watir::BrowserDriver
     #
     
+
+    module FactoryMethods 
+        include Watir::Exception
+
+        def log ( what )
+            @ieController.logger.debug( what ) if @logger
+        end
+
+        def wait( noSleep  = false )
+             @ieController.waitForIE( noSleep )
+        end
+        alias waitForIE wait
+
+        #
+        # Factory Methods
+        #
+
+        # this method is the main way of accessing a frame 
+        #   * frame_name  - string, the name of the frame to access
+        def frame( frame_name)
+            return Frame.new(self, frame_name)
+        end
+
+ 
+        # this method is used to access a form.
+        # available ways of accessing it are, :index , :name, :id, :method, :action
+        #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if formName is not supplied this parameter is the NAME of the form
+        #  * formName   - String - the text associated with the symbol
+        def form( how , formName=nil )
+            # If only one value is supplied, it is a form name
+            if formName == nil
+                formName = how
+                formHow = :name
+            else
+                formName = formName
+                formHow = how
+            end
+            log "form how is #{formHow} name is #{formName}"      
+            return Form.new(self, formHow, formName)      
+        end
+
+        # This method is used to get a table from the page. 
+        # :index (1 based counting)and :id are supported. 
+        #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
+        # :index can be used when there are multiple forms on a page. 
+        # The first form can be accessed with :index 1, the second :index 2, etc. 
+        #   * how - symbol - the way we look for the table. Supported values are
+        #                  - :id
+        #                  - :index
+        #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
+        def table( how, what )
+            return Table.new( self , how, what)
+        end
+
+        # this is the main method for accessing the tables iterator. It returns a Tables object
+        def tables()
+            return Tables.new(self)
+        end
+
+        # this method accesses a table cell. 
+        # how - symbol - how we access the cell,  :id is supported
+        def cell( how, what )
+           return TableCell.new( self, how, what)
+        end
+
+        # this method accesses a table row. 
+        # how - symbol - how we access the row,  :id is supported
+        def row( how, what )
+           return TableRow.new( self, how, what)
+        end
+
+
+        # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
+        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # Returns a Button object.
+        def button( how , what=nil )
+            if how.kind_of? Symbol and what != nil
+                return Button.new(self, how , what )
+            elsif how.kind_of? String and what == nil
+                log "how is a string - #{how}"
+                return Button.new(self, :caption, how)
+            else
+                raise MissingWayOfFindingObjectException
+            end
+        end
+
+        # this is the main method for accessing the buttons iterator. It returns a Buttons object
+        def buttons()
+            return Buttons.new(self)
+        end
+
+
+        # This is the main method for accessing a reset button ( <input type = reset> ).
+        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # Returns a Reset object.
+        def reset( how , what=nil )
+            if how.kind_of? Symbol and what != nil
+                return Reset.new(self, how , what )
+            elsif how.kind_of? String and what == nil
+                log "how is a string - #{how}"
+                return Reset.new(self, :caption, how)
+            else
+                raise MissingWayOfFindingObjectException
+            end
+        end
+
+
+
+        # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
+        #  *  how   - symbol - how we access the field , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns a FileField object
+        def file_field( how , what )
+            f = FileField.new(self , how, what)
+        end
+        alias fileField file_field
+        
+        # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
+        #  *  how   - symbol - how we access the field , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns a TextFieldobject
+        def text_field( how , what )
+            t = TextField.new(self , how, what)
+        end
+        alias textField text_field
+
+        # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
+        def text_fields
+            return Text_Fields.new(self)
+        end
+
+
+        def hidden( how, what )
+            return Hidden.new(self, how, what)
+        end
+
+        # this is the method for accessing the hiddens iterator. It returns a Hiddens object
+        def hiddens
+            return Hiddens.new(self)
+        end
+
+
+
+        # This is the main method for accessing a selection list. Usually a <select> HTML tag.
+        #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns a SelectBox object
+        def select_list( how , what )
+            s = SelectBox.new(self , how, what)
+        end
+        alias selectBox select_list
+
+        # this is the method for accessing thr select lists iterator. Returns a Select_Lists object
+        def select_lists()
+            return Select_Lists.new(self)
+        end
+
+
+        
+        # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
+        #  *  how   - symbol - how we access the check box , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
+        # returns a RadioCheckCommon object
+        def checkbox( how , what , value=nil)
+            c = RadioCheckCommon.new( self, how, what, "checkbox", value)
+        end
+        alias checkBox checkbox
+
+        # this is the method for accessing thr check boxes iterator. Returns a Check_Boxes object
+        def checkboxes
+            return Check_Boxes.new(self)
+        end
+
+        # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
+        #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
+        #  *  what  - string, int or regexp , what we are looking for, 
+        #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
+        # returns a RadioCheckCommon object
+        def radio( how , what , value=nil)
+            return RadioCheckCommon.new( self, how, what, "radio", value)
+        end
+
+        # this is the method for accessing the radio buttons iterator. Returns a Radios object
+        def radios
+            return Radios.new(self)
+        end
+        
+        # This is the main method for accessing a link.
+        #  *  how   - symbol - how we access the link, :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns a Link object
+        def link( how , what)
+            return Link.new(self , how, what )
+        end
+
+        # this is the factory method for accessing the links collection. Returns a Links object
+        def links
+            return Links.new(self)
+        end
+
+        
+        # This is the main method for accessing images.
+        #  *  how   - symbol - how we access the image, :index, :id, :name , :src
+        #  *  what  - string, int or re , what we are looking for, 
+        # returns an Image object
+        #This method retrieves an image on a web page for use.
+        #Uses an <img src="image.gif"> HTML tag.
+        def image( how , what)
+            i = Image.new(self , how, what )
+        end
+        
+        # this is the factory method for accessing the images collection. Returns an Images object
+        def images
+            return Images.new(self)
+        end
+
+        # This is the main method for accessing JavaScript popups.
+        # returns a PopUp object
+        def popup( )
+            i = PopUp.new(self )
+        end
+
+
+        # This is the main method for accessing divs.
+        #  *  how   - symbol - how we access the div, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        # returns an Div object
+        def div( how , what )
+            return Div.new(self , how , what)
+        end
+
+        # this is the main method for accessing the divs iterator. Returns a Divs object
+        def divs
+            return Divs.new(self)
+        end
+
+        # This is the main method for accessing span tags
+        #  *  how   - symbol - how we access the span, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        # returns an Span object
+        def span( how , what )
+            return Span.new(self , how , what)
+        end
+
+        # this is the main method for accessing the spans iterator. Returns a Spans object
+        def spans()
+            return Spans.new(self)
+        end
+
+
+
+
+        
+        #
+        # Searching for Page Elements
+        # Not for external consumption
+        #        
+
+        
+        def getContainer()
+            return getDocument.body.all 
+        end
+        private :getContainer
+                
+        # This is the main method for finding objects on a web page.
+        #   * how - symbol - the way we look for the object. Supported values are
+        #                  - :name
+        #                  - :id
+        #                  - :index
+        #                  - :value
+        #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
+        #   * types - what object types we will look at. Only used when index is specified as the how.
+        #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
+        def getObject( how, what , types=nil ,  value=nil )
+            container = getContainer()
+            
+            if types
+                if types.kind_of?(Array)
+                    elementTypes = types
+                else
+                    elementTypes = [types]
+                end
+            end
+            
+            o = nil
+            
+            log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
+            
+            if how == :index
+                o = getObjectAtIndex( container, what , types , value)
+            elsif how == :caption || how == :value 
+                o = getObjectWithValue( what, container , "submit" , "button" )
+            elsif how == :src || how ==:alt
+                o = getObjectWithSrcOrAlt(what , how , container, types)
+            else
+                log "How is #{how}"
+                container.each do |object|
+                    next  unless o == nil
+                    
+                    begin
+                        ns = false
+                        case how
+                        when :id
+                            attribute = object.invoke("id")
+                        when :name
+                            attribute = object.invoke("name")
+                        when :beforeText
+                            attribute = object.getAdjacentText("afterEnd").strip
+                        when :afterText
+                            attribute = object.getAdjacentText("beforeBegin").strip
+                        else
+                            next
+                        end
+                        
+                        if  what.matches( attribute )  #attribute == what
+                            if types
+                                if elementTypes.include?(object.invoke("type"))
+                                    if value
+                                        log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                        if object.value.to_s == value.to_s
+                                            o = object
+                                        end
+                                    else # no value
+                                        o = object
+                                    end
+                                end
+                            else # no types
+                                o = object
+                            end
+                        end
+                    rescue => e
+                        log 'IE#getObject error ' + e.to_s 
+                    end
+                    
+                end
+            end
+            
+            # If a value has been supplied, such as with a check box or a radio button, 
+            # we need to go through the collection and get the correct one.
+            if value
+                begin 
+                    n.each do |thisObject|
+                        if thisObject.value == value.to_s and o ==nil
+                            o = thisObject
+                        end 
+                    end
+                rescue
+                    # probably no value on this object
+                end
+            end
+            
+            return o
+        end
+        
+        # This method is used internally to locate an object that has a value specified.
+        # It is normally used for buttons with a caption (HTML value attribute).
+        #   * what            - what we are looking for - normally the value or caption of a button
+        #   * container         - the container that we are searching in ( a form or the body of a document )
+        #   * *htmlObjectTypes  - an array of the objects we are interested in
+        def getObjectWithValue(what , container , *htmlObjectTypes )
+            o = nil
+            container.each do |r|
+                next unless o == nil
+                begin
+                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
+                    o = r if what.matches(r.value)
+                rescue
+                    # may not have a value...
+                end 
+            end
+            return o
+        end
+        
+        # This method is used on buttons that are of type "image". Usually an <img src=""> or <input type="image"> HTML tag.
+        # When an image is used to submit a form, it is treated as a button.
+        #   * what            - what we are looking for - normally the src or alt tag attribute of a button
+        #   * container         - the container that we are searching in ( a form or the body of a document )
+        #   * htmlObjectTypes  - an array of the objects we are interested in
+        def getObjectWithSrcOrAlt( what , how , container , htmlObjectTypes )
+            o = nil
+            container.each do |r|
+                next unless o == nil
+                begin
+                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
+                    case how
+                    when :alt
+                        attribute = r.alt
+                    when :src
+                        attribute = r.src
+                    else
+                        next
+                    end
+                    
+                    o = r if what.matches( attribute )         
+                    
+                rescue
+                end 
+            end
+            return o
+        end
+        
+        # This method is used to locate an object when an "index" is used. 
+        # It is used internally.
+        #   * container  - the container we are looking in
+        #   * index      - the index of the element we want to get - 1 based counting
+        #   * types      - an array of the type of objects to look at
+        #   * value      - the value of the object to get, used when getting itens like checkboxes and radios
+        def getObjectAtIndex(container , index , types , value=nil)
+            log" getting object #{types.to_s}  at index( #{index}"
+            
+            o = nil
+            objectIndex = 1
+            container.each do | thisObject |
+                begin
+                    
+                    if types.include?( thisObject.invoke("type") )
+                        begin 
+                            oName = thisObject.invoke("name")
+                        rescue
+                            oName = "unknown"
+                        end
+                        log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
+                        
+                        if objectIndex.to_s == index.to_s
+                            o = thisObject
+                            if value
+                                if value == thisObject.value
+                                    break
+                                end
+                            else
+                                break
+                            end
+                            
+                        end
+                        objectIndex +=1
+                    end
+                rescue
+                    # probably doesnt support type
+                end
+            end
+            return o
+        end
+        
+        # This method gets a link from the document. This is a hyperlink, generally declared in the <a href="http://testsite">test site</a> HTML tag.
+        #   * how  - symbol - how we get the link Supported types are:
+        #                     :index - the link at position x , 1 based
+        #                     :url   - get the link that has a url that matches. A regular expression match is performed
+        #                     :text  - get link based on the supplied text. uses either a string or regular expression match
+        #   * what - depends on how - an integer for index, a string or regexp for url and text
+        def getLink( how, what )
+            doc = getDocument()
+            links = doc.links
+            
+            # Guard ensures watir won't crash if somehow the list of links is nil
+            if (links == nil)
+                raise UnknownObjectException, "Unknown Object in getLink: attempted to click a link when no links present"
+            end
+            
+            link = nil
+            case how
+                
+            when :index
+                begin
+                    link = links[ (what-1).to_s ]
+                rescue
+                    link=nil
+                end
+                
+            when :url
+                links.each do |thisLink|
+                    if what.matches(thisLink.href) 
+                        link = thisLink if link == nil
+                    end
+                end
+                
+            when :text
+                links.each do |thisLink|
+                    if what.matches(thisLink.innerText) 
+                        link = thisLink if link == nil
+                    end
+                end
+                
+            when :id
+                links.each do |thisLink|
+                    if what.matches(thisLink.invoke("id"))
+                        link = thisLink if link == nil
+                    end
+                end
+            when :name
+                links.each do |thisLink|
+                    if what.matches(thisLink.invoke("name"))
+                        link = thisLink if link == nil
+                    end
+                end
+
+            when :title
+                links.each do |thisLink|
+                    if what.matches(thisLink.invoke("title"))
+                        link = thisLink if link == nil
+                    end
+                end
+
+                
+            when :beforeText
+                links.each do |thisLink|
+                    if what.matches(thisLink.getAdjacentText("afterEnd").strip)
+                        link = thisLink if link == nil
+                    end
+                end
+
+            when :afterText
+                links.each do |thisLink|
+                    if what.matches(thisLink.getAdjacentText("beforeBegin").strip)
+                        link = thisLink if link == nil
+                    end
+                end
+
+
+            else
+                raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
+            end
+            
+            # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
+            # the nil-related exceptions and provide useful information to the user.
+            return link
+        
+        end
+
+
+        # This method gets a table row or cell 
+        #   * how  - symbol - how we get the link row or cell types are:
+        #            id
+        #   * what -  a string or regexp 
+        def getTablePart( part , how , what )
+             doc = getDocument()
+             parts = doc.all.tags( part )
+             n = nil
+             parts.each do | p |
+                 next unless n==nil
+                 if what.matches( p.invoke("id") )
+                     n = p 
+                 end
+             end
+             return n
+        end
+
+        # this method is used to get elements like SPAN or DIV
+        #---
+        # Dont me make me private!
+        #+++
+        def getNonControlObject(part , how, what )
+
+             doc = getDocument()
+             parts = doc.all.tags( part )
+             n = nil
+             case how
+                when :id
+                    attribute = "id"
+                when :name
+                    attribute = "name"
+                when :title
+                    attribute = "title"
+              end
+
+              if attribute
+                 parts.each do | p |
+                     next unless n==nil
+                     n = p if what.matches( p.invoke(attribute) )
+                 end
+              elsif how == :index
+                  count = 1
+                  parts.each do | p |
+                     next unless n==nil
+                     n = p if what == count
+                     count +=1
+                  end
+              else
+                  raise MissingWayOfFindingObjectException, "unknown way of finding a #{ part} ( {what} )"
+              end
+            return n
+
+        end
+
+
+
+    end
+
     
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
     class IE
         include Watir::Exception
-
+        include FactoryMethods 
         # The revision number ( according to CVS )
         REVISION = "$Revision$"
 
@@ -729,334 +1319,6 @@ module Watir
         alias showSpans show_spans
 
 
-        
-        #
-        # Searching for Page Elements
-        # Not for external consumption
-        #        
-        
-        def getContainer()
-            return getDocument.body.all
-        end
-        private :getContainer
-                
-        # This is the main method for finding objects on a web page.
-        #   * how - symbol - the way we look for the object. Supported values are
-        #                  - :name
-        #                  - :id
-        #                  - :index
-        #                  - :value
-        #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
-        #   * types - what object types we will look at. Only used when index is specified as the how.
-        #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-        def getObject( how, what , types=nil ,  value=nil )
-            container = getContainer()
-            
-            if types
-                if types.kind_of?(Array)
-                    elementTypes = types
-                else
-                    elementTypes = [types]
-                end
-            end
-            
-            o = nil
-            
-            log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
-            
-            if how == :index
-                o = getObjectAtIndex( container, what , types , value)
-            elsif how == :caption || how == :value 
-                o = getObjectWithValue( what, container , "submit" , "button" )
-            elsif how == :src || how ==:alt
-                o = getObjectWithSrcOrAlt(what , how , container, types)
-            else
-                log "How is #{how}"
-                container.each do |object|
-                    next  unless o == nil
-                    
-                    begin
-                        ns = false
-                        case how
-                        when :id
-                            attribute = object.invoke("id")
-                        when :name
-                            attribute = object.invoke("name")
-                        when :beforeText
-                            attribute = object.getAdjacentText("afterEnd").strip
-                        when :afterText
-                            attribute = object.getAdjacentText("beforeBegin").strip
-                        else
-                            next
-                        end
-                        
-                        if  what.matches( attribute )  #attribute == what
-                            if types
-                                if elementTypes.include?(object.invoke("type"))
-                                    if value
-                                        log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                                        if object.value.to_s == value.to_s
-                                            o = object
-                                        end
-                                    else # no value
-                                        o = object
-                                    end
-                                end
-                            else # no types
-                                o = object
-                            end
-                        end
-                    rescue => e
-                        log 'IE#getObject error ' + e.to_s 
-                    end
-                    
-                end
-            end
-            
-            # If a value has been supplied, such as with a check box or a radio button, 
-            # we need to go through the collection and get the correct one.
-            if value
-                begin 
-                    n.each do |thisObject|
-                        if thisObject.value == value.to_s and o ==nil
-                            o = thisObject
-                        end 
-                    end
-                rescue
-                    # probably no value on this object
-                end
-            end
-            
-            return o
-        end
-        
-        # This method is used internally to locate an object that has a value specified.
-        # It is normally used for buttons with a caption (HTML value attribute).
-        #   * what            - what we are looking for - normally the value or caption of a button
-        #   * container         - the container that we are searching in ( a form or the body of a document )
-        #   * *htmlObjectTypes  - an array of the objects we are interested in
-        def getObjectWithValue(what , container , *htmlObjectTypes )
-            o = nil
-            container.each do |r|
-                next unless o == nil
-                begin
-                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
-                    o = r if what.matches(r.value)
-                rescue
-                    # may not have a value...
-                end 
-            end
-            return o
-        end
-        
-        # This method is used on buttons that are of type "image". Usually an <img src=""> or <input type="image"> HTML tag.
-        # When an image is used to submit a form, it is treated as a button.
-        #   * what            - what we are looking for - normally the src or alt tag attribute of a button
-        #   * container         - the container that we are searching in ( a form or the body of a document )
-        #   * htmlObjectTypes  - an array of the objects we are interested in
-        def getObjectWithSrcOrAlt( what , how , container , htmlObjectTypes )
-            o = nil
-            container.each do |r|
-                next unless o == nil
-                begin
-                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
-                    case how
-                    when :alt
-                        attribute = r.alt
-                    when :src
-                        attribute = r.src
-                    else
-                        next
-                    end
-                    
-                    o = r if what.matches( attribute )         
-                    
-                rescue
-                end 
-            end
-            return o
-        end
-        
-        # This method is used to locate an object when an "index" is used. 
-        # It is used internally.
-        #   * container  - the container we are looking in
-        #   * index      - the index of the element we want to get - 1 based counting
-        #   * types      - an array of the type of objects to look at
-        #   * value      - the value of the object to get, used when getting itens like checkboxes and radios
-        def getObjectAtIndex(container , index , types , value=nil)
-            log" getting object #{types.to_s}  at index( #{index}"
-            
-            o = nil
-            objectIndex = 1
-            container.each do | thisObject |
-                begin
-                    
-                    if types.include?( thisObject.invoke("type") )
-                        begin 
-                            oName = thisObject.invoke("name")
-                        rescue
-                            oName = "unknown"
-                        end
-                        log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
-                        
-                        if objectIndex.to_s == index.to_s
-                            o = thisObject
-                            if value
-                                if value == thisObject.value
-                                    break
-                                end
-                            else
-                                break
-                            end
-                            
-                        end
-                        objectIndex +=1
-                    end
-                rescue
-                    # probably doesnt support type
-                end
-            end
-            return o
-        end
-        
-        # This method gets a link from the document. This is a hyperlink, generally declared in the <a href="http://testsite">test site</a> HTML tag.
-        #   * how  - symbol - how we get the link Supported types are:
-        #                     :index - the link at position x , 1 based
-        #                     :url   - get the link that has a url that matches. A regular expression match is performed
-        #                     :text  - get link based on the supplied text. uses either a string or regular expression match
-        #   * what - depends on how - an integer for index, a string or regexp for url and text
-        def getLink( how, what )
-            doc = getDocument()
-            links = doc.links
-            
-            # Guard ensures watir won't crash if somehow the list of links is nil
-            if (links == nil)
-                raise UnknownObjectException, "Unknown Object in getLink: attempted to click a link when no links present"
-            end
-            
-            link = nil
-            case how
-                
-            when :index
-                begin
-                    link = links[ (what-1).to_s ]
-                rescue
-                    link=nil
-                end
-                
-            when :url
-                links.each do |thisLink|
-                    if what.matches(thisLink.href) 
-                        link = thisLink if link == nil
-                    end
-                end
-                
-            when :text
-                links.each do |thisLink|
-                    if what.matches(thisLink.innerText) 
-                        link = thisLink if link == nil
-                    end
-                end
-                
-            when :id
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("id"))
-                        link = thisLink if link == nil
-                    end
-                end
-            when :name
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("name"))
-                        link = thisLink if link == nil
-                    end
-                end
-
-            when :title
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("title"))
-                        link = thisLink if link == nil
-                    end
-                end
-
-                
-            when :beforeText
-                links.each do |thisLink|
-                    if what.matches(thisLink.getAdjacentText("afterEnd").strip)
-                        link = thisLink if link == nil
-                    end
-                end
-
-            when :afterText
-                links.each do |thisLink|
-                    if what.matches(thisLink.getAdjacentText("beforeBegin").strip)
-                        link = thisLink if link == nil
-                    end
-                end
-
-
-            else
-                raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
-            end
-            
-            # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
-            # the nil-related exceptions and provide useful information to the user.
-            return link
-        end
-
-        # This method gets a table row or cell 
-        #   * how  - symbol - how we get the link row or cell types are:
-        #            id
-        #   * what -  a string or regexp 
-        def getTablePart( part , how , what )
-             doc = getDocument()
-             parts = doc.all.tags( part )
-             n = nil
-             parts.each do | p |
-                 next unless n==nil
-                 if what.matches( p.invoke("id") )
-                     n = p 
-                 end
-             end
-             return n
-        end
-
-        # this method is used to get elements like SPAN or DIV
-        #---
-        # Dont me make me private!
-        #+++
-        def getNonControlObject(part , how, what )
-
-             doc = getDocument()
-             parts = doc.all.tags( part )
-             n = nil
-             case how
-                when :id
-                    attribute = "id"
-                when :name
-                    attribute = "name"
-                when :title
-                    attribute = "title"
-              end
-
-              if attribute
-                 parts.each do | p |
-                     next unless n==nil
-                     n = p if what.matches( p.invoke(attribute) )
-                 end
-              elsif how == :index
-                  count = 1
-                  parts.each do | p |
-                     next unless n==nil
-                     n = p if what == count
-                     count +=1
-                  end
-              else
-                  raise MissingWayOfFindingObjectException, "unknown way of finding a #{ part} ( {what} )"
-              end
-            return n
-
-        end
-
         #
         # This method gives focus to the frame
         # It may be removed and become part of the frame object
@@ -1067,245 +1329,6 @@ module Watir
         end
 
        
-        #
-        # Factory Methods
-        #
-
-        # this method is the main way of accessing a frame 
-        #   * frame_name  - string, the name of the frame to access
-        def frame( frame_name)
-            return Frame.new(self, frame_name)
-        end
-
- 
-        # this method is used to access a form.
-        # available ways of accessing it are, :index , :name, :id, :method, :action
-        #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if formName is not supplied this parameter is the NAME of the form
-        #  * formName   - String - the text associated with the symbol
-        def form( how , formName=nil )
-            # If only one value is supplied, it is a form name
-            if formName == nil
-                formName = how
-                formHow = :name
-            else
-                formName = formName
-                formHow = how
-            end
-            log "form how is #{formHow} name is #{formName}"      
-            return Form.new(self, formHow, formName)      
-        end
-
-        # This method is used to get a table from the page. 
-        # :index (1 based counting)and :id are supported. 
-        #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
-        # :index can be used when there are multiple forms on a page. 
-        # The first form can be accessed with :index 1, the second :index 2, etc. 
-        #   * how - symbol - the way we look for the table. Supported values are
-        #                  - :id
-        #                  - :index
-        #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
-        def table( how, what )
-            return Table.new( self , how, what)
-        end
-
-        # this is the main method for accessing the tables iterator. It returns a Tables object
-        def tables()
-            return Tables.new(self)
-        end
-
-        # this method accesses a table cell. 
-        # how - symbol - how we access the cell,  :id is supported
-        def cell( how, what )
-           return TableCell.new( self, how, what)
-        end
-
-        # this method accesses a table row. 
-        # how - symbol - how we access the row,  :id is supported
-        def row( how, what )
-           return TableRow.new( self, how, what)
-        end
-
-
-        # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
-        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # Returns a Button object.
-        def button( how , what=nil )
-            if how.kind_of? Symbol and what != nil
-                return Button.new(self, how , what )
-            elsif how.kind_of? String and what == nil
-                log "how is a string - #{how}"
-                return Button.new(self, :caption, how)
-            else
-                raise MissingWayOfFindingObjectException
-            end
-        end
-
-        # this is the main method for accessing the buttons iterator. It returns a Buttons object
-        def buttons()
-            return Buttons.new(self)
-        end
-
-
-        # This is the main method for accessing a reset button ( <input type = reset> ).
-        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # Returns a Reset object.
-        def reset( how , what=nil )
-            if how.kind_of? Symbol and what != nil
-                return Reset.new(self, how , what )
-            elsif how.kind_of? String and what == nil
-                log "how is a string - #{how}"
-                return Reset.new(self, :caption, how)
-            else
-                raise MissingWayOfFindingObjectException
-            end
-        end
-
-
-
-        # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
-        #  *  how   - symbol - how we access the field , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # returns a FileField object
-        def file_field( how , what )
-            f = FileField.new(self , how, what)
-        end
-        alias fileField file_field
-        
-        # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
-        #  *  how   - symbol - how we access the field , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # returns a TextFieldobject
-        def text_field( how , what )
-            t = TextField.new(self , how, what)
-        end
-        alias textField text_field
-
-        # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
-        def text_fields
-            return Text_Fields.new(self)
-        end
-
-
-        def hidden( how, what )
-            return Hidden.new(self, how, what)
-        end
-
-        # this is the method for accessing the hiddens iterator. It returns a Hiddens object
-        def hiddens
-            return Hiddens.new(self)
-        end
-
-
-
-        # This is the main method for accessing a selection list. Usually a <select> HTML tag.
-        #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # returns a SelectBox object
-        def select_list( how , what )
-            s = SelectBox.new(self , how, what)
-        end
-        alias selectBox select_list
-
-        # this is the method for accessing thr select lists iterator. Returns a Select_Lists object
-        def select_lists()
-            return Select_Lists.new(self)
-        end
-
-
-        
-        # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
-        #  *  how   - symbol - how we access the check box , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
-        # returns a RadioCheckCommon object
-        def checkbox( how , what , value=nil)
-            c = RadioCheckCommon.new( self, how, what, "checkbox", value)
-        end
-        alias checkBox checkbox
-
-        # this is the method for accessing thr check boxes iterator. Returns a Check_Boxes object
-        def checkboxes
-            return Check_Boxes.new(self)
-        end
-
-        # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
-        #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
-        #  *  what  - string, int or regexp , what we are looking for, 
-        #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
-        # returns a RadioCheckCommon object
-        def radio( how , what , value=nil)
-            return RadioCheckCommon.new( self, how, what, "radio", value)
-        end
-
-        # this is the method for accessing the radio buttons iterator. Returns a Radios object
-        def radios
-            return Radios.new(self)
-        end
-        
-        # This is the main method for accessing a link.
-        #  *  how   - symbol - how we access the link, :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        # returns a Link object
-        def link( how , what)
-            return Link.new(self , how, what )
-        end
-
-        # this is the factory method for accessing the links collection. Returns a Links object
-        def links
-            return Links.new(self)
-        end
-
-        
-        # This is the main method for accessing images.
-        #  *  how   - symbol - how we access the image, :index, :id, :name , :src
-        #  *  what  - string, int or re , what we are looking for, 
-        # returns an Image object
-        #This method retrieves an image on a web page for use.
-        #Uses an <img src="image.gif"> HTML tag.
-        def image( how , what)
-            i = Image.new(self , how, what )
-        end
-        
-        # this is the factory method for accessing the images collection. Returns an Images object
-        def images
-            return Images.new(self)
-        end
-
-        # This is the main method for accessing JavaScript popups.
-        # returns a PopUp object
-        def popup( )
-            i = PopUp.new(self )
-        end
-
-
-        # This is the main method for accessing divs.
-        #  *  how   - symbol - how we access the div, :index, :id, :name 
-        #  *  what  - string, integer or re , what we are looking for, 
-        # returns an Div object
-        def div( how , what )
-            return Div.new(self , how , what)
-        end
-
-        # this is the main method for accessing the divs iterator. Returns a Divs object
-        def divs
-            return Divs.new(self)
-        end
-
-        # This is the main method for accessing span tags
-        #  *  how   - symbol - how we access the span, :index, :id, :name 
-        #  *  what  - string, integer or re , what we are looking for, 
-        # returns an Span object
-        def span( how , what )
-            return Span.new(self , how , what)
-        end
-
-        # this is the main method for accessing the spans iterator. Returns a Spans object
-        def spans()
-            return Spans.new(self)
-        end
-
     end # class IE
     
     
@@ -2274,6 +2297,12 @@ module Watir
     # this class is a table cell - when called via the table object
     class TableCell <ObjectActions
 
+        include Watir::Exception
+        include FactoryMethods 
+
+        attr_reader :typingspeed      
+
+
         # Returns an initialized instance of a table cell          
         #   * ieController  - an instance of an IEController       
         #   * how         - symbol - how we access the cell        
@@ -2290,7 +2319,14 @@ module Watir
              super( @o )   
              @how = how   
              @what = what   
+             @typingspeed = @ieController.typingspeed      
+             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+
          end 
+
+        def getContainer()
+            return @o .all
+        end
 
         def text()
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
@@ -2298,9 +2334,10 @@ module Watir
         end
         alias to_s text
  
+=begin
         # Returns the object contained in the cell as a Button
-        def button
-            return Button.new(@ieController,:from_object,getChildThatIs( @o , ["button", "submit" , "image"] ) )
+        def button( how=nil, what=nil)
+            return Button.new(@ieController,:from_object,getChildThatIs( @o , ["button", "submit" , "image"] ) ) 
         end
 
         # Returns the object contained in the cell as a Table
@@ -2329,7 +2366,7 @@ module Watir
             return child_object
 
         end
-
+=end
    end
 
 

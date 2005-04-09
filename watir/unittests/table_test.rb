@@ -66,23 +66,35 @@ class TC_Tables < Test::Unit::TestCase
  
         table = $ie.table(:index,1)
    
-        table[1][1].button.click
+        table[1][1].button(:index,1).click
         assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
-        table[2][1].button.click
+        table[2][1].button(:index,1).click
         assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
+
+        table[1][1].button(:id,'b1').click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
+
+        assert_raises(UnknownObjectException   ) { table[1][1].button(:id,'b_missing').click }
+
+        table[3][1].button(:index,2).click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
+
+
         
-        $ie.table(:index,1)[4][1].text_field.set("123")
+
+        
+        $ie.table(:index,1)[4][1].text_field(:index,1).set("123")
         assert($ie.text_field(:index,2).verify_contains("123"))
 
         # check when a cell contains 2 objects
 
         # if there were 2 different html objects in the same cell, some weird things happened ( button caption could change for example)
-        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field.value )
-        $ie.table(:index,1)[5][1].text_field.click
-        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field.value )
+        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
+        $ie.table(:index,1)[5][1].text_field(:index,1).click
+        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
 
-        $ie.table(:index,1)[5][1].button.click
-        assert_equal( '' , $ie.table(:index,1)[5][1].text_field.value )
+        $ie.table(:index,1)[5][1].button(:index,1).click
+        assert_equal( '' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
 
 
     end
@@ -93,7 +105,7 @@ class TC_Tables < Test::Unit::TestCase
         button = $ie.button(:id,"b1")
         table = Table.create_from_element($ie,button)
        
-        table[2][1].button.click
+        table[2][1].button(:index,1).click
         assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
     end
 
