@@ -52,6 +52,50 @@ class TC_Divs < Test::Unit::TestCase
     end
 
 
+    def test_div_iterator
+ 
+        assert_equal( 7 , $ie.divs.length)
+        assert_equal( "div1" , $ie.divs[1].id )
+
+        #puts "1.id is " + $ie.divs[1].id.to_s
+        #puts "2.id is " + $ie.divs[2].id.to_s
+
+
+        index =1
+        $ie.divs.each do |s|
+            puts "each - div= " + s.to_s
+            assert_equal($ie.div(:index, index ).name , s.name )
+            assert_equal($ie.div(:index, index ).id , s.id )
+            assert_equal($ie.div(:index, index ).style , s.style )
+            index +=1
+        end
+        assert_equal(index-1, $ie.divs.length)   # -1 as we add 1 at the end of the loop
+    end
+
+
+    def test_objects_in_div
+ 
+        assert($ie.div(:id, 'buttons1').button(:index,1).exists? )
+        assert_false($ie.div(:id, 'buttons1').button(:index,3).exists? )
+        assert($ie.div(:id, 'buttons1').button(:name,'b1').exists? )
+
+        assert($ie.div(:id, 'buttons2').button(:index,1).exists? )
+        assert($ie.div(:id, 'buttons2').button(:index,2).exists? )
+        assert_false($ie.div(:id, 'buttons1').button(:index,3).exists? )
+        
+        $ie.div(:id, 'buttons1').button(:index,1).click
+
+        assert_equal( 'button1' ,   $ie.div(:id , 'text_fields1').text_field(:index,1).value)
+
+        assert_equal( 3 , $ie.div(:id , 'text_fields1').text_fields.length )
+
+
+    end
+
+
+
+
+
     #---- Span Tests ---
 
     def test_spans
@@ -95,7 +139,7 @@ class TC_Divs < Test::Unit::TestCase
 
     def test_span_iterator
  
-        assert_equal( 4 , $ie.spans.length)
+        assert_equal( 7 , $ie.spans.length)
         assert_equal( "span1" , $ie.spans[1].id )
 
         #puts "1.id is " + $ie.spans[1].id.to_s
@@ -112,5 +156,27 @@ class TC_Divs < Test::Unit::TestCase
         end
         assert_equal(index-1, $ie.spans.length)   # -1 as we add 1 at the end of the loop
     end
+
+
+    def test_objects_in_span
+ 
+        assert($ie.span(:id, 'buttons1').button(:index,1).exists? )
+        assert_false($ie.span(:id, 'buttons1').button(:index,3).exists? )
+        assert($ie.span(:id, 'buttons1').button(:name,'b1').exists? )
+
+        assert($ie.span(:id, 'buttons2').button(:index,1).exists? )
+        assert($ie.span(:id, 'buttons2').button(:index,2).exists? )
+        assert_false($ie.span(:id, 'buttons1').button(:index,3).exists? )
+        
+        $ie.span(:id, 'buttons1').button(:index,1).click
+
+        assert_equal( 'button1' ,   $ie.span(:id , 'text_fields1').text_field(:index,1).value)
+
+        assert_equal( 3 , $ie.span(:id , 'text_fields1').text_fields.length )
+
+
+    end
+
+
 
 end

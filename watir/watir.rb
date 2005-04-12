@@ -163,6 +163,10 @@ module Watir
     module FactoryMethods 
         include Watir::Exception
 
+        def ie
+            return @ieController
+        end
+
         def log ( what )
             @ieController.logger.debug( what ) if @logger
         end
@@ -421,11 +425,18 @@ module Watir
         #        
 
         
-        def getContainer()
+        def getContainerContents()
             return getDocument.body.all 
         end
-        private :getContainer
-                
+        private :getContainerContents
+
+        def getContainer()
+            return getDocument.body
+        end
+
+           
+
+     
         # This is the main method for finding objects on a web page.
         #   * how - symbol - the way we look for the object. Supported values are
         #                  - :name
@@ -436,7 +447,7 @@ module Watir
         #   * types - what object types we will look at. Only used when index is specified as the how.
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
         def getObject( how, what , types=nil ,  value=nil )
-            container = getContainer()
+            container = getContainerContents()
             
             if types
                 if types.kind_of?(Array)
@@ -1498,11 +1509,17 @@ module Watir
             @container.waitForIE
         end   
 
-        def getContainer()
+        def getContainerContents()
             raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.elements.all
         end   
-        private :getContainer
+        private :getContainerContents
+
+        def getContainer()
+            return @form
+        end
+
+
 
         def wait(no_sleep = false)
             @container.wait(no_sleep)
@@ -1712,6 +1729,27 @@ module Watir
             @length=0
         end
  
+
+        def get_length_of_input_objects(object_type) 
+
+            if object_type.kind_of? Array 
+                object_types == object_type  
+            else
+                object_types = [ object_type ]
+            end
+
+            length = 0
+            if  @ieController.getContainer.getElementsByTagName("INPUT").length > 0 
+
+                objects= @ieController.getContainer.getElementsByTagName("INPUT")
+                objects.each do |o|
+                   length+=1 if object_types.include?(o.invoke("type").downcase )
+                end
+            end    
+            return length
+
+        end
+
         # iterate through each of the elements in the collection in turn
         def each
             0.upto( @length-1 ) { |i | yield iterator_object(i)   }
@@ -1766,12 +1804,7 @@ module Watir
 
         def initialize( ieController )
             super
-            if @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-                objects.each do |o|
-                    @length+=1 if ["button" , "submit", "image"].include?( o.invoke("type").downcase )
-                end
-            end        
+            @length = get_length_of_input_objects(["button" , "submit", "image"])
         end
 
         def iterator_object(i)
@@ -1787,13 +1820,7 @@ module Watir
 
         def initialize( ieController )
             super
-            if @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-                objects.each do |o|
-                    @length+=1 if ["checkbox"].include?( o.invoke("type").downcase )
-                end
-            end        
-
+            @length = get_length_of_input_objects("checkbox")
         end
        
         def iterator_object(i)
@@ -1809,13 +1836,7 @@ module Watir
 
         def initialize( ieController )
             super
-            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0
-                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-                objects.each do |o|
-                    @length+=1 if ["radio"].include?( o.invoke("type").downcase )
-                end
-            end        
-
+            @length = get_length_of_input_objects("radio")
         end
        
         def iterator_object(i)
@@ -1879,12 +1900,7 @@ module Watir
     class Text_Fields < Iterators
         def initialize( ieController )
             super
-            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-                objects.each do |o|
-                    @length+=1 if ["text"].include?(o.invoke("type").downcase )
-                end
-            end        
+            @length = get_length_of_input_objects("text") 
         end
        
         def iterator_object(i)
@@ -1900,23 +1916,13 @@ module Watir
     class Hiddens < Iterators
         def initialize( ieController )
             super
-            if  @ieController.ie.document.body.getElementsByTagName("INPUT").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("INPUT")
-                objects.each do |o|
-                    @length+=1 if ["hidden"].include?(o.invoke("type").downcase )
-                end
-            end        
+            @length = get_length_of_input_objects("hidden")
         end
        
         def iterator_object(i)
             @ieController.hidden( :index , i+1)
         end
     end
-
-
-
-
-
 
 
 
@@ -1943,13 +1949,31 @@ module Watir
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
     class SpanDivCommon < ObjectActions
+
+
+        include Watir::Exception
+        include FactoryMethods 
+
+        attr_reader :typingspeed      
+
         def initialize( ieController,  how , what )
             @ieController = ieController
             @o = ieController.getNonControlObject(@objectType , how, what )
             super( @o )
             @how = how
             @what = what
+            @typingspeed = @ieController.typingspeed      
+            @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
         end
+
+        def getContainerContents()
+            return @o.all
+        end
+
+        def getContainer()
+            return @o
+        end
+
 
         # this method returns the innerText of the object
         # raises an ObjectNotFound exception if the object cannot be found
@@ -2324,9 +2348,14 @@ module Watir
 
          end 
 
-        def getContainer()
-            return @o .all
+        def getContainerContents()
+            return @o.all
         end
+
+        def getContainer()
+            return @o
+        end
+
 
         def text()
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
@@ -2334,39 +2363,6 @@ module Watir
         end
         alias to_s text
  
-=begin
-        # Returns the object contained in the cell as a Button
-        def button( how=nil, what=nil)
-            return Button.new(@ieController,:from_object,getChildThatIs( @o , ["button", "submit" , "image"] ) ) 
-        end
-
-        # Returns the object contained in the cell as a Table
-        def table
-            return Table.new(@ieController,:from_object,getChildThatIs( @o , "table" ))
-        end
-     
-        # Returns the object contained in the cell as a TextField
-        def text_field
-            return TextField.new(@ieController,:from_object, getChildThatIs( @o , "text" )  )
-        end
-        alias textField text_field 
-
-
-        # this method returns the child object that is the specified type
-        def getChildThatIs( o , find_object_types )
-
-            child_object = nil
-            o.children.each do |c| 
-                next unless child_object == nil
-                begin
-                    child_object = c if find_object_types.include?( c.invoke("type") )
-                rescue
-                end
-            end
-            return child_object
-
-        end
-=end
    end
 
 

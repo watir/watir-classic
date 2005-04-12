@@ -31,6 +31,23 @@ CVS Revision: "$Revision$"
 <div id = div4 onClick = "javascript:document.all.text1.value=parseInt(document.all.text1.value)-1">This div has an onClick that decrements text1</div>
 
 This input field gets its value from div3. Its name is text1<input type = text name = text1 value = 0>
+<br>
+<br> The following DIVS are used to test buttons and other objects in a div
+
+<div id=buttons1>
+   <input type=button name=b1 value="Button 1" onClick="javascript:document.all.div_text1.value='button1';">
+</div>
+<div id=buttons2>
+  <input type=button name=b2 value="Button 2" onClick="javascript:document.all.div_text1.value='button2';">
+  <input type=button name=b3 value="Button 3" onClick="javascript:document.all.div_text1.value='button3';">
+</div>
+
+<div id=text_fields1>
+   Text1: <input type=text name=div_text1 >&nbsp;&nbsp;&nbsp;&nbsp;   Text2: <input type=text name=div_text2 >&nbsp;&nbsp;&nbsp;&nbsp;   Text3: <input type=text name=div_text3>
+</div>
+
+
+
 
 <br>
 <hr>
@@ -46,6 +63,23 @@ Span Tests
 <span id = span4 onClick = "javascript:document.all.text2.value=parseInt(document.all.text2.value)-1">This span has an onClick that decrements text2</span>
 <br>
 This input field gets its value from span3. Its name is text1<input type = text name = text2 value = 0>
+
+<br>
+<br> The following spans are used to test buttons and other objects in a span
+<br>
+<span id=buttons1>
+   <input type=button name=b1 value="Button 1" onClick="javascript:document.all.span_text1.value='button1';">
+</span>
+<br>
+<span id=buttons2>
+  <input type=button name=b2 value="Button 2" onClick="javascript:document.all.span_text1.value='button2';">
+  <input type=button name=b3 value="Button 3" onClick="javascript:document.all.span_text1.value='button3';">
+</span>
+<br>
+<span id=text_fields1>
+   Text1: <input type=text name=span_text1 >&nbsp;&nbsp;&nbsp;&nbsp;   Text2: <input type=text name=span_text2 >&nbsp;&nbsp;&nbsp;&nbsp;   Text3: <input type=text name=span_text3>
+</span>
+
 
 
 
