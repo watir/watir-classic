@@ -34,6 +34,23 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal( 2 , $ie.table(:index , 1).row_count)
         assert_equal( 5 , $ie.table(:id, 't1').row_count)   # 4 rows and a header 
         assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
+
+        # test the each iterator on rows - ie, go through each cell
+
+        row = $ie.table(:index, 2)[2]
+        count=1
+        row.each do |cell|
+            cell.flash
+            if count == 1
+                assert_equal('Row 1 Col1' , cell.to_s.strip )
+            elsif count==2
+                assert_equal('Row 1 Col2' , cell.to_s.strip )
+            end
+            count+=1
+        end
+        assert_equal(2, count -1)
+
+
     end
 
     def test_columns
@@ -80,7 +97,10 @@ class TC_Tables < Test::Unit::TestCase
         assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
 
 
-        
+        table[3][1].button(:value ,"Click too").click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
+
+
 
         
         $ie.table(:index,1)[4][1].text_field(:index,1).set("123")
@@ -139,6 +159,21 @@ class TC_Tables < Test::Unit::TestCase
         assert_false( $ie.row(:id, 'no_exist').exists? )
 
         assert_equal('Row 2 Col1' ,  $ie.row(:id, 'row1')[1].to_s.strip )
+    end
+
+    def test_row_iterator
+
+        t = $ie.table(:index,1)
+        count =1
+        t.each do |row|
+            if count==1
+                assert( "Row 1 Col1" , row[1].text )
+                assert( "Row 1 Col2" , row[2].text )
+            elsif count==2
+                assert( "Row 2 Col1" , row[1].text )
+                assert( "Row 2 Col2" , row[2].text )
+            end
+        end
 
     end
 
@@ -168,9 +203,21 @@ class TC_Tables < Test::Unit::TestCase
         end
         assert_equal( count-1, $ie.table(:id, 'body_test' ).bodies.length  )
 
-        assert_equal( "This text is in the SECOND TBODY." ,$ie.table(:id, 'body_test' ).body(:index,2)[1][1].to_s.strip ) 
+        assert_equal( "This text is in the THIRD TBODY." ,$ie.table(:id, 'body_test' ).body(:index,3)[1][1].to_s.strip ) 
 
 
+        # iterate through all the rows in a table body
+        count = 1
+        $ie.table(:id, 'body_test' ).body(:index,2).each do | row |
+            row.flash
+            if count == 1
+                assert_equal('This text is in the SECOND TBODY.' , row[1].text.strip )
+            elsif count == 1
+                 assert_equal('This text is also in the SECOND TBODY.' , row[1].text.strip )
+            end
+
+            count+=1
+        end
 
 
     end
