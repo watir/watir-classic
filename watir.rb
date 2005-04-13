@@ -1309,7 +1309,7 @@ module Watir
             puts "Found #{tables.length} tables"
             index=1
             tables.each do |d|
-                puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.cols }"
+                puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.rows["0"].cells.length }"
                 index+=1
             end
         end
@@ -2067,34 +2067,6 @@ module Watir
             return Table.new(ieController,:from_object,o)
         end
 
-        # tables dont have name, so return an empty string
-        def name
-            return ""
-        end
-
-        # tables dont have value, so return an empty string
-        def value
-            return ""
-        end
-
-        # this method is used to ppulate the properties in the to_s method
-        def table_string_creator
-            n = []
-            n <<   "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
-            n <<   "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
-            return n
-         end
-         private :table_string_creator
-
-         # returns the properties of the object in a string
-         # raises an ObjectNotFound exception if the object cannot be found
-         def to_s
-            object_exist_check
-            r = string_creator
-            r=r + table_string_creator
-            return r.join("\n")
-         end
-
         # Returns an initialized instance of a table object
         #   * ieController  - an instance of an IEController
         #   * how         - symbol - how we access the table
@@ -2130,7 +2102,40 @@ module Watir
             @how = how
             @what = what
         end
-   
+
+        # tables dont have name, so return an empty string
+        def name
+            return ""
+        end
+
+        # tables dont have value, so return an empty string
+        def value
+            return ""
+        end
+
+        # this method is used to ppulate the properties in the to_s method
+        def table_string_creator
+            n = []
+            n <<   "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
+            n <<   "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
+            return n
+        end
+        private :table_string_creator
+
+        # returns the properties of the object in a string
+        # raises an ObjectNotFound exception if the object cannot be found
+        def to_s
+            object_exist_check
+            r = string_creator
+            r=r + table_string_creator
+            return r.join("\n")
+        end
+
+        # iterates through the rows in the table. Yields a TableRow object
+        def each
+            1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@ieController ,:direct, row(i) )    }
+        end
+ 
         # Returns a row in the table
         #   * index         - the index of the row
         def [](index)
@@ -2189,13 +2194,15 @@ module Watir
         end
    
         def row(index)
-            table_rows = table_rows = @o.invoke("rows")
-            return table_rows[(index-1).to_s]
+            return @o.invoke("rows")[(index-1).to_s]
         end
         private :row
 
     end
 
+
+    # this class is a collection of the table body objects that exist in the table
+    # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
     class TableBodies<ObjectActions
 
         def initialize(ieController, how, what )
@@ -2205,7 +2212,8 @@ module Watir
                 @o = what     # in this case, @o is the parent table
             end
         end
-
+ 
+        # returns the number of TableBodies that exist in the table
         def length
             object_exist_check
             return @o.tBodies.length
@@ -2221,12 +2229,15 @@ module Watir
             return @o.tBodies[(n-1).to_s]
         end
 
+        # iterates through each of the TableBodies in the Table. Yields a TableBody object
         def each
             0.upto( @o.tBodies.length-1 ) { |i | yield TableBody.new( @ieController , :direct , @o.tBodies[i.to_s] )   }
         end
 
     end
 
+
+    # this class is a table body
     class TableBody<ObjectActions
         def initialize(ieController, how, what, parent_table=nil )
             @ieController = ieController
@@ -2241,6 +2252,9 @@ module Watir
             super(@o)
         end
 
+ 
+        # This method updates the internal representation of the table. It can be used on dynamic tables to update the watir representation 
+        # after the table has changed
         def update_rows
             if @o
                 @o.rows.each do |oo|
@@ -2255,6 +2269,18 @@ module Watir
             object_exist_check
             return TableRow.new( @ieController , :direct , @rows[n-1] )
         end
+
+        # iterates through all the rows in the table body
+        def each
+            0.upto( @rows.length-1 ) { |i | yield @rows[i]    }
+        end
+
+
+        # returns the number of rows in this table body.
+        def length
+           return @rows.length
+        end
+
 
     end
 
@@ -2292,8 +2318,13 @@ module Watir
             end
         end
 
+        # this method iterates through each of the cells in the row. Yieldss a TableCell object
+        def each
+            0.upto( @cells.length-1 ) { |i | yield @cells[i]    }
+        end
 
-	  # Returns an element from the row
+
+	  # Returns an element from the row as a TableCell object
         def [](index)
             object_exist_check
             raise UnknownCellException , "Unable to locate a cell at index #{index}" if @cells.length < index
@@ -2356,7 +2387,7 @@ module Watir
             return @o
         end
 
-
+        # returns the contents of the cell as text
         def text()
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
              return @o.innerText 
@@ -2485,7 +2516,7 @@ module Watir
             return @o.invoke("height").to_s
         end
 
-        # returns the type of the object
+        # returns the type of the object - 'image'
         def type 
             object_exist_check
             return "image"
@@ -2545,26 +2576,32 @@ module Watir
             @what = what
         end
 
+        # returns 'link' as the object type
         def type
             object_exist_check
             return "link"
         end
+
+        # returns the text displayed by the link
         def innerText
             object_exist_check
             return @o.innerText
         end
+        alias text innerText
 
+        # returns the url the link points to
         def href
             object_exist_check
             return @o.href
         end
 
+        # links dont support value, so returns an empty string
         def value
             object_exist_check
             return ""
         end
-
-       
+ 
+        # if an image is used as part of the link, this will return true      
         def link_has_image
             return true  if @o.getElementsByTagName("IMG").length > 0
             return false
@@ -2587,6 +2624,7 @@ module Watir
             return n
          end
 
+         # returns a textual description of the link
          def to_s
             object_exist_check
             r = string_creator
@@ -3049,26 +3087,36 @@ module Watir
         private :doKeyPress
     end
 
+
+    # this class can be used to access hidden field objects
+
     class Hidden  < TextField 
 
         def initialize( ieController,  how , what )
             super
         end
+
         def supported_types
             return ["hidden"]
         end
+       
+
+        # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
             self.value=n
         end
  
+        # override the append method, so that focus isnt set to the hidden object
         def append(n)
             self.value = self.value.to_s + n.to_s
         end
 
+        # override the clear method, so that focus isnt set to the hidden object
         def clear
             self.value = ""
         end
 
+        # this method will do nothing, as you cant set focus to a hidden field
         def focus
             # do nothing!
         end
