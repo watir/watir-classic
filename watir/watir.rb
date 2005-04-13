@@ -1733,7 +1733,7 @@ module Watir
         def get_length_of_input_objects(object_type) 
 
             if object_type.kind_of? Array 
-                object_types == object_type  
+                object_types = object_type  
             else
                 object_types = [ object_type ]
             end
