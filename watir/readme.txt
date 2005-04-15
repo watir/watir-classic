@@ -75,7 +75,8 @@ Contributors:
    Michael Kelly
    Peter Chau
    Danny Faught
-
+   Andy Sipe
+   John Lloyd-Jones
 
 Acknowledgements:
    Chris Morris
