@@ -222,6 +222,24 @@ class TC_Tables < Test::Unit::TestCase
 
     end
 
+    def test_get_columnvalues_single_column
+        $ie.goto($htmlRoot + "simple_table_columns.html")
+        assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 1).column_values(1))
+    end
+
+    def test_get_columnvalues_multiple_column
+        $ie.goto($htmlRoot + "simple_table_columns.html")
+        assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 2).column_values(1))
+        assert_equal(["R1C3", "R2C3", "R3C3"], $ie.table(:index, 2).column_values(3))
+    end
+
+    def test_get_columnvalues_with_colspan
+        $ie.goto($htmlRoot + "simple_table_columns.html")
+        assert_equal(["R1C1", "R2C1", "R3C1", "R4C1"], $ie.table(:index, 3).column_values(1))
+        (2..4).each{|x|assert_raises(UnknownCellException){$ie.table(:index, 3).column_values(x)}}
+    end
+
+
 
 
 
