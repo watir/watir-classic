@@ -77,6 +77,7 @@ Contributors:
    Danny Faught
    Andy Sipe
    John Lloyd-Jones
+   Chris Hedges
 
 Acknowledgements:
    Chris Morris
