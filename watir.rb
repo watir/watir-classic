@@ -2198,6 +2198,16 @@ module Watir
         end
         private :row
 
+        # Returns an array containing all the text values in the specified column
+        # Raises an UnknownCellException if the specified does not exist in every
+        # row of the table
+        #   * columnnumber  - column index to extract values from
+        def column_values(columnnumber)
+            return (1..row_count).collect {|idx| self[idx][columnnumber].text}
+        end
+
+
+
     end
 
 
