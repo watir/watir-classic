@@ -147,11 +147,14 @@ class TC_Fields < Test::Unit::TestCase
 
     def test_text_field_iterators
 
-        assert_equal( 8 , $ie.text_fields.length )
+        assert_equal( 12 , $ie.text_fields.length )
 
         # watir is 1 based, so this is the first text field
         assert_equal( "Hello World" , $ie.text_fields[1].value )
         assert_equal( "text1" , $ie.text_fields[1].name )
+
+        assert_equal( "password" , $ie.text_fields[ $ie.text_fields.length ].type)
+
 
         index = 1
         $ie.text_fields.each do |t|
@@ -161,6 +164,33 @@ class TC_Fields < Test::Unit::TestCase
             index +=1
         end
         assert_equal( index-1, $ie.text_fields.length) 
+
+    end
+
+
+    def test_JS_Events
+        $ie.text_field(:name , 'events_tester').set('p')
+
+        # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
+        assert_equal( "keypresskeydownkeypresskeyup" , $ie.text_field(:name , 'events_text').value.gsub("\r\n" , "")  )
+        $ie.button(:value , "Clear Events Box").click
+        $ie.text_field(:name , 'events_tester').set('ab')
+
+        # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
+        assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , $ie.text_field(:name , 'events_text').value.gsub("\r\n" , "") )
+
+    end
+
+    def test_password
+
+        $ie.text_field(:name , "password1").set("secret")
+        assert( 'secret' , $ie.text_field(:name , "password1").value )
+
+        $ie.text_field(:id , "password1").set("top_secret")
+        assert( 'top_secret' , $ie.text_field(:id, "password1").value )
+
+
+
 
     end
 

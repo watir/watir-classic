@@ -6,6 +6,15 @@ Test page for Text Fields
 </head>
 <body>
 CVS Revision: "$Revision$"
+
+<script>
+function addEvent(e) {
+    document.all.events_text.value = document.all.events_text.value + "\n" + e
+}
+</script>
+
+
+
 <br>
 <br>
 <table>
@@ -54,6 +63,24 @@ These text fields are used to test :beforeText and :afterText
 <br>
 This Text Before<input type = text name=aftertest  value = 'AfterText Test' title = "This used to test :afterText">
 
+<br>
+<br>
+
+This Field has javascript events in it
+<input type = text name= events_tester onKeyUp='javascript:addEvent("keyup")' onKeyDown='javascript:addEvent("keydown")' onKeyPress='javascript:addEvent("keypress")'>
+<br>
+
+<textarea name = events_text cols = 20 rows = 10 ></textarea>
+<input type=button onClick='document.all.events_text.value=""' value="Clear Events Box">
+
+
+<br>
+Password Fields
+<br>
+
+<input type = password name =password1>
+
+<input type = password id =password1>
 
 
 
