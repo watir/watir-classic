@@ -1900,9 +1900,17 @@ module Watir
     class Text_Fields < Iterators
         def initialize( ieController )
             super
-            @length = get_length_of_input_objects("text") 
+            @length = get_length_of_input_objects( supported_types ) 
+
+            # text areas are also included inthe Text_filds, but we need to get them seperately
+            @length = @length + @ieController.ie.document.body.getElementsByTagName("textarea").length
+
         end
        
+       def supported_types
+            return ["text" , "password"] 
+        end
+
         def iterator_object(i)
             @ieController.text_field( :index , i+1)
         end
@@ -3069,6 +3077,12 @@ module Watir
             @o.value = v.to_s
         end
 
+        def fire_key_events
+            @o.fireEvent("onKeyDown")
+            @o.fireEvent("onKeyPress")
+            @o.fireEvent("onKeyUp")
+        end
+
 
         # This method is used internally by setText and appendText
         # It should not be used externally.
@@ -3089,7 +3103,7 @@ module Watir
                 c = value[i,1]
                 @ieController.log  " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
-                @o.fireEvent("onKeyPress")
+                fire_key_events
                 @ieController.waitForIE(true)
             end
 
