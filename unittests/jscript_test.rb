@@ -22,7 +22,9 @@ class TC_JavaScript_Test < Test::Unit::TestCase
 
 
 	def test_alert_button()
+            @@attach=false
 		goto_javascript_page()
+
 		a = Thread.new {
 			system('ruby jscriptExtraAlert.rb')
 
@@ -38,6 +40,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
 
 	end
 	def test_confirm_button_ok()
+            @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
 			system('ruby jscriptExtraConfirmOk.rb')
@@ -52,6 +55,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
 	       assert( testResult =~ /Confirm OK/ )  
 	end
 	def test_confirm_button_Cancel()
+            @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
 			system('ruby jscriptExtraConfirmCancel.rb')
