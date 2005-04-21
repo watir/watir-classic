@@ -78,7 +78,8 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
-
+require 'ftools'
+require 'find'
 
 class String
     def matches (x)
@@ -2572,6 +2573,30 @@ module Watir
             end
         end
 
+        # This method saves the image to the file path that is given.  If
+        # the image src references a local url (file:///...) then the image
+        # is saved directly from the src.   If the image references any
+        # other kind of url then the 'Temporary Internet Files' cache is
+        # searched for the image.
+        # Raises a CacheItemNotFound exception if the image cannot be located
+        # path - directory path and file name of where image should be saved
+        def save(path)
+            if (src =~ /^file\:\/\/\//)
+                File.copy(src.gsub(/^file:\/\/\//, ''), path)
+            else
+                loc = WIN32OLE.new("Shell.Application").Namespace(0x0020).Self.Path
+                name = src.slice(src.rindex('/')+1,src.length)
+                name = Regexp.new(name.sub(/^([^.]+)/, '\1\[\d+\]'))
+
+                matches = []
+                Find.find(loc) { |entry| matches << entry if (entry =~ name) }
+                raise CacheItemNotFound, "match not found" if (matches.length == 0)
+
+                match = matches[0]
+                matches.each { |entry| match = entry if (File.atime(entry) > File.atime(match)) }
+                File.copy(match, path)
+          end
+        end
     end
     
     
