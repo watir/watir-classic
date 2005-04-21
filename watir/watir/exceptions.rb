@@ -92,6 +92,12 @@ module Watir
         end
     end
 
+    # This exception is thrown if a requested item from the cache cannot be located
+    class CacheItemNotFound < WatirException
+        def initialize(message="")
+            super(message)
+        end
+    end
 
 
 
