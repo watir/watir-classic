@@ -184,8 +184,15 @@ module Watir
 
         # this method is the main way of accessing a frame 
         #   * frame_name  - string, the name of the frame to access
-        def frame( frame_name)
-            return Frame.new(self, frame_name)
+        def frame( how, what=nil)
+
+
+            if what == nil
+                what = how
+                how = :name 
+            end
+
+            return Frame.new(self,how , what)
         end
 
  
@@ -1397,17 +1404,24 @@ module Watir
 
     class Frame < IE
     
-        def initialize(container, name)
+        def initialize(container,  how, what)
             @container = container
             @frame = nil
-        
+
             frames = @container.getDocument.frames
 
             for i in 0 .. frames.length-1
+                next unless @frame==nil
                 this_frame = frames[i.to_s]
                 begin
-                    if name == this_frame.name.to_s
-                          @frame = this_frame
+                    if how == :index 
+                        if i+1 == what
+                            @frame = this_frame
+                        end
+                    elsif how == :name
+                        if what== this_frame.name.to_s
+                              @frame = this_frame
+                        end
                     end
                 rescue
                     # probably no name on this object
@@ -1415,7 +1429,7 @@ module Watir
             end
             
             unless @frame
-                raise UnknownFrameException , "Unable to locate a frame with name #{ name } " 
+                raise UnknownFrameException , "Unable to locate a frame with name #{ what} " 
             end
 
             @typingspeed = container.typingspeed      

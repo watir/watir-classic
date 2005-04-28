@@ -11,12 +11,30 @@ class TC_Frames < Test::Unit::TestCase
         $ie.goto($htmlRoot + "frame_buttons.html")
     end
 
-    def test_frame
+    def test_frame_no_what
         assert_raises(UnknownFrameException) { $ie.frame("missingFrame").button(:id, "b2").enabled?  }  
         assert_raises(UnknownObjectException) { $ie.frame("buttonFrame2").button(:id, "b2").enabled?  }  
         assert($ie.frame("buttonFrame").button(:id, "b2").enabled?)   
         assert_false($ie.frame("buttonFrame").button(:caption, "Disabled Button").enabled?)
     end
+
+    def test_frame_using_name
+        assert_raises(UnknownFrameException) { $ie.frame(:name , "missingFrame").button(:id, "b2").enabled?  }  
+        assert_raises(UnknownObjectException) { $ie.frame(:name, "buttonFrame2").button(:id, "b2").enabled?  }  
+        assert($ie.frame(:name, "buttonFrame").button(:id, "b2").enabled?)   
+        assert_false($ie.frame(:name , "buttonFrame").button(:caption, "Disabled Button").enabled?)
+    end
+
+    def test_frame_using_index
+        assert_raises(UnknownFrameException) { $ie.frame(:index, 8).button(:id, "b2").enabled?  }  
+        assert_raises(UnknownObjectException) { $ie.frame(:index, 2).button(:id, "b2").enabled?  }  
+        assert($ie.frame(:index, 1 ).button(:id, "b2").enabled?)   
+        assert_false($ie.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
+    end
+
+
+
+
 
     def test_preset_frame
         # with ruby's instance_eval, we are able to use the same frame for several actions
