@@ -1,3 +1,5 @@
+END {$ie.close} # close ie at completion of the tests
+
 # libraries used by feature tests
 require 'watir'
 require 'test/unit'
@@ -6,11 +8,12 @@ require 'watir/testUnitAddons'
 
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir
-
 $all_tests = Dir["unittests/*_test.rb"]
+
 $failing_tests = ["unittests/popups_test.rb"] + ["unittests/images_test.rb"]
-$noisy_tests = ['unittests/image_saveas_test.rb'] + ['unittests/screen_capture_test.rb'] + ['unittests/filefield_test.rb']
-$core_tests = $all_tests - ($failing_tests + $noisy_tests)
+$tests_that_must_be_visible = ['unittests/image_saveas_test.rb'] + ['unittests/screen_capture_test.rb'] + 
+    ['unittests/filefield_test.rb'] + ['unittests/jscript_test.rb']
+$core_tests = $all_tests - ($failing_tests + $tests_that_must_be_visible)
 
 def start_ie_with_logger
   $ie = Watir::IE.new()

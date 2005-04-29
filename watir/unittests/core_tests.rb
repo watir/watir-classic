@@ -7,4 +7,3 @@ Dir.chdir TOPDIR
 $core_tests.each {|x| require x}
 
 
-
