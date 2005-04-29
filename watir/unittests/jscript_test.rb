@@ -3,6 +3,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
+$mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
 
 class TC_JavaScript_Test < Test::Unit::TestCase
     include Watir
@@ -26,7 +27,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
 		goto_javascript_page()
 
 		a = Thread.new {
-			system('ruby jscriptExtraAlert.rb')
+			system("ruby #{$mydir}\\jscriptExtraAlert.rb")
 
 		 }
 		b = Thread.new { 
@@ -43,7 +44,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
             @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
-			system('ruby jscriptExtraConfirmOk.rb')
+			system("ruby #{$mydir}\\jscriptExtraConfirmOk.rb")
 
 		 }
 		b = Thread.new { 
@@ -58,7 +59,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
             @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
-			system('ruby jscriptExtraConfirmCancel.rb')
+			system("ruby #{$mydir}\\jscriptExtraConfirmCancel.rb")
 
 		 }
 		b = Thread.new { 
