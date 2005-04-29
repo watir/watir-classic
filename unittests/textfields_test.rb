@@ -188,11 +188,48 @@ class TC_Fields < Test::Unit::TestCase
 
         $ie.text_field(:id , "password1").set("top_secret")
         assert( 'top_secret' , $ie.text_field(:id, "password1").value )
+    end
 
+    def test_labels_iterator
 
+        assert_equal(3, $ie.labels.length)
+        assert_equal('Label For this Field' , $ie.labels[1].innerText.strip )
+        assert_equal('Password With ID ( the text here is a label for it )' , $ie.labels[3].innerText )
+
+        count=0
+        $ie.labels.each do |l|
+            count +=1
+        end
+        assert_equal(count, $ie.labels.length)
 
 
     end
 
+    def test_label_properties
+        assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).innerText  } 
+        assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).for  } 
+        assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).name  } 
+        assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).type  } 
+        assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).id  } 
+
+        assert_false( $ie.label(:index,10).exists? ) 
+        assert_false( $ie.label(:id,'missing').exists? ) 
+        assert( $ie.label(:index,1).exists? ) 
+
+
+        assert_equal( "" , $ie.label(:index,1).id )
+        assert_false(      $ie.label(:index,1).disabled )
+        assert(            $ie.label(:index,1).enabled?)
+
+
+        assert_equal( "label2" , $ie.label(:index,2).id )
+        assert_equal( "Label"  , $ie.label(:index,2).type )
+
+        assert_equal( "Password With ID ( the text here is a label for it )" , $ie.label(:index,3).innerText)
+        assert_equal( "password1" , $ie.label(:index,3).for)
+    end
+
+
+    
 
 end

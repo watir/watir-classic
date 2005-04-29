@@ -23,7 +23,7 @@ function addEvent(e) {
 <td>
 <input type = text name = text1 value = 'Hello World'>number 1
 <br>
-<input type = text id= text2 value = 'goodbye all'>
+<label for=text2>Label For this Field  </label><input type = text id= text2 value = 'goodbye all'>
 
 
 <td>These text fields are not in a form
@@ -39,7 +39,7 @@ Disabled text box
 <td>
 <input type = text name = readOnly value = "Cant enter text in me" readonly>
 <br>
-<input type = text id= readOnly2 value = "Cant enter text in me" readonly>
+<label for=readOnly2 id=label2>Another Label (pointless- its a readonly box!)  </label><input type = text id= readOnly2 value = "Cant enter text in me" readonly>
 <td>
 readonly text boxes
 
@@ -78,9 +78,9 @@ This Field has javascript events in it
 Password Fields
 <br>
 
-<input type = password name =password1>
-
-<input type = password id =password1>
+Password With Name<input type = password name =password1>
+<br>
+<label for=password1>Password With ID ( the text here is a label for it )</label><input type = password id =password1>
 
 
 
