@@ -424,7 +424,18 @@ module Watir
             return Spans.new(self)
         end
 
+        # this is the main method for accessing the labels iterator. It returns a Labels object
+        def labels()
+            return Labels.new(self)
+        end
 
+        # This is the main method for accessing labels.
+        #  *  how   - symbol - how we access the label, :index, :id, :for
+        #  *  what  - string, integer or re , what we are looking for, 
+        # returns a Label object
+        def label( how, what)
+            return Label.new(self, how, what)
+        end
 
 
         
@@ -744,6 +755,8 @@ module Watir
                     attribute = "name"
                 when :title
                     attribute = "title"
+                when :for   # only applies to labels
+                    attribute = "htmlFor"
               end
 
               if attribute
@@ -1340,6 +1353,20 @@ module Watir
             end
         end
         alias showSpans show_spans
+
+
+        def show_labels( )
+            labels = getDocument().getElementsByTagName("LABEL")
+            puts "Found #{labels.length} label tags"
+            index=1
+            labels.each do |d|
+                puts "#{index}  text=#{d.invoke('innerText')}      style=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
+                index+=1
+            end
+        end
+        alias showLabels show_labels
+
+
 
 
         #
@@ -1970,6 +1997,21 @@ module Watir
         end
     end
 
+    # this class accesses the labels in the document as a collection
+    # it would normally only be accessed by the labels method of IEController
+    class Labels< Iterators
+        def initialize( ieController )
+            super
+            if  @ieController.ie.document.body.getElementsByTagName("LABEL").length > 0 
+                objects= @ieController.ie.document.body.getElementsByTagName("LABEL")
+                @length=objects.length
+            end        
+        end
+       
+        def iterator_object(i)
+            @ieController.label( :index , i+1)
+        end
+    end
 
 
 
@@ -2078,6 +2120,69 @@ module Watir
             super( ieController, how, what)
         end
     end
+
+    # this class is used to access a label object on the html page
+    class Label < ObjectActions
+        def initialize( ieController , how, what)
+            @ieController = ieController
+            @o = ieController.getNonControlObject("LABEL" , how, what )
+            @how = how
+            @what = what
+            super( @o )
+        end
+
+        # labels dont support name, so return an empty string
+        def name
+            object_exist_check
+            return ""
+        end
+ 
+        # labels dont support value, so return an empty string
+        def value
+            object_exist_check
+            return ""
+        end
+
+        # return the type of this object
+        def type
+            object_exist_check
+            return "Label"
+        end
+
+        # return the ID of the control that this label is associated with
+        def for
+            object_exist_check
+            return @o.htmlFor
+        end
+
+        def innerText
+            object_exist_check
+            return @o.innerText
+        end
+
+        # this method is used to ppulate the properties in the to_s method
+        def label_string_creator
+            n = []
+            n <<   "for:".ljust(TO_S_SIZE) + self.for
+            n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
+            return n
+        end
+        private :label_string_creator
+
+        # returns the properties of the object in a string
+        # raises an ObjectNotFound exception if the object cannot be found
+        def to_s
+            object_exist_check
+            r = string_creator
+            r=r + label_string_creator
+            return r.join("\n")
+        end
+
+
+
+    end
+
+
 
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
