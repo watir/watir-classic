@@ -13,5 +13,6 @@ class TC_Links < Test::Unit::TestCase
         $ie.link(:index, 5).click
         ie2 = $ie.newWindow
         assert_equal('TextArea-MultiLine', ie2.title)
+        ie2.close
     end
 end
