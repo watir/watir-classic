@@ -40,7 +40,7 @@ class TC_Tables < Test::Unit::TestCase
         row = $ie.table(:index, 2)[2]
         count=1
         row.each do |cell|
-            cell.flash
+            #  cell.flash   # this line commented out to speed up the test
             if count == 1
                 assert_equal('Row 1 Col1' , cell.to_s.strip )
             elsif count==2
@@ -49,6 +49,16 @@ class TC_Tables < Test::Unit::TestCase
             count+=1
         end
         assert_equal(2, count -1)
+
+
+    end
+  
+    def test_dynamic_tables
+        t = $ie.table(:id, 't1')
+        assert_equal( 5, t.row_count)
+
+        $ie.button(:value , 'add row').click
+        assert_equal( 6, t.row_count)
 
 
     end
@@ -199,7 +209,7 @@ class TC_Tables < Test::Unit::TestCase
         $ie.table(:id, 'body_test' ).bodies.each do |n|
 
             # do something better here!
-            n.flash
+            # n.flash # this line commented out to speed up the test
 
             case count 
                 when 1 
@@ -222,7 +232,7 @@ class TC_Tables < Test::Unit::TestCase
         # iterate through all the rows in a table body
         count = 1
         $ie.table(:id, 'body_test' ).body(:index,2).each do | row |
-            row.flash
+            # row.flash    # this line commented out, to speed up the tests
             if count == 1
                 assert_equal('This text is in the SECOND TBODY.' , row[1].text.strip )
             elsif count == 1
