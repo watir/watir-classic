@@ -186,9 +186,7 @@ class TC_Images < Test::Unit::TestCase
     end
     
     def build_path(part) 
-        dir = part
-        dir = "unittests/" + dir if ($0 != __FILE__)
-        dir
+        "#{$myDir}/#{part}"
     end
     
     def run_webrick(port = 33000)
