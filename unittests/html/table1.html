@@ -5,6 +5,33 @@ Test page for Tables
 </title>
 </head>
 <body>
+
+<script language=javascript>
+
+function addRow() {
+
+    var tbody = document.getElementById('t1' ).getElementsByTagName("TBODY")[0];
+
+    // Create a TR
+    var row = document.createElement("TR");
+    row.setAttribute("class", "normal");
+    row.setAttribute("border", "1");
+    
+    for (j=0 ; j < document.getElementById('t1' ).rows(1).cells.length; j++) {
+       // Create a TD 
+       var td = document.createElement("TD");
+       td.setAttribute("border","1");
+       td.innerHTML = "New Cell";
+
+       // Assign TD to TR and then assign TR to TBODY
+        row.appendChild(td);
+    }
+    tbody.appendChild(row);
+}
+
+</script>
+
+
 CVS Revision: "$Revision$"
 <br>
 <br>
@@ -16,6 +43,7 @@ CVS Revision: "$Revision$"
       <td> Row 2 Col1
       <td> Row 2 Col2
 </table>
+
 
 <br>
 <br>
@@ -35,7 +63,11 @@ CVS Revision: "$Revision$"
       <td> Row 4 Col2
 
 </table>
+<br>
+<input type=button value='add row' onClick='javascript:addRow()'>
 
+<br>
+<br>
 
 The following has a nested table
 <table id='t2' border=1>
