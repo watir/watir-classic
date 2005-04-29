@@ -118,6 +118,19 @@ class TC_Tables < Test::Unit::TestCase
 
 
     end
+ 
+    def test_links_and_images_in_table
+
+        table = $ie.table(:id, 'pic_table')
+        image = table[1][2].image(:index,1)
+        assert_equal("106", image.width)
+
+        link = table[1][4].link(:index,1)
+        assert_equal("Google", link.innerText)
+
+
+    end
+
 
     def test_table_from_element
         $ie.goto($htmlRoot + "simple_table_buttons.html")

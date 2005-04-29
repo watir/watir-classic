@@ -636,6 +636,47 @@ module Watir
             return o
         end
         
+
+        # this method finds the specified image
+        # doc  - where to look
+        # how  - symnol - how to look
+        # what - string or regexp - what to look ofr
+        def getImage( how, what )
+
+            doc = getDocument()
+            count = 1
+            images = doc.images
+            o=nil
+            images.each do |img|
+                
+                #puts "Image on page: src = #{img.src}"
+                
+                next unless o == nil
+                if how == :index
+                    o = img if count == what.to_i
+                else                
+                    case how
+                        
+                    when :src
+                        attribute = img.src
+                    when :name
+                        attribute = img.name
+                    when :id
+                        attribute = img.invoke("id")
+                    when :alt
+                        attribute = img.invoke("alt")
+                    else
+                        next
+                    end
+                    
+                    o = img if what.matches(attribute)
+                end
+                count +=1
+            end # do
+            return o
+
+        end
+
         # This method gets a link from the document. This is a hyperlink, generally declared in the <a href="http://testsite">test site</a> HTML tag.
         #   * how  - symbol - how we get the link Supported types are:
         #                     :index - the link at position x , 1 based
@@ -2529,6 +2570,11 @@ module Watir
             return @o
         end
 
+        def getDocument()
+            return @o.document
+        end
+
+
         # returns the contents of the cell as text
         def text()
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
@@ -2550,55 +2596,14 @@ module Watir
         #   * what         - what we use to access the image, name, src, index, id or alt
         def initialize( ieController,  how , what )
             @ieController = ieController
-            doc = ieController.getDocument()
             
             #puts "Finding an image how: #{how} What #{what}"
-
-            @o = getImage(doc, how, what)
+            @o = @ieController.getImage(how, what)
 
             super( @o )
             @how = how
             @what = what
            
-        end
-
-        # this method finds the specified image
-        # doc  - where to look
-        # how  - symnol - how to look
-        # what - string or regexp - what to look ofr
-        def getImage( doc, how, what )
-
-            count = 1
-            images = doc.images
-            o=nil
-            images.each do |img|
-                
-                #puts "Image on page: src = #{img.src}"
-                
-                next unless o == nil
-                if how == :index
-                    o = img if count == what.to_i
-                else                
-                    case how
-                        
-                    when :src
-                        attribute = img.src
-                    when :name
-                        attribute = img.name
-                    when :id
-                        attribute = img.invoke("id")
-                    when :alt
-                        attribute = img.invoke("alt")
-                    else
-                        next
-                    end
-                    
-                    o = img if what.matches(attribute)
-                end
-                count +=1
-            end # do
-            return o
-
         end
 
         # this method produces the properties for an image as an array
