@@ -27,7 +27,8 @@ class TC_JavaScript_Test < Test::Unit::TestCase
 		goto_javascript_page()
 
 		a = Thread.new {
-			system("ruby #{$mydir}\\jscriptExtraAlert.rb")
+			system("rubyw
+			 #{$mydir}\\jscriptExtraAlert.rb")
 
 		 }
 		b = Thread.new { 
@@ -44,7 +45,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
             @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
-			system("ruby #{$mydir}\\jscriptExtraConfirmOk.rb")
+			system("rubyw #{$mydir}\\jscriptExtraConfirmOk.rb")
 
 		 }
 		b = Thread.new { 
@@ -59,7 +60,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
             @@attach=false
 		goto_javascript_page()
 		a = Thread.new {
-			system("ruby #{$mydir}\\jscriptExtraConfirmCancel.rb")
+			system("rubyw #{$mydir}\\jscriptExtraConfirmCancel.rb")
 
 		 }
 		b = Thread.new { 
