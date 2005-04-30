@@ -14,7 +14,7 @@ class TC_ie < Test::Unit::TestCase
    end
     
    def test_waitForIE
-      wait_time = 5
+      wait_time = 1
 #      @faked_ie.logger.level = Logger::DEBUG
     
       @faked_ie.setTimeToWait wait_time
