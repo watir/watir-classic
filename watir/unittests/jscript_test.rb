@@ -3,6 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
+require 'watir/WindowHelper'
 
 $mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
 
@@ -13,60 +14,32 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     @@javascript_page		= $htmlRoot  + 'JavascriptClick.htm'
     
     def goto_javascript_page()
-        if @@attach
-            $ie = IE.attach(:title,@@javascript_page_title)
-        else
             $ie.goto(@@javascript_page)
-        end
     end
     
-    def test_alert_button()
-        @@attach=false
+    def check_dialog(extra_file, expected_result, &block)
         goto_javascript_page()
-        a = Thread.new {
-            system("rubyw #{$mydir}\\jscriptExtraAlert.rb")
-        }
-        b = Thread.new { 
-            push_button
-        }
-        a.join
-        b.join
-        testResult = $ie.text_field(:id, "testResult").to_s
-        assert( testResult =~ /Alert OK/ )  
+        Thread.new { system("rubyw #{$mydir}\\#{extra_file}.rb") }
+
+        block.call
+        testResult = $ie.text_field(:id, "testResult").value
+        assert_match( expected_result, testResult )  
+    end
+
+    def test_alert_button()
+        check_dialog('jscriptExtraAlert', /Alert OK/){ $ie.button(:id, 'btnAlert').click }
+    end
+    def test_alert_button2()
+        check_dialog('jscriptPushButton', /Alert OK/){ sleep 0.1; WindowHelper.new.push_alert_button }
     end
     def test_confirm_button_ok()
-        @@attach=false
-        goto_javascript_page()
-        a = Thread.new {
-            system("rubyw #{$mydir}\\jscriptExtraConfirmOk.rb")
-        }
-        b = Thread.new { 
-            push_confirm_button
-        }
-        a.join
-        b.join
-        testResult = $ie.text_field(:id, "testResult").to_s
-        assert( testResult =~ /Confirm OK/ )  
+        check_dialog('jscriptExtraConfirmOk', /Confirm OK/){ push_confirm_button }
     end
     def test_confirm_button_Cancel()
-        @@attach=false
-        goto_javascript_page()
-        a = Thread.new {
-            system("rubyw #{$mydir}\\jscriptExtraConfirmCancel.rb")
-        }
-        b = Thread.new { 
-            push_confirm_button
-        }
-        a.join
-        b.join
-        testResult = $ie.text_field(:id, "testResult").to_s
-        assert( testResult =~ /Confirm Cancel/ )  
+        check_dialog('jscriptExtraConfirmCancel', /Confirm Cancel/){push_confirm_button}
     end
         
     def push_confirm_button
-        $ie.button(:id,'btnInformation').click
-    end
-    def push_button()
-        $ie.button(:id,'btnAlert').click
+        $ie.button(:id, 'btnInformation').click
     end
 end
