@@ -7,13 +7,29 @@ require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
 
 topdir = File.join(File.dirname(__FILE__), '..')
-Dir.chdir topdir
-$all_tests = Dir["unittests/*_test.rb"]
+Dir.chdir topdir do
+  $all_tests = Dir["unittests/*_test.rb"]
+end
 
-$failing_tests = ["unittests/popups_test.rb"] + ["unittests/images_test.rb"]
-$tests_that_must_be_visible = ['unittests/image_saveas_test.rb'] + ['unittests/screen_capture_test.rb'] + 
-    ['unittests/filefield_test.rb'] + ['unittests/jscript_test.rb']
-$core_tests = $all_tests - ($failing_tests + $tests_that_must_be_visible)
+def their_unit_tests x; "unittests/#{x}_test.rb"; end
+$failing_tests = 
+    ['popups', # has problems when run in a suite (is ok when run alone); 
+               # must be visible
+               # will be revised to use autoit 
+               # takes 15 seconds to run
+     'images'  # 
+     ].collect {|x| their_unit_tests x}
+$tests_that_must_be_visible = # don't work when run with the -b switch (fail or hang), 
+                              # or else are visible nontheless
+  [#'image_saveas', 
+    'screen_capture', # is always visible; takes 25 secons
+    'filefield', # is always visible; takes 40 seconds 
+    'jscript',
+    'js_events' # is always visible
+    ].collect {|x| their_unit_tests x}
+
+$non_core_tests = $failing_tests + $tests_that_must_be_visible
+$core_tests = $all_tests - $non_core_tests
 
 def start_ie_with_logger
   $ie = Watir::IE.new()
