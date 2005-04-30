@@ -27,8 +27,7 @@ $core_tests = $all_tests - $non_core_tests
 
 def start_ie_with_logger
   $ie = Watir::IE.new()
-  $ie.typingspeed = 0
-  $ie.defaultSleepTime = 0.01
+  $ie.set_fast_speed
 end
 
 def set_local_dir
