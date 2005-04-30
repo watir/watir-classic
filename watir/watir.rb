@@ -444,10 +444,10 @@ module Watir
         #
         # Typical usage
         #
-        #    ie.checkbox(:id, 'send_email')                   # access the select box with an id of currency
-        #    ie.checkbox(:name, 'send_copy')                  # access the select box with a name of country
-        #    ie.checkbox(:name, /n_/ )                        # access the first select box whose name matches n_
-        #    ie.checkbox(:index, 2)                           # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.checkbox(:id, 'send_email')                   # access the check box with an id of send_mail
+        #    ie.checkbox(:name, 'send_copy')                  # access the check box with a name of send_copy
+        #    ie.checkbox(:name, /n_/ )                        # access the first check box whose name matches n_
+        #    ie.checkbox(:index, 2)                           # access the second check box on the page ( 1 based, so the first field is accessed with :index,1)
         #
         # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
         #
@@ -457,15 +457,15 @@ module Watir
         #
         # Watir can access these using the following:
         #
-        #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the select box with an id of day_to_send and a value of monday
-        #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the select box with a name of email_frequency and a value of 'weekly'
+        #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
+        #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
         #
         def checkbox( how , what , value=nil)
             c = RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
         alias checkBox checkbox
 
-        # this is the method for accessing thr check boxes iterator. Returns a Check_Boxes object
+        # this is the method for accessing the check boxes iterator. Returns a Check_Boxes object
         #
         # Typical usage:
         #
@@ -481,12 +481,39 @@ module Watir
         #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
         #  *  what  - string, int or regexp , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
+        #
         # returns a RadioCheckCommon object
+        #
+        # Typical usage
+        #
+        #    ie.radio(:id, 'send_email')                   # access the radio button with an id of currency
+        #    ie.radio(:name, 'send_copy')                  # access the radio button with a name of country
+        #    ie.radio(:name, /n_/ )                        # access the first radio button whose name matches n_
+        #    ie.radio(:index, 2)                           # access the second radio button on the page ( 1 based, so the first field is accessed with :index,1)
+        #
+        # In many instances, radio buttons on an html page have the same name, but are identified by different values. An example is shown next.
+        #
+        #  <input type = radio  name = email_frequency value = 'daily' > Daily Email
+        #  <input type = radio  name = email_frequency value = 'Weekly'> Weekly Email
+        #  <input type = radio  name = email_frequency value = 'monthly'>Monthly Email
+        #
+        # Watir can access these using the following:
+        #
+        #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
+        #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
+        #
         def radio( how , what , value=nil)
             return RadioCheckCommon.new( self, how, what, "radio", value)
         end
 
         # this is the method for accessing the radio buttons iterator. Returns a Radios object
+        #
+        # Typical usage:
+        #
+        #   ie.radios.each do |s| ; puts s.to_s ; end ;   # iterate through all the radio buttons on the page
+        #   ie.radios[1].to_s                             # goto the first radio button on the page                                   
+        #   ie.radios.length                              # show how many radio buttons are on the page.
+        #
         def radios
             return Radios.new(self)
         end
