@@ -180,9 +180,15 @@ module Watir
         #
 
         # this method is the main way of accessing a frame 
-        #   * frame_name  - string, the name of the frame to access
+        #   *  how   - how the frame is accessed, either :name or :index is supported. This can also just be the name of the frame
+        #   *  what  - what we want to access.
+        #
+        # Typical usage:
+        #
+        #   ie.frame(:index,1) 
+        #   ie.frame(:name , 'main_frame')
+        #   ie.frame('main_frame')        # in this case, just a name is supplied
         def frame( how, what=nil)
-
 
             if what == nil
                 what = how
@@ -224,18 +230,31 @@ module Watir
         end
 
         # this is the main method for accessing the tables iterator. It returns a Tables object
+        #
+        # Typical usage:
+        #
+        #   ie.tables.each do |t| ; puts t.to_s ; end ;   # iterate through all the tables on the page
+        #   ie.tables[1].to_s                             # goto the first table on the page                                   
+        #   ie.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
+        #
         def tables()
             return Tables.new(self)
         end
 
         # this method accesses a table cell. 
         # how - symbol - how we access the cell,  :id is supported
+        # 
+        # returns a TableCell Object
+        #
         def cell( how, what )
            return TableCell.new( self, how, what)
         end
 
         # this method accesses a table row. 
         # how - symbol - how we access the row,  :id is supported
+        # 
+        # returns a TableRow object
+        #
         def row( how, what )
            return TableRow.new( self, how, what)
         end
@@ -245,6 +264,16 @@ module Watir
         #  *  how   - symbol - how we access the button , :index, :caption, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         # Returns a Button object.
+        #
+        # Typical Usage
+        #
+        #    ie.button(:id,    'b_1')                       # access the button with an ID of b_1
+        #    ie.button(:name,  'verify_data')               # access the button with a name of verify_data
+        #    ie.button(:value, 'Login')                     # access the button with a value (the text displayed on the button) of Login
+        #    ie.button(:caption, 'Login')                   # same as above
+        #    ie.button(:value, /Log/)                       # access the button that has text matching /Log/
+        #    ie.button(:index, 2)                           # access the second button on the page ( 1 based, so the first button is accessed with :index,1)
+        #
         def button( how , what=nil )
             if how.kind_of? Symbol and what != nil
                 return Button.new(self, how , what )
@@ -257,15 +286,31 @@ module Watir
         end
 
         # this is the main method for accessing the buttons iterator. It returns a Buttons object
+        #
+        # Typical usage:
+        #
+        #   ie.buttons.each do |b| ; puts b.to_s ; end ;   # iterate through all the buttons on the page
+        #   ie.buttons[1].to_s                             # goto the first button on the page                                   
+        #   ie.buttons.length                              # show how many buttons are on the page. 
         def buttons()
             return Buttons.new(self)
         end
 
 
         # This is the main method for accessing a reset button ( <input type = reset> ).
-        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
+        #  *  how   - symbol - how we access the button , :index, :caption, :value ( value and caption are the same) :name etc
         #  *  what  - string, int or re , what we are looking for, 
+        #
         # Returns a Reset object.
+        #
+        # Typical Usage
+        #
+        #    ie.reset(:id,    'r_1')                       # access the reset button with an ID of r_1
+        #    ie.reset(:name,  'clear_data')                # access the reset button with a name of clear_data
+        #    ie.reset(:value, 'Clear')                     # access the reset button with a value (the text displayed on the button) of Clear
+        #    ie.reset(:calption, 'Clear')                  # same as above
+        #    ie.reset(:index, 2)                           # access the second reset button on the page ( 1 based, so the first reset button is accessed with :index,1)
+        #
         def reset( how , what=nil )
             if how.kind_of? Symbol and what != nil
                 return Reset.new(self, how , what )
@@ -282,7 +327,15 @@ module Watir
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
+        #
         # returns a FileField object
+        #
+        # Typical Usage
+        #
+        #    ie.file_field(:id,   'up_1')                     # access the file upload field with an ID of up_1
+        #    ie.file_field(:name, 'upload')                   # access the file upload field with a name of upload
+        #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
+        #
         def file_field( how , what )
             f = FileField.new(self , how, what)
         end
@@ -291,23 +344,56 @@ module Watir
         # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
-        # returns a TextFieldobject
+        #
+        # returns a TextField object
+        #
+        # Typical Usage
+        #
+        #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
+        #    ie.text_field(:name, 'address')                   # access the text field with a name of address
+        #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
+        #
         def text_field( how , what )
             t = TextField.new(self , how, what)
         end
         alias textField text_field
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
+        #
+        # Typical usage:
+        #
+        #   ie.text_fields.each do |t| ; puts t.to_s ; end ;   # iterate through all the text fields on the page
+        #   ie.text_fields[1].to_s                             # goto the first text field on the page                                   
+        #   ie.text_fields.length                              # show how many text field are on the page.
+        #
         def text_fields
             return Text_Fields.new(self)
         end
 
-
+        # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
+        #  *  how   - symbol - how we access the field , :index, :id, :name etc
+        #  *  what  - string, int or re , what we are looking for, 
+        #
+        # returns a Hidden
+        #
+        # Typical usage
+        #
+        #    ie.hidden(:id, 'session_id')                 # access the hidden field with an ID of session_id
+        #    ie.hidden(:name, 'temp_value')               # access the hidden field with a name of temp_value
+        #    ie.hidden(:index, 2)                         # access the second hidden field on the page ( 1 based, so the first field is accessed with :index,1)
+        #
         def hidden( how, what )
             return Hidden.new(self, how, what)
         end
 
         # this is the method for accessing the hiddens iterator. It returns a Hiddens object
+        #
+        # Typical usage:
+        #
+        #   ie.hiddens.each do |t| ; puts t.to_s ; end ;   # iterate through all the hidden fields on the page
+        #   ie.hiddens[1].to_s                             # goto the first hidden field on the page                                   
+        #   ie.hiddens.length                              # show how many hidden fields are on the page.
+        #
         def hiddens
             return Hiddens.new(self)
         end
@@ -317,13 +403,31 @@ module Watir
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
+        #
         # returns a SelectBox object
+        #
+        # Typical usage
+        #
+        #    ie.select_list(:id, 'currency')                   # access the select box with an id of currency
+        #    ie.select_list(:name, 'country')                  # access the select box with a name of country
+        #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
+        #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
+        #
         def select_list( how , what )
             s = SelectBox.new(self , how, what)
         end
         alias selectBox select_list
 
-        # this is the method for accessing thr select lists iterator. Returns a Select_Lists object
+
+
+        # this is the method for accessing the select lists iterator. Returns a Select_Lists object
+        #
+        # Typical usage:
+        #
+        #   ie.select_lists.each do |s| ; puts s.to_s ; end ;   # iterate through all the select boxes on the page
+        #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
+        #   ie.select_lists.length                              # show how many select boxes are on the page.
+        #
         def select_lists()
             return Select_Lists.new(self)
         end
@@ -331,16 +435,44 @@ module Watir
 
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
+        #
         #  *  how   - symbol - how we access the check box , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
+        #
         # returns a RadioCheckCommon object
+        #
+        # Typical usage
+        #
+        #    ie.checkbox(:id, 'send_email')                   # access the select box with an id of currency
+        #    ie.checkbox(:name, 'send_copy')                  # access the select box with a name of country
+        #    ie.checkbox(:name, /n_/ )                        # access the first select box whose name matches n_
+        #    ie.checkbox(:index, 2)                           # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
+        #
+        # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
+        #
+        #  <input type = checkbox name = email_frequency value = 'daily' > Daily Email
+        #  <input type = checkbox name = email_frequency value = 'Weekly'> Weekly Email
+        #  <input type = checkbox name = email_frequency value = 'monthly'>Monthly Email
+        #
+        # Watir can access these using the following:
+        #
+        #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the select box with an id of day_to_send and a value of monday
+        #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the select box with a name of email_frequency and a value of 'weekly'
+        #
         def checkbox( how , what , value=nil)
             c = RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
         alias checkBox checkbox
 
         # this is the method for accessing thr check boxes iterator. Returns a Check_Boxes object
+        #
+        # Typical usage:
+        #
+        #   ie.checkboxes.each do |s| ; puts s.to_s ; end ;   # iterate through all the check boxes on the page
+        #   ie.checkboxes[1].to_s                             # goto the first check box on the page                                   
+        #   ie.checkboxes.length                              # show how many check boxes are on the page.
+        #
         def checkboxes
             return Check_Boxes.new(self)
         end
