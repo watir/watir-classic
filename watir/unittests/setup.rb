@@ -21,8 +21,7 @@ $failing_tests =
      ].collect {|x| their_unit_tests x}
 $tests_that_must_be_visible = # don't work when run with the -b switch (fail or hang), 
                               # or else are visible nontheless
-  [#'image_saveas', 
-    'screen_capture', # is always visible; takes 25 secons
+  [ 'screen_capture', # is always visible; takes 25 secons
     'filefield', # is always visible; takes 40 seconds 
     'jscript',
     'js_events' # is always visible
