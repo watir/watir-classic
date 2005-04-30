@@ -68,14 +68,27 @@ class TC_Fields < Test::Unit::TestCase
     end
 
     def test_TextField_to_s
-         puts "---------------- To String test -------------"
-         puts $ie.text_field(:index , 1).to_s
-         puts "---------------- To String test -------------"
-         puts $ie.text_field(:index , 2).to_s
-         puts "---------------- To String test -------------"
-         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 999 ).to_s}  
+        expected = [build_to_s_regex("type", "text"),
+                    build_to_s_regex("id", ""),
+                    build_to_s_regex("name", "text1"),
+                    build_to_s_regex("value", "Hello World"),
+                    build_to_s_regex("disabled", "false"),
+                    build_to_s_regex("length", "20"),
+                    build_to_s_regex("max length", "2147483647"),
+                    build_to_s_regex("read only", "false")]
+        items = $ie.text_field(:index, 1).to_s.split(/\n/)
+        expected.each_with_index{|regex, x| assert(regex =~ items[x]) }
+        expected[1] = build_to_s_regex("id", "text2")
+        expected[2] = build_to_s_regex("name", "")
+        expected[3] = build_to_s_regex("value", "goodbye all")
+        items = $ie.text_field(:index, 2).to_s.split(/\n/)
+        expected.each_with_index{|regex, x| assert(regex =~ items[x]) }
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.text_field(:index, 999 ).to_s}  
     end
-
+    
+    def build_to_s_regex(lhs, rhs)
+        Regexp.new("^#{lhs}: +#{rhs}$")
+    end
 
     def test_text_field_Append
          assert_raises(ObjectReadOnlyException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:id, "readOnly2").append("Some Text") }  
