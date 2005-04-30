@@ -192,8 +192,9 @@ class TC_Images < Test::Unit::TestCase
     def run_webrick(port = 33000)
         @port = port
         server = WEBrick::HTTPServer.new(:Port => port,
-                                         :DocumentRoot => build_path("html"),
-        :Logger => WEBrick::Log.new(nil, WEBrick::Log::FATAL ))
+                         :DocumentRoot => build_path("html"),
+                         :Logger => WEBrick::Log.new(nil, WEBrick::Log::FATAL),
+                         :AccessLog => "")
         begin
             runner = Thread.new(server) {|svr| svr.start()}
             yield
