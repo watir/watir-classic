@@ -107,7 +107,25 @@ class TC_Links < Test::Unit::TestCase
     end
 
     def test_showLinks
-        $ie.showLinks
+        tmp = ""
+        def tmp.puts(s) self << s; end
+        $ie.showLinks(tmp)
+        expected = [/^index name +id +href + text\/src$/,
+                    get_path_regex(1, "links2.htmltest1"),
+                    get_path_regex(2, "link_pass.htmltest1"),
+                    get_path_regex(3, "pass3.html / file:///#{$myDir.downcase}/html/images/button.jpg"),
+                    get_path_regex(4, "textarea.htmlnew window"),
+                    get_path_regex(5, "textarea.htmlnew window"),
+                    get_path_regex(6, "links1.htmllink using an id", "link_id"),
+                    get_path_regex(7, "links1.htmllink using a name", "link_name"),
+                    get_path_regex(8, "links1.htmllink using a title"),
+                    get_path_regex(9, "pass.htmlimage and a text link / file:///#{$myDir.downcase}/html/images/triangle.jpg")]
+        items = tmp.split(/\n/).collect {|s|s.downcase.strip}
+        expected.each_with_index{|regex, x| assert(regex =~ items[x])}
+    end
+
+    def get_path_regex(idx, name, nameid="")
+      Regexp.new("^#{idx} +#{nameid} +file:///#{$myDir.downcase}/html/#{name}$")
     end
 
 
