@@ -43,5 +43,14 @@ class TC_Navigate< Test::Unit::TestCase
        $ie.refresh
        # Not sure how we test this. Text fields and checkboxes dont get reset if you click the browser refresh button
     end
+
+    def test_http_errors
+        # this is commented out as it depends on too many things.....
+
+          assert_raises(NavigationException) { $ie.goto('http://localhost:3001') }         # Cannot find server or DNS Error
+          assert_raises(NavigationException) { $ie.goto('http://www.fxruby.org/dfdf' ) }  # HTTP 404 - File not found
+
+    end
+
 end
 

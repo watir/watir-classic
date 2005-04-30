@@ -100,6 +100,13 @@ module Watir
     end
 
 
+    # This exception is thrown if an http error, such as a 404, 500 etc is encountered while navigating
+    class NavigationException < WatirException
+        def initialize(message="")
+            super(message)
+        end
+    end
+
 
     
   end

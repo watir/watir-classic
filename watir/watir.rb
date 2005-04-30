@@ -67,7 +67,7 @@
 #
 #  -b  (background)   Run Internet Explorer invisible
 #  -f  (fast)         Run tests very fast
-
+#  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
 
 require 'win32ole'
 require 'logger'
@@ -1175,9 +1175,37 @@ module Watir
             @logger = DefaultLogger.new()
 
             @url_list = []
+
+            # add an error checker for http navigation errors, such as 404, 500 etc
+            navigation_checker=Proc.new{ |ie|
+                if ie.document.frames.length > 1
+                    1.upto ie.document.frames.length do |i|
+                        check_for_http_error(ie.frame(:index, i)  )
+                    end
+                else
+                    check_for_http_error(ie)
+                end
+             }
+
+            add_checker(  navigation_checker )       
+
         end
         private :set_defaults        
         
+        def check_for_http_error(ie)
+          
+            url=ie.document.url 
+            #puts "url is " + url
+            if /shdoclc.dll/.match(url)
+                puts "Match on shdoclc.dll"
+                m = /id=IEText.*?>(.*?)</i.match(ie.html)
+                if m
+                    #puts "Error is #{m[1]}"
+                    raise NavigationException , m[1]
+                end
+            end
+        end
+
         def set_fast_speed
             @typingspeed = 0
             @defaultSleepTime = 0.01
@@ -1426,7 +1454,7 @@ module Watir
                 
                 s=nil
             rescue WIN32OLERuntimeError => e
-                @logger.warn 'runtime error in wait' #  + e.to_s
+                @logger.warn 'runtime error in wait ' #  + e.to_s
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
@@ -1768,6 +1796,7 @@ module Watir
         def getDocument
             @frame.document
         end
+        alias document getDocument
 
         def wait(no_sleep = false)
             @container.wait(no_sleep)
