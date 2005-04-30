@@ -11,23 +11,18 @@ Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
 end
 
-def their_unit_tests x; "unittests/#{x}_test.rb"; end
-$failing_tests = 
+$non_core_tests = 
     ['popups', # has problems when run in a suite (is ok when run alone); 
                # must be visible
                # will be revised to use autoit 
                # takes 15 seconds to run
-     'images'  # 
-     ].collect {|x| their_unit_tests x}
-$tests_that_must_be_visible = # don't work when run with the -b switch (fail or hang), 
-                              # or else are visible nontheless
-  [ 'screen_capture', # is always visible; takes 25 secons
-    'filefield', # is always visible; takes 40 seconds 
-    'jscript',
-    'js_events' # is always visible
-    ].collect {|x| their_unit_tests x}
+     'images', # failing tests; also assumes working dir is unittests
+     'screen_capture', # is always visible; takes 25 secons
+     'filefield', # is always visible; takes 40 seconds 
+     'jscript',
+     'js_events' # is always visible
+    ].collect {|x| "unittests/#{x}_test.rb"}
 
-$non_core_tests = $failing_tests + $tests_that_must_be_visible
 $core_tests = $all_tests - $non_core_tests
 
 def start_ie_with_logger
