@@ -94,14 +94,15 @@ end
 
 # This method copies samples, unittests, documentation and Rdocs to the selected directory 'dirSelected'
 # A start menu item and desktop icon will be created if 'startMenu' and 'desktop' are true
-def install(dirSelected, startMenu, desktop)
+def install(dirSelected, startMenu, desktop , register_AutoIt )
     puts "Going to install to #{dirSelected} with startMenu=#{startMenu} and desktop=#{desktop}"
 
     siteLib = (Config::CONFIG['sitelibdir']).gsub("/" , "\\")
+    watir_sub_dir = siteLib + '\\watir\\'
 
     # copy the watir libs to siteLib 
     puts "Copying Files"
-    d = File.makedirs(siteLib + '\\watir\\')
+    d = File.makedirs(watir_sub_dir )
     copy_file( 'watir.rb' , siteLib)
     FileUtils.cp_r('watir', siteLib, {:verbose=> true} )
 
@@ -132,6 +133,19 @@ def install(dirSelected, startMenu, desktop)
         make_desktop_shortcut( "Watir API Reference", dirSelected + "\\rdoc\\index.html" ) 
     end
 
+    if register_AutoIt==1
+    
+        # register the autoit dll
+        # this doesnt seem to return any useful error levels, so Im going to display the regsvr dialog box
+        system("regsvr32.exe #{watir_sub_dir}AutoItX3.dll")
+
+        make_startmenu_shortcut( "AutoIt Reference", watir_sub_dir+ "\\AutoItX.chm" ) if startMenu==1
+
+
+    end
+
+
+
 end
 
 
@@ -143,7 +157,7 @@ bonus_location = homeDrive + "\\watir_bonus\\"   # the default bonus location
 
 # Creat an FXApplication
 application = FXApp.new("mainWindow", "Watir Installer")    
-main = FXMainWindow.new(application, "Watir Installer", nil, nil, DECOR_ALL, 0, 0, 380, 150)
+main = FXMainWindow.new(application, "Watir Installer", nil, nil, DECOR_ALL, 0, 0, 380, 250)
 
 # Load mini icons
 icon=loadGifIcon(application, "watir.gif")
@@ -181,11 +195,15 @@ desktopIcon.checkState = true
 startMenuShortcut = FXCheckButton.new(vFrame, "Start Menu Shortcut\n", nil)
 startMenuShortcut.checkState = true
 
+installAUtoIt = FXCheckButton.new(vFrame, "Install AutoIt\n", nil)
+installAUtoIt.checkState = true
+
+
 
 # install button
 installButton = FXButton.new(vFrame, "Install", nil, application, BUTTON_NORMAL)
 installButton.connect(SEL_COMMAND) do |sender, sel, checked|    
-    install(browseText.text, startMenuShortcut.checkState, desktopIcon.checkState)
+    install(browseText.text, startMenuShortcut.checkState, desktopIcon.checkState ,installAUtoIt.checkState  )
     puts "Installation Completed"
     application.exit()   
 end
