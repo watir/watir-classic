@@ -1419,7 +1419,9 @@ module Watir
         alias showImages show_images
         
         # this method shows all the links availble in the document
-        def show_links()
+        # * strm -- stream where output is sent, stdout by default, must
+        #           handle the puts command
+        def show_links(strm=$stdout)
 
             props=       ["name" ,"id" , "href"  ]
             print_sizes= [12 , 12, 60]
@@ -1455,7 +1457,7 @@ module Watir
                 end
                 s=s+"\n"
             end
-            puts  s
+            strm.puts  s
 
         end
         alias showLinks show_links
