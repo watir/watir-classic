@@ -153,23 +153,43 @@ module Watir
         end
     end
 
-    #
+    #--
     # MOVETO: watir/browser_driver.rb
     # Module Watir::BrowserDriver
-    #
+    #++
     
 
+
+    # This module contains the factory methods that are used to access most html objects
+    #
+    # For example, to access a button on a web page that has the following html
+    #  <input type = button name= 'b1' value='Click Me' onClick='javascript:doSomething()'>
+    #
+    # the following watir code could be used
+    #
+    #  ie.button(:name, 'b1').click
+    #
+    # or
+    #
+    #  ie.button(:value, 'Click Me').to_s
+    #
+    # there are many methods available to the Button object
+    #
     module FactoryMethods 
         include Watir::Exception
 
+
+        # this method returns the real Internet Explorer object, allowing access to objects, properties and methods that Watir doesnot support
         def ie
             return @ieController
         end
 
+        # write the specified string to the log, assuming a logger has been setup using IE#set_logger
         def log ( what )
             @ieController.logger.debug( what ) if @logger
         end
 
+        # this method causes Watir to wait until Internet Explorer has finished the action
         def wait( noSleep  = false )
              @ieController.waitForIE( noSleep )
         end
@@ -374,7 +394,7 @@ module Watir
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #
-        # returns a Hidden
+        # returns a Hidden object
         #
         # Typical usage
         #
@@ -506,7 +526,7 @@ module Watir
             return RadioCheckCommon.new( self, how, what, "radio", value)
         end
 
-        # this is the method for accessing the radio buttons iterator. Returns a Radios object
+        # This is the method for accessing the radio buttons iterator. Returns a Radios object
         #
         # Typical usage:
         #
@@ -519,30 +539,62 @@ module Watir
         end
         
         # This is the main method for accessing a link.
-        #  *  how   - symbol - how we access the link, :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the link, :index, :id, :name , :beforetext, :afterText, :title , :text , :url
+        #  *  what  - string, int or re , what we are looking for
+        #
         # returns a Link object
+        #
+        # Typical Usage
+        # 
+        #   ie.link(:url, /login/)              # access the first link whose url matches login. We can use a string in place of the regular expression
+        #                                       # but the complete path must be used, ie.link(:url, 'http://myserver.com/my_path/login.asp')
+        #   ie.link(:index,2)                   # access the second link on the page
+        #   ie.link(:title , "Picture")         # access a link using the tool tip
+        #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
+        #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
+        #
         def link( how , what)
             return Link.new(self , how, what )
         end
 
-        # this is the factory method for accessing the links collection. Returns a Links object
+        # This is the main method for accessing the links collection. Returns a Links object
+        #
+        # Typical usage:
+        #
+        #   ie.links.each do |l| ; puts l.to_s ; end ;   # iterate through all the links on the page
+        #   ie.links[1].to_s                             # goto the first link on the page                                   
+        #   ie.links.length                              # show how many links are on the page.
+        #
         def links
             return Links.new(self)
         end
 
         
-        # This is the main method for accessing images.
-        #  *  how   - symbol - how we access the image, :index, :id, :name , :src
+        # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
+        #  *  how   - symbol - how we access the image, :index, :id, :name , :src or :alt are supported
         #  *  what  - string, int or re , what we are looking for, 
+        #
         # returns an Image object
-        #This method retrieves an image on a web page for use.
-        #Uses an <img src="image.gif"> HTML tag.
+        #
+        # Typical Usage
+        # 
+        #   ie.image(:src, /myPic/)             # access the first image that matches myPic. We can use a string in place of the regular expression
+        #                                       # but the complete path must be used, ie.image(:src, 'http://myserver.com/my_path/my_image.jpg')
+        #   ie.image(:index,2)                  # access the second image on the page
+        #   ie.image(:alt , "A Picture")        # access an image using the alt text
+        #   
         def image( how , what)
             i = Image.new(self , how, what )
         end
         
-        # this is the factory method for accessing the images collection. Returns an Images object
+        # This is the main method for accessing the images collection. Returns an Images object
+        #
+        # Typical usage:
+        #
+        #   ie.images.each do |i| ; puts i.to_s ; end ;   # iterate through all the images on the page
+        #   ie.images[1].to_s                             # goto the first image on the page                                   
+        #   ie.images.length                              # show how many images are on the page.
+        #
         def images
             return Images.new(self)
         end
@@ -554,71 +606,124 @@ module Watir
         end
 
 
-        # This is the main method for accessing divs.
-        #  *  how   - symbol - how we access the div, :index, :id, :name 
+        # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
+        #  *  how   - symbol - how we access the div, :index, :id, :title
         #  *  what  - string, integer or re , what we are looking for, 
+        #
         # returns an Div object
+        #
+        # Typical Usage
+        # 
+        #   ie.div(:id, /list/)                 # access the first div that matches list.
+        #   ie.div(:index,2)                    # access the second div on the page
+        #   ie.div(:title , "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   
         def div( how , what )
             return Div.new(self , how , what)
         end
 
         # this is the main method for accessing the divs iterator. Returns a Divs object
+        #
+        # Typical usage:
+        #
+        #   ie.divs.each do |i| ; puts i.to_s ; end ;   # iterate through all the divs on the page
+        #   ie.divs[1].to_s                             # goto the first div on the page                                   
+        #   ie.divs.length                              # show how many divs are on the page.
+        #
         def divs
             return Divs.new(self)
         end
 
-        # This is the main method for accessing span tags
+        # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/span.asp?frame=true
         #  *  how   - symbol - how we access the span, :index, :id, :name 
         #  *  what  - string, integer or re , what we are looking for, 
-        # returns an Span object
+        #
+        # returns a Span object
+        #
+        # Typical Usage
+        # 
+        #   ie.span(:id, /list/)                 # access the first span that matches list.
+        #   ie.span(:index,2)                    # access the second span on the page
+        #   ie.span(:title , "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   
         def span( how , what )
             return Span.new(self , how , what)
         end
 
-        # this is the main method for accessing the spans iterator. Returns a Spans object
+        # this is the main method for accessing the spans iterator. 
+        # 
+        # Returns a Spans object
+        #
+        # Typical usage:
+        #
+        #   ie.spans.each do |i| ; puts i.to_s ; end ;   # iterate through all the spans on the page
+        #   ie.spans[1].to_s                             # goto the first span on the page                                   
+        #   ie.spans.length                              # show how many spans are on the page.
+        #
         def spans()
             return Spans.new(self)
         end
 
         # this is the main method for accessing the labels iterator. It returns a Labels object
+        # 
+        # Returns a Labels object
+        #
+        # Typical usage:
+        #
+        #   ie.labels.each do |i| ; puts i.to_s ; end ;   # iterate through all the labels on the page
+        #   ie.labels[1].to_s                             # goto the first label on the page                                   
+        #   ie.labels.length                              # show how many labels are on the page.
+        #
         def labels()
             return Labels.new(self)
         end
 
-        # This is the main method for accessing labels.
+        # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
         #  *  how   - symbol - how we access the label, :index, :id, :for
         #  *  what  - string, integer or re , what we are looking for, 
+        #
         # returns a Label object
+        #
+        # Typical Usage
+        # 
+        #   ie.label(:id, /list/)                 # access the first span that matches list.
+        #   ie.label(:index,2)                    # access the second label on the page
+        #   ie.label(:for, "text_1")              # access a the label that is associated with the object that has an id of text_1
+        #   
         def label( how, what)
             return Label.new(self, how, what)
         end
 
 
         
+
+        #--
         #
         # Searching for Page Elements
         # Not for external consumption
         #        
+        #++
 
-        
+        # this method is used iternally by Watir and should not be used externally. 
         def getContainerContents()
             return getDocument.body.all 
         end
         private :getContainerContents
 
+        # this method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         def getContainer()
             return getDocument.body
         end
-
-           
-
      
         # This is the main method for finding objects on a web page.
+        #
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         #   * how - symbol - the way we look for the object. Supported values are
         #                  - :name
         #                  - :id
         #                  - :index
-        #                  - :value
+        #                  - :value etc
         #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
         #   * types - what object types we will look at. Only used when index is specified as the how.
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
@@ -702,7 +807,9 @@ module Watir
             
             return o
         end
-        
+
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #      
         # This method is used internally to locate an object that has a value specified.
         # It is normally used for buttons with a caption (HTML value attribute).
         #   * what            - what we are looking for - normally the value or caption of a button
@@ -722,6 +829,8 @@ module Watir
             return o
         end
         
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # This method is used on buttons that are of type "image". Usually an <img src=""> or <input type="image"> HTML tag.
         # When an image is used to submit a form, it is treated as a button.
         #   * what            - what we are looking for - normally the src or alt tag attribute of a button
@@ -749,7 +858,9 @@ module Watir
             end
             return o
         end
-        
+
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # This method is used to locate an object when an "index" is used. 
         # It is used internally.
         #   * container  - the container we are looking in
@@ -792,11 +903,11 @@ module Watir
             return o
         end
         
-
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # this method finds the specified image
-        # doc  - where to look
-        # how  - symnol - how to look
-        # what - string or regexp - what to look ofr
+        #    * how  - symbol - how to look
+        #    * what - string or regexp - what to look ofr
         def getImage( how, what )
 
             doc = getDocument()
@@ -833,6 +944,8 @@ module Watir
 
         end
 
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # This method gets a link from the document. This is a hyperlink, generally declared in the <a href="http://testsite">test site</a> HTML tag.
         #   * how  - symbol - how we get the link Supported types are:
         #                     :index - the link at position x , 1 based
@@ -891,7 +1004,6 @@ module Watir
                         link = thisLink if link == nil
                     end
                 end
-
                 
             when :beforeText
                 links.each do |thisLink|
@@ -906,8 +1018,6 @@ module Watir
                         link = thisLink if link == nil
                     end
                 end
-
-
             else
                 raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
             end
@@ -918,7 +1028,8 @@ module Watir
         
         end
 
-
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # This method gets a table row or cell 
         #   * how  - symbol - how we get the link row or cell types are:
         #            id
@@ -935,11 +1046,14 @@ module Watir
              end
              return n
         end
+        #++
 
+
+        #--
+
+        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        #
         # this method is used to get elements like SPAN or DIV
-        #---
-        # Dont me make me private!
-        #+++
         def getNonControlObject(part , how, what )
 
              doc = getDocument()
@@ -974,7 +1088,7 @@ module Watir
             return n
 
         end
-
+        #++
 
 
     end
@@ -1419,9 +1533,9 @@ module Watir
         alias showImages show_images
         
         # this method shows all the links availble in the document
-        # * strm -- stream where output is sent, stdout by default, must
-        #           handle the puts command
-        def show_links(strm=$stdout)
+        # * strm -- stream where output is sent, stdout by default, must 
+        #           handle the puts command 
+        def show_links(strm=$stdout) 
 
             props=       ["name" ,"id" , "href"  ]
             print_sizes= [12 , 12, 60]
@@ -1458,7 +1572,6 @@ module Watir
                 s=s+"\n"
             end
             strm.puts  s
-
         end
         alias showLinks show_links
 
@@ -1773,12 +1886,13 @@ module Watir
                                 
     end # class Form
     
-
+    #--
     #
     # MOVETO: watir/driver.rb
     # Module Watir::Driver
     #
-        
+    #++       
+ 
     # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
     # This is not a class that users would normally access. 
     class ObjectActions
@@ -1968,6 +2082,9 @@ module Watir
     # this class is the super class for the iterator classes ( buttons, links, spans etc
     # it would normally only be accessed by the iterator methods ( spans , links etc) of IEController
     class Iterators
+
+        include Enumerable
+
         # Super class for all the iteractor classes
         #   * ieController  - an instance of an IEController
         def initialize( ieController)
@@ -1995,6 +2112,7 @@ module Watir
             return length
 
         end
+
 
         # iterate through each of the elements in the collection in turn
         def each
@@ -2217,6 +2335,9 @@ module Watir
 
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
+    #
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class SpanDivCommon < ObjectActions
 
 
@@ -2304,7 +2425,11 @@ module Watir
          end
     end
 
-    # this class is used to deal with Div tags in the html page. It would not normally be created by users
+    # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
+    # It would not normally be created by users
+    #
+    # many of the methods available to this object are inherited from the SpanDivCommonclass
+    #
     class Div < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "div"
@@ -2314,6 +2439,9 @@ module Watir
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
+    #
+    # many of the methods available to this object are inherited from the SpanDivCommon class
+    #
     class Span < SpanDivCommon 
         def initialize( ieController, how, what)
             @objectType = "span"
@@ -2321,7 +2449,10 @@ module Watir
         end
     end
 
-    # this class is used to access a label object on the html page
+    # this class is used to access a label object on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
+    #
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class Label < ObjectActions
         def initialize( ieController , how, what)
             @ieController = ieController
@@ -2378,14 +2509,14 @@ module Watir
             return r.join("\n")
         end
 
-
-
     end
 
 
 
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class Table < ObjectActions
  
         # Returns an initialized instance of the table object to wich anElement belongs
@@ -2538,13 +2669,13 @@ module Watir
             return (1..row_count).collect {|idx| self[idx][columnnumber].text}
         end
 
-
-
     end
 
 
     # this class is a collection of the table body objects that exist in the table
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class TableBodies<ObjectActions
 
         def initialize(ieController, how, what )
@@ -2747,6 +2878,8 @@ module Watir
 
     # This class is the means of accessing an image on a page.
     # It would not normally be used by users, as the image method of IEController would return an initialised instance of an image.
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class Image < ObjectActions
         
         # Returns an initialized instance of a image  object
@@ -2889,6 +3022,8 @@ module Watir
     
     # This class is the means of accessing a link on a page
     # It would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link.
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class Link < ObjectActions
         # Returns an initialized instance of a link object
         #   * ieController  - an instance of an IEController
@@ -2968,6 +3103,9 @@ module Watir
     
     # This class is the way in which select boxes are manipulated.
     # it would not normally be created by a user, as it is returned by the selectBox method of IEController
+    #
+    # many of the methods available to this object are inherited from the ObjectActions class
+    #
     class SelectBox < ObjectActions
         # returns an initialized instance of a SelectBox object
         #   * ieController  - an instance of an IEController
@@ -3094,7 +3232,10 @@ module Watir
     
 
     # This is the main class for accessing buttons.
-    # Normally a user would not need to create this object as it is returned by the IEController Button method.
+    # Normally a user would not need to create this object as it is returned by the factory method button 
+    #
+    # most of the methods available to Button objects are inherited from the ObjectActions class
+    #
     class Button < ObjectActions
         def initialize( ieController,  how , what )
             @ieController = ieController
