@@ -66,9 +66,7 @@
 # command line options:
 #
 #  -b  (background)   Run Internet Explorer invisible
-#  -s  (Spinner off)  Use this when you don't want the spinner displayed. Useful when using an IDE like Eclipse or Scite
-
-
+#  -f  (fast)         Run tests very fast
 
 
 require 'win32ole'
@@ -103,7 +101,13 @@ end
 $HIDE_IE = command_line_flag('-b') 
 
 # Constant to enable/disable the spinner
-$ENABLE_SPINNER = !command_line_flag('-s') 
+$ENABLE_SPINNER = command_line_flag('-x') 
+
+# Constant to set fast speed
+$FAST_SPEED = command_line_flag('-f')
+
+# Eat the -s command line switch (deprecated)
+command_line_flag('-s')
 
 module Watir
     include Watir::Exception
@@ -153,11 +157,6 @@ module Watir
         end
     end
 
-    #--
-    # MOVETO: watir/browser_driver.rb
-    # Module Watir::BrowserDriver
-    #++
-    
 
 
     # This module contains the factory methods that are used to access most html objects
@@ -256,7 +255,6 @@ module Watir
         #   ie.tables.each do |t| ; puts t.to_s ; end ;   # iterate through all the tables on the page
         #   ie.tables[1].to_s                             # goto the first table on the page                                   
         #   ie.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
-        #
         def tables()
             return Tables.new(self)
         end
@@ -265,7 +263,6 @@ module Watir
         # how - symbol - how we access the cell,  :id is supported
         # 
         # returns a TableCell Object
-        #
         def cell( how, what )
            return TableCell.new( self, how, what)
         end
@@ -274,11 +271,9 @@ module Watir
         # how - symbol - how we access the row,  :id is supported
         # 
         # returns a TableRow object
-        #
         def row( how, what )
            return TableRow.new( self, how, what)
         end
-
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
         #  *  how   - symbol - how we access the button , :index, :caption, :name etc
@@ -293,7 +288,6 @@ module Watir
         #    ie.button(:caption, 'Login')                   # same as above
         #    ie.button(:value, /Log/)                       # access the button that has text matching /Log/
         #    ie.button(:index, 2)                           # access the second button on the page ( 1 based, so the first button is accessed with :index,1)
-        #
         def button( how , what=nil )
             if how.kind_of? Symbol and what != nil
                 return Button.new(self, how , what )
@@ -315,7 +309,6 @@ module Watir
         def buttons()
             return Buttons.new(self)
         end
-
 
         # This is the main method for accessing a reset button ( <input type = reset> ).
         #  *  how   - symbol - how we access the button , :index, :caption, :value ( value and caption are the same) :name etc
@@ -342,8 +335,6 @@ module Watir
             end
         end
 
-
-
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -357,7 +348,7 @@ module Watir
         #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
         #
         def file_field( how , what )
-            f = FileField.new(self , how, what)
+            return FileField.new(self , how, what)
         end
         alias fileField file_field
         
@@ -372,9 +363,8 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        #
         def text_field( how , what )
-            t = TextField.new(self , how, what)
+            return TextField.new(self , how, what)
         end
         alias textField text_field
 
@@ -385,7 +375,6 @@ module Watir
         #   ie.text_fields.each do |t| ; puts t.to_s ; end ;   # iterate through all the text fields on the page
         #   ie.text_fields[1].to_s                             # goto the first text field on the page                                   
         #   ie.text_fields.length                              # show how many text field are on the page.
-        #
         def text_fields
             return Text_Fields.new(self)
         end
@@ -401,7 +390,6 @@ module Watir
         #    ie.hidden(:id, 'session_id')                 # access the hidden field with an ID of session_id
         #    ie.hidden(:name, 'temp_value')               # access the hidden field with a name of temp_value
         #    ie.hidden(:index, 2)                         # access the second hidden field on the page ( 1 based, so the first field is accessed with :index,1)
-        #
         def hidden( how, what )
             return Hidden.new(self, how, what)
         end
@@ -413,7 +401,6 @@ module Watir
         #   ie.hiddens.each do |t| ; puts t.to_s ; end ;   # iterate through all the hidden fields on the page
         #   ie.hiddens[1].to_s                             # goto the first hidden field on the page                                   
         #   ie.hiddens.length                              # show how many hidden fields are on the page.
-        #
         def hiddens
             return Hiddens.new(self)
         end
@@ -432,13 +419,10 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        #
         def select_list( how , what )
             s = SelectBox.new(self , how, what)
         end
         alias selectBox select_list
-
-
 
         # this is the method for accessing the select lists iterator. Returns a Select_Lists object
         #
@@ -447,12 +431,9 @@ module Watir
         #   ie.select_lists.each do |s| ; puts s.to_s ; end ;   # iterate through all the select boxes on the page
         #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
         #   ie.select_lists.length                              # show how many select boxes are on the page.
-        #
         def select_lists()
             return Select_Lists.new(self)
         end
-
-
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
         #
@@ -479,9 +460,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        #
         def checkbox( how , what , value=nil)
-            c = RadioCheckCommon.new( self, how, what, "checkbox", value)
+            return RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
         alias checkBox checkbox
 
@@ -492,7 +472,6 @@ module Watir
         #   ie.checkboxes.each do |s| ; puts s.to_s ; end ;   # iterate through all the check boxes on the page
         #   ie.checkboxes[1].to_s                             # goto the first check box on the page                                   
         #   ie.checkboxes.length                              # show how many check boxes are on the page.
-        #
         def checkboxes
             return Check_Boxes.new(self)
         end
@@ -584,7 +563,7 @@ module Watir
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
         def image( how , what)
-            i = Image.new(self , how, what )
+            return Image.new(self , how, what )
         end
         
         # This is the main method for accessing the images collection. Returns an Images object
@@ -602,7 +581,7 @@ module Watir
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
         def popup( )
-            i = PopUp.new(self )
+            return PopUp.new(self )
         end
 
 
@@ -1189,12 +1168,18 @@ module Watir
             @typingspeed = DEFAULT_TYPING_SPEED
             @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
             @defaultSleepTime = DEFAULT_SLEEP_TIME
+            set_fast_speed if $FAST_SPEED
 
             @logger = DefaultLogger.new()
 
             @url_list = []
         end
         private :set_defaults        
+        
+        def set_fast_speed
+            @typingspeed = 0
+            @defaultSleepTime = 0.01
+        end            
         
         def create_browser_window
             @ie = WIN32OLE.new('InternetExplorer.Application')
@@ -2280,9 +2265,6 @@ module Watir
         end
     end
 
-
-
-
     # this class accesses the hidden fields in the document as a collection
     # it would normally only be accessed by the hiddens method of IEController
     class Hiddens < Iterators
@@ -2295,9 +2277,6 @@ module Watir
             @ieController.hidden( :index , i+1)
         end
     end
-
-
-
 
     # this class accesses the text fields in the document as a collection
     # it would normally only be accessed by the text_fields method of IEController
@@ -2331,16 +2310,12 @@ module Watir
         end
     end
 
-
-
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
     #
     # many of the methods available to this object are inherited from the ObjectActions class
     #
     class SpanDivCommon < ObjectActions
-
-
         include Watir::Exception
         include FactoryMethods 
 
@@ -2363,7 +2338,6 @@ module Watir
         def getContainer()
             return @o
         end
-
 
         # this method returns the innerText of the object
         # raises an ObjectNotFound exception if the object cannot be found
@@ -2388,7 +2362,6 @@ module Watir
             object_exist_check
             return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
         end
-
 
         # spans or divs do not support a name attribute, so this returns an empty string
         # raises an ObjectNotFound exception if the object cannot be found
@@ -2510,8 +2483,6 @@ module Watir
         end
 
     end
-
-
 
     # This class is used for dealing with tables.
     # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
@@ -2677,7 +2648,6 @@ module Watir
     # many of the methods available to this object are inherited from the ObjectActions class
     #
     class TableBodies<ObjectActions
-
         def initialize(ieController, how, what )
             @ieController = ieController
             @o= nil
@@ -2724,7 +2694,6 @@ module Watir
             update_rows
             super(@o)
         end
-
  
         # This method updates the internal representation of the table. It can be used on dynamic tables to update the watir representation 
         # after the table has changed
@@ -2735,7 +2704,6 @@ module Watir
                 end
             end
         end
-
 
         # returns the specified row as a TableRow object
         def []n
@@ -2748,13 +2716,10 @@ module Watir
             0.upto( @rows.length-1 ) { |i | yield @rows[i]    }
         end
 
-
         # returns the number of rows in this table body.
         def length
            return @rows.length
         end
-
-
     end
 
 
@@ -2849,7 +2814,6 @@ module Watir
              @what = what   
              @typingspeed = @ieController.typingspeed      
              @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
-
          end 
 
         def getContainerContents()
@@ -2895,7 +2859,6 @@ module Watir
             super( @o )
             @how = how
             @what = what
-           
         end
 
         # this method produces the properties for an image as an array
@@ -2906,7 +2869,6 @@ module Watir
             n <<   "file size:".ljust(TO_S_SIZE) + self.fileSize.to_s
             n <<   "width:".ljust(TO_S_SIZE) + self.width.to_s
             n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
-
             return n
         end
         private :image_string_creator
@@ -3096,10 +3058,7 @@ module Watir
             r=r + link_string_creator
             return r.join("\n")
          end
-
     end
-    
-
     
     # This class is the way in which select boxes are manipulated.
     # it would not normally be created by a user, as it is returned by the selectBox method of IEController
@@ -3132,8 +3091,6 @@ module Watir
             object_exist_check
             return ""
         end
-
-
 
         # This method clears the selected items in the select box
         def clearSelection
@@ -3254,7 +3211,6 @@ module Watir
         end
 
     end
-
 
     # This is the main class for accessing reset buttons.
     # Normally a user would not need to create this object as it is returned by the IEController reset method.
@@ -3436,7 +3392,6 @@ module Watir
         #   * destination_how   - symbol, :id, :name how we identify the drop target 
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
         def dragContentsTo( destination_how , destination_what)
-
             object_exist_check
             destination = @ieController.textField(destination_how , destination_what)
 
@@ -3458,13 +3413,11 @@ module Watir
             self.value = ""
         end
 
-
         # This method clears the contents of the text box.
         #   Raises  UnknownObjectException if the object can't be found
         #   Raises  ObjectDisabledException if the object is disabled
         #   Raises  ObjectReadOnlyException if the object is read only
         def clear()
-
             object_exist_check
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
@@ -3480,7 +3433,6 @@ module Watir
             @o.fireEvent("onChange")
             @ieController.waitForIE()
             highLight(:clear)
-            
         end
         
         # This method appens the supplied text to the contents of the text box.
@@ -3493,13 +3445,11 @@ module Watir
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
-            
             highLight(:set)
             @o.scrollIntoView
             @o.focus
             doKeyPress( setThis )
             highLight(:clear)
-            
         end
         
         # This method sets the contents of the text box to the supplied text 
@@ -3554,16 +3504,14 @@ module Watir
             for i in 0 .. value.length-1   
                 sleep @ieController.typingspeed   # typing speed
                 c = value[i,1]
-                @ieController.log  " adding c.chr " + c  #.chr.to_s
+                #@ieController.log  " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
                 fire_key_events
-                @ieController.waitForIE(true)
             end
-
+            
         end
         private :doKeyPress
     end
-
 
     # this class can be used to access hidden field objects
 
