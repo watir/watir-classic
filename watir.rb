@@ -1165,10 +1165,12 @@ module Watir
             @error_checkers= []
 
             @ie.visible = ! $HIDE_IE
-            @typingspeed = DEFAULT_TYPING_SPEED
             @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
-            @defaultSleepTime = DEFAULT_SLEEP_TIME
-            set_fast_speed if $FAST_SPEED
+            if $FAST_SPEED
+                set_fast_speed
+            else
+                set_slow_speed
+            end
 
             @logger = DefaultLogger.new()
 
@@ -1180,6 +1182,11 @@ module Watir
             @typingspeed = 0
             @defaultSleepTime = 0.01
         end            
+
+        def set_slow_speed
+            @typingspeed = DEFAULT_TYPING_SPEED
+            @defaultSleepTime = DEFAULT_SLEEP_TIME
+        end
         
         def create_browser_window
             @ie = WIN32OLE.new('InternetExplorer.Application')
