@@ -2584,6 +2584,36 @@ module Watir
             @what = what
         end
 
+
+        # override the highlight method, as if the tables rows are set to have a background color, 
+        # this will override the table background color,  and the normal flsh method wont work
+        def highLight(setOrClear )
+
+           if setOrClear == :set
+                begin
+                    @original_border = @o.border.to_i
+                    if @o.border.to_i==1
+                        @o.border = 2
+                    else
+                        @o.border=1
+                    end
+                rescue
+                    @original_border = nil
+                end
+            else
+                begin 
+                    @o.border= @original_border unless @original_border == nil
+                    @original_border = nil
+                rescue
+                    # we could be here for a number of reasons...
+                ensure
+                    @original_border = nil
+                end
+            end
+            super    
+        end
+
+
         # tables dont have name, so return an empty string
         def name
             return ""
