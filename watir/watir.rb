@@ -1984,6 +1984,19 @@ module Watir
             return @o
         end
   
+        # returns the innerHTML of the object as a string - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/innerhtml.asp?frame=true
+        def innerHTML
+            object_exist_check
+            return @o.innerHTML
+        end
+
+        # returns the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
+        def outerHTML
+            object_exist_check
+            return @o.outerHTML
+        end
+
+
         # Returns an array with many of the properties, in a format to be used by the to_s method
         def string_creator
 
