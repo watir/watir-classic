@@ -36,7 +36,7 @@ module Timeclock
         at_exit { user_manager.deactivate_all_sessions }
         request_handler = RequestHandler.new(user_manager)
 
-        puts DRb.start_service('druby://:9000', request_handler).uri
+        puts DRb.start_service('druby://:9002', request_handler).uri
         user_manager.advertise('', '9001')
 
         begin
