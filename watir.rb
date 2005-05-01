@@ -3049,7 +3049,7 @@ module Watir
 
                 matches = []
                 Find.find(loc) { |entry| matches << entry if (entry =~ name) }
-                raise CacheItemNotFound, "match not found" if (matches.length == 0)
+                raise CacheItemNotFound, "Match not found in #{loc} using #{name}" if (matches.length == 0)
 
                 match = matches[0]
                 matches.each { |entry| match = entry if (File.atime(entry) > File.atime(match)) }
