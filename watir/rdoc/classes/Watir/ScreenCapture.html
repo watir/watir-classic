@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Watir::ScreenCapture</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Watir::ScreenCapture</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/watir/screen_capture_rb.html">
+                watir/screen_capture.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000132">screen_capture</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">KEYEVENTF_KEYUP</td>
+          <td>=</td>
+          <td class="context-item-value">0x2</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">SW_HIDE</td>
+          <td>=</td>
+          <td class="context-item-value">0</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">SW_SHOW</td>
+          <td>=</td>
+          <td class="context-item-value">5</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">SW_SHOWNORMAL</td>
+          <td>=</td>
+          <td class="context-item-value">1</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_CONTROL</td>
+          <td>=</td>
+          <td class="context-item-value">0x11</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_F4</td>
+          <td>=</td>
+          <td class="context-item-value">0x73</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_MENU</td>
+          <td>=</td>
+          <td class="context-item-value">0x12</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_RETURN</td>
+          <td>=</td>
+          <td class="context-item-value">0x0D</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_SHIFT</td>
+          <td>=</td>
+          <td class="context-item-value">0x10</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_SNAPSHOT</td>
+          <td>=</td>
+          <td class="context-item-value">0x2C</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">VK_TAB</td>
+          <td>=</td>
+          <td class="context-item-value">0x09</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">GMEM_MOVEABLE</td>
+          <td>=</td>
+          <td class="context-item-value">0x0002</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">CF_TEXT</td>
+          <td>=</td>
+          <td class="context-item-value">1</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000132" class="method-detail">
+        <a name="M000132"></a>
+
+        <div class="method-heading">
+          <a href="ScreenCapture.src/M000132.html" target="Code" class="method-signature"
+            onclick="popupCode('ScreenCapture.src/M000132.html');return false;">
+          <span class="method-name">screen_capture</span><span class="method-args">(filename , active_window_only=false, save_as_bmp=false)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method saves the current window or whole screen as either a bitmap or
+a jpeg It uses paint to save the file, so will barf if a duplicate filename
+is selected, or the path doesnt exist etc
+</p>
+<pre>
+   * filename        - string  -  the name of the file to save. If its not fully qualified the current directory is used
+   * active_window   - boolean - if true, the whole screen is captured, if false,  just the active window is captured
+   * save_as_bmp     - boolean - if true saves the file as a bitmap, saves it as a jpeg otherwise
+</pre>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

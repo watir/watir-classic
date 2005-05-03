@@ -65,7 +65,9 @@
         <tr class="top-aligned-row">
             <td><strong>Parent:</strong></td>
             <td>
-                Object
+                <a href="ObjectActions.html">
+                ObjectActions
+               </a>
             </td>
         </tr>
         </table>
@@ -80,7 +82,7 @@
 
     <div id="description">
       <p>
-this class is a table cell
+this class is a table cell - when called via the table object
 </p>
 
     </div>
@@ -92,11 +94,12 @@ this class is a table cell
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000245">button</a>&nbsp;&nbsp;
-      <a href="#M000244">new</a>&nbsp;&nbsp;
-      <a href="#M000246">table</a>&nbsp;&nbsp;
-      <a href="#M000247">text</a>&nbsp;&nbsp;
-      <a href="#M000248">textField</a>&nbsp;&nbsp;
+      <a href="#M000371">getContainer</a>&nbsp;&nbsp;
+      <a href="#M000370">getContainerContents</a>&nbsp;&nbsp;
+      <a href="#M000372">getDocument</a>&nbsp;&nbsp;
+      <a href="#M000369">new</a>&nbsp;&nbsp;
+      <a href="#M000373">text</a>&nbsp;&nbsp;
+      <a href="#M000374">to_s</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -104,6 +107,14 @@ this class is a table cell
 
 
     <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name"><a href="Exception.html">Watir::Exception</a></span>
+        <span class="include-name"><a href="FactoryMethods.html">FactoryMethods</a></span>
+      </div>
+    </div>
 
     <div id="section">
 
@@ -111,6 +122,19 @@ this class is a table cell
 
 
 
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">typingspeed</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
       
 
 
@@ -118,13 +142,13 @@ this class is a table cell
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000244" class="method-detail">
-        <a name="M000244"></a>
+      <div id="method-M000369" class="method-detail">
+        <a name="M000369"></a>
 
         <div class="method-heading">
-          <a href="TableCell.src/M000244.html" target="Code" class="method-signature"
-            onclick="popupCode('TableCell.src/M000244.html');return false;">
-          <span class="method-name">new</span><span class="method-args">(o,ieController)</span>
+          <a href="TableCell.src/M000369.html" target="Code" class="method-signature"
+            onclick="popupCode('TableCell.src/M000369.html');return false;">
+          <span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
           </a>
         </div>
       
@@ -133,81 +157,84 @@ this class is a table cell
 Returns an initialized instance of a table cell
 </p>
 <pre>
-  * o  - the object contained in the cell
   * ieController  - an instance of an IEController
+  * how         - symbol - how we access the cell
+  * what         - what we use to access the cell - id, name index etc
 </pre>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000245" class="method-detail">
-        <a name="M000245"></a>
+      <div id="method-M000371" class="method-detail">
+        <a name="M000371"></a>
 
         <div class="method-heading">
-          <a href="TableCell.src/M000245.html" target="Code" class="method-signature"
-            onclick="popupCode('TableCell.src/M000245.html');return false;">
-          <span class="method-name">button</span><span class="method-args">()</span>
+          <a href="TableCell.src/M000371.html" target="Code" class="method-signature"
+            onclick="popupCode('TableCell.src/M000371.html');return false;">
+          <span class="method-name">getContainer</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
-          <p>
-Returns the object contained in the cell as a <a
-href="Button.html">Button</a>
-</p>
         </div>
       </div>
 
-      <div id="method-M000246" class="method-detail">
-        <a name="M000246"></a>
+      <div id="method-M000370" class="method-detail">
+        <a name="M000370"></a>
 
         <div class="method-heading">
-          <a href="TableCell.src/M000246.html" target="Code" class="method-signature"
-            onclick="popupCode('TableCell.src/M000246.html');return false;">
-          <span class="method-name">table</span><span class="method-args">()</span>
+          <a href="TableCell.src/M000370.html" target="Code" class="method-signature"
+            onclick="popupCode('TableCell.src/M000370.html');return false;">
+          <span class="method-name">getContainerContents</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
-          <p>
-Returns the object contained in the cell as a <a
-href="Table.html">Table</a>
-</p>
         </div>
       </div>
 
-      <div id="method-M000247" class="method-detail">
-        <a name="M000247"></a>
+      <div id="method-M000372" class="method-detail">
+        <a name="M000372"></a>
 
         <div class="method-heading">
-          <a href="TableCell.src/M000247.html" target="Code" class="method-signature"
-            onclick="popupCode('TableCell.src/M000247.html');return false;">
+          <a href="TableCell.src/M000372.html" target="Code" class="method-signature"
+            onclick="popupCode('TableCell.src/M000372.html');return false;">
+          <span class="method-name">getDocument</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000373" class="method-detail">
+        <a name="M000373"></a>
+
+        <div class="method-heading">
+          <a href="TableCell.src/M000373.html" target="Code" class="method-signature"
+            onclick="popupCode('TableCell.src/M000373.html');return false;">
           <span class="method-name">text</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns the text of the object contained in the cell
+returns the contents of the cell as text
 </p>
         </div>
       </div>
 
-      <div id="method-M000248" class="method-detail">
-        <a name="M000248"></a>
+      <div id="method-M000374" class="method-detail">
+        <a name="M000374"></a>
 
         <div class="method-heading">
-          <a href="TableCell.src/M000248.html" target="Code" class="method-signature"
-            onclick="popupCode('TableCell.src/M000248.html');return false;">
-          <span class="method-name">textField</span><span class="method-args">()</span>
-          </a>
+          <span class="method-name">to_s</span><span class="method-args">()</span>
         </div>
       
         <div class="method-description">
           <p>
-Returns the object contained in the cell as a <a
-href="TextField.html">TextField</a>
+Alias for <a href="TableCell.html#M000373">text</a>
 </p>
         </div>
       </div>

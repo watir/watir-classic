@@ -5,15 +5,14 @@
 
 <html>
 <head>
-  <title>close_browser (Watir::Simple)</title>
+  <title>click_button_with_value (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 364</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close_browser</span>
-                <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">getIE</span>.<span class="ruby-identifier">quit</span>
-                <span class="ruby-identifier">sleep</span> <span class="ruby-value">2</span>
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 239</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">click_button_with_value</span>(<span class="ruby-identifier">value</span>)
+                <span class="ruby-identifier">wait_before_and_after</span> {       <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">button</span>(<span class="ruby-identifier">:value</span>, <span class="ruby-identifier">value</span>).<span class="ruby-identifier">click</span> }
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

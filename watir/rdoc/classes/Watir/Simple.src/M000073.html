@@ -5,18 +5,15 @@
 
 <html>
 <head>
-  <title>assert_image_with_id (Watir::Simple)</title>
+  <title>close_browser (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 443</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_image_with_id</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">mesg</span>=<span class="ruby-keyword kw">nil</span>)
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mesg</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span>
-                        <span class="ruby-identifier">assert</span>( <span class="ruby-identifier">get_image_with_id</span>(<span class="ruby-identifier">id</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-node">&quot;image with id: [#{id}] is not present&quot;</span>)
-                <span class="ruby-keyword kw">else</span>
-                        <span class="ruby-identifier">assert</span>( <span class="ruby-identifier">get_image_with_id</span>(<span class="ruby-identifier">id</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">mesg</span>)
-                <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 364</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close_browser</span>
+                <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">getIE</span>.<span class="ruby-identifier">quit</span>
+                <span class="ruby-identifier">sleep</span> <span class="ruby-value">2</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -5,18 +5,14 @@
 
 <html>
 <head>
-  <title>assert_text_not_in_body (Watir::Simple)</title>
+  <title>select_from_combobox_with_index (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 260</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_text_not_in_body</span>(<span class="ruby-identifier">text</span>,<span class="ruby-identifier">mesg</span>=<span class="ruby-keyword kw">nil</span>)
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mesg</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span>
-                        <span class="ruby-identifier">assert</span>(<span class="ruby-operator">!</span> <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">pageContainsText</span>(<span class="ruby-identifier">text</span>), <span class="ruby-node">&quot;couldn't find in body: [#{text}]&quot;</span>)
-                <span class="ruby-keyword kw">else</span>
-                        <span class="ruby-identifier">assert</span>(<span class="ruby-operator">!</span> <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">pageContainsText</span>(<span class="ruby-identifier">text</span>), <span class="ruby-identifier">mesg</span>)
-                <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 202</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">select_from_combobox_with_index</span>(<span class="ruby-identifier">index</span>, <span class="ruby-identifier">text</span>)
+                <span class="ruby-identifier">wait_before_and_after</span> {       <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">selectBox</span>(<span class="ruby-identifier">:index</span>, <span class="ruby-identifier">index</span>).<span class="ruby-identifier">select</span>(<span class="ruby-identifier">text</span>) }
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>
