@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>show_frames (Watir::IE)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir.rb, line 1505</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">show_frames</span>()
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">allFrames</span> = <span class="ruby-identifier">getDocument</span>().<span class="ruby-identifier">frames</span>
+                <span class="ruby-identifier">count</span> = <span class="ruby-identifier">allFrames</span>.<span class="ruby-identifier">length</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;there are #{count} frames&quot;</span>
+                <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">count</span><span class="ruby-operator">-</span><span class="ruby-value">1</span> <span class="ruby-keyword kw">do</span>  
+                    <span class="ruby-keyword kw">begin</span>
+                        <span class="ruby-identifier">fname</span> = <span class="ruby-identifier">allFrames</span>[<span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>].<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>
+                        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;frame  index: #{i} name: #{fname}&quot;</span>
+                    <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;frame  index: #{i} --Access Denied--&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/Access is denied/</span>)
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;no frames&quot;</span>
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

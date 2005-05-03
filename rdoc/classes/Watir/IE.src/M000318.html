@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>show_tables (Watir::IE)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir.rb, line 1662</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">show_tables</span>( )
+            <span class="ruby-identifier">tables</span> = <span class="ruby-identifier">getDocument</span>().<span class="ruby-identifier">getElementsByTagName</span>(<span class="ruby-value str">&quot;TABLE&quot;</span>)
+            <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Found #{tables.length} tables&quot;</span>
+            <span class="ruby-identifier">index</span>=<span class="ruby-value">1</span>
+            <span class="ruby-identifier">tables</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.rows[&quot;0&quot;].cells.length }&quot;</span>
+                <span class="ruby-identifier">index</span><span class="ruby-operator">+=</span><span class="ruby-value">1</span>
+            <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

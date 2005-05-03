@@ -80,6 +80,17 @@
 
   <div id="contextContent">
 
+    <div id="description">
+      <p>
+this class contains items that are common between the span and div objects
+it would not normally be used directly
+</p>
+<p>
+many of the methods available to this object are inherited from the <a
+href="ObjectActions.html">ObjectActions</a> class
+</p>
+
+    </div>
 
 
    </div>
@@ -88,9 +99,16 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000221">new</a>&nbsp;&nbsp;
-      <a href="#M000223">style</a>&nbsp;&nbsp;
-      <a href="#M000222">text</a>&nbsp;&nbsp;
+      <a href="#M000334">getContainer</a>&nbsp;&nbsp;
+      <a href="#M000333">getContainerContents</a>&nbsp;&nbsp;
+      <a href="#M000336">innerText</a>&nbsp;&nbsp;
+      <a href="#M000339">name</a>&nbsp;&nbsp;
+      <a href="#M000332">new</a>&nbsp;&nbsp;
+      <a href="#M000337">style</a>&nbsp;&nbsp;
+      <a href="#M000335">text</a>&nbsp;&nbsp;
+      <a href="#M000341">to_s</a>&nbsp;&nbsp;
+      <a href="#M000338">type</a>&nbsp;&nbsp;
+      <a href="#M000340">value</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -98,6 +116,14 @@
 
 
     <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name"><a href="Exception.html">Watir::Exception</a></span>
+        <span class="include-name"><a href="FactoryMethods.html">FactoryMethods</a></span>
+      </div>
+    </div>
 
     <div id="section">
 
@@ -105,6 +131,19 @@
 
 
 
+    <div id="attribute-list">
+      <h3 class="section-bar">Attributes</h3>
+
+      <div class="name-list">
+        <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">typingspeed</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        </table>
+      </div>
+    </div>
       
 
 
@@ -112,12 +151,12 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000221" class="method-detail">
-        <a name="M000221"></a>
+      <div id="method-M000332" class="method-detail">
+        <a name="M000332"></a>
 
         <div class="method-heading">
-          <a href="SpanDivCommon.src/M000221.html" target="Code" class="method-signature"
-            onclick="popupCode('SpanDivCommon.src/M000221.html');return false;">
+          <a href="SpanDivCommon.src/M000332.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000332.html');return false;">
           <span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
           </a>
         </div>
@@ -128,13 +167,13 @@
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000223" class="method-detail">
-        <a name="M000223"></a>
+      <div id="method-M000334" class="method-detail">
+        <a name="M000334"></a>
 
         <div class="method-heading">
-          <a href="SpanDivCommon.src/M000223.html" target="Code" class="method-signature"
-            onclick="popupCode('SpanDivCommon.src/M000223.html');return false;">
-          <span class="method-name">style</span><span class="method-args">()</span>
+          <a href="SpanDivCommon.src/M000334.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000334.html');return false;">
+          <span class="method-name">getContainer</span><span class="method-args">()</span>
           </a>
         </div>
       
@@ -142,17 +181,139 @@
         </div>
       </div>
 
-      <div id="method-M000222" class="method-detail">
-        <a name="M000222"></a>
+      <div id="method-M000333" class="method-detail">
+        <a name="M000333"></a>
 
         <div class="method-heading">
-          <a href="SpanDivCommon.src/M000222.html" target="Code" class="method-signature"
-            onclick="popupCode('SpanDivCommon.src/M000222.html');return false;">
+          <a href="SpanDivCommon.src/M000333.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000333.html');return false;">
+          <span class="method-name">getContainerContents</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000336" class="method-detail">
+        <a name="M000336"></a>
+
+        <div class="method-heading">
+          <span class="method-name">innerText</span><span class="method-args">()</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="SpanDivCommon.html#M000335">text</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000339" class="method-detail">
+        <a name="M000339"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000339.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000339.html');return false;">
+          <span class="method-name">name</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+spans or divs do not support a name attribute, so this returns an empty
+string raises an ObjectNotFound exception if the object cannot be found
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000337" class="method-detail">
+        <a name="M000337"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000337.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000337.html');return false;">
+          <span class="method-name">style</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the classname of the style that this san or div is using raises an
+ObjectNotFound exception if the object cannot be found
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000335" class="method-detail">
+        <a name="M000335"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000335.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000335.html');return false;">
           <span class="method-name">text</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
+          <p>
+this method returns the innerText of the object raises an ObjectNotFound
+exception if the object cannot be found
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000341" class="method-detail">
+        <a name="M000341"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000341.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000341.html');return false;">
+          <span class="method-name">to_s</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the properties of the object in a string raises an ObjectNotFound
+exception if the object cannot be found
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000338" class="method-detail">
+        <a name="M000338"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000338.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000338.html');return false;">
+          <span class="method-name">type</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method returns the type of object raises an ObjectNotFound exception
+if the object cannot be found
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000340" class="method-detail">
+        <a name="M000340"></a>
+
+        <div class="method-heading">
+          <a href="SpanDivCommon.src/M000340.html" target="Code" class="method-signature"
+            onclick="popupCode('SpanDivCommon.src/M000340.html');return false;">
+          <span class="method-name">value</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+spans or divs do not support a value attribute, so this returns an empty
+string raises an ObjectNotFound exception if the object cannot be found
+</p>
         </div>
       </div>
 

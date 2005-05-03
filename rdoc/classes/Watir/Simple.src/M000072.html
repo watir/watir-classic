@@ -5,18 +5,14 @@
 
 <html>
 <head>
-  <title>assert_image_with_src (Watir::Simple)</title>
+  <title>assert_text_in_combobox_by_id (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 430</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_image_with_src</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">mesg</span>=<span class="ruby-keyword kw">nil</span>)
-                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mesg</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span>
-                        <span class="ruby-identifier">assert</span>( <span class="ruby-identifier">get_image_with_src</span>(<span class="ruby-identifier">src</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-node">&quot;image with src: [#{src}] is not present&quot;</span>)
-                <span class="ruby-keyword kw">else</span>
-                        <span class="ruby-identifier">assert</span>( <span class="ruby-identifier">get_image_with_src</span>(<span class="ruby-identifier">src</span>) <span class="ruby-operator">!=</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">mesg</span>)
-                <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 356</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_text_in_combobox_by_id</span>(<span class="ruby-identifier">id</span>, <span class="ruby-identifier">text</span>, <span class="ruby-identifier">mesg</span>=<span class="ruby-keyword kw">nil</span>)
+                <span class="ruby-identifier">assert_text_in_combobox_wrapper</span>(<span class="ruby-identifier">:id</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">text</span>, <span class="ruby-identifier">mesg</span>)
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

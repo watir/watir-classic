@@ -84,7 +84,9 @@
       <p>
 This class is the means of accessing an image on a page. It would not
 normally be used by users, as the image method of IEController would return
-an initialised instance of an image.
+an initialised instance of an image. many of the methods available to this
+object are inherited from the <a
+href="ObjectActions.html">ObjectActions</a> class
 </p>
 
     </div>
@@ -96,9 +98,18 @@ an initialised instance of an image.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000130">hasLoaded?</a>&nbsp;&nbsp;
-      <a href="#M000131">highLight</a>&nbsp;&nbsp;
-      <a href="#M000129">new</a>&nbsp;&nbsp;
+      <a href="#M000230">fileCreatedDate</a>&nbsp;&nbsp;
+      <a href="#M000231">fileSize</a>&nbsp;&nbsp;
+      <a href="#M000235">hasLoaded?</a>&nbsp;&nbsp;
+      <a href="#M000233">height</a>&nbsp;&nbsp;
+      <a href="#M000236">highLight</a>&nbsp;&nbsp;
+      <a href="#M000226">new</a>&nbsp;&nbsp;
+      <a href="#M000237">save</a>&nbsp;&nbsp;
+      <a href="#M000229">src</a>&nbsp;&nbsp;
+      <a href="#M000227">to_s</a>&nbsp;&nbsp;
+      <a href="#M000234">type</a>&nbsp;&nbsp;
+      <a href="#M000228">value</a>&nbsp;&nbsp;
+      <a href="#M000232">width</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -120,12 +131,12 @@ an initialised instance of an image.
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000129" class="method-detail">
-        <a name="M000129"></a>
+      <div id="method-M000226" class="method-detail">
+        <a name="M000226"></a>
 
         <div class="method-heading">
-          <a href="Image.src/M000129.html" target="Code" class="method-signature"
-            onclick="popupCode('Image.src/M000129.html');return false;">
+          <a href="Image.src/M000226.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000226.html');return false;">
           <span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
           </a>
         </div>
@@ -137,19 +148,53 @@ Returns an initialized instance of a image object
 <pre>
   * ieController  - an instance of an IEController
   * how         - symbol - how we access the image
-  * what         - what we use to access the image, text, url, index etc
+  * what         - what we use to access the image, name, src, index, id or alt
 </pre>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000130" class="method-detail">
-        <a name="M000130"></a>
+      <div id="method-M000230" class="method-detail">
+        <a name="M000230"></a>
 
         <div class="method-heading">
-          <a href="Image.src/M000130.html" target="Code" class="method-signature"
-            onclick="popupCode('Image.src/M000130.html');return false;">
+          <a href="Image.src/M000230.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000230.html');return false;">
+          <span class="method-name">fileCreatedDate</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method returns the file created date of the image
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000231" class="method-detail">
+        <a name="M000231"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000231.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000231.html');return false;">
+          <span class="method-name">fileSize</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method returns the filesize of the image
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000235" class="method-detail">
+        <a name="M000235"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000235.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000235.html');return false;">
           <span class="method-name">hasLoaded?</span><span class="method-args">()</span>
           </a>
         </div>
@@ -166,17 +211,148 @@ produce incorrect responses.
         </div>
       </div>
 
-      <div id="method-M000131" class="method-detail">
-        <a name="M000131"></a>
+      <div id="method-M000233" class="method-detail">
+        <a name="M000233"></a>
 
         <div class="method-heading">
-          <a href="Image.src/M000131.html" target="Code" class="method-signature"
-            onclick="popupCode('Image.src/M000131.html');return false;">
+          <a href="Image.src/M000233.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000233.html');return false;">
+          <span class="method-name">height</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the height in pixels of the image, as a string
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000236" class="method-detail">
+        <a name="M000236"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000236.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000236.html');return false;">
           <span class="method-name">highLight</span><span class="method-args">( setOrClear )</span>
           </a>
         </div>
       
         <div class="method-description">
+          <p>
+this method highlights the image ( in fact it adds or removes a border
+around the image)
+</p>
+<pre>
+ * setOrClear   - symbol - :set to set the border, :clear to remove it
+</pre>
+        </div>
+      </div>
+
+      <div id="method-M000237" class="method-detail">
+        <a name="M000237"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000237.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000237.html');return false;">
+          <span class="method-name">save</span><span class="method-args">(path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method saves the image to the file path that is given. If the image
+src references a local url (file:///&#8230;) then the image is saved
+directly from the src. If the image references any other kind of url then
+the &#8216;Temporary Internet Files&#8217; cache is searched for the image.
+Raises a CacheItemNotFound exception if the image cannot be located path -
+directory path and file name of where image should be saved
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000229" class="method-detail">
+        <a name="M000229"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000229.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000229.html');return false;">
+          <span class="method-name">src</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method returns the source url of the image
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000227" class="method-detail">
+        <a name="M000227"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000227.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000227.html');return false;">
+          <span class="method-name">to_s</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns a string representation of the object
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000234" class="method-detail">
+        <a name="M000234"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000234.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000234.html');return false;">
+          <span class="method-name">type</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the type of the object - &#8216;image&#8217;
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000228" class="method-detail">
+        <a name="M000228"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000228.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000228.html');return false;">
+          <span class="method-name">value</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+a value doesnt exist for an image, so this will return an empty string
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000232" class="method-detail">
+        <a name="M000232"></a>
+
+        <div class="method-heading">
+          <a href="Image.src/M000232.html" target="Code" class="method-signature"
+            onclick="popupCode('Image.src/M000232.html');return false;">
+          <span class="method-name">width</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the width in pixels of the image, as a string
+</p>
         </div>
       </div>
 

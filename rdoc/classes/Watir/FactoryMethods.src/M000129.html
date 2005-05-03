@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>getLink (Watir::FactoryMethods)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir.rb, line 934</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getLink</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> )
+            <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
+            <span class="ruby-identifier">links</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">links</span>
+            
+            <span class="ruby-comment cmt"># Guard ensures watir won't crash if somehow the list of links is nil</span>
+            <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">links</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>)
+                <span class="ruby-identifier">raise</span> <span class="ruby-constant">UnknownObjectException</span>, <span class="ruby-value str">&quot;Unknown Object in getLink: attempted to click a link when no links present&quot;</span>
+            <span class="ruby-keyword kw">end</span>
+            
+            <span class="ruby-identifier">link</span> = <span class="ruby-keyword kw">nil</span>
+            <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
+                
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:index</span>
+                <span class="ruby-keyword kw">begin</span>
+                    <span class="ruby-identifier">link</span> = <span class="ruby-identifier">links</span>[ (<span class="ruby-identifier">what</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>).<span class="ruby-identifier">to_s</span> ]
+                <span class="ruby-keyword kw">rescue</span>
+                    <span class="ruby-identifier">link</span>=<span class="ruby-keyword kw">nil</span>
+                <span class="ruby-keyword kw">end</span>
+                
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:url</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">href</span>) 
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+                
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:text</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">innerText</span>) 
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+                
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>))
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;name&quot;</span>))
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:title</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;title&quot;</span>))
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+                
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:beforeText</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">getAdjacentText</span>(<span class="ruby-value str">&quot;afterEnd&quot;</span>).<span class="ruby-identifier">strip</span>)
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:afterText</span>
+                <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">thisLink</span><span class="ruby-operator">|</span>
+                    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">thisLink</span>.<span class="ruby-identifier">getAdjacentText</span>(<span class="ruby-value str">&quot;beforeBegin&quot;</span>).<span class="ruby-identifier">strip</span>)
+                        <span class="ruby-identifier">link</span> = <span class="ruby-identifier">thisLink</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">link</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                    <span class="ruby-keyword kw">end</span>
+                <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">raise</span> <span class="ruby-constant">MissingWayOfFindingObjectException</span>, <span class="ruby-value str">&quot;unknown way of finding a link ( {what} )&quot;</span>
+            <span class="ruby-keyword kw">end</span>
+            
+            <span class="ruby-comment cmt"># if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. &quot;click&quot;) should rescue </span>
+            <span class="ruby-comment cmt"># the nil-related exceptions and provide useful information to the user.</span>
+            <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">link</span>
+        
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -5,14 +5,34 @@
 
 <html>
 <head>
-  <title>enter_text_into_field_with_index (Watir::Simple)</title>
+  <title>navigate_to_link_with_url (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 177</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">enter_text_into_field_with_index</span>(<span class="ruby-identifier">index</span>, <span class="ruby-identifier">text</span>)
-    <span class="ruby-identifier">wait_before_and_after</span> { <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">textField</span>(<span class="ruby-identifier">:index</span>, <span class="ruby-identifier">index</span>).<span class="ruby-identifier">set</span>(<span class="ruby-identifier">text</span>) }
-        <span class="ruby-keyword kw">end</span></pre>
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 71</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">navigate_to_link_with_url</span>(<span class="ruby-identifier">url</span>)
+    <span class="ruby-comment cmt"># FIXME: this should be moved into Watir!</span>
+    <span class="ruby-identifier">wait_before_and_after</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-identifier">doc</span> = <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">getDocument</span>()
+      <span class="ruby-identifier">links</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">links</span>
+      <span class="ruby-identifier">link</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">links</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">match</span> = <span class="ruby-keyword kw">false</span>
+        <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">url</span>
+        <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Regexp</span>
+          <span class="ruby-identifier">match</span> = (<span class="ruby-identifier">n</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;href&quot;</span>) <span class="ruby-operator">=~</span> <span class="ruby-identifier">url</span>)
+        <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>
+          <span class="ruby-identifier">match</span> = (<span class="ruby-identifier">n</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;href&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-identifier">url</span>)
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">match</span>
+          <span class="ruby-identifier">link</span> = <span class="ruby-identifier">n</span>
+          <span class="ruby-keyword kw">break</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Couldn't find link with url #{url}&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">link</span>
+      <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">goto</span> <span class="ruby-identifier">link</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

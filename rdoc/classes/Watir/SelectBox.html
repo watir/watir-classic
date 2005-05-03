@@ -86,6 +86,10 @@ This class is the way in which select boxes are manipulated. it would not
 normally be created by a user, as it is returned by the selectBox method of
 IEController
 </p>
+<p>
+many of the methods available to this object are inherited from the <a
+href="ObjectActions.html">ObjectActions</a> class
+</p>
 
     </div>
 
@@ -96,12 +100,13 @@ IEController
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000122">clearSelection</a>&nbsp;&nbsp;
-      <a href="#M000125">getAllContents</a>&nbsp;&nbsp;
-      <a href="#M000126">getSelectedItems</a>&nbsp;&nbsp;
-      <a href="#M000121">new</a>&nbsp;&nbsp;
-      <a href="#M000123">select</a>&nbsp;&nbsp;
-      <a href="#M000124">select_value</a>&nbsp;&nbsp;
+      <a href="#M000210">clearSelection</a>&nbsp;&nbsp;
+      <a href="#M000213">getAllContents</a>&nbsp;&nbsp;
+      <a href="#M000214">getSelectedItems</a>&nbsp;&nbsp;
+      <a href="#M000208">new</a>&nbsp;&nbsp;
+      <a href="#M000211">select</a>&nbsp;&nbsp;
+      <a href="#M000212">select_value</a>&nbsp;&nbsp;
+      <a href="#M000209">title</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -123,12 +128,12 @@ IEController
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000121" class="method-detail">
-        <a name="M000121"></a>
+      <div id="method-M000208" class="method-detail">
+        <a name="M000208"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000121.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000121.html');return false;">
+          <a href="SelectBox.src/M000208.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000208.html');return false;">
           <span class="method-name">new</span><span class="method-args">( ieController, how , what )</span>
           </a>
         </div>
@@ -148,12 +153,12 @@ object
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000122" class="method-detail">
-        <a name="M000122"></a>
+      <div id="method-M000210" class="method-detail">
+        <a name="M000210"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000122.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000122.html');return false;">
+          <a href="SelectBox.src/M000210.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000210.html');return false;">
           <span class="method-name">clearSelection</span><span class="method-args">()</span>
           </a>
         </div>
@@ -165,12 +170,12 @@ This method clears the selected items in the select box
         </div>
       </div>
 
-      <div id="method-M000125" class="method-detail">
-        <a name="M000125"></a>
+      <div id="method-M000213" class="method-detail">
+        <a name="M000213"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000125.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000125.html');return false;">
+          <a href="SelectBox.src/M000213.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000213.html');return false;">
           <span class="method-name">getAllContents</span><span class="method-args">()</span>
           </a>
         </div>
@@ -184,12 +189,12 @@ UnknownObjectException if the select box is not found
         </div>
       </div>
 
-      <div id="method-M000126" class="method-detail">
-        <a name="M000126"></a>
+      <div id="method-M000214" class="method-detail">
+        <a name="M000214"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000126.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000126.html');return false;">
+          <a href="SelectBox.src/M000214.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000214.html');return false;">
           <span class="method-name">getSelectedItems</span><span class="method-args">()</span>
           </a>
         </div>
@@ -202,12 +207,12 @@ Raises UnknownObjectException if the select box is not found.
         </div>
       </div>
 
-      <div id="method-M000123" class="method-detail">
-        <a name="M000123"></a>
+      <div id="method-M000211" class="method-detail">
+        <a name="M000211"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000123.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000123.html');return false;">
+          <a href="SelectBox.src/M000211.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000211.html');return false;">
           <span class="method-name">select</span><span class="method-args">( item )</span>
           </a>
         </div>
@@ -223,12 +228,12 @@ NoValueFoundException if the specified value is not found.
         </div>
       </div>
 
-      <div id="method-M000124" class="method-detail">
-        <a name="M000124"></a>
+      <div id="method-M000212" class="method-detail">
+        <a name="M000212"></a>
 
         <div class="method-heading">
-          <a href="SelectBox.src/M000124.html" target="Code" class="method-signature"
-            onclick="popupCode('SelectBox.src/M000124.html');return false;">
+          <a href="SelectBox.src/M000212.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000212.html');return false;">
           <span class="method-name">select_value</span><span class="method-args">( item )</span>
           </a>
         </div>
@@ -241,6 +246,24 @@ NoValueFoundException if the specified value is not found.
 <pre>
  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
 </pre>
+        </div>
+      </div>
+
+      <div id="method-M000209" class="method-detail">
+        <a name="M000209"></a>
+
+        <div class="method-heading">
+          <a href="SelectBox.src/M000209.html" target="Code" class="method-signature"
+            onclick="popupCode('SelectBox.src/M000209.html');return false;">
+          <span class="method-name">title</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+returns the value of the title attribute - select boxes dont support this,
+so an empty string &quot;&quot; is returned
+</p>
         </div>
       </div>
 

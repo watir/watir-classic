@@ -5,15 +5,17 @@
 
 <html>
 <head>
-  <title>fill_text_fields (Watir::Simple)</title>
+  <title>assert_text_not_in_body (Watir::Simple)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 393</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fill_text_fields</span>(<span class="ruby-identifier">data</span>)
-                <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">field</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
-                        <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">textField</span>(<span class="ruby-identifier">:name</span>, <span class="ruby-identifier">field</span>).<span class="ruby-identifier">set</span>(<span class="ruby-identifier">value</span>)
+  <pre><span class="ruby-comment cmt"># File watir/watir_simple.rb, line 260</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_text_not_in_body</span>(<span class="ruby-identifier">text</span>,<span class="ruby-identifier">mesg</span>=<span class="ruby-keyword kw">nil</span>)
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mesg</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">then</span>
+                        <span class="ruby-identifier">assert</span>(<span class="ruby-operator">!</span> <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">pageContainsText</span>(<span class="ruby-identifier">text</span>), <span class="ruby-node">&quot;couldn't find in body: [#{text}]&quot;</span>)
+                <span class="ruby-keyword kw">else</span>
+                        <span class="ruby-identifier">assert</span>(<span class="ruby-operator">!</span> <span class="ruby-ivar">@@browser</span>.<span class="ruby-identifier">pageContainsText</span>(<span class="ruby-identifier">text</span>), <span class="ruby-identifier">mesg</span>)
                 <span class="ruby-keyword kw">end</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>

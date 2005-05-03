@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>getImage (Watir::FactoryMethods)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir.rb, line 890</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getImage</span>( <span class="ruby-identifier">how</span>, <span class="ruby-identifier">what</span> )
+
+            <span class="ruby-identifier">doc</span> = <span class="ruby-identifier">getDocument</span>()
+            <span class="ruby-identifier">count</span> = <span class="ruby-value">1</span>
+            <span class="ruby-identifier">images</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">images</span>
+            <span class="ruby-identifier">o</span>=<span class="ruby-keyword kw">nil</span>
+            <span class="ruby-identifier">images</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">img</span><span class="ruby-operator">|</span>
+                
+                <span class="ruby-comment cmt">#puts &quot;Image on page: src = #{img.src}&quot;</span>
+                
+                <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">o</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">how</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">:index</span>
+                    <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">to_i</span>
+                <span class="ruby-keyword kw">else</span>                
+                    <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">how</span>
+                        
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:src</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">src</span>
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:name</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">name</span>
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:id</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;id&quot;</span>)
+                    <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:alt</span>
+                        <span class="ruby-identifier">attribute</span> = <span class="ruby-identifier">img</span>.<span class="ruby-identifier">invoke</span>(<span class="ruby-value str">&quot;alt&quot;</span>)
+                    <span class="ruby-keyword kw">else</span>
+                        <span class="ruby-keyword kw">next</span>
+                    <span class="ruby-keyword kw">end</span>
+                    
+                    <span class="ruby-identifier">o</span> = <span class="ruby-identifier">img</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">what</span>.<span class="ruby-identifier">matches</span>(<span class="ruby-identifier">attribute</span>)
+                <span class="ruby-keyword kw">end</span>
+                <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span><span class="ruby-value">1</span>
+            <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do</span>
+            <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">o</span>
+
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

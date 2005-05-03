@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>assert_arrayContains (Test::Unit::Assertions)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File watir/testUnitAddons.rb, line 38</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_arrayContains</span>(<span class="ruby-identifier">array</span>, <span class="ruby-identifier">string</span> , <span class="ruby-identifier">message</span> =<span class="ruby-keyword kw">nil</span>)
+
+         <span class="ruby-identifier">_wrap_assertion</span> <span class="ruby-keyword kw">do</span>
+          <span class="ruby-identifier">assert_block</span>(<span class="ruby-value str">&quot;assert should not be called with a block.&quot;</span>) { <span class="ruby-operator">!</span><span class="ruby-identifier">block_given?</span> }
+          <span class="ruby-identifier">assert</span>(<span class="ruby-identifier">array</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>) , <span class="ruby-value str">&quot;Must have an array&quot;</span>)
+          <span class="ruby-identifier">assert</span>(<span class="ruby-identifier">array</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">string</span>) , <span class="ruby-identifier">message</span>)
+        <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

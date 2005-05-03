@@ -65,7 +65,9 @@
         <tr class="top-aligned-row">
             <td><strong>Parent:</strong></td>
             <td>
-                Object
+                <a href="ObjectActions.html">
+                ObjectActions
+               </a>
             </td>
         </tr>
         </table>
@@ -92,9 +94,13 @@ this class is a table row
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000093">[]</a>&nbsp;&nbsp;
-      <a href="#M000094">method_missing</a>&nbsp;&nbsp;
-      <a href="#M000092">new</a>&nbsp;&nbsp;
+      <a href="#M000157">[]</a>&nbsp;&nbsp;
+      <a href="#M000156">each</a>&nbsp;&nbsp;
+      <a href="#M000158">method_missing</a>&nbsp;&nbsp;
+      <a href="#M000159">name</a>&nbsp;&nbsp;
+      <a href="#M000154">new</a>&nbsp;&nbsp;
+      <a href="#M000155">update_row_cells</a>&nbsp;&nbsp;
+      <a href="#M000160">value</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -116,60 +122,134 @@ this class is a table row
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000092" class="method-detail">
-        <a name="M000092"></a>
+      <div id="method-M000154" class="method-detail">
+        <a name="M000154"></a>
 
         <div class="method-heading">
-          <a href="TableRow.src/M000092.html" target="Code" class="method-signature"
-            onclick="popupCode('TableRow.src/M000092.html');return false;">
-          <span class="method-name">new</span><span class="method-args">(row,ieController)</span>
+          <a href="TableRow.src/M000154.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000154.html');return false;">
+          <span class="method-name">new</span><span class="method-args">(ieController , how, what)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns an initialized instance of a table cell
+Returns an initialized instance of a table row
 </p>
 <pre>
-  * row  - an Array with the elements of the row
+  * o  - the object contained in the row
   * ieController  - an instance of an IEController
+  * how          - symbol - how we access the row
+  * what         - what we use to access the wor - id, index etc. If how is :direct then what is a Internet Explorer Raw Row
 </pre>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000093" class="method-detail">
-        <a name="M000093"></a>
+      <div id="method-M000157" class="method-detail">
+        <a name="M000157"></a>
 
         <div class="method-heading">
-          <a href="TableRow.src/M000093.html" target="Code" class="method-signature"
-            onclick="popupCode('TableRow.src/M000093.html');return false;">
+          <a href="TableRow.src/M000157.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000157.html');return false;">
           <span class="method-name">[]</span><span class="method-args">(index)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Returns an element from the row
+Returns an element from the row as a <a href="TableCell.html">TableCell</a>
+object
 </p>
         </div>
       </div>
 
-      <div id="method-M000094" class="method-detail">
-        <a name="M000094"></a>
+      <div id="method-M000156" class="method-detail">
+        <a name="M000156"></a>
 
         <div class="method-heading">
-          <a href="TableRow.src/M000094.html" target="Code" class="method-signature"
-            onclick="popupCode('TableRow.src/M000094.html');return false;">
+          <a href="TableRow.src/M000156.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000156.html');return false;">
+          <span class="method-name">each</span><span class="method-args">() {|@cells[i]| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method iterates through each of the cells in the row. Yieldss a <a
+href="TableCell.html">TableCell</a> object
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000158" class="method-detail">
+        <a name="M000158"></a>
+
+        <div class="method-heading">
+          <a href="TableRow.src/M000158.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000158.html');return false;">
           <span class="method-name">method_missing</span><span class="method-args">(aSymbol,*args)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-defaults all missing methods to the array of elements, to be able to use
-the row as an array
+defaults all missing methods to the array of elements, to be able to
+</p>
+<pre>
+ use the row as an array
+</pre>
+        </div>
+      </div>
+
+      <div id="method-M000159" class="method-detail">
+        <a name="M000159"></a>
+
+        <div class="method-heading">
+          <a href="TableRow.src/M000159.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000159.html');return false;">
+          <span class="method-name">name</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+table rows dont have names, so always returns an empty string
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000155" class="method-detail">
+        <a name="M000155"></a>
+
+        <div class="method-heading">
+          <a href="TableRow.src/M000155.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000155.html');return false;">
+          <span class="method-name">update_row_cells</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+this method updates the internal list of cells.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000160" class="method-detail">
+        <a name="M000160"></a>
+
+        <div class="method-heading">
+          <a href="TableRow.src/M000160.html" target="Code" class="method-signature"
+            onclick="popupCode('TableRow.src/M000160.html');return false;">
+          <span class="method-name">value</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+table rows dont have values, so always returns an empty string
 </p>
         </div>
       </div>
