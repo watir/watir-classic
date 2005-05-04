@@ -2710,11 +2710,19 @@ module Watir
         private :row
 
         # Returns an array containing all the text values in the specified column
-        # Raises an UnknownCellException if the specified does not exist in every
+        # Raises an UnknownCellException if the specified column does not exist in every
+        # Raises an UnknownTableException if the table doesn't exist.
         # row of the table
         #   * columnnumber  - column index to extract values from
         def column_values(columnnumber)
             return (1..row_count).collect {|idx| self[idx][columnnumber].text}
+        end
+        
+        # Returns an array containing all the text values in the specified row
+        # Raises an UnknownTableException if the table doesn't exist.
+        #   * rownumber  - row index to extract values from
+        def row_values(rownumber)
+            return (1..column_count(rownumber)).collect {|idx| self[rownumber][idx].text}
         end
 
     end
