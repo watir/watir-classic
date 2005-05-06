@@ -3070,7 +3070,7 @@ module Watir
         
         def fill_save_image_dialog(path)
             Thread.new do 
-                system("ruby -e \"require 'win32ole'; @autoit = WIN32OLE.new('AutoItX3.Control'); @autoit.WinWait 'Save Picture'; @autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\"")
+                system("ruby -e \"require 'win32ole'; @autoit = WIN32OLE.new('AutoItX3.Control'); waitresult = @autoit.WinWait 'Save Picture', '', 15; if waitresult == 1\" -e \"@autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\" -e \"end\"")
             end
         end
         private :fill_save_image_dialog
