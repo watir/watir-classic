@@ -12,6 +12,7 @@ class TC_Images < Test::Unit::TestCase
     
     def setup
         gotoImagePage
+        @saved_img_path = build_path("sample.img.dat");
     end
     
     def gotoImagePage()
@@ -117,92 +118,39 @@ class TC_Images < Test::Unit::TestCase
     def test_save_local_image
         gotoImagePage()
         safe_file_block(1) do
-            assert(File.compare("sample.img.dat", $ie.images[1].src.gsub(/^file:\/\/\//, '')))
+            assert(File.compare(@saved_img_path, $ie.images[1].src.gsub(/^file:\/\/\//, '')))
+        end
+        safe_file_block(2) do
+             assert(File.compare(@saved_img_path, $ie.images[2].src.gsub(/^file:\/\/\//, '')))
         end
     end
     
-    def test_save_local_image_overwrites
+    def test_save_local_image_returns_original_page
         gotoImagePage()
-        safe_file_block(1,2) do
-            assert(File.compare("sample.img.dat", $ie.images[2].src.gsub(/^file:\/\/\//, '')))
-        end
-    end
-    
-    def test_save_remote_image
-        run_webrick do
-            goto_local_served_page
-            safe_file_block(1) do
-                assert(File.compare("sample.img.dat", build_path("html/images/triangle.jpg")))
-            end
-        end
-    end
-    
-    def test_save_remote_image_overwrites
-        run_webrick do
-            goto_local_served_page
-            safe_file_block(1,2) do
-                assert(File.compare("sample.img.dat", build_path("html/images/square.jpg")))
-            end
-        end
-    end
-    
-    def test_not_found_in_cache_throws
-        run_webrick do
-            goto_local_served_page
-            Watir::CookieManager::WatirHelper.deleteSpecialFolderContents(0x0020)
-            assert_raises(CacheItemNotFound ) { $ie.images[1].save("sample.img.dat") }
-        end
-    end
-    
-    def test_most_recent_returned_when_duplicates
-        run_webrick do
-            goto_local_served_page
-        end
-        File.copy(build_path("html/images/square.jpg"), build_path("html/images/triangle.jpg"))
-        begin
-            run_webrick(34000) do
-                goto_local_served_page
-                safe_file_block(1) do
-                    assert(File.compare("sample.img.dat", build_path("html/images/square.jpg")))
-                end
-            end
-        ensure
-            File.copy(build_path("html/images/originaltriangle.jpg"), build_path("html/images/triangle.jpg"))
-        end
-    end
-    
-    def goto_local_served_page
-        $ie.goto("http://localhost:#{@port}/images1.html")
+        safe_file_block(1) {}
+        assert_equal(6 , $ie.images.length)
     end
     
     def safe_file_block(*imgstosave)
-        File.unlink("sample.img.dat") if (File.exists?("sample.img.dat"))
+        clean_saved_image
         begin
-            imgstosave.each {|imgidx| $ie.images[imgidx].save("sample.img.dat")}
+            imgstosave.each {|imgidx| $ie.images[imgidx].save(build_windows_path("sample.img.dat"))}
             yield
         ensure
-            File.unlink("sample.img.dat") if (File.exists?("sample.img.dat"))
+            clean_saved_image
         end
+    end
+    
+    def clean_saved_image
+      File.unlink(@saved_img_path) if (File.exists?(@saved_img_path))
+    end
+    
+    def build_windows_path(part) 
+      build_path(part).gsub(/\//, "\\")
     end
     
     def build_path(part) 
         "#{$myDir}/#{part}"
-    end
-    
-    def run_webrick(port = 33000)
-        @port = port
-        server = WEBrick::HTTPServer.new(:Port => port,
-                         :DocumentRoot => build_path("html"),
-                         :Logger => WEBrick::Log.new(nil, WEBrick::Log::FATAL),
-                         :AccessLog => "")
-        begin
-            runner = Thread.new(server) {|svr| svr.start()}
-            yield
-        ensure
-            server.stop()
-            runner.join()
-            server.shutdown()
-        end
     end
 end
 
