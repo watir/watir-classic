@@ -14,12 +14,35 @@ How To Use:
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
    Install the watir files, unit tests and sample html pages. 
-   Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/all_tests.rb'.
+   Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
+
+Changes Since Last Release
+   These are the significant changes since the last release:
+
+   added new row_values and column_value methods to tables
+   added ability to save an image - ie.image(:index,1).save('c:\temp\mypic.gif')
+   new method, html that applies to objects, not just a page - ie.button(:index,1).html => <INPUT id=b2 title="this is button1" onclick="javascript:document.location='pass.html';" type=button value="Click Me" name=b1>
+   now throws a NavigationException on 404, 500 errors
+   iterators now mixin Enumerable
+   added support for labels
+   added support for frames by index
+   added screen_capture
+   added hidden field support, and iterator method
+   table cells, span and div now act as containers, so can do ie.div(:index,1).button(:index.2).click
+   added index to print out from show_xx methods. Link shows img src if an image is used
+   added onKeyUp and onKeyDown to text_fields#set
+   installer now installs AutoIt to deal with javascript popups, file uploads etc
+   the spinner is now off by default 
+
+   bug fix in text_fields iterator where it wasnt iterating through password or text ares. Added test for password fields
+   bug fix for flash for tables
+   bug fixes for images and links in cells
+
 
 
 Typical Usage
-    # include the controller 
+   # include the controller 
    require 'watir' 
    include Watir
    # create an instance of the controller 
@@ -42,18 +65,34 @@ Typical Usage
    :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
 
 
+  The objects that are currently supported include
+   Button
+   Radio
+   CheckBox
+   TextField (Including TextArea and Password)
+   Hidden
+   SelectBox
+   Label
+   Span
+   Div
+   Links
+   Tables 
+   Images
+
+ These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
+ http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
+ http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+
  command line options:
 
-  -b  (background)   Run Internet Explorer minimised
-  -s  (Spinner off)  Use this when you dont want the spinner displyed. Most usful when using an ide like eclipse or scite
+  -b  (background)   Run Internet Explorer invisible
+  -f  (fast)         Run tests very fast
+  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
 
 
-
-Things Still to be Done:
-   waitForIE may change to use the events from Internet Explorer. This will help detect page changes that are very quick ( from a local file system)
-   RDoc - I always need to add documentation to the classes and methods
-   Javascript pop ups
-   New browser windows - experimental at the moment
+Javascript Pop Up Support
+   Watir now optionally installs AutoIt - http://www.autoitscript.com/
+   This is the preffered method for dealing wth pop ups, file requesters etc. Support for Winclickers will be removed.
 
 Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
@@ -80,6 +119,7 @@ Contributors:
    Chris Hedges
    Park Heesob
    Shashank Date
+
 
 Acknowledgements:
    Chris Morris
