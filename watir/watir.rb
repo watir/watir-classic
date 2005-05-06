@@ -76,8 +76,7 @@ require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
 require 'watir/screen_capture'
-require 'ftools'
-require 'find'
+require 'watir/windowhelper'
 
 class String
     def matches (x)
@@ -3045,31 +3044,32 @@ module Watir
             end
         end
 
-        # This method saves the image to the file path that is given.  If
-        # the image src references a local url (file:///...) then the image
-        # is saved directly from the src.   If the image references any
-        # other kind of url then the 'Temporary Internet Files' cache is
-        # searched for the image.
-        # Raises a CacheItemNotFound exception if the image cannot be located
+        # This method saves the image to the file path that is given.  The 
+        # path must be in windows format (c:\\dirname\\somename.gif).  This method
+        # will not overwrite a previously existing image.  If an image already
+        # exists at the given path then a dialog will be displayed prompting
+        # for overwrite.
+        # Raises a WatirException if AutoIt is not correctly installed
         # path - directory path and file name of where image should be saved
         def save(path)
-            if (src =~ /^file\:\/\/\//)
-                File.copy(src.gsub(/^file:\/\/\//, ''), path)
-            else
-                loc = WIN32OLE.new("Shell.Application").Namespace(0x0020).Self.Path
-                name = src.slice(src.rindex('/')+1,src.length)
-                name = Regexp.new(name.sub(/^([^.]+)/, '\1\[\d+\]'))
-
-                matches = []
-                Find.find(loc) { |entry| matches << entry if (entry =~ name) }
-                raise CacheItemNotFound, "Match not found in #{loc} using #{name}" if (matches.length == 0)
-
-                match = matches[0]
-                matches.each { |entry| match = entry if (File.atime(entry) > File.atime(match)) }
-                File.copy(match, path)
-          end
+            WindowHelper.check_autoit_installed
+            @ieController.goto(src)
+            begin
+                thrd = fill_save_image_dialog(path)
+                @ieController.document.execCommand("SaveAs")
+                thrd.join(1000)
+            ensure
+                @ieController.back
+            end
         end
-    end
+        
+        def fill_save_image_dialog(path)
+            Thread.new do 
+                system("ruby -e \"require 'win32ole'; @autoit = WIN32OLE.new('AutoItX3.Control'); @autoit.WinWait 'Save Picture'; @autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\"")
+            end
+        end
+        private :fill_save_image_dialog
+    end                                                      
     
     
     # This class is the means of accessing a link on a page
