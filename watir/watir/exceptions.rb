@@ -92,14 +92,6 @@ module Watir
         end
     end
 
-    # This exception is thrown if a requested item from the cache cannot be located
-    class CacheItemNotFound < WatirException
-        def initialize(message="")
-            super(message)
-        end
-    end
-
-
     # This exception is thrown if an http error, such as a 404, 500 etc is encountered while navigating
     class NavigationException < WatirException
         def initialize(message="")
@@ -107,7 +99,5 @@ module Watir
         end
     end
 
-
-    
   end
 end
