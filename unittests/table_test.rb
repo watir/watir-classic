@@ -129,6 +129,55 @@ class TC_Tables < Test::Unit::TestCase
 
     end
  
+    def test_simple_table_gif
+        $ie.goto($htmlRoot + "simple_table_buttons.html")
+ 
+        table = $ie.table(:index,2)
+
+        assert_match( /1\.gif/   , table[1][1].image( :index,1).src  )
+        assert_match( /2\.gif/   , table[1][2].image( :index ,1).src )
+        assert_match( /3\.gif/   , table[1][3].image( :index ,1).src    )
+
+        assert_match( /1\.gif/   , table[3][1].image( :index ,1).src  )
+        assert_match( /2\.gif/   , table[3][2].image( :index ,1).src )
+        assert_match( /3\.gif/   , table[3][3].image( :index ,1).src  )
+
+ 
+        table = $ie.table(:index,3)
+        assert_match( /1\.gif/   , table[1][1].image( :index ,1).src  )
+        assert_match( /2\.gif/   , table[1][1].image( :index ,2).src )
+        assert_match( /3\.gif/   , table[1][1].image( :index ,3).src )
+
+        assert_match( /1\.gif/  , table[3][1].image( :index ,1).src  )
+        assert_match( /2\.gif/  , table[3][1].image( :index ,2).src    )
+        assert_match( /3\.gif/  , table[3][1].image( :index ,3).src  )
+
+
+    end
+
+    def test_table_with_hidden_or_visible_rows
+
+        $ie.goto($htmlRoot + "simple_table_buttons.html")
+        t = $ie.table(:id , 'show_hide')
+
+        # expand the table
+        t.each do |r|
+            r[1].image(:src, /plus/).click if r[1].image(:src, /plus/).exists?
+        end
+
+        # shrink rows 1,2,3
+        count=1
+        t.each do |r|
+            r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
+            count=2
+        end
+
+
+
+
+    end
+
+
     def test_links_and_images_in_table
 
         table = $ie.table(:id, 'pic_table')
@@ -152,15 +201,15 @@ class TC_Tables < Test::Unit::TestCase
         assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
     end
 
-    def atest_complex_table_access
+    def test_complex_table_access
         $ie.goto($htmlRoot + "complex_table.html")
      
         table = $ie.table(:index,1)
        
-        assert_equal("subtable1 Row 1 Col1",table[1][1].table[1][1].text.strip)
-        assert_equal("subtable1 Row 1 Col2",table[1][1].table[1][2].text.strip)
-        assert_equal("subtable2 Row 1 Col2",table[2][1].table[1][2].text.strip)
-        assert_equal("subtable2 Row 1 Col1",table[2][1].table[1][1].text.strip)
+        assert_equal("subtable1 Row 1 Col1",table[1][1].table(:index,1)[1][1].text.strip)
+        assert_equal("subtable1 Row 1 Col2",table[1][1].table(:index,1)[1][2].text.strip)
+        assert_equal("subtable2 Row 1 Col2",table[2][1].table(:index,1)[1][2].text.strip)
+        assert_equal("subtable2 Row 1 Col1",table[2][1].table(:index,1)[1][1].text.strip)
      
     end
 
