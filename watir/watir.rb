@@ -58,6 +58,8 @@
 #   :index        finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
 #   :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
 #   :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
+#
+
 
 # These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
 # http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
@@ -891,7 +893,7 @@ module Watir
 
             doc = getDocument()
             count = 1
-            images = doc.images
+            images = doc.all.tags("IMG")
             o=nil
             images.each do |img|
                 
@@ -933,7 +935,7 @@ module Watir
         #   * what - depends on how - an integer for index, a string or regexp for url and text
         def getLink( how, what )
             doc = getDocument()
-            links = doc.links
+            links = doc.all.tags("A")
             
             # Guard ensures watir won't crash if somehow the list of links is nil
             if (links == nil)
@@ -1072,6 +1074,25 @@ module Watir
 
     end
 
+
+    # THis class is a representaton of the document head - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/head.asp
+    class Head
+
+        def initialize( ieController )
+            @ieController = ieController
+        end
+
+        def meta
+
+        end
+
+        def to_s
+            head_text = ""
+            h=@ieController.ie.document.getElementsByTagName('head')
+            return h.ole_methods
+        end
+       
+    end
     
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
@@ -1490,12 +1511,21 @@ module Watir
         end
         alias getHTML html
         
+
+        def outerhtml()
+              return getDocument().body.outerHTML
+        end
+
+
         # this method returns the text of the current document
         def text()
             return getDocument().body.innerText
         end
         alias getText text
 
+        #def head
+        #    return Head.new(self)
+        #end
         #
         # Show me state
         #        
@@ -2554,7 +2584,7 @@ module Watir
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
             @ieController = parent
-            allTables = parent.getDocument.body.getElementsByTagName("TABLE")
+            allTables = parent.getDocument.getElementsByTagName("TABLE")
             parent.log "There are #{ allTables.length } tables"
             table = nil
             tableIndex = 1
@@ -2644,6 +2674,7 @@ module Watir
 
         # iterates through the rows in the table. Yields a TableRow object
         def each
+            object_exist_check
             1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@ieController ,:direct, row(i) )    }
         end
  
@@ -2815,7 +2846,7 @@ module Watir
         #   * o  - the object contained in the row
         #   * ieController  - an instance of an IEController       
         #   * how          - symbol - how we access the row        
-        #   * what         - what we use to access the wor - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
+        #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
         def initialize(ieController , how, what)
             @ieController = ieController
             @how = how   
@@ -2898,7 +2929,7 @@ module Watir
              @how = how   
              @what = what   
              @typingspeed = @ieController.typingspeed      
-             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+             #@activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
          end 
 
         def getContainerContents()
@@ -2910,7 +2941,7 @@ module Watir
         end
 
         def getDocument()
-            return @o.document
+            return @o  
         end
 
 
