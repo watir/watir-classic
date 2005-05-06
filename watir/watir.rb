@@ -1771,6 +1771,7 @@ module Watir
 
     class Frame < IE
     
+
         def initialize(container,  how, what)
             @container = container
             @frame = nil
@@ -1801,6 +1802,10 @@ module Watir
 
             @typingspeed = container.typingspeed      
             @activeObjectHighLightColor = container.activeObjectHighLightColor      
+        end
+
+        def ie
+            return @frame
         end
 
         def getDocument
