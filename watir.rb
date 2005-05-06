@@ -1074,25 +1074,6 @@ module Watir
 
     end
 
-
-    # THis class is a representaton of the document head - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/head.asp
-    class Head
-
-        def initialize( ieController )
-            @ieController = ieController
-        end
-
-        def meta
-
-        end
-
-        def to_s
-            head_text = ""
-            h=@ieController.ie.document.getElementsByTagName('head')
-            return h.ole_methods
-        end
-       
-    end
     
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
@@ -1106,7 +1087,7 @@ module Watir
         REVISION = "$Revision$"
 
         # the Release number
-        VERSION = "1.2"
+        VERSION = "1.3"
         
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4         
