@@ -7,12 +7,23 @@ class FakeFrame
 	end
 end
 
+class FakeAll
+    def initialize(doc)
+        @doc = doc
+    end
+    def tags(tag)
+        @doc.links
+    end
+end
+        
+
 class FakeDoc
 
-   attr_accessor :links
+   attr_accessor :links, :all
    
    def initialize()
       @links = ""
+      @all = FakeAll.new(self)
    end
    
 	def frames
