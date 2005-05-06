@@ -3057,7 +3057,7 @@ module Watir
             begin
                 thrd = fill_save_image_dialog(path)
                 @ieController.document.execCommand("SaveAs")
-                thrd.join(1000)
+                thrd.join(5)
             ensure
                 @ieController.back
             end
