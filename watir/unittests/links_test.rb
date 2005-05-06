@@ -11,10 +11,31 @@ class TC_Links < Test::Unit::TestCase
         $ie.goto($htmlRoot + "links1.html")
     end
 
+    def gotoFrameLinksPage()
+        $ie.goto($htmlRoot + "frame_links.html")
+    end
+
+
     def setup()
         gotoLinksPage()
     end
 
+    def test_links_in_frames
+        gotoFrameLinksPage()
+
+        assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
+        assert_false($ie.frame("buttonFrame").link(:text, "missing").exists?)   
+
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.frame("buttonFrame").link(:index, 199).href }  
+        assert_match( /links2/ ,$ie.frame("buttonFrame").link(:index, 1).href )
+
+        count =0
+        $ie.frame("buttonFrame").links.each do |l|
+            count+=1
+        end
+
+        assert_equal( 9 , count)
+    end
     
     def test_Link_Exists
        assert($ie.link(:text, "test1").exists?)   
