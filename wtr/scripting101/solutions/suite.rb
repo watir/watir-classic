@@ -1,13 +1,15 @@
-# suite.rb - run all the suggested solutions tests (watir)
-# This suite presumes timeclock http server is running on same machine.
+# suite.rb - run all the suggested solutions tests
+# Presumes timeclock http server is already running on same machine.
 
 require 'test/unit'
 
-$: << File.join( File.dirname( __FILE__ ), '..' )
+$LOAD_PATH << File.join( File.dirname( __FILE__ ), '..' )
 require 'toolkit/iostring'
 require 'toolkit/testhook'
 require 'toolkit/timeclock-recent-records'
 require 'toolkit/watir-assist'
+
+require 'watir'
 
 class Lab2 < Test::Unit::TestCase
   def setup
@@ -24,11 +26,13 @@ class Lab2 < Test::Unit::TestCase
 
     # verify one job was created and it is no longer running.
     # (presumes ie isn't closed)
+    $ie = Watir::IE.attach(:title, /Paul's Timeclock/)
     assert_total_job_records 1
     assert_job_record 1, 'ruby article', ''
   end
   def teardown
     $stdout = STDOUT
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
   end
 end
@@ -37,6 +41,7 @@ class Lab3 < Test::Unit::TestCase
 
   def test_login_start
     load 'lab3_1.rb'
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     y = get_results_table_array
     assert_equal 2, y.length
     assert_equal "background", y.job_name(1)
@@ -45,6 +50,7 @@ class Lab3 < Test::Unit::TestCase
 
   def test_start_stop
     load 'lab3_2.rb'
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     y = get_results_table_array
     assert_equal 2, y.length
     assert_equal "foreground", y.job_name(1)
@@ -53,6 +59,7 @@ class Lab3 < Test::Unit::TestCase
 
   def test_two_jobs
     load 'lab3_3.rb'
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     y = get_results_table_array
     assert_equal 3, y.length
     assert_equal "job2", y.job_name(1)
@@ -62,6 +69,7 @@ class Lab3 < Test::Unit::TestCase
   end
   
   def teardown
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
     ensure_no_user_data("ruby")
   end
@@ -81,6 +89,7 @@ class Lab4 < Test::Unit::TestCase
   end
   def teardown
     $stdout = STDOUT
+    $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
   end
 end
