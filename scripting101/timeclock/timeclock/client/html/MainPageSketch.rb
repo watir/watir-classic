@@ -100,7 +100,8 @@ module Timeclock
         ## Middle of the page: last command's results and current running job
 
         def last_results_xhtml
-          p(@last_result_is_error ? TextResultRed : TextResultGreen,
+          p({:id => 'last_results'}, 
+            @last_result_is_error ? TextResultRed : TextResultGreen,
             @last_result)
         end
 
@@ -118,11 +119,11 @@ module Timeclock
         def running_job_xhtml
           if @running
             command_form('refresh',
-                         p(center,
+                         p({:id  => 'running_job'}, center,
                            running_job_text,
                            submit('refresh', 'Refresh')))
           else
-            p(center, running_job_text)
+            p({:id  => 'running_job'}, center, running_job_text)
           end
         end
 
@@ -177,7 +178,8 @@ module Timeclock
                td(state)) }
                                          
           table({:align => 'center', :width => '66%', :border => "1",
-                  :cellspacing => "0", :cellpadding => "3"},
+                  :cellspacing => "0", :cellpadding => "3",
+                  :id => 'recent_records'},
                 tr({:bgcolor => HeaderBlueFill},
                    td({:align => "center", :colspan => "4" },
                       'Recent Records')),
