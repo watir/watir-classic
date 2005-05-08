@@ -23,17 +23,15 @@ ie.button(:value , 'Create').click
 ie.button(:name, 'start_day').click
 
 # verify that the status message appears
-if ie.pageContainsText("Job 'background' started")
+if ie.contains_text("Job 'background' started")
   puts 'PASS - job started'
 else
   puts "FAIL - job didn't start"
 end
 
 # verify that the job appears in the recent records table
-require 'toolkit/timeclock-recent-records'
-$ie = ie
-if get_results_table_array.job_name(1) == 'background' and
-   get_results_table_array.status(1) == 'running'
+if ie.table(:id, 'recent_records')[2][1].text.strip == 'background' and
+   ie.table(:id, 'recent_records')[2][4].text.strip == 'running'
 then
   puts 'PASS - background job is running'
 else
