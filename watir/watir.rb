@@ -960,7 +960,7 @@ module Watir
                 
             when :text
                 links.each do |thisLink|
-                    if what.matches(thisLink.innerText) 
+                    if what.matches(thisLink.innerText.strip) 
                         link = thisLink if link == nil
                     end
                 end
@@ -1499,7 +1499,7 @@ module Watir
 
         # this method returns the text of the current document
         def text()
-            return getDocument().body.innerText
+            return getDocument().body.innerText.strip
         end
         alias getText text
 
@@ -2398,7 +2398,7 @@ module Watir
         # raises an ObjectNotFound exception if the object cannot be found
         def text()
             object_exist_check
-            d = @o.innerText
+            d = @o.innerText.strip
             return d
         end
         alias innerText text
@@ -2516,7 +2516,7 @@ module Watir
 
         def innerText
             object_exist_check
-            return @o.innerText
+            return @o.innerText.strip
         end
 
         # this method is used to ppulate the properties in the to_s method
@@ -2926,7 +2926,7 @@ module Watir
         # returns the contents of the cell as text
         def text()
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
-             return @o.innerText 
+             return @o.innerText.strip 
         end
         alias to_s text
  
@@ -3107,7 +3107,7 @@ module Watir
         # returns the text displayed by the link
         def innerText
             object_exist_check
-            return @o.innerText
+            return @o.innerText.strip
         end
         alias text innerText
 
