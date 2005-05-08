@@ -19,6 +19,14 @@ class WindowHelper
 	  	@autoit.WinWait "Microsoft Internet Explorer", ""
 	  	@autoit.Send "{ESCAPE}"
 	end
+
+	def push_security_alert_yes()
+	  	@autoit.WinWait "Security Alert", ""
+	  	@autoit.Send "{TAB}"
+	  	@autoit.Send "{TAB}"
+	  	@autoit.Send "{SPACE}"
+	end
+
   
 	def logon(title,name = 'john doe',password = 'john doe')
 		  @autoit.WinWait title, ""
