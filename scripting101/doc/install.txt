@@ -5,7 +5,7 @@ h2. Installation Instructions
 These instructions describe how to install the software we'll use in
 our _Scripting Web Tests_ class (aka _Scripting for Testers_).
 
-We will be using Ruby (a programming language) and WATIR
+We will be using Ruby (a programming language) and Watir
 (a library) on your machine to test server software. You can run the
 server software on your computer. 
 
@@ -17,10 +17,10 @@ or Windows XP. You should have Administrator privileges.</B>
 We believe that it will also work on Windows NT and Windows 98, but we
 don't support these in our classes. (Our experience has been that
 machines that are still running these operating systems often are too
-slow or have other problems that we don't have time for in a class
+slow or have other problems that we don't have time to support in a class
 environment. Sorry.)
 
-The WATIR software requires Internet Explorer and therefore only runs on 
+The Watir library requires Internet Explorer and therefore only runs on 
 Windows. The Timeclock server was developed on a
 Macintosh, and should run on any machine supporting Ruby (Unix, Linux,
 Windows). (The Timeclock "product tests" will not run on Windows using
@@ -35,9 +35,9 @@ these materials can be found online.
 
 h4. Ruby
 
-We are currently using this Ruby installer: 
-"ruby181-12.exe.":http://rubyforge.org/frs/?group_id=167&release_id=414 
-(There are known problems with ruby 1.8.1-13; don't use it.)
+We are currently using 
+"Ruby for Windows 1.8.2-14":http://rubyforge.org/frs/?group_id=167&release_id=1346 
+(There are known problems with Ruby 1.8.1-13; don't use it.)
 
 #      Double-click this exe file to install.
 #      Select the default installation options (choose all options;
@@ -45,35 +45,24 @@ We are currently using this Ruby installer:
 #      If you are installing as Administrator you don't need to
        restart windows. Otherwise, you should.  
 
-h4. WATIR Library
+h4. Watir
 
-This library is hosted on rubyforge.org: watir.tar.gz
+We are using "Watir 1.3":http://rubyforge.org/frs/?group_id=104&release_id=2133
 
-# Extract the contents of this archive into your hard drive (c:). A
-  "watir" directory will be created automatically.
+# Unzip this into c:\watir
+# Execute install.rb
+# Use all the default installation options
 
 h4. Scripting Class Materials
 
-You will also need the materials hosted on rubyforge.org:
-"scripting101.tar.gz":http://rubyforge.org/frs/?group_id=104&release_id=717
+We are using "Scripting101 1.4":http://rubyforge.org/frs/?group_id=104&release_id=1386
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.
   
-h4. FireFox Browser
-
-FireFox includes development tools that we use to help understand
-web pages.
-
-# Install the Firefox browser.
-# Do a custom install.
-# On the Select Components page, select 'Developer Tools.'
-
 h3. Running the Timeclock Server.
 
-You probably won't need to do this for class, since you can use your
-instructor's server. Otherwise, here is how to start up a timeclock
-server on your machine. 
+You will need to start up a timeclock server on your machine. 
 
 #      Start a command shell. (Start-> Run, enter "cmd".)
 #      Enter "cd c:\scripting101\timeclock\bin".
@@ -88,4 +77,4 @@ sample tests.
 #      Enter "ruby c:\scripting101\solutions\suite.rb -b".
 
 Note: These tests will run unbearably slowly if Internet Explorer is 
-configured to use a proxy server that is unavailable.
+configured to use a proxy server that happens to be unavailable.
