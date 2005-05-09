@@ -644,6 +644,38 @@ module Watir
             return Spans.new(self)
         end
 
+
+        # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
+        #  *  how   - symbol - how we access the p, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        #
+        # returns a P object
+        #
+        # Typical Usage
+        # 
+        #   ie.p(:id, /list/)                 # access the first p tag  that matches list.
+        #   ie.p(:index,2)                    # access the second p tag on the page
+        #   ie.p(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   
+        def p( how , what )
+            return P.new(self , how , what)
+        end
+
+        # this is the main method for accessing the ps iterator. 
+        # 
+        # Returns a Ps object
+        #
+        # Typical usage:
+        #
+        #   ie.ps.each do |i| ; puts i.to_s ; end ;   # iterate through all the p tags on the page
+        #   ie.ps[1].to_s                             # goto the first p tag on the page                                   
+        #   ie.ps.length                              # show how many p tags are on the page.
+        #
+        def ps()
+            return Ps.new(self)
+        end
+
+
         # this is the main method for accessing the labels iterator. It returns a Labels object
         # 
         # Returns a Labels object
@@ -2170,6 +2202,23 @@ module Watir
         end
     end
 
+    # this class accesses the p tags in the document as a collection
+    # it would normally only be accessed by the ps method of IEController
+    class Ps < Iterators
+
+        def initialize( ieController )
+            super
+            @length =@ieController.ie.document.body.getElementsByTagName("P").length
+        end
+       
+        # this method creates an object of the correct type that the iterators use
+        def iterator_object(i)
+            @ieController.p( :index , i+1)
+        end
+        private :iterator_object
+    end
+
+
     # this class accesses the spans in the document as a collection
     # it would normally only be accessed by the spans method of IEController
     class Spans < Iterators
@@ -2451,6 +2500,13 @@ module Watir
             r=r + span_div_string_creator
             return r.join("\n")
          end
+    end
+
+    class P < SpanDivCommon 
+        def initialize( ieController, how, what)
+            @objectType = "P"
+            super( ieController, how, what)
+        end
     end
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
