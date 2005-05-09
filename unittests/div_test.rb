@@ -178,5 +178,43 @@ class TC_Divs < Test::Unit::TestCase
     end
 
 
+    def test_p
+
+        assert($ie.p(:id, 'number1').exists?)
+        assert($ie.p(:index, 3).exists?)
+        assert($ie.p(:title, 'test_3').exists?)
+
+        assert_false($ie.p(:id, 'missing').exists?)
+        assert_false($ie.p(:index, 8).exists?)
+        assert_false($ie.p(:title, 'test_55').exists?)
+
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').style }
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').text }
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').title }
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').to_s }
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').disabled }
+
+        assert_equal(  'redText' , $ie.p(:index,1).style)
+        assert_equal(  'P_tag_1' , $ie.p(:index,1).title)
+        assert_equal(  'This text is in a p with an id of number2' , $ie.p(:index,2).text)
+
+    end
+
+    def test_p_iterator
+
+        assert_equal( 3, $ie.ps.length)
+        assert_equal( 'italicText', $ie.ps[2].style)
+        assert_equal( 'number3', $ie.ps[3].id)
+
+        count=1
+        $ie.ps.each do |p|
+            assert_equal('number'+count.to_s , p.id)
+            count+=1
+        end
+        assert_equal( count-1 ,  $ie.ps.length)
+
+    end
+
+
 
 end
