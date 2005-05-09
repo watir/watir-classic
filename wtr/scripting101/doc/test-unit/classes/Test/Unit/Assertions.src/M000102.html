@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>assert_throws (Test::Unit::Assertions)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/assertions.rb, line 275</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_throws</span>(<span class="ruby-identifier">expected_symbol</span>, <span class="ruby-identifier">message</span>=<span class="ruby-value str">&quot;&quot;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">proc</span>)
+        <span class="ruby-identifier">_wrap_assertion</span> <span class="ruby-keyword kw">do</span>
+          <span class="ruby-identifier">assert_instance_of</span>(<span class="ruby-constant">Symbol</span>, <span class="ruby-identifier">expected_symbol</span>, <span class="ruby-value str">&quot;assert_throws expects the symbol that should be thrown for its first argument&quot;</span>)
+          <span class="ruby-identifier">assert_block</span>(<span class="ruby-value str">&quot;Should have passed a block to assert_throws.&quot;</span>){<span class="ruby-identifier">block_given?</span>}
+          <span class="ruby-identifier">caught</span> = <span class="ruby-keyword kw">true</span>
+          <span class="ruby-keyword kw">begin</span>
+            <span class="ruby-identifier">catch</span>(<span class="ruby-identifier">expected_symbol</span>) <span class="ruby-keyword kw">do</span>
+              <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">call</span>
+              <span class="ruby-identifier">caught</span> = <span class="ruby-keyword kw">false</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">full_message</span> = <span class="ruby-identifier">build_message</span>(<span class="ruby-identifier">message</span>, <span class="ruby-value str">&quot;&lt;?&gt; should have been thrown.&quot;</span>, <span class="ruby-identifier">expected_symbol</span>)
+            <span class="ruby-identifier">assert_block</span>(<span class="ruby-identifier">full_message</span>){<span class="ruby-identifier">caught</span>}
+          <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>, <span class="ruby-constant">ThreadError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">error</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-constant">UncaughtThrow</span>[<span class="ruby-identifier">error</span>.<span class="ruby-identifier">class</span>] <span class="ruby-operator">!~</span> <span class="ruby-identifier">error</span>.<span class="ruby-identifier">message</span>
+              <span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">full_message</span> = <span class="ruby-identifier">build_message</span>(<span class="ruby-identifier">message</span>, <span class="ruby-value str">&quot;&lt;?&gt; expected to be thrown but\n&lt;?&gt; was thrown.&quot;</span>, <span class="ruby-identifier">expected_symbol</span>, <span class="ruby-identifier">$1</span>.<span class="ruby-identifier">intern</span>)
+            <span class="ruby-identifier">flunk</span>(<span class="ruby-identifier">full_message</span>)
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>result_changed (Test::Unit::UI::Fox::TestRunner)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/ui/fox/testrunner.rb, line 116</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">result_changed</span>(<span class="ruby-identifier">result</span>)
+            <span class="ruby-ivar">@test_progress_bar</span>.<span class="ruby-identifier">progress</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">run_count</span>
+  
+            <span class="ruby-ivar">@test_count_label</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">run_count</span>.<span class="ruby-identifier">to_s</span>
+            <span class="ruby-ivar">@assertion_count_label</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">assertion_count</span>.<span class="ruby-identifier">to_s</span>
+            <span class="ruby-ivar">@failure_count_label</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">failure_count</span>.<span class="ruby-identifier">to_s</span>
+            <span class="ruby-ivar">@error_count_label</span>.<span class="ruby-identifier">text</span> = <span class="ruby-identifier">result</span>.<span class="ruby-identifier">error_count</span>.<span class="ruby-identifier">to_s</span>
+
+             <span class="ruby-comment cmt"># repaint now!</span>
+             <span class="ruby-ivar">@info_panel</span>.<span class="ruby-identifier">repaint</span>
+             <span class="ruby-ivar">@application</span>.<span class="ruby-identifier">flush</span>
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

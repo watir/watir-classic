@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>assert_raise (Test::Unit::Assertions)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/assertions.rb, line 75</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">assert_raise</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+        <span class="ruby-identifier">_wrap_assertion</span> <span class="ruby-keyword kw">do</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Module</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>
+            <span class="ruby-identifier">message</span> = <span class="ruby-value str">&quot;&quot;</span>
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">message</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">exceptions</span>, <span class="ruby-identifier">modules</span> = <span class="ruby-identifier">_check_exception_class</span>(<span class="ruby-identifier">args</span>)
+          <span class="ruby-identifier">expected</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">args</span>
+          <span class="ruby-identifier">actual_exception</span> = <span class="ruby-keyword kw">nil</span>
+          <span class="ruby-identifier">full_message</span> = <span class="ruby-identifier">build_message</span>(<span class="ruby-identifier">message</span>, <span class="ruby-value str">&quot;&lt;?&gt; exception expected but none was thrown.&quot;</span>, <span class="ruby-identifier">expected</span>)
+          <span class="ruby-identifier">assert_block</span>(<span class="ruby-identifier">full_message</span>) <span class="ruby-keyword kw">do</span>
+            <span class="ruby-keyword kw">begin</span>
+              <span class="ruby-keyword kw">yield</span>
+            <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">actual_exception</span>
+              <span class="ruby-keyword kw">break</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">false</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">full_message</span> = <span class="ruby-identifier">build_message</span>(<span class="ruby-identifier">message</span>, <span class="ruby-value str">&quot;&lt;?&gt; exception expected but was\n?&quot;</span>, <span class="ruby-identifier">expected</span>, <span class="ruby-identifier">actual_exception</span>)
+          <span class="ruby-identifier">assert_block</span>(<span class="ruby-identifier">full_message</span>) {<span class="ruby-identifier">_expected_exception?</span>(<span class="ruby-identifier">actual_exception</span>, <span class="ruby-identifier">exceptions</span>, <span class="ruby-identifier">modules</span>)}
+          <span class="ruby-identifier">actual_exception</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

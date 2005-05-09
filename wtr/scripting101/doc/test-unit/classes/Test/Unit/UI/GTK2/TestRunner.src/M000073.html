@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>progress_panel (Test::Unit::UI::GTK2::TestRunner)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/ui/gtk2/testrunner.rb, line 235</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">progress_panel</span>
+            <span class="ruby-identifier">lazy_initialize</span>(<span class="ruby-identifier">:progress_panel</span>) <span class="ruby-keyword kw">do</span>
+              <span class="ruby-ivar">@progress_panel</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">HBox</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">false</span>, <span class="ruby-value">10</span>)
+              <span class="ruby-ivar">@progress_panel</span>.<span class="ruby-identifier">border_width</span> = <span class="ruby-value">10</span>
+              <span class="ruby-ivar">@progress_panel</span>.<span class="ruby-identifier">pack_start</span>(<span class="ruby-identifier">test_progress_bar</span>, <span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">true</span>, <span class="ruby-value">0</span>)
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

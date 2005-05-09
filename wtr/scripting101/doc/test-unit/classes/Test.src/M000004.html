@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>keyword_display (Test)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/autorunner.rb, line 185</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">keyword_display</span>(<span class="ruby-identifier">array</span>)
+        <span class="ruby-identifier">list</span> = <span class="ruby-identifier">array</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span>, <span class="ruby-operator">*</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>}
+        <span class="ruby-constant">Array</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">array</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">sort!</span>
+        <span class="ruby-identifier">list</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">/^(.)([A-Za-z]+)(?=\w*$)/</span>, <span class="ruby-value str">'\\1[\\2]'</span>)}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;, &quot;</span>)
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

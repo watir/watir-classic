@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>run (Test::Unit::TestCase)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/testcase.rb, line 65</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">run</span>(<span class="ruby-identifier">result</span>)
+        <span class="ruby-keyword kw">yield</span>(<span class="ruby-constant">STARTED</span>, <span class="ruby-identifier">name</span>)
+        <span class="ruby-ivar">@_result</span> = <span class="ruby-identifier">result</span>
+        <span class="ruby-keyword kw">begin</span>
+          <span class="ruby-identifier">setup</span>
+          <span class="ruby-identifier">__send__</span>(<span class="ruby-ivar">@method_name</span>)
+        <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AssertionFailedError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+          <span class="ruby-identifier">add_failure</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>)
+        <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">StandardError</span>, <span class="ruby-constant">ScriptError</span>
+          <span class="ruby-identifier">add_error</span>(<span class="ruby-identifier">$!</span>)
+        <span class="ruby-keyword kw">ensure</span>
+          <span class="ruby-keyword kw">begin</span>
+            <span class="ruby-identifier">teardown</span>
+          <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">AssertionFailedError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-identifier">add_failure</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span>, <span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>)
+          <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">StandardError</span>, <span class="ruby-constant">ScriptError</span>
+            <span class="ruby-identifier">add_error</span>(<span class="ruby-identifier">$!</span>)
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">result</span>.<span class="ruby-identifier">add_run</span>
+        <span class="ruby-keyword kw">yield</span>(<span class="ruby-constant">FINISHED</span>, <span class="ruby-identifier">name</span>)
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
