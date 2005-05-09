@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Test::Unit</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Test::Unit</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/unit/assertionfailederror_rb.html">
+                unit/assertionfailederror.rb
+                </a>
+        <br />
+                <a href="../../files/unit/assertions_rb.html">
+                unit/assertions.rb
+                </a>
+        <br />
+                <a href="../../files/unit/autorunner_rb.html">
+                unit/autorunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/collector/dir_rb.html">
+                unit/collector/dir.rb
+                </a>
+        <br />
+                <a href="../../files/unit/collector/objectspace_rb.html">
+                unit/collector/objectspace.rb
+                </a>
+        <br />
+                <a href="../../files/unit/collector_rb.html">
+                unit/collector.rb
+                </a>
+        <br />
+                <a href="../../files/unit/error_rb.html">
+                unit/error.rb
+                </a>
+        <br />
+                <a href="../../files/unit/failure_rb.html">
+                unit/failure.rb
+                </a>
+        <br />
+                <a href="../../files/unit/testcase_rb.html">
+                unit/testcase.rb
+                </a>
+        <br />
+                <a href="../../files/unit/testresult_rb.html">
+                unit/testresult.rb
+                </a>
+        <br />
+                <a href="../../files/unit/testsuite_rb.html">
+                unit/testsuite.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/console/testrunner_rb.html">
+                unit/ui/console/testrunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/fox/testrunner_rb.html">
+                unit/ui/fox/testrunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/gtk/testrunner_rb.html">
+                unit/ui/gtk/testrunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/gtk2/testrunner_rb.html">
+                unit/ui/gtk2/testrunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/testrunnermediator_rb.html">
+                unit/ui/testrunnermediator.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/testrunnerutilities_rb.html">
+                unit/ui/testrunnerutilities.rb
+                </a>
+        <br />
+                <a href="../../files/unit/ui/tk/testrunner_rb.html">
+                unit/ui/tk/testrunner.rb
+                </a>
+        <br />
+                <a href="../../files/unit/util/backtracefilter_rb.html">
+                unit/util/backtracefilter.rb
+                </a>
+        <br />
+                <a href="../../files/unit/util/observable_rb.html">
+                unit/util/observable.rb
+                </a>
+        <br />
+                <a href="../../files/unit/util/procwrapper_rb.html">
+                unit/util/procwrapper.rb
+                </a>
+        <br />
+                <a href="../../files/unit_rb.html">
+                unit.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1><a href="Unit.html">Test::Unit</a> - Ruby <a href="Unit.html">Unit</a> Testing Framework</h1>
+<h2>Introduction</h2>
+<p>
+<a href="Unit.html">Unit</a> testing is making waves all over the place,
+largely due to the fact that it is a core practice of XP. While XP is
+great, unit testing has been around for a long time and has always been a
+good idea. One of the keys to good unit testing, though, is not just
+writing tests, but having tests. What&#8217;s the difference? Well, if you
+just <em>write</em> a test and throw it away, you have no guarantee that
+something won&#8217;t change later which breaks your code. If, on the other
+hand, you <em>have</em> tests (obviously you have to write them first), and
+run them as often as possible, you slowly build up a wall of things that
+cannot break without you immediately knowing about it. This is when unit
+testing hits its peak usefulness.
+</p>
+<p>
+Enter <a href="Unit.html">Test::Unit</a>, a framework for unit testing in
+Ruby, helping you to design, debug and evaluate your code by making it easy
+to write and have tests for it.
+</p>
+<h2>Notes</h2>
+<p>
+<a href="Unit.html">Test::Unit</a> has grown out of and superceded
+Lapidary.
+</p>
+<h2>Feedback</h2>
+<p>
+I like (and do my best to practice) XP, so I value early releases, user
+feedback, and clean, simple, expressive code. There is always room for
+improvement in everything I do, and <a href="Unit.html">Test::Unit</a> is
+no exception. Please, let me know what you think of <a
+href="Unit.html">Test::Unit</a> as it stands, and what you&#8217;d like to
+see expanded/changed/improved/etc. If you find a bug, let me know ASAP; one
+good way to let me know what the bug is is to submit a new test that
+catches it :-) Also, I&#8217;d love to hear about any successes you have
+with <a href="Unit.html">Test::Unit</a>, and any documentation you might
+add will be greatly appreciated. My contact info is below.
+</p>
+<h2>Contact Information</h2>
+<p>
+A lot of discussion happens about Ruby in general on the ruby-talk mailing
+list (<a
+href="http://www.ruby-lang.org/en/ml.html">www.ruby-lang.org/en/ml.html</a>),
+and you can ask any questions you might have there. I monitor the list, as
+do many other helpful Rubyists, and you&#8217;re sure to get a quick
+answer. Of course, you&#8217;re also welcome to email me (Nathaniel
+Talbott) directly at <a
+href="mailto:testunit@talbott.ws">testunit@talbott.ws</a>, and I&#8217;ll
+do my best to help you out.
+</p>
+<h2>Credits</h2>
+<p>
+I&#8217;d like to thank&#8230;
+</p>
+<p>
+Matz, for a great language!
+</p>
+<p>
+Masaki Suketa, for his work on RubyUnit, which filled a vital need in the
+Ruby world for a very long time. I&#8217;m also grateful for his help in
+polishing <a href="Unit.html">Test::Unit</a> and getting the RubyUnit
+compatibility layer right. His graciousness in allowing <a
+href="Unit.html">Test::Unit</a> to supercede RubyUnit continues to be a
+challenge to me to be more willing to defer my own rights.
+</p>
+<p>
+Ken McKinlay, for his interest and work on unit testing, and for his
+willingness to dialog about it. He was also a great help in pointing out
+some of the holes in the RubyUnit compatibility layer.
+</p>
+<p>
+Dave Thomas, for the original idea that led to the extremely simple
+&quot;require &#8216;test/unit&#8217;&quot;, plus his code to improve it
+even more by allowing the selection of tests from the command-line. Also,
+without RDoc, the documentation for <a href="Unit.html">Test::Unit</a>
+would stink a lot more than it does now.
+</p>
+<p>
+Everyone who&#8217;s helped out with bug reports, feature ideas,
+encouragement to continue, etc. It&#8217;s a real privilege to be a part of
+the Ruby community.
+</p>
+<p>
+The guys at RoleModel Software, for putting up with me repeating, &quot;But
+this would be so much easier in Ruby!&quot; whenever we&#8217;re coding in
+Java.
+</p>
+<p>
+My Creator, for giving me life, and giving it more abundantly.
+</p>
+<h2>License</h2>
+<p>
+<a href="Unit.html">Test::Unit</a> is copyright &#169; 2000-2003 Nathaniel
+Talbott. It is free software, and is distributed under the Ruby license.
+See the COPYING file in the standard Ruby distribution for details.
+</p>
+<h2>Warranty</h2>
+<p>
+This software is provided &quot;as is&quot; and without any express or
+implied warranties, including, without limitation, the implied warranties
+of merchantibility and fitness for a particular purpose.
+</p>
+<h2>Author</h2>
+<p>
+Nathaniel Talbott. Copyright &#169; 2000-2003, Nathaniel Talbott
+</p>
+<hr size="2"></hr><h1>Usage</h1>
+<p>
+The general idea behind unit testing is that you write a <em>test</em>
+<em>method</em> that makes certain <em>assertions</em> about your code,
+working against a <em>test</em> <em>fixture</em>. A bunch of these
+<em>test</em> <em>methods</em> are bundled up into a <em>test</em>
+<em>suite</em> and can be run any time the developer wants. The results of
+a run are gathered in a <em>test</em> <em>result</em> and displayed to the
+user through some <a href="Unit/UI.html">UI</a>. So, lets break this down
+and see how <a href="Unit.html">Test::Unit</a> provides each of these
+necessary pieces.
+</p>
+<h2><a href="Unit/Assertions.html">Assertions</a></h2>
+<p>
+These are the heart of the framework. Think of an assertion as a statement
+of expected outcome, i.e. &quot;I assert that x should be equal to y&quot;.
+If, when the assertion is executed, it turns out to be correct, nothing
+happens, and life is good. If, on the other hand, your assertion turns out
+to be false, an error is propagated with pertinent information so that you
+can go back and make your assertion succeed, and, once again, life is good.
+For an explanation of the current assertions, see <a
+href="Unit/Assertions.html">Test::Unit::Assertions</a>.
+</p>
+<h2><a href="../Test.html">Test</a> Method &amp; <a href="../Test.html">Test</a> Fixture</h2>
+<p>
+Obviously, these assertions have to be called within a context that knows
+about them and can do something meaningful with their pass/fail value.
+Also, it&#8217;s handy to collect a bunch of related tests, each test
+represented by a method, into a common test class that knows how to run
+them. The tests will be in a separate class from the code they&#8217;re
+testing for a couple of reasons. First of all, it allows your code to stay
+uncluttered with test code, making it easier to maintain. Second, it allows
+the tests to be stripped out for deployment, since they&#8217;re really
+there for you, the developer, and your users don&#8217;t need them. Third,
+and most importantly, it allows you to set up a common test fixture for
+your tests to run against.
+</p>
+<p>
+What&#8217;s a test fixture? Well, tests do not live in a vacuum; rather,
+they&#8217;re run against the code they are testing. Often, a collection of
+tests will run against a common set of data, also called a fixture. If
+they&#8217;re all bundled into the same test class, they can all share the
+setting up and tearing down of that data, eliminating unnecessary
+duplication and making it much easier to add related tests.
+</p>
+<p>
+<a href="Unit/TestCase.html">Test::Unit::TestCase</a> wraps up a collection
+of test methods together and allows you to easily set up and tear down the
+same test fixture for each test. This is done by overriding setup and/or
+teardown, which will be called before and after each test method that is
+run. The <a href="Unit/TestCase.html">TestCase</a> also knows how to
+collect the results of your assertions into a <a
+href="Unit/TestResult.html">Test::Unit::TestResult</a>, which can then be
+reported back to you&#8230; but I&#8217;m getting ahead of myself. To write
+a test, follow these steps:
+</p>
+<ul>
+<li>Make sure <a href="Unit.html">Test::Unit</a> is in your library path.
+
+</li>
+<li>require &#8216;test/unit&#8217; in your test script.
+
+</li>
+<li>Create a class that subclasses <a
+href="Unit/TestCase.html">Test::Unit::TestCase</a>.
+
+</li>
+<li>Add a method that begins with &quot;test&quot; to your class.
+
+</li>
+<li>Make assertions in your test method.
+
+</li>
+<li>Optionally define setup and/or teardown to set up and/or tear down your
+common test fixture.
+
+</li>
+<li>You can now run your test as you would any other Ruby script&#8230; try it
+and see!
+
+</li>
+</ul>
+<p>
+A really simple test might look like this (setup and teardown are commented
+out to indicate that they are completely optional):
+</p>
+<pre>
+    require 'test/unit'
+
+    class TC_MyTest &lt; Test::Unit::TestCase
+      # def setup
+      # end
+
+      # def teardown
+      # end
+
+      def test_fail
+        assert(false, 'Assertion was false.')
+      end
+    end
+</pre>
+<h2><a href="../Test.html">Test</a> Runners</h2>
+<p>
+So, now you have this great test class, but you still need a way to run it
+and view any failures that occur during the run. This is where <a
+href="Unit/UI/Console/TestRunner.html">Test::Unit::UI::Console::TestRunner</a>
+(and others, such as <a
+href="Unit/UI/GTK/TestRunner.html">Test::Unit::UI::GTK::TestRunner</a>)
+comes into play. The console test runner is automatically invoked for you
+if you require &#8216;test/unit&#8217; and simply run the file. To use
+another runner, or to manually invoke a runner, simply call its run class
+method and pass in an object that responds to the suite message with a <a
+href="Unit/TestSuite.html">Test::Unit::TestSuite</a>. This can be as simple
+as passing in your <a href="Unit/TestCase.html">TestCase</a> class (which
+has a class suite method). It might look something like this:
+</p>
+<pre>
+   require 'test/unit/ui/console/testrunner'
+   Test::Unit::UI::Console::TestRunner.run(TC_MyTest)
+</pre>
+<h2><a href="../Test.html">Test</a> Suite</h2>
+<p>
+As more and more unit tests accumulate for a given project, it becomes a
+real drag running them one at a time, and it also introduces the potential
+to overlook a failing test because you forget to run it. Suddenly it
+becomes very handy that the TestRunners can take any object that returns a
+<a href="Unit/TestSuite.html">Test::Unit::TestSuite</a> in response to a
+suite method. The <a href="Unit/TestSuite.html">TestSuite</a> can, in turn,
+contain other TestSuites or individual tests (typically created by a <a
+href="Unit/TestCase.html">TestCase</a>). In other words, you can easily
+wrap up a group of TestCases and TestSuites like this:
+</p>
+<pre>
+ require 'test/unit/testsuite'
+ require 'tc_myfirsttests'
+ require 'tc_moretestsbyme'
+ require 'ts_anothersetoftests'
+
+ class TS_MyTests
+   def self.suite
+     suite = Test::Unit::TestSuite.new
+     suite &lt;&lt; TC_MyFirstTests.suite
+     suite &lt;&lt; TC_MoreTestsByMe.suite
+     suite &lt;&lt; TS_AnotherSetOfTests.suite
+     return suite
+   end
+ end
+ Test::Unit::UI::Console::TestRunner.run(TS_MyTests)
+</pre>
+<p>
+Now, this is a bit cumbersome, so <a href="Unit.html">Test::Unit</a> does a
+little bit more for you, by wrapping these up automatically when you
+require &#8216;test/unit&#8217;. What does this mean? It means you could
+write the above test case like this instead:
+</p>
+<pre>
+ require 'test/unit'
+ require 'tc_myfirsttests'
+ require 'tc_moretestsbyme'
+ require 'ts_anothersetoftests'
+</pre>
+<p>
+<a href="Unit.html">Test::Unit</a> is smart enough to find all the test
+cases existing in the ObjectSpace and wrap them up into a suite for you. It
+then runs the dynamic suite using the console TestRunner.
+</p>
+<h2>Questions?</h2>
+<p>
+I&#8217;d really like to get feedback from all levels of Ruby practitioners
+about typos, grammatical errors, unclear statements, missing points, etc.,
+in this document (or any other).
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000006">run=</a>&nbsp;&nbsp;
+      <a href="#M000007">run?</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Unit/Assertions.html" class="link">Test::Unit::Assertions</a><br />
+Module <a href="Unit/Collector.html" class="link">Test::Unit::Collector</a><br />
+Module <a href="Unit/UI.html" class="link">Test::Unit::UI</a><br />
+Module <a href="Unit/Util.html" class="link">Test::Unit::Util</a><br />
+Class <a href="Unit/AssertionFailedError.html" class="link">Test::Unit::AssertionFailedError</a><br />
+Class <a href="Unit/AutoRunner.html" class="link">Test::Unit::AutoRunner</a><br />
+Class <a href="Unit/Error.html" class="link">Test::Unit::Error</a><br />
+Class <a href="Unit/Failure.html" class="link">Test::Unit::Failure</a><br />
+Class <a href="Unit/TestCase.html" class="link">Test::Unit::TestCase</a><br />
+Class <a href="Unit/TestResult.html" class="link">Test::Unit::TestResult</a><br />
+Class <a href="Unit/TestSuite.html" class="link">Test::Unit::TestSuite</a><br />
+
+    </div>
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">OUTPUT_LEVELS</td>
+          <td>=</td>
+          <td class="context-item-value">[         [:silent, UI::SILENT],         [:progress, UI::PROGRESS_ONLY],         [:normal, UI::NORMAL],         [:verbose, UI::VERBOSE],       ]</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">COLLECTORS</td>
+          <td>=</td>
+          <td class="context-item-value">{         :objectspace =&gt; proc do |r|           require 'test/unit/collector/objectspace'</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+          <a href="Unit.src/M000006.html" target="Code" class="method-signature"
+            onclick="popupCode('Unit.src/M000006.html');return false;">
+          <span class="method-name">run=</span><span class="method-args">(flag)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <a href="Unit.src/M000007.html" target="Code" class="method-signature"
+            onclick="popupCode('Unit.src/M000007.html');return false;">
+          <span class="method-name">run?</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

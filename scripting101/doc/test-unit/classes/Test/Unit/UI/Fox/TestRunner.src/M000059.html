@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>create_fault_list (Test::Unit::UI::Fox::TestRunner)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/ui/fox/testrunner.rb, line 225</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_fault_list</span>(<span class="ruby-identifier">parent</span>)
+            <span class="ruby-identifier">list</span> = <span class="ruby-constant">FXList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">parent</span>, <span class="ruby-value">10</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-value">0</span>, <span class="ruby-constant">LIST_SINGLESELECT</span> <span class="ruby-operator">|</span> <span class="ruby-constant">LAYOUT_FILL_X</span>) <span class="ruby-comment cmt">#, 0, 0, 0, 150)</span>
+            <span class="ruby-identifier">list</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-constant">SEL_COMMAND</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">sender</span>, <span class="ruby-identifier">sel</span>, <span class="ruby-identifier">ptr</span><span class="ruby-operator">|</span>
+              <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sender</span>.<span class="ruby-identifier">retrieveItem</span>(<span class="ruby-identifier">sender</span>.<span class="ruby-identifier">currentItem</span>).<span class="ruby-identifier">selected?</span>
+                <span class="ruby-identifier">show_fault</span>(<span class="ruby-identifier">sender</span>.<span class="ruby-identifier">retrieveItem</span>(<span class="ruby-identifier">sender</span>.<span class="ruby-identifier">currentItem</span>).<span class="ruby-identifier">fault</span>)
+              <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">clear_fault</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">list</span>
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

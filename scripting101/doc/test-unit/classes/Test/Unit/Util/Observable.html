@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Test::Unit::Util::Observable</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Test::Unit::Util::Observable</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../../files/unit/util/observable_rb.html">
+                unit/util/observable.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+This is a utility class that allows anything mixing it in to notify a set
+of listeners about interesting events.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000008">add_listener</a>&nbsp;&nbsp;
+      <a href="#M000010">notify_listeners</a>&nbsp;&nbsp;
+      <a href="#M000009">remove_listener</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">NOTHING</td>
+          <td>=</td>
+          <td class="context-item-value">&quot;NOTHING/#{__id__}&quot;</td>
+          <td width="3em">&nbsp;</td>
+          <td class="context-item-desc">
+We use this for defaults since nil might mean something
+
+</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
+
+        <div class="method-heading">
+          <a href="Observable.src/M000008.html" target="Code" class="method-signature"
+            onclick="popupCode('Observable.src/M000008.html');return false;">
+          <span class="method-name">add_listener</span><span class="method-args">(channel_name, listener_key=NOTHING) {|value| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Adds the passed proc as a listener on the channel indicated by
+channel_name. listener_key is used to remove the listener later; if none is
+specified, the proc itself is used.
+</p>
+<p>
+Whatever is used as the listener_key is returned, making it very easy to
+use the proc itself as the listener_key:
+</p>
+<pre>
+ listener = add_listener(&quot;Channel&quot;) { ... }
+ remove_listener(&quot;Channel&quot;, listener)
+</pre>
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <a href="Observable.src/M000010.html" target="Code" class="method-signature"
+            onclick="popupCode('Observable.src/M000010.html');return false;">
+          <span class="method-name">notify_listeners</span><span class="method-args">(channel_name, *arguments)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Calls all the procs registered on the channel indicated by channel_name. If
+value is specified, it is passed in to the procs, otherwise they are called
+with no arguments.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000009" class="method-detail">
+        <a name="M000009"></a>
+
+        <div class="method-heading">
+          <a href="Observable.src/M000009.html" target="Code" class="method-signature"
+            onclick="popupCode('Observable.src/M000009.html');return false;">
+          <span class="method-name">remove_listener</span><span class="method-args">(channel_name, listener_key)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Removes the listener indicated by listener_key from the channel indicated
+by channel_name. Returns the registered proc, or nil if none was found.
+</p>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

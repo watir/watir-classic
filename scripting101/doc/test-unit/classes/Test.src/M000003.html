@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>options (Test)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/autorunner.rb, line 94</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">options</span>
+        <span class="ruby-ivar">@options</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">OptionParser</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">o</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">banner</span> = <span class="ruby-value str">&quot;Test::Unit automatic runner.&quot;</span>
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">banner</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;\nUsage: #{$0} [options] [-- untouched arguments]&quot;</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-r'</span>, <span class="ruby-value str">'--runner=RUNNER'</span>, <span class="ruby-constant">RUNNERS</span>,
+               <span class="ruby-value str">&quot;Use the given RUNNER.&quot;</span>,
+               <span class="ruby-value str">&quot;(&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">keyword_display</span>(<span class="ruby-constant">RUNNERS</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;)&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+            <span class="ruby-ivar">@runner</span> = <span class="ruby-identifier">r</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-keyword kw">if</span>(<span class="ruby-ivar">@standalone</span>)
+            <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-a'</span>, <span class="ruby-value str">'--add=TORUN'</span>, <span class="ruby-constant">Array</span>,
+                 <span class="ruby-value str">&quot;Add TORUN to the list of things to run;&quot;</span>,
+                 <span class="ruby-value str">&quot;can be a file or a directory.&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+              <span class="ruby-ivar">@to_run</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">a</span>)
+            <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-ivar">@pattern</span> = []
+            <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-p'</span>, <span class="ruby-value str">'--pattern=PATTERN'</span>, <span class="ruby-constant">Regexp</span>,
+                 <span class="ruby-value str">&quot;Match files to collect against PATTERN.&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+              <span class="ruby-ivar">@pattern</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-keyword kw">end</span>
+
+            <span class="ruby-ivar">@exclude</span> = []
+            <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-x'</span>, <span class="ruby-value str">'--exclude=PATTERN'</span>, <span class="ruby-constant">Regexp</span>,
+                 <span class="ruby-value str">&quot;Ignore files to collect against PATTERN.&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+              <span class="ruby-ivar">@exclude</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">e</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-n'</span>, <span class="ruby-value str">'--name=NAME'</span>, <span class="ruby-constant">String</span>,
+               <span class="ruby-value str">&quot;Runs tests matching NAME.&quot;</span>,
+               <span class="ruby-value str">&quot;(patterns may be used).&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">n</span> = (<span class="ruby-regexp re">%r{\A/(.*)/\Z}</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">n</span> <span class="ruby-value">? </span><span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$1</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">n</span>)
+            <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">n</span>
+            <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Regexp</span>
+              <span class="ruby-ivar">@filters</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">method_name</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>}
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-ivar">@filters</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">method_name</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>}
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-t'</span>, <span class="ruby-value str">'--testcase=TESTCASE'</span>, <span class="ruby-constant">String</span>,
+               <span class="ruby-value str">&quot;Runs tests in TestCases matching TESTCASE.&quot;</span>,
+               <span class="ruby-value str">&quot;(patterns may be used).&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">n</span> = (<span class="ruby-regexp re">%r{\A/(.*)/\Z}</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">n</span> <span class="ruby-value">? </span><span class="ruby-constant">Regexp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$1</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">n</span>)
+            <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">n</span>
+            <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Regexp</span>
+              <span class="ruby-ivar">@filters</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>}
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-ivar">@filters</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">proc</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">t</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">t</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>}
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-v'</span>, <span class="ruby-value str">'--verbose=[LEVEL]'</span>, <span class="ruby-constant">OUTPUT_LEVELS</span>,
+               <span class="ruby-value str">&quot;Set the output level (default is verbose).&quot;</span>,
+               <span class="ruby-value str">&quot;(&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">keyword_display</span>(<span class="ruby-constant">OUTPUT_LEVELS</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;)&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span>
+            <span class="ruby-ivar">@output_level</span> = <span class="ruby-identifier">l</span> <span class="ruby-operator">||</span> <span class="ruby-constant">UI</span><span class="ruby-operator">::</span><span class="ruby-constant">VERBOSE</span>
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'--'</span>,
+               <span class="ruby-value str">&quot;Stop processing options so that the&quot;</span>,
+               <span class="ruby-value str">&quot;remaining options will be passed to the&quot;</span>,
+               <span class="ruby-value str">&quot;test.&quot;</span>){<span class="ruby-identifier">o</span>.<span class="ruby-identifier">terminate</span>}
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on</span>(<span class="ruby-value str">'-h'</span>, <span class="ruby-value str">'--help'</span>, <span class="ruby-value str">'Display this help.'</span>){<span class="ruby-identifier">puts</span> <span class="ruby-identifier">o</span>; <span class="ruby-identifier">exit</span>}
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>(<span class="ruby-value str">'Deprecated options:'</span>)
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>(<span class="ruby-value str">'--console'</span>, <span class="ruby-value str">'Console runner (use --runner).'</span>) <span class="ruby-keyword kw">do</span>
+            <span class="ruby-identifier">warn</span>(<span class="ruby-value str">&quot;Deprecated option (--console).&quot;</span>)
+            <span class="ruby-ivar">@runner</span> = <span class="ruby-constant">RUNNERS</span>[<span class="ruby-identifier">:console</span>]
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>(<span class="ruby-value str">'--gtk'</span>, <span class="ruby-value str">'GTK runner (use --runner).'</span>) <span class="ruby-keyword kw">do</span>
+            <span class="ruby-identifier">warn</span>(<span class="ruby-value str">&quot;Deprecated option (--gtk).&quot;</span>)
+            <span class="ruby-ivar">@runner</span> = <span class="ruby-constant">RUNNERS</span>[<span class="ruby-identifier">:gtk</span>]
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>(<span class="ruby-value str">'--fox'</span>, <span class="ruby-value str">'Fox runner (use --runner).'</span>) <span class="ruby-keyword kw">do</span>
+            <span class="ruby-identifier">warn</span>(<span class="ruby-value str">&quot;Deprecated option (--fox).&quot;</span>)
+            <span class="ruby-ivar">@runner</span> = <span class="ruby-constant">RUNNERS</span>[<span class="ruby-identifier">:fox</span>]
+          <span class="ruby-keyword kw">end</span>
+
+          <span class="ruby-identifier">o</span>.<span class="ruby-identifier">on_tail</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

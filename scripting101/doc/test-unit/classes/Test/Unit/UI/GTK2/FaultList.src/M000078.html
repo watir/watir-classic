@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>new (Test::Unit::UI::GTK2::FaultList)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File unit/ui/gtk2/testrunner.rb, line 23</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
+            <span class="ruby-ivar">@faults</span> = []
+            <span class="ruby-ivar">@model</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">ListStore</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">String</span>, <span class="ruby-constant">String</span>)
+            <span class="ruby-keyword kw">super</span>(<span class="ruby-ivar">@model</span>)
+            <span class="ruby-identifier">column</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TreeViewColumn</span>.<span class="ruby-identifier">new</span>
+            <span class="ruby-identifier">column</span>.<span class="ruby-identifier">visible</span> = <span class="ruby-keyword kw">false</span>
+            <span class="ruby-identifier">append_column</span>(<span class="ruby-identifier">column</span>)
+            <span class="ruby-identifier">renderer</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">CellRendererText</span>.<span class="ruby-identifier">new</span>
+            <span class="ruby-identifier">column</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">TreeViewColumn</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;Failures&quot;</span>, <span class="ruby-identifier">renderer</span>, {<span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>})
+            <span class="ruby-identifier">append_column</span>(<span class="ruby-identifier">column</span>)
+            <span class="ruby-identifier">selection</span>.<span class="ruby-identifier">mode</span> = <span class="ruby-constant">Gtk</span><span class="ruby-operator">::</span><span class="ruby-constant">SELECTION_SINGLE</span>
+            <span class="ruby-identifier">set_rules_hint</span>(<span class="ruby-keyword kw">true</span>)
+            <span class="ruby-identifier">set_headers_visible</span>(<span class="ruby-keyword kw">false</span>)
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
