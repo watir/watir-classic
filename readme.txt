@@ -17,8 +17,15 @@ How To Use:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
 
-Changes Since Last Release
-   These are the significant changes since the last release:
+
+Changes from 1.3
+
+   Added P tag support
+   Bug fix for images and links in frames using each
+   Bug fixes for image#save
+
+Changes from 1.2
+   These are the significant changes since 1.2
 
    added new row_values and column_value methods to tables
    added ability to save an image - ie.image(:index,1).save('c:\temp\mypic.gif')
@@ -75,6 +82,7 @@ Typical Usage
    Label
    Span
    Div
+   P
    Links
    Tables 
    Images
