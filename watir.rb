@@ -1118,7 +1118,7 @@ module Watir
         REVISION = "$Revision$"
 
         # the Release number
-        VERSION = "1.3"
+        VERSION = "1.3.1"
         
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4         
