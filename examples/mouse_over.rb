@@ -13,10 +13,10 @@ puts "    "
 sleep 1
 puts "Step 1: go to the test site:  " + testSite
 $ie.goto(testSite)
-$ie.link(:text,"      Prospective Students      ").fireEvent("onMouseOver")
+$ie.link(:text,/Prospective Students/).fireEvent("onMouseOver")
 sleep 1
-$ie.link(:text,"      Prospective Students      ").fireEvent("onMouseOut")
-$ie.link(:text,"  Current Students  ").fireEvent("onMouseOver") 
+$ie.link(:text,/Prospective Students/).fireEvent("onMouseOut")
+$ie.link(:text,/Current Students/).fireEvent("onMouseOver") 
 $ie.link(:url,"http://faculty.fortlewis.edu/").flash
 sleep 1
 
