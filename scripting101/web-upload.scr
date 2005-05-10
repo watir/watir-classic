@@ -1,0 +1,18 @@
+cd /var/www/gforge-projects/wtr/s101/doc
+lcd doc
+put index.html
+put install.html
+put "Internet Explorer Cheat Sheet.doc"
+put Ruby-cheat-sheet.doc
+put Timeclock-cheat-sheet.doc
+put Timeclock-Users-Guide.doc
+put web-services-documentation.doc
+put "Wireless Matrix AutoTests.doc"
+lcd ../exercises
+cd ../exercises
+put getting-started-lab.html
+put iec-scripts-lab.html
+put irb-iec-lab.html
+put test-harness.html
+put verifying-results.html
+put web-services-lab.html
