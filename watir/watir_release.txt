@@ -1,33 +1,27 @@
 Watir Release How To
 
-Check everything out of cvs
-in Watir.rb, change the VERSION constant to be the release number
-check in watir.rb
+Check everything out of cvs.
+In watir.rb, change the VERSION constant to be the release number.
+Update readme.rb with latest release info.
+Check in watir.rb and readme.rb.
 
-Update readme.rb with latest release info
-copy readme.rb to readme.txt
-check them in
+tag the files (assumes version 1.3.1):
+cvs tag -c -R "v1_3_1" *.* 
 
-tag the files
-cvs tag -c -R "new version number" *.*     watir version numbers are like this: v1_8
+In a new directory do an export:
+cvs -z3 -d:ext:pmr16366@rubyforge.org:/var/cvs/wtr export -r "v1_3_1" watir
 
+Build the rdoc:
+build-rdoc.bat
 
+Check to see if any thing needs deleting - this file for example.
+Copy readme.rb to readme.txt.
 
-In a new directory do an export 
-cvs  -z3 -d:ext:pmr16366@rubyforge.org:/var/cvs/wtr export -r "v1_31" watir
-
-
-build the rdoc - use the batch file
-
-check to see if any thing needs deleting - this file for example
-
-zip up. Note the filename is watir_v1_1.zip
-
-delete the watir_bonus directories
-
+Zip up. Note the filename is watir_v1_3_1.zip.
 
 Useful other things
 -------------------
+Delete the watir_bonus directories.
 
 Release Notes 
 -------------

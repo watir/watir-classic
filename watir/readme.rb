@@ -51,7 +51,6 @@ Changes from 1.2
 Typical Usage
    # include the controller 
    require 'watir' 
-   include Watir
    # create an instance of the controller 
    ie = Watir::IE.new  
    # go to the page you want to test 
@@ -83,9 +82,9 @@ Typical Usage
    Span
    Div
    P
-   Links
-   Tables 
-   Images
+   Link
+   Table 
+   Image
 
  These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
  http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
