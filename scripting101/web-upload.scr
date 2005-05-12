@@ -8,6 +8,8 @@ put Timeclock-cheat-sheet.doc
 put Timeclock-Users-Guide.doc
 put web-services-documentation.doc
 put "Wireless Matrix AutoTests.doc"
+put Using_IRB_and_Watir_to_Create_Automated_Scripts.doc
+put Assertions.html
 lcd ../exercises
 cd ../exercises
 put getting-started-lab.html
