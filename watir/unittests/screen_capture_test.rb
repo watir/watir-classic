@@ -3,18 +3,18 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
+require 'watir/screen_capture'
 
-#require 'FileTest'
-
+# BUG: Doesn't delete temp files
 class TC_Capture< Test::Unit::TestCase
     include Watir
+    include Watir::ScreenCapture
    
     def setup( )
        delete_captured_files( [ 'jpeg1.jpg' , 'jpeg2.jpg' , 'bmp1.bmp', 'bmp2.bmp' ] )
        $ie.goto($htmlRoot + 'buttons1.html' )
        @temp_dir = $mydir
        @file_list = []       
-
     end
 
     def teardown()
@@ -22,7 +22,6 @@ class TC_Capture< Test::Unit::TestCase
     end
 
     def delete_captured_files( list=nil )
-
         if list
             files = list
         else
@@ -32,39 +31,30 @@ class TC_Capture< Test::Unit::TestCase
         files.each do |f|
             File.delete( f) if FileTest.exists?( f)
         end
-
     end
 
-
     def test_jpeg
-
         file_name= 'jpeg1.jpg'
         @file_list << file_name
-        $ie.screen_capture( file_name  )
+        screen_capture( file_name  )
         assert(FileTest.exist?( file_name) )
 
         file_name= 'jpeg2.jpg'
         @file_list << file_name
-        $ie.screen_capture( file_name , true  )   # just the active window
+        screen_capture( file_name , true  )   # just the active window
         assert(FileTest.exist?( file_name) )
-
     end
 
     def test_bmp
-
         file_name= 'bmp1.bmp'
         @file_list << file_name
-        $ie.screen_capture( file_name , false, true )
+        screen_capture( file_name , false, true )
         assert(FileTest.exist?( file_name ) )
 
         file_name= 'bmp2.bmp'
         @file_list << file_name
-        $ie.screen_capture( file_name , true , true )   # just the active window
+        screen_capture( file_name , true , true )   # just the active window
         assert(FileTest.exist?( file_name) ) 
-
     end
-
-
-
 end
 
