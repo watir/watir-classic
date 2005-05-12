@@ -4,13 +4,12 @@ body {
 	background:   #fff;
 	font-size:    1em;
 	font-family:  verdana, helvetica, arial, sans-serif;
-	}
+}
 	
 h1 {
 	margin-bottom:	1em;
 	font-size:	1.5em;
 	font-weight:	bold;
-
 }
 
 h2 {
@@ -18,16 +17,13 @@ h2 {
 	margin-bottom: 1em;
 	font-size:     1.5em;
 	font-weight:   normal;
-
 }	
 
 p {
-        margin-top:    0px;
+    margin-top:    0px;
 	margin-bottom: 1em;
 	font-size:     .8em;
-
 }
-
 
 a:link {
 	color:	          #215997;
@@ -45,17 +41,13 @@ a:hover {
 a:active {
 }
 
-
 #banner {
         width:		     95%;
 	height:	             95px;
 	background-image:    url(images/watir.gif);
 	background-repeat:   no-repeat;
 	background-position: 30px 0px;
-
 }
-
-
 
 #banner h1 {
 	margin-left:	     150px;
@@ -63,7 +55,6 @@ a:active {
 	background-image:    url(images/watirwords.gif);
 	background-repeat:   no-repeat;
 	background-position: 18px 25px;
-
 }
 
 #left-column {
@@ -75,12 +66,10 @@ a:active {
 	font-size:  0.8em;
 }
 
-
 #left-column p {
         margin-top:	0px;
 	margin-bottom:	1em;
 	font-size:     .8em;
-
 }
 
 #left-column h2 {
@@ -104,7 +93,6 @@ a:active {
 
 }
 
-
 #right-column {
 	        position:     absolute;
 		width:	      70%;
@@ -113,9 +101,9 @@ a:active {
 		margin-right: auto;
 		text-align:   left;
 	}
+
 #right-column p {
 	font-size:     .8em;
-
 }
 
 #right-column h2 {
@@ -168,8 +156,6 @@ p.navigation-bar a:hover {
         color:            white;
         text-decoration: underline;
 }
-
-
 
  .about {
 	margin-bottom:	     1em;
