@@ -1,11 +1,10 @@
-# feature tests for navigation
+# feature tests for screen capture
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 require 'watir/screen_capture'
 
-# BUG: Doesn't delete temp files
 class TC_Capture< Test::Unit::TestCase
     include Watir
     include Watir::ScreenCapture
@@ -13,7 +12,6 @@ class TC_Capture< Test::Unit::TestCase
     def setup( )
        delete_captured_files( [ 'jpeg1.jpg' , 'jpeg2.jpg' , 'bmp1.bmp', 'bmp2.bmp' ] )
        $ie.goto($htmlRoot + 'buttons1.html' )
-       @temp_dir = $mydir
        @file_list = []       
     end
 
@@ -21,13 +19,8 @@ class TC_Capture< Test::Unit::TestCase
         delete_captured_files
     end
 
-    def delete_captured_files( list=nil )
-        if list
-            files = list
-        else
-            files = @file_list
-        end
-
+    def delete_captured_files(files=nil )
+        files = @file_list unless files
         files.each do |f|
             File.delete( f) if FileTest.exists?( f)
         end
