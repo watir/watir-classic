@@ -11,15 +11,15 @@ Useful information that will help you complete the tutorial labs.
 * "Installation":install.html. Installing Ruby, Timeclock, and the WTR
   toolkit. 
 * "Scripting Web Tests Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. 
-  Overview of the WATIR toolkit and a few extensions for Timeclock.
+  Overview of the Watir library and a few other helpful things.
+* "Using IRB and Watir":Using_IRB_and_Watir_to_Create_Automated_Scripts.doc
+  describes how to use Ruby's interactive shell to create Watir tests.
 * "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
   Ruby language.  
 * The Watir User Guide and Example Test Case are installed with Watir 
   (look in your Start menu).
-* "Timeclock Users Guide":Timeclock-Users-Guide.doc. A description of the 
-  Timeclock application.
-* "Using IRB and Watir":Using_IRB_and_Watir_to_Create_Automated_Scripts.doc
-  describes how to use Ruby's interactive shell to create Watir tests.
+* "Timeclock Specification":Functional_Specification_for_the_Timeclock_Application.doc. 
+  A functional description of Timeclock.
 * "Assertions in Test::Unit":Assertions.html.
   Detailed documentation of the assertions defined in the Test::Unit library.
 * An online copy of Programming Ruby (the Pickaxe Book) is installed with Ruby if you would like
