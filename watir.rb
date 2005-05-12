@@ -75,7 +75,6 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
-require 'watir/screen_capture'
 require 'watir/windowhelper'
 
 class String
@@ -1111,8 +1110,6 @@ module Watir
     class IE
         include Watir::Exception
         include FactoryMethods 
-
-        include Watir::ScreenCapture
 
         # The revision number ( according to CVS )
         REVISION = "$Revision$"
