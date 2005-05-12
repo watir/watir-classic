@@ -122,14 +122,18 @@ def install(dirSelected, startMenu, desktop , register_AutoIt )
     # Create start menu shortcut
     if startMenu==1
         puts "Creating start menu shortcuts"
-        make_startmenu_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
-        make_startmenu_shortcut( "Watir API Reference", dirSelected + "\\rdoc\\index.html" )
+        make_startmenu_shortcut( "Documentation" , dirSelected + "\\doc\\index.html" ) 
+        make_startmenu_shortcut( "User Guide" , dirSelected + "\\doc\\watir_user_guide.html" ) 
+        make_startmenu_shortcut( "Sample Test" , dirSelected + "\\doc\\example_testcase.html" ) 
+        make_startmenu_shortcut( "API Reference", dirSelected + "\\rdoc\\index.html" )
     end
     
     # Create desktop shortcut
     if desktop==1
         puts "Creating desktop shortcuts"
-        make_desktop_shortcut( "Watir Documentation" , dirSelected + "\\doc\\watir_user_guide.html" ) 
+        make_desktop_shortcut( "Watir Documentation" , dirSelected + "\\doc\\index.html" ) 
+        make_desktop_shortcut( "Watir User Guide" , dirSelected + "\\doc\\watir_user_guide.html" ) 
+        make_desktop_shortcut( "Watir Sample Test" , dirSelected + "\\doc\\example_testcase.html" ) 
         make_desktop_shortcut( "Watir API Reference", dirSelected + "\\rdoc\\index.html" ) 
     end
 
@@ -140,20 +144,12 @@ def install(dirSelected, startMenu, desktop , register_AutoIt )
         system("regsvr32.exe #{watir_sub_dir}AutoItX3.dll")
 
         make_startmenu_shortcut( "AutoIt Reference", watir_sub_dir+ "\\AutoItX.chm" ) if startMenu==1
-
-
     end
-
-
-
 end
-
-
 
 # Get info from client computer
 homeDrive = ENV["HOMEDRIVE"]
 bonus_location = homeDrive + "\\watir_bonus\\"   # the default bonus location
-
 
 # Creat an FXApplication
 application = FXApp.new("mainWindow", "Watir Installer")    
