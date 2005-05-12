@@ -1,5 +1,3 @@
-require 'watir'
-
 def ie_load ( html_file )
   path = File.join( File.dirname(__FILE__), html_file ) # relative path
   path = File.expand_path( path ) # full path
