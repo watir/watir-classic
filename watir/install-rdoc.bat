@@ -1,0 +1,1 @@
+rdoc --exclude "unittests|examples|install.rb" -r
