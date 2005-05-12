@@ -22,16 +22,21 @@ ie.button(:value , 'Create').click
 # start the day
 ie.button(:name, 'start_day').click
 
-# verify that the status message appears
-if ie.contains_text("Job 'background' started")
+# verify the status text
+if ie.p(:id, 'last_results').text.include? "Job 'background' started"
   puts 'PASS - job started'
 else
   puts "FAIL - job didn't start"
 end
+if ie.p(:id, 'running_job').text.include? "Job 'background' is running."
+  puts 'PASS - job running'
+else
+  puts "FAIL - job not running"
+end
 
 # verify that the job appears in the recent records table
-if ie.table(:id, 'recent_records')[2][1].text.strip == 'background' and
-   ie.table(:id, 'recent_records')[2][4].text.strip == 'running'
+if ie.table(:id, 'recent_records')[2][1].text == 'background' and
+   ie.table(:id, 'recent_records')[2][4].text == 'running'
 then
   puts 'PASS - background job is running'
 else

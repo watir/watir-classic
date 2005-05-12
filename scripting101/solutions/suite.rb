@@ -84,10 +84,11 @@ class Lab4 < Test::Unit::TestCase
     $stdout = @mockout
     load 'lab4_1.rb'
     $stdout = STDOUT
-    assert_match /PASS - job started\n/, @mockout
-    assert_match /PASS - background job is running\n/, @mockout
+    assert_equal 'PASS - job started', @mockout.readline!
+    assert_equal 'PASS - job running', @mockout.readline!
+    assert_equal 'PASS - background job is running', @mockout.readline!    
   end
-  def teardown
+  def xteardown
     $stdout = STDOUT
     $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
