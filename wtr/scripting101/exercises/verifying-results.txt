@@ -2,7 +2,7 @@ h2=. Scripting Web Tests
 
 h2=. Lab 4: Verifying Results
 
-You've written some scripts that demonstrate your ability to automate
+You've written some scripts that demonstrate how to automate
 an internet browser. But they aren't really tests. Because they don't
 really check the results. Now it is time to take care of that.
 
@@ -18,6 +18,7 @@ statement in Ruby.
 #   *Start, Stop, and Verify.* Revise the start, stop and pause test
      script so that it checks the results.
 
+Don't use the assert methods for this lab. We'll use those in the next lab.
 
 h3=. Solutions to Lab 3
 
