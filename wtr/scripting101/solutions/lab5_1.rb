@@ -32,4 +32,3 @@ assert( ie.p(:id, 'running_job').text.include?( "Job 'background' is running." )
 assert( ie.table(:id, 'recent_records')[2][1].text == 'background' )
 assert( ie.table(:id, 'recent_records')[2][4].text == 'running' )
 
-

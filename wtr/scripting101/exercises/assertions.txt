@@ -29,6 +29,6 @@ h3=. Solutions to Lab 4
 
 See the following for solutions to Lab 4:
 
-# "solutions/lab4_1.rb":solutions/lab4_1.rb
-# "solutions/lab4_2.rb":solutions/lab4_1.rb
+# "solutions/lab4_1.rb":../solutions/lab4_1.rb
+# "solutions/lab4_2.rb":../solutions/lab4_1.rb
 
