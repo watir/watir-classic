@@ -37,8 +37,10 @@ A series of labs based on the Timeclock application.
   Create simple scripts.
 * Lab 4. "Verifying Results":../exercises/verifying-results.html.
   Check the expected results in your test scripts.
-* Lab 5. "Harnessing Tests":../exercises/test-harness.html.
-  Collect your tests in a test harness. Use assertions.
+* Lab 5. "Assertions":../exercises/assertions.html
+  Use assertions to check expected results.
+* Lab 6. "Harnessing Tests":../exercises/test-harness.html.
+  Collect your tests in a test harness.
 
 h3. Advanced Material
 

@@ -99,7 +99,22 @@ class Lab4 < Test::Unit::TestCase
   end
   def teardown
     $stdout = STDOUT
-    $ie = Watir::IE.attach(:title, /Timeclock/)
-    $ie.close if $ie
+    ie = Watir::IE.attach(:title, /Timeclock/)
+    ie.close if ie
+  end
+end
+class Lab5 < Test::Unit::TestCase
+  def setup
+    ensure_no_user_data 'ruby' 
+  end
+  def test_lab5_1
+    load 'lab5_1.rb'
+  end
+  def test_lab5_2
+    load 'lab5_2.rb'
+  end
+  def teardown
+    ie = Watir::IE.attach(:title, /Timeclock/)
+    ie.close if ie
   end
 end
