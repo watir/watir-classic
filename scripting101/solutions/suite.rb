@@ -1,4 +1,4 @@
-# suite.rb - run all the suggested solutions tests
+# suite.rb - run all the suggested solutions tests, and verify that they work
 # Presumes timeclock http server is already running on same machine.
 
 require 'test/unit'
@@ -88,7 +88,16 @@ class Lab4 < Test::Unit::TestCase
     assert_equal 'PASS - job running', @mockout.readline!
     assert_equal 'PASS - background job is running', @mockout.readline!    
   end
-  def xteardown
+  def test_lab4_2
+    $stdout = @mockout
+    load 'lab4_2.rb'
+    $stdout = STDOUT
+    assert_equal "PASS - Job 'foreground' started", @mockout.readline!
+    assert_equal "PASS - Paused 'foreground'", @mockout.readline!
+    assert_equal "PASS - Job 'foreground' resumed", @mockout.readline!
+    assert_equal "PASS - Stopped 'foreground'", @mockout.readline!
+  end
+  def teardown
     $stdout = STDOUT
     $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
