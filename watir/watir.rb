@@ -2097,7 +2097,6 @@ module Watir
             highLight(:clear)
         end
 
-
         # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
             object_exist_check
@@ -2107,6 +2106,7 @@ module Watir
                 highLight(:clear)
                 sleep 0.05
             end
+            nil
         end
         
         # This method executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
