@@ -47,7 +47,7 @@ We are currently using
 
 h4. Watir
 
-We are using "Watir 1.3":http://rubyforge.org/frs/?group_id=104&release_id=2133
+We are using "Watir 1.3.1":http://rubyforge.org/frs/?group_id=104&release_id=2164
 
 # Unzip this into c:\watir
 # Execute install.rb
@@ -55,7 +55,7 @@ We are using "Watir 1.3":http://rubyforge.org/frs/?group_id=104&release_id=2133
 
 h4. Scripting Class Materials
 
-We are using "Scripting101 1.4":http://rubyforge.org/frs/?group_id=104&release_id=1386
+We are using "Scripting101 1.5.1":http://rubyforge.org/frs/?group_id=104&release_id=2160
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.

@@ -44,6 +44,6 @@ h3=. Solution to Lab 5
 
 See the following for solutions to Lab 5:
 
-# "solutions/lab5_1.rb":solutions/lab5_1.rb
-# "solutions/lab5_2.rb":solutions/lab5_1.rb
+# "solutions/lab5_1.rb":../solutions/lab5_1.rb
+# "solutions/lab5_2.rb":../solutions/lab5_1.rb
 
