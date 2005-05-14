@@ -1,6 +1,6 @@
 h2=. Scripting Web Tests
 
-h2=. Lab 5: Harnessing Tests
+h2=. Lab 6: Harnessing Tests
 
 You've written a number of tests. Now it's time to put them all
 together with a test harness. This will allow them to run in sequence
@@ -10,15 +10,17 @@ The following code demonstrates how to create a simple test harness
 that loads one test script.
 
 <pre>
-require 'test/unit'
-class LoadTestScript < Test::Unit::TestCase
-  def test_login_start
-    load 'login-start.rb'
+  require 'watir'
+  require 'test/unit'
+  class LoadTestScript < Test::Unit::TestCase
+    def test_login_start
+      load 'login-start.rb'
+    end
+    def teardown
+      ie = Watir::IE.attach(:title, /Timeclock/)
+      ie.close if ie
+    end
   end
-  def teardown
-    $ie.close if $ie
-  end
-end
 </pre>
 
 You can add additional tests, by defining additional methods to the
@@ -26,26 +28,10 @@ class whose names begin with 'test_' that load the desired
 scripts. 
 
 # *Test Harness.* Create a test harness that executes all of your test
-scripts.
+scripts. Each of your scripts should include assertions to verify the
+test results. If you haven't added assertions to them, now is the time.
 
-# *Assertions.* Printing out PASS or FAIL is no longer an effective
-testing strategy when running multiple tests in a harness. You need
-your tests to know for themselves whether they pass or fail. The way
-to do this is with assertions. Assertions directly check a value. If
-it's as expected, nothing happens. When it isn't, an exception is
-raised, which will be caught and reported by the test harness. Several
-generic assertion methods are listed in the cheat sheet, along with
-some that are specific to the Timeclock application. Convert your
-tests to using assertions. These are detailed on page 2 of the Scripting Web
-Tests cheat sheet.
-
-h3=. Solution to Lab 4
-
-See solutions/lab4_1.rb for one suggested solution.
-
-h3=. Bonus Exercises
-
-If you have time, you may want to try the following:
+*Bonus Exercises.* If you have time, you may want to try the following:
 
 # *Record Check.* Write another test script. Start with a user that
     has no time records. Record time sessions for two separate jobs,
@@ -53,3 +39,11 @@ If you have time, you may want to try the following:
 
 # *Test Strategy.* Look over the test ideas you developed in Lab 1.
    Write a test script for one or more of your ideas.
+
+h3=. Solution to Lab 5
+
+See the following for solutions to Lab 5:
+
+# "solutions/lab5_1.rb":solutions/lab5_1.rb
+# "solutions/lab5_2.rb":solutions/lab5_1.rb
+

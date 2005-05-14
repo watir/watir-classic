@@ -44,5 +44,5 @@ complete each script, demonstrate it to your instructors.
 
 h3=. Solution to Lab 2
 
-See lab/solutions/lab2.rb for an example of a solution to Lab 2
+See "solutions/lab2.rb":../solutions/lab2.rb for an example of a solution to Lab 2
 converted to a script.
