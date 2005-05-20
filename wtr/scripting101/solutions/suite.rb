@@ -34,6 +34,7 @@ class Lab2 < Test::Unit::TestCase
     $stdout = STDOUT
     $ie = Watir::IE.attach(:title, /Timeclock/)
     $ie.close if $ie
+    ensure_no_user_data 'paul' 
   end
 end
 
@@ -101,6 +102,7 @@ class Lab4 < Test::Unit::TestCase
     $stdout = STDOUT
     ie = Watir::IE.attach(:title, /Timeclock/)
     ie.close if ie
+    ensure_no_user_data 'ruby' 
   end
 end
 class Lab5 < Test::Unit::TestCase
@@ -116,5 +118,6 @@ class Lab5 < Test::Unit::TestCase
   def teardown
     ie = Watir::IE.attach(:title, /Timeclock/)
     ie.close if ie
+    ensure_no_user_data 'ruby' 
   end
 end
