@@ -37,7 +37,7 @@ module Timeclock
             $trace.announce "Creating session for #{name}"
             session = RichlyCallingWrapper.new(@user_manager.session_for(name))
 
-            @session_handlers_by_id[session.id] =
+            @session_handlers_by_id[session.object_id] =
               SessionRequestHandler.new(session, name)
             session
           end
@@ -45,7 +45,7 @@ module Timeclock
 
         def ensure_no_session_for(user)
           if session_handler = find_user_session_handler(user)
-            if session_id = session_handler.session.id
+            if session_id = session_handler.session.object_id
               deactivate_session(session_id)
             end
           end
@@ -113,7 +113,7 @@ module Timeclock
         def sketch(session, user)
           jobs = session.jobs.values.collect { | job | job.full_name }
           if jobs.empty?
-            FirstJobCreationPageSketch.new(session.id)
+            FirstJobCreationPageSketch.new(session.object_id)
           else
             MainPageSketch.new(user, session)
           end

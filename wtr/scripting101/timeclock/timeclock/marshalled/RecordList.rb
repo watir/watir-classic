@@ -40,7 +40,7 @@ module Timeclock
 
       def push(record)
         attach_persistent_id record
-        assert(record_with_id(record.id).nil?)
+        assert(record_with_id(record.object_id).nil?)
         super
         sort!
         self
