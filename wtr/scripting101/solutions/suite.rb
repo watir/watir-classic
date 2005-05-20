@@ -121,3 +121,5 @@ class Lab5 < Test::Unit::TestCase
     ensure_no_user_data 'ruby' 
   end
 end
+
+require 'lab6'
