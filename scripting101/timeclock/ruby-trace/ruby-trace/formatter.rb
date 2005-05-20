@@ -29,7 +29,7 @@ module Trace
       @format = format
       @time_format = time_format
 
-      assert(!format.index(/\#{[^}]*time[^}]*}/) || time_format) {
+      assert(!format.index(/\#\{[^\}]*time[^\}]*\}/) || time_format) {
         'If you use #{time} in a format, you must also give a time format.'
       }
     end

@@ -15,7 +15,7 @@ module Timeclock
         def initialize(user, session, last_result = "",
                        last_result_is_error = false)
           @user = user
-          @session_id = session.id
+          @session_id = session.object_id
           @jobs = session.jobs
           @active_records = session.active_records
           @running = @active_records.values.find { | ar| ar.running? }
