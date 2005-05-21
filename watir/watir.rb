@@ -131,7 +131,6 @@ module Watir
         end
     end
     
-    
     # This class displays the spinner object that appears in the console when a page is being loaded
     class Spinner
         
@@ -158,8 +157,6 @@ module Watir
         end
     end
 
-
-
     # This module contains the factory methods that are used to access most html objects
     #
     # For example, to access a button on a web page that has the following html
@@ -178,7 +175,6 @@ module Watir
     module FactoryMethods 
         include Watir::Exception
 
-
         # this method returns the real Internet Explorer object, allowing access to objects, properties and methods that Watir doesnot support
         def ie
             return @ieController
@@ -194,9 +190,6 @@ module Watir
              @ieController.wait( noSleep )
         end
 
-        #
-        # Factory Methods
-        #
 
         # this method is the main way of accessing a frame 
         #   *  how   - how the frame is accessed, either :name or :index is supported. This can also just be the name of the frame
@@ -216,7 +209,6 @@ module Watir
 
             return Frame.new(self,how , what)
         end
-
  
         # this method is used to access a form.
         # available ways of accessing it are, :index , :name, :id, :method, :action
@@ -403,8 +395,6 @@ module Watir
             return Hiddens.new(self)
         end
 
-
-
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -421,7 +411,7 @@ module Watir
             s = SelectBox.new(self , how, what)
         end
 
-        # this is the method for accessing the select lists iterator. Returns a Select_Lists object
+        # this is the method for accessing the select lists iterator. Returns a SelectLists object
         #
         # Typical usage:
         #
@@ -429,7 +419,7 @@ module Watir
         #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
         #   ie.select_lists.length                              # show how many select boxes are on the page.
         def select_lists()
-            return Select_Lists.new(self)
+            return SelectLists.new(self)
         end
         
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
@@ -461,7 +451,7 @@ module Watir
             return RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
 
-        # this is the method for accessing the check boxes iterator. Returns a Check_Boxes object
+        # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
         #
         # Typical usage:
         #
@@ -469,7 +459,7 @@ module Watir
         #   ie.checkboxes[1].to_s                             # goto the first check box on the page                                   
         #   ie.checkboxes.length                              # show how many check boxes are on the page.
         def checkboxes
-            return Check_Boxes.new(self)
+            return CheckBoxes.new(self)
         end
 
         # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
@@ -544,7 +534,6 @@ module Watir
             return Links.new(self)
         end
 
-        
         # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
         #  *  how   - symbol - how we access the image, :index, :id, :name , :src or :alt are supported
         #  *  what  - string, int or re , what we are looking for, 
@@ -579,7 +568,6 @@ module Watir
         def popup( )
             return PopUp.new(self )
         end
-
 
         # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
         #  *  how   - symbol - how we access the div, :index, :id, :title
@@ -639,7 +627,6 @@ module Watir
             return Spans.new(self)
         end
 
-
         # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
         #  *  how   - symbol - how we access the p, :index, :id, :name 
         #  *  what  - string, integer or re , what we are looking for, 
@@ -669,7 +656,6 @@ module Watir
         def ps()
             return Ps.new(self)
         end
-
 
         # this is the main method for accessing the labels iterator. It returns a Labels object
         # 
@@ -1053,10 +1039,6 @@ module Watir
              end
              return n
         end
-        #++
-
-
-        #--
 
         # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         #
@@ -1095,8 +1077,6 @@ module Watir
             return n
 
         end
-        #++
-
 
     end
 
@@ -1773,7 +1753,6 @@ module Watir
 
     class Frame < IE
     
-
         def initialize(container,  how, what)
             @container = container
             @frame = nil
@@ -1917,12 +1896,6 @@ module Watir
                                 
     end # class Form
     
-    #--
-    #
-    # MOVETO: watir/driver.rb
-    # Module Watir::Driver
-    #
-    #++       
  
     # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
     # This is not a class that users would normally access. 
@@ -2234,7 +2207,7 @@ module Watir
 
     # this class accesses the check boxes in the document as a collection
     # it would normally only be accessed by the links method of IEController
-    class Check_Boxes < Iterators
+    class CheckBoxes < Iterators
 
         def initialize( ieController )
             super
@@ -2267,7 +2240,7 @@ module Watir
 
     # this class accesses the select boxes  in the document as a collection
     # it would normally only be accessed by the select_lists method of IEController
-    class Select_Lists< Iterators
+    class SelectLists< Iterators
 
         def initialize( ieController )
             super
