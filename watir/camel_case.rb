@@ -1,4 +1,4 @@
-# These are provided for backwards compatability with 1.1
+# These are provided for backwards compatability with Watir 1.1
 
 module Watir
     module FactoryMethods
