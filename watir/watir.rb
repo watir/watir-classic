@@ -2101,7 +2101,6 @@ module Watir
             @length = length # must be defined by subclasses
         end
  
-
         def get_length_of_input_objects(object_type) 
 
             if object_type.kind_of? Array 
@@ -2122,7 +2121,6 @@ module Watir
 
         end
 
-
         # iterate through each of the elements in the collection in turn
         def each
             0.upto( @length-1 ) { |i | yield iterator_object(i)   }
@@ -2132,191 +2130,11 @@ module Watir
         def [](n)
             return iterator_object(n-1)
         end
-    end
-
-    # this class accesses the p tags in the document as a collection
-    # it would normally only be accessed by the ps method of IEController
-    class Ps < Iterators
-
-        def length
-            @ieController.ie.document.body.getElementsByTagName("P").length
-        end
 
         # this method creates an object of the correct type that the iterators use
+        private
         def iterator_object(i)
-            @ieController.p( :index , i+1)
-        end
-        private :iterator_object
-    end
-
-
-    # this class accesses the spans in the document as a collection
-    # it would normally only be accessed by the spans method of IEController
-    class Spans < Iterators
-
-        def length
-            @ieController.ie.document.body.getElementsByTagName("SPAN").length
-        end
-
-        # this method creates an object of the correct type that the iterators use
-        def iterator_object(i)
-            @ieController.span( :index , i+1)
-        end
-        private :iterator_object
-    end
-
-    # this class accesses the divs in the document as a collection
-    # it would normally only be accessed by the divs method of IEController
-    class Divs< Iterators
-
-        def length
-            @ieController.ie.document.body.getElementsByTagName("DIV").length
-        end
-
-        def iterator_object(i)
-            @ieController.div( :index , i+1)
-        end
-        private :iterator_object
-
-    end
-
-    # this class accesses the buttons in the document as a collection
-    # it would normally only be accessed by the buttons method of IEController
-    class Buttons < Iterators
-
-        def length
-            get_length_of_input_objects(["button" , "submit", "image"])
-        end
-
-        def iterator_object(i)
-            @ieController.button( :index , i+1)
-        end
-        private :iterator_object
-
-    end
-
-    # this class accesses the check boxes in the document as a collection
-    # it would normally only be accessed by the links method of IEController
-    class CheckBoxes < Iterators
-  
-        def length
-            get_length_of_input_objects("checkbox")
-        end
-
-        def iterator_object(i)
-            @ieController.checkbox( :index , i+1)
-        end
-        private :iterator_object
-
-    end
-
-    # this class accesses the radio buttons in the document as a collection
-    # it would normally only be accessed by the radios method of IEController
-    class Radios < Iterators
-
-        def length
-            get_length_of_input_objects("radio")
-        end
-
-        def iterator_object(i)
-            @ieController.radio( :index , i+1)
-        end
-        private :iterator_object
-
-    end
-
-
-    # this class accesses the select boxes  in the document as a collection
-    # it would normally only be accessed by the select_lists method of IEController
-    class SelectLists < Iterators
-
-        def length
-            @ieController.ie.document.body.getElementsByTagName("SELECT").length
-        end
-
-        def iterator_object(i)
-            @ieController.select_list( :index , i+1)
-        end
-        private :iterator_object
-
-    end
-
-    # this class accesses the links in the document as a collection
-    # it would normally only be accessed by the links method of IEController
-    class Links < Iterators
-    
-        def length
-            @ieController.ie.document.body.getElementsByTagName("A").length
-        end
-
-        def iterator_object(i)
-            @ieController.link( :index , i+1)
-        end
-
-    end
-
-    # this class accesses the imnages in the document as a collection
-    # it would normally only be accessed by the images method of IEController
-    class Images < Iterators
-
-        def length
-            @ieController.ie.document.images.length
-        end
-
-        def iterator_object(i)
-            @ieController.image( :index , i+1)
-        end
-
-    end
-
-    # this class accesses the text fields in the document as a collection
-    # it would normally only be accessed by the text_fields method of IEController
-    class TextFields < Iterators
-
-        def length
-            # text areas are also included inthe Text_filds, but we need to get them seperately
-            get_length_of_input_objects( ["text" , "password"] ) +
-                @ieController.ie.document.body.getElementsByTagName("textarea").length
-        end
-
-        def iterator_object(i)
-            @ieController.text_field( :index , i+1)
-        end
-    end
-
-    # this class accesses the hidden fields in the document as a collection
-    # it would normally only be accessed by the hiddens method of IEController
-    class Hiddens < Iterators
-        def length
-            get_length_of_input_objects("hidden")
-        end
-
-        def iterator_object(i)
-            @ieController.hidden( :index , i+1)
-        end
-    end
-
-    # this class accesses the text fields in the document as a collection
-    # it would normally only be accessed by the text_fields method of IEController
-    class Tables< Iterators
-        def length
-            @ieController.ie.document.body.getElementsByTagName("TABLE").length
-        end
-
-        def iterator_object(i)
-            @ieController.table( :index , i+1)
-        end
-    end
-
-    # this class accesses the labels in the document as a collection
-    # it would normally only be accessed by the labels method of IEController
-    class Labels< Iterators
-        def length
-            @ieController.ie.document.body.getElementsByTagName("LABEL").length
-        end
-
-        def iterator_object(i)
-            @ieController.label( :index , i+1)
+            element_class.new(@ieController, :index, i+1)
         end
     end
 
@@ -2409,24 +2227,24 @@ module Watir
     end
 
     class P < SpanDivCommon 
-        def tag; 'P'; end
+        TAG = 'P'
+        def tag; TAG; end
+        def self.tag; TAG; end
     end
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
     # It would not normally be created by users
-    #
-    # many of the methods available to this object are inherited from the SpanDivCommonclass
-    #
     class Div < SpanDivCommon 
-        def tag; 'DIV'; end
+        TAG = 'DIV'
+        def tag; TAG; end
+        def self.tag; TAG; end
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
-    #
-    # many of the methods available to this object are inherited from the SpanDivCommon class
-    #
     class Span < SpanDivCommon 
-        def tag; 'SPAN'; end
+        TAG = 'SPAN'
+        def tag; TAG; end
+        def self.tag; TAG; end
     end
 
     # this class is used to access a label object on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
@@ -3594,7 +3412,137 @@ module Watir
         end
 
     end
+
+    # presumes element_class or element_tag is defined
+    # for subclasses of Iterators
+    module CommonCollection
+        def element_tag
+            element_class.tag
+        end
+        def length
+            @ieController.getContainer.getElementsByTagName(element_tag).length
+        end
+    end        
     
+    # this class accesses the buttons in the document as a collection
+    # it would normally only be accessed by the buttons method of IEController
+    class Buttons < Iterators
+        def element_class; Button; end
+        def length
+            get_length_of_input_objects(["button", "submit", "image"])
+        end
+    end
+
+    # this class accesses the check boxes in the document as a collection
+    # it would normally only be accessed by the links method of IEController
+    class CheckBoxes < Iterators
+        def element_class; CheckBox; end  
+        def length
+            get_length_of_input_objects("checkbox")
+        end
+        # this method creates an object of the correct type that the iterators use
+        private
+        def iterator_object(i)
+            @ieController.checkbox(:index, i+1)
+        end
+    end
+
+    # this class accesses the radio buttons in the document as a collection
+    # it would normally only be accessed by the radios method of IEController
+    class Radios < Iterators
+        def element_class; Radio; end
+        def length
+            get_length_of_input_objects("radio")
+        end
+        # this method creates an object of the correct type that the iterators use
+        private
+        def iterator_object(i)
+            @ieController.radio(:index, i+1)
+        end
+    end
+
+    # this class accesses the select boxes  in the document as a collection
+    # it would normally only be accessed by the select_lists method of IEController
+    class SelectLists < Iterators
+        include CommonCollection
+        def element_class; SelectBox; end
+        def element_tag; 'SELECT'; end
+    end
+
+    # this class accesses the links in the document as a collection
+    # it would normally only be accessed by the links method of IEController
+    class Links < Iterators
+        include CommonCollection
+        def element_class; Link; end    
+        def element_tag; 'A'; end
+    end
+
+    # this class accesses the imnages in the document as a collection
+    # it would normally only be accessed by the images method of IEController
+    class Images < Iterators
+        def element_class; Image; end 
+        def length
+            @ieController.document.images.length
+        end
+    end
+
+    # this class accesses the text fields in the document as a collection
+    # it would normally only be accessed by the text_fields method of IEController
+    class TextFields < Iterators
+        def element_class; TextField; end
+        def length
+            # text areas are also included inthe Text_filds, but we need to get them seperately
+            get_length_of_input_objects( ["text" , "password"] ) +
+                @ieController.ie.document.body.getElementsByTagName("textarea").length
+        end
+    end
+
+    # this class accesses the hidden fields in the document as a collection
+    # it would normally only be accessed by the hiddens method of IEController
+    class Hiddens < Iterators
+        def element_class; Hidden; end
+        def length
+            get_length_of_input_objects("hidden")
+        end
+    end
+
+    # this class accesses the text fields in the document as a collection
+    # it would normally only be accessed by the text_fields method of IEController
+    class Tables< Iterators
+        include CommonCollection
+        def element_class; Table; end
+        def element_tag; 'TABLE'; end
+    end
+
+    # this class accesses the labels in the document as a collection
+    # it would normally only be accessed by the labels method of IEController
+    class Labels< Iterators
+        include CommonCollection
+        def element_class; Label; end
+        def element_tag; 'LABEL'; end
+    end
+
+    # this class accesses the p tags in the document as a collection
+    # it would normally only be accessed by the ps method of IEController
+    class Ps < Iterators
+        include CommonCollection
+        def element_class; P; end
+    end
+
+    # this class accesses the spans in the document as a collection
+    # it would normally only be accessed by the spans method of IEController
+    class Spans < Iterators
+        include CommonCollection
+        def element_class; Span; end
+    end
+
+    # this class accesses the divs in the document as a collection
+    # it would normally only be accessed by the divs method of IEController
+    class Divs< Iterators
+        include CommonCollection
+        def element_class; Div; end
+    end
+
 end
 
 require 'watir/camel_case'
