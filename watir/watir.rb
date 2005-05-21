@@ -68,7 +68,7 @@
 # command line options:
 #
 #  -b  (background)   Run Internet Explorer invisible
-#  -f  (fast)         Run tests very fast
+#  -f  (fast)         Run tests fast
 #  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
 
 require 'win32ole'
@@ -91,6 +91,7 @@ end
 
 # ARGV needs to be deleted to enable the Test::Unit functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
+# Note: this means that watir must be require'd BEFORE test/unit.
 def command_line_flag(switch)
     setting = ARGV.include?(switch) 
     ARGV.delete(switch)
@@ -190,9 +191,8 @@ module Watir
 
         # this method causes Watir to wait until Internet Explorer has finished the action
         def wait( noSleep  = false )
-             @ieController.waitForIE( noSleep )
+             @ieController.wait( noSleep )
         end
-        alias waitForIE wait
 
         #
         # Factory Methods
@@ -350,7 +350,6 @@ module Watir
         def file_field( how , what )
             return FileField.new(self , how, what)
         end
-        alias fileField file_field
         
         # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
@@ -366,7 +365,6 @@ module Watir
         def text_field( how , what )
             return TextField.new(self , how, what)
         end
-        alias textField text_field
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
         #
@@ -422,7 +420,6 @@ module Watir
         def select_list( how , what )
             s = SelectBox.new(self , how, what)
         end
-        alias selectBox select_list
 
         # this is the method for accessing the select lists iterator. Returns a Select_Lists object
         #
@@ -463,7 +460,6 @@ module Watir
         def checkbox( how , what , value=nil)
             return RadioCheckCommon.new( self, how, what, "checkbox", value)
         end
-        alias checkBox checkbox
 
         # this is the method for accessing the check boxes iterator. Returns a Check_Boxes object
         #
@@ -717,13 +713,13 @@ module Watir
 
         # this method is used iternally by Watir and should not be used externally. 
         def getContainerContents()
-            return getDocument.body.all 
+            return document.body.all 
         end
         private :getContainerContents
 
         # this method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         def getContainer()
-            return getDocument.body
+            return document.body
         end
      
         # This is the main method for finding objects on a web page.
@@ -921,7 +917,7 @@ module Watir
         #    * what - string or regexp - what to look ofr
         def getImage( how, what )
 
-            doc = getDocument()
+            doc = document
             count = 1
             images = doc.all.tags("IMG")
             o=nil
@@ -964,7 +960,7 @@ module Watir
         #                     :text  - get link based on the supplied text. uses either a string or regular expression match
         #   * what - depends on how - an integer for index, a string or regexp for url and text
         def getLink( how, what )
-            doc = getDocument()
+            doc = document
             links = doc.all.tags("A")
             
             # Guard ensures watir won't crash if somehow the list of links is nil
@@ -1046,7 +1042,7 @@ module Watir
         #            id
         #   * what -  a string or regexp 
         def getTablePart( part , how , what )
-             doc = getDocument()
+             doc = document
              parts = doc.all.tags( part )
              n = nil
              parts.each do | p |
@@ -1067,7 +1063,7 @@ module Watir
         # this method is used to get elements like SPAN or DIV
         def getNonControlObject(part , how, what )
 
-             doc = getDocument()
+             doc = document
              parts = doc.all.tags( part )
              n = nil
              case how
@@ -1316,7 +1312,6 @@ module Watir
             raise NoStatusBarException if !@ie.statusBar
             return @ie.statusText()
         end
-        alias getStatus status
 
         #
         # Navigation
@@ -1326,7 +1321,7 @@ module Watir
         #  * url  - string - the URL to navigate to
         def goto( url )
             @ie.navigate(url)
-            waitForIE()
+            wait()
             sleep 0.2
             return @down_load_time
         end
@@ -1335,21 +1330,21 @@ module Watir
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
         def back
             @ie.GoBack()
-            waitForIE
+            wait
         end
 
         # Goes to the next page - the same as clicking the browsers forward button
         # an WIN32OLERuntimeError exception is raised if the browser cant go forward
         def forward
             @ie.GoForward()
-            waitForIE
+            wait
         end
         
         # Refreshes the current page - the same as clicking the browsers refresh button
         # an WIN32OLERuntimeError exception is raised if the browser cant refresh
         def refresh
             @ie.refresh2(3)
-            waitForIE
+            wait
         end
         
         # this method clears the list of urls that we have visited
@@ -1396,7 +1391,6 @@ module Watir
         def document()
             return @ie.document
         end
-        alias getDocument document
            
         # returns the current url, as displayed in the address bar of the browser 
         def url
@@ -1414,9 +1408,9 @@ module Watir
                 retryCount += 1
                 returnValue = 
                 if text.kind_of? Regexp
-                    getDocument().body.innerText.match(text)
+                    document.body.innerText.match(text)
                 elsif text.kind_of? String
-                    getDocument().body.innerText.index(text)
+                    document.body.innerText.index(text)
                 else
                     raise MissingWayOfFindingObjectException
                 end 
@@ -1427,7 +1421,6 @@ module Watir
             end
             return returnValue
         end
-        alias pageContainsText contains_text
         # 
         # Synchronization
         #
@@ -1447,7 +1440,7 @@ module Watir
                 end
                 s.reverse
                 
-                log "waitForIE: readystate=" + @ie.readyState.to_s 
+                log "wait: readystate=" + @ie.readyState.to_s 
                 until @ie.readyState == READYSTATE_COMPLETE
                     @pageHasReloaded = true
                     sleep 0.02
@@ -1489,7 +1482,6 @@ module Watir
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
         end
-        alias waitForIE wait
 
         # Error checkers
 
@@ -1516,21 +1508,19 @@ module Watir
 
         # this method returns the HTML of the current page
         def html()
-            return getDocument().body.outerHTML
+            return document.body.outerHTML
         end
-        alias getHTML html
         
 
         def outerhtml()
-              return getDocument().body.outerHTML
+              return document.body.outerHTML
         end
 
 
         # this method returns the text of the current document
         def text()
-            return getDocument().body.innerText.strip
+            return document.body.innerText.strip
         end
-        alias getText text
 
         #def head
         #    return Head.new(self)
@@ -1542,7 +1532,7 @@ module Watir
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
         def show_frames()
-            if allFrames = getDocument().frames
+            if allFrames = document.frames
                 count = allFrames.length
                 puts "there are #{count} frames"
                 for i in 0..count-1 do  
@@ -1557,11 +1547,10 @@ module Watir
                 puts "no frames"
             end
         end
-        alias showFrames show_frames
         
         # Show all forms displays all the forms that are on a web page.
         def show_forms()
-            if allForms = getDocument.forms
+            if allForms = document.forms
                 count = allForms.length
                 puts "There are #{count} forms"
                 for i in 0..count-1 do
@@ -1575,11 +1564,10 @@ module Watir
                 puts "No forms"
             end
         end
-        alias showForms show_forms
 
         # this method shows all the images availble in the document
         def show_images()
-            doc = getDocument()
+            doc = document
             index=1
             doc.images.each do |l|
                 puts "image: name: #{l.name}"
@@ -1589,14 +1577,13 @@ module Watir
                 index+=1
             end
         end
-        alias showImages show_images
         
         # this method shows all the links availble in the document
         def show_links() 
 
             props=       ["name" ,"id" , "href"  ]
             print_sizes= [12 , 12, 60]
-            doc = getDocument()
+            doc = document
             index=0
             text_size = 60
             # draw the table header
@@ -1630,14 +1617,13 @@ module Watir
             end
             puts  s
         end
-        alias showLinks show_links
 
         # this method shows the name, id etc of the object that is currently active - ie the element that has focus
         # its mostly used in irb when creating a script
         def show_active
             s = "" 
             
-            current = getDocument.activeElement
+            current = document.activeElement
             begin
                 s=s+current.invoke("type").to_s.ljust(16)
             rescue
@@ -1653,7 +1639,6 @@ module Watir
             end
             s=s+"\n"
         end
-        alias showActive show_active
         
         # This method shows the available objects on the current page.
         # This is usually only used for debugging or writing new test scripts.
@@ -1661,7 +1646,7 @@ module Watir
         # when developing a test case using Watir.
         def show_all_objects()
             puts "-----------Objects in  page -------------" 
-            doc = getDocument()
+            doc = document
             s = ""
             props=["name" ,"id" , "value" , "alt" , "src"]
             doc.all.each do |n|
@@ -1682,11 +1667,10 @@ module Watir
             end
             puts s+"\n\n\n"
         end
-        alias showAllObjects show_all_objects
 
         # this method shows all the divs availble in the document
         def show_divs( )
-            divs = getDocument().getElementsByTagName("DIV")
+            divs = document.getElementsByTagName("DIV")
             puts "Found #{divs.length} div tags"
             index=1
             divs.each do |d|
@@ -1694,12 +1678,10 @@ module Watir
                 index+=1
             end
         end
-        alias showDivs show_divs
-
 
         # this method is used to show all the tables that are available
         def show_tables( )
-            tables = getDocument().getElementsByTagName("TABLE")
+            tables = document.getElementsByTagName("TABLE")
             puts "Found #{tables.length} tables"
             index=1
             tables.each do |d|
@@ -1707,13 +1689,10 @@ module Watir
                 index+=1
             end
         end
-        alias showTables show_tables
-
-
 
         # this method shows all the spans availble in the document
         def show_spans( )
-            spans = getDocument().getElementsByTagName("SPAN")
+            spans = document.getElementsByTagName("SPAN")
             puts "Found #{spans.length} span tags"
             index=1
             spans.each do |d|
@@ -1721,11 +1700,9 @@ module Watir
                 index+=1
             end
         end
-        alias showSpans show_spans
-
 
         def show_labels( )
-            labels = getDocument().getElementsByTagName("LABEL")
+            labels = document.getElementsByTagName("LABEL")
             puts "Found #{labels.length} label tags"
             index=1
             labels.each do |d|
@@ -1733,10 +1710,6 @@ module Watir
                 index+=1
             end
         end
-        alias showLabels show_labels
-
-
-
 
         #
         # This method gives focus to the frame
@@ -1805,7 +1778,7 @@ module Watir
             @container = container
             @frame = nil
 
-            frames = @container.getDocument.frames
+            frames = @container.document.frames
 
             for i in 0 .. frames.length-1
                 next unless @frame==nil
@@ -1837,15 +1810,13 @@ module Watir
             return @frame
         end
 
-        def getDocument
+        def document
             @frame.document
         end
-        alias document getDocument
 
         def wait(no_sleep = false)
             @container.wait(no_sleep)
         end
-        alias waitForIE wait
     end
     
 
@@ -1889,7 +1860,7 @@ module Watir
             
             log "Get form  formHow is #{@formHow}  formName is #{@formName} "
             count = 1
-            doc = @container.getDocument()
+            doc = @container.document
             doc.forms.each do |thisForm|
                 next unless @form == nil
 
@@ -1927,7 +1898,7 @@ module Watir
         def submit()
             raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.submit 
-            @container.waitForIE
+            @container.wait
         end   
 
         def getContainerContents()
@@ -1940,12 +1911,9 @@ module Watir
             return @form
         end
 
-
-
         def wait(no_sleep = false)
             @container.wait(no_sleep)
         end
-        alias waitForIE wait 
                                 
     end # class Form
     
@@ -2093,7 +2061,7 @@ module Watir
            
             highLight(:set)
             @o.click()
-            @ieController.waitForIE()
+            @ieController.wait()
             highLight(:clear)
         end
 
@@ -2119,7 +2087,7 @@ module Watir
 
             highLight(:set)
             @o.fireEvent(event)
-            @ieController.waitForIE()
+            @ieController.wait()
             highLight(:clear)
         end
         alias fire_event fireEvent
@@ -2615,7 +2583,7 @@ module Watir
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
             @ieController = parent
-            allTables = parent.getDocument.getElementsByTagName("TABLE")
+            allTables = parent.document.getElementsByTagName("TABLE")
             parent.log "There are #{ allTables.length } tables"
             table = nil
             tableIndex = 1
@@ -2971,7 +2939,7 @@ module Watir
             return @o
         end
 
-        def getDocument()
+        def document()
             return @o  
         end
 
@@ -3579,7 +3547,7 @@ module Watir
             @o.value = ""
             @o.fireEvent("onKeyPress")
             @o.fireEvent("onChange")
-            @ieController.waitForIE()
+            @ieController.wait()
             highLight(:clear)
         end
         
@@ -3697,3 +3665,5 @@ module Watir
     end
     
 end
+
+require 'watir/camel_case'
