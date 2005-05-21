@@ -18,7 +18,6 @@ class TC_Divs < Test::Unit::TestCase
         assert($ie.textField(:name, "text1").verify_contains("0") )  
         $ie.div(:id , "div3").click
         assert($ie.textField(:name, "text1").verify_contains("1") )  
-        
         $ie.div(:id , "div4").click
         assert($ie.textField(:name, "text1").verify_contains("0") )  
     end
@@ -27,8 +26,10 @@ class TC_Divs < Test::Unit::TestCase
         assert_raises(UnknownObjectException) {$ie.div(:id , "div77").text }
         assert_raises(UnknownObjectException) {$ie.div(:title , "div77").text }
         
-        assert_equal("This div has an onClick that increments text1" ,   $ie.div(:id , "div3").text.strip )
-        assert_equal("This text is in a div with an id of div1 and title of test1" ,   $ie.div(:title , "Test1").text.strip )
+        assert_equal("This div has an onClick that increments text1", 
+            $ie.div(:id , "div3").text.strip )
+        assert_equal("This text is in a div with an id of div1 and title of test1",   
+            $ie.div(:title , "Test1").text.strip )
         
         assert_raises(UnknownObjectException) {$ie.div(:id , "div77").style }
         assert_equal("blueText" ,   $ie.div(:id , "div2").style )
@@ -49,12 +50,9 @@ class TC_Divs < Test::Unit::TestCase
         assert_equal( 7 , $ie.divs.length)
         assert_equal( "div1" , $ie.divs[1].id )
         
-        #puts "1.id is " + $ie.divs[1].id.to_s
-        #puts "2.id is " + $ie.divs[2].id.to_s
-        
         index =1
         $ie.divs.each do |s|
-            puts "each - div= " + s.to_s
+            # puts "each - div= " + s.to_s
             assert_equal($ie.div(:index, index ).name , s.name )
             assert_equal($ie.div(:index, index ).id , s.id )
             assert_equal($ie.div(:index, index ).style , s.style )
@@ -118,12 +116,9 @@ class TC_Divs < Test::Unit::TestCase
         assert_equal( 7 , $ie.spans.length)
         assert_equal( "span1" , $ie.spans[1].id )
         
-        #puts "1.id is " + $ie.spans[1].id.to_s
-        #puts "2.id is " + $ie.spans[2].id.to_s
-        
-        index =1
+        index = 1
         $ie.spans.each do |s|
-            puts "each - span = " + s.to_s
+            # puts "each - span = " + s.to_s
             assert_equal($ie.span(:index, index ).name , s.name )
             assert_equal($ie.span(:index, index ).id , s.id )
             assert_equal($ie.span(:index, index ).style , s.style )
