@@ -15,11 +15,11 @@ class TC_Divs < Test::Unit::TestCase
         assert_raises(UnknownObjectException) {$ie.div(:id , "div77").click }
         assert_raises(UnknownObjectException) {$ie.div(:title , "div77").click }
         
-        assert($ie.textField(:name, "text1").verify_contains("0") )  
+        assert($ie.text_field(:name, "text1").verify_contains("0") )  
         $ie.div(:id , "div3").click
-        assert($ie.textField(:name, "text1").verify_contains("1") )  
+        assert($ie.text_field(:name, "text1").verify_contains("1") )  
         $ie.div(:id , "div4").click
-        assert($ie.textField(:name, "text1").verify_contains("0") )  
+        assert($ie.text_field(:name, "text1").verify_contains("0") )  
     end
     
     def test_div_properties
@@ -82,12 +82,12 @@ class TC_Divs < Test::Unit::TestCase
         assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
         assert_raises(UnknownObjectException) {$ie.span(:title , "span77").click }
         
-        assert($ie.textField(:name, "text2").verify_contains("0") )  
+        assert($ie.text_field(:name, "text2").verify_contains("0") )  
         $ie.span(:id , "span3").click
-        assert($ie.textField(:name, "text2").verify_contains("1") )  
+        assert($ie.text_field(:name, "text2").verify_contains("1") )  
         
         $ie.span(:id , "span4").click
-        assert($ie.textField(:name, "text2").verify_contains("0") )  
+        assert($ie.text_field(:name, "text2").verify_contains("0") )  
     end
     
     def test_span_properties

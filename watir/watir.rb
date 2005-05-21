@@ -366,7 +366,7 @@ module Watir
         #   ie.text_fields[1].to_s                             # goto the first text field on the page                                   
         #   ie.text_fields.length                              # show how many text field are on the page.
         def text_fields
-            return Text_Fields.new(self)
+            return TextFields.new(self)
         end
 
         # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
@@ -2092,14 +2092,13 @@ module Watir
     # this class is the super class for the iterator classes ( buttons, links, spans etc
     # it would normally only be accessed by the iterator methods ( spans , links etc) of IEController
     class Iterators
-
         include Enumerable
 
         # Super class for all the iteractor classes
         #   * ieController  - an instance of an IEController
         def initialize( ieController)
             @ieController = ieController
-            @length=0
+            @length = length # must be defined by subclasses
         end
  
 
@@ -2129,11 +2128,6 @@ module Watir
             0.upto( @length-1 ) { |i | yield iterator_object(i)   }
         end
 
-        # returns how many objects are in the collection
-        def length
-            return @length
-        end
- 
         # allows access to a specific item in the collection
         def [](n)
             return iterator_object(n-1)
@@ -2144,11 +2138,10 @@ module Watir
     # it would normally only be accessed by the ps method of IEController
     class Ps < Iterators
 
-        def initialize( ieController )
-            super
-            @length =@ieController.ie.document.body.getElementsByTagName("P").length
+        def length
+            @ieController.ie.document.body.getElementsByTagName("P").length
         end
-       
+
         # this method creates an object of the correct type that the iterators use
         def iterator_object(i)
             @ieController.p( :index , i+1)
@@ -2161,11 +2154,10 @@ module Watir
     # it would normally only be accessed by the spans method of IEController
     class Spans < Iterators
 
-        def initialize( ieController )
-            super
-            @length =@ieController.ie.document.body.getElementsByTagName("SPAN").length
+        def length
+            @ieController.ie.document.body.getElementsByTagName("SPAN").length
         end
-       
+
         # this method creates an object of the correct type that the iterators use
         def iterator_object(i)
             @ieController.span( :index , i+1)
@@ -2177,11 +2169,10 @@ module Watir
     # it would normally only be accessed by the divs method of IEController
     class Divs< Iterators
 
-        def initialize( ieController )
-            super
-            @length= @ieController.ie.document.body.getElementsByTagName("DIV").length
+        def length
+            @ieController.ie.document.body.getElementsByTagName("DIV").length
         end
-       
+
         def iterator_object(i)
             @ieController.div( :index , i+1)
         end
@@ -2193,9 +2184,8 @@ module Watir
     # it would normally only be accessed by the buttons method of IEController
     class Buttons < Iterators
 
-        def initialize( ieController )
-            super
-            @length = get_length_of_input_objects(["button" , "submit", "image"])
+        def length
+            get_length_of_input_objects(["button" , "submit", "image"])
         end
 
         def iterator_object(i)
@@ -2208,12 +2198,11 @@ module Watir
     # this class accesses the check boxes in the document as a collection
     # it would normally only be accessed by the links method of IEController
     class CheckBoxes < Iterators
-
-        def initialize( ieController )
-            super
-            @length = get_length_of_input_objects("checkbox")
+  
+        def length
+            get_length_of_input_objects("checkbox")
         end
-       
+
         def iterator_object(i)
             @ieController.checkbox( :index , i+1)
         end
@@ -2225,11 +2214,10 @@ module Watir
     # it would normally only be accessed by the radios method of IEController
     class Radios < Iterators
 
-        def initialize( ieController )
-            super
-            @length = get_length_of_input_objects("radio")
+        def length
+            get_length_of_input_objects("radio")
         end
-       
+
         def iterator_object(i)
             @ieController.radio( :index , i+1)
         end
@@ -2240,13 +2228,12 @@ module Watir
 
     # this class accesses the select boxes  in the document as a collection
     # it would normally only be accessed by the select_lists method of IEController
-    class SelectLists< Iterators
+    class SelectLists < Iterators
 
-        def initialize( ieController )
-            super
-            @length= @ieController.ie.document.body.getElementsByTagName("SELECT").length
+        def length
+            @ieController.ie.document.body.getElementsByTagName("SELECT").length
         end
-       
+
         def iterator_object(i)
             @ieController.select_list( :index , i+1)
         end
@@ -2256,14 +2243,12 @@ module Watir
 
     # this class accesses the links in the document as a collection
     # it would normally only be accessed by the links method of IEController
-    class Links<Iterators
-        # Returns an initialized instance of a links object
-        #   * ieController  - an instance of an IEController
-        def initialize( ieController )
-            super
-            @length= @ieController.ie.document.body.getElementsByTagName("A").length
+    class Links < Iterators
+    
+        def length
+            @ieController.ie.document.body.getElementsByTagName("A").length
         end
-       
+
         def iterator_object(i)
             @ieController.link( :index , i+1)
         end
@@ -2272,14 +2257,12 @@ module Watir
 
     # this class accesses the imnages in the document as a collection
     # it would normally only be accessed by the images method of IEController
-    class Images<Iterators
-        # Returns an initialized instance of a links object
-        #   * ieController  - an instance of an IEController
-        def initialize( ieController )
-            super
-            @length= @ieController.ie.document.images.length
+    class Images < Iterators
+
+        def length
+            @ieController.ie.document.images.length
         end
-       
+
         def iterator_object(i)
             @ieController.image( :index , i+1)
         end
@@ -2288,18 +2271,12 @@ module Watir
 
     # this class accesses the text fields in the document as a collection
     # it would normally only be accessed by the text_fields method of IEController
-    class Text_Fields < Iterators
-        def initialize( ieController )
-            super
-            @length = get_length_of_input_objects( supported_types ) 
+    class TextFields < Iterators
 
+        def length
             # text areas are also included inthe Text_filds, but we need to get them seperately
-            @length = @length + @ieController.ie.document.body.getElementsByTagName("textarea").length
-
-        end
-       
-       def supported_types
-            return ["text" , "password"] 
+            get_length_of_input_objects( ["text" , "password"] ) +
+                @ieController.ie.document.body.getElementsByTagName("textarea").length
         end
 
         def iterator_object(i)
@@ -2310,11 +2287,10 @@ module Watir
     # this class accesses the hidden fields in the document as a collection
     # it would normally only be accessed by the hiddens method of IEController
     class Hiddens < Iterators
-        def initialize( ieController )
-            super
-            @length = get_length_of_input_objects("hidden")
+        def length
+            get_length_of_input_objects("hidden")
         end
-       
+
         def iterator_object(i)
             @ieController.hidden( :index , i+1)
         end
@@ -2323,14 +2299,10 @@ module Watir
     # this class accesses the text fields in the document as a collection
     # it would normally only be accessed by the text_fields method of IEController
     class Tables< Iterators
-        def initialize( ieController )
-            super
-            if  @ieController.ie.document.body.getElementsByTagName("TABLE").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("TABLE")
-                @length=objects.length
-            end        
+        def length
+            @ieController.ie.document.body.getElementsByTagName("TABLE").length
         end
-       
+
         def iterator_object(i)
             @ieController.table( :index , i+1)
         end
@@ -2339,14 +2311,10 @@ module Watir
     # this class accesses the labels in the document as a collection
     # it would normally only be accessed by the labels method of IEController
     class Labels< Iterators
-        def initialize( ieController )
-            super
-            if  @ieController.ie.document.body.getElementsByTagName("LABEL").length > 0 
-                objects= @ieController.ie.document.body.getElementsByTagName("LABEL")
-                @length=objects.length
-            end        
+        def length
+            @ieController.ie.document.body.getElementsByTagName("LABEL").length
         end
-       
+
         def iterator_object(i)
             @ieController.label( :index , i+1)
         end
@@ -2365,7 +2333,7 @@ module Watir
 
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getNonControlObject(@objectType , how, what )
+            @o = ieController.getNonControlObject(tag , how, what )
             super( @o )
             @how = how
             @what = what
@@ -2441,10 +2409,7 @@ module Watir
     end
 
     class P < SpanDivCommon 
-        def initialize( ieController, how, what)
-            @objectType = "P"
-            super( ieController, how, what)
-        end
+        def tag; 'P'; end
     end
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
@@ -2453,11 +2418,7 @@ module Watir
     # many of the methods available to this object are inherited from the SpanDivCommonclass
     #
     class Div < SpanDivCommon 
-        def initialize( ieController, how, what)
-            @objectType = "div"
-            super( ieController, how, what)
-        end
-
+        def tag; 'DIV'; end
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
@@ -2465,10 +2426,7 @@ module Watir
     # many of the methods available to this object are inherited from the SpanDivCommon class
     #
     class Span < SpanDivCommon 
-        def initialize( ieController, how, what)
-            @objectType = "span"
-            super( ieController, how, what)
-        end
+        def tag; 'SPAN'; end
     end
 
     # this class is used to access a label object on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true

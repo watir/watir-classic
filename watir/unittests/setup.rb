@@ -1,4 +1,4 @@
-END {$ie.close} # close ie at completion of the tests
+END {$ie.close if $ie} # close ie at completion of the tests
 
 # libraries used by feature tests
 require 'watir'
