@@ -8,23 +8,23 @@ To Install:
 
 How To Use:
    This only works on Windows.
-   This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12  using Windows 2000 and XP.
+   Best is to use Ruby 1.8.2-14 or later.
+   This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
    It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
-   Best is to use Ruby 1.8.2-14.
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
    Install the watir files, unit tests and sample html pages. 
+
+Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
 
-
-Changes from 1.3
-
+Changes in 1.3.1
    Added P tag support
    Bug fix for images and links in frames using each
    Bug fixes for image#save
 
-Changes from 1.2
+Changes in 1.3
    These are the significant changes since 1.2
 
    added new row_values and column_value methods to tables
@@ -41,12 +41,9 @@ Changes from 1.2
    added onKeyUp and onKeyDown to text_fields#set
    installer now installs AutoIt to deal with javascript popups, file uploads etc
    the spinner is now off by default 
-
    bug fix in text_fields iterator where it wasnt iterating through password or text ares. Added test for password fields
    bug fix for flash for tables
    bug fixes for images and links in cells
-
-
 
 Typical Usage
    # include the controller 
@@ -70,14 +67,13 @@ Typical Usage
    :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
    :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
 
-
   The objects that are currently supported include
    Button
    Radio
    CheckBox
    TextField (Including TextArea and Password)
    Hidden
-   SelectBox
+   SelectList
    Label
    Span
    Div
@@ -90,12 +86,14 @@ Typical Usage
  http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
  http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
 
- command line options:
+ Command line options:
 
   -b  (background)   Run Internet Explorer invisible
   -f  (fast)         Run tests very fast
   -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
-
+  
+ Note that if you also use test/unit, you will need to require 'watir' first to avoid conflicts
+ with its command line switches.
 
 Javascript Pop Up Support
    Watir now optionally installs AutoIt - http://www.autoitscript.com/
@@ -105,7 +103,6 @@ Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
    Bret Pettichord (bret@pettichord.com)
    The mailing list: http://rubyforge.org/mail/?group_id=104
-
 
 Contributors:
    Bret Pettichord

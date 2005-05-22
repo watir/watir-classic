@@ -399,7 +399,7 @@ module Watir
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #
-        # returns a SelectBox object
+        # returns a SelectList object
         #
         # Typical usage
         #
@@ -408,7 +408,7 @@ module Watir
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
         def select_list( how , what )
-            s = SelectBox.new(self , how, what)
+            s = SelectList.new(self , how, what)
         end
 
         # this is the method for accessing the select lists iterator. Returns a SelectLists object
@@ -946,8 +946,7 @@ module Watir
         #                     :text  - get link based on the supplied text. uses either a string or regular expression match
         #   * what - depends on how - an integer for index, a string or regexp for url and text
         def getLink( how, what )
-            doc = document
-            links = doc.all.tags("A")
+            links = document.all.tags("A")
             
             # Guard ensures watir won't crash if somehow the list of links is nil
             if (links == nil)
@@ -956,7 +955,6 @@ module Watir
             
             link = nil
             case how
-                
             when :index
                 begin
                     link = links[ (what-1).to_s ]
@@ -1801,7 +1799,7 @@ module Watir
 
     # Forms
 
-    module FormWrapperMethods
+    module FormAccess
         def name
             @form.getAttributeNode('name').value
         end
@@ -1816,9 +1814,9 @@ module Watir
         end
     end        
         
-    # wraps around a form ole object
+    # wraps around a form OLE object
     class FormWrapper
-        include FormWrapperMethods
+        include FormAccess
         def initialize ( ole_object )
             @form = ole_object
         end
@@ -1829,7 +1827,7 @@ module Watir
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
     #   * what         - what we use to access the form
     class Form < IE
-        include FormWrapperMethods
+        include FormAccess
 
         attr_accessor :form
         def initialize( container, how, what )
@@ -2930,10 +2928,10 @@ module Watir
     #
     # many of the methods available to this object are inherited from the ObjectActions class
     #
-    class SelectBox < ObjectActions
-        # returns an initialized instance of a SelectBox object
+    class SelectList < ObjectActions
+        # returns an initialized instance of a SelectList object
         #   * ieController  - an instance of an IEController
-        #   * how         - symbol - how we access the select box
+        #   * how          - symbol - how we access the select box
         #   * what         - what we use to access the select box, name, id etc
         def initialize( ieController,  how , what )
             @ieController = ieController
@@ -2942,16 +2940,18 @@ module Watir
             @how = how
             @what = what
         end
+        
+        attr :o
 
         def assert_exists
             unless @o
                 raise UnknownObjectException,  
-                    "Unable to locate a selectbox using #{@how} and #{@what}"
+                    "Unable to locate a select list using #{@how} and #{@what}"
             end
         end
         private :assert_exists
         
-        # returns the value of the title attribute - select boxes dont support this, so an empty string "" is returned
+        # returns the value of the title attribute - select boxes don't support this, so an empty string "" is returned
         def title
             object_exist_check
             return ""
@@ -2961,69 +2961,75 @@ module Watir
         def clearSelection
             assert_exists
             highLight( :set)
+            wait = false
             @o.each do |selectBoxItem|
-                selectBoxItem.selected = false
-                @ieController.wait
+                if selectBoxItem.selected
+                    selectBoxItem.selected = false
+                    wait = true
+                end
             end
+            @ieController.wait if wait
             highLight( :clear)
         end
+#        private :clearSelection
         
-        # This method selects an item, or items in a select box.
+        # This method selects an item, or items in a select box, by text.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the thing to select, string, reg exp or an array of string and reg exps
         def select( item )
             select_item_in_select_list( :text , item )
         end
 
-        # This method selects an item, or items in a select box.
+        # Selects an item, or items in a select box, by value.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
         def select_value( item )
             select_item_in_select_list( :value , item )
         end
 
-        # this method is used internally to select something from the select box
+        # BUG: Should be private
+        # Selects something from the select box
         #  * name  - symbol  :vale or :text - how we find an item in the select box
         #  * item  - string or reg exp - what we are looking for
         def select_item_in_select_list( name_or_value, item )
             assert_exists
-            if item.kind_of?( Array ) == false
+            unless item.kind_of?( Array )
                 items = [item]
             else
                 items = item 
             end
             
             highLight( :set)
-            doBreak = false
-            items.each do |thisItem|
-                
+            items.each do |thisItem| # item to be selected
+                doBreak = false
                 @ieController.log "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
-                
-                @o.each do |selectBoxItem|
+                @o.each do |selectBoxItem| # items in the list
                     @ieController.log " comparing #{thisItem } to #{selectBoxItem.invoke(name_or_value.to_s) }"
                     if thisItem.matches( selectBoxItem.invoke(name_or_value.to_s))
                         matchedAnItem = true
-                        if selectBoxItem.selected == true
+                        if selectBoxItem.selected
                             @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is already selected"
                             doBreak = true
                         else
                             @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is being selected"
                             selectBoxItem.selected = true
                             @o.fireEvent("onChange")
+                            @ieController.wait
                             doBreak = true
                         end
-                        @ieController.wait
                         break if doBreak
                     end
                 end
-                
-                raise NoValueFoundException, "Selectbox was found, but didn't find item with #{name_or_value.to_s} of #{item} "  if doBreak == false
+                unless doBreak
+                    raise NoValueFoundException, 
+                        "Selectbox was found, but didn't find item with #{name_or_value.to_s} of #{thisItem} "  
+                end
             end
             highLight( :clear )
         end
-        private :select_item_in_select_list
         
-        # This method returns all the items in the select list as an array. An empty array is returned if the select box has no contents.
+        # Returns all the items in the select list as an array. 
+        # An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
         def getAllContents()
             assert_exists
@@ -3033,25 +3039,46 @@ module Watir
             return returnArray 
         end
         
-        # This method returns all the selected items from the select box as an array.
+        # Returns the selected items as an array.
         # Raises UnknownObjectException if the select box is not found.
         def getSelectedItems
             assert_exists
             returnArray = []
             @ieController.log "There are #{@o.length} items"
             @o.each do |thisItem|
-                if thisItem.selected == true
+                if thisItem.selected
                     @ieController.log "Item ( #{thisItem.text} ) is selected"
                     returnArray << thisItem.text 
                 end
             end
             return returnArray 
         end
+        
+        def option (attribute, value)
+            Option.new(self, attribute, value)
+        end
     end
 
-    class Option < ObjectActions
+    module OptionAccess
     end
-    
+
+    # An item in a select list
+    class Option
+        def initialize (select_list, attribute, value)
+            @select_list = select_list
+            @attribute = attribute
+            @value = value
+            
+            
+#            @select_list.o.each do | option |
+                
+        end
+        def select
+            @select_list.select_item_in_select_list(@attribute, @value)
+        end
+        def selected?
+        end            
+    end    
 
     # This is the main class for accessing buttons.
     # Normally a user would not need to create this object as it is returned by the factory method button 
@@ -3465,7 +3492,7 @@ module Watir
     # it would normally only be accessed by the select_lists method of IEController
     class SelectLists < Iterators
         include CommonCollection
-        def element_class; SelectBox; end
+        def element_class; SelectList; end
         def element_tag; 'SELECT'; end
     end
 
