@@ -190,6 +190,29 @@ module Watir
              @ieController.wait( noSleep )
         end
 
+        # this method checks the defaults to see what should be used as the default way of finding an object
+        #   * element_type  symbol, the element typoe we are checking defaults for, eg :button , :text_field etc
+        def get_attribute_to_use( element_type )
+
+            # first see if there is a default set for this object type
+            check_all_elements_default = true
+
+            if @default_attributes
+                if @default_attributes.has_key?( element_type )
+                    attribute = @default_attributes[ element_type ]
+                    check_all_elements_default = false
+                end
+            end
+
+            # now check the default for all object types
+            # if we have obtained a default for this object type, we dont check the global
+            if @default_attribute !=nil and  check_all_elements_default == true
+                attribute = @default_attribute
+            end
+
+            return attribute
+        end
+
 
         # this method is the main way of accessing a frame 
         #   *  how   - how the frame is accessed, either :name or :index is supported. This can also just be the name of the frame
@@ -268,9 +291,20 @@ module Watir
         end
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
-        #  *  how   - symbol - how we access the button , :index, :caption, :name etc
+        #  *  how   - symbol - how we access the button 
         #  *  what  - string, int or re , what we are looking for, 
         # Returns a Button object.
+        #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :value      - find the item using the value attribute ( in this case the button caption)
+        #    :caption    - same as value
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
         #
         # Typical Usage
         #
@@ -280,16 +314,38 @@ module Watir
         #    ie.button(:caption, 'Login')                   # same as above
         #    ie.button(:value, /Log/)                       # access the button that has text matching /Log/
         #    ie.button(:index, 2)                           # access the second button on the page ( 1 based, so the first button is accessed with :index,1)
+        #
+        # if only a single parameter is supplied,  then :value is used 
+        #
+        #    ie.button('Click Me')                          # access the button with a value of Click Me
+        #
+        # if a default attribute type has been set using IE#set_default_attribute_for_element or IE#set_default_attribute
+        # then the behaviour is modified as shown below
+        #
+        #    ie.set_default_attribute(:id)
+        #    ie.button('b_7')                               # access the button that has an id of b_7
+        #    ie.set_default_attribute_for_element( :button , :name)
+        #    ie.button('Verify_data')                       # access the button that has a name of Verify_data
+        #
         def button( how , what=nil )
             if how.kind_of? Symbol and what != nil
                 return Button.new(self, how , what )
             elsif how.kind_of? String and what == nil
-                log "how is a string - #{how}"
-                return Button.new(self, :caption, how)
+
+                attribute= get_attribute_to_use( :button )
+
+                # maintain backwards compatability by using :caption if nothing else is specified
+                if attribute == nil
+                    attribute = :caption
+                end
+
+                log "Using default attribute to access a button how is a string - #{how}"
+                return Button.new(self, attribute , how)
             else
                 raise MissingWayOfFindingObjectException
             end
         end
+
 
         # this is the main method for accessing the buttons iterator. It returns a Buttons object
         #
@@ -349,14 +405,31 @@ module Watir
         #
         # returns a TextField object
         #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
+        #
         # Typical Usage
         #
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field( how , what )
-            return TextField.new(self , how, what)
+        def text_field( how , what=nil )
+            if what == nil
+                attribute= get_attribute_to_use( :text_field )
+                value = how
+            else
+                attribute=how
+                value = what
+            end
+            return TextField.new(self , attribute, value)
         end
+
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
         #
@@ -395,11 +468,22 @@ module Watir
             return Hiddens.new(self)
         end
 
+
+
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
         #
         # returns a SelectList object
+        #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
         #
         # Typical usage
         #
@@ -407,9 +491,19 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        def select_list( how , what )
-            s = SelectList.new(self , how, what)
+        def select_list( how , what=nil )
+            
+            if what == nil
+                attribute= get_attribute_to_use( :select_list)
+                value = how
+            else
+                attribute=how
+                value = what
+            end
+            return SelectList.new(self , attribute, value)
         end
+
+
 
         # this is the method for accessing the select lists iterator. Returns a SelectLists object
         #
@@ -430,6 +524,15 @@ module Watir
         #
         # returns a RadioCheckCommon object
         #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
+        #
         # Typical usage
         #
         #    ie.checkbox(:id, 'send_email')                   # access the check box with an id of send_mail
@@ -447,8 +550,16 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        def checkbox( how , what , value=nil)
-            return RadioCheckCommon.new( self, how, what, "checkbox", value)
+        def checkbox( how , what=nil , value=nil)
+            if what == nil
+                attribute= get_attribute_to_use( :checkbox)
+                find_how= how
+            else
+                attribute=how
+                find_how= what
+            end
+            
+            return RadioCheckCommon.new( self,  attribute, find_how, "checkbox", value)
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -469,6 +580,15 @@ module Watir
         #
         # returns a RadioCheckCommon object
         #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
+        #
         # Typical usage
         #
         #    ie.radio(:id, 'send_email')                   # access the radio button with an id of currency
@@ -487,8 +607,16 @@ module Watir
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
-        def radio( how , what , value=nil)
-            return RadioCheckCommon.new( self, how, what, "radio", value)
+        def radio( how , what=nil , value=nil)
+            if what == nil
+                attribute= get_attribute_to_use( :radio)
+                find_how= how
+            else
+                attribute=how
+                find_how= what
+            end
+            
+            return RadioCheckCommon.new( self,  attribute, find_how, "radio", value)
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -509,6 +637,18 @@ module Watir
         #
         # returns a Link object
         #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :beforeText - finds the item immediately before the specified text
+        #    :afterText  - finds the item immediately after the specified text
+        #    :url        - finds the link based on the url. This must be the full path to the link, so is best used with a regular expression
+        #    :text       - finds a link using the innerText of the link, ie the Text that is displayed to the user
+        #    :title      - finds the item using the tool tip text
+        #
         # Typical Usage
         # 
         #   ie.link(:url, /login/)              # access the first link whose url matches login. We can use a string in place of the regular expression
@@ -518,15 +658,23 @@ module Watir
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #
-        def link( how , what)
-            return Link.new(self , how, what )
+        def link( how , what=nil)
+            if what == nil
+                attribute= get_attribute_to_use( :link)
+                find_how= how
+            else
+                attribute=how
+                find_how= what
+            end
+
+            return Link.new(self , attribute , find_how)
         end
 
         # This is the main method for accessing the links collection. Returns a Links object
         #
         # Typical usage:
         #
-        #   ie.links.each do |l| ; puts l.to_s ; end ;   # iterate through all the links on the page
+        #   ie.links.each do |l| ; puts l.to_s ; end     # iterate through all the links on the page
         #   ie.links[1].to_s                             # goto the first link on the page                                   
         #   ie.links.length                              # show how many links are on the page.
         #
@@ -534,11 +682,21 @@ module Watir
             return Links.new(self)
         end
 
+
         # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
         #  *  how   - symbol - how we access the image, :index, :id, :name , :src or :alt are supported
         #  *  what  - string, int or re , what we are looking for, 
         #
         # returns an Image object
+        #
+        # Valid values for 'how' are
+        #
+        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #                  index is 1 based
+        #    :name       - find the item using the name attribute
+        #    :id         - find the item using the id attribute
+        #    :alt        - finds the item using the tool tip text
+        #    :src        - finds the item using the src tag. This must be the fully qualified name, so is best used with a regular expression
         #
         # Typical Usage
         # 
@@ -547,8 +705,16 @@ module Watir
         #   ie.image(:index,2)                  # access the second image on the page
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
-        def image( how , what)
-            return Image.new(self , how, what )
+        def image( how , what=nil)
+            if what == nil
+                attribute= get_attribute_to_use( :image)
+                find_how= how
+            else
+                attribute=how
+                find_how= what
+            end
+
+            return Image.new(self , attribute , find_how )
         end
         
         # This is the main method for accessing the images collection. Returns an Images object
@@ -1196,12 +1362,50 @@ module Watir
         end
         private :set_defaults        
         
+        # this method is used to set the default way of finding elements
+        #   *  default_attribute   symbol, :id, :name etc
+        # If an attribute that is used as the default is not applicable to all elements, such as :url, 
+        # then it may be impossible to access certain elements and many exceptions may be raised
+        # to delete the default set, it to nil
+        def set_default_attribute( default_attribute)
+            @default_attribute = default_attribute
+        end
+
+        # this returns the current default attribute as a string
+        #  ie if the default is set as :id  'id' will be returned
+        def get_default_attribute
+            @default_attribute.to_s
+        end
+
+        # this method is used to return the current default way for finding the specified element.
+        # returns a string
+        def get_default_attribute_for(  element_type  )
+            @default_attributes[ element_type ].to_s
+        end
+
+        # this method is used to set the default way of finding a specific element type.
+        # it overrides the global default set using the IE#set_default_attribute method
+        #
+        # Typical Usage
+        #   ie.set_default_attribute_for_element( :button , :name)
+        def set_default_attribute_for_element( element_type , default_attribute )
+
+            if default_attribute == nil
+                @default_attributes.delete( element_type )
+            else
+                @default_attributes = { element_type => default_attribute }
+            end
+        end
+
+
+        # This method checks the currently displayed page for http errors, 404, 500 etc
+        # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
           
             url=ie.document.url 
             #puts "url is " + url
             if /shdoclc.dll/.match(url)
-                puts "Match on shdoclc.dll"
+                #puts "Match on shdoclc.dll"
                 m = /id=IEText.*?>(.*?)</i.match(ie.html)
                 if m
                     #puts "Error is #{m[1]}"
