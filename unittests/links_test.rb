@@ -20,6 +20,45 @@ class TC_Links < Test::Unit::TestCase
         gotoLinksPage()
     end
 
+
+
+    def test_default_attribute_for_all
+        $ie.set_default_attribute( :text)
+        assert_equal('text' , $ie.get_default_attribute)
+        assert_raises(UnknownObjectException ) { $ie.link('missing_text').id }
+        assert_equal("link_id"  , $ie.link('Link Using an ID').id) 
+        $ie.set_default_attribute( nil )
+    end
+
+    def test_default_attribute_for_link
+
+        $ie.set_default_attribute_for_element( :link, :id)
+        assert_equal('id' , $ie.get_default_attribute_for( :link) )
+        assert_equal("Link Using an ID"  , $ie.link('link_id').text) 
+
+        $ie.set_default_attribute_for_element(:link, :text)
+        assert_equal('text' , $ie.get_default_attribute_for( :link) )
+        assert_raises(UnknownObjectException ) { $ie.link('Link With no id').href}
+        assert_match(/links1\.html/i  , $ie.link('Link Using an ID').href) 
+
+     
+        # make sure that setting the default for a link directly, overrides the all setting
+        # we are still using the name attribute, set a few lines up
+        $ie.set_default_attribute( :id)
+        assert_equal('link_name'  , $ie.link('Link Using a name').name)  #box1 is a name 
+
+
+        # delete the link type
+        $ie.set_default_attribute_for_element( :link, nil)
+
+        # make sure the global attribute (id)  is used
+        assert_equal('link_id'  , $ie.link('link_id').id)   # box5 is an id
+
+    end
+
+
+
+
     def test_links_in_frames
         gotoFrameLinksPage()
 

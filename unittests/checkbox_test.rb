@@ -11,6 +11,45 @@ class TC_CheckBox < Test::Unit::TestCase
         $ie.goto($htmlRoot + "checkboxes1.html")
     end
 
+
+    def test_default_attribute_for_all
+        $ie.set_default_attribute( :id)
+        assert_equal('id' , $ie.get_default_attribute)
+        assert_raises(UnknownObjectException ) { $ie.checkbox('missing_id').id }
+        assert_equal("1"  , $ie.checkbox('box4').value  ) 
+        $ie.set_default_attribute( nil )
+
+
+    end
+
+    def test_default_attribute_for_check_box
+
+        $ie.set_default_attribute_for_element( :checkbox, :id)
+        assert_equal('id' , $ie.get_default_attribute_for( :checkbox) )
+        assert_equal("1"  , $ie.checkbox('box4').value  ) 
+
+        $ie.set_default_attribute_for_element(:checkbox , :name)
+        assert_equal('name' , $ie.get_default_attribute_for( :checkbox) )
+        assert_raises(UnknownObjectException ) { $ie.checkbox('missing_name').value }
+        assert_equal(true  , $ie.checkbox('box4').checked?) 
+
+     
+        # make sure that setting the default for a checkbox directly, overrides the all setting
+        # we are still using the name attribute, set a few lines up
+        $ie.set_default_attribute( :id)
+        assert_equal(true  , $ie.checkbox('box4').checked?)  #box4 is a name 
+
+
+        # delete the text_field type
+        $ie.set_default_attribute_for_element( :checkbox, nil)
+
+        # make sure the global attribute (id)  is used
+        assert_equal('verify1'  , $ie.checkbox('box4').name)   # box4 is an id
+
+    end
+
+
+
     def test_checkbox_properties
 
 
@@ -40,12 +79,12 @@ class TC_CheckBox < Test::Unit::TestCase
 
 
     def test_onClick
-       assert_false($ie.button("foo").enabled?)
+       assert_false($ie.button(:value , "foo").enabled?)
        $ie.checkBox(:name, "box5").set
-       assert($ie.button("foo").enabled?)
+       assert($ie.button(:value , "foo").enabled?)
 
        $ie.checkBox(:name, "box5").clear
-       assert_false($ie.button("foo").enabled?)
+       assert_false($ie.button(:value , "foo").enabled?)
     end
 
     def test_CheckBox_Exists
@@ -121,7 +160,7 @@ class TC_CheckBox < Test::Unit::TestCase
 
     def test_checkbox_iterator
 
-        assert_equal(9, $ie.checkboxes.length)
+        assert_equal(11, $ie.checkboxes.length)
         assert_equal("box1" , $ie.checkboxes[1].name )
 
         index=1
