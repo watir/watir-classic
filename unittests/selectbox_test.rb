@@ -11,6 +11,46 @@ class TC_Selectbox < Test::Unit::TestCase
         $ie.goto($htmlRoot + "selectboxes1.html")
     end
     
+
+    def test_default_attribute_for_all
+        $ie.set_default_attribute( :id)
+        assert_equal('id' , $ie.get_default_attribute)
+        assert_raises(UnknownObjectException ) { $ie.select_list('missing_id').id }
+        assert_equal("o1"  , $ie.select_list('selectbox_4').value  ) 
+        $ie.set_default_attribute( nil )
+
+
+    end
+
+    def test_default_attribute_for_select_list
+
+        $ie.set_default_attribute_for_element( :select_list, :id)
+        assert_equal('id' , $ie.get_default_attribute_for( :select_list) )
+        assert_equal("o1"  , $ie.select_list('selectbox_4').value  ) 
+
+        $ie.set_default_attribute_for_element(:select_list, :name)
+        assert_equal('name' , $ie.get_default_attribute_for( :select_list) )
+        assert_raises(UnknownObjectException ) { $ie.select_list('missing_name').value }
+        assert_equal("o3"  , $ie.select_list('sel1').value) 
+
+     
+        # make sure that setting the default for a select_list directly, overrides the all setting
+        # we are still using the name attribute, set a few lines up
+        $ie.set_default_attribute( :id)
+        assert_equal("o3"  , $ie.select_list('sel1').value)  #'sel1' is a name 
+
+
+        # delete the text_field type
+        $ie.set_default_attribute_for_element( :select_list, nil)
+
+        # make sure the global attribute (id)  is used
+        assert_equal("o1"  , $ie.select_list('selectbox_4').value  )   # selectbox_4 is an id
+
+    end
+
+
+
+
     def test_textBox_Exists
         assert($ie.selectBox(:name, "sel1").exists?)   
         assert_false($ie.selectBox(:name, "missing").exists?)   
