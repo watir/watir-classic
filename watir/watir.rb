@@ -2705,7 +2705,7 @@ module Watir
         include FactoryMethods 
 
         attr_reader :typingspeed      
-
+        attr_reader :activeObjectHighLightColor 
 
         # Returns an initialized instance of a table cell          
         #   * ieController  - an instance of an IEController       
@@ -2724,7 +2724,7 @@ module Watir
              @how = how   
              @what = what   
              @typingspeed = @ieController.typingspeed      
-             #@activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
          end 
 
         def getContainerContents()
