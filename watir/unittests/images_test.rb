@@ -18,6 +18,42 @@ class TC_Images < Test::Unit::TestCase
     def gotoImagePage()
         $ie.goto($htmlRoot + "images1.html")
     end
+
+
+    def test_default_attribute_for_all
+        $ie.set_default_attribute( :id)
+        assert_equal('id' , $ie.get_default_attribute)
+        assert_raises(UnknownObjectException ) { $ie.image('missing_image').id }
+        assert_match(/square\.jpg/i, $ie.image('square').src) 
+        $ie.set_default_attribute( nil )
+    end
+
+    def test_default_attribute_for_image
+
+        $ie.set_default_attribute_for_element( :image, :id)
+        assert_equal('id' , $ie.get_default_attribute_for( :image) )
+        assert_match( /square\.jpg/i, $ie.image('square').src )
+
+        $ie.set_default_attribute_for_element(:image, :src)
+        assert_equal('src' , $ie.get_default_attribute_for( :image) )
+        assert_raises(UnknownObjectException ) { $ie.image( /image_src/ ).id}
+        assert_equal('square'  , $ie.image(/square/).id) 
+
+     
+        # make sure that setting the default for a image directly, overrides the all setting
+        # we are still using the src attribute, set a few lines up
+        $ie.set_default_attribute( :id)
+        assert_equal('circle'  , $ie.image(/circle\.jpg/i ).name)   
+
+
+        # delete the image type
+        $ie.set_default_attribute_for_element( :image, nil)
+
+        # make sure the global attribute (id)  is used
+        assert_equal('square'  , $ie.image('square').id)   
+    end
+
+
     
     def test_imageExists
         assert_false( $ie.image(:name , "missing_name").exists?  )
