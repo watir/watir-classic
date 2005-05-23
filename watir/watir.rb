@@ -2146,8 +2146,17 @@ module Watir
         def initialize( ieController)
             @ieController = ieController
             @length = length # must be defined by subclasses
+
+            # set up the items we want to display when the show method s used
+            set_show_items
+
         end
  
+        def set_show_items
+            @show_attributes = Attribute_Length_Pairs.new( "id" , 20)
+            @show_attributes.add( "name" , 20)
+        end
+
         def get_length_of_input_objects(object_type) 
 
             if object_type.kind_of? Array 
@@ -2178,11 +2187,36 @@ module Watir
             return iterator_object(n-1)
         end
 
+        # this method is the way to show the objects, normally used from irb
+        def show
+            s="index".ljust(6)
+            @show_attributes.each do |attribute_length_pair| 
+                s=s + attribute_length_pair.attribute.ljust(attribute_length_pair.length)
+            end
+
+            index = 1
+            self.each do |o|
+                s= s+"\n"
+                s=s + index.to_s.ljust(6)
+                @show_attributes.each do |attribute_length_pair| 
+                    begin
+                        s=s  + eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
+                    rescue=>e
+                        s=s+ " ".ljust( attribute_length_pair.length )
+                    end
+                end
+                index+=1
+            end
+            puts s 
+        end
+
+
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
             element_class.new(@ieController, :index, i+1)
         end
+
     end
 
     # this class contains items that are common between the span and div objects
@@ -3500,6 +3534,58 @@ module Watir
         end
     end        
     
+
+    # This class is used as part of the .show method of the iterators class
+    # it would not normally be used by a user
+    class Attribute_Length_Holder
+
+        attr_accessor :attribute
+        attr_accessor :length
+
+        def initialize( attrib, length)
+            @attribute = attrib
+            @length = length
+        end
+    end
+
+    # This class is used as part of the .show method of the iterators class
+    # it would not normally be used by a user
+    class Attribute_Length_Pairs
+
+        def initialize( attrib=nil , length=nil)
+            @attr=[]
+            if attrib
+                @attr <<  Attribute_Length_Holder.new( attrib , length )
+            end
+            @index_counter=0
+        end
+
+
+        def add( attrib , length)
+            @attr <<  Attribute_Length_Holder.new( attrib , length )
+        end
+
+        def delete(attrib)
+            item_to_delete=nil
+            @attr.each_with_index do |e,i|
+                item_to_delete = i if e.attribute==attrib
+            end
+            @attr.delete_at(item_to_delete ) unless item_to_delete == nil
+        end
+
+        def next
+            temp = @attr[@index_counter]
+            @index_counter +=1
+            return temp
+        end
+
+        def each
+             0.upto( @attr.length-1 ) { |i | yield @attr[i]   }
+        end
+    end
+
+
+
     # this class accesses the buttons in the document as a collection
     # it would normally only be accessed by the buttons method of IEController
     class Buttons < Iterators
@@ -3507,6 +3593,14 @@ module Watir
         def length
             get_length_of_input_objects(["button", "submit", "image"])
         end
+
+        def set_show_items
+            super
+            @show_attributes.add( "disabled" , 9)
+            @show_attributes.add( "value" , 20)
+        end
+
+
     end
 
     # this class accesses the check boxes in the document as a collection
@@ -3551,6 +3645,13 @@ module Watir
         include CommonCollection
         def element_class; Link; end    
         def element_tag; 'A'; end
+
+        def set_show_items
+            super
+            @show_attributes.add("href", 60)
+            @show_attributes.add("innerText" , 60)
+        end
+
     end
 
     # this class accesses the imnages in the document as a collection
@@ -3560,6 +3661,13 @@ module Watir
         def length
             @ieController.document.images.length
         end
+
+        def set_show_items
+            super
+            @show_attributes.add("src", 60)
+            @show_attributes.add("alt", 30)
+        end 
+
     end
 
     # this class accesses the text fields in the document as a collection
@@ -3588,6 +3696,11 @@ module Watir
         include CommonCollection
         def element_class; Table; end
         def element_tag; 'TABLE'; end
+
+        def set_show_items
+            super
+            @show_attributes.delete( "name")
+        end
     end
 
     # this class accesses the labels in the document as a collection
@@ -3596,6 +3709,11 @@ module Watir
         include CommonCollection
         def element_class; Label; end
         def element_tag; 'LABEL'; end
+
+        def set_show_items
+            super
+            @show_attributes.add("htmlFor", 20)
+        end
     end
 
     # this class accesses the p tags in the document as a collection
@@ -3603,6 +3721,13 @@ module Watir
     class Ps < Iterators
         include CommonCollection
         def element_class; P; end
+
+        def set_show_items
+            super
+            @show_attributes.delete( "name")
+            @show_attributes.add( "className" , 20)
+        end
+
     end
 
     # this class accesses the spans in the document as a collection
@@ -3610,6 +3735,13 @@ module Watir
     class Spans < Iterators
         include CommonCollection
         def element_class; Span; end
+
+        def set_show_items
+            super
+            @show_attributes.delete( "name")
+            @show_attributes.add( "className" , 20)
+        end
+
     end
 
     # this class accesses the divs in the document as a collection
@@ -3617,6 +3749,13 @@ module Watir
     class Divs< Iterators
         include CommonCollection
         def element_class; Div; end
+
+        def set_show_items
+            super
+            @show_attributes.delete( "name")
+            @show_attributes.add( "className" , 20)
+        end
+
     end
 
 end
