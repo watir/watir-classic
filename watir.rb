@@ -230,7 +230,7 @@ module Watir
         # This method is used to get a table from the page. 
         # :index (1 based counting)and :id are supported. 
         #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
-        # :index can be used when there are multiple forms on a page. 
+        # :index can be used when there are multiple tables on a page. 
         # The first form can be accessed with :index 1, the second :index 2, etc. 
         #   * how - symbol - the way we look for the table. Supported values are
         #                  - :id
@@ -1891,7 +1891,56 @@ module Watir
         def wait(no_sleep = false)
             @container.wait(no_sleep)
         end
-                                
+                
+        # This method is responsible for setting and clearing the colored highlighting on the specified form.
+        # use :set   to set the highlight
+        #   :clear  to clear the highlight
+        def highLight( setOrClear  , element , count)
+
+            if setOrClear == :set
+                begin
+                    original_color = element.style.backgroundColor
+                    original_color = "" if original_color== nil
+                    element.style.backgroundColor = activeObjectHighLightColor
+                rescue => e
+                    puts e 
+                    puts e.backtrace.join("\n")
+                    original_color = ""
+                end
+                @original_styles[ count ] = original_color 
+            else
+                begin 
+                    element.style.backgroundColor  = @original_styles[ count]
+                rescue => e
+                    puts e
+                    # we could be here for a number of reasons...
+                ensure
+                end
+            end
+        end
+        
+
+        # causes the object to flash. Normally used in IRB when creating scripts        
+        def flash
+            @original_styles = {}
+            10.times do
+                count=0
+                @form.elements.each do |element|
+                    highLight(:set , element , count)
+                    count +=1
+                end
+                sleep 0.05
+                count = 0
+                @form.elements.each do |element|
+                    highLight(:clear , element , count)
+                    count +=1
+                end
+                sleep 0.05
+            end
+        end
+
+
+                
     end # class Form
     
  
