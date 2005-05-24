@@ -2436,12 +2436,25 @@ module Watir
 
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getNonControlObject(tag , how, what )
-            super( @o )
             @how = how
             @what = what
+            refresh
+            super( @o )
             @typingspeed = @ieController.typingspeed      
             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+        end
+
+        # this method is used to refresh the Watir representation on the html element.
+        # this would normally be used when a variable is assigned to an element on the page, and the page is then refreshed
+        #  eg
+        #
+        #    a=ie.span(:index,1)
+        #    a.flash
+        #    ie.button(:value, 'Refresh The Page').click
+        #    a.refresh
+        #    a.flash
+        def refresh
+            @o = @ieController.getNonControlObject(tag , @how, @what )
         end
 
         def getContainerContents()
