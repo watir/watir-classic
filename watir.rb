@@ -3276,41 +3276,30 @@ module Watir
 
         # BUG: Should be private
         # Selects something from the select box
-        #  * name  - symbol  :vale or :text - how we find an item in the select box
+        #  * name  - symbol  :value or :text - how we find an item in the select box
         #  * item  - string or reg exp - what we are looking for
-        def select_item_in_select_list( name_or_value, item )
+        def select_item_in_select_list( attribute, value )
             assert_exists
-            unless item.kind_of?( Array )
-                items = [item]
-            else
-                items = item 
-            end
-            
-            highLight( :set)
-            items.each do |thisItem| # item to be selected
-                doBreak = false
-                @ieController.log "Setting box #{@o.name} to #{thisItem} #{thisItem.class} "
-                @o.each do |selectBoxItem| # items in the list
-                    @ieController.log " comparing #{thisItem } to #{selectBoxItem.invoke(name_or_value.to_s) }"
-                    if thisItem.matches( selectBoxItem.invoke(name_or_value.to_s))
-                        matchedAnItem = true
-                        if selectBoxItem.selected
-                            @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is already selected"
-                            doBreak = true
-                        else
-                            @ieController.log " #{selectBoxItem.invoke(name_or_value.to_s)} is being selected"
-                            selectBoxItem.selected = true
-                            @o.fireEvent("onChange")
-                            @ieController.wait
-                            doBreak = true
-                        end
-                        break if doBreak
+            highLight( :set )
+            doBreak = false
+            @ieController.log "Setting box #{@o.name} to #{attribute} #{value} "
+            @o.each do |option| # items in the list
+                if value.matches( option.invoke(attribute.to_s))
+                    if option.selected
+                        doBreak = true
+                        break
+                    else
+                        option.selected = true
+                        @o.fireEvent("onChange")
+                        @ieController.wait
+                        doBreak = true
+                        break
                     end
                 end
-                unless doBreak
-                    raise NoValueFoundException, 
-                        "Selectbox was found, but didn't find item with #{name_or_value.to_s} of #{thisItem} "  
-                end
+            end
+            unless doBreak
+                raise NoValueFoundException, 
+                        "No option with #{attribute.to_s} of #{value} in this select element"  
             end
             highLight( :clear )
         end
@@ -3347,24 +3336,57 @@ module Watir
     end
 
     module OptionAccess
+        def text
+            @option.text
+        end
+        def value
+            @option.value
+        end
+        def selected
+            @option.selected
+        end
+    end
+
+    class OptionWrapper
+        include OptionAccess
+        def initialize (option)
+            @option = option
+        end
     end
 
     # An item in a select list
     class Option
+        include OptionAccess
+        include Watir::Exception
         def initialize (select_list, attribute, value)
             @select_list = select_list
-            @attribute = attribute
-            @value = value
-            
-            
-#            @select_list.o.each do | option |
+            @how = attribute
+            @what = value
+            @option = nil
+
+            unless [:text, :value].include? attribute 
+                raise MissingWayOfFindingObjectException,
+                    "Option does not support attribute #{@how}"
+            end
+            @select_list.o.each do |option| # items in the list
+                if value.matches( option.invoke(attribute.to_s))
+                    @option = option
+                    break
+                end
+            end
                 
         end
-        def select
-            @select_list.select_item_in_select_list(@attribute, @value)
+        def assert_exists
+            unless @option
+                raise UnknownObjectException,  
+                    "Unable to locate an option using #{@how} and #{@what}"
+            end
         end
-        def selected?
-        end            
+        private :assert_exists
+        def select
+            assert_exists
+            @select_list.select_item_in_select_list(@how, @what)
+        end
     end    
 
     # This is the main class for accessing buttons.

@@ -15,13 +15,6 @@ module Watir
         end
     end
     
-    # This exception is thrown if an attempt is made to access a property that either does not exist or has not been found
-    class UnknownPropertyException < WatirException
-        def initialize(message = "")
-            super(message)
-        end
-    end
-    
     # This exception is thrown if an attempt is made to access an object that is in a disabled state
     class ObjectDisabledException   < WatirException
         def initialize(message="")
@@ -76,7 +69,6 @@ module Watir
             super(message)
         end
     end
-
     
     # This exception is thrown if the window cannot be found
     class NoMatchingWindowFoundException < WatirException

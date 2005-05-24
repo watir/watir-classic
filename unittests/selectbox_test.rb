@@ -4,6 +4,41 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
+class TC_SelectList < Test::Unit::TestCase
+    include Watir
+    
+    def setup()
+        $ie.goto($htmlRoot + "selectboxes1.html")
+    end
+    
+    def test_SelectList_exists
+        assert($ie.select_list(:name, "sel1").exists?)   
+        assert_false($ie.select_list(:name, "missing").exists?)   
+        assert_false($ie.select_list(:id, "missing").exists?)   
+    end
+    
+    def test_SelectList_enabled
+        assert($ie.select_list(:name, "sel1").enabled?)   
+        assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").enabled? }  
+        assert_false($ie.select_list(:id, 'selectbox_4').enabled?)
+    end
+
+
+    def test_Option_text_select
+        assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, "missing item").select }  
+        assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, /missing/).select }  
+        assert_raises(MissingWayOfFindingObjectException) { $ie.select_list(:name, "sel1").option(:missing, "Option 1").select }
+
+        # the select method keeps any currently selected items - use the clear selection method first
+        $ie.select_list( :name , "sel1").clearSelection
+        $ie.select_list( :name , "sel1").option(:text, "Option 1").select
+        assert_arrayEquals( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
+    end    
+    
+
+end
+
+# Tests for the old interface
 class TC_Selectbox < Test::Unit::TestCase
     include Watir
     
@@ -49,9 +84,7 @@ class TC_Selectbox < Test::Unit::TestCase
     end
 
 
-
-
-    def test_textBox_Exists
+    def test_selectBox_Exists
         assert($ie.selectBox(:name, "sel1").exists?)   
         assert_false($ie.selectBox(:name, "missing").exists?)   
         assert_false($ie.selectBox(:id, "missing").exists?)   
@@ -88,7 +121,6 @@ class TC_Selectbox < Test::Unit::TestCase
     end
     
     def test_selectBox_select
-        assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").getSelectedItems }  
         assert_raises(NoValueFoundException) { $ie.selectBox(:name, "sel1").select("missing item") }  
         assert_raises(NoValueFoundException) { $ie.selectBox(:name, "sel1").select(/missing/) }  
         
@@ -102,7 +134,8 @@ class TC_Selectbox < Test::Unit::TestCase
         assert_arrayEquals( ["Option 2" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
         
         $ie.selectBox( :name , "sel2").clearSelection
-        $ie.selectBox( :name , "sel2").select([ /2/ , /4/ ])
+        $ie.selectBox( :name , "sel2").select(/2/)
+        $ie.selectBox( :name , "sel2").select(/4/)
         assert_arrayEquals( ["Option 2" , "Option 4" ] , 
         $ie.selectBox(:name, "sel2").getSelectedItems)   
         
@@ -191,7 +224,7 @@ class TC_Selectbox < Test::Unit::TestCase
     
 end
 
-class TC_Select_Options #< Test::Unit::TestCase
+class TC_Select_Options < Test::Unit::TestCase
     include Watir
     
     def setup()
@@ -200,7 +233,7 @@ class TC_Select_Options #< Test::Unit::TestCase
     
     def test_options_text
         $ie.select_list(:name, 'op_numhits').option(:text, '>=').select
-        assert($ie.select_list(:name, 'op_numhits').option(:text, '>=').selected?)
+        assert($ie.select_list(:name, 'op_numhits').option(:text, '>=').selected)
     end
         
 end
