@@ -121,7 +121,7 @@ class TC_Forms3 < Test::Unit::TestCase
     end
     
     def test_flash2
-        $ie.button( 'Click Me').flash
+        $ie.button(:value, 'Click Me').flash
         assert_raises( Watir::UnknownObjectException ) { $ie.text_field( :name , 'g177').flash }
     end
     
