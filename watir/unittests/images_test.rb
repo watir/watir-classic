@@ -51,6 +51,10 @@ class TC_Images < Test::Unit::TestCase
 
         # make sure the global attribute (id)  is used
         assert_equal('square'  , $ie.image('square').id)   
+        # clear the global attribute
+        $ie.set_default_attribute( nil )
+
+
     end
 
 

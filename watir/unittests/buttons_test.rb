@@ -89,6 +89,10 @@ class TC_Buttons < Test::Unit::TestCase
         $ie.set_default_attribute( nil)
         assert_equal("b4"  , $ie.button('Disabled Button').name  ) 
 
+        # clear the global attribute
+        $ie.set_default_attribute( nil )
+
+
     end
 
  
