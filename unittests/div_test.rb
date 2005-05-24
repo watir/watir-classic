@@ -22,6 +22,19 @@ class TC_Divs < Test::Unit::TestCase
         assert($ie.text_field(:name, "text1").verify_contains("0") )  
     end
     
+
+    def test_div_refresh
+
+        a=$ie.div(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+
+    end
+
+
     def test_div_properties
         assert_raises(UnknownObjectException) {$ie.div(:id , "div77").text }
         assert_raises(UnknownObjectException) {$ie.div(:title , "div77").text }
@@ -88,6 +101,18 @@ class TC_Divs < Test::Unit::TestCase
         
         $ie.span(:id , "span4").click
         assert($ie.text_field(:name, "text2").verify_contains("0") )  
+
+    end
+
+    def test_span_refresh
+
+        a=$ie.span(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+
     end
     
     def test_span_properties
@@ -163,6 +188,19 @@ class TC_Divs < Test::Unit::TestCase
         assert_equal(  'This text is in a p with an id of number2' , $ie.p(:index,2).text)
     end
     
+
+    def test_p_refresh
+
+        a=$ie.p(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+
+    end
+
+
     def test_p_iterator
         assert_equal( 3, $ie.ps.length)
         assert_equal( 'italicText', $ie.ps[2].style)
