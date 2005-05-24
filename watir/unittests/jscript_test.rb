@@ -13,8 +13,20 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     @@javascript_page_title	= 'Alert Test'
     @@javascript_page		= $htmlRoot  + 'JavascriptClick.htm'
     
+    def setup
+        begin
+            WindowHelper.check_autoit_installed
+        rescue Watir::Exception::WatirException
+            puts "Problem with Autoit - is it installed?."
+            exit
+        rescue
+            puts "There is a Problem with Autoit - is it installed?."
+            exit
+        end
+    end
+
     def goto_javascript_page()
-            $ie.goto(@@javascript_page)
+        $ie.goto(@@javascript_page)
     end
     
     def check_dialog(extra_file, expected_result, &block)
