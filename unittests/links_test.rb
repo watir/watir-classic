@@ -54,6 +54,10 @@ class TC_Links < Test::Unit::TestCase
         # make sure the global attribute (id)  is used
         assert_equal('link_id'  , $ie.link('link_id').id)   # box5 is an id
 
+        # clear the global attribute
+        $ie.set_default_attribute( nil )
+
+
     end
 
 

@@ -45,6 +45,9 @@ class TC_Fields < Test::Unit::TestCase
 
         # make sure the global attribute (id)  is used
         assert_equal("goodbye all"  , $ie.text_field('text2').value  )   # text2 is an id
+        # clear the global attribute
+        $ie.set_default_attribute( nil )
+
 
     end
 

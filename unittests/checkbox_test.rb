@@ -46,6 +46,10 @@ class TC_CheckBox < Test::Unit::TestCase
         # make sure the global attribute (id)  is used
         assert_equal('verify1'  , $ie.checkbox('box4').name)   # box4 is an id
 
+        # clear the global attribute
+        $ie.set_default_attribute( nil )
+
+
     end
 
 
