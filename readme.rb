@@ -124,6 +124,7 @@ Contributors:
    Park Heesob
    Shashank Date
    Jared Luxenberg
+   Alexey Verkhovsky
 
 Acknowledgements:
    Chris Morris
