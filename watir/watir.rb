@@ -2552,11 +2552,27 @@ module Watir
     class Label < ObjectActions
         def initialize( ieController , how, what)
             @ieController = ieController
-            @o = ieController.getNonControlObject("LABEL" , how, what )
             @how = how
             @what = what
+            refresh
             super( @o )
         end
+
+
+        # this method is used to refresh the Watir representation on the html element.
+        # this would normally be used when a variable is assigned to an element on the page, and the page is then refreshed
+        #  eg
+        #
+        #    a=ie.label(:index,1)
+        #    a.flash
+        #    ie.button(:value, 'Refresh The Page').click
+        #    a.refresh
+        #    a.flash
+        def refresh
+            @o = @ieController.getNonControlObject("LABEL" , @how, @what )
+        end
+
+
 
         # labels dont support name, so return an empty string
         def name
@@ -2630,34 +2646,46 @@ module Watir
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
             @ieController = parent
-            allTables = parent.document.getElementsByTagName("TABLE")
-            parent.log "There are #{ allTables.length } tables"
+            @how = how
+            @what = what
+
             table = nil
-            tableIndex = 1
-	      if(how != :from_object) then
+
+	      if(@how != :from_object) then
+               table=get_table
+	      else
+		    table = @what
+	      end
+
+            parent.log "table - #{@what}, #{@how} Not found " if table ==  nil
+            @o = table
+            super( @o )
+        end
+
+        def refresh
+            @o=get_table
+        end
+
+        def get_table
+                allTables = @ieController.document.getElementsByTagName("TABLE")
+                @ieController.log "There are #{ allTables.length } tables"
+                tableIndex = 1
+                table=nil
                 allTables.each do |t|
                     next  unless table == nil
-                    case how
+                    case @how
                         when :id
-                        if t.invoke("id").to_s == what.to_s
+                        if t.invoke("id").to_s == @what.to_s
                             table = t
                         end
                         when :index
-                        if tableIndex == what.to_i
+                        if tableIndex == @what.to_i
                             table = t
                         end
                     end
                     tableIndex = tableIndex + 1
                 end
-	      else
-		    table = what
-	      end
-
-            parent.log "table - #{what}, #{how} Not found " if table ==  nil
-            @o = table
-            super( @o )
-            @how = how
-            @what = what
+            return table
         end
 
 
@@ -2866,6 +2894,7 @@ module Watir
                 end
             end
         end
+        alias refresh update_rows
 
         # returns the specified row as a TableRow object
         def []n
@@ -2917,6 +2946,7 @@ module Watir
                 end
             end
         end
+        alias refresh update_row_cells
 
         # this method iterates through each of the cells in the row. Yieldss a TableCell object
         def each
@@ -3014,13 +3044,14 @@ module Watir
         #   * what         - what we use to access the image, name, src, index, id or alt
         def initialize( ieController,  how , what )
             @ieController = ieController
-            
-            #puts "Finding an image how: #{how} What #{what}"
-            @o = @ieController.getImage(how, what)
-
-            super( @o )
             @how = how
             @what = what
+            refresh
+            super( @o )
+        end
+
+        def refresh
+            @o = @ieController.getImage(@how, @what)
         end
 
         # this method produces the properties for an image as an array
@@ -3156,14 +3187,18 @@ module Watir
         #   * what         - what we use to access the link, text, url, index etc
         def initialize( ieController,  how , what )
             @ieController = ieController
+            @how = how
+            @what = what
             begin
-                @o = ieController.getLink( how, what )
+                refresh
             rescue UnknownObjectException
                 @o = nil
             end
             super( @o )
-            @how = how
-            @what = what
+        end
+
+        def refresh
+            @o = @ieController.getLink( @how, @what )
         end
 
         # returns 'link' as the object type
@@ -3235,13 +3270,17 @@ module Watir
         #   * what         - what we use to access the select box, name, id etc
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getObject(how, what, ["select-one", "select-multiple"])
-            super( @o )
             @how = how
             @what = what
+            refresh
+            super( @o )
         end
         
         attr :o
+
+        def refresh
+            @o = @ieController.getObject(@how, @what, ["select-one", "select-multiple"])
+        end
 
         def assert_exists
             unless @o
@@ -3412,14 +3451,18 @@ module Watir
             @ieController = ieController
             @how = how
             @what = what
-            #puts "Button - how is #{@how}"
             if(how == :from_object) then
                 @o = what
             else
-                @o = ieController.getObject( how, what , object_types)
+                refresh
             end              
             super( @o )
         end
+
+        def refresh
+            @o = @ieController.getObject( @how, @what , object_types)
+        end
+
         def object_types
             return ["button" , "submit" , "image"] 
         end
@@ -3439,12 +3482,15 @@ module Watir
         # Create an instance of the file object
         def initialize( ieController,  how , what )
             @ieController = ieController
-            @o = ieController.getObject( how, what , ["file"] )
-            super( @o )
             @how = how
             @what = what
+            super( @o )
         end
         
+        def refresh
+            @o = @ieController.getObject( @how, @what , ["file"] )
+        end
+
         def set(setPath)
             object_exist_check	        
             Thread.new {
@@ -3466,11 +3512,16 @@ module Watir
 
         def initialize( ieController,  how , what , type, value=nil )
             @ieController = ieController
-            @o = ieController.getObject( how, what , type, value)
-            super( @o )
             @how = how
             @what = what
+            @type = type
             @value = value
+            refresh
+            super( @o )
+        end
+
+        def refresh
+            @o = @ieController.getObject( @how, @what , @type, @value)
         end
 
         def assert_exists
@@ -3530,14 +3581,19 @@ module Watir
         
         def initialize( ieController,  how , what )
             @ieController = ieController
-	    if(how != :from_object) then
-            	@o = ieController.getObject( how, what , supported_types)
-	    else
-		@o = what
-	    end
-            super( @o )
             @how = how
             @what = what
+
+	      if(how != :from_object) then
+                refresh            
+	      else
+		    @o = what
+	      end
+            super( @o )
+        end
+
+        def refresh
+            @o = @ieController.getObject( @how, @what , supported_types)
         end
 
         def supported_types

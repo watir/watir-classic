@@ -221,6 +221,15 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
+    def test_text_field_refresh
+        a=$ie.text_field(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+    end
+
 
     def test_JS_Events
         $ie.text_field(:name , 'events_tester').set('p')
@@ -258,6 +267,16 @@ class TC_Fields < Test::Unit::TestCase
 
 
     end
+
+    def test_Label_refresh
+        a=$ie.label(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+    end
+
 
     def test_label_properties
         assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).innerText  } 
