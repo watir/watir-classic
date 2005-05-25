@@ -60,7 +60,16 @@ class TC_Links < Test::Unit::TestCase
 
     end
 
+    def test_links_refresh
 
+        a=$ie.link(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+
+    end
 
 
     def test_links_in_frames

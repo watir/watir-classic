@@ -57,6 +57,17 @@ class TC_Images < Test::Unit::TestCase
 
     end
 
+    def test_image_refresh
+
+        a=$ie.image(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+
+
+    end
 
     
     def test_imageExists

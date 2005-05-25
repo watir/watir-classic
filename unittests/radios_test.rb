@@ -49,6 +49,16 @@ class TC_Radios < Test::Unit::TestCase
 
     end
 
+    def test_radios_refresh
+
+        a=$ie.radio(:index,1)
+        assert_nothing_raised() { a.to_s }
+        $ie.refresh
+        assert_raises( WIN32OLERuntimeError ) { a.to_s }
+        a.refresh
+        assert_nothing_raised() { a.to_s }
+    end
+
 
     def test_Radio_Exists
        assert($ie.radio(:name, "box1").exists?)   
@@ -84,12 +94,9 @@ class TC_Radios < Test::Unit::TestCase
     def test_Radio_isSet
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").isSet?  }  
 
-       puts "radio 1 is set : #{ $ie.radio(:name, 'box1').isSet? } "
        assert_false($ie.radio(:name, "box1").isSet?)   
-
        assert( $ie.radio(:name, "box3").isSet?)   
        assert_false($ie.radio(:name, "box2").isSet?)   
-
        assert( $ie.radio(:name, "box4" , 1 ).isSet?)   
        assert_false($ie.radio(:name, "box4" , 2 ).isSet?)   
     end
