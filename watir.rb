@@ -1176,7 +1176,7 @@ module Watir
                     end
                 end
             else
-                raise MissingWayOfFindingObjectException, "unknown way of finding a link ( {what} )"
+                raise MissingWayOfFindingObjectException, "#{how.inspect} is an unknown way of finding a link ( #{what} )"
             end
             
             # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
@@ -1475,7 +1475,7 @@ module Watir
         
         # Deprecated: Use IE#ie instead
         # This method returns the Internet Explorer object. 
-        # Methods, properties,  etc. that the IEController does not support can be accessed.
+        # Methods, properties,  etc. that the IE object does not support can be accessed.
         def getIE()
             return @ie
         end
@@ -2027,13 +2027,15 @@ module Watir
     end
        
     #   Form Factory object 
-    #   * ieController  - an instance of an IEController
-    #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
-    #   * what         - what we use to access the form
     class Form < IE
         include FormAccess
 
         attr_accessor :form
+
+
+        #   * container   - the containing object, normally an instance of IE
+        #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
+        #   * what        - what we use to access the form
         def initialize( container, how, what )
             @container = container
             @formHow = how
@@ -2341,12 +2343,12 @@ module Watir
 
 
     # this class is the super class for the iterator classes ( buttons, links, spans etc
-    # it would normally only be accessed by the iterator methods ( spans , links etc) of IEController
+    # it would normally only be accessed by the iterator methods ( spans , links etc) of IE
     class Iterators
         include Enumerable
 
         # Super class for all the iteractor classes
-        #   * ieController  - an instance of an IEController
+        #   * ieController  - an instance of an IE object
         def initialize( ieController)
             @ieController = ieController
             @length = length # must be defined by subclasses
@@ -2624,13 +2626,14 @@ module Watir
     end
 
     # This class is used for dealing with tables.
-    # This will not be normally used by users, as the table method of IEController would return an initialised instance of a table.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#table method
+    #
     # many of the methods available to this object are inherited from the ObjectActions class
     #
     class Table < ObjectActions
  
         # Returns an initialized instance of the table object to wich anElement belongs
-        #   * ieController  - an instance of an IEController
+        #   * ieController  - an instance of an IE object
         #   * anElement     - a Watir object (TextField, Button, etc.)
         def Table.create_from_element(ieController,anElement)
             o = anElement.getOLEObject.parentElement
@@ -2919,7 +2922,7 @@ module Watir
 
         # Returns an initialized instance of a table row          
         #   * o  - the object contained in the row
-        #   * ieController  - an instance of an IEController       
+        #   * ieController  - an instance of an IE object       
         #   * how          - symbol - how we access the row        
         #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
         def initialize(ieController , how, what)
@@ -2979,7 +2982,7 @@ module Watir
 
     end
  
-    # this class is a table cell - when called via the table object
+    # this class is a table cell - when called via the Table object
     class TableCell <ObjectActions
 
         include Watir::Exception
@@ -2989,7 +2992,7 @@ module Watir
         attr_reader :activeObjectHighLightColor 
 
         # Returns an initialized instance of a table cell          
-        #   * ieController  - an instance of an IEController       
+        #   * ieController  - an  IE object       
         #   * how         - symbol - how we access the cell        
         #   * what         - what we use to access the cell - id, name index etc
         def initialize( ieController,  how , what )   
@@ -3033,7 +3036,8 @@ module Watir
 
 
     # This class is the means of accessing an image on a page.
-    # It would not normally be used by users, as the image method of IEController would return an initialised instance of an image.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#button method
+    #
     # many of the methods available to this object are inherited from the ObjectActions class
     #
     class Image < ObjectActions
@@ -3177,7 +3181,7 @@ module Watir
     
     
     # This class is the means of accessing a link on a page
-    # It would not normally be used bt users, as the link method of IEController would returned an initialised instance of a link.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#link method
     # many of the methods available to this object are inherited from the ObjectActions class
     #
     class Link < ObjectActions
@@ -3259,7 +3263,7 @@ module Watir
     end
     
     # This class is the way in which select boxes are manipulated.
-    # it would not normally be created by a user, as it is returned by the selectBox method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#select_list method
     #
     # many of the methods available to this object are inherited from the ObjectActions class
     #
@@ -3442,7 +3446,7 @@ module Watir
     end    
 
     # This is the main class for accessing buttons.
-    # Normally a user would not need to create this object as it is returned by the factory method button 
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#button method
     #
     # most of the methods available to Button objects are inherited from the ObjectActions class
     #
@@ -3470,7 +3474,10 @@ module Watir
     end
 
     # This is the main class for accessing reset buttons.
-    # Normally a user would not need to create this object as it is returned by the IEController reset method.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#reset method
+    #
+    # most of the methods available to this element are inherited from the ObjectActions class
+    #
     class Reset < Button
         def object_types
             return ["reset"] 
@@ -3507,7 +3514,10 @@ module Watir
 
     # This class is the class for radio buttons and check boxes. 
     # It contains methods common to both.
-    # It should not be created by users.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#checkbox or Watir::FactoryMethods#radio methods
+    #
+    # most of the methods available to this element are inherited from the ObjectActions class
+    #
     class RadioCheckCommon < ObjectActions
 
         def initialize( ieController,  how , what , type, value=nil )
@@ -3576,7 +3586,10 @@ module Watir
     end
         
     # This class is the main class for Text Fields
-    # It shouldn't normally be created, as the textField method of IEController will return an initialized object.
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#text_field method
+    #
+    # most of the methods available to this element are inherited from the ObjectActions class
+    #
     class TextField < ObjectActions
         
         def initialize( ieController,  how , what )
@@ -3784,7 +3797,10 @@ module Watir
     end
 
     # this class can be used to access hidden field objects
-
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#hidden method
+    #
+    # most of the methods available to this element are inherited from the ObjectActions class
+    #
     class Hidden  < TextField 
 
         def initialize( ieController,  how , what )
@@ -3817,6 +3833,10 @@ module Watir
         end
 
     end
+
+    #--
+    #   These classes are not for public consumption, so we switch off rdoc
+
 
     # presumes element_class or element_tag is defined
     # for subclasses of Iterators
@@ -3879,10 +3899,13 @@ module Watir
         end
     end
 
-
+    #    resume rdoc
+    #++   
+    
 
     # this class accesses the buttons in the document as a collection
-    # it would normally only be accessed by the buttons method of IEController
+    # it would normally only be accessed by the Watir::FactoryMethods#buttons method
+    #
     class Buttons < Iterators
         def element_class; Button; end
         def length
@@ -3899,7 +3922,8 @@ module Watir
     end
 
     # this class accesses the check boxes in the document as a collection
-    # it would normally only be accessed by the links method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#checkboxes method
+    #
     class CheckBoxes < Iterators
         def element_class; CheckBox; end  
         def length
@@ -3913,7 +3937,8 @@ module Watir
     end
 
     # this class accesses the radio buttons in the document as a collection
-    # it would normally only be accessed by the radios method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#radios method
+    #
     class Radios < Iterators
         def element_class; Radio; end
         def length
@@ -3927,7 +3952,8 @@ module Watir
     end
 
     # this class accesses the select boxes  in the document as a collection
-    # it would normally only be accessed by the select_lists method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#select_lists method
+    #
     class SelectLists < Iterators
         include CommonCollection
         def element_class; SelectList; end
@@ -3935,7 +3961,8 @@ module Watir
     end
 
     # this class accesses the links in the document as a collection
-    # it would normally only be accessed by the links method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#links method
+    #
     class Links < Iterators
         include CommonCollection
         def element_class; Link; end    
@@ -3950,7 +3977,8 @@ module Watir
     end
 
     # this class accesses the imnages in the document as a collection
-    # it would normally only be accessed by the images method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#images method
+    #
     class Images < Iterators
         def element_class; Image; end 
         def length
@@ -3966,7 +3994,8 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # it would normally only be accessed by the text_fields method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#text_fields method
+    #
     class TextFields < Iterators
         def element_class; TextField; end
         def length
@@ -3977,7 +4006,7 @@ module Watir
     end
 
     # this class accesses the hidden fields in the document as a collection
-    # it would normally only be accessed by the hiddens method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#hiddens method
     class Hiddens < Iterators
         def element_class; Hidden; end
         def length
@@ -3986,7 +4015,8 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # it would normally only be accessed by the text_fields method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#tables method
+    #
     class Tables< Iterators
         include CommonCollection
         def element_class; Table; end
@@ -3999,7 +4029,8 @@ module Watir
     end
 
     # this class accesses the labels in the document as a collection
-    # it would normally only be accessed by the labels method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#labels method
+    #
     class Labels< Iterators
         include CommonCollection
         def element_class; Label; end
@@ -4012,7 +4043,8 @@ module Watir
     end
 
     # this class accesses the p tags in the document as a collection
-    # it would normally only be accessed by the ps method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#ps method
+    #
     class Ps < Iterators
         include CommonCollection
         def element_class; P; end
@@ -4026,7 +4058,8 @@ module Watir
     end
 
     # this class accesses the spans in the document as a collection
-    # it would normally only be accessed by the spans method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#spans method
+    #
     class Spans < Iterators
         include CommonCollection
         def element_class; Span; end
@@ -4040,7 +4073,8 @@ module Watir
     end
 
     # this class accesses the divs in the document as a collection
-    # it would normally only be accessed by the divs method of IEController
+    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#divs method
+    #
     class Divs< Iterators
         include CommonCollection
         def element_class; Div; end
