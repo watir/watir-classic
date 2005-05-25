@@ -31,7 +31,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     
     def check_dialog(extra_file, expected_result, &block)
         goto_javascript_page()
-        Thread.new { system("rubyw #{$mydir}\\#{extra_file}.rb") }
+        Thread.new { system("rubyw \"#{$mydir}\\#{extra_file}.rb\"") }
 
         block.call
         testResult = $ie.text_field(:id, "testResult").value
