@@ -123,7 +123,7 @@ Contributors:
    Chris Hedges
    Park Heesob
    Shashank Date
-
+   Jared Luxenberg
 
 Acknowledgements:
    Chris Morris
