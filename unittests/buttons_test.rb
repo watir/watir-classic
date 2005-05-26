@@ -52,18 +52,14 @@ class TC_Buttons < Test::Unit::TestCase
 
     def test_default_attribute_for_all
         goto_button_page
-        $ie.set_default_attribute( :id)
-        assert_equal('id' , $ie.get_default_attribute)
+        $ie.default_attribute = :id
+        assert_equal(:id , $ie.default_attribute)
         assert_raises(UnknownObjectException ) { $ie.button('b9').id }
         assert_equal("b2"  , $ie.button('b2').id  ) 
-
-
     end
 
     def test_default_attribute_for_buttons
-
         goto_button_page
-
         $ie.set_default_attribute_for_element( :button , :id)
         assert_equal('id' , $ie.get_default_attribute_for( :button) )
         assert_equal("b2"  , $ie.button('b2').id  ) 
@@ -76,7 +72,7 @@ class TC_Buttons < Test::Unit::TestCase
      
         # make sure thaqt setting the default for a button directly, overrides the all setting
         # we are still using a default of value, set a few lines up
-        $ie.set_default_attribute( :id)
+        $ie.default_attribute = :id
         assert_equal("b4"  , $ie.button('Disabled Button').name  ) 
 
         # delete the button type
@@ -86,13 +82,8 @@ class TC_Buttons < Test::Unit::TestCase
         assert_equal("b2"  , $ie.button('b2').id  ) 
 
         # delete the global, and make sure we default to the caption
-        $ie.set_default_attribute( nil)
+        $ie.default_attribute = nil
         assert_equal("b4"  , $ie.button('Disabled Button').name  ) 
-
-        # clear the global attribute
-        $ie.set_default_attribute( nil )
-
-
     end
 
  
@@ -199,11 +190,12 @@ class TC_Buttons < Test::Unit::TestCase
 
        assert($ie.frame("buttonFrame").button(:caption, "Click Me").enabled?)   
        assert_raises(  UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { $ie.button(:caption, "Disabled Button").enabled?}  
-
-        
-
     end
 
-
+    def teardown
+        # clear the global attribute
+        $ie.default_attribute = nil 
+    end
+    
 end
 
