@@ -319,10 +319,10 @@ module Watir
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
         #
-        # if a default attribute type has been set using IE#set_default_attribute_for_element or IE#set_default_attribute
+        # if a default attribute type has been set using IE#set_default_attribute_for_element or IE#default_attribute
         # then the behaviour is modified as shown below
         #
-        #    ie.set_default_attribute(:id)
+        #    ie.default_attribute = :id
         #    ie.button('b_7')                               # access the button that has an id of b_7
         #    ie.set_default_attribute_for_element( :button , :name)
         #    ie.button('Verify_data')                       # access the button that has a name of Verify_data
@@ -1363,19 +1363,13 @@ module Watir
         private :set_defaults        
         
         # this method is used to set the default way of finding elements
-        #   *  default_attribute   symbol, :id, :name etc
+        #   *  default_attribute   :symbol, :id, :name etc
         # If an attribute that is used as the default is not applicable to all elements, such as :url, 
         # then it may be impossible to access certain elements and many exceptions may be raised
         # to delete the default set, it to nil
-        def set_default_attribute( default_attribute)
-            @default_attribute = default_attribute
-        end
-
         # this returns the current default attribute as a string
         #  ie if the default is set as :id  'id' will be returned
-        def get_default_attribute
-            @default_attribute.to_s
-        end
+        attr_accessor :default_attribute
 
         # this method is used to return the current default way for finding the specified element.
         # returns a string
