@@ -68,7 +68,6 @@ class TC_Buttons < Test::Unit::TestCase
         assert_equal('value' , $ie.get_default_attribute_for( :button) )
         assert_raises(UnknownObjectException ) { $ie.button('b2').id }
         assert_equal("b4"  , $ie.button('Disabled Button').name  ) 
-
      
         # make sure thaqt setting the default for a button directly, overrides the all setting
         # we are still using a default of value, set a few lines up
