@@ -13,13 +13,11 @@ class TC_Fields < Test::Unit::TestCase
 
 
     def test_default_attribute_for_all
-        $ie.set_default_attribute( :id)
-        assert_equal('id' , $ie.get_default_attribute)
+        $ie.default_attribute = :id
+        assert_equal(:id , $ie.default_attribute)
         assert_raises(UnknownObjectException ) { $ie.text_field('missing_id').id }
         assert_equal("goodbye all"  , $ie.text_field('text2').value  ) 
-        $ie.set_default_attribute( nil )
-
-
+        $ie.default_attribute = nil 
     end
 
     def test_default_attribute_for_text_fields
@@ -36,7 +34,7 @@ class TC_Fields < Test::Unit::TestCase
      
         # make sure thaqt setting the default for a text_field directly, overrides the all setting
         # we are still using the name attribute, set a few lines up
-        $ie.set_default_attribute( :id)
+        $ie.default_attribute = :id
         assert_equal("Cant enter text in me"  , $ie.text_field('disabled').value)  #'disabled' is a name 
 
 
@@ -46,7 +44,7 @@ class TC_Fields < Test::Unit::TestCase
         # make sure the global attribute (id)  is used
         assert_equal("goodbye all"  , $ie.text_field('text2').value  )   # text2 is an id
         # clear the global attribute
-        $ie.set_default_attribute( nil )
+        $ie.default_attribute = nil 
 
 
     end
@@ -221,16 +219,6 @@ class TC_Fields < Test::Unit::TestCase
 
     end
 
-    def test_text_field_refresh
-        a=$ie.text_field(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-    end
-
-
     def test_JS_Events
         $ie.text_field(:name , 'events_tester').set('p')
 
@@ -267,16 +255,6 @@ class TC_Fields < Test::Unit::TestCase
 
 
     end
-
-    def test_Label_refresh
-        a=$ie.label(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-    end
-
 
     def test_label_properties
         assert_raises(UnknownObjectException  ) {  $ie.label(:index,20).innerText  } 

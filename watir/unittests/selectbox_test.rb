@@ -17,23 +17,11 @@ class TC_SelectList < Test::Unit::TestCase
         assert_false($ie.select_list(:id, "missing").exists?)   
     end
     
-    def refresh
-
-        a=$ie.select_list(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-
-    end
-
     def test_SelectList_enabled
         assert($ie.select_list(:name, "sel1").enabled?)   
         assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").enabled? }  
         assert_false($ie.select_list(:id, 'selectbox_4').enabled?)
     end
-
 
     def test_Option_text_select
         assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, "missing item").select }  
@@ -45,8 +33,6 @@ class TC_SelectList < Test::Unit::TestCase
         $ie.select_list( :name , "sel1").option(:text, "Option 1").select
         assert_arrayEquals( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
     end    
-    
-
 end
 
 # Tests for the old interface
@@ -57,49 +43,35 @@ class TC_Selectbox < Test::Unit::TestCase
         $ie.goto($htmlRoot + "selectboxes1.html")
     end
     
-
     def test_default_attribute_for_all
-        $ie.set_default_attribute( :id )
-        assert_equal('id' , $ie.get_default_attribute)
+        $ie.default_attribute = :id 
+        assert_equal(:id , $ie.default_attribute)
         assert_raises(UnknownObjectException ) { $ie.select_list('missing_id').id }
         assert_equal("o1"  , $ie.select_list('selectbox_4').value  ) 
-        $ie.set_default_attribute( nil  )
-
-
+        $ie.default_attribute = nil  
     end
 
     def test_default_attribute_for_select_list
-
         $ie.set_default_attribute_for_element(:select_list ,  :id )
         assert_equal('id' , $ie.get_default_attribute_for( :select_list) )
-
         assert_equal("o1"  , $ie.select_list('selectbox_4').value  ) 
 
         $ie.set_default_attribute_for_element( :select_list , :name )
-
         assert_equal('name' , $ie.get_default_attribute_for(:select_list) )
         assert_raises(UnknownObjectException ) { $ie.select_list('missing_name').value }
         assert_equal("o3"  , $ie.select_list('sel1').value) 
-
      
         # make sure that setting the default for a select_list directly, overrides the all setting
         # we are still using the name attribute, set a few lines up
-        $ie.set_default_attribute( :id )
+        $ie.default_attribute = :id 
         assert_equal("o3"  , $ie.select_list('sel1').value)  #'sel1' is a name 
-
-
         # delete the select_list type
         $ie.set_default_attribute_for_element( :select_list , nil)
-
-
         # make sure the global attribute (id)  is used
         assert_equal("o1"  , $ie.select_list('selectbox_4').value  )   # selectbox_4 is an id
-
         # clear the global attribute
-        $ie.set_default_attribute( nil )
-
+        $ie.default_attribute = nil
     end
-
 
     def test_selectBox_Exists
         assert($ie.selectBox(:name, "sel1").exists?)   
@@ -238,7 +210,6 @@ class TC_Selectbox < Test::Unit::TestCase
         end
         assert_equal( index-1, $ie.select_lists.length)
     end
-    
 end
 
 class TC_Select_Options < Test::Unit::TestCase
@@ -252,6 +223,5 @@ class TC_Select_Options < Test::Unit::TestCase
         $ie.select_list(:name, 'op_numhits').option(:text, '>=').select
         assert($ie.select_list(:name, 'op_numhits').option(:text, '>=').selected)
     end
-        
 end
 

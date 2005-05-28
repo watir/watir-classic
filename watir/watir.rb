@@ -1378,7 +1378,7 @@ module Watir
         end
 
         # this method is used to set the default way of finding a specific element type.
-        # it overrides the global default set using the IE#set_default_attribute method
+        # it overrides the global default set using the IE#default_attribute method
         #
         # Typical Usage
         #   ie.set_default_attribute_for_element( :button , :name)
@@ -2434,23 +2434,10 @@ module Watir
             @ieController = ieController
             @how = how
             @what = what
-            refresh
+            @o = @ieController.getNonControlObject(tag , @how, @what )
             super( @o )
             @typingspeed = @ieController.typingspeed      
             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
-        end
-
-        # this method is used to refresh the Watir representation on the html element.
-        # this would normally be used when a variable is assigned to an element on the page, and the page is then refreshed
-        #  eg
-        #
-        #    a=ie.span(:index,1)
-        #    a.flash
-        #    ie.button(:value, 'Refresh The Page').click
-        #    a.refresh
-        #    a.flash
-        def refresh
-            @o = @ieController.getNonControlObject(tag , @how, @what )
         end
 
         def getContainerContents()
@@ -2491,7 +2478,6 @@ module Watir
             object_exist_check
             return ""
         end
-
  
         # spans or divs do not support a value attribute, so this returns an empty string
         # raises an ObjectNotFound exception if the object cannot be found
@@ -2499,7 +2485,6 @@ module Watir
             object_exist_check
             return ""
         end
-
 
         # this method is used to ppulate the properties in the to_s method
         def span_div_string_creator
@@ -2550,24 +2535,9 @@ module Watir
             @ieController = ieController
             @how = how
             @what = what
-            refresh
+            @o = @ieController.getNonControlObject("LABEL" , @how, @what )
             super( @o )
         end
-
-
-        # this method is used to refresh the Watir representation on the html element.
-        # this would normally be used when a variable is assigned to an element on the page, and the page is then refreshed
-        #  eg
-        #
-        #    a=ie.label(:index,1)
-        #    a.flash
-        #    ie.button(:value, 'Refresh The Page').click
-        #    a.refresh
-        #    a.flash
-        def refresh
-            @o = @ieController.getNonControlObject("LABEL" , @how, @what )
-        end
-
 
 
         # labels dont support name, so return an empty string
@@ -2659,10 +2629,7 @@ module Watir
             super( @o )
         end
 
-        def refresh
-            @o=get_table
-        end
-
+        # BUG: should be private
         def get_table
                 allTables = @ieController.document.getElementsByTagName("TABLE")
                 @ieController.log "There are #{ allTables.length } tables"
@@ -2884,6 +2851,7 @@ module Watir
  
         # This method updates the internal representation of the table. It can be used on dynamic tables to update the watir representation 
         # after the table has changed
+        # BUG: Remove
         def update_rows
             if @o
                 @o.rows.each do |oo|
@@ -2891,7 +2859,6 @@ module Watir
                 end
             end
         end
-        alias refresh update_rows
 
         # returns the specified row as a TableRow object
         def []n
@@ -2943,7 +2910,6 @@ module Watir
                 end
             end
         end
-        alias refresh update_row_cells
 
         # this method iterates through each of the cells in the row. Yieldss a TableCell object
         def each
@@ -3044,12 +3010,8 @@ module Watir
             @ieController = ieController
             @how = how
             @what = what
-            refresh
-            super( @o )
-        end
-
-        def refresh
             @o = @ieController.getImage(@how, @what)
+            super( @o )
         end
 
         # this method produces the properties for an image as an array
@@ -3188,15 +3150,11 @@ module Watir
             @how = how
             @what = what
             begin
-                refresh
+                @o = @ieController.getLink( @how, @what )
             rescue UnknownObjectException
                 @o = nil
             end
             super( @o )
-        end
-
-        def refresh
-            @o = @ieController.getLink( @how, @what )
         end
 
         # returns 'link' as the object type
@@ -3270,15 +3228,11 @@ module Watir
             @ieController = ieController
             @how = how
             @what = what
-            refresh
+            @o = @ieController.getObject(@how, @what, ["select-one", "select-multiple"])
             super( @o )
         end
         
         attr :o
-
-        def refresh
-            @o = @ieController.getObject(@how, @what, ["select-one", "select-multiple"])
-        end
 
         def assert_exists
             unless @o
@@ -3452,13 +3406,9 @@ module Watir
             if(how == :from_object) then
                 @o = what
             else
-                refresh
+                @o = @ieController.getObject( @how, @what , object_types)
             end              
             super( @o )
-        end
-
-        def refresh
-            @o = @ieController.getObject( @how, @what , object_types)
         end
 
         def object_types
@@ -3487,7 +3437,8 @@ module Watir
             @what = what
             super( @o )
         end
-        
+
+        # BUG: Doesn't this need to be called in the initialize method?        
         def refresh
             @o = @ieController.getObject( @how, @what , ["file"] )
         end
@@ -3520,12 +3471,8 @@ module Watir
             @what = what
             @type = type
             @value = value
-            refresh
-            super( @o )
-        end
-
-        def refresh
             @o = @ieController.getObject( @how, @what , @type, @value)
+            super( @o )
         end
 
         def assert_exists
@@ -3592,15 +3539,11 @@ module Watir
             @what = what
 
 	      if(how != :from_object) then
-                refresh            
+                @o = @ieController.getObject( @how, @what , supported_types)
 	      else
 		    @o = what
 	      end
             super( @o )
-        end
-
-        def refresh
-            @o = @ieController.getObject( @how, @what , supported_types)
         end
 
         def supported_types

@@ -23,11 +23,11 @@ class TC_Links < Test::Unit::TestCase
 
 
     def test_default_attribute_for_all
-        $ie.set_default_attribute( :text)
-        assert_equal('text' , $ie.get_default_attribute)
+        $ie.default_attribute = :text
+        assert_equal(:text , $ie.default_attribute)
         assert_raises(UnknownObjectException ) { $ie.link('missing_text').id }
         assert_equal("link_id"  , $ie.link('Link Using an ID').id) 
-        $ie.set_default_attribute( nil )
+        $ie.default_attribute = nil
     end
 
     def test_default_attribute_for_link
@@ -44,9 +44,8 @@ class TC_Links < Test::Unit::TestCase
      
         # make sure that setting the default for a link directly, overrides the all setting
         # we are still using the name attribute, set a few lines up
-        $ie.set_default_attribute( :id)
+        $ie.default_attribute = :id
         assert_equal('link_name'  , $ie.link('Link Using a name').name)  #box1 is a name 
-
 
         # delete the link type
         $ie.set_default_attribute_for_element( :link, nil)
@@ -55,22 +54,10 @@ class TC_Links < Test::Unit::TestCase
         assert_equal('link_id'  , $ie.link('link_id').id)   # box5 is an id
 
         # clear the global attribute
-        $ie.set_default_attribute( nil )
+        $ie.default_attribute = nil
 
 
     end
-
-    def test_links_refresh
-
-        a=$ie.link(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-
-    end
-
 
     def test_links_in_frames
         gotoFrameLinksPage()

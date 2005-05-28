@@ -23,21 +23,6 @@ class TC_Tables < Test::Unit::TestCase
        assert($ie.table(:id, 't1').exists? )
        assert($ie.table(:index, 1).exists? )
        assert($ie.table(:index, 2).exists? )
-
-
-    end
-
-    def test_table_refresh
-
-
-        a=$ie.table(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-
-
     end
 
     def test_rows
