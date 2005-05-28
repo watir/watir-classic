@@ -15,7 +15,6 @@ class TC_Tables < Test::Unit::TestCase
         $ie.goto($htmlRoot + "table1.html")
     end
 
-
     def test_Table_Exists
        assert_false($ie.table(:id , 'missingTable').exists? )
        assert_false($ie.table(:index, 33).exists? )
@@ -34,7 +33,6 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
 
         # test the each iterator on rows - ie, go through each cell
-
         row = $ie.table(:index, 2)[2]
         count=1
         row.each do |cell|
@@ -47,8 +45,7 @@ class TC_Tables < Test::Unit::TestCase
             count+=1
         end
         assert_equal(2, count -1)
-
-
+        assert_equal(2, $ie.table(:index, 2)[2].column_count)        
     end
   
     def test_dynamic_tables
@@ -57,8 +54,6 @@ class TC_Tables < Test::Unit::TestCase
 
         $ie.button(:value , 'add row').click
         assert_equal( 6, t.row_count)
-
-
     end
 
     def test_columns
@@ -70,7 +65,6 @@ class TC_Tables < Test::Unit::TestCase
     end
 
     def test_to_a
-
         table1Expected = [ ["Row 1 Col1" , "Row 1 Col2"] ,[ "Row 2 Col1" , "Row 2 Col2"] ]
         assert_arrayEquals(table1Expected, $ie.table(:index , 1).to_a )
     end
@@ -104,12 +98,8 @@ class TC_Tables < Test::Unit::TestCase
         table[3][1].button(:index,2).click
         assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
 
-
         table[3][1].button(:value ,"Click too").click
         assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
-
-
-
         
         $ie.table(:index,1)[4][1].text_field(:index,1).set("123")
         assert($ie.text_field(:index,2).verify_contains("123"))
@@ -123,8 +113,6 @@ class TC_Tables < Test::Unit::TestCase
 
         $ie.table(:index,1)[5][1].button(:index,1).click
         assert_equal( '' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
-
-
     end
  
     def test_simple_table_gif
@@ -139,7 +127,6 @@ class TC_Tables < Test::Unit::TestCase
         assert_match( /1\.gif/   , table[3][1].image( :index ,1).src  )
         assert_match( /2\.gif/   , table[3][2].image( :index ,1).src )
         assert_match( /3\.gif/   , table[3][3].image( :index ,1).src  )
-
  
         table = $ie.table(:index,3)
         assert_match( /1\.gif/   , table[1][1].image( :index ,1).src  )
@@ -149,12 +136,9 @@ class TC_Tables < Test::Unit::TestCase
         assert_match( /1\.gif/  , table[3][1].image( :index ,1).src  )
         assert_match( /2\.gif/  , table[3][1].image( :index ,2).src    )
         assert_match( /3\.gif/  , table[3][1].image( :index ,3).src  )
-
-
     end
 
     def test_table_with_hidden_or_visible_rows
-
         $ie.goto($htmlRoot + "simple_table_buttons.html")
         t = $ie.table(:id , 'show_hide')
 
@@ -169,25 +153,16 @@ class TC_Tables < Test::Unit::TestCase
             r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
             count=2
         end
-
-
-
-
     end
 
-
     def test_links_and_images_in_table
-
         table = $ie.table(:id, 'pic_table')
         image = table[1][2].image(:index,1)
         assert_equal("106", image.width)
 
         link = table[1][4].link(:index,1)
         assert_equal("Google", link.innerText)
-
-
     end
-
 
     def test_table_from_element
         $ie.goto($htmlRoot + "simple_table_buttons.html")
@@ -208,7 +183,6 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal("subtable1 Row 1 Col2",table[1][1].table(:index,1)[1][2].text.strip)
         assert_equal("subtable2 Row 1 Col2",table[2][1].table(:index,1)[1][2].text.strip)
         assert_equal("subtable2 Row 1 Col1",table[2][1].table(:index,1)[1][1].text.strip)
-     
     end
 
     def test_cell_directly
@@ -219,12 +193,9 @@ class TC_Tables < Test::Unit::TestCase
 
         # not really cell directly, but just to show another way of geting the cell
         assert_equal( "Row 1 Col1",  $ie.table(:index,1)[1][1].to_s.strip )
-
-
     end
 
     def test_row_directly
-
         assert( $ie.row(:id, 'row1').exists? )  
         assert_false( $ie.row(:id, 'no_exist').exists? )
 
@@ -232,7 +203,6 @@ class TC_Tables < Test::Unit::TestCase
     end
 
     def test_row_iterator
-
         t = $ie.table(:index,1)
         count =1
         t.each do |row|
@@ -244,11 +214,9 @@ class TC_Tables < Test::Unit::TestCase
                 assert( "Row 2 Col2" , row[2].text )
             end
         end
-
     end
 
     def test_table_body
-
         assert_equal( 1, $ie.table(:index,1).bodies.length )
         assert_equal( 3, $ie.table(:id, 'body_test' ).bodies.length )
 
@@ -275,7 +243,6 @@ class TC_Tables < Test::Unit::TestCase
 
         assert_equal( "This text is in the THIRD TBODY." ,$ie.table(:id, 'body_test' ).body(:index,3)[1][1].to_s.strip ) 
 
-
         # iterate through all the rows in a table body
         count = 1
         $ie.table(:id, 'body_test' ).body(:index,2).each do | row |
@@ -285,11 +252,8 @@ class TC_Tables < Test::Unit::TestCase
             elsif count == 1
                  assert_equal('This text is also in the SECOND TBODY.' , row[1].text.strip )
             end
-
             count+=1
         end
-
-
     end
 
     def test_get_columnvalues_single_column
@@ -324,9 +288,4 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal(["R5C1", "R5C2", "R5C3"], $ie.table(:index, 3).row_values(5))
         assert_equal(["R6C2", "R6C3"], $ie.table(:index, 3).row_values(6))
     end
-
-
-
-
-
 end

@@ -15,12 +15,9 @@ class TC_Links < Test::Unit::TestCase
         $ie.goto($htmlRoot + "frame_links.html")
     end
 
-
     def setup()
         gotoLinksPage()
     end
-
-
 
     def test_default_attribute_for_all
         $ie.default_attribute = :text
@@ -31,7 +28,6 @@ class TC_Links < Test::Unit::TestCase
     end
 
     def test_default_attribute_for_link
-
         $ie.set_default_attribute_for_element( :link, :id)
         assert_equal('id' , $ie.get_default_attribute_for( :link) )
         assert_equal("Link Using an ID"  , $ie.link('link_id').text) 
@@ -40,7 +36,6 @@ class TC_Links < Test::Unit::TestCase
         assert_equal('text' , $ie.get_default_attribute_for( :link) )
         assert_raises(UnknownObjectException ) { $ie.link('Link With no id').href}
         assert_match(/links1\.html/i  , $ie.link('Link Using an ID').href) 
-
      
         # make sure that setting the default for a link directly, overrides the all setting
         # we are still using the name attribute, set a few lines up
@@ -55,10 +50,21 @@ class TC_Links < Test::Unit::TestCase
 
         # clear the global attribute
         $ie.default_attribute = nil
-
-
     end
 
+    def xtest_new_link_exists
+        assert(exists?{$ie.link(:text, "test1")})   
+        assert(exists?{$ie.link(:text, /TEST/i)})   
+        assert_false(exists?{$ie.link(:text, "missing")})   
+        assert_false(exists?{$ie.link(:text, /miss/)})   
+
+        gotoFrameLinksPage()
+        assert(exists?{$ie.frame("buttonFrame").link(:text, "test1")})   
+        assert_false(exists?{$ie.frame("buttonFrame").link(:text, "missing")})
+        
+        assert_false(exists?{ie.frame("missing").link(:text, "test1")})   
+    end
+    
     def test_links_in_frames
         gotoFrameLinksPage()
 
@@ -82,12 +88,10 @@ class TC_Links < Test::Unit::TestCase
        assert_false($ie.link(:text, "missing").exists?)   
        assert_false($ie.link(:text, /miss/).exists?)   
 
-
        # this assert we have to build up the path
        #  this is what it looks like if you do a to_s on the link  file:///C:/watir_bonus/unitTests/html/links1.HTML
        # but what we get back from $htmlRoot is a mixed case, so its almost impossible for use to test this correctly
        # assert($ie.link(:url,'file:///C:/watir_bonus/unitTests/html/links1.HTML' ).exists?)   
-
 
        assert($ie.link(:url, /link_pass.html/).exists?)   
        assert_false($ie.link(:url, "alsomissing.html").exists?)   
@@ -111,15 +115,9 @@ class TC_Links < Test::Unit::TestCase
 
        assert($ie.link(:url, /_pass/).exists?)   
        assert_false($ie.link(:url, /dont_exist/).exists?)   
-
-
-
     end
 
-
     def test_Link_click
-
-
         $ie.link(:text, "test1").click
         assert( $ie.contains_text("Links2-Pass") ) 
 
@@ -137,7 +135,6 @@ class TC_Links < Test::Unit::TestCase
     end
 
     def test_link_properties
-        
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).href }  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).value}  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).innerText }  
@@ -145,7 +142,6 @@ class TC_Links < Test::Unit::TestCase
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).id }  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).disabled }  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).type }  
-
 
         assert_match( /links2/ ,$ie.link(:index, 1).href )
         assert_equal( ""      , $ie.link(:index, 1).value)
@@ -160,31 +156,22 @@ class TC_Links < Test::Unit::TestCase
 
         assert_equal( "" , $ie.link(:index, 7).title)
 
-
         assert_equal( "link_title" , $ie.link(:index, 8).title)
-
-
     end
 
     def test_link_iterator
-
         assert_equal(9, $ie.links.length )
         assert_equal("Link Using a name" , $ie.links[7].innerText)
 
         index = 1
         $ie.links.each do |link|
-
             assert_equal( $ie.link(:index, index).href      , link.href )
             assert_equal( $ie.link(:index, index).id        , link.id )
             assert_equal( $ie.link(:index, index).name      , link.name )
             assert_equal( $ie.link(:index, index).innerText , link.innerText )
-
             index+=1
         end
-
     end
-
-
 end
 
 require 'unittests/iostring'

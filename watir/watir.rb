@@ -113,6 +113,16 @@ command_line_flag('-s')
 module Watir
     include Watir::Exception
 
+    # BUG: this won't work right until the null objects are pulled out
+    def exists?
+        begin
+            yield
+            true
+        rescue
+            false
+        end
+    end
+
     class WatirLogger < Logger
         def initialize(  filName , logsToKeep, maxLogSize )
             super( filName , logsToKeep, maxLogSize )
@@ -2911,13 +2921,12 @@ module Watir
             end
         end
 
-        # this method iterates through each of the cells in the row. Yieldss a TableCell object
+        # this method iterates through each of the cells in the row. Yields a TableCell object
         def each
             0.upto( @cells.length-1 ) { |i | yield @cells[i]    }
         end
 
-
-	  # Returns an element from the row as a TableCell object
+   	  # Returns an element from the row as a TableCell object
         def [](index)
             object_exist_check
             raise UnknownCellException , "Unable to locate a cell at index #{index}" if @cells.length < index
@@ -2939,7 +2948,9 @@ module Watir
              return ""
         end
 
-
+        def column_count
+             @cells.length
+        end
     end
  
     # this class is a table cell - when called via the Table object
