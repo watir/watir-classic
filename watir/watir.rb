@@ -1393,7 +1393,6 @@ module Watir
         # Typical Usage
         #   ie.set_default_attribute_for_element( :button , :name)
         def set_default_attribute_for_element( element_type , default_attribute )
-
             if default_attribute == nil
                 @default_attributes.delete( element_type )
             else
@@ -1401,11 +1400,9 @@ module Watir
             end
         end
 
-
         # This method checks the currently displayed page for http errors, 404, 500 etc
         # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
-          
             url=ie.document.url 
             #puts "url is " + url
             if /shdoclc.dll/.match(url)
@@ -1537,12 +1534,12 @@ module Watir
         def clear_url_list
             @url_list.clear
         end
+
         # Closes the Browser
         def close
             @ie.quit
         end
         
-
         # this method can be used to capture events that occur in the browser
         # It is only wired up for the NewWindow event right now, but could be easily expanded
         # Do not use this when using irb
@@ -1607,6 +1604,7 @@ module Watir
             end
             return returnValue
         end
+
         # 
         # Synchronization
         #
@@ -1690,27 +1688,16 @@ module Watir
             @error_checkers.delete(checker)
         end
 
-        # Getting Page as text or HTML
-
-        # this method returns the HTML of the current page
+        # The HTML of the current page
         def html()
             return document.body.outerHTML
         end
         
-
-        def outerhtml()
-              return document.body.outerHTML
-        end
-
-
-        # this method returns the text of the current document
+        # The text of the current document
         def text()
             return document.body.innerText.strip
         end
 
-        #def head
-        #    return Head.new(self)
-        #end
         #
         # Show me state
         #        
@@ -1905,11 +1892,9 @@ module Watir
             doc.activeElement.blur
             doc.focus
         end
-
        
     end # class IE
-    
-    
+        
     # 
     # MOVETO: watir/popup.rb
     # Module Watir::Popup
@@ -1924,23 +1909,15 @@ module Watir
         def button( caption )
             return JSButton.new(  @ieController.getIE.hwnd , caption )
         end
-        
     end
     
-    class JSCommon
-        def initialize()
-        end
-    end
-    
-    
-    class JSButton < JSCommon
+    class JSButton 
         def initialize( hWnd , caption )
             @hWnd = hWnd
             @caption = caption
         end
         
         def startClicker( waitTime = 3 )
-            
             clicker = WinClicker.new
             clicker.clickJSDialog_Thread
             # clickerThread = Thread.new( @caption ) {
@@ -1949,10 +1926,8 @@ module Watir
             #   clickWindowsButton_hwnd(hwnd , buttonCaption )
             #}
         end
-        
     end
     
-    #
     # 
     # Module Watir::Control or Watir::BrowserDriver
     #
@@ -2128,7 +2103,7 @@ module Watir
                 end
             end
         end
-        
+        private :highLight
 
         # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
@@ -2148,27 +2123,31 @@ module Watir
                 sleep 0.05
             end
         end
-
-
                 
     end # class Form
     
- 
     # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
     # This is not a class that users would normally access. 
     class ObjectActions
         include Watir::Exception
-
-
-        # this constant is used to determine how many spaces are used to seperate the property from the value in the to_s method
+        
+        # number of spaces that seperate the property from the value in the to_s method
         TO_S_SIZE = 14
         
-        # Creates an instance of this class.
-        #   o  - the object that watir is using
+        #   o  - the ole object for the element being wrapped
         def initialize( o )
             @o = o
             @originalColor = nil
         end
+        
+        private
+        def self.def_wrap(method_name)
+            class_eval "def #{method_name}
+                          object_exist_check
+                          @o.invoke('#{method_name}')
+                        end"
+        end
+        public
 
         def object_exist_check
             raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
@@ -2181,6 +2160,7 @@ module Watir
         private :object_disabled_check
 
         # returns a string with the type of the object, or an empty string if it isnt supported. Many objects override this method anyway.
+        # BUG: the guard for type is in the method, unlike the guard for title which is outside it; should be consistent
         def type
             object_exist_check
             begin 
@@ -2191,37 +2171,14 @@ module Watir
             return object_type
         end
 
-        # returns the name of the object as a string
-        def name
-            object_exist_check
-            return @o.invoke("name")
-        end
-
-        # returns the id of the object
-        def id
-            object_exist_check
-            return @o.invoke("id")
-        end
-  
-        # returns true if the object is disabled
-        def disabled
-            object_exist_check
-            return @o.invoke("disabled")
-        end
-         
-        # returns the value of the object
-        def value
-            object_exist_check
-            return @o.invoke("value")
-        end
-
-        # returns the value of the title attribute
-        def title
-            object_exist_check
-            return @o.invoke("title")
-        end
+        def_wrap :name
+        def_wrap :id
+        def_wrap :disabled
+        def_wrap :value
+        def_wrap :title
 
         # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
+        # BUG: should be renamed appropriately and then use an attribute reader
         def getOLEObject()
             return @o
         end
@@ -2234,17 +2191,14 @@ module Watir
 
         # Returns an array with many of the properties, in a format to be used by the to_s method
         def string_creator
-
             n = []
             n <<   "type:".ljust(TO_S_SIZE) + self.type
             n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
             n <<   "name:".ljust(TO_S_SIZE) +       self.name.to_s
             n <<   "value:".ljust(TO_S_SIZE) +      self.value.to_s
             n <<   "disabled:".ljust(TO_S_SIZE) +   self.disabled.to_s
-
             return n
         end
-
         
         # This method displays basic details about the object. Sample output for a button is shown.
         # Raises UnknownObjectException if the object is not found.
@@ -2266,13 +2220,12 @@ module Watir
                 begin
                     @originalColor = @o.style.backgroundColor
                     @o.style.backgroundColor = @ieController.activeObjectHighLightColor
-                rescue
+                rescue 
                     @originalColor = nil
                 end
-            else
+            else # BUG: assumes is :clear, but could actually be anything
                 begin 
-                    @o.style.backgroundColor  = @originalColor unless @originalColor == nil
-                    @originalColor = nil
+                    @o.style.backgroundColor = @originalColor unless @originalColor == nil
                 rescue
                     # we could be here for a number of reasons...
                 ensure
@@ -2280,12 +2233,12 @@ module Watir
                 end
             end
         end
+        private :highLight
         
         #   This method clicks the active element.
         #   raises: UnknownObjectException  if the object is not found
         #   ObjectDisabledException if the object is currently disabled
-        def click()
-
+        def click
             object_exist_check
             object_disabled_check
            
@@ -2336,12 +2289,11 @@ module Watir
             @o? true: false
         end
         
-        # This method returns true if the current element is enable, false if it isn't.
+        # Returns true if the element is enabled, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
             object_exist_check
-            return false if @o.invoke("disabled")
-            return true
+            return ! @o.invoke("disabled")
         end
     end
 
@@ -3118,6 +3070,7 @@ module Watir
                 end
             end
         end
+        private :highLight
 
         # This method saves the image to the file path that is given.  The 
         # path must be in windows format (c:\\dirname\\somename.gif).  This method
