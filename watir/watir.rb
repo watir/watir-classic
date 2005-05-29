@@ -863,9 +863,6 @@ module Watir
             return Label.new(self, how, what)
         end
 
-
-        
-
         #--
         #
         # Searching for Page Elements
@@ -880,6 +877,7 @@ module Watir
         private :getContainerContents
 
         # this method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        # BUG: This looks wrong: Not everything that includes FactoryMethods has a document.body!
         def getContainer()
             return document.body
         end
@@ -2147,35 +2145,34 @@ module Watir
                           @o.invoke('#{method_name}')
                         end"
         end
-        public
-
+        def self.def_wrap_guard(method_name)
+            class_eval "def #{method_name}
+                          object_exist_check
+                          begin
+                            @o.invoke('#{method_name}')
+                          rescue
+                            ''
+                          end
+                        end"
+        end
         def object_exist_check
-            raise UnknownObjectException.new("Unable to locate object, using #{@how.to_s} and #{@what.to_s}") if @o==nil
-        end
-        private :object_exist_check
-
-        def object_disabled_check
-            raise ObjectDisabledException ,"object #{@how.to_s} and #{@what.to_s} is disabled" if !self.enabled?
-        end
-        private :object_disabled_check
-
-        # returns a string with the type of the object, or an empty string if it isnt supported. Many objects override this method anyway.
-        # BUG: the guard for type is in the method, unlike the guard for title which is outside it; should be consistent
-        def type
-            object_exist_check
-            begin 
-                object_type = @o.invoke("type")
-            rescue
-                object_type = ""
+            unless @o
+                raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
             end
-            return object_type
+        end
+        def object_disabled_check
+            unless enabled?
+                raise ObjectDisabledException, "object #{@how} and #{@what} is disabled"
+            end                
         end
 
-        def_wrap :name
+        public
+        def_wrap_guard :type        
+        def_wrap_guard :name
         def_wrap :id
         def_wrap :disabled
-        def_wrap :value
-        def_wrap :title
+        def_wrap_guard :value
+        def_wrap_guard :title
 
         # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
         # BUG: should be renamed appropriately and then use an attribute reader
@@ -2307,41 +2304,38 @@ module Watir
         #   * ieController  - an instance of an IE object
         def initialize( ieController)
             @ieController = ieController
-            @length = length # must be defined by subclasses
+            @length = length() # defined by subclasses
 
             # set up the items we want to display when the show method s used
             set_show_items
-
         end
  
         def set_show_items
-            @show_attributes = Attribute_Length_Pairs.new( "id" , 20)
+            @show_attributes = AttributeLengthPairs.new( "id" , 20)
             @show_attributes.add( "name" , 20)
         end
 
         def get_length_of_input_objects(object_type) 
-
-            if object_type.kind_of? Array 
-                object_types = object_type  
-            else
-                object_types = [ object_type ]
-            end
+            object_types = 
+                if object_type.kind_of? Array 
+                    object_type  
+                else
+                    [ object_type ]
+                end
 
             length = 0
-            if  @ieController.getContainer.getElementsByTagName("INPUT").length > 0 
-
-                objects= @ieController.getContainer.getElementsByTagName("INPUT")
+            objects = @ieController.getContainer.getElementsByTagName("INPUT")
+            if  objects.length > 0 
                 objects.each do |o|
-                   length+=1 if object_types.include?(o.invoke("type").downcase )
+                   length += 1 if object_types.include?(o.invoke("type").downcase )
                 end
             end    
             return length
-
         end
 
         # iterate through each of the elements in the collection in turn
         def each
-            0.upto( @length-1 ) { |i | yield iterator_object(i)   }
+            0.upto( @length-1 ) { |i | yield iterator_object(i) }
         end
 
         # allows access to a specific item in the collection
@@ -2372,13 +2366,11 @@ module Watir
             puts s 
         end
 
-
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
             element_class.new(@ieController, :index, i+1)
         end
-
     end
 
     # this class contains items that are common between the span and div objects
@@ -2412,19 +2404,16 @@ module Watir
 
         # this method returns the innerText of the object
         # raises an ObjectNotFound exception if the object cannot be found
-        def text()
+        def text
             object_exist_check
-            d = @o.innerText.strip
-            return d
+            return @o.innerText.strip
         end
-        alias innerText text
 
         # returns the classname of the style that this san or div is using
         # raises an ObjectNotFound exception if the object cannot be found
         def style
             object_exist_check
-            d = @o.invoke("className")
-            return d
+            return @o.invoke("className")
         end
 
         # this method returns the type of  object
@@ -2432,20 +2421,6 @@ module Watir
         def type
             object_exist_check
             return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
-        end
-
-        # spans or divs do not support a name attribute, so this returns an empty string
-        # raises an ObjectNotFound exception if the object cannot be found
-        def name
-            object_exist_check
-            return ""
-        end
- 
-        # spans or divs do not support a value attribute, so this returns an empty string
-        # raises an ObjectNotFound exception if the object cannot be found
-        def value
-            object_exist_check
-            return ""
         end
 
         # this method is used to ppulate the properties in the to_s method
@@ -2501,19 +2476,6 @@ module Watir
             super( @o )
         end
 
-
-        # labels dont support name, so return an empty string
-        def name
-            object_exist_check
-            return ""
-        end
- 
-        # labels dont support value, so return an empty string
-        def value
-            object_exist_check
-            return ""
-        end
-
         # return the type of this object
         def type
             object_exist_check
@@ -2526,12 +2488,13 @@ module Watir
             return @o.htmlFor
         end
 
-        def innerText
+        def text
             object_exist_check
             return @o.innerText.strip
         end
+        alias innerText :text
 
-        # this method is used to ppulate the properties in the to_s method
+        # this method is used to populate the properties in the to_s method
         def label_string_creator
             n = []
             n <<   "for:".ljust(TO_S_SIZE) + self.for
@@ -2643,17 +2606,6 @@ module Watir
             super    
         end
 
-
-        # tables dont have name, so return an empty string
-        def name
-            return ""
-        end
-
-        # tables dont have value, so return an empty string
-        def value
-            return ""
-        end
-
         # this method is used to ppulate the properties in the to_s method
         def table_string_creator
             n = []
@@ -2698,10 +2650,7 @@ module Watir
         #   * index         - the index of the row
         def column_count(index=1) 
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-
-            this_row = row(index)
-            count = this_row.cells.length
-            return count
+            row(index).cells.length
         end
 
         # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
@@ -2729,7 +2678,6 @@ module Watir
         def body( how , what )
             return TableBody.new( @ieController, how, what , self)
         end
-
 
         def bodies
             return TableBodies.new(@ieController,  :direct , @o)
@@ -2891,15 +2839,6 @@ module Watir
             return @o.send(aSymbol,*args)
         end
    
-        # table rows dont have names, so always returns an empty string
-        def name
-             return ""
-        end
-        # table rows dont have values, so always returns an empty string
-        def value 
-             return ""
-        end
-
         def column_count
              @cells.length
         end
@@ -2945,7 +2884,6 @@ module Watir
         def document()
             return @o  
         end
-
 
         # returns the contents of the cell as text
         def text()
@@ -2997,17 +2935,7 @@ module Watir
             return r.join("\n")
         end
 
-        # a value doesnt exist for an image, so this will return an empty string
-        def value
-            object_exist_check
-            return ""
-        end
-
-        # this method returns the source url of the image
-        def src
-            object_exist_check
-            return @o.invoke("src")
-        end
+        def_wrap :src
 
         # this method returns the file created date of the image
         def fileCreatedDate
@@ -3135,17 +3063,8 @@ module Watir
         alias text innerText
 
         # returns the url the link points to
-        def href
-            object_exist_check
-            return @o.href
-        end
+        def_wrap :href
 
-        # links dont support value, so returns an empty string
-        def value
-            object_exist_check
-            return ""
-        end
- 
         # if an image is used as part of the link, this will return true      
         def link_has_image
             return true  if @o.getElementsByTagName("IMG").length > 0
@@ -3206,12 +3125,6 @@ module Watir
         end
         private :assert_exists
         
-        # returns the value of the title attribute - select boxes don't support this, so an empty string "" is returned
-        def title
-            object_exist_check
-            return ""
-        end
-
         # This method clears the selected items in the select box
         def clearSelection
             assert_exists
@@ -3440,17 +3353,11 @@ module Watir
         end
 
         def assert_exists
-            unless @o
-                raise UnknownObjectException,  
-                    "Unable to locate a radio button using #{@how} and #{@what}"
-            end
+            object_exist_check
         end
 
         def assert_enabled
-            unless self.enabled?
-                raise ObjectDisabledException,  
-                    "object #{@how} and #{@what} is disabled"
-            end
+            object_disabled_check
         end
 
         # This method determines if a radio button or check box is set.
@@ -3750,35 +3657,31 @@ module Watir
         end
     end        
     
-
     # This class is used as part of the .show method of the iterators class
     # it would not normally be used by a user
-    class Attribute_Length_Holder
-
-        attr_accessor :attribute
-        attr_accessor :length
-
-        def initialize( attrib, length)
-            @attribute = attrib
-            @length = length
+    class AttributeLengthPairs
+        
+        # This class is used as part of the .show method of the iterators class
+        # it would not normally be used by a user
+        class AttributeLengthHolder
+            attr_accessor :attribute
+            attr_accessor :length
+            
+            def initialize( attrib, length)
+                @attribute = attrib
+                @length = length
+            end
         end
-    end
-
-    # This class is used as part of the .show method of the iterators class
-    # it would not normally be used by a user
-    class Attribute_Length_Pairs
-
+        
         def initialize( attrib=nil , length=nil)
             @attr=[]
-            if attrib
-                @attr <<  Attribute_Length_Holder.new( attrib , length )
-            end
+            add( attrib , length ) if attrib
             @index_counter=0
         end
 
-
+        # BUG: Untested. (Null implementation passes all tests.)
         def add( attrib , length)
-            @attr <<  Attribute_Length_Holder.new( attrib , length )
+            @attr <<  AttributeLengthHolder.new( attrib , length )
         end
 
         def delete(attrib)
@@ -3818,8 +3721,6 @@ module Watir
             @show_attributes.add( "disabled" , 9)
             @show_attributes.add( "value" , 20)
         end
-
-
     end
 
     # this class accesses the check boxes in the document as a collection

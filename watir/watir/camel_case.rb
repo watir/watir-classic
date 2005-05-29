@@ -29,4 +29,9 @@ module Watir
     class Form        
         alias waitForIE wait 
     end
+    
+    class SpanDivCommon
+        alias innerText text
+    end    
+    
 end
