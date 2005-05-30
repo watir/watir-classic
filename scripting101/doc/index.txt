@@ -10,12 +10,12 @@ Useful information that will help you complete the tutorial labs.
 
 * "Installation":install.html. Installing Ruby, Timeclock, and the WTR
   toolkit. 
-* "Scripting Web Tests Cheat Sheet":Internet%20Explorer%20Cheat%20Sheet.doc. 
+* "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
+  Ruby language.  
+* "Watir Cheat Sheet":Watir-cheat-sheet.doc. 
   Overview of the Watir library and a few other helpful things.
 * "Using IRB and Watir":Using_IRB_and_Watir_to_Create_Automated_Scripts.doc
   describes how to use Ruby's interactive shell to create Watir tests.
-* "Ruby Cheat Sheet":Ruby-cheat-sheet.doc. A quick overview of the
-  Ruby language.  
 * The Watir User Guide and Example Test Case are installed with Watir 
   (look in your Start menu).
 * "Timeclock Specification":Functional_Specification_for_the_Timeclock_Application.doc. 
@@ -82,6 +82,9 @@ h4. About Watir
 * Also see this 
   "list of articles about Watir":http://wtr.rubyforge.org/wiki/wiki.pl?WatirArticles 
   on our project wiki.
+* Watir makes extensive use of the COM interface to Internet Explorer. 
+  This is "documented":http://msdn.microsoft.com/workshop/browser/webbrowser/reference/Objects/InternetExplorer.asp
+  online.
 
 h4. About Ruby
 
