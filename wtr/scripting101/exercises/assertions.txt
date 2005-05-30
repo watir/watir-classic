@@ -12,7 +12,7 @@ raised, which terminates the script. When we add the tests to a harness,
 any test failures will automatically be collected and reported.
 
 Several assertion methods are included in the 
-"Scripting Web Tests Cheat Sheet":../doc/Internet%20Explorer%20Cheat%20Sheet.doc. 
+"Watir Cheat Sheet":../doc/Watir-cheat-sheet.doc. 
 You may also want to refer to the complete 
 "Assertions Library Reference":../doc/Assertions.html.
 

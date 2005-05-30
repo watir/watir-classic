@@ -6,7 +6,7 @@ You've written some scripts that demonstrate how to automate
 an internet browser. But they aren't really tests. Because they don't
 really check the results. Now it is time to take care of that.
 
-Refer to the "Scripting Web Tests Cheat Sheet":../doc/Internet%20Explorer%20Cheat%20Sheet.doc 
+Refer to the "Watir Cheat Sheet":../doc/Watir-cheat-sheet.doc 
 for several testing methods. The "Ruby Cheat Sheet":../doc/Ruby-cheat-sheet.doc 
 describes the syntax of an if-then statement in Ruby.
 
