@@ -6,7 +6,7 @@ These instructions describe how to install the software we'll use in
 our _Scripting Web Tests_ class (aka _Scripting for Testers_).
 
 We will be using Ruby (a programming language) and Watir
-(a library) on your machine to test server software. You can run the
+(a library) on your machine to test server software. You will also run the
 server software on your computer. 
 
 h3. Hardware Requirements
@@ -55,11 +55,27 @@ We are using "Watir 1.3.1":http://rubyforge.org/frs/?group_id=104&release_id=216
 
 h4. Scripting Class Materials
 
-We are using "Scripting101 1.5.1":http://rubyforge.org/frs/?group_id=104&release_id=2160
+We are using "Scripting101 1.5.2":http://rubyforge.org/frs/?group_id=104&release_id=2181
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.
   
+h4. SpySmith
+
+We are using "SpySmith v 1.0":http://www.qualityforge.com/download/spysmith.zip from QualityForge. 
+This is a commercial tool available for free as a 90-day evaluation.
+
+# Open the zip file using WinZip.
+# Extract all files in this zip archive to top-level drive, e.g. C:\ or D:\ etc. (or create a directory to use as your top-level).
+* The extraction will create the following directories, assuming you extracted to C:\
+** <code>C:\QualityForge\SpySmith</code>
+     contains spysmith.exe, qfss01.dll
+** <code>C:\QualityForge\SpySmith\Docs</code>
+     contains local html help docs
+** <code>C:\QualityForge\SpySmith\Docs\gifs</code>
+     contains local image files
+* Open the containing folder and double-click the SpySmith icon to run the program.
+
 h3. Running the Timeclock Server.
 
 You will need to start up a timeclock server on your machine. 
