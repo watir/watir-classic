@@ -1,7 +1,7 @@
 # These are provided for backwards compatability with Watir 1.1
 
 module Watir
-    module FactoryMethods
+    module SupportsSubElements
         alias waitForIE wait
         alias fileField file_field
         alias textField text_field

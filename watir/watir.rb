@@ -182,7 +182,8 @@ module Watir
     #
     # there are many methods available to the Button object
     #
-    module FactoryMethods 
+    # Is includable for classes that have @ieController, @default_attribute, @default_attributes, document and document.body
+    module SupportsSubElements 
         include Watir::Exception
 
         # this method returns the real Internet Explorer object, allowing access to objects, properties and methods that Watir doesnot support
@@ -877,7 +878,7 @@ module Watir
         private :getContainerContents
 
         # this method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        # BUG: This looks wrong: Not everything that includes FactoryMethods has a document.body!
+        # BUG: This looks wrong: Not everything that includes SupportsSubElements has a document.body!
         def getContainer()
             return document.body
         end
@@ -1257,7 +1258,7 @@ module Watir
     # An instance of this must be created to access Internet Explorer.
     class IE
         include Watir::Exception
-        include FactoryMethods 
+        include SupportsSubElements 
 
         # The revision number ( according to CVS )
         REVISION = "$Revision$"
@@ -1569,7 +1570,7 @@ module Watir
         #
         
         # Return the current document
-        def document()
+        def document
             return @ie.document
         end
            
@@ -1653,7 +1654,7 @@ module Watir
                 end
                 @down_load_time =  Time.now - pageLoadStart 
 
-                run_error_checks()
+                run_error_checks
 
                 print "\b" unless @enable_spinner == false
                 
@@ -1668,7 +1669,7 @@ module Watir
         # Error checkers
 
         # this method runs the predefined error checks
-        def run_error_checks()
+        def run_error_checks
             @error_checkers.each do |e|
                 e.call(self)
             end
@@ -1687,12 +1688,12 @@ module Watir
         end
 
         # The HTML of the current page
-        def html()
+        def html
             return document.body.outerHTML
         end
         
         # The text of the current document
-        def text()
+        def text
             return document.body.innerText.strip
         end
 
@@ -1702,7 +1703,7 @@ module Watir
         
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
-        def show_frames()
+        def show_frames
             if allFrames = document.frames
                 count = allFrames.length
                 puts "there are #{count} frames"
@@ -1720,7 +1721,7 @@ module Watir
         end
         
         # Show all forms displays all the forms that are on a web page.
-        def show_forms()
+        def show_forms
             if allForms = document.forms
                 count = allForms.length
                 puts "There are #{count} forms"
@@ -1737,7 +1738,7 @@ module Watir
         end
 
         # this method shows all the images availble in the document
-        def show_images()
+        def show_images
             doc = document
             index=1
             doc.images.each do |l|
@@ -1750,7 +1751,7 @@ module Watir
         end
         
         # this method shows all the links availble in the document
-        def show_links() 
+        def show_links 
 
             props=       ["name" ,"id" , "href"  ]
             print_sizes= [12 , 12, 60]
@@ -1815,7 +1816,7 @@ module Watir
         # This is usually only used for debugging or writing new test scripts.
         # This is a nice feature to help find out what HTML objects are on a page
         # when developing a test case using Watir.
-        def show_all_objects()
+        def show_all_objects
             puts "-----------Objects in  page -------------" 
             doc = document
             s = ""
@@ -1840,7 +1841,7 @@ module Watir
         end
 
         # this method shows all the divs availble in the document
-        def show_divs( )
+        def show_divs
             divs = document.getElementsByTagName("DIV")
             puts "Found #{divs.length} div tags"
             index=1
@@ -1851,7 +1852,7 @@ module Watir
         end
 
         # this method is used to show all the tables that are available
-        def show_tables( )
+        def show_tables
             tables = document.getElementsByTagName("TABLE")
             puts "Found #{tables.length} tables"
             index=1
@@ -1862,7 +1863,7 @@ module Watir
         end
 
         # this method shows all the spans availble in the document
-        def show_spans( )
+        def show_spans
             spans = document.getElementsByTagName("SPAN")
             puts "Found #{spans.length} span tags"
             index=1
@@ -1872,7 +1873,7 @@ module Watir
             end
         end
 
-        def show_labels( )
+        def show_labels
             labels = document.getElementsByTagName("LABEL")
             puts "Found #{labels.length} label tags"
             index=1
@@ -1885,10 +1886,9 @@ module Watir
         #
         # This method gives focus to the frame
         # It may be removed and become part of the frame object
-        def focus()
-            doc = getDocument()
-            doc.activeElement.blur
-            doc.focus
+        def focus
+            document.activeElement.blur
+            document.focus
         end
        
     end # class IE
@@ -2055,19 +2055,19 @@ module Watir
         end
         
         # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
-        def submit()
+        def submit
             raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.submit 
             @container.wait
         end   
 
-        def getContainerContents()
+        def getContainerContents
             raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.elements.all
         end   
         private :getContainerContents
 
-        def getContainer()
+        def getContainer
             return @form
         end
 
@@ -2124,9 +2124,9 @@ module Watir
                 
     end # class Form
     
-    # This class is the base class for most actions ( such as "click ", etc. ) that occur on an object.
+    # Base class for most elements.
     # This is not a class that users would normally access. 
-    class ObjectActions
+    class Element
         include Watir::Exception
         
         # number of spaces that seperate the property from the value in the to_s method
@@ -2141,13 +2141,13 @@ module Watir
         private
         def self.def_wrap(method_name)
             class_eval "def #{method_name}
-                          object_exist_check
+                          assert_exists
                           @o.invoke('#{method_name}')
                         end"
         end
         def self.def_wrap_guard(method_name)
             class_eval "def #{method_name}
-                          object_exist_check
+                          assert_exists
                           begin
                             @o.invoke('#{method_name}')
                           rescue
@@ -2155,12 +2155,12 @@ module Watir
                           end
                         end"
         end
-        def object_exist_check
+        def assert_exists
             unless @o
                 raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
             end
         end
-        def object_disabled_check
+        def assert_enabled
             unless enabled?
                 raise ObjectDisabledException, "object #{@how} and #{@what} is disabled"
             end                
@@ -2176,13 +2176,13 @@ module Watir
 
         # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
         # BUG: should be renamed appropriately and then use an attribute reader
-        def getOLEObject()
+        def getOLEObject
             return @o
         end
   
         # returns the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
         def html
-            object_exist_check
+            assert_exists
             return @o.outerHTML
         end
 
@@ -2205,7 +2205,7 @@ module Watir
         #      value      Disabled Button
         #      disabled   true
         def to_s
-            object_exist_check
+            assert_exists
             return string_creator.join("\n")
         end
         
@@ -2236,8 +2236,8 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #   ObjectDisabledException if the object is currently disabled
         def click
-            object_exist_check
-            object_disabled_check
+            assert_exists
+            assert_enabled
            
             highLight(:set)
             @o.click()
@@ -2247,7 +2247,7 @@ module Watir
 
         # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
-            object_exist_check
+            assert_exists
             10.times do
                 highLight(:set)
                 sleep 0.05
@@ -2262,8 +2262,8 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def fireEvent(event)
-            object_exist_check
-            object_disabled_check
+            assert_exists
+            assert_enabled
 
             highLight(:set)
             @o.fireEvent(event)
@@ -2276,8 +2276,8 @@ module Watir
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
         def focus()
-            object_exist_check
-            object_disabled_check
+            assert_exists
+            assert_enabled
             @o.focus()
         end
         
@@ -2289,7 +2289,7 @@ module Watir
         # Returns true if the element is enabled, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
-            object_exist_check
+            assert_exists
             return ! @o.invoke("disabled")
         end
     end
@@ -2297,7 +2297,7 @@ module Watir
 
     # this class is the super class for the iterator classes ( buttons, links, spans etc
     # it would normally only be accessed by the iterator methods ( spans , links etc) of IE
-    class Iterators
+    class ElementCollections
         include Enumerable
 
         # Super class for all the iteractor classes
@@ -2376,11 +2376,11 @@ module Watir
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
     #
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class SpanDivCommon < ObjectActions
+    class SpanDivCommon < Element
         include Watir::Exception
-        include FactoryMethods 
+        include SupportsSubElements 
 
         attr_reader :typingspeed      
 
@@ -2405,21 +2405,21 @@ module Watir
         # this method returns the innerText of the object
         # raises an ObjectNotFound exception if the object cannot be found
         def text
-            object_exist_check
+            assert_exists
             return @o.innerText.strip
         end
 
         # returns the classname of the style that this san or div is using
         # raises an ObjectNotFound exception if the object cannot be found
         def style
-            object_exist_check
+            assert_exists
             return @o.invoke("className")
         end
 
         # this method returns the type of  object
         # raises an ObjectNotFound exception if the object cannot be found
         def type
-            object_exist_check
+            assert_exists
             return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
         end
 
@@ -2435,7 +2435,7 @@ module Watir
          # returns the properties of the object in a string
          # raises an ObjectNotFound exception if the object cannot be found
          def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + span_div_string_creator
             return r.join("\n")
@@ -2465,9 +2465,9 @@ module Watir
 
     # this class is used to access a label object on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
     #
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class Label < ObjectActions
+    class Label < Element
         def initialize( ieController , how, what)
             @ieController = ieController
             @how = how
@@ -2478,18 +2478,18 @@ module Watir
 
         # return the type of this object
         def type
-            object_exist_check
+            assert_exists
             return "Label"
         end
 
         # return the ID of the control that this label is associated with
         def for
-            object_exist_check
+            assert_exists
             return @o.htmlFor
         end
 
         def text
-            object_exist_check
+            assert_exists
             return @o.innerText.strip
         end
         alias innerText :text
@@ -2506,7 +2506,7 @@ module Watir
         # returns the properties of the object in a string
         # raises an ObjectNotFound exception if the object cannot be found
         def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + label_string_creator
             return r.join("\n")
@@ -2515,11 +2515,11 @@ module Watir
     end
 
     # This class is used for dealing with tables.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#table method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#table method
     #
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class Table < ObjectActions
+    class Table < Element
  
         # Returns an initialized instance of the table object to wich anElement belongs
         #   * ieController  - an instance of an IE object
@@ -2618,7 +2618,7 @@ module Watir
         # returns the properties of the object in a string
         # raises an ObjectNotFound exception if the object cannot be found
         def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + table_string_creator
             return r.join("\n")
@@ -2626,7 +2626,7 @@ module Watir
 
         # iterates through the rows in the table. Yields a TableRow object
         def each
-            object_exist_check
+            assert_exists
             1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@ieController ,:direct, row(i) )    }
         end
  
@@ -2709,9 +2709,9 @@ module Watir
 
     # this class is a collection of the table body objects that exist in the table
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class TableBodies<ObjectActions
+    class TableBodies<Element
         def initialize(ieController, how, what )
             @ieController = ieController
             @o= nil
@@ -2722,13 +2722,13 @@ module Watir
  
         # returns the number of TableBodies that exist in the table
         def length
-            object_exist_check
+            assert_exists
             return @o.tBodies.length
         end
 
         # returns the n'th Body as a Watir TableBody object
         def []n
-            object_exist_check
+            assert_exists
             return TableBody.new( @ieController , :direct , @o.tBodies[(n-1).to_s] )
         end
 
@@ -2745,7 +2745,7 @@ module Watir
 
 
     # this class is a table body
-    class TableBody<ObjectActions
+    class TableBody<Element
         def initialize(ieController, how, what, parent_table=nil )
             @ieController = ieController
             @o= nil
@@ -2772,7 +2772,7 @@ module Watir
 
         # returns the specified row as a TableRow object
         def []n
-            object_exist_check
+            assert_exists
             return TableRow.new( @ieController , :direct , @rows[n-1] )
         end
 
@@ -2789,7 +2789,7 @@ module Watir
 
 
     # this class is a table row
-    class TableRow < ObjectActions
+    class TableRow < Element
 
         # Returns an initialized instance of a table row          
         #   * o  - the object contained in the row
@@ -2813,7 +2813,7 @@ module Watir
 
         # this method updates the internal list of cells. 
         def update_row_cells
-            if @o   # cant call the object_exist_check here, as an exists? method call will fail
+            if @o   # cant call the assert_exists here, as an exists? method call will fail
                 @cells=[]
                 @o.cells.each do |oo|
                     @cells << TableCell.new(@ieController, :direct, oo)
@@ -2828,7 +2828,7 @@ module Watir
 
    	  # Returns an element from the row as a TableCell object
         def [](index)
-            object_exist_check
+            assert_exists
             raise UnknownCellException , "Unable to locate a cell at index #{index}" if @cells.length < index
             return @cells[(index-1)]
         end
@@ -2845,10 +2845,9 @@ module Watir
     end
  
     # this class is a table cell - when called via the Table object
-    class TableCell <ObjectActions
-
+    class TableCell <Element
         include Watir::Exception
-        include FactoryMethods 
+        include SupportsSubElements 
 
         attr_reader :typingspeed      
         attr_reader :activeObjectHighLightColor 
@@ -2873,20 +2872,20 @@ module Watir
              @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
          end 
 
-        def getContainerContents()
+        def getContainerContents
             return @o.all
         end
 
-        def getContainer()
+        def getContainer
             return @o
         end
 
-        def document()
+        def document
             return @o  
         end
 
         # returns the contents of the cell as text
-        def text()
+        def text
              raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
              return @o.innerText.strip 
         end
@@ -2895,13 +2894,12 @@ module Watir
    end
 
 
-
     # This class is the means of accessing an image on a page.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#button method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#button method
     #
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class Image < ObjectActions
+    class Image < Element
         
         # Returns an initialized instance of a image  object
         #   * ieController  - an instance of an IEController
@@ -2929,7 +2927,7 @@ module Watir
 
         # returns a string representation of the object
         def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + image_string_creator
             return r.join("\n")
@@ -2939,31 +2937,31 @@ module Watir
 
         # this method returns the file created date of the image
         def fileCreatedDate
-            object_exist_check
+            assert_exists
             return @o.invoke("fileCreatedDate")
         end
 
         # this method returns the filesize of the image
         def fileSize
-            object_exist_check
+            assert_exists
             return @o.invoke("fileSize").to_s
         end
 
         # returns the width in pixels of the image, as a string
         def width
-            object_exist_check
+            assert_exists
             return @o.invoke("width").to_s
         end
 
         # returns the height in pixels of the image, as a string
         def height
-            object_exist_check
+            assert_exists
             return @o.invoke("height").to_s
         end
 
         # returns the type of the object - 'image'
         def type 
-            object_exist_check
+            assert_exists
             return "image"
         end
  
@@ -3029,10 +3027,10 @@ module Watir
     
     
     # This class is the means of accessing a link on a page
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#link method
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#link method
+    # many of the methods available to this object are inherited from the Element class
     #
-    class Link < ObjectActions
+    class Link < Element
         # Returns an initialized instance of a link object
         #   * ieController  - an instance of an IEController
         #   * how         - symbol - how we access the link
@@ -3051,13 +3049,13 @@ module Watir
 
         # returns 'link' as the object type
         def type
-            object_exist_check
+            assert_exists
             return "link"
         end
 
         # returns the text displayed by the link
         def innerText
-            object_exist_check
+            assert_exists
             return @o.innerText.strip
         end
         alias text innerText
@@ -3090,7 +3088,7 @@ module Watir
 
          # returns a textual description of the link
          def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + link_string_creator
             return r.join("\n")
@@ -3098,11 +3096,11 @@ module Watir
     end
     
     # This class is the way in which select boxes are manipulated.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#select_list method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#select_list method
     #
-    # many of the methods available to this object are inherited from the ObjectActions class
+    # many of the methods available to this object are inherited from the Element class
     #
-    class SelectList < ObjectActions
+    class SelectList < Element
         # returns an initialized instance of a SelectList object
         #   * ieController  - an instance of an IEController
         #   * how          - symbol - how we access the select box
@@ -3117,14 +3115,6 @@ module Watir
         
         attr :o
 
-        def assert_exists
-            unless @o
-                raise UnknownObjectException,  
-                    "Unable to locate a select list using #{@how} and #{@what}"
-            end
-        end
-        private :assert_exists
-        
         # This method clears the selected items in the select box
         def clearSelection
             assert_exists
@@ -3271,11 +3261,11 @@ module Watir
     end    
 
     # This is the main class for accessing buttons.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#button method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#button method
     #
-    # most of the methods available to Button objects are inherited from the ObjectActions class
+    # most of the methods available to Button objects are inherited from the Element class
     #
-    class Button < ObjectActions
+    class Button < Element
         def initialize( ieController,  how , what )
             @ieController = ieController
             @how = how
@@ -3295,9 +3285,9 @@ module Watir
     end
 
     # This is the main class for accessing reset buttons.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#reset method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#reset method
     #
-    # most of the methods available to this element are inherited from the ObjectActions class
+    # most of the methods available to this element are inherited from the Element class
     #
     class Reset < Button
         def object_types
@@ -3306,7 +3296,7 @@ module Watir
     end
     
     # File dialog
-    class FileField < ObjectActions
+    class FileField < Element
         # Create an instance of the file object
         def initialize( ieController,  how , what )
             @ieController = ieController
@@ -3321,7 +3311,7 @@ module Watir
         end
 
         def set(setPath)
-            object_exist_check	        
+            assert_exists	        
             Thread.new {
                 clicker = WinClicker.new
                 clicker.setFileRequesterFileName_newProcess(setPath)
@@ -3336,11 +3326,11 @@ module Watir
 
     # This class is the class for radio buttons and check boxes. 
     # It contains methods common to both.
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#checkbox or Watir::FactoryMethods#radio methods
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#checkbox or Watir::SupportsSubElements#radio methods
     #
-    # most of the methods available to this element are inherited from the ObjectActions class
+    # most of the methods available to this element are inherited from the Element class
     #
-    class RadioCheckCommon < ObjectActions
+    class RadioCheckCommon < Element
 
         def initialize( ieController,  how , what , type, value=nil )
             @ieController = ieController
@@ -3350,14 +3340,6 @@ module Watir
             @value = value
             @o = @ieController.getObject( @how, @what , @type, @value)
             super( @o )
-        end
-
-        def assert_exists
-            object_exist_check
-        end
-
-        def assert_enabled
-            object_disabled_check
         end
 
         # This method determines if a radio button or check box is set.
@@ -3398,11 +3380,11 @@ module Watir
     end
         
     # This class is the main class for Text Fields
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#text_field method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#text_field method
     #
-    # most of the methods available to this element are inherited from the ObjectActions class
+    # most of the methods available to this element are inherited from the Element class
     #
-    class TextField < ObjectActions
+    class TextField < Element
         
         def initialize( ieController,  how , what )
             @ieController = ieController
@@ -3423,12 +3405,12 @@ module Watir
         private :supported_types
 
         def size
-            object_exist_check
+            assert_exists
             return @o.size
         end
 
         def maxLength
-            object_exist_check
+            assert_exists
             return @o.maxlength
         end
 
@@ -3442,7 +3424,7 @@ module Watir
          end
 
          def to_s
-            object_exist_check
+            assert_exists
             r = string_creator
             r=r + text_string_creator
             return r.join("\n")
@@ -3452,7 +3434,7 @@ module Watir
         # This method returns true or false if the text field is read only.
         #   Raises  UnknownObjectException if the object can't be found.
         def readOnly?
-            object_exist_check
+            assert_exists
             return @o.readOnly 
         end   
         
@@ -3460,7 +3442,7 @@ module Watir
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
-            object_exist_check
+            assert_exists
             return self.value
         end
         
@@ -3469,7 +3451,7 @@ module Watir
         #   Raises  UnknownObjectException if the object can't be found
         #   * containsThis - string or reg exp  -  the text to verify 
         def verify_contains( containsThis )
-            object_exist_check            
+            assert_exists            
             if containsThis.kind_of? String
                 return true if self.value == containsThis
             elsif containsThis.kind_of? Regexp
@@ -3483,7 +3465,7 @@ module Watir
         #   * destination_how   - symbol, :id, :name how we identify the drop target 
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
         def dragContentsTo( destination_how , destination_what)
-            object_exist_check
+            assert_exists
             destination = @ieController.textField(destination_how , destination_what)
 
             raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
@@ -3508,8 +3490,8 @@ module Watir
         #   Raises  UnknownObjectException if the object can't be found
         #   Raises  ObjectDisabledException if the object is disabled
         #   Raises  ObjectReadOnlyException if the object is read only
-        def clear()
-            object_exist_check
+        def clear
+            assert_exists
             raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
@@ -3532,9 +3514,9 @@ module Watir
         #   Raises  ObjectReadOnlyException if the object is read only
         #   * setThis  - string - the text to append
         def append( setThis)
-            object_exist_check
-            raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
-            raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
+            assert_exists
+            raise ObjectDisabledException, "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
+            raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
             highLight(:set)
             @o.scrollIntoView
@@ -3549,9 +3531,9 @@ module Watir
         #   Raises  ObjectReadOnlyException if the object is read only
         #   * setThis  - string - the text to set 
         def set( setThis )
-            object_exist_check
-            raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
-            raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
+            assert_exists
+            raise ObjectDisabledException, "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
+            raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
             
             highLight(:set)
             @o.scrollIntoView
@@ -3567,7 +3549,7 @@ module Watir
         # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
         # it is preffered to use the set method.
         def value=(v)
-            object_exist_check
+            assert_exists
             @o.value = v.to_s
         end
 
@@ -3605,11 +3587,11 @@ module Watir
     end
 
     # this class can be used to access hidden field objects
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#hidden method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#hidden method
     #
-    # most of the methods available to this element are inherited from the ObjectActions class
+    # most of the methods available to this element are inherited from the Element class
     #
-    class Hidden  < TextField 
+    class Hidden < TextField 
 
         def initialize( ieController,  how , what )
             super
@@ -3647,7 +3629,7 @@ module Watir
 
 
     # presumes element_class or element_tag is defined
-    # for subclasses of Iterators
+    # for subclasses of ElementCollections
     module CommonCollection
         def element_tag
             element_class.tag
@@ -3708,9 +3690,9 @@ module Watir
     
 
     # this class accesses the buttons in the document as a collection
-    # it would normally only be accessed by the Watir::FactoryMethods#buttons method
+    # it would normally only be accessed by the Watir::SupportsSubElements#buttons method
     #
-    class Buttons < Iterators
+    class Buttons < ElementCollections
         def element_class; Button; end
         def length
             get_length_of_input_objects(["button", "submit", "image"])
@@ -3724,9 +3706,9 @@ module Watir
     end
 
     # this class accesses the check boxes in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#checkboxes method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#checkboxes method
     #
-    class CheckBoxes < Iterators
+    class CheckBoxes < ElementCollections
         def element_class; CheckBox; end  
         def length
             get_length_of_input_objects("checkbox")
@@ -3739,9 +3721,9 @@ module Watir
     end
 
     # this class accesses the radio buttons in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#radios method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#radios method
     #
-    class Radios < Iterators
+    class Radios < ElementCollections
         def element_class; Radio; end
         def length
             get_length_of_input_objects("radio")
@@ -3754,18 +3736,18 @@ module Watir
     end
 
     # this class accesses the select boxes  in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#select_lists method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#select_lists method
     #
-    class SelectLists < Iterators
+    class SelectLists < ElementCollections
         include CommonCollection
         def element_class; SelectList; end
         def element_tag; 'SELECT'; end
     end
 
     # this class accesses the links in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#links method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#links method
     #
-    class Links < Iterators
+    class Links < ElementCollections
         include CommonCollection
         def element_class; Link; end    
         def element_tag; 'A'; end
@@ -3779,9 +3761,9 @@ module Watir
     end
 
     # this class accesses the imnages in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#images method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#images method
     #
-    class Images < Iterators
+    class Images < ElementCollections
         def element_class; Image; end 
         def length
             @ieController.document.images.length
@@ -3796,9 +3778,9 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#text_fields method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#text_fields method
     #
-    class TextFields < Iterators
+    class TextFields < ElementCollections
         def element_class; TextField; end
         def length
             # text areas are also included inthe Text_filds, but we need to get them seperately
@@ -3808,8 +3790,8 @@ module Watir
     end
 
     # this class accesses the hidden fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#hiddens method
-    class Hiddens < Iterators
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#hiddens method
+    class Hiddens < ElementCollections
         def element_class; Hidden; end
         def length
             get_length_of_input_objects("hidden")
@@ -3817,9 +3799,9 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#tables method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#tables method
     #
-    class Tables< Iterators
+    class Tables < ElementCollections
         include CommonCollection
         def element_class; Table; end
         def element_tag; 'TABLE'; end
@@ -3831,9 +3813,9 @@ module Watir
     end
 
     # this class accesses the labels in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#labels method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#labels method
     #
-    class Labels< Iterators
+    class Labels < ElementCollections
         include CommonCollection
         def element_class; Label; end
         def element_tag; 'LABEL'; end
@@ -3845,9 +3827,9 @@ module Watir
     end
 
     # this class accesses the p tags in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#ps method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#ps method
     #
-    class Ps < Iterators
+    class Ps < ElementCollections
         include CommonCollection
         def element_class; P; end
 
@@ -3860,9 +3842,9 @@ module Watir
     end
 
     # this class accesses the spans in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#spans method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#spans method
     #
-    class Spans < Iterators
+    class Spans < ElementCollections
         include CommonCollection
         def element_class; Span; end
 
@@ -3875,9 +3857,9 @@ module Watir
     end
 
     # this class accesses the divs in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::FactoryMethods#divs method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#divs method
     #
-    class Divs< Iterators
+    class Divs < ElementCollections
         include CommonCollection
         def element_class; Div; end
 
