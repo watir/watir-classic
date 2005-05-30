@@ -32,8 +32,8 @@ class TC_TextArea < Test::Unit::TestCase
         gotoPage()
 
         # test for read only method
-        assert_false($ie.text_field(:name, "txtMultiLine1").readOnly? )  
-        assert($ie.text_field(:name,"txtReadOnly").readOnly?)
+        assert_false($ie.text_field(:name, "txtMultiLine1").readonly? )  
+        assert($ie.text_field(:name,"txtReadOnly").readonly?)
 
         # test for enabled? method
         assert_false($ie.text_field(:name, "txtDisabled").enabled? )  

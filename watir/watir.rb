@@ -1800,7 +1800,7 @@ module Watir
                 s=s+current.invoke("type").to_s.ljust(16)
             rescue
             end
-            props=["name" ,"id" , "value" , "alt" , "src","innerText","href"]
+            props=["name", "id", "value", "alt", "src", "innerText", "href"]
             props.each do |prop|
                 begin
                     p = current.invoke(prop)
@@ -3418,7 +3418,7 @@ module Watir
             n = []
             n <<   "length:".ljust(TO_S_SIZE) + self.size.to_s
             n <<   "max length:".ljust(TO_S_SIZE) + self.maxLength.to_s
-            n <<   "read only:".ljust(TO_S_SIZE) + self.readOnly?.to_s
+            n <<   "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
 
             return n
          end
@@ -3429,16 +3429,20 @@ module Watir
             r=r + text_string_creator
             return r.join("\n")
          end
-
         
         # This method returns true or false if the text field is read only.
         #   Raises  UnknownObjectException if the object can't be found.
-        def readOnly?
+        def readonly?
             assert_exists
             return @o.readOnly 
-        end   
+        end
+        alias readOnly? :readonly?
+
+        def assert_not_readonly
+            raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only"  if self.readonly?
+        end                
         
-        # TODO: rename me
+        # BUG: rename me
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
@@ -3492,8 +3496,8 @@ module Watir
         #   Raises  ObjectReadOnlyException if the object is read only
         def clear
             assert_exists
-            raise ObjectDisabledException , "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
-            raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
+            assert_enabled
+            assert_not_readonly
             
             highLight(:set)
             
@@ -3515,8 +3519,8 @@ module Watir
         #   * setThis  - string - the text to append
         def append( setThis)
             assert_exists
-            raise ObjectDisabledException, "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
-            raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
+            assert_enabled
+            assert_not_readonly
             
             highLight(:set)
             @o.scrollIntoView
@@ -3532,8 +3536,8 @@ module Watir
         #   * setThis  - string - the text to set 
         def set( setThis )
             assert_exists
-            raise ObjectDisabledException, "Textfield #{@how} and #{@what} is disabled "   if !self.enabled?
-            raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only "  if self.readOnly?
+            assert_enabled
+            assert_not_readonly
             
             highLight(:set)
             @o.scrollIntoView
@@ -3558,7 +3562,6 @@ module Watir
             @o.fireEvent("onKeyPress")
             @o.fireEvent("onKeyUp")
         end
-
 
         # This method is used internally by setText and appendText
         # It should not be used externally.

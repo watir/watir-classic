@@ -90,16 +90,13 @@ class TC_Fields < Test::Unit::TestCase
        assert_false($ie.text_field(:name, "disabled").enabled? )  
        assert($ie.text_field(:name, "text1").enabled? )  
        assert($ie.text_field(:id, "text2").enabled? )  
-
     end
 
     def test_text_field_readOnly
-       assert_false($ie.text_field(:name, "disabled").readOnly? )  
-       assert($ie.text_field(:name, "readOnly").readOnly? )  
-       assert($ie.text_field(:id, "readOnly2").readOnly? )  
-
+       assert_false($ie.text_field(:name, "disabled").readonly? )  
+       assert($ie.text_field(:name, "readOnly").readonly? )  
+       assert($ie.text_field(:id, "readOnly2").readonly? )  
     end
-
 
     def test_text_field_getContents()
          assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:name, "missing_field").append("Some Text") }  
@@ -169,7 +166,6 @@ class TC_Fields < Test::Unit::TestCase
          # may need this to see that it really happened
          #puts "press return to continue"
          #gets 
-
     end
 
     def test_text_field_properties
