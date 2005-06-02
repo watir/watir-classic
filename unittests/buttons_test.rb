@@ -84,21 +84,7 @@ class TC_Buttons < Test::Unit::TestCase
         $ie.default_attribute = nil
         assert_equal("b4"  , $ie.button('Disabled Button').name  ) 
     end
-
  
-    def test_button_refresh
-
-        goto_button_page
-        a=$ie.button(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-
-
-    end
-
     def test_properties
        goto_button_page()
 

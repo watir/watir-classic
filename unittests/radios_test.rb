@@ -10,14 +10,13 @@ class TC_Radios < Test::Unit::TestCase
     def setup()
         $ie.goto($htmlRoot + "radioButtons1.html")
     end
-   
 
     def test_default_attribute_for_all
-        $ie.set_default_attribute( :id)
-        assert_equal('id' , $ie.get_default_attribute)
+        $ie.default_attribute = :id
+        assert_equal(:id , $ie.default_attribute)
         assert_raises(UnknownObjectException ) { $ie.radio('missing_id').id }
         assert_equal("on"  , $ie.radio('box5').value  ) 
-        $ie.set_default_attribute( nil )
+        $ie.default_attribute = nil 
     end
 
     def test_default_attribute_for_radio
@@ -34,7 +33,7 @@ class TC_Radios < Test::Unit::TestCase
      
         # make sure that setting the default for a radio directly, overrides the all setting
         # we are still using the name attribute, set a few lines up
-        $ie.set_default_attribute( :id)
+        $ie.default_attribute = :id
         assert_equal(false  , $ie.radio('box1').checked?)  #box1 is a name 
 
 
@@ -44,21 +43,10 @@ class TC_Radios < Test::Unit::TestCase
         # make sure the global attribute (id)  is used
         assert_equal(false  , $ie.radio('box5').checked?)   # box5 is an id
         # clear the global attribute
-        $ie.set_default_attribute( nil )
+        $ie.default_attribute = nil
 
 
     end
-
-    def test_radios_refresh
-
-        a=$ie.radio(:index,1)
-        assert_nothing_raised() { a.to_s }
-        $ie.refresh
-        assert_raises( WIN32OLERuntimeError ) { a.to_s }
-        a.refresh
-        assert_nothing_raised() { a.to_s }
-    end
-
 
     def test_Radio_Exists
        assert($ie.radio(:name, "box1").exists?)   
