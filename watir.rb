@@ -1334,7 +1334,8 @@ module Watir
         # dont make private
         def attach_init( how, what )
             attach_browser_window(how, what)
-            set_defaults                        
+            set_defaults
+            wait                        
         end        
         
         def set_defaults
