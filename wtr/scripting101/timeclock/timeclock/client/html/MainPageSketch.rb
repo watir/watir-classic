@@ -30,7 +30,7 @@ module Timeclock
           column_attrs = {:width => "33%", :align => "center",
                           :style => "vertical-align: top;"} 
           [background_buttons_xhtml,
-           table({:align => 'center'},
+           table({:align => 'center' , :id => 'job_and_day'  },
                  tr(td(column_attrs,
                        vertical(start_job_table_xhtml,
                                 create_job_table_xhtml)),
@@ -88,7 +88,7 @@ module Timeclock
                        tight_table(head_row(b("Or create a new job")),
                                    tr(td(center(BodyBlueFill),
                                          input({:type => 'text',
-                                                 :name => 'name',
+                                                 :name => 'job_name',
                                                  :size => '16',
                                                  :maxlength => '100'}) , 
 						 input({:type => 'submit',
