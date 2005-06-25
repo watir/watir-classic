@@ -18,6 +18,7 @@ module Timeclock
                    :action => "login"},
                  input({:type => 'text',
                          :name => 'name',
+			             :id => 'login',
                          :value => '',
                          :size => '20',
                          :maxlength => '100'}),
