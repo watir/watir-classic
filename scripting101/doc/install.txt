@@ -2,8 +2,8 @@ h1. Scripting Web Tests
 
 h2. Installation Instructions
 
-These instructions describe how to install the software we'll use in
-our _Scripting Web Tests_ class (aka _Scripting for Testers_).
+These instructions describe how to install the software we use in
+our _Scripting Web Tests_ class (also called _Scripting for Testers_).
 
 We will be using Ruby (a programming language) and Watir
 (a library) on your machine to test server software. You will also run the
@@ -22,7 +22,7 @@ environment. Sorry.)
 
 The Watir library requires Internet Explorer and therefore only runs on 
 Windows. The Timeclock server was developed on a
-Macintosh, and should run on any machine supporting Ruby (Unix, Linux,
+Macintosh, and should run on any machine supporting Ruby (Unix, Linux, Mac,
 Windows). (The Timeclock "product tests" will not run on Windows using
 the mswin build -- the one you use for the class. They will run on
 Windows using the cygwin build.)
