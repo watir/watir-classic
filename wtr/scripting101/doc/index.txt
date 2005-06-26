@@ -42,6 +42,15 @@ A series of labs based on the Timeclock application.
 * Lab 6. "Harnessing Tests":../exercises/test-harness.html.
   Collect your tests in a test harness.
 
+h3. Presentation Decks
+
+Powerpoint slides we review in the tutorial.
+
+* "Introduction":tutorial_introduction.ppt
+* "How Watir Works":how_watir_works.ppt
+* "The Watir Community":watir_world.ppt
+* "Other Testing Tools":beyond_watir.ppt
+
 h3. Advanced Material
 
 This is advanced material that ordinarily is not used in the one-day
