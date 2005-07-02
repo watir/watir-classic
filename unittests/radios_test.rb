@@ -71,12 +71,34 @@ class TC_Radios < Test::Unit::TestCase
    end
 
    def test_onClick
+
+       assert_false($ie.radio(:name, "box5").isSet?)
        assert_false($ie.button(:value , "foo").enabled?)
+
+       # first click the button is enabled and the radio is set
        $ie.radio(:name, "box5" , 1).set
+       assert($ie.radio(:name, "box5",1).isSet?)
        assert($ie.button(:value , "foo").enabled?)
 
-       $ie.radio(:name, "box5", 2).set
+       # second click the button is disabled and the radio is still set
+       $ie.radio(:name, "box5", 1).set
+       assert($ie.radio(:name, "box5",1).isSet?)
        assert_false($ie.button(:value , "foo").enabled?)
+
+       # third click the button is enabled and the radio is still set
+       $ie.radio(:name, "box5", 1).set
+       assert($ie.radio(:name, "box5",1 ).isSet?)
+       assert($ie.button(:value , "foo").enabled?)
+
+       # click the radio with a value of 2 , button is disabled and the radio is still set
+       $ie.radio(:name, "box5", 2).set
+       assert_false($ie.radio(:name, "box5" ,1).isSet?)
+       assert($ie.radio(:name, "box5" ,2).isSet?)
+       assert_false($ie.button(:value , "foo").enabled?)
+
+
+
+
     end
 
     def test_Radio_isSet
