@@ -2534,7 +2534,7 @@ module Watir
         end
 
         # Returns an initialized instance of a table object
-        #   * ieController  - an instance of an IEController
+        #   * parent      - an instance of an IEController ( or a frame etc )
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
@@ -2555,7 +2555,10 @@ module Watir
             super( @o )
         end
 
+        # --- 
         # BUG: should be private
+        # +++
+        # this method finds the specified table on the page
         def get_table
                 allTables = @ieController.document.getElementsByTagName("TABLE")
                 @ieController.log "There are #{ allTables.length } tables"
@@ -2565,7 +2568,7 @@ module Watir
                     next  unless table == nil
                     case @how
                         when :id
-                        if t.invoke("id").to_s == @what.to_s
+                        if @what.matches( t.invoke("id").to_s )
                             table = t
                         end
                         when :index
