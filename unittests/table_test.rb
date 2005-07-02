@@ -265,6 +265,17 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 1).column_values(1))
     end
 
+    def test_colspan
+        $ie.goto($htmlRoot + "simple_table_columns.html")
+        assert_equal(2, $ie.table(:index, 3)[2][1].colspan)
+        assert_equal(1, $ie.table(:index, 3)[1][1].colspan)
+        assert_equal(3, $ie.table(:index, 3)[4][1].colspan)
+
+    end
+
+
+
+
     def test_get_columnvalues_multiple_column
         $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 2).column_values(1))

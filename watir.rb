@@ -2896,6 +2896,10 @@ module Watir
         end
         alias to_s text
  
+        def colspan
+            @o.colSpan
+        end
+
    end
 
 
