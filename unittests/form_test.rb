@@ -81,6 +81,11 @@ class TC_Forms3 < Test::Unit::TestCase
         assert($ie.form(:action, "pass.html").exists?)   
         assert_false($ie.form(:action, "missing").exists?)   
     end
+
+    def test_getObject_when_non_watir_object_before_it
+        # test for bug reported by Scott Pack,  http://rubyforge.org/pipermail/wtr-general/2005-June/002223.html
+        assert_equal("check1" , $ie.checkbox(:index,1).name )
+    end
     
     def test_showforms # add verification of output!
         $ie.showForms

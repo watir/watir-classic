@@ -911,7 +911,8 @@ module Watir
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
             if how == :index
-                o = getObjectAtIndex( container, what , types , value)
+                o = getObjectAtIndex( container, what , elementTypes , value)
+
             elsif how == :caption || how == :value 
                 o = getObjectWithValue( what, container , "submit" , "button" )
             elsif how == :src || how ==:alt
