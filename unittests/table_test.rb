@@ -20,6 +20,10 @@ class TC_Tables < Test::Unit::TestCase
        assert_false($ie.table(:index, 33).exists? )
 
        assert($ie.table(:id, 't1').exists? )
+       assert($ie.table(:id, /t/).exists? )
+       assert_false($ie.table(:id , /missing_table/).exists? )
+
+
        assert($ie.table(:index, 1).exists? )
        assert($ie.table(:index, 2).exists? )
     end
