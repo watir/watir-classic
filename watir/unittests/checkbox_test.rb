@@ -85,6 +85,11 @@ class TC_CheckBox < Test::Unit::TestCase
 
        $ie.checkBox(:name, "box5").clear
        assert_false($ie.button(:value , "foo").enabled?)
+
+       $ie.checkBox(:name, "box5").clear
+       assert_false($ie.button(:value , "foo").enabled?)
+
+
     end
 
     def test_CheckBox_Exists

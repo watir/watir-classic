@@ -533,7 +533,7 @@ module Watir
         #  *  what  - string, int or re , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         #
-        # returns a RadioCheckCommon object
+        # returns a CheckBox object
         #
         # Valid values for 'how' are
         #
@@ -570,7 +570,7 @@ module Watir
                 find_how= what
             end
             
-            return RadioCheckCommon.new( self,  attribute, find_how, "checkbox", value)
+            return CheckBox.new( self,  attribute, find_how, "checkbox", value)
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -589,7 +589,7 @@ module Watir
         #  *  what  - string, int or regexp , what we are looking for, 
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         #
-        # returns a RadioCheckCommon object
+        # returns a Radio object
         #
         # Valid values for 'how' are
         #
@@ -627,7 +627,7 @@ module Watir
                 find_how= what
             end
             
-            return RadioCheckCommon.new( self,  attribute, find_how, "radio", value)
+            return Radio.new( self,  attribute, find_how, "radio", value)
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -3383,6 +3383,47 @@ module Watir
         
     end
         
+    class Radio < RadioCheckCommon 
+
+    end
+
+    class CheckBox < RadioCheckCommon 
+
+        # This method sets the check box.
+        #   Raises UnknownObjectException  if its unable to locate an object
+        #         ObjectDisabledException  if the object is disabled 
+        def set
+            assert_exists
+            assert_enabled
+            highLight( :set)
+            if @o.checked == false
+                @o.checked = true
+                @o.fireEvent("onClick")
+               @ieController.wait
+            end
+            highLight( :clear )
+        end
+
+        # This method clears a check box. 
+        # Returns true if set or false if not set.
+        #   Raises UnknownObjectException if its unable to locate an object
+        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
+        def clear
+            assert_exists
+            assert_enabled
+            highLight( :set)
+            if @o.checked == true
+                @o.checked = false
+                @o.fireEvent("onClick")
+                @ieController.wait
+            end
+            highLight( :clear)
+        end
+
+
+    end
+
+
     # This class is the main class for Text Fields
     # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#text_field method
     #
