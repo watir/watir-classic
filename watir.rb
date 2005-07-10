@@ -3368,9 +3368,9 @@ module Watir
         def clear
             assert_exists
             assert_enabled
-            @o.checked = false
-            @o.fireEvent("onClick")
-            @ieController.wait
+            highLight( :set)
+            set_clear_item( false )
+            highLight( :clear )
         end
         
         # This method sets the radio list item or check box.
@@ -3380,18 +3380,27 @@ module Watir
             assert_exists
             assert_enabled
             highLight( :set)
-            @o.checked = true
-            @o.fireEvent("onClick")
-            @ieController.wait
+            set_clear_item( true )
             highLight( :clear )
         end
-        
+    
+        # This method is the common code for setting or clearing checkboxes and radio. A user would normalyy not access this, but use Checkbox#set etc
+
+        def set_clear_item( set )
+            @o.checked = set
+            @o.fireEvent("onClick")
+            @ieController.wait
+        end
+    
     end
-        
+
+    # This class is the watir representation of a radio button.        
     class Radio < RadioCheckCommon 
 
     end
 
+
+    # This class is the watir representation of a check box.
     class CheckBox < RadioCheckCommon 
 
         # This method sets the check box.
@@ -3402,9 +3411,7 @@ module Watir
             assert_enabled
             highLight( :set)
             if @o.checked == false
-                @o.checked = true
-                @o.fireEvent("onClick")
-               @ieController.wait
+                set_clear_item( true )
             end
             highLight( :clear )
         end
@@ -3412,15 +3419,13 @@ module Watir
         # This method clears a check box. 
         # Returns true if set or false if not set.
         #   Raises UnknownObjectException if its unable to locate an object
-        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
+        #         ObjectDisabledException  if the object is disabled 
         def clear
             assert_exists
             assert_enabled
             highLight( :set)
             if @o.checked == true
-                @o.checked = false
-                @o.fireEvent("onClick")
-                @ieController.wait
+                set_clear_item( false )
             end
             highLight( :clear)
         end
