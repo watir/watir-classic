@@ -3461,7 +3461,7 @@ module Watir
         end
 
         def supported_types
-            return ["text" , "password","textarea"] 
+            return ["text" , "password", "textarea"] 
         end
         private :supported_types
 
@@ -3609,6 +3609,8 @@ module Watir
             @o.fireEvent("onKeyPress")
             doKeyPress( setThis )
             highLight(:clear)
+            @o.fireEvent("onChange")
+            @o.fireEvent("onBlur")
         end
         
         # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
@@ -3623,6 +3625,7 @@ module Watir
             @o.fireEvent("onKeyPress")
             @o.fireEvent("onKeyUp")
         end
+        private :fire_key_events
 
         # This method is used internally by setText and appendText
         # It should not be used externally.
