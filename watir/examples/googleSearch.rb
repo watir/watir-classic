@@ -12,16 +12,15 @@
 #
 #------------------------------------------------------------------------------------------------------------#
 
-   #includes:
    require 'watir'   # the watir controller
-   include Watir
 
-   #variables:
+   # set a variable
    test_site = 'http://www.google.com'
   
-   #open the IE browser
-   ie = IE.new
+   # open the IE browser
+   ie = Watir::IE.new
 
+   # print some comments
    puts "## Beginning of test: Google search"
    puts "  "
   
