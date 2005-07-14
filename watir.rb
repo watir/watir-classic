@@ -3312,12 +3312,10 @@ module Watir
             @how = how
             @what = what
             super( @o )
+            @o = @ieController.getObject( @how, @what , ["file"] )
+
         end
 
-        # BUG: Doesn't this need to be called in the initialize method?        
-        def refresh
-            @o = @ieController.getObject( @how, @what , ["file"] )
-        end
 
         def set(setPath)
             assert_exists	        
@@ -3394,6 +3392,10 @@ module Watir
     
     end
 
+    #--
+    #  this class is only used to change the name of the class that radio buttons use to something more meaningful
+    #  and to make the docs better
+    #++
     # This class is the watir representation of a radio button.        
     class Radio < RadioCheckCommon 
 
@@ -3403,15 +3405,21 @@ module Watir
     # This class is the watir representation of a check box.
     class CheckBox < RadioCheckCommon 
 
-        # This method sets the check box.
+        # This method, with no arguments supplied, sets the check box.
+        # If the optional set_or_clear is supplied, the checkbox is set, when its true and cleared when its false
         #   Raises UnknownObjectException  if its unable to locate an object
         #         ObjectDisabledException  if the object is disabled 
-        def set
+        def set( set_or_clear=true )
             assert_exists
             assert_enabled
             highLight( :set)
-            if @o.checked == false
-                set_clear_item( true )
+
+            if set_or_clear == true
+                if @o.checked == false
+                    set_clear_item( true )
+                end
+            else
+                self.clear
             end
             highLight( :clear )
         end
