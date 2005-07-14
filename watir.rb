@@ -33,7 +33,7 @@
   (based on BSD Open Source License)
 =end
 
-#  This is Watir, a web application testing tool for Ruby
+#  This is Watir, Web Application Testing In Ruby
 #  Home page is http://wtr.rubyforge.org
 #
 #  Version "$Revision$"
@@ -41,14 +41,13 @@
 #  Typical usage: 
 #   # include the controller 
 #   require "watir" 
-#   # create an instance of the controller 
-#   ie = Watir::IE.new("http://myserver/mypage")  
 #   # go to the page you want to test 
-#   # to enter text into a text field - assuming the field is name "username" 
+#   ie = Watir::IE.start("http://myserver/mypage")  
+#   # enter "Paul" into an input field named "username" 
 #   ie.text_field(:name, "username").set("Paul") 
-#   # if there was a text field that had an id of "company_ID", you could set it to Ruby Co: 
+#   # enter "Ruby Co" into input field with id "company_ID" 
 #   ie.text_field(:id ,"company_ID").set("Ruby Co") 
-#   # to click a button that has a caption of 'Cancel' 
+#   # click button that has a caption of "Cancel" 
 #   ie.button(:value, "Cancel").click 
 #   
 #  The ways that are available to identify an html object depend upon the object type, but include
@@ -1548,6 +1547,7 @@ module Watir
         def capture_events
             ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
             
+            # Note: NewWindow3 interface only on XP SP2 or later!
             ev.on_event_with_outargs("NewWindow3") {|ppdisp, cancel, flags, fromURL, toURL , args| 
                 
                 # http://msdn.microsoft.com/workshop/browser/webbrowser/reference/ifaces/dwebbrowserevents2/newwindow2.asp
@@ -2898,10 +2898,9 @@ module Watir
  
         def colspan
             @o.colSpan
-        end
-
    end
 
+   end
 
     # This class is the means of accessing an image on a page.
     # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#button method
@@ -3316,7 +3315,6 @@ module Watir
 
         end
 
-
         def set(setPath)
             assert_exists	        
             Thread.new {
@@ -3423,7 +3421,7 @@ module Watir
             end
             highLight( :clear )
         end
-
+        
         # This method clears a check box. 
         # Returns true if set or false if not set.
         #   Raises UnknownObjectException if its unable to locate an object
@@ -3434,10 +3432,10 @@ module Watir
             highLight( :set)
             if @o.checked == true
                 set_clear_item( false )
-            end
+    end
             highLight( :clear)
         end
-
+        
 
     end
 
