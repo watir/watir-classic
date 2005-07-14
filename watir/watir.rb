@@ -3381,12 +3381,12 @@ module Watir
         end
     
         # This method is the common code for setting or clearing checkboxes and radio. A user would normalyy not access this, but use Checkbox#set etc
-
         def set_clear_item( set )
             @o.checked = set
             @o.fireEvent("onClick")
             @ieController.wait
         end
+        private :set_clear_item
     
     end
 
