@@ -161,6 +161,18 @@ class TC_CheckBox < Test::Unit::TestCase
        # checkboxes that have the same name but different values
        $ie.checkbox(:name, "box4" , 3).set
        assert($ie.checkbox(:name, "box4" , 3).isSet?)   
+
+       # test set using the optinal true/false
+       # assumes the checkbox is already checked
+       $ie.checkbox(:name, "box1").set( false )
+       assert_false($ie.checkbox(:name, "box1").isSet?)   
+
+       $ie.checkbox(:name, "box1").set( true )
+       assert($ie.checkbox(:name, "box1").isSet?)   
+
+
+
+
     end
 
     def test_checkbox_iterator
