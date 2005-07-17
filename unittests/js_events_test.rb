@@ -21,7 +21,7 @@ class TC_JSEvents < Test::Unit::TestCase
     def test_Button_Enabled
        gotoJavaScriptEventsPage()    
      
-       $ie.text_field(:name, "entertext").fireEvent("onkeyup")
+       $ie.text_field(:name, "entertext").fire_event("onkeyup")
        assert($ie.button(:caption, "Button 1").enabled?)   
      
     end
@@ -31,7 +31,7 @@ class TC_JSEvents < Test::Unit::TestCase
        gotoJavaScriptEventsPage()
        
        puts "Firing event to make button enabled"
-       $ie.text_field(:name, "entertext").fireEvent("onKeyUp")
+       $ie.text_field(:name, "entertext").fire_event("onKeyUp")
        puts "Clicking the button"
 
        $ie.button(:caption, "Button 1").click
@@ -60,13 +60,13 @@ class TC_JSEvents < Test::Unit::TestCase
   
     def test_page_status
        gotoJavaScriptEventsPage()
-       $ie.link(:text, "Check the Status").fireEvent("onMouseOver")
+       $ie.link(:text, "Check the Status").fire_event("onMouseOver")
        assert($ie.status, "It worked") 
     end
     
     def test_page_status
        gotoJavaScriptEventsPage()
-       $ie.link(:text, "Clear the Status").fireEvent("onMouseOver")
+       $ie.link(:text, "Clear the Status").fire_event("onMouseOver")
        assert($ie.status, "") 
     end
  #end of window status
