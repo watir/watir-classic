@@ -6,9 +6,8 @@ require 'timeclock/util/misc'
 require 'timeclock/util/Configuration'
 require 'drb'
 
-# On Windows, you'll need something like this:
+# On Windows, you might need something like this:
 # ENV["VW_TIMECLOCK_DATA_DIR"] = "C:/My Documents/Timeclock"
-# The following line will fail if it's not set.
 Timeclock::Configuration.ensure_data_dir
 Timeclock::Configuration.start_log('http-server.txt')
 
@@ -30,17 +29,18 @@ module Timeclock
 
       def self.handle_requests_with(request_handler)
         http_parser = HttpGetParser.new
-        listen = TCPServer.new(8080);
+        http_port = 8080
+        listen = TCPServer.new(http_port);
 
         user_manager = Timeclock::Server::NetworkableUserManager.new
         at_exit { user_manager.deactivate_all_sessions }
         request_handler = RequestHandler.new(user_manager)
 
-        puts DRb.start_service('druby://:9002', request_handler).uri
+        DRb.start_service('druby://:9002', request_handler).uri
         user_manager.advertise('', '9001')
 
         begin
-          puts "Listening on #{listen.inspect}."
+          puts "Listening on #{http_port}."
           loop do
             connection = listen.accept
             begin
