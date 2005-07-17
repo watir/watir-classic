@@ -74,7 +74,6 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
-require 'watir/windowhelper'
 
 class String
     def matches (x)
@@ -1500,7 +1499,7 @@ module Watir
         # Navigation
         #
 
-        # Causes the Internet Explorer browser to navigate to the specified URL.
+        # Navigate to the specified URL.
         #  * url  - string - the URL to navigate to
         def goto( url )
             @ie.navigate(url)
@@ -1509,28 +1508,28 @@ module Watir
             return @down_load_time
         end
         
-        # Goes to the previous page - the same as clicking the browsers back button
+        # Go to the previous page - the same as clicking the browsers back button
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
         def back
             @ie.GoBack()
             wait
         end
 
-        # Goes to the next page - the same as clicking the browsers forward button
+        # Go to the next page - the same as clicking the browsers forward button
         # an WIN32OLERuntimeError exception is raised if the browser cant go forward
         def forward
             @ie.GoForward()
             wait
         end
         
-        # Refreshes the current page - the same as clicking the browsers refresh button
+        # Refresh the current page - the same as clicking the browsers refresh button
         # an WIN32OLERuntimeError exception is raised if the browser cant refresh
         def refresh
             @ie.refresh2(3)
             wait
         end
         
-        # this method clears the list of urls that we have visited
+        # clear the list of urls that we have visited
         def clear_url_list
             @url_list.clear
         end
@@ -1540,6 +1539,21 @@ module Watir
             @ie.quit
         end
         
+        # Maximize the window (expands to fill the screen)
+        def maximize; set_window_state (:SW_MAXIMIZE); end
+        
+        # Minimize the window (appears as icon on taskbar)
+        def minimize; set_window_state (:SW_MINIMIZE); end
+
+        # Restore the window (after minimizing or maximizing)
+        def restore;  set_window_state (:SW_RESTORE);  end
+        
+        def set_window_state (state)
+    		autoit = WIN32OLE.new('AutoItX3.Control')
+		    autoit.WinSetState title, '', autoit.send(state)			
+        end
+        private :set_window_state
+                
         # this method can be used to capture events that occur in the browser
         # It is only wired up for the NewWindow event right now, but could be easily expanded
         # Do not use this when using irb
@@ -3014,6 +3028,7 @@ module Watir
         # Raises a WatirException if AutoIt is not correctly installed
         # path - directory path and file name of where image should be saved
         def save(path)
+            require 'watir/windowhelper'
             WindowHelper.check_autoit_installed
             @ieController.goto(src)
             begin
