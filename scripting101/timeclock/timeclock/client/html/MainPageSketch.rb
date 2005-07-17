@@ -88,7 +88,7 @@ module Timeclock
                        tight_table(head_row(b("Or create a new job")),
                                    tr(td(center(BodyBlueFill),
                                          input({:type => 'text',
-                                                 :name => 'job_name',
+                                                 :name => 'name',
                                                  :size => '16',
                                                  :maxlength => '100'}) , 
 						 input({:type => 'submit',
