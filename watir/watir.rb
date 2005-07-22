@@ -234,6 +234,7 @@ module Watir
         #   ie.frame('main_frame')        # in this case, just a name is supplied
         def frame( how, what=nil)
 
+            # default is :name if not specified
             if what == nil
                 what = how
                 how = :name 
@@ -246,7 +247,7 @@ module Watir
         # available ways of accessing it are, :index , :name, :id, :method, :action
         #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if formName is not supplied this parameter is the NAME of the form
         #  * formName   - String - the text associated with the symbol
-        def form( how , formName=nil )
+        def form( how, formName=nil )
             # If only one value is supplied, it is a form name
             if formName == nil
                 formName = how
@@ -1948,27 +1949,33 @@ module Watir
 
     class Frame < IE
     
-        def initialize(container,  how, what)
+        def initialize(container, how, what)
             @container = container
             @frame = nil
 
             frames = @container.document.frames
 
             for i in 0 .. frames.length-1
-                next unless @frame==nil
-                this_frame = frames[i.to_s]
-                begin
-                    if how == :index 
-                        if i+1 == what
+                next unless @frame == nil
+                this_frame = frames.item(i)
+                if how == :index 
+                    if i+1 == what
+                        @frame = this_frame
+                    end
+                elsif how == :name
+                    begin
+                        if what.matches(this_frame.name)
                             @frame = this_frame
                         end
-                    elsif how == :name
-                        if what== this_frame.name.to_s
-                              @frame = this_frame
-                        end
+                    rescue # access denied?
                     end
-                rescue
-                    # probably no name on this object
+                elsif how == :id
+                    # BUG: Won't work for IFRAMES
+                    if what.matches(@container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
+                        @frame = this_frame
+                    end
+                else
+                    raise ArgumentError, "Argument #{how} not supported"
                 end
             end
             
