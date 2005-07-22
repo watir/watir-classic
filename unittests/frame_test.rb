@@ -24,7 +24,12 @@ class TC_Frames < Test::Unit::TestCase
         assert($ie.frame(:name, "buttonFrame").button(:id, "b2").enabled?)   
         assert_false($ie.frame(:name , "buttonFrame").button(:caption, "Disabled Button").enabled?)
     end
-
+    
+    def test_frame_using_name_and_regexp
+        assert_raises(UnknownFrameException) { $ie.frame(:name , /missingFrame/).button(:id, "b2").enabled?  }  
+        assert($ie.frame(:name, /button/).button(:id, "b2").enabled?)   
+    end
+    
     def test_frame_using_index
         assert_raises(UnknownFrameException) { $ie.frame(:index, 8).button(:id, "b2").enabled?  }  
         assert_raises(UnknownObjectException) { $ie.frame(:index, 2).button(:id, "b2").enabled?  }  
@@ -32,9 +37,9 @@ class TC_Frames < Test::Unit::TestCase
         assert_false($ie.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
     end
 
-
-
-
+    def test_frame_with_invalid_attribute
+        assert_raises(ArgumentError) { $ie.frame(:blah, 'no_such_thing').button(:id, "b2").enabled?  }  
+    end
 
     def test_preset_frame
         # with ruby's instance_eval, we are able to use the same frame for several actions
@@ -46,6 +51,22 @@ class TC_Frames < Test::Unit::TestCase
         assert_equal([true, false], results)
     end
 
+end
+
+class TC_Frames2 < Test::Unit::TestCase
+    include Watir
+    
+    def setup()
+        $ie.goto($htmlRoot + "frame_multi.html")
+    end
+
+    def test_frame_with_no_name
+        assert_raises(UnknownFrameException) { $ie.frame(:name , "missingFrame").button(:id, "b2").enabled?  }  
+    end            
+    
+    def test_frame_by_id
+        assert_raises(UnknownFrameException) { $ie.frame(:id , "missingFrame").button(:id, "b2").enabled?  }  
+    end
 end
 
 class TC_NestedFrames < Test::Unit::TestCase
@@ -117,6 +138,4 @@ END_OF_MESSAGE
     end
 
 end
-
-
 
