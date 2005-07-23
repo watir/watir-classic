@@ -1,9 +1,0 @@
-This file is used to acknowledge those who've contributed to
-Ruby-Trace. 
-
-Dave Thomas showed me the track that's used in the level_value
-methods. 
-
-I got the code for Observable from Nat Pryce's nice writeups on design
-patterns in Ruby. 
-<http://www.rubygarden.org/ruby?ExampleDesignPatternsInRuby>
