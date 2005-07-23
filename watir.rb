@@ -1555,6 +1555,15 @@ module Watir
         end
         private :set_window_state
                 
+		# Send key events to IE window. 
+		# See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
+		# for complete documentation on keys supported and syntax.
+        def send_keys (key_string)
+            autoit = WIN32OLE.new 'AutoItX3.Control' 
+            autoit.WinActivate title
+            autoit.Send key_string
+        end
+
         # this method can be used to capture events that occur in the browser
         # It is only wired up for the NewWindow event right now, but could be easily expanded
         # Do not use this when using irb
