@@ -80,7 +80,7 @@ class TC_NestedFrames < Test::Unit::TestCase
         assert_raises(UnknownFrameException) { $ie.frame("missingFrame").button(:id, "b2").enabled?  }  
         assert_raises(UnknownFrameException) { $ie.frame("nestedFrame").frame("subFrame").button(:id, "b2").enabled?  }  
         assert($ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").enabled?)   
-        $ie.frame("nestedFrame").frame("senderFrame").text_field(:index , "1" ).set("Hello")
+        $ie.frame("nestedFrame").frame("senderFrame").text_field(:index, "1").set("Hello")
         $ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").click()
         assert($ie.frame("nestedFrame").frame("receiverFrame").text_field(:name, "receiverText").verify_contains("Hello"))   
     end

@@ -482,7 +482,7 @@ module Watir
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
         def checkbox(how, what=nil ,value=nil)
-            return CheckBox.new(self, how, what, "checkbox", value)
+            return CheckBox.new(self, how, what, ["checkbox"], value)
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -531,7 +531,7 @@ module Watir
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
         def radio(how, what=nil, value=nil)
-            return Radio.new(self, how, what, "radio", value)
+            return Radio.new(self, how, what, ["radio"], value)
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -757,14 +757,13 @@ module Watir
         # Not for external consumption
         #        
         #++
-
-        # this method is used iternally by Watir and should not be used externally. 
         def getContainerContents()
             return document.body.all 
         end
         private :getContainerContents
 
-        # this method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        # this method is used internally by Watir and should not be used externally. 
+        # It cannot be marked as private because of the way mixins and inheritance work in watir.
         # BUG: This looks wrong: Not everything that includes SupportsSubElements has a document.body!
         def getContainer()
             return document.body
@@ -772,7 +771,7 @@ module Watir
      
         # This is the main method for finding objects on a web page.
         #
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
+        # This method is used internally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         #
         #   * how - symbol - the way we look for the object. Supported values are
         #                  - :name
@@ -782,40 +781,49 @@ module Watir
         #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
         #   * types - what object types we will look at. Only used when index is specified as the how.
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-        def getObject( how, what , types=nil ,  value=nil )
-            container = getContainerContents()
-            
-            if types
-                if types.kind_of?(Array)
-                    elementTypes = types
-                else
-                    elementTypes = [types]
-                end
-            end
-            
-            o = nil
-            
+        def getObject(how, what, types, value=nil)
+            container = getContainerContents # XXX actually this returns a collection object (not a container)
+            how = :value if how == :caption
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
+            o = nil
             if how == :index
-                o = getObjectAtIndex( container, what , elementTypes , value)
-
-            elsif how == :caption || how == :value 
-                o = getObjectWithValue( what, container , "submit" , "button" )
-            elsif how == :src || how ==:alt
-                o = getObjectWithSrcOrAlt(what , how , container, types)
+                index =  what.to_i
+                log" getting object #{types.to_s}  at index( #{index}"
+                
+                objectIndex = 1
+                container.each do | thisObject |
+                    begin
+                        this_type = thisObject.invoke("type")
+                    rescue
+                        this_type = nil
+                    end
+                    if types.include?(this_type)
+                        if objectIndex == index
+                            o = thisObject
+                            break
+                        end
+                        objectIndex += 1
+                    end
+                end
+                return o
+                
             else
-                log "How is #{how}"
                 container.each do |object|
                     next  unless o == nil
                     
                     begin
-                        ns = false
                         case how
                         when :id
                             attribute = object.invoke("id")
                         when :name
                             attribute = object.invoke("name")
+                        when :value
+                            attribute = object.value
+                        when :alt
+                            attribute = object.alt
+                        when :src
+                            attribute = object.src
                         when :beforeText
                             attribute = object.getAdjacentText("afterEnd").strip
                         when :afterText
@@ -824,22 +832,17 @@ module Watir
                             next
                         end
                         
-                        if  what.matches( attribute )  #attribute == what
-                            if types
-                                if elementTypes.include?(object.invoke("type"))
-                                    if value
-                                        log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                                        if object.value.to_s == value.to_s
-                                            o = object
-                                        end
-                                    else # no value
-                                        o = object
-                                    end
+                        if what.matches(attribute) && types.include?(object.invoke("type"))
+                            if value
+                                log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                                if object.value.to_s == value.to_s
+                                    o = object
                                 end
-                            else # no types
+                            else # no value
                                 o = object
                             end
                         end
+                        
                     rescue => e
                         log 'IE#getObject error ' + e.to_s 
                     end
@@ -847,118 +850,9 @@ module Watir
                 end
             end
             
-            # If a value has been supplied, such as with a check box or a radio button, 
-            # we need to go through the collection and get the correct one.
-            if value
-                begin 
-                    n.each do |thisObject|
-                        if thisObject.value == value.to_s and o ==nil
-                            o = thisObject
-                        end 
-                    end
-                rescue
-                    # probably no value on this object
-                end
-            end
-            
             return o
         end
 
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #      
-        # This method is used internally to locate an object that has a value specified.
-        # It is normally used for buttons with a caption (HTML value attribute).
-        #   * what            - what we are looking for - normally the value or caption of a button
-        #   * container         - the container that we are searching in ( a form or the body of a document )
-        #   * *htmlObjectTypes  - an array of the objects we are interested in
-        def getObjectWithValue(what , container , *htmlObjectTypes )
-            o = nil
-            container.each do |r|
-                next unless o == nil
-                begin
-                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
-                    o = r if what.matches(r.value)
-                rescue
-                    # may not have a value...
-                end 
-            end
-            return o
-        end
-        
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # This method is used on buttons that are of type "image". Usually an <img src=""> or <input type="image"> HTML tag.
-        # When an image is used to submit a form, it is treated as a button.
-        #   * what            - what we are looking for - normally the src or alt tag attribute of a button
-        #   * container         - the container that we are searching in ( a form or the body of a document )
-        #   * htmlObjectTypes  - an array of the objects we are interested in
-        def getObjectWithSrcOrAlt( what , how , container , htmlObjectTypes )
-            o = nil
-            container.each do |r|
-                next unless o == nil
-                begin
-                    next unless htmlObjectTypes.include?(r.invoke("type").downcase)
-                    case how
-                    when :alt
-                        attribute = r.alt
-                    when :src
-                        attribute = r.src
-                    else
-                        next
-                    end
-                    
-                    o = r if what.matches( attribute )         
-                    
-                rescue
-                end 
-            end
-            return o
-        end
-
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # This method is used to locate an object when an "index" is used. 
-        # It is used internally.
-        #   * container  - the container we are looking in
-        #   * index      - the index of the element we want to get - 1 based counting
-        #   * types      - an array of the type of objects to look at
-        #   * value      - the value of the object to get, used when getting itens like checkboxes and radios
-        def getObjectAtIndex(container , index , types , value=nil)
-            log" getting object #{types.to_s}  at index( #{index}"
-            
-            o = nil
-            objectIndex = 1
-            container.each do | thisObject |
-                begin
-                    
-                    if types.include?( thisObject.invoke("type") )
-                        begin 
-                            oName = thisObject.invoke("name")
-                        rescue
-                            oName = "unknown"
-                        end
-                        log "checking object type is #{ thisObject.invoke("type") } name is #{oName} current index is #{objectIndex}  "
-                        
-                        if objectIndex.to_s == index.to_s
-                            o = thisObject
-                            if value
-                                if value == thisObject.value
-                                    break
-                                end
-                            else
-                                break
-                            end
-                            
-                        end
-                        objectIndex +=1
-                    end
-                rescue
-                    # probably doesnt support type
-                end
-            end
-            return o
-        end
-        
         # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         #
         # this method finds the specified image
@@ -2289,6 +2183,7 @@ module Watir
         def getContainerContents()
             return @o.all
         end
+        private :getContainerContents
 
         def getContainer()
             return @o
@@ -2770,6 +2665,7 @@ module Watir
         def getContainerContents
             return @o.all
         end
+        private :getContainerContents
 
         def getContainer
             return @o
@@ -3234,7 +3130,7 @@ module Watir
             @what = what
             @type = type
             @value = value
-            @o = @ieController.getObject( @how, @what , @type, @value)
+            @o = @ieController.getObject(@how, @what, @type, @value)
             super( @o )
         end
 
@@ -3344,7 +3240,7 @@ module Watir
             @what = what
 
 	      if(how != :from_object) then
-                @o = @ieController.getObject( @how, @what , supported_types)
+                @o = @ieController.getObject(@how, @what, supported_types)
 	      else
 		    @o = what
 	      end
