@@ -11,45 +11,6 @@ class TC_Fields < Test::Unit::TestCase
         $ie.goto($htmlRoot + "textfields1.html")
     end
 
-
-    def test_default_attribute_for_all
-        $ie.default_attribute = :id
-        assert_equal(:id , $ie.default_attribute)
-        assert_raises(UnknownObjectException ) { $ie.text_field('missing_id').id }
-        assert_equal("goodbye all"  , $ie.text_field('text2').value  ) 
-        $ie.default_attribute = nil 
-    end
-
-    def test_default_attribute_for_text_fields
-
-        $ie.set_default_attribute_for_element( :text_field, :id)
-        assert_equal('id' , $ie.get_default_attribute_for( :text_field) )
-        assert_equal("goodbye all"  , $ie.text_field('text2').value  ) 
-
-        $ie.set_default_attribute_for_element(:text_field , :name)
-        assert_equal('name' , $ie.get_default_attribute_for( :text_field) )
-        assert_raises(UnknownObjectException ) { $ie.text_field('missing_name').value }
-        assert_equal("Hello World"  , $ie.text_field('text1').value) 
-
-     
-        # make sure thaqt setting the default for a text_field directly, overrides the all setting
-        # we are still using the name attribute, set a few lines up
-        $ie.default_attribute = :id
-        assert_equal("Cant enter text in me"  , $ie.text_field('disabled').value)  #'disabled' is a name 
-
-
-        # delete the text_field type
-        $ie.set_default_attribute_for_element( :text_field, nil)
-
-        # make sure the global attribute (id)  is used
-        assert_equal("goodbye all"  , $ie.text_field('text2').value  )   # text2 is an id
-        # clear the global attribute
-        $ie.default_attribute = nil 
-
-
-    end
-
-
     def test_text_field_exists
        assert($ie.text_field(:name, "text1").exists?)   
        assert_false($ie.text_field(:name, "missing").exists?)   
@@ -62,17 +23,13 @@ class TC_Fields < Test::Unit::TestCase
 
         assert($ie.text_field(:beforeText , /after/i).exists? )
         assert($ie.text_field(:afterText , /before/i).exists? )
-
     end
 
     def test_text_field_dragContentsTo
-
         $ie.text_field(:name, "text1").dragContentsTo(:id, "text2")
         assert_equal($ie.text_field(:name, "text1").getContents, "" ) 
         assert_equal($ie.text_field(:id, "text2").getContents, "goodbye allHello World" ) 
-
     end
-
 
     def test_text_field_VerifyContents
        assert($ie.text_field(:name, "text1").verify_contains("Hello World") )  

@@ -11,43 +11,6 @@ class TC_Radios < Test::Unit::TestCase
         $ie.goto($htmlRoot + "radioButtons1.html")
     end
 
-    def test_default_attribute_for_all
-        $ie.default_attribute = :id
-        assert_equal(:id , $ie.default_attribute)
-        assert_raises(UnknownObjectException ) { $ie.radio('missing_id').id }
-        assert_equal("on"  , $ie.radio('box5').value  ) 
-        $ie.default_attribute = nil 
-    end
-
-    def test_default_attribute_for_radio
-
-        $ie.set_default_attribute_for_element( :radio, :id)
-        assert_equal('id' , $ie.get_default_attribute_for( :radio) )
-        assert_equal("on"  , $ie.radio('box5').value  ) 
-
-        $ie.set_default_attribute_for_element(:radio, :name)
-        assert_equal('name' , $ie.get_default_attribute_for( :radio) )
-        assert_raises(UnknownObjectException ) { $ie.radio('missing_name').value }
-        assert_equal(false  , $ie.radio('box1').checked?) 
-
-     
-        # make sure that setting the default for a radio directly, overrides the all setting
-        # we are still using the name attribute, set a few lines up
-        $ie.default_attribute = :id
-        assert_equal(false  , $ie.radio('box1').checked?)  #box1 is a name 
-
-
-        # delete the text_field type
-        $ie.set_default_attribute_for_element( :radio, nil)
-
-        # make sure the global attribute (id)  is used
-        assert_equal(false  , $ie.radio('box5').checked?)   # box5 is an id
-        # clear the global attribute
-        $ie.default_attribute = nil
-
-
-    end
-
     def test_Radio_Exists
        assert($ie.radio(:name, "box1").exists?)   
        assert($ie.radio(:id, "box5").exists?)   
