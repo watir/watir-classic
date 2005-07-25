@@ -180,7 +180,7 @@ module Watir
     #
     # there are many methods available to the Button object
     #
-    # Is includable for classes that have @ieController, @default_attribute, @default_attributes, document and document.body
+    # Is includable for classes that have @ieController, document and document.body
     module SupportsSubElements 
         include Watir::Exception
 
@@ -199,65 +199,36 @@ module Watir
              @ieController.wait( noSleep )
         end
 
-        # this method checks the defaults to see what should be used as the default way of finding an object
-        #   * element_type  symbol, the element typoe we are checking defaults for, eg :button , :text_field etc
-        def get_attribute_to_use( element_type )
-
-            # first see if there is a default set for this object type
-            check_all_elements_default = true
-
-            if @default_attributes
-                if @default_attributes.has_key?( element_type )
-                    attribute = @default_attributes[ element_type ]
-                    check_all_elements_default = false
-                end
+        def process_default(default_attribute, how, what)
+            if what == nil
+                what = how
+                how = default_attribute 
             end
-
-            # now check the default for all object types
-            # if we have obtained a default for this object type, we dont check the global
-            if @default_attribute !=nil and  check_all_elements_default == true
-                attribute = @default_attribute
-            end
-
-            return attribute
-        end
-
+            return how, what
+        end 
+        private :process_default
 
         # this method is the main way of accessing a frame 
-        #   *  how   - how the frame is accessed, either :name or :index is supported. This can also just be the name of the frame
+        #   *  how   - how the frame is accessed. This can also just be the name of the frame
         #   *  what  - what we want to access.
         #
         # Typical usage:
         #
-        #   ie.frame(:index,1) 
+        #   ie.frame(:index, 1) 
         #   ie.frame(:name , 'main_frame')
         #   ie.frame('main_frame')        # in this case, just a name is supplied
-        def frame( how, what=nil)
-
-            # default is :name if not specified
-            if what == nil
-                what = how
-                how = :name 
-            end
-
-            return Frame.new(self,how , what)
+        def frame(how, what=nil)
+            how, what = process_default :name, how, what
+            return Frame.new(self, how, what)
         end
  
         # this method is used to access a form.
         # available ways of accessing it are, :index , :name, :id, :method, :action
-        #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if formName is not supplied this parameter is the NAME of the form
-        #  * formName   - String - the text associated with the symbol
-        def form( how, formName=nil )
-            # If only one value is supplied, it is a form name
-            if formName == nil
-                formName = how
-                formHow = :name
-            else
-                formName = formName
-                formHow = how
-            end
-            log "form how is #{formHow} name is #{formName}"      
-            return Form.new(self, formHow, formName)      
+        #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
+        #  * what   - String - the text associated with the symbol
+        def form(how, what=nil)
+            how, what = process_default :name, how, what
+            return Form.new(self, how, what)      
         end
 
         # This method is used to get a table from the page. 
@@ -328,34 +299,10 @@ module Watir
         # if only a single parameter is supplied,  then :value is used 
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
-        #
-        # if a default attribute type has been set using IE#set_default_attribute_for_element or IE#default_attribute
-        # then the behaviour is modified as shown below
-        #
-        #    ie.default_attribute = :id
-        #    ie.button('b_7')                               # access the button that has an id of b_7
-        #    ie.set_default_attribute_for_element( :button , :name)
-        #    ie.button('Verify_data')                       # access the button that has a name of Verify_data
-        #
-        def button( how , what=nil )
-            if how.kind_of? Symbol and what != nil
-                return Button.new(self, how , what )
-            elsif how.kind_of? String and what == nil
-
-                attribute= get_attribute_to_use( :button )
-
-                # maintain backwards compatability by using :caption if nothing else is specified
-                if attribute == nil
-                    attribute = :caption
-                end
-
-                log "Using default attribute to access a button how is a string - #{how}"
-                return Button.new(self, attribute , how)
-            else
-                raise MissingWayOfFindingObjectException
-            end
+        def button(how, what=nil)
+            how, what = process_default :value, how, what
+            return Button.new(self, how, what)
         end
-
 
         # this is the main method for accessing the buttons iterator. It returns a Buttons object
         #
@@ -379,18 +326,12 @@ module Watir
         #    ie.reset(:id,    'r_1')                       # access the reset button with an ID of r_1
         #    ie.reset(:name,  'clear_data')                # access the reset button with a name of clear_data
         #    ie.reset(:value, 'Clear')                     # access the reset button with a value (the text displayed on the button) of Clear
-        #    ie.reset(:calption, 'Clear')                  # same as above
+        #    ie.reset(:caption, 'Clear')                   # same as above
         #    ie.reset(:index, 2)                           # access the second reset button on the page ( 1 based, so the first reset button is accessed with :index,1)
         #
-        def reset( how , what=nil )
-            if how.kind_of? Symbol and what != nil
-                return Reset.new(self, how , what )
-            elsif how.kind_of? String and what == nil
-                log "how is a string - #{how}"
-                return Reset.new(self, :caption, how)
-            else
-                raise MissingWayOfFindingObjectException
-            end
+        def reset(how, what=nil)
+            how, what = process_default :value, how, what
+            return Reset.new(self, how , what)
         end
 
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
@@ -405,7 +346,7 @@ module Watir
         #    ie.file_field(:name, 'upload')                   # access the file upload field with a name of upload
         #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
         #
-        def file_field( how , what )
+        def file_field(how , what)
             return FileField.new(self , how, what)
         end
         
@@ -429,17 +370,9 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field( how , what=nil )
-            if what == nil
-                attribute= get_attribute_to_use( :text_field )
-                value = how
-            else
-                attribute=how
-                value = what
-            end
-            return TextField.new(self , attribute, value)
+        def text_field(how , what=nil)
+            return TextField.new(self, how, what)
         end
-
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
         #
@@ -478,8 +411,6 @@ module Watir
             return Hiddens.new(self)
         end
 
-
-
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
         #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
         #  *  what  - string, int or re , what we are looking for, 
@@ -501,19 +432,9 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        def select_list( how , what=nil )
-            
-            if what == nil
-                attribute= get_attribute_to_use( :select_list)
-                value = how
-            else
-                attribute=how
-                value = what
-            end
-            return SelectList.new(self , attribute, value)
+        def select_list(how , what=nil)
+            return SelectList.new(self, how, what)
         end
-
-
 
         # this is the method for accessing the select lists iterator. Returns a SelectLists object
         #
@@ -560,16 +481,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        def checkbox( how , what=nil , value=nil)
-            if what == nil
-                attribute= get_attribute_to_use( :checkbox)
-                find_how= how
-            else
-                attribute=how
-                find_how= what
-            end
-            
-            return CheckBox.new( self,  attribute, find_how, "checkbox", value)
+        def checkbox(how, what=nil ,value=nil)
+            return CheckBox.new(self, how, what, "checkbox", value)
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -617,16 +530,8 @@ module Watir
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
-        def radio( how , what=nil , value=nil)
-            if what == nil
-                attribute= get_attribute_to_use( :radio)
-                find_how= how
-            else
-                attribute=how
-                find_how= what
-            end
-            
-            return Radio.new( self,  attribute, find_how, "radio", value)
+        def radio(how, what=nil, value=nil)
+            return Radio.new(self, how, what, "radio", value)
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -668,16 +573,8 @@ module Watir
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #
-        def link( how , what=nil)
-            if what == nil
-                attribute= get_attribute_to_use( :link)
-                find_how= how
-            else
-                attribute=how
-                find_how= what
-            end
-
-            return Link.new(self , attribute , find_how)
+        def link(how, what=nil)
+            return Link.new(self, how, what)
         end
 
         # This is the main method for accessing the links collection. Returns a Links object
@@ -691,7 +588,6 @@ module Watir
         def links
             return Links.new(self)
         end
-
 
         # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
         #  *  how   - symbol - how we access the image, :index, :id, :name , :src or :alt are supported
@@ -716,15 +612,7 @@ module Watir
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
         def image( how , what=nil)
-            if what == nil
-                attribute= get_attribute_to_use( :image)
-                find_how= how
-            else
-                attribute=how
-                find_how= what
-            end
-
-            return Image.new(self , attribute , find_how )
+            return Image.new(self, how, what)
         end
         
         # This is the main method for accessing the images collection. Returns an Images object
@@ -741,7 +629,7 @@ module Watir
 
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
-        def popup( )
+        def popup
             return PopUp.new(self )
         end
 
@@ -757,8 +645,8 @@ module Watir
         #   ie.div(:index,2)                    # access the second div on the page
         #   ie.div(:title , "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
-        def div( how , what )
-            return Div.new(self , how , what)
+        def div(how, what)
+            return Div.new(self, how, what)
         end
 
         # this is the main method for accessing the divs iterator. Returns a Divs object
@@ -785,8 +673,8 @@ module Watir
         #   ie.span(:index,2)                    # access the second span on the page
         #   ie.span(:title , "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
-        def span( how , what )
-            return Span.new(self , how , what)
+        def span(how , what)
+            return Span.new(self, how, what)
         end
 
         # this is the main method for accessing the spans iterator. 
@@ -799,7 +687,7 @@ module Watir
         #   ie.spans[1].to_s                             # goto the first span on the page                                   
         #   ie.spans.length                              # show how many spans are on the page.
         #
-        def spans()
+        def spans
             return Spans.new(self)
         end
 
@@ -815,7 +703,7 @@ module Watir
         #   ie.p(:index,2)                    # access the second p tag on the page
         #   ie.p(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
-        def p( how , what )
+        def p(how, what)
             return P.new(self , how , what)
         end
 
@@ -829,22 +717,8 @@ module Watir
         #   ie.ps[1].to_s                             # goto the first p tag on the page                                   
         #   ie.ps.length                              # show how many p tags are on the page.
         #
-        def ps()
+        def ps
             return Ps.new(self)
-        end
-
-        # this is the main method for accessing the labels iterator. It returns a Labels object
-        # 
-        # Returns a Labels object
-        #
-        # Typical usage:
-        #
-        #   ie.labels.each do |i| ; puts i.to_s ; end ;   # iterate through all the labels on the page
-        #   ie.labels[1].to_s                             # goto the first label on the page                                   
-        #   ie.labels.length                              # show how many labels are on the page.
-        #
-        def labels()
-            return Labels.new(self)
         end
 
         # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
@@ -859,8 +733,22 @@ module Watir
         #   ie.label(:index,2)                    # access the second label on the page
         #   ie.label(:for, "text_1")              # access a the label that is associated with the object that has an id of text_1
         #   
-        def label( how, what)
+        def label(how, what)
             return Label.new(self, how, what)
+        end
+
+        # this is the main method for accessing the labels iterator. It returns a Labels object
+        # 
+        # Returns a Labels object
+        #
+        # Typical usage:
+        #
+        #   ie.labels.each do |i| ; puts i.to_s ; end ;   # iterate through all the labels on the page
+        #   ie.labels[1].to_s                             # goto the first label on the page                                   
+        #   ie.labels.length                              # show how many labels are on the page.
+        #
+        def labels()
+            return Labels.new(self)
         end
 
         #--
@@ -1372,34 +1260,6 @@ module Watir
         end
         private :set_defaults        
         
-        # this method is used to set the default way of finding elements
-        #   *  default_attribute   :symbol, :id, :name etc
-        # If an attribute that is used as the default is not applicable to all elements, such as :url, 
-        # then it may be impossible to access certain elements and many exceptions may be raised
-        # to delete the default set, it to nil
-        # this returns the current default attribute as a string
-        #  ie if the default is set as :id  'id' will be returned
-        attr_accessor :default_attribute
-
-        # this method is used to return the current default way for finding the specified element.
-        # returns a string
-        def get_default_attribute_for(  element_type  )
-            @default_attributes[ element_type ].to_s
-        end
-
-        # this method is used to set the default way of finding a specific element type.
-        # it overrides the global default set using the IE#default_attribute method
-        #
-        # Typical Usage
-        #   ie.set_default_attribute_for_element( :button , :name)
-        def set_default_attribute_for_element( element_type , default_attribute )
-            if default_attribute == nil
-                @default_attributes.delete( element_type )
-            else
-                @default_attributes = { element_type => default_attribute }
-            end
-        end
-
         # This method checks the currently displayed page for http errors, 404, 500 etc
         # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
