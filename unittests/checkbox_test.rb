@@ -62,7 +62,7 @@ class TC_CheckBox < Test::Unit::TestCase
        assert($ie.checkbox(:name, "box1").enabled?)   
        assert_false($ie.checkbox(:name, "box2").enabled?)   
 
-       assert($ie.checkbox(:name, "box4" , 4).enabled?)   
+       assert($ie.checkbox(:name, "box4", 4).enabled?)   
        assert_false($ie.checkbox(:name, "box4" , 5 ).enabled?)   
     end
 

@@ -20,7 +20,8 @@ $non_core_tests =
      'screen_capture', # is always visible; takes 25 secons
      'filefield', # is always visible; takes 40 seconds 
      'jscript',
-     'js_events' # is always visible
+     'js_events', # is always visible
+     'minmax' # becomes visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $core_tests = $all_tests - $non_core_tests
