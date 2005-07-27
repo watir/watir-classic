@@ -315,24 +315,6 @@ module Watir
             return Buttons.new(self)
         end
 
-        # This is the main method for accessing a reset button ( <input type = reset> ).
-        #  *  how   - symbol - how we access the button , :index, :caption, :value ( value and caption are the same) :name etc
-        #  *  what  - string, int or re , what we are looking for, 
-        #
-        # Returns a Reset object.
-        #
-        # Typical Usage
-        #
-        #    ie.reset(:id,    'r_1')                       # access the reset button with an ID of r_1
-        #    ie.reset(:name,  'clear_data')                # access the reset button with a name of clear_data
-        #    ie.reset(:value, 'Clear')                     # access the reset button with a value (the text displayed on the button) of Clear
-        #    ie.reset(:caption, 'Clear')                   # same as above
-        #    ie.reset(:index, 2)                           # access the second reset button on the page ( 1 based, so the first reset button is accessed with :index,1)
-        #
-        def reset(how, what=nil)
-            how, what = process_default :value, how, what
-            return Reset.new(self, how , what)
-        end
 
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
@@ -691,7 +673,7 @@ module Watir
             return Spans.new(self)
         end
 
-        # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
+        # This is the main method for accessing p tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
         #  *  how   - symbol - how we access the p, :index, :id, :name 
         #  *  what  - string, integer or re , what we are looking for, 
         #
@@ -1960,8 +1942,10 @@ module Watir
         def_wrap_guard :value
         def_wrap_guard :title
 
-        # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used        
+        # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used    
+        #--    
         # BUG: should be renamed appropriately and then use an attribute reader
+        #++
         def getOLEObject
             return @o
         end
@@ -2684,12 +2668,12 @@ module Watir
  
         def colspan
             @o.colSpan
-   end
+        end
 
    end
 
     # This class is the means of accessing an image on a page.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#button method
+    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#image method
     #
     # many of the methods available to this object are inherited from the Element class
     #
@@ -3074,21 +3058,11 @@ module Watir
         end
 
         def object_types
-            return ["button" , "submit" , "image"] 
+            return ["button" , "submit" , "image" , "reset" ] 
         end
 
     end
 
-    # This is the main class for accessing reset buttons.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#reset method
-    #
-    # most of the methods available to this element are inherited from the Element class
-    #
-    class Reset < Button
-        def object_types
-            return ["reset"] 
-        end
-    end
     
     # File dialog
     class FileField < Element
@@ -3219,7 +3193,7 @@ module Watir
             highLight( :set)
             if @o.checked == true
                 set_clear_item( false )
-    end
+            end
             highLight( :clear)
         end
         
@@ -3254,12 +3228,25 @@ module Watir
 
         def size
             assert_exists
-            return @o.size
+            begin 
+                s=@o.size
+            rescue
+                # TextArea does not support size
+                s=""
+            end
+            return s
+
         end
 
         def maxLength
             assert_exists
-            return @o.maxlength
+            begin 
+                s=@o.maxlength
+            rescue
+                # TextArea does not support maxLength
+                s=""
+            end
+            return s
         end
 
         def text_string_creator
@@ -3289,8 +3276,9 @@ module Watir
         def assert_not_readonly
             raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only"  if self.readonly?
         end                
-        
+        #--
         # BUG: rename me
+        #++
         # This method returns the current contents of the text field as a string.
         #   Raises  UnknownObjectException if the object can't be found
         def getContents()
