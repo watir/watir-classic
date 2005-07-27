@@ -78,6 +78,8 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).width }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileCreatedDate }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileSize }
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).alt}
+
         
         assert_equal( "image"  , $ie.image(:index, 2).type ) 
         assert_equal( ""       , $ie.image(:index, 2).name ) 
@@ -87,10 +89,16 @@ class TC_Images < Test::Unit::TestCase
         assert_equal( "88" , $ie.image(:index, 2).height )
         assert_equal( "88" , $ie.image(:index, 2).width )
         
+
         # this line fails, as the date is when it is installed on the local oc, not the date the file was really created
         #assert_equal( "03/10/2005" , $ie.image(:index, 2).fileCreatedDate )
         assert_equal( "788",  $ie.image(:index, 2).fileSize )
-        
+       
+        # alt text
+        assert_equal('circle' , $ie.image(:index, 6).alt) 
+        assert_equal( ""      , $ie.image(:index, 2).alt) 
+
+ 
         # to string tests -- output should be verified!
         puts $ie.image(:name  , "circle").to_s
         puts $ie.image(:index , 2).to_s
