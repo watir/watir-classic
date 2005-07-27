@@ -25,5 +25,11 @@ class TC_FileField < Test::Unit::TestCase
 	$ie.button(:name,"upload").click
 
 	assert($ie.contains_text("PASS"))	
-  end
+    end
+
+    def test_iterator
+        gotoPage()
+        assert_equal(6, $ie.file_fields.length)
+    end
+
 end
