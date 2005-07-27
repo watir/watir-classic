@@ -2710,6 +2710,7 @@ module Watir
             n <<   "file size:".ljust(TO_S_SIZE) + self.fileSize.to_s
             n <<   "width:".ljust(TO_S_SIZE) + self.width.to_s
             n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
+            n <<   "alt:".ljust(TO_S_SIZE) + self.alt.to_s
             return n
         end
         private :image_string_creator
@@ -2741,6 +2742,13 @@ module Watir
             assert_exists
             return @o.invoke("width").to_s
         end
+
+        # returns the alt text of the image
+        def alt
+            assert_exists
+            return @o.invoke("alt").to_s
+        end
+
 
         # returns the height in pixels of the image, as a string
         def height
