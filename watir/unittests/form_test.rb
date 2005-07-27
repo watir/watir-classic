@@ -90,25 +90,33 @@ class TC_Forms3 < Test::Unit::TestCase
     def test_showforms # add verification of output!
         $ie.showForms
     end
-    
+
     def test_reset
-        assert( $ie.reset(:index, 1).exists?)
-        assert( $ie.reset(:index, 1).enabled?)
                 
         $ie.text_field(:id, "t1").set("Hello, reset test!")
         assert_equal($ie.text_field(:id, 't1').getContents, 'Hello, reset test!')
         
-        $ie.reset(:index, 1).click
+        $ie.button(:caption, "Reset").click
         assert_equal("" , $ie.text_field(:id, 't1').getContents )
         
         # also verify it works under a form
         $ie.text_field(:id, "t1").set("reset test - using a form")
         assert_equal($ie.text_field(:id, 't1').getContents, 'reset test - using a form')
         
-        $ie.form(:index,2).reset(:index,1).click
+        $ie.form(:index,2).button(:index,2).click
         assert_equal("" , $ie.text_field(:id, 't1').getContents )
+
+        # also verify it works under a form, this time using the :id attribute
+        $ie.text_field(:id, "t1").set("reset test - using a form")
+        assert_equal($ie.text_field(:id, 't1').getContents, 'reset test - using a form')
+        
+        $ie.form(:index,2).button(:id,'reset_button').click
+        assert_equal("" , $ie.text_field(:id, 't1').getContents )
+
     end
-    
+
+
+
     def test_flash1
         $ie.form(:name ,"test2").button(:caption , "Submit").flash
     end 
