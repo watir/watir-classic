@@ -1483,9 +1483,9 @@ module Watir
                 for i in 0..count-1 do  
                     begin
                         fname = allFrames[i.to_s].name.to_s
-                        puts "frame  index: #{i} name: #{fname}"
+                        puts "frame  index: #{i+1} name: #{fname}"
                     rescue => e
-                        puts "frame  index: #{i} --Access Denied--" if e.to_s.match(/Access is denied/)
+                        puts "frame  index: #{i+1} --Access Denied--" if e.to_s.match(/Access is denied/)
                     end
                 end
             else
