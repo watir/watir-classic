@@ -46,9 +46,15 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").click }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").click}
         assert_raises(UnknownObjectException ) { $ie.image(:alt, "no_image_with_this").click}
+
+        # test for bug 1882
+        $ie.text_field(:name , "text1").clear
+        $ie.button(:value , /Pos/ ).click
+        assert_equal('clicked' , $ie.text_field(:name , "text1" ).value )
         
         $ie.image(:src, /button/).click
         assert($ie.contains_text("PASS") )
+
     end
     
     def test_imageHasLoaded
