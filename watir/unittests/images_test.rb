@@ -51,12 +51,21 @@ class TC_Images < Test::Unit::TestCase
         $ie.text_field(:name , "text1").clear
         $ie.button(:value , /Pos/ ).click
         assert_equal('clicked' , $ie.text_field(:name , "text1" ).value )
+
+        # test for disabled button
+        assert_false( $ie.image(:name , 'disabler_test').disabled )
+        $ie.button(:name , 'disable_img').click
+
+        assert( $ie.image(:name , 'disabler_test').disabled )
+        $ie.button(:name , 'disable_img').click
         
         $ie.image(:src, /button/).click
         assert($ie.contains_text("PASS") )
 
     end
     
+
+
     def test_imageHasLoaded
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
