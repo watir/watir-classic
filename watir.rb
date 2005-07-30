@@ -248,7 +248,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.tables.each do |t| ; puts t.to_s ; end     # iterate through all the tables on the page
+        #   ie.tables.each { |t| puts t.to_s }            # iterate through all the tables on the page
         #   ie.tables[1].to_s                             # goto the first table on the page                                   
         #   ie.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
         def tables()
@@ -308,7 +308,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.buttons.each do |b| ; puts b.to_s ; end     # iterate through all the buttons on the page
+        #   ie.buttons.each { |b| puts b.to_s }            # iterate through all the buttons on the page
         #   ie.buttons[1].to_s                             # goto the first button on the page                                   
         #   ie.buttons.length                              # show how many buttons are on the page. 
         def buttons()
@@ -336,7 +336,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.file_fields.each do |f| ; puts f.to_s ; end     # iterate through all the file fields on the page
+        #   ie.file_fields.each { |f| puts f.to_s }            # iterate through all the file fields on the page
         #   ie.file_fields[1].to_s                             # goto the first file field on the page                                   
         #   ie.file_fields.length                              # show how many file fields are on the page. 
         def file_fields()
@@ -371,7 +371,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.text_fields.each do |t| ; puts t.to_s ; end     # iterate through all the text fields on the page
+        #   ie.text_fields.each { |t| puts t.to_s }            # iterate through all the text fields on the page
         #   ie.text_fields[1].to_s                             # goto the first text field on the page                                   
         #   ie.text_fields.length                              # show how many text field are on the page.
         def text_fields
@@ -397,7 +397,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.hiddens.each do |t| ; puts t.to_s ; end     # iterate through all the hidden fields on the page
+        #   ie.hiddens.each { |t|  puts t.to_s }           # iterate through all the hidden fields on the page
         #   ie.hiddens[1].to_s                             # goto the first hidden field on the page                                   
         #   ie.hiddens.length                              # show how many hidden fields are on the page.
         def hiddens
@@ -433,7 +433,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.select_lists.each do |s| ; puts s.to_s ; end     # iterate through all the select boxes on the page
+        #   ie.select_lists.each { |s| puts s.to_s }            # iterate through all the select boxes on the page
         #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
         #   ie.select_lists.length                              # show how many select boxes are on the page.
         def select_lists()
@@ -482,7 +482,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.checkboxes.each do |s| ; puts s.to_s ; end     # iterate through all the check boxes on the page
+        #   ie.checkboxes.each { |c| puts c.to_s }           # iterate through all the check boxes on the page
         #   ie.checkboxes[1].to_s                             # goto the first check box on the page                                   
         #   ie.checkboxes.length                              # show how many check boxes are on the page.
         def checkboxes
@@ -531,7 +531,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.radios.each do |s| ; puts s.to_s ; end     # iterate through all the radio buttons on the page
+        #   ie.radios.each { |r| puts r.to_s }            # iterate through all the radio buttons on the page
         #   ie.radios[1].to_s                             # goto the first radio button on the page                                   
         #   ie.radios.length                              # show how many radio buttons are on the page.
         #
@@ -574,7 +574,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.links.each do |l| ; puts l.to_s ; end     # iterate through all the links on the page
+        #   ie.links.each { |l| puts l.to_s }            # iterate through all the links on the page
         #   ie.links[1].to_s                             # goto the first link on the page                                   
         #   ie.links.length                              # show how many links are on the page.
         #
@@ -612,7 +612,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.images.each do |i| ; puts i.to_s ; end     # iterate through all the images on the page
+        #   ie.images.each { |i| puts i.to_s }            # iterate through all the images on the page
         #   ie.images[1].to_s                             # goto the first image on the page                                   
         #   ie.images.length                              # show how many images are on the page.
         #
@@ -646,7 +646,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.divs.each do |i| ; puts i.to_s ; end     # iterate through all the divs on the page
+        #   ie.divs.each { |d| puts d.to_s }            # iterate through all the divs on the page
         #   ie.divs[1].to_s                             # goto the first div on the page                                   
         #   ie.divs.length                              # show how many divs are on the page.
         #
@@ -676,7 +676,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.spans.each do |i| ; puts i.to_s ; end     # iterate through all the spans on the page
+        #   ie.spans.each { |s| puts s.to_s }            # iterate through all the spans on the page
         #   ie.spans[1].to_s                             # goto the first span on the page                                   
         #   ie.spans.length                              # show how many spans are on the page.
         #
@@ -706,7 +706,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.ps.each do |i| ; puts i.to_s ; end     # iterate through all the p tags on the page
+        #   ie.ps.each { |p| puts p.to_s }            # iterate through all the p tags on the page
         #   ie.ps[1].to_s                             # goto the first p tag on the page                                   
         #   ie.ps.length                              # show how many p tags are on the page.
         #
@@ -736,7 +736,7 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.labels.each do |i| ; puts i.to_s ; end     # iterate through all the labels on the page
+        #   ie.labels.each { |l| puts l.to_s }            # iterate through all the labels on the page
         #   ie.labels[1].to_s                             # goto the first label on the page                                   
         #   ie.labels.length                              # show how many labels are on the page.
         #
