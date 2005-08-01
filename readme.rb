@@ -11,6 +11,7 @@ How To Use:
    Best is to use Ruby 1.8.2-14 or later.
    This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
    It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
+   Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
    Install the watir files, unit tests and sample html pages. 
