@@ -1,3 +1,4 @@
+puts <<END
 cd /var/www/gforge-projects/wtr/s101/doc
 lcd doc
 put index.html
@@ -34,3 +35,4 @@ put lab4_2.rb
 put lab5_1.rb
 put lab5_2.rb
 put lab6.rb
+END
