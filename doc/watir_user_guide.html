@@ -680,9 +680,9 @@ end</div>
 our test class and execute all the test cases declared in it. The runner by default executes the test cases randomly, 
 so if you need to chain test cases, prefix letters from the alphabet or numbers after the "test" 
 prefix to force them to run in order. ex. "test_a_mytest". </p>
-<p><i>Note:</i>If you use numbers in your method names, note that  1 2 3 4 5 6 7 8 9 10 11 12 will be executed as 1 10 11 12 2 3 4 5 6 7 8 9.  
-Use numbering like this if you have more than nine test cases:  01 02 03 04 05 06 07 08 09 10 11 12.
-ex. "test_01_mytest", "test_02_mytest", "test_03_mytest"
+<p><i>Note:</i>If you use numbers in your method names, note that  1 2 3 4 5 6 7 8 9 10 11 12 will be executed in this order:
+1 10 11 12 2 3 4 5 6 7 8 9. Instead, use this format:  01 02 03 04 05 06 07 08 09 10 11 12.
+ex. "test_01_mytest", "test_02_mytest", "test_03_mytest" will run in the order expected.
 </p>
 <p>The test case class with test cases defined will look like this:</p>
 <div class="testexample">class TC_myTest &lt; Test::Unit::TestCase<br>
