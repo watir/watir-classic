@@ -813,13 +813,6 @@ it by a one-based index. Here's an example using a radio list: </p>
 <div class="testexample">ie.radio(:index, 1).set</div>
 <p>Watir code to clear the second radio list item using its index: </p>
 <div class="testexample">ie.radio(:index, 2).clear</div>
-<p><b>Access Element Using Text Before or After Element</b></p>
-<p>You can also use the <b>beforeText</b> and <b>afterText</b> methods to access 
-an element. If an element you wish to access has text before or after it, you can
-key off of that page text. Using the radio list example, we could set the third 
-radio button like this:
-<div class="testexample">ie.radio(:beforeText, "Radio 3").set</div>
-<p>This method finds a radio button that immediately follows the text "Radio 3".</p>
 
 <h4>Using Regular Expressions</h4>
 <p>Watir supports regular expressions in method calls.</p>
