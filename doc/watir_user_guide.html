@@ -592,8 +592,12 @@ has an <b>attach</b> method that allows you to access and control the new window
 click a button or link that opens a new window, you can attach to it by identifying the
 window by its URL or by the Window title:</p>
 
-<div class="testexample">$new_window.attach(:url, 'http://mytestsite')</div>
-<div class="testexample">$new_window.attach(:title, 'Test New Window')</div>
+<div class="testexample">ie2 = Watir::IE.attach(:url, 'http://mytestsite')</div>
+<div class="testexample">ie3 = Watir::IE.attach(:title, 'Test New Window')</div>
+<p>You can use a regular expression on URL or title like this:</p>
+<div class="testexample">ie4 = Watir::IE.attach(:title, /Test New/)</div>
+<p><i>Note: be careful to not assign the new window to your "ie" variable. Give the
+attached window variable a different name.</i></p>
 
 <h2>Validating Test Results</h2>
 <p>How do we tell whether the test passed or failed? It is good
@@ -657,9 +661,7 @@ test script:</p>
 <div class="testexample">#test::unit includes<br>
 require 'test/unit'<br>
 require 'test/unit/ui/console/testrunner'<br>
-require 'watir/testUnitAddons'<br>
 </div>
-<p><i>Note: <b>unittests/testUnitAddons</b> is required to do an <b>assert_false</b>.</i></p>
 <h4>Create a Test Instance</h4>
 <p>We create a new class for our test suite which is inherited from the
 test::unit <b>TestCase</b> class.</p>
@@ -668,16 +670,20 @@ test::unit <b>TestCase</b> class.</p>
 &nbsp;&nbsp;<i>...fill in Test Case methods here...</i><br>
 end </div>
 <h4>Create a Test Case Method</h4>
-<p>Within our test case class, we need to declare test cases like this:<br>
+<p>Within our test case class, we need to declare test cases as <i>methods</i> like this:<br>
 </p>
 <div class="testexample">def test_myTestCase<br>
-&nbsp;&nbsp;<i>fill in Watir method and assertion here</i><br>
+&nbsp;&nbsp;<i>fill in method body with Watir code and assertion here</i><br>
 end</div>
-<p>Test cases must be prefixed with the word <i>test</i>.</p>
+<p>Test case method names must be prefixed with the word <i>test</i>.</p>
 <p>When we run the test script from the command line, test::unit uses reflection to go through 
 our test class and execute all the test cases declared in it. The runner by default executes the test cases randomly, 
 so if you need to chain test cases, prefix letters from the alphabet or numbers after the "test" 
-prefix to force them to run in order. ex. "test_a_mytest"</p>
+prefix to force them to run in order. ex. "test_a_mytest". </p>
+<p><i>Note:</i>If you use numbers in your method names, note that  1 2 3 4 5 6 7 8 9 10 11 12 will be executed as 1 10 11 12 2 3 4 5 6 7 8 9.  
+Use numbering like this if you have more than nine test cases:  01 02 03 04 05 06 07 08 09 10 11 12.
+ex. "test_01_mytest", "test_02_mytest", "test_03_mytest"
+</p>
 <p>The test case class with test cases defined will look like this:</p>
 <div class="testexample">class TC_myTest &lt; Test::Unit::TestCase<br>
 &nbsp;&nbsp;def test_ myTestCase<br>
@@ -708,8 +714,17 @@ method call in an assertion, we need to do something different.
 Test::unit assertsions don't necessarily
 return a true or a false.</p>
 <p>Here is an example of how to print the results of an assertion:</p>
+<div class="testexample">
+if assert(ie.contains_text("Test verification point."))<br>
+&nbsp;&nbsp; puts("TEST PASSED. Found test string: 'Test verification
+point.' ")<br>
+else<br>
+&nbsp;&nbsp; puts("TEST FAILED.") <br>
+end<br>
+</div>
+<p>This is an example that will print out more information on a failure:</p>
 <div class="testexample">begin<br>
-&nbsp; assert(ie.contains_text("Test verification point.") )<br>
+&nbsp;&nbsp; assert(ie.contains_text("Test verification point."))<br>
 &nbsp;&nbsp; puts("TEST PASSED. Found test string: 'Test verification
 point.' ")<br>
 rescue =&gt; e <br>
@@ -727,17 +742,43 @@ failure.</p>
 Internet Explorer instance, use either a class variable "@@ie", or a global variable
 "$ie". This allows the test script to use the same Internet Explorer instance for
 all the test cases.</p>
+<p><i>Note: use global variables with caution.</i></p>
+<h4>Setup and Teardown</h4>
+<p>The method names <b>setup</b> and <b>teardown</b> are reserved for test::unit. If you would like to use
+setup and teardown functionality, simply use those as method names for the actions you want executed before and after 
+executing <i>each</i> test case.</p>
+<div class="testexample">def setup<br>
+&nbsp;&nbsp;<i>fill in code that will run <b>before every</b> test case here...</i><br>
+end</div>
+<div class="testexample">def teardown<br>
+&nbsp;&nbsp;<i>fill in code that will run <b>after every</b> test case here...</i><br>
+end</div>
 <h2>Tips and Tricks</h2>
+<h3>Online Resources</h3>
+<p>Have a question? Check the <a href="http://wtr.rubyforge.org/wiki/wiki.pl?FrequentQuestions">
+Watir FAQ</a> or search the Watir mailing list archives using Google. Search by entering the following<br>
+site:rubyforge.org "[Wtr-general]" <i>your search term</i><br>
+If you wanted to search for information on JavaScript popups, you would enter this:<br>
+site:rubyforge.org "[Wtr-general]" javascript popups</p>
+<h3>Popup Windows</h3>
+<p>JavaScript generated popups such as Alert boxes, Windows Security popups, and other
+popups that are not contained in a web browser are not accessible the same way HTML pages
+are. There has been some experimental code packaged with Watir to deal with popups with 
+limited success. A good popup handling solution is being worked on and will be included
+in a future Watir release. In the mean time, <a href="http://www.autoitscript.com/">AutoIT</a>
+is installed with Watir. Look at "jscript_test.rb" in the unittests directory, and
+search the mail list archives for more information.</p><p>Watch for a Watir solution in a future release.</p>
 <h4>Running Tests With the Browser Not Visible</h4>
 <p>Run the tests with a "-b" option if you don't want the browser to be visible.
 ex. myTest.rb -b</p>
-<h4>Troubleshooting</h4>
+<h3>Troubleshooting</h3>
 <p>Not all HTML tags will look the same. If you have difficulty getting
 Watir to interact with an object on your web page, try the Watir method
 with different attributes.
 The tag may come with one attribute, or it may come with several. If
 you still have trouble, see if the developers will add a <i>name</i>
 attribute to the offending tag.</p>
+
 <h4>Choosing Attributes</h4>
 <p>If you are having difficulty getting Watir to interact with an
 object, try using the method with different tag attributes. Tag
@@ -750,6 +791,36 @@ exhausted the attributes on a tag and Watir still won't interact with
 it, send an email to the wtr-general mailing list. The Watir
 development team will help out, and if needed, add support for that
 situation within Watir.</p>
+
+<h4>Accessing Tags Using Alternate Methods</h4>
+<p>In some situations, you may not know what the tag attributes of an HTML object
+are. They may be missing, or the tag attributes might be dynamically generated. Some
+web architectures dynamically generate tags, and the attributes might change each time
+you run a test. To work around this, try the following:</p>
+<p><b>Access Element Using Index</b></p>
+<p>Elements on a web page can be accessed by where they appear on a page. If an 
+element you want to interact with always appears in the same place, you can access 
+it by a one-based index. Here's an example using a radio list: </p>
+<p>What you see in the web browser:</p>
+<div class="browserexample">Radio 1: <input name="clickme1" id="1"
+ type="radio"> <br>
+ Radio 2: <input name="clickme2" id="2"
+ type="radio"> <br>
+ Radio 3: <input name="clickme3" id="3"
+ type="radio">
+ </div>
+<p>Watir code to set the first radio list item using its index: </p>
+<div class="testexample">ie.radio(:index, 1).set</div>
+<p>Watir code to clear the second radio list item using its index: </p>
+<div class="testexample">ie.radio(:index, 2).clear</div>
+<p><b>Access Element Using Text Before or After Element</b></p>
+<p>You can also use the <b>beforeText</b> and <b>afterText</b> methods to access 
+an element. If an element you wish to access has text before or after it, you can
+key off of that page text. Using the radio list example, we could set the third 
+radio button like this:
+<div class="testexample">ie.radio(:beforeText, "Radio 3").set</div>
+<p>This method finds a radio button that immediately follows the text "Radio 3".</p>
+
 <h4>Using Regular Expressions</h4>
 <p>Watir supports regular expressions in method calls.</p>
 <p>Here is an example using the <i>link</i> method to click a
@@ -760,15 +831,17 @@ hyperlink using the <i>url</i> attribute:</p>
 <p>Watir supports div tags. Some web applications use one <i>div</i>
 for one state of the application, and another for a different state
 (such as error or success messages). Watir can check the status of the
-div
-to allow for tests on pages using CSS as part of the application. </p>
+div to allow for tests on pages using CSS as part of the application. </p>
 <p>Check out the unit test <b>css_test.rb</b> for usage.</p>
 <h4>Running a Test Concurrently</h4>
 <p>To run a test concurrently, check out <b>concurrent_search</b> in the 
 <i>examples</i> directory for an example.</p>
 <h4>Tree Views</h4>
 <p>Watir now supports JavaScript treeviews such as
-the <a href="http://www.ivanpeters.com/">Joust tree view</a>.</p>
+the <a href="http://www.ivanpeters.com/">Joust tree view</a>.
+The <a href="http://wtr.rubyforge.org/wiki/wiki.pl?FrequentQuestions">Watir FAQ</a>
+has an example you can follow.
+</p>
 <h4>Multiple Windows</h4>
 <p>Watir now handles multiple browser windows with the <b>attach</b> method.</p>
 <h4>File Upload</h4>
