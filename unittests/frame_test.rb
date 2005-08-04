@@ -116,24 +116,24 @@ class TC_show_frames < Test::Unit::TestCase
     def test_show_nested_frames
         capture_and_compare("nestedFrames.html", <<END_OF_MESSAGE)
 there are 2 frames
-frame  index: 0 name: nestedFrame
-frame  index: 1 name: nestedFrame2
+frame  index: 1 name: nestedFrame
+frame  index: 2 name: nestedFrame2
 END_OF_MESSAGE
     end
 
     def test_button_frames
         capture_and_compare("frame_buttons.html", <<END_OF_MESSAGE)
 there are 2 frames
-frame  index: 0 name: buttonFrame
-frame  index: 1 name: buttonFrame2
+frame  index: 1 name: buttonFrame
+frame  index: 2 name: buttonFrame2
 END_OF_MESSAGE
     end
 
     def test_iframes
         capture_and_compare("iframeTest.html", <<END_OF_MESSAGE)
 there are 2 frames
-frame  index: 0 name: senderFrame
-frame  index: 1 name: receiverFrame
+frame  index: 1 name: senderFrame
+frame  index: 2 name: receiverFrame
 END_OF_MESSAGE
     end
 
