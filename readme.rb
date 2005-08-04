@@ -37,7 +37,6 @@ Changes in 1.4
     fix for table, id and reg exp
     wait for page load before returning from IE.attach
     update to select_list -- new interface still in progress
-    added default attribute methods
     added .show method to iterators
     fix for flashing objects in table cells
     added flash for forms
