@@ -1,4 +1,0 @@
-./MessageReader.rb:23:in `test_two_line_with_date' at 2004/04/19 13:13:58
-=  error: message 1
-./MessageReader.rb:24:in `test_two_line_with_date' at 2004/04/19 13:13:58
-=  announce: message 2
