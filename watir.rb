@@ -2191,9 +2191,9 @@ module Watir
             return @o.innerText.strip
         end
 
-        # returns the classname of the style that this san or div is using
+        # returns the class name of the span or div is using
         # raises an ObjectNotFound exception if the object cannot be found
-        def style
+        def class_name
             assert_exists
             return @o.invoke("className")
         end
@@ -2205,7 +2205,7 @@ module Watir
             return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
         end
 
-        # this method is used to ppulate the properties in the to_s method
+        # this method is used to populate the properties in the to_s method
         def span_div_string_creator
             n = []
             n <<   "style:".ljust(TO_S_SIZE) + self.style
