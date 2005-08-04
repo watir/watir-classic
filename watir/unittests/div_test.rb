@@ -31,14 +31,14 @@ class TC_Divs < Test::Unit::TestCase
         assert_equal("This text is in a div with an id of div1 and title of test1",   
             $ie.div(:title , "Test1").text.strip )
         
-        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").style }
-        assert_equal("blueText" ,   $ie.div(:id , "div2").style )
-        assert_equal("" ,   $ie.div(:id , "div1").style )
+        assert_raises(UnknownObjectException) {$ie.div(:id , "div77").class_name }
+        assert_equal("blueText" ,   $ie.div(:id , "div2").class_name )
+        assert_equal("" ,   $ie.div(:id , "div1").class_name )
         
-        assert_raises(UnknownObjectException) {$ie.div(:index , 44).style }
+        assert_raises(UnknownObjectException) {$ie.div(:index , 44).class_name }
         assert_equal("div1" ,      $ie.div(:index , 1).id )
-        assert_equal("" ,          $ie.div(:index , 1).style )
-        assert_equal("blueText" ,  $ie.div(:index , 2).style )
+        assert_equal("" ,          $ie.div(:index , 1).class_name )
+        assert_equal("blueText" ,  $ie.div(:index , 2).class_name )
         assert_equal("Div" ,       $ie.div(:index , 2).type)
         assert_equal(""    ,       $ie.div(:index , 2).value)
         assert_equal(false ,       $ie.div(:index , 2).disabled)
@@ -55,7 +55,7 @@ class TC_Divs < Test::Unit::TestCase
             # puts "each - div= " + s.to_s
             assert_equal($ie.div(:index, index ).name , s.name )
             assert_equal($ie.div(:index, index ).id , s.id )
-            assert_equal($ie.div(:index, index ).style , s.style )
+            assert_equal($ie.div(:index, index ).class_name , s.class_name )
             index +=1
         end
         assert_equal(index-1, $ie.divs.length)   # -1 as we add 1 at the end of the loop
@@ -98,14 +98,14 @@ class TC_Divs < Test::Unit::TestCase
         assert_equal("This span has an onClick that increments text2" ,   $ie.span(:id , "span3").text.strip )
         assert_equal("This text is in a span with an id of span1 and title of test2" ,   $ie.span(:title , "Test2").text.strip )
         
-        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").style }
-        assert_equal("blueText" ,   $ie.span(:id , "span2").style )
-        assert_equal("" ,   $ie.span(:id , "span1").style )
+        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").class_name }
+        assert_equal("blueText" ,   $ie.span(:id , "span2").class_name )
+        assert_equal("" ,   $ie.span(:id , "span1").class_name )
         
-        assert_raises(UnknownObjectException) {$ie.span(:index , 44).style }
+        assert_raises(UnknownObjectException) {$ie.span(:index , 44).class_name }
         assert_equal("span1" ,     $ie.span(:index , 1).id )
-        assert_equal("" ,          $ie.span(:index , 1).style )
-        assert_equal("blueText" ,  $ie.span(:index , 2).style )
+        assert_equal("" ,          $ie.span(:index , 1).class_name )
+        assert_equal("blueText" ,  $ie.span(:index , 2).class_name )
         assert_equal("Span" ,      $ie.span(:index , 2).type)
         assert_equal(""    ,       $ie.span(:index , 2).value)
         assert_equal(false ,       $ie.span(:index , 2).disabled)
@@ -122,7 +122,7 @@ class TC_Divs < Test::Unit::TestCase
             # puts "each - span = " + s.to_s
             assert_equal($ie.span(:index, index ).name , s.name )
             assert_equal($ie.span(:index, index ).id , s.id )
-            assert_equal($ie.span(:index, index ).style , s.style )
+            assert_equal($ie.span(:index, index ).class_name , s.class_name )
             index +=1
         end
         assert_equal(index-1, $ie.spans.length)   # -1 as we add 1 at the end of the loop
@@ -153,20 +153,20 @@ class TC_Divs < Test::Unit::TestCase
         assert_false($ie.p(:index, 8).exists?)
         assert_false($ie.p(:title, 'test_55').exists?)
         
-        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').style }
+        assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').class_name }
         assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').text }
         assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').title }
         assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').to_s }
         assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').disabled }
         
-        assert_equal(  'redText' , $ie.p(:index,1).style)
+        assert_equal(  'redText' , $ie.p(:index,1).class_name)
         assert_equal(  'P_tag_1' , $ie.p(:index,1).title)
         assert_equal(  'This text is in a p with an id of number2' , $ie.p(:index,2).text)
     end
     
     def test_p_iterator
         assert_equal( 3, $ie.ps.length)
-        assert_equal( 'italicText', $ie.ps[2].style)
+        assert_equal( 'italicText', $ie.ps[2].class_name)
         assert_equal( 'number3', $ie.ps[3].id)
         
         count=1
