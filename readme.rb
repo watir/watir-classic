@@ -2,7 +2,6 @@
 
 This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
-
 To Install:
    Execute install.rb. 
 
@@ -20,14 +19,37 @@ Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
 
+Changes in 1.4
+    fix method name for accessing class name of P/Span/Div (change from style to class_name)
+    fix for bug 2152 (frame index in show_frames off by 1)
+    added alt as a property to image
+    added file_fields
+    fixed TextArea#to_s
+    moved reset button to buttons class
+    add IE#send_keys
+    frames can now be referenced using regexps and ids
+    added IE#minimize, IE#maximize, IE#restore
+    onChange and onBlur events now triggered by TextField#set
+    added default option to set for checkbox
+    added colspan method to tablecell
+    fix for bug reported by Scott P, wrong objects are sometimes found
+    fixed bug with radio/checkboxes doing multiple fireevents
+    fix for table, id and reg exp
+    wait for page load before returning from IE.attach
+    update to select_list -- new interface still in progress
+    added default attribute methods
+    added .show method to iterators
+    fix for flashing objects in table cells
+    added flash for forms
+    flash returns nil instead of the curious '10'
+    removed ScreenCapture module from IE class
+
 Changes in 1.3.1
    Added P tag support
    Bug fix for images and links in frames using each
    Bug fixes for image#save
 
 Changes in 1.3
-   These are the significant changes since 1.2
-
    added new row_values and column_value methods to tables
    added ability to save an image - ie.image(:index,1).save('c:\temp\mypic.gif')
    new method, html that applies to objects, not just a page - ie.button(:index,1).html => <INPUT id=b2 title="this is button1" onclick="javascript:document.location='pass.html';" type=button value="Click Me" name=b1>
