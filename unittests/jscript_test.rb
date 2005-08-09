@@ -9,28 +9,18 @@ $mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
 
 class TC_JavaScript_Test < Test::Unit::TestCase
     include Watir
-    @@attach = true
-    @@javascript_page_title	= 'Alert Test'
-    @@javascript_page		= $htmlRoot  + 'JavascriptClick.htm'
+    @@javascript_page = $htmlRoot  + 'JavascriptClick.html'
     
     def setup
         begin
             WindowHelper.check_autoit_installed
-        rescue Watir::Exception::WatirException
-            puts "Problem with Autoit - is it installed?."
-            exit
         rescue
-            puts "There is a Problem with Autoit - is it installed?."
-            exit
+            raise "There is a Problem with Autoit - is it installed?"
         end
     end
 
-    def goto_javascript_page()
-        $ie.goto(@@javascript_page)
-    end
-    
     def check_dialog(extra_file, expected_result, &block)
-        goto_javascript_page()
+        $ie.goto(@@javascript_page)
         Thread.new { system("rubyw \"#{$mydir}\\#{extra_file}.rb\"") }
 
         block.call
@@ -39,19 +29,19 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     end
 
     def test_alert_button()
-        check_dialog('jscriptExtraAlert', /Alert OK/){ $ie.button(:id, 'btnAlert').click }
+        check_dialog('jscriptExtraAlert', /Alert button!/){ $ie.button(:id, 'btnAlert').click }
     end
     def test_alert_button2()
-        check_dialog('jscriptPushButton', /Alert OK/){ sleep 0.1; WindowHelper.new.push_alert_button }
+        check_dialog('jscriptPushButton', /Alert button!/){ sleep 0.1; WindowHelper.new.push_alert_button }
     end
     def test_confirm_button_ok()
-        check_dialog('jscriptExtraConfirmOk', /Confirm OK/){ push_confirm_button }
+        check_dialog('jscriptExtraConfirmOk', /Confirm and OK button!/){ push_confirm_button }
     end
     def test_confirm_button_Cancel()
-        check_dialog('jscriptExtraConfirmCancel', /Confirm Cancel/){push_confirm_button}
+        check_dialog('jscriptExtraConfirmCancel', /Confirm and Cancel button!/){push_confirm_button}
     end
-        
+
     def push_confirm_button
-        $ie.button(:id, 'btnInformation').click
+        $ie.button(:id, 'btnConfirm').click
     end
 end
