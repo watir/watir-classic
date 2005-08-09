@@ -13,7 +13,7 @@ class TC_CSS < Test::Unit::TestCase
        puts "Found #{divs.length} div tags"
        divs.each do |d|
            puts "Checking div #{d.id}"
-           puts "div #{d.invoke("id") } style is #{d.invoke("className")  	}"
+           puts "div #{d.invoke("id") } class is #{d.invoke("className")  	}"
        end
     end
 
@@ -27,7 +27,7 @@ class TC_CSS < Test::Unit::TestCase
           
            if d.innerText.to_s.downcase.match( /#{message}/i )
 
-               #puts "div #{d.invoke("id") } style is #{d.invoke("className")  	}"
+               #puts "div #{d.invoke("id") } class is #{d.invoke("className")  	}"
                if d.invoke("className").to_s.downcase.match(/show/i)
                    puts "message is shown!!!"
                    s = true
