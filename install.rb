@@ -8,8 +8,8 @@ rescue Exception
         require 'fox12'
         require 'fox12/colors'
     rescue Exception
-        puts "Gui installer can not be executed on your system."
-        puts "Please run the command line installer"
+        puts "Installer can not be executed on your system."
+        exit
     end
 end
 
@@ -21,8 +21,6 @@ require 'FileUtils'
 include FileUtils::Verbose
 require 'rbconfig'
     
-
-
 # Copy files from a directory to another directory
 def copy_file( from , to )
     c = File.cp(from , to, true)
@@ -31,7 +29,6 @@ def copy_file( from , to )
         exit
     end
 end
-
 
 # Creates a new start menu shortcut under Programs > Watir
 def make_startmenu_shortcut(name , targetURL )
@@ -117,7 +114,11 @@ def install(dirSelected, startMenu, desktop , register_AutoIt )
     FileUtils.cp_r('doc' , dirSelected, {:verbose=> true} )
     
     # copy the Rdocs to dirSelected
-    FileUtils.cp_r('rdoc', dirSelected, {:verbose=> true} )
+    begin
+        FileUtils.cp_r('rdoc', dirSelected, {:verbose=> true} )
+    rescue # in case being installed from dev (when there are no rdocs)
+        puts 'Rdoc not installed'
+    end
 
     # Create start menu shortcut
     if startMenu==1
@@ -159,12 +160,9 @@ main = FXMainWindow.new(application, "Watir Installer", nil, nil, DECOR_ALL, 0, 
 icon=loadGifIcon(application, "watir.gif")
 main.setMiniIcon(icon)
         
-
 # Text book - can add additional information here
 infoTextValue = "\n Choose an installation path"
 infoTextBox = FXLabel.new(main, infoTextValue, nil, LAYOUT_SIDE_TOP | JUSTIFY_LEFT)
-
-
     
 # Directory browsing
 browseFrame = FXHorizontalFrame.new(main)
@@ -177,12 +175,9 @@ browseButton.connect(SEL_COMMAND) do |sender, sel, checked|
         browseText.text = dirSelected  # set browseText to new directory
     end
 end
-
  
 # Create a verticle frame for Checkboxes and Install Button
 vFrame = FXVerticalFrame.new(main)
-
-
 
 # check boxes for desktop and start menu
 desktopIcon = FXCheckButton.new(vFrame, "Desktop Icon", nil)
@@ -194,8 +189,6 @@ startMenuShortcut.checkState = true
 installAUtoIt = FXCheckButton.new(vFrame, "Install AutoIt\n", nil)
 installAUtoIt.checkState = true
 
-
-
 # install button
 installButton = FXButton.new(vFrame, "Install", nil, application, BUTTON_NORMAL)
 installButton.connect(SEL_COMMAND) do |sender, sel, checked|    
@@ -203,8 +196,6 @@ installButton.connect(SEL_COMMAND) do |sender, sel, checked|
     puts "Installation Completed"
     application.exit()   
 end
-
-
 
 application.create()
 main.show(PLACEMENT_SCREEN)
