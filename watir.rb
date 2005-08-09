@@ -1619,7 +1619,7 @@ module Watir
             puts "Found #{divs.length} div tags"
             index=1
             divs.each do |d|
-                puts "#{index}  id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}  id=#{d.invoke('id')}      class=#{d.invoke("className")}"
                 index+=1
             end
         end
@@ -1641,7 +1641,7 @@ module Watir
             puts "Found #{spans.length} span tags"
             index=1
             spans.each do |d|
-                puts "#{index}   id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
                 index+=1
             end
         end
@@ -1651,7 +1651,7 @@ module Watir
             puts "Found #{labels.length} label tags"
             index=1
             labels.each do |d|
-                puts "#{index}  text=#{d.invoke('innerText')}      style=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
+                puts "#{index}  text=#{d.invoke('innerText')}      class=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
                 index+=1
             end
         end
@@ -2208,7 +2208,7 @@ module Watir
         # this method is used to populate the properties in the to_s method
         def span_div_string_creator
             n = []
-            n <<   "style:".ljust(TO_S_SIZE) + self.style
+            n <<   "class:".ljust(TO_S_SIZE) + self.class_name
             n <<   "text:".ljust(TO_S_SIZE) + self.text
             return n
          end
