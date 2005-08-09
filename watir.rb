@@ -1433,7 +1433,7 @@ module Watir
                 
                 s=nil
             rescue WIN32OLERuntimeError => e
-                @logger.warn 'runtime error in wait ' #  + e.to_s
+                @logger.info "runtime error in wait: #{e}\n#{e.backtrace.join("\\\n")}"
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
