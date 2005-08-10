@@ -1311,28 +1311,6 @@ module Watir
             autoit.Send key_string
         end
 
-        # this method can be used to capture events that occur in the browser
-        # It is only wired up for the NewWindow event right now, but could be easily expanded
-        # Do not use this when using irb
-        # the new window is available in  the newWindow variable:
-        def capture_events
-            ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
-            
-            # Note: NewWindow3 interface only on XP SP2 or later!
-            ev.on_event_with_outargs("NewWindow3") {|ppdisp, cancel, flags, fromURL, toURL , args| 
-                
-                # http://msdn.microsoft.com/workshop/browser/webbrowser/reference/ifaces/dwebbrowserevents2/newwindow2.asp
-                # http://groups.google.ca/groups?q=on_event_with_outargs&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=e249d8e7.0410060843.3f55fa05%40posting.google.com&rnum=1
-                # http://groups.google.ca/groups?q=on_event&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=200202211155.UAA05077%40ums509.nifty.ne.jp&rnum=8
-                
-                log "New Window URL: #{ toURL }"
-                log "Flags: #{flags}"
-                args[1] = true
-                @newWindow = IE.new
-                @newWindow.goto(toURL)
-            }
-        end
-        
         # used by the popup code only
         def dir
             return File.expand_path(File.dirname(__FILE__))
