@@ -1295,10 +1295,21 @@ module Watir
 
         # Restore the window (after minimizing or maximizing)
         def restore;  set_window_state (:SW_RESTORE);  end
-        
-        def set_window_state (state)
+
+        # Make the window come to the front
+        def bring_to_front
     		autoit = WIN32OLE.new('AutoItX3.Control')
-		    autoit.WinSetState title, '', autoit.send(state)			
+    		autoit.WinActivate title, ''		
+     	end
+
+     	def front?
+    		autoit = WIN32OLE.new('AutoItX3.Control')
+    		1 == autoit.WinActive(title, '')		
+     	end	     	         
+
+     	def set_window_state (state)
+    		autoit = WIN32OLE.new('AutoItX3.Control')
+    		autoit.WinSetState title, '', autoit.send(state)			
         end
         private :set_window_state
                 
