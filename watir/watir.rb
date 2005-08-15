@@ -180,25 +180,26 @@ module Watir
     #
     # there are many methods available to the Button object
     #
-    # Is includable for classes that have @ieController, document and document.body
-    module SupportsSubElements 
+    # Is includable for classes that have @container, document and document.body
+    module Container 
         include Watir::Exception
 
-        # this method returns the real Internet Explorer object, allowing access to objects, properties and methods that Watir doesnot support
-        def ie
-            return @ieController
+        # Note: @container is the container of this object, i.e. the container 
+        # of this container. 
+        # In other words, for ie.table().this_thing().text_field().set, 
+        # container of this_thing is the table.
+        
+        # Write the specified string to the log.
+        def log(what)
+            @container.logger.debug( what ) if @logger
         end
 
-        # write the specified string to the log, assuming a logger has been setup using IE#set_logger
-        def log ( what )
-            @ieController.logger.debug( what ) if @logger
+        # Wait until Internet Explorer has finished loading the page.
+        def wait(no_sleep  = false)
+             @container.wait(no_sleep)
         end
 
-        # this method causes Watir to wait until Internet Explorer has finished the action
-        def wait( noSleep  = false )
-             @ieController.wait( noSleep )
-        end
-
+        # Determine the how and what when defaults are possible.
         def process_default(default_attribute, how, what)
             if what == nil
                 what = how
@@ -750,18 +751,11 @@ module Watir
         # Not for external consumption
         #        
         #++
-        def getContainerContents()
+        def ole_inner_elements
             return document.body.all 
         end
-        private :getContainerContents
+        private :ole_inner_elements
 
-        # this method is used internally by Watir and should not be used externally. 
-        # It cannot be marked as private because of the way mixins and inheritance work in watir.
-        # BUG: This looks wrong: Not everything that includes SupportsSubElements has a document.body!
-        def getContainer()
-            return document.body
-        end
-     
         # This is the main method for finding objects on a web page.
         #
         # This method is used internally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
@@ -775,7 +769,7 @@ module Watir
         #   * types - what object types we will look at. Only used when index is specified as the how.
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
         def getObject(how, what, types, value=nil)
-            container = getContainerContents # XXX actually this returns a collection object (not a container)
+            container = ole_inner_elements 
             how = :value if how == :caption
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
@@ -1033,12 +1027,12 @@ module Watir
     # An instance of this must be created to access Internet Explorer.
     class IE
         include Watir::Exception
-        include SupportsSubElements 
+        include Container 
 
-        # The revision number ( according to CVS )
+        # The revision number (according to CVS)
         REVISION = "$Revision$"
 
-        # the Release number
+        # The Release number
         VERSION = "1.4"
         
         # Used internally to determine when IE has finished loading a page
@@ -1071,12 +1065,11 @@ module Watir
         # When a new window is created it is stored in newWindow
         attr_accessor :newWindow
 
-        # Use this to gain access to the 'raw' internet explorer object.        
+        # the ole internet explorer object        
         attr_reader :ie
 
         # access to the logger object
         attr_accessor :logger
-
 
         # this contains the list of unique urls that have been visited
         attr_reader :url_list                        
@@ -1295,7 +1288,7 @@ module Watir
 
         # Restore the window (after minimizing or maximizing)
         def restore;  set_window_state (:SW_RESTORE);  end
-
+        
         # Make the window come to the front
         def bring_to_front
     		autoit = WIN32OLE.new('AutoItX3.Control')
@@ -1307,9 +1300,9 @@ module Watir
     		1 == autoit.WinActive(title, '')		
      	end	     	         
 
-     	def set_window_state (state)
+        def set_window_state (state)
     		autoit = WIN32OLE.new('AutoItX3.Control')
-    		autoit.WinSetState title, '', autoit.send(state)			
+		    autoit.WinSetState title, '', autoit.send(state)			
         end
         private :set_window_state
                 
@@ -1663,11 +1656,11 @@ module Watir
     # POPUP object
     class PopUp
         def initialize( ieController )
-            @ieController = ieController
+            @container = ieController
         end
         
         def button( caption )
-            return JSButton.new(  @ieController.getIE.hwnd , caption )
+            return JSButton.new(  @container.getIE.hwnd , caption )
         end
     end
     
@@ -1829,15 +1822,11 @@ module Watir
             @container.wait
         end   
 
-        def getContainerContents
+        def ole_inner_elements
             raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
             @form.elements.all
         end   
-        private :getContainerContents
-
-        def getContainer
-            return @form
-        end
+        private :ole_inner_elements
 
         def wait(no_sleep = false)
             @container.wait(no_sleep)
@@ -1846,9 +1835,9 @@ module Watir
         # This method is responsible for setting and clearing the colored highlighting on the specified form.
         # use :set   to set the highlight
         #   :clear  to clear the highlight
-        def highLight( setOrClear  , element , count)
+        def highlight(set_or_clear, element, count)
 
-            if setOrClear == :set
+            if set_or_clear == :set
                 begin
                     original_color = element.style.backgroundColor
                     original_color = "" if original_color== nil
@@ -1869,7 +1858,7 @@ module Watir
                 end
             end
         end
-        private :highLight
+        private :highlight
 
         # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
@@ -1877,13 +1866,13 @@ module Watir
             10.times do
                 count=0
                 @form.elements.each do |element|
-                    highLight(:set , element , count)
+                    highlight(:set , element , count)
                     count +=1
                 end
                 sleep 0.05
                 count = 0
                 @form.elements.each do |element|
-                    highLight(:clear , element , count)
+                    highlight(:clear , element , count)
                     count +=1
                 end
                 sleep 0.05
@@ -1892,18 +1881,18 @@ module Watir
                 
     end # class Form
     
-    # Base class for most elements.
+    # Base class for html elements.
     # This is not a class that users would normally access. 
     class Element
         include Watir::Exception
         
-        # number of spaces that seperate the property from the value in the to_s method
+        # number of spaces that separate the property from the value in the to_s method
         TO_S_SIZE = 14
         
-        #   o  - the ole object for the element being wrapped
-        def initialize( o )
-            @o = o
-            @originalColor = nil
+        # ole_object - the ole object for the element being wrapped
+        def initialize(ole_object)
+            @o = ole_object
+            @original_color = nil
         end
         
         private
@@ -1942,21 +1931,22 @@ module Watir
         def_wrap_guard :value
         def_wrap_guard :title
 
-        # returns the Object in its OLE form, allowing any methods of the DOM that Watir doesnt support to be used    
+        # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
-        # BUG: should be renamed appropriately and then use an attribute reader
+        # BUG: should use an attribute reader and rename the instance variable
         #++
-        def getOLEObject
+        def ole_object
             return @o
         end
+        alias getOLEObject ole_object # move to camel_case.rb
   
-        # returns the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
+        # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
         def html
             assert_exists
             return @o.outerHTML
         end
 
-        # Returns an array with many of the properties, in a format to be used by the to_s method
+        # Return an array with many of the properties, in a format to be used by the to_s method
         def string_creator
             n = []
             n <<   "type:".ljust(TO_S_SIZE) + self.type
@@ -1966,8 +1956,9 @@ module Watir
             n <<   "disabled:".ljust(TO_S_SIZE) +   self.disabled.to_s
             return n
         end
+        private :string_creator
         
-        # This method displays basic details about the object. Sample output for a button is shown.
+        # Display basic details about the object. Sample output for a button is shown.
         # Raises UnknownObjectException if the object is not found.
         #      name      b4
         #      type      button
@@ -1982,25 +1973,25 @@ module Watir
         # This method is responsible for setting and clearing the colored highlighting on the currently active element.
         # use :set   to set the highlight
         #   :clear  to clear the highlight
-        def highLight( setOrClear )
-            if setOrClear == :set
+        def highlight(set_or_clear)
+            if set_or_clear == :set
                 begin
-                    @originalColor = @o.style.backgroundColor
-                    @o.style.backgroundColor = @ieController.activeObjectHighLightColor
+                    @original_color = @o.style.backgroundColor
+                    @o.style.backgroundColor = @container.activeObjectHighLightColor
                 rescue 
-                    @originalColor = nil
+                    @original_color = nil
                 end
             else # BUG: assumes is :clear, but could actually be anything
                 begin 
-                    @o.style.backgroundColor = @originalColor unless @originalColor == nil
+                    @o.style.backgroundColor = @original_color unless @original_color == nil
                 rescue
                     # we could be here for a number of reasons...
                 ensure
-                    @originalColor = nil
+                    @original_color = nil
                 end
             end
         end
-        private :highLight
+        private :highlight
         
         #   This method clicks the active element.
         #   raises: UnknownObjectException  if the object is not found
@@ -2009,19 +2000,19 @@ module Watir
             assert_exists
             assert_enabled
            
-            highLight(:set)
+            highlight(:set)
             @o.click()
-            @ieController.wait()
-            highLight(:clear)
+            @container.wait()
+            highlight(:clear)
         end
 
         # causes the object to flash. Normally used in IRB when creating scripts        
         def flash
             assert_exists
             10.times do
-                highLight(:set)
+                highlight(:set)
                 sleep 0.05
-                highLight(:clear)
+                highlight(:clear)
                 sleep 0.05
             end
             nil
@@ -2031,16 +2022,16 @@ module Watir
         #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
-        def fireEvent(event)
+        def fire_event(event)
             assert_exists
             assert_enabled
 
-            highLight(:set)
+            highlight(:set)
             @o.fireEvent(event)
-            @ieController.wait()
-            highLight(:clear)
+            @container.wait()
+            highlight(:clear)
         end
-        alias fire_event fireEvent
+        alias fireEvent fire_event # move to camel_case.rb
         
         # This method sets focus on the active element.
         #   raises: UnknownObjectException  if the object is not found
@@ -2073,7 +2064,7 @@ module Watir
         # Super class for all the iteractor classes
         #   * ieController  - an instance of an IE object
         def initialize( ieController)
-            @ieController = ieController
+            @container = ieController
             @length = length() # defined by subclasses
 
             # set up the items we want to display when the show method s used
@@ -2094,7 +2085,7 @@ module Watir
                 end
 
             length = 0
-            objects = @ieController.getContainer.getElementsByTagName("INPUT")
+            objects = @container.document.getElementsByTagName("INPUT")
             if  objects.length > 0 
                 objects.each do |o|
                    length += 1 if object_types.include?(o.invoke("type").downcase )
@@ -2139,7 +2130,7 @@ module Watir
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
-            element_class.new(@ieController, :index, i+1)
+            element_class.new(@container, :index, i+1)
         end
     end
 
@@ -2150,26 +2141,26 @@ module Watir
     #
     class SpanDivCommon < Element
         include Watir::Exception
-        include SupportsSubElements 
+        include Container 
 
         attr_reader :typingspeed      
 
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
-            @o = @ieController.getNonControlObject(tag , @how, @what )
+            @o = @container.getNonControlObject(tag , @how, @what )
             super( @o )
-            @typingspeed = @ieController.typingspeed      
-            @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+            @typingspeed = @container.typingspeed      
+            @activeObjectHighLightColor = @container.activeObjectHighLightColor      
         end
 
-        def getContainerContents()
+        def ole_inner_elements
             return @o.all
         end
-        private :getContainerContents
+        private :ole_inner_elements
 
-        def getContainer()
+        def document
             return @o
         end
 
@@ -2240,10 +2231,10 @@ module Watir
     #
     class Label < Element
         def initialize( ieController , how, what)
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
-            @o = @ieController.getNonControlObject("LABEL" , @how, @what )
+            @o = @container.getNonControlObject("LABEL" , @how, @what )
             super( @o )
         end
 
@@ -2286,7 +2277,7 @@ module Watir
     end
 
     # This class is used for dealing with tables.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#table method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#table method
     #
     # many of the methods available to this object are inherited from the Element class
     #
@@ -2308,7 +2299,7 @@ module Watir
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
-            @ieController = parent
+            @container = parent
             @how = how
             @what = what
 
@@ -2330,8 +2321,8 @@ module Watir
         # +++
         # this method finds the specified table on the page
         def get_table
-                allTables = @ieController.document.getElementsByTagName("TABLE")
-                @ieController.log "There are #{ allTables.length } tables"
+                allTables = @container.document.getElementsByTagName("TABLE")
+                @container.log "There are #{ allTables.length } tables"
                 tableIndex = 1
                 table=nil
                 allTables.each do |t|
@@ -2354,9 +2345,9 @@ module Watir
 
         # override the highlight method, as if the tables rows are set to have a background color, 
         # this will override the table background color,  and the normal flsh method wont work
-        def highLight(setOrClear )
+        def highlight(set_or_clear )
 
-           if setOrClear == :set
+           if set_or_clear == :set
                 begin
                     @original_border = @o.border.to_i
                     if @o.border.to_i==1
@@ -2401,14 +2392,14 @@ module Watir
         # iterates through the rows in the table. Yields a TableRow object
         def each
             assert_exists
-            1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@ieController ,:direct, row(i) )    }
+            1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@container ,:direct, row(i) )    }
         end
  
         # Returns a row in the table
         #   * index         - the index of the row
         def [](index)
             raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-            return  TableRow.new(@ieController ,:direct, row(index) )
+            return  TableRow.new(@container ,:direct, row(index) )
         end
 
         # This method returns the number of rows in the table.
@@ -2450,11 +2441,11 @@ module Watir
         private :table_body
 
         def body( how , what )
-            return TableBody.new( @ieController, how, what , self)
+            return TableBody.new( @container, how, what , self)
         end
 
         def bodies
-            return TableBodies.new(@ieController,  :direct , @o)
+            return TableBodies.new(@container,  :direct , @o)
         end
    
         def row(index)
@@ -2487,7 +2478,7 @@ module Watir
     #
     class TableBodies<Element
         def initialize(ieController, how, what )
-            @ieController = ieController
+            @container = ieController
             @o= nil
             if how == :direct
                 @o = what     # in this case, @o is the parent table
@@ -2503,7 +2494,7 @@ module Watir
         # returns the n'th Body as a Watir TableBody object
         def []n
             assert_exists
-            return TableBody.new( @ieController , :direct , @o.tBodies[(n-1).to_s] )
+            return TableBody.new( @container , :direct , @o.tBodies[(n-1).to_s] )
         end
 
         def get_IE_table_body_at_index( n )
@@ -2512,7 +2503,7 @@ module Watir
 
         # iterates through each of the TableBodies in the Table. Yields a TableBody object
         def each
-            0.upto( @o.tBodies.length-1 ) { |i | yield TableBody.new( @ieController , :direct , @o.tBodies[i.to_s] )   }
+            0.upto( @o.tBodies.length-1 ) { |i | yield TableBody.new( @container , :direct , @o.tBodies[i.to_s] )   }
         end
 
     end
@@ -2521,7 +2512,7 @@ module Watir
     # this class is a table body
     class TableBody<Element
         def initialize(ieController, how, what, parent_table=nil )
-            @ieController = ieController
+            @container = ieController
             @o= nil
             if how == :direct
                 @o = what     # in this case, @o is the table body
@@ -2539,7 +2530,7 @@ module Watir
         def update_rows
             if @o
                 @o.rows.each do |oo|
-                    @rows << TableRow.new(@ieController, :direct, oo)
+                    @rows << TableRow.new(@container, :direct, oo)
                 end
             end
         end
@@ -2547,7 +2538,7 @@ module Watir
         # returns the specified row as a TableRow object
         def []n
             assert_exists
-            return TableRow.new( @ieController , :direct , @rows[n-1] )
+            return TableRow.new( @container , :direct , @rows[n-1] )
         end
 
         # iterates through all the rows in the table body
@@ -2571,7 +2562,7 @@ module Watir
         #   * how          - symbol - how we access the row        
         #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
         def initialize(ieController , how, what)
-            @ieController = ieController
+            @container = ieController
             @how = how   
             @what = what   
             @o=nil
@@ -2590,7 +2581,7 @@ module Watir
             if @o   # cant call the assert_exists here, as an exists? method call will fail
                 @cells=[]
                 @o.cells.each do |oo|
-                    @cells << TableCell.new(@ieController, :direct, oo)
+                    @cells << TableCell.new(@container, :direct, oo)
                 end
             end
         end
@@ -2621,7 +2612,7 @@ module Watir
     # this class is a table cell - when called via the Table object
     class TableCell <Element
         include Watir::Exception
-        include SupportsSubElements 
+        include Container 
 
         attr_reader :typingspeed      
         attr_reader :activeObjectHighLightColor 
@@ -2631,7 +2622,7 @@ module Watir
         #   * how         - symbol - how we access the cell        
         #   * what         - what we use to access the cell - id, name index etc
         def initialize( ieController,  how , what )   
-            @ieController = ieController    
+            @container = ieController    
             #puts "How = #{how}"
              if how == :direct
                  @o = what
@@ -2642,18 +2633,14 @@ module Watir
              super( @o )   
              @how = how   
              @what = what   
-             @typingspeed = @ieController.typingspeed      
-             @activeObjectHighLightColor = @ieController.activeObjectHighLightColor      
+             @typingspeed = @container.typingspeed      
+             @activeObjectHighLightColor = @container.activeObjectHighLightColor      
          end 
 
-        def getContainerContents
+        def ole_inner_elements
             return @o.all
         end
-        private :getContainerContents
-
-        def getContainer
-            return @o
-        end
+        private :ole_inner_elements
 
         def document
             return @o  
@@ -2673,7 +2660,7 @@ module Watir
    end
 
     # This class is the means of accessing an image on a page.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#image method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#image method
     #
     # many of the methods available to this object are inherited from the Element class
     #
@@ -2684,10 +2671,10 @@ module Watir
         #   * how         - symbol - how we access the image
         #   * what         - what we use to access the image, name, src, index, id or alt
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
-            @o = @ieController.getImage(@how, @what)
+            @o = @container.getImage(@how, @what)
             super( @o )
         end
 
@@ -2762,9 +2749,9 @@ module Watir
         end
 
         # this method highlights the image ( in fact it adds or removes a border around the image)
-        #  * setOrClear   - symbol - :set to set the border, :clear to remove it
-        def highLight( setOrClear )
-            if setOrClear == :set
+        #  * set_or_clear   - symbol - :set to set the border, :clear to remove it
+        def highlight( set_or_clear )
+            if set_or_clear == :set
                 begin
                     @original_border = @o.border
                     @o.border = 1
@@ -2782,7 +2769,7 @@ module Watir
                 end
             end
         end
-        private :highLight
+        private :highlight
 
         # This method saves the image to the file path that is given.  The 
         # path must be in windows format (c:\\dirname\\somename.gif).  This method
@@ -2794,13 +2781,13 @@ module Watir
         def save(path)
             require 'watir/windowhelper'
             WindowHelper.check_autoit_installed
-            @ieController.goto(src)
+            @container.goto(src)
             begin
                 thrd = fill_save_image_dialog(path)
-                @ieController.document.execCommand("SaveAs")
+                @container.document.execCommand("SaveAs")
                 thrd.join(5)
             ensure
-                @ieController.back
+                @container.back
             end
         end
         
@@ -2814,7 +2801,7 @@ module Watir
     
     
     # This class is the means of accessing a link on a page
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#link method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#link method
     # many of the methods available to this object are inherited from the Element class
     #
     class Link < Element
@@ -2823,11 +2810,11 @@ module Watir
         #   * how         - symbol - how we access the link
         #   * what         - what we use to access the link, text, url, index etc
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
             begin
-                @o = @ieController.getLink( @how, @what )
+                @o = @container.getLink( @how, @what )
             rescue UnknownObjectException
                 @o = nil
             end
@@ -2883,7 +2870,7 @@ module Watir
     end
     
     # This class is the way in which select boxes are manipulated.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#select_list method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
     #
     # many of the methods available to this object are inherited from the Element class
     #
@@ -2893,10 +2880,10 @@ module Watir
         #   * how          - symbol - how we access the select box
         #   * what         - what we use to access the select box, name, id etc
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
-            @o = @ieController.getObject(@how, @what, ["select-one", "select-multiple"])
+            @o = @container.getObject(@how, @what, ["select-one", "select-multiple"])
             super( @o )
         end
         
@@ -2905,7 +2892,7 @@ module Watir
         # This method clears the selected items in the select box
         def clearSelection
             assert_exists
-            highLight( :set)
+            highlight( :set)
             wait = false
             @o.each do |selectBoxItem|
                 if selectBoxItem.selected
@@ -2913,8 +2900,8 @@ module Watir
                     wait = true
                 end
             end
-            @ieController.wait if wait
-            highLight( :clear)
+            @container.wait if wait
+            highlight( :clear)
         end
 #        private :clearSelection
         
@@ -2938,9 +2925,9 @@ module Watir
         #  * item  - string or reg exp - what we are looking for
         def select_item_in_select_list( attribute, value )
             assert_exists
-            highLight( :set )
+            highlight( :set )
             doBreak = false
-            @ieController.log "Setting box #{@o.name} to #{attribute} #{value} "
+            @container.log "Setting box #{@o.name} to #{attribute} #{value} "
             @o.each do |option| # items in the list
                 if value.matches( option.invoke(attribute.to_s))
                     if option.selected
@@ -2949,7 +2936,7 @@ module Watir
                     else
                         option.selected = true
                         @o.fireEvent("onChange")
-                        @ieController.wait
+                        @container.wait
                         doBreak = true
                         break
                     end
@@ -2959,7 +2946,7 @@ module Watir
                 raise NoValueFoundException, 
                         "No option with #{attribute.to_s} of #{value} in this select element"  
             end
-            highLight( :clear )
+            highlight( :clear )
         end
         
         # Returns all the items in the select list as an array. 
@@ -2967,7 +2954,7 @@ module Watir
         # Raises UnknownObjectException if the select box is not found
         def getAllContents()
             assert_exists
-            @ieController.log "There are #{@o.length} items"
+            @container.log "There are #{@o.length} items"
             returnArray = []
             @o.each { |thisItem| returnArray << thisItem.text }
             return returnArray 
@@ -2978,10 +2965,10 @@ module Watir
         def getSelectedItems
             assert_exists
             returnArray = []
-            @ieController.log "There are #{@o.length} items"
+            @container.log "There are #{@o.length} items"
             @o.each do |thisItem|
                 if thisItem.selected
-                    @ieController.log "Item ( #{thisItem.text} ) is selected"
+                    @container.log "Item ( #{thisItem.text} ) is selected"
                     returnArray << thisItem.text 
                 end
             end
@@ -3048,19 +3035,19 @@ module Watir
     end    
 
     # This is the main class for accessing buttons.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#button method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
     #
     # most of the methods available to Button objects are inherited from the Element class
     #
     class Button < Element
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
             if(how == :from_object) then
                 @o = what
             else
-                @o = @ieController.getObject( @how, @what , object_types)
+                @o = @container.getObject( @how, @what , object_types)
             end              
             super( @o )
         end
@@ -3076,11 +3063,11 @@ module Watir
     class FileField < Element
         # Create an instance of the file object
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
             super( @o )
-            @o = @ieController.getObject( @how, @what , ["file"] )
+            @o = @container.getObject( @how, @what , ["file"] )
 
         end
 
@@ -3100,19 +3087,19 @@ module Watir
 
     # This class is the class for radio buttons and check boxes. 
     # It contains methods common to both.
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#checkbox or Watir::SupportsSubElements#radio methods
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or Watir::Container#radio methods
     #
     # most of the methods available to this element are inherited from the Element class
     #
     class RadioCheckCommon < Element
 
         def initialize( ieController,  how , what , type, value=nil )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
             @type = type
             @value = value
-            @o = @ieController.getObject(@how, @what, @type, @value)
+            @o = @container.getObject(@how, @what, @type, @value)
             super( @o )
         end
 
@@ -3133,9 +3120,9 @@ module Watir
         def clear
             assert_exists
             assert_enabled
-            highLight( :set)
+            highlight( :set)
             set_clear_item( false )
-            highLight( :clear )
+            highlight( :clear )
         end
         
         # This method sets the radio list item or check box.
@@ -3144,16 +3131,16 @@ module Watir
         def set
             assert_exists
             assert_enabled
-            highLight( :set)
+            highlight( :set)
             set_clear_item( true )
-            highLight( :clear )
+            highlight( :clear )
         end
     
         # This method is the common code for setting or clearing checkboxes and radio. A user would normalyy not access this, but use Checkbox#set etc
         def set_clear_item( set )
             @o.checked = set
             @o.fireEvent("onClick")
-            @ieController.wait
+            @container.wait
         end
         private :set_clear_item
     
@@ -3179,7 +3166,7 @@ module Watir
         def set( set_or_clear=true )
             assert_exists
             assert_enabled
-            highLight( :set)
+            highlight( :set)
 
             if set_or_clear == true
                 if @o.checked == false
@@ -3188,7 +3175,7 @@ module Watir
             else
                 self.clear
             end
-            highLight( :clear )
+            highlight( :clear )
         end
         
         # This method clears a check box. 
@@ -3198,11 +3185,11 @@ module Watir
         def clear
             assert_exists
             assert_enabled
-            highLight( :set)
+            highlight( :set)
             if @o.checked == true
                 set_clear_item( false )
             end
-            highLight( :clear)
+            highlight( :clear)
         end
         
 
@@ -3210,19 +3197,19 @@ module Watir
 
 
     # This class is the main class for Text Fields
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#text_field method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
     #
     # most of the methods available to this element are inherited from the Element class
     #
     class TextField < Element
         
         def initialize( ieController,  how , what )
-            @ieController = ieController
+            @container = ieController
             @how = how
             @what = what
 
 	      if(how != :from_object) then
-                @o = @ieController.getObject(@how, @what, supported_types)
+                @o = @container.getObject(@how, @what, supported_types)
 	      else
 		    @o = what
 	      end
@@ -3314,7 +3301,7 @@ module Watir
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
         def dragContentsTo( destination_how , destination_what)
             assert_exists
-            destination = @ieController.textField(destination_how , destination_what)
+            destination = @container.textField(destination_how , destination_what)
 
             raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
@@ -3343,7 +3330,7 @@ module Watir
             assert_enabled
             assert_not_readonly
             
-            highLight(:set)
+            highlight(:set)
             
             @o.scrollIntoView
             @o.focus
@@ -3352,8 +3339,8 @@ module Watir
             @o.value = ""
             @o.fireEvent("onKeyPress")
             @o.fireEvent("onChange")
-            @ieController.wait()
-            highLight(:clear)
+            @container.wait()
+            highlight(:clear)
         end
         
         # This method appens the supplied text to the contents of the text box.
@@ -3366,11 +3353,11 @@ module Watir
             assert_enabled
             assert_not_readonly
             
-            highLight(:set)
+            highlight(:set)
             @o.scrollIntoView
             @o.focus
             doKeyPress( setThis )
-            highLight(:clear)
+            highlight(:clear)
         end
         
         # This method sets the contents of the text box to the supplied text 
@@ -3383,7 +3370,7 @@ module Watir
             assert_enabled
             assert_not_readonly
             
-            highLight(:set)
+            highlight(:set)
             @o.scrollIntoView
             @o.focus
             @o.select()
@@ -3391,7 +3378,7 @@ module Watir
             @o.value = ""
             @o.fireEvent("onKeyPress")
             doKeyPress( setThis )
-            highLight(:clear)
+            highlight(:clear)
             @o.fireEvent("onChange")
             @o.fireEvent("onBlur")
         end
@@ -3418,16 +3405,16 @@ module Watir
                 maxLength = @o.maxLength
                 if value.length > maxLength
                     value = suppliedValue[0 .. maxLength ]
-                    @ieController.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
+                    @container.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
                 end
             rescue
                 # probably a text area - so it doesnt have a max Length
                 maxLength = -1
             end
             for i in 0 .. value.length-1   
-                sleep @ieController.typingspeed   # typing speed
+                sleep @container.typingspeed   # typing speed
                 c = value[i,1]
-                #@ieController.log  " adding c.chr " + c  #.chr.to_s
+                #@container.log  " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
                 fire_key_events
             end
@@ -3437,7 +3424,7 @@ module Watir
     end
 
     # this class can be used to access hidden field objects
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#hidden method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
     #
     # most of the methods available to this element are inherited from the Element class
     #
@@ -3485,7 +3472,7 @@ module Watir
             element_class.tag
         end
         def length
-            @ieController.getContainer.getElementsByTagName(element_tag).length
+            @container.document.getElementsByTagName(element_tag).length
         end
     end        
     
@@ -3540,7 +3527,7 @@ module Watir
     
 
     # this class accesses the buttons in the document as a collection
-    # it would normally only be accessed by the Watir::SupportsSubElements#buttons method
+    # it would normally only be accessed by the Watir::Container#buttons method
     #
     class Buttons < ElementCollections
         def element_class; Button; end
@@ -3557,7 +3544,7 @@ module Watir
 
 
     # this class accesses the file fields in the document as a collection
-    # it would normally only be accessed by the Watir::SupportsSubElements#file_fields method
+    # it would normally only be accessed by the Watir::Container#file_fields method
     #
     class FileFields< ElementCollections
         def element_class; FileField; end
@@ -3574,7 +3561,7 @@ module Watir
 
 
     # this class accesses the check boxes in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#checkboxes method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
     #
     class CheckBoxes < ElementCollections
         def element_class; CheckBox; end  
@@ -3584,12 +3571,12 @@ module Watir
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
-            @ieController.checkbox(:index, i+1)
+            @container.checkbox(:index, i+1)
         end
     end
 
     # this class accesses the radio buttons in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#radios method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#radios method
     #
     class Radios < ElementCollections
         def element_class; Radio; end
@@ -3599,12 +3586,12 @@ module Watir
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
-            @ieController.radio(:index, i+1)
+            @container.radio(:index, i+1)
         end
     end
 
     # this class accesses the select boxes  in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#select_lists method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#select_lists method
     #
     class SelectLists < ElementCollections
         include CommonCollection
@@ -3613,7 +3600,7 @@ module Watir
     end
 
     # this class accesses the links in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#links method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#links method
     #
     class Links < ElementCollections
         include CommonCollection
@@ -3629,12 +3616,12 @@ module Watir
     end
 
     # this class accesses the imnages in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#images method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
     #
     class Images < ElementCollections
         def element_class; Image; end 
         def length
-            @ieController.document.images.length
+            @container.document.images.length
         end
 
         def set_show_items
@@ -3646,19 +3633,19 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#text_fields method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#text_fields method
     #
     class TextFields < ElementCollections
         def element_class; TextField; end
         def length
-            # text areas are also included inthe Text_filds, but we need to get them seperately
+            # text areas are also included in the TextFields, but we need to get them seperately
             get_length_of_input_objects( ["text" , "password"] ) +
-                @ieController.ie.document.body.getElementsByTagName("textarea").length
+                @container.document.getElementsByTagName("textarea").length
         end
     end
 
     # this class accesses the hidden fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#hiddens method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#hiddens method
     class Hiddens < ElementCollections
         def element_class; Hidden; end
         def length
@@ -3667,7 +3654,7 @@ module Watir
     end
 
     # this class accesses the text fields in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#tables method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#tables method
     #
     class Tables < ElementCollections
         include CommonCollection
@@ -3681,7 +3668,7 @@ module Watir
     end
 
     # this class accesses the labels in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#labels method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#labels method
     #
     class Labels < ElementCollections
         include CommonCollection
@@ -3695,7 +3682,7 @@ module Watir
     end
 
     # this class accesses the p tags in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#ps method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
     #
     class Ps < ElementCollections
         include CommonCollection
@@ -3710,7 +3697,7 @@ module Watir
     end
 
     # this class accesses the spans in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#spans method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#spans method
     #
     class Spans < ElementCollections
         include CommonCollection
@@ -3725,7 +3712,7 @@ module Watir
     end
 
     # this class accesses the divs in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::SupportsSubElements#divs method
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#divs method
     #
     class Divs < ElementCollections
         include CommonCollection
