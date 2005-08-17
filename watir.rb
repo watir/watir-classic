@@ -1681,11 +1681,8 @@ module Watir
         end
     end
     
-    # 
-    # Module Watir::Control or Watir::BrowserDriver
-    #
-
-    class Frame < IE
+    class Frame
+        include Container
     
         def initialize(container, how, what)
             @container = container
@@ -1765,11 +1762,11 @@ module Watir
     end
        
     #   Form Factory object 
-    class Form < IE
+    class Form
         include FormAccess
+        include Container
 
         attr_accessor :form
-
 
         #   * container   - the containing object, normally an instance of IE
         #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
