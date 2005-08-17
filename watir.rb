@@ -188,14 +188,25 @@ module Watir
         # of this container. 
         # In other words, for ie.table().this_thing().text_field().set, 
         # container of this_thing is the table.
-        
+
+        # This is used to change the typing speed when entering text on a page.
+        attr_accessor :typingspeed
+        # The color we want to use for the active object. This can be any valid web-friendly color.
+        attr_accessor :activeObjectHighLightColor
+
+        def copy_test_config(container)
+            @typingspeed = container.typingspeed      
+            @activeObjectHighLightColor = container.activeObjectHighLightColor      
+        end    
+        private :copy_test_config
+
         # Write the specified string to the log.
         def log(what)
-            @container.logger.debug( what ) if @logger
+            @container.logger.debug(what) if @logger
         end
 
         # Wait until Internet Explorer has finished loading the page.
-        def wait(no_sleep  = false)
+        def wait(no_sleep = false)
              @container.wait(no_sleep)
         end
 
@@ -218,7 +229,7 @@ module Watir
         #   ie.frame(:index, 1) 
         #   ie.frame(:name , 'main_frame')
         #   ie.frame('main_frame')        # in this case, just a name is supplied
-        def frame(how, what=nil)
+        def frame(how, what = nil)
             how, what = process_default :name, how, what
             return Frame.new(self, how, what)
         end
@@ -227,7 +238,7 @@ module Watir
         # available ways of accessing it are, :index , :name, :id, :method, :action
         #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
         #  * what   - String - the text associated with the symbol
-        def form(how, what=nil)
+        def form(how, what = nil)
             how, what = process_default :name, how, what
             return Form.new(self, how, what)      
         end
@@ -241,7 +252,7 @@ module Watir
         #                  - :id
         #                  - :index
         #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
-        def table( how, what )
+        def table(how, what)
             return Table.new( self , how, what)
         end
 
@@ -252,7 +263,7 @@ module Watir
         #   ie.tables.each { |t| puts t.to_s }            # iterate through all the tables on the page
         #   ie.tables[1].to_s                             # goto the first table on the page                                   
         #   ie.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
-        def tables()
+        def tables
             return Tables.new(self)
         end
 
@@ -260,7 +271,7 @@ module Watir
         # how - symbol - how we access the cell,  :id is supported
         # 
         # returns a TableCell Object
-        def cell( how, what )
+        def cell(how, what)
            return TableCell.new( self, how, what)
         end
 
@@ -268,8 +279,8 @@ module Watir
         # how - symbol - how we access the row,  :id is supported
         # 
         # returns a TableRow object
-        def row( how, what )
-           return TableRow.new( self, how, what)
+        def row(how, what)
+           return TableRow.new(self, how, what)
         end
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
@@ -300,7 +311,7 @@ module Watir
         # if only a single parameter is supplied,  then :value is used 
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
-        def button(how, what=nil)
+        def button(how, what = nil)
             how, what = process_default :value, how, what
             return Button.new(self, how, what)
         end
@@ -312,10 +323,9 @@ module Watir
         #   ie.buttons.each { |b| puts b.to_s }            # iterate through all the buttons on the page
         #   ie.buttons[1].to_s                             # goto the first button on the page                                   
         #   ie.buttons.length                              # show how many buttons are on the page. 
-        def buttons()
+        def buttons
             return Buttons.new(self)
         end
-
 
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
         #  *  how   - symbol - how we access the field , :index, :id, :name etc
@@ -329,8 +339,8 @@ module Watir
         #    ie.file_field(:name, 'upload')                   # access the file upload field with a name of upload
         #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
         #
-        def file_field(how , what)
-            return FileField.new(self , how, what)
+        def file_field(how, what)
+            return FileField.new(self, how, what)
         end
         
         # this is the main method for accessing the file_fields iterator. It returns a FileFields object
@@ -340,7 +350,7 @@ module Watir
         #   ie.file_fields.each { |f| puts f.to_s }            # iterate through all the file fields on the page
         #   ie.file_fields[1].to_s                             # goto the first file field on the page                                   
         #   ie.file_fields.length                              # show how many file fields are on the page. 
-        def file_fields()
+        def file_fields
             return FileFields.new(self)
         end
 
@@ -364,7 +374,7 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field(how , what=nil)
+        def text_field(how , what = nil) # xxx do we need to have default logic here?
             return TextField.new(self, how, what)
         end
 
@@ -390,7 +400,7 @@ module Watir
         #    ie.hidden(:id, 'session_id')                 # access the hidden field with an ID of session_id
         #    ie.hidden(:name, 'temp_value')               # access the hidden field with a name of temp_value
         #    ie.hidden(:index, 2)                         # access the second hidden field on the page ( 1 based, so the first field is accessed with :index,1)
-        def hidden( how, what )
+        def hidden(how, what)
             return Hidden.new(self, how, what)
         end
 
@@ -426,7 +436,7 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        def select_list(how , what=nil)
+        def select_list(how , what = nil) # xxx default logic?
             return SelectList.new(self, how, what)
         end
 
@@ -437,7 +447,7 @@ module Watir
         #   ie.select_lists.each { |s| puts s.to_s }            # iterate through all the select boxes on the page
         #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
         #   ie.select_lists.length                              # show how many select boxes are on the page.
-        def select_lists()
+        def select_lists
             return SelectLists.new(self)
         end
         
@@ -475,8 +485,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        def checkbox(how, what=nil ,value=nil)
-            return CheckBox.new(self, how, what, ["checkbox"], value)
+        def checkbox(how, what = nil , value = nil) # xxx default logic?
+            return CheckBox.new(self, how, what, ["checkbox"], value) # xxx
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -524,8 +534,8 @@ module Watir
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
-        def radio(how, what=nil, value=nil)
-            return Radio.new(self, how, what, ["radio"], value)
+        def radio(how, what = nil, value = nil)
+            return Radio.new(self, how, what, ["radio"], value) # xxx
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -567,7 +577,7 @@ module Watir
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #
-        def link(how, what=nil)
+        def link(how, what = nil)
             return Link.new(self, how, what)
         end
 
@@ -605,7 +615,7 @@ module Watir
         #   ie.image(:index,2)                  # access the second image on the page
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
-        def image( how , what=nil)
+        def image(how , what = nil)
             return Image.new(self, how, what)
         end
         
@@ -623,7 +633,7 @@ module Watir
 
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
-        def popup
+        def popup         # xxx this should not be on the container object!        
             return PopUp.new(self )
         end
 
@@ -667,7 +677,7 @@ module Watir
         #   ie.span(:index,2)                    # access the second span on the page
         #   ie.span(:title , "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
-        def span(how , what)
+        def span(how, what)
             return Span.new(self, how, what)
         end
 
@@ -698,7 +708,7 @@ module Watir
         #   ie.p(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
         def p(how, what)
-            return P.new(self , how , what)
+            return P.new(self, how, what)
         end
 
         # this is the main method for accessing the ps iterator. 
@@ -741,7 +751,7 @@ module Watir
         #   ie.labels[1].to_s                             # goto the first label on the page                                   
         #   ie.labels.length                              # show how many labels are on the page.
         #
-        def labels()
+        def labels
             return Labels.new(self)
         end
 
@@ -1047,15 +1057,9 @@ module Watir
         # The default color for highlighting objects as they are accessed.
         DEFAULT_HIGHLIGHT_COLOR = "yellow"
         
-        # This is used to change the typing speed when entering text on a page.
-        attr_accessor :typingspeed
-        
         # This is used to change how long after a page has finished loading that we wait for.
         attr_accessor :defaultSleepTime
         
-        # The color we want to use for the active object. This can be any valid web-friendly color.
-        attr_accessor :activeObjectHighLightColor
-
         # use this to switch the spinner on and off
         attr_accessor :enable_spinner
 
@@ -1083,7 +1087,7 @@ module Watir
         
         # Create a new IE Window, starting at the specified url.
         # If no url is given, start empty.
-        def IE.start( url = nil )
+        def self.start(url = nil)
             ie = new
             ie.goto(url) if url
             return ie
@@ -1092,7 +1096,7 @@ module Watir
         # Attach to an existing IE window, either by url or title.
         # IE.attach(:url, 'http://www.google.com')
         # IE.attach(:title, 'Google') 
-        def IE.attach(how, what)
+        def self.attach(how, what)
             ie = new(true) # don't create window
             ie.attach_init(how, what)
             return ie
@@ -1170,10 +1174,10 @@ module Watir
         end
         private :create_browser_window
 
-        def attach_browser_window( how, what )
+        def attach_browser_window(how, what)
             log "Seeking Window with #{how}: #{ what }"
             shell = WIN32OLE.new("Shell.Application")
-            appWindows = shell.Windows()
+            appWindows = shell.Windows
             
             ieTemp = nil
             appWindows.each do |aWin| 
@@ -1655,8 +1659,8 @@ module Watir
     
     # POPUP object
     class PopUp
-        def initialize( ieController )
-            @container = ieController
+        def initialize( container )
+            @container = container
         end
         
         def button( caption )
@@ -1717,9 +1721,7 @@ module Watir
             unless @frame
                 raise UnknownFrameException , "Unable to locate a frame with name #{ what} " 
             end
-
-            @typingspeed = container.typingspeed      
-            @activeObjectHighLightColor = container.activeObjectHighLightColor      
+            copy_test_config container
         end
 
         def ie
@@ -1804,8 +1806,7 @@ module Watir
                 count = count +1
             end
             
-            @typingspeed = @container.typingspeed      
-            @activeObjectHighLightColor = @container.activeObjectHighLightColor      
+            copy_test_config container
         end
 
         def exists?
@@ -2059,9 +2060,9 @@ module Watir
         include Enumerable
 
         # Super class for all the iteractor classes
-        #   * ieController  - an instance of an IE object
-        def initialize( ieController)
-            @container = ieController
+        #   * container  - an instance of an IE object
+        def initialize( container)
+            @container = container
             @length = length() # defined by subclasses
 
             # set up the items we want to display when the show method s used
@@ -2140,16 +2141,13 @@ module Watir
         include Watir::Exception
         include Container 
 
-        attr_reader :typingspeed      
-
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             @o = @container.getNonControlObject(tag , @how, @what )
             super( @o )
-            @typingspeed = @container.typingspeed      
-            @activeObjectHighLightColor = @container.activeObjectHighLightColor      
+            copy_test_config container
         end
 
         def ole_inner_elements
@@ -2227,8 +2225,8 @@ module Watir
     # many of the methods available to this object are inherited from the Element class
     #
     class Label < Element
-        def initialize( ieController , how, what)
-            @container = ieController
+        def initialize( container , how, what)
+            @container = container
             @how = how
             @what = what
             @o = @container.getNonControlObject("LABEL" , @how, @what )
@@ -2281,14 +2279,14 @@ module Watir
     class Table < Element
  
         # Returns an initialized instance of the table object to wich anElement belongs
-        #   * ieController  - an instance of an IE object
+        #   * container  - an instance of an IE object
         #   * anElement     - a Watir object (TextField, Button, etc.)
-        def Table.create_from_element(ieController,anElement)
+        def Table.create_from_element(container,anElement)
             o = anElement.getOLEObject.parentElement
             while(o && o.tagName != 'TABLE')
                 o = o.parentElement
             end
-            return Table.new(ieController,:from_object,o)
+            return Table.new(container,:from_object,o)
         end
 
         # Returns an initialized instance of a table object
@@ -2474,8 +2472,8 @@ module Watir
     # many of the methods available to this object are inherited from the Element class
     #
     class TableBodies<Element
-        def initialize(ieController, how, what )
-            @container = ieController
+        def initialize(container, how, what )
+            @container = container
             @o= nil
             if how == :direct
                 @o = what     # in this case, @o is the parent table
@@ -2508,8 +2506,8 @@ module Watir
 
     # this class is a table body
     class TableBody<Element
-        def initialize(ieController, how, what, parent_table=nil )
-            @container = ieController
+        def initialize(container, how, what, parent_table=nil )
+            @container = container
             @o= nil
             if how == :direct
                 @o = what     # in this case, @o is the table body
@@ -2555,18 +2553,18 @@ module Watir
 
         # Returns an initialized instance of a table row          
         #   * o  - the object contained in the row
-        #   * ieController  - an instance of an IE object       
+        #   * container  - an instance of an IE object       
         #   * how          - symbol - how we access the row        
         #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
-        def initialize(ieController , how, what)
-            @container = ieController
+        def initialize(container , how, what)
+            @container = container
             @how = how   
             @what = what   
             @o=nil
             if how == :direct
                 @o = what
             else
-                @o = ieController.getTablePart( "TR" , how , what )   
+                @o = container.getTablePart( "TR" , how , what )   
             end
             update_row_cells
             super( @o )   
@@ -2611,27 +2609,23 @@ module Watir
         include Watir::Exception
         include Container 
 
-        attr_reader :typingspeed      
-        attr_reader :activeObjectHighLightColor 
-
         # Returns an initialized instance of a table cell          
-        #   * ieController  - an  IE object       
+        #   * container  - an  IE object       
         #   * how         - symbol - how we access the cell        
         #   * what         - what we use to access the cell - id, name index etc
-        def initialize( ieController,  how , what )   
-            @container = ieController    
+        def initialize( container,  how , what )   
+            @container = container    
             #puts "How = #{how}"
-             if how == :direct
+             if how == :direct # xxx !?
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
-                 @o = ieController.getTablePart( "TD" , how , what )   
+                 @o = container.getTablePart( "TD" , how , what )   
              end
              super( @o )   
              @how = how   
              @what = what   
-             @typingspeed = @container.typingspeed      
-             @activeObjectHighLightColor = @container.activeObjectHighLightColor      
+             copy_test_config container
          end 
 
         def ole_inner_elements
@@ -2664,11 +2658,11 @@ module Watir
     class Image < Element
         
         # Returns an initialized instance of a image  object
-        #   * ieController  - an instance of an IEController
+        #   * container  - an instance of an IEController
         #   * how         - symbol - how we access the image
         #   * what         - what we use to access the image, name, src, index, id or alt
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             @o = @container.getImage(@how, @what)
@@ -2803,11 +2797,11 @@ module Watir
     #
     class Link < Element
         # Returns an initialized instance of a link object
-        #   * ieController  - an instance of an IEController
+        #   * container  - an instance of an IEController
         #   * how         - symbol - how we access the link
         #   * what         - what we use to access the link, text, url, index etc
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             begin
@@ -2873,11 +2867,11 @@ module Watir
     #
     class SelectList < Element
         # returns an initialized instance of a SelectList object
-        #   * ieController  - an instance of an IEController
+        #   * container  - an instance of an IEController
         #   * how          - symbol - how we access the select box
         #   * what         - what we use to access the select box, name, id etc
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             @o = @container.getObject(@how, @what, ["select-one", "select-multiple"])
@@ -3037,8 +3031,8 @@ module Watir
     # most of the methods available to Button objects are inherited from the Element class
     #
     class Button < Element
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             if(how == :from_object) then
@@ -3059,8 +3053,8 @@ module Watir
     # File dialog
     class FileField < Element
         # Create an instance of the file object
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
             super( @o )
@@ -3090,8 +3084,8 @@ module Watir
     #
     class RadioCheckCommon < Element
 
-        def initialize( ieController,  how , what , type, value=nil )
-            @container = ieController
+        def initialize( container,  how , what , type, value=nil )
+            @container = container
             @how = how
             @what = what
             @type = type
@@ -3200,8 +3194,8 @@ module Watir
     #
     class TextField < Element
         
-        def initialize( ieController,  how , what )
-            @container = ieController
+        def initialize( container,  how , what )
+            @container = container
             @how = how
             @what = what
 
@@ -3427,7 +3421,7 @@ module Watir
     #
     class Hidden < TextField 
 
-        def initialize( ieController,  how , what )
+        def initialize( container,  how , what )
             super
         end
 
