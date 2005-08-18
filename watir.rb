@@ -374,7 +374,7 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field(how , what = nil) # xxx do we need to have default logic here?
+        def text_field(how , what = nil) # BUG do we need to have default logic here?
             return TextField.new(self, how, what)
         end
 
@@ -436,7 +436,7 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        def select_list(how , what = nil) # xxx default logic?
+        def select_list(how , what = nil) # BUG default logic?
             return SelectList.new(self, how, what)
         end
 
@@ -485,8 +485,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        def checkbox(how, what = nil , value = nil) # xxx default logic?
-            return CheckBox.new(self, how, what, ["checkbox"], value) # xxx
+        def checkbox(how, what = nil , value = nil) # BUG default logic?
+            return CheckBox.new(self, how, what, ["checkbox"], value) # BUG
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -535,7 +535,7 @@ module Watir
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
         def radio(how, what = nil, value = nil)
-            return Radio.new(self, how, what, ["radio"], value) # xxx
+            return Radio.new(self, how, what, ["radio"], value) # BUG
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -633,7 +633,7 @@ module Watir
 
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
-        def popup         # xxx this should not be on the container object!        
+        def popup         # BUG this should not be on the container object!        
             return PopUp.new(self )
         end
 
@@ -1066,9 +1066,6 @@ module Watir
         # use this to get the time for the last page download
         attr_reader :down_load_time
         
-        # When a new window is created it is stored in newWindow
-        attr_accessor :newWindow
-
         # the ole internet explorer object        
         attr_reader :ie
 
@@ -1210,19 +1207,12 @@ module Watir
         private :attach_browser_window
 
         # deprecated: use logger= instead
-        def set_logger( logger )
+        def set_logger(logger)
             @logger = logger
         end
 
-        def log ( what )
-            @logger.debug( what ) if @logger
-        end
-        
-        # Deprecated: Use IE#ie instead
-        # This method returns the Internet Explorer object. 
-        # Methods, properties,  etc. that the IE object does not support can be accessed.
-        def getIE()
-            return @ie
+        def log (what)
+            @logger.debug(what) if @logger
         end
         
         #
@@ -1237,7 +1227,7 @@ module Watir
         # Return the status of the window, typically from the status bar at the bottom.
         def status
             raise NoStatusBarException if !@ie.statusBar
-            return @ie.statusText()
+            return @ie.statusText
         end
 
         #
@@ -1246,7 +1236,7 @@ module Watir
 
         # Navigate to the specified URL.
         #  * url  - string - the URL to navigate to
-        def goto( url )
+        def goto(url)
             @ie.navigate(url)
             wait()
             sleep 0.2
@@ -1368,7 +1358,7 @@ module Watir
         #
         
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
-        def wait( noSleep  = false )
+        def wait(no_sleep = false)
             begin
                 @down_load_time=0
                 pageLoadStart = Time.now
@@ -1394,8 +1384,7 @@ module Watir
                     sleep 0.02
                     s.spin
                 end
-                
-                
+                                
                 if @ie.document.frames.length > 1
                     begin
                         0.upto @ie.document.frames.length-1 do |i|
@@ -1411,7 +1400,7 @@ module Watir
                 else
                     @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
                 end
-                @down_load_time =  Time.now - pageLoadStart 
+                @down_load_time = Time.now - pageLoadStart 
 
                 run_error_checks
 
@@ -1422,7 +1411,7 @@ module Watir
                 @logger.info "runtime error in wait: #{e}\n#{e.backtrace.join("\\\n")}"
             end
             sleep 0.01
-            sleep @defaultSleepTime unless noSleep  == true
+            sleep @defaultSleepTime unless no_sleep == true
         end
 
         # Error checkers
@@ -1687,45 +1676,46 @@ module Watir
     
     class Frame
         include Container
-    
-        def initialize(container, how, what)
-            @container = container
-            @frame = nil
 
+        # Find the frame denoted by how and what in the container and return its ole_object
+        def self.locate(container, how, what)
             frames = @container.document.frames
+            target = nil
 
             for i in 0 .. frames.length-1
-                next unless @frame == nil
+                next unless target == nil
                 this_frame = frames.item(i)
                 if how == :index 
                     if i+1 == what
-                        @frame = this_frame
+                        target = this_frame
                     end
                 elsif how == :name
                     begin
                         if what.matches(this_frame.name)
-                            @frame = this_frame
+                            target = this_frame
                         end
                     rescue # access denied?
                     end
                 elsif how == :id
                     # BUG: Won't work for IFRAMES
                     if what.matches(@container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
-                        @frame = this_frame
+                        target = this_frame
                     end
                 else
                     raise ArgumentError, "Argument #{how} not supported"
                 end
             end
             
-            unless @frame
+            unless target
                 raise UnknownFrameException , "Unable to locate a frame with name #{ what} " 
             end
-            copy_test_config container
+            target        
         end
-
-        def ie
-            return @frame
+    
+        def initialize(container, how, what)
+            @container = container
+            @frame = locate(container, how, what)
+            copy_test_config container
         end
 
         def document
@@ -1736,148 +1726,6 @@ module Watir
             @container.wait(no_sleep)
         end
     end
-    
-
-    # Forms
-
-    module FormAccess
-        def name
-            @form.getAttributeNode('name').value
-        end
-        def action
-            @form.action
-        end
-        def method
-            @form.invoke('method')
-        end
-        def id
-            @form.invoke("id").to_s
-        end
-    end        
-        
-    # wraps around a form OLE object
-    class FormWrapper
-        include FormAccess
-        def initialize ( ole_object )
-            @form = ole_object
-        end
-    end
-       
-    #   Form Factory object 
-    class Form
-        include FormAccess
-        include Container
-
-        attr_accessor :form
-
-        #   * container   - the containing object, normally an instance of IE
-        #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
-        #   * what        - what we use to access the form
-        def initialize( container, how, what )
-            @container = container
-            @formHow = how
-            @formName = what
-            
-            log "Get form  formHow is #{@formHow}  formName is #{@formName} "
-            count = 1
-            doc = @container.document
-            doc.forms.each do |thisForm|
-                next unless @form == nil
-
-                wrapped = FormWrapper.new(thisForm)
-
-                log "form on page, name is " + wrapped.name
-                
-                @form =
-                case @formHow
-                when :name 
-                    wrapped.name == @formName ? thisForm : nil
-                when :id
-                    wrapped.id == @formName.to_s ? thisForm : nil
-                when :index
-                    count == @formName.to_i ? thisForm : nil
-                when :method
-                    wrapped.method.downcase == @formName.downcase ? thisForm : nil
-                when :action
-                    @formName.matches(wrapped.action) ? thisForm : nil
-                else
-                    raise MissingWayOfFindingObjectException
-                end
-                count = count +1
-            end
-            
-            copy_test_config container
-        end
-
-        def exists?
-            @form ? true : false
-        end
-        
-        # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
-        def submit
-            raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @form.submit 
-            @container.wait
-        end   
-
-        def ole_inner_elements
-            raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @form.elements.all
-        end   
-        private :ole_inner_elements
-
-        def wait(no_sleep = false)
-            @container.wait(no_sleep)
-        end
-                
-        # This method is responsible for setting and clearing the colored highlighting on the specified form.
-        # use :set   to set the highlight
-        #   :clear  to clear the highlight
-        def highlight(set_or_clear, element, count)
-
-            if set_or_clear == :set
-                begin
-                    original_color = element.style.backgroundColor
-                    original_color = "" if original_color== nil
-                    element.style.backgroundColor = activeObjectHighLightColor
-                rescue => e
-                    puts e 
-                    puts e.backtrace.join("\n")
-                    original_color = ""
-                end
-                @original_styles[ count ] = original_color 
-            else
-                begin 
-                    element.style.backgroundColor  = @original_styles[ count]
-                rescue => e
-                    puts e
-                    # we could be here for a number of reasons...
-                ensure
-                end
-            end
-        end
-        private :highlight
-
-        # causes the object to flash. Normally used in IRB when creating scripts        
-        def flash
-            @original_styles = {}
-            10.times do
-                count=0
-                @form.elements.each do |element|
-                    highlight(:set , element , count)
-                    count +=1
-                end
-                sleep 0.05
-                count = 0
-                @form.elements.each do |element|
-                    highlight(:clear , element , count)
-                    count +=1
-                end
-                sleep 0.05
-            end
-        end
-                
-    end # class Form
     
     # Base class for html elements.
     # This is not a class that users would normally access. 
@@ -1936,7 +1784,6 @@ module Watir
         def ole_object
             return @o
         end
-        alias getOLEObject ole_object # move to camel_case.rb
   
         # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
         def html
@@ -2029,8 +1876,7 @@ module Watir
             @container.wait()
             highlight(:clear)
         end
-        alias fireEvent fire_event # move to camel_case.rb
-        
+
         # This method sets focus on the active element.
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
@@ -2132,6 +1978,150 @@ module Watir
         end
     end
 
+
+    # Forms
+
+    module FormAccess
+        def name
+            @form.getAttributeNode('name').value
+        end
+        def action
+            @form.action
+        end
+        def method
+            @form.invoke('method')
+        end
+        def id
+            @form.invoke("id").to_s
+        end
+    end        
+        
+    # wraps around a form OLE object
+    class FormWrapper
+        include FormAccess
+        def initialize ( ole_object )
+            @form = ole_object
+        end
+    end
+       
+    #   Form Factory object 
+    class Form < Element
+        include FormAccess
+        include Container
+
+        attr_accessor :form
+
+        #   * container   - the containing object, normally an instance of IE
+        #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
+        #   * what        - what we use to access the form
+        def initialize( container, how, what )
+            @container = container
+            @formHow = how
+            @formName = what
+            
+            log "Get form  formHow is #{@formHow}  formName is #{@formName} "
+            count = 1
+            doc = @container.document
+            doc.forms.each do |thisForm|
+                next unless @form == nil
+
+                wrapped = FormWrapper.new(thisForm)
+
+                log "form on page, name is " + wrapped.name
+                
+                @form =
+                case @formHow
+                when :name 
+                    wrapped.name == @formName ? thisForm : nil
+                when :id
+                    wrapped.id == @formName.to_s ? thisForm : nil
+                when :index
+                    count == @formName.to_i ? thisForm : nil
+                when :method
+                    wrapped.method.downcase == @formName.downcase ? thisForm : nil
+                when :action
+                    @formName.matches(wrapped.action) ? thisForm : nil
+                else
+                    raise MissingWayOfFindingObjectException
+                end
+                count = count +1
+            end
+            
+            super(@form)
+            
+            copy_test_config container
+        end
+
+        def exists?
+            @form ? true : false
+        end
+        
+        # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
+        def submit
+            raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+            @form.submit 
+            @container.wait
+        end   
+
+        def ole_inner_elements
+            raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
+            @form.elements.all
+        end   
+        private :ole_inner_elements
+
+        def wait(no_sleep = false)
+            @container.wait(no_sleep)
+        end
+                
+        # This method is responsible for setting and clearing the colored highlighting on the specified form.
+        # use :set   to set the highlight
+        #   :clear  to clear the highlight
+        def highlight(set_or_clear, element, count)
+
+            if set_or_clear == :set
+                begin
+                    original_color = element.style.backgroundColor
+                    original_color = "" if original_color== nil
+                    element.style.backgroundColor = activeObjectHighLightColor
+                rescue => e
+                    puts e 
+                    puts e.backtrace.join("\n")
+                    original_color = ""
+                end
+                @original_styles[ count ] = original_color 
+            else
+                begin 
+                    element.style.backgroundColor  = @original_styles[ count]
+                rescue => e
+                    puts e
+                    # we could be here for a number of reasons...
+                ensure
+                end
+            end
+        end
+        private :highlight
+
+        # causes the object to flash. Normally used in IRB when creating scripts        
+        def flash
+            @original_styles = {}
+            10.times do
+                count=0
+                @form.elements.each do |element|
+                    highlight(:set , element , count)
+                    count +=1
+                end
+                sleep 0.05
+                count = 0
+                @form.elements.each do |element|
+                    highlight(:clear , element , count)
+                    count +=1
+                end
+                sleep 0.05
+            end
+        end
+                
+    end # class Form
+    
     # this class contains items that are common between the span and div objects
     # it would not normally be used directly
     #
@@ -2225,7 +2215,7 @@ module Watir
     # many of the methods available to this object are inherited from the Element class
     #
     class Label < Element
-        def initialize( container , how, what)
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
@@ -2605,7 +2595,7 @@ module Watir
     end
  
     # this class is a table cell - when called via the Table object
-    class TableCell <Element
+    class TableCell < Element
         include Watir::Exception
         include Container 
 
@@ -2613,10 +2603,10 @@ module Watir
         #   * container  - an  IE object       
         #   * how         - symbol - how we access the cell        
         #   * what         - what we use to access the cell - id, name index etc
-        def initialize( container,  how , what )   
+        def initialize(container,  how, what)   
             @container = container    
             #puts "How = #{how}"
-             if how == :direct # xxx !?
+             if how == :direct # BUG !?
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else

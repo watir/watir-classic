@@ -21,7 +21,13 @@ module Watir
         alias showLinks show_links
         alias showActive show_active
         alias showAllObjects show_all_objects
+        def   getIE; @ie; end
+        
     end
+    class Element
+        alias getOLEObject ole_object 
+        alias fireEvent fire_event        
+    end    
     class Frame        
         alias getDocument document
         alias waitForIE wait

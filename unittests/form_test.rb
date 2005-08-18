@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-class TC_Forms2 < Test::Unit::TestCase
+class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     def setup()
         $ie.goto($htmlRoot + "forms2.html")
     end
@@ -27,8 +27,13 @@ class TC_Forms2 < Test::Unit::TestCase
     end
     
     def test_ButtonInForm
-        assert($ie.form(:name ,"test2").button(:caption , "Submit").exists?)
+        assert($ie.form(:name, "test2").button(:caption , "Submit").exists?)
     end     
+    
+    def test_form_html # from bug #2261
+        assert_equal("\r\n<FORM name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
+            $ie.form(:name, 'test2').html)
+    end
 end
 
 require 'unittests/iostring'
@@ -87,12 +92,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_equal("check1" , $ie.checkbox(:index,1).name )
     end
     
-    def test_showforms # add verification of output!
-        $ie.showForms
-    end
-
     def test_reset
-                
         $ie.text_field(:id, "t1").set("Hello, reset test!")
         assert_equal($ie.text_field(:id, 't1').getContents, 'Hello, reset test!')
         
@@ -112,10 +112,7 @@ class TC_Forms3 < Test::Unit::TestCase
         
         $ie.form(:index,2).button(:id,'reset_button').click
         assert_equal("" , $ie.text_field(:id, 't1').getContents )
-
     end
-
-
 
     def test_flash1
         $ie.form(:name ,"test2").button(:caption , "Submit").flash
@@ -138,18 +135,6 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_raises( Watir::UnknownObjectException ) { $ie.text_field( :name , 'g177').flash }
     end
     
-    def test_showElements # add verification!
-        $ie.showAllObjects
-    end
-    
-    def test_showText
-        puts $ie.getText
-    end
-    
-    def test_showHTML
-        puts $ie.getHTML
-    end
-    
     def test_submitWithImage
         assert( $ie.button(:alt , "submit").exists? )
         assert( $ie.button(:alt , /sub/).exists? )
@@ -165,6 +150,17 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
         
         assert( $ie.contains_text("PASS") )
+    end
+end
+
+class TC_Forms3_Display < Test::Unit::TestCase
+    include MockStdoutTestCase # BUG in test: output not verified!                
+    def test_show_stuff
+        $ie.goto($htmlRoot + "forms3.html")
+        $stdout = @mockout
+        $ie.showAllObjects
+        puts $ie.getText
+        puts $ie.getHTML
     end
 end
 
