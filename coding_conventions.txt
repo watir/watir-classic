@@ -1,0 +1,43 @@
+In general, Pickaxe is our style manual. Make your code look like theirs. 
+The following is mostly elaboration; exceptions are marked as house style.
+
+We use four spaces for each indentation level. (house style)
+
+Don't use braces to span more than one line. Use do/end intead.
+
+Don't use do/end on one line; use braces instead.
+
+We prefer single-quoted strings when string interpolation is not being used. (house style)
+
+Instance variables holding ole objects should have 'ole' in the name. (house style)
+
+In general, Watir names should follow what HTML or JavaScript uses. 
+These have precedence over the OLE API names. (house style)
+
+Parameter names should be descriptive and accurate. Always. Same is true for local variables, 
+but more slack is allowed.
+
+Single-letter names for local variables are allowed when they have limited scope (and aren't parameters).
+
+No extra whitespace!!! No more than one consecutive blank line. 
+Never more than one consecutive space (except indentation).
+
+Argument lists are set like English (one, two, three). 
+However: use extra spaces with vertical bars. Thus:
+    (1..5).each {| n | puts n}
+    
+Also, always uses spaces with operators. Thus:
+    a = b + c if d == e
+    
+Capitalization rules -- Straight from Ruby Style:
+
+method names -- lowercase, use underscore between words. always!
+
+instance variables -- same as method names (except with a @). always!
+
+Class names are constants so they must start with Capital (syntax error otherwise).
+Use StuddlyCaps for multiple words.
+
+Studdly_Caps_With_Underscores are never, ever, ever correct.
+
+camelCaseWithLowerCaseStart is never, ever, ever correct.
