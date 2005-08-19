@@ -31,7 +31,7 @@ class TC_SelectList < Test::Unit::TestCase
         # the select method keeps any currently selected items - use the clear selection method first
         $ie.select_list( :name , "sel1").clearSelection
         $ie.select_list( :name , "sel1").option(:text, "Option 1").select
-        assert_arrayEquals( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
     end    
 end
 
@@ -56,15 +56,15 @@ class TC_Selectbox < Test::Unit::TestCase
     
     def test_selectBox_getAllContents
         assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").getAllContents }  
-        assert_arrayEquals( ["Option 1" ,"Option 2" , "Option 3" , "Option 4"] , 
+        assert_equal( ["Option 1" ,"Option 2" , "Option 3" , "Option 4"] , 
             $ie.selectBox(:name, "sel1").getAllContents)   
     end
     
     def test_selectBox_getSelectedItems
         assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").getSelectedItems }  
-        assert_arrayEquals( ["Option 3" ] , 
+        assert_equal( ["Option 3" ] , 
             $ie.selectBox(:name, "sel1").getSelectedItems)   
-        assert_arrayEquals( ["Option 3" , "Option 6" ] , 
+        assert_equal( ["Option 3" , "Option 6" ] , 
             $ie.selectBox(:name, "sel2").getSelectedItems)   
     end
     
@@ -73,10 +73,10 @@ class TC_Selectbox < Test::Unit::TestCase
         $ie.selectBox( :name , "sel1").clearSelection
         
         # the box sel1 has no ability to have a de-selected item
-        assert_arrayEquals( ["Option 3" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 3" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
         
         $ie.selectBox( :name , "sel2").clearSelection
-        assert_arrayEquals( [ ] , $ie.selectBox(:name, "sel2").getSelectedItems)   
+        assert_equal( [ ] , $ie.selectBox(:name, "sel2").getSelectedItems)   
     end
     
     def test_selectBox_select
@@ -86,16 +86,16 @@ class TC_Selectbox < Test::Unit::TestCase
         # the select method keeps any currently selected items - use the clear selectcion method first
         $ie.selectBox( :name , "sel1").clearSelection
         $ie.selectBox( :name , "sel1").select("Option 1")
-        assert_arrayEquals( ["Option 1" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 1" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
         
         $ie.selectBox( :name , "sel1").clearSelection
         $ie.selectBox( :name , "sel1").select(/2/)
-        assert_arrayEquals( ["Option 2" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 2" ] , $ie.selectBox(:name, "sel1").getSelectedItems)   
         
         $ie.selectBox( :name , "sel2").clearSelection
         $ie.selectBox( :name , "sel2").select(/2/)
         $ie.selectBox( :name , "sel2").select(/4/)
-        assert_arrayEquals( ["Option 2" , "Option 4" ] , 
+        assert_equal( ["Option 2" , "Option 4" ] , 
         $ie.selectBox(:name, "sel2").getSelectedItems)   
         
         # these are to test the onchange event
@@ -118,16 +118,16 @@ class TC_Selectbox < Test::Unit::TestCase
         # the select method keeps any currently selected items - use the clear selectcion method first
         $ie.select_list( :name , "sel1").clearSelection
         $ie.select_list( :name , "sel1").select_value("o1")
-        assert_arrayEquals( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
         
         $ie.select_list( :name , "sel1").clearSelection
         $ie.select_list( :name , "sel1").select_value(/2/)
-        assert_arrayEquals( ["Option 2" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
+        assert_equal( ["Option 2" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
         
         $ie.select_list( :name , "sel2").clearSelection
         $ie.select_list( :name , "sel2").select_value(/4/)
         $ie.select_list( :name , "sel2").select_value(/2/)
-        assert_arrayEquals( ["Option 2" , "Option 4" ] , 
+        assert_equal( ["Option 2" , "Option 4" ] , 
             $ie.select_list(:name, "sel2").getSelectedItems)   
         
         # these are to test the onchange event
