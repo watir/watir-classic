@@ -30,9 +30,16 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
         assert($ie.form(:name, "test2").button(:caption , "Submit").exists?)
     end     
     
-    def test_form_html # from bug #2261
+    # The following tests from bug 2261 
+    def test_form_html 
         assert_equal("\r\n<FORM name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
             $ie.form(:name, 'test2').html)
+    end
+    def test_form_flash
+        assert_nothing_raised{ $ie.form(:name, 'test2').flash }
+    end
+    def test_form_sub_element
+        assert_equal('Click Me', $ie.form(:index, 1).button(:name, 'b1').value)
     end
 end
 
@@ -68,6 +75,11 @@ end
 class TC_Forms3 < Test::Unit::TestCase
     def setup()
         $ie.goto($htmlRoot + "forms3.html")
+    end
+
+    # The following tests from bug 2261 
+    def test_p_in_form
+        $ie.form(:name, 'buttonsubmit').p(:index, 1).text
     end
     
     def test_Form_Exists

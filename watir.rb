@@ -1770,6 +1770,7 @@ module Watir
         end
 
         public
+        # doc for Element#type
         def_wrap_guard :type        
         def_wrap_guard :name
         def_wrap :id
@@ -2068,6 +2069,10 @@ module Watir
             @form.elements.all
         end   
         private :ole_inner_elements
+
+        def document
+            return @form
+        end
 
         def wait(no_sleep = false)
             @container.wait(no_sleep)
