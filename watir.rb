@@ -1679,7 +1679,7 @@ module Watir
 
         # Find the frame denoted by how and what in the container and return its ole_object
         def self.locate(container, how, what)
-            frames = @container.document.frames
+            frames = container.document.frames
             target = nil
 
             for i in 0 .. frames.length-1
@@ -1698,7 +1698,7 @@ module Watir
                     end
                 elsif how == :id
                     # BUG: Won't work for IFRAMES
-                    if what.matches(@container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
+                    if what.matches(container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
                         target = this_frame
                     end
                 else
@@ -1714,7 +1714,7 @@ module Watir
     
         def initialize(container, how, what)
             @container = container
-            @frame = locate(container, how, what)
+            @frame = Frame.locate(container, how, what)
             copy_test_config container
         end
 
@@ -2280,7 +2280,7 @@ module Watir
         end
 
         # Returns an initialized instance of a table object
-        #   * parent      - an instance of an IEController ( or a frame etc )
+        #   * parent      - the container
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
         def initialize( parent,  how , what )
@@ -2648,7 +2648,7 @@ module Watir
     class Image < Element
         
         # Returns an initialized instance of a image  object
-        #   * container  - an instance of an IEController
+        #   * container  - an instance of a container
         #   * how         - symbol - how we access the image
         #   * what         - what we use to access the image, name, src, index, id or alt
         def initialize( container,  how , what )
@@ -2787,7 +2787,7 @@ module Watir
     #
     class Link < Element
         # Returns an initialized instance of a link object
-        #   * container  - an instance of an IEController
+        #   * container  - an instance of a container
         #   * how         - symbol - how we access the link
         #   * what         - what we use to access the link, text, url, index etc
         def initialize( container,  how , what )
@@ -2857,7 +2857,7 @@ module Watir
     #
     class SelectList < Element
         # returns an initialized instance of a SelectList object
-        #   * container  - an instance of an IEController
+        #   * container  - an instance of a container
         #   * how          - symbol - how we access the select box
         #   * what         - what we use to access the select box, name, id etc
         def initialize( container,  how , what )
