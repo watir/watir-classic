@@ -70,7 +70,7 @@ class TC_Tables < Test::Unit::TestCase
 
     def test_to_a
         table1Expected = [ ["Row 1 Col1" , "Row 1 Col2"] ,[ "Row 2 Col1" , "Row 2 Col2"] ]
-        assert_arrayEquals(table1Expected, $ie.table(:index , 1).to_a )
+        assert_equal(table1Expected, $ie.table(:index , 1).to_a )
     end
 
     def test_simple_table_access
