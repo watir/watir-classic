@@ -21,5 +21,13 @@ class TC_Defer < Test::Unit::TestCase
         text_field = $ie.text_field(:name, 'text1')
         $ie.refresh
         assert_equal('Hello World', text_field.value)
+        assert(text_field.enabled?)
+    end
+    def test_exists
+        @ie_new = Watir::IE.new
+        text_field = @ie_new.text_field(:name, 'text1')
+        assert_false(text_field.exists?)
+        @ie_new.goto($htmlRoot + "textfields1.html")
+        assert(text_field.exists?)
     end
 end
