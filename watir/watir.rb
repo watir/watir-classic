@@ -374,7 +374,7 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field(how , what = nil) # BUG do we need to have default logic here?
+        def text_field(how, what = nil) # BUG do we need to have default logic here?
             return TextField.new(self, how, what)
         end
 
@@ -1892,10 +1892,14 @@ module Watir
             @o.focus()
         end
         
-        # This methods checks to see if the current element actually exists. 
+        # Returns whether this element actually exists. 
         def exists?
-            locate if defined?(locate)
-            @o? true: false
+            begin
+	        locate if defined?(locate)
+	    rescue WIN32OLERuntimeError
+	        @o = nil
+	    end        
+	    @o ? true: false
         end
         
         # Returns true if the element is enabled, false if it isn't.
@@ -3032,22 +3036,23 @@ module Watir
     # most of the methods available to Button objects are inherited from the Element class
     #
     class Button < Element
-        def initialize( container,  how , what )
+        def locate
+            if @how == :from_object
+                @o = @what
+            else
+                @o = @container.getObject(@how, @what, object_types)
+            end              
+        end
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            if(how == :from_object) then
-                @o = what
-            else
-                @o = @container.getObject( @how, @what , object_types)
-            end              
-            super( @o )
+            super(nil)
         end
 
         def object_types
-            return ["button" , "submit" , "image" , "reset" ] 
+            ["button", "submit", "image", "reset"] 
         end
-
     end
 
     
