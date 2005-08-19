@@ -1741,6 +1741,10 @@ module Watir
             @original_color = nil
         end
         
+        def ole_object=(o)
+            @o = o
+        end
+                    
         private
         def self.def_wrap(method_name)
             class_eval "def #{method_name}
@@ -1759,6 +1763,7 @@ module Watir
                         end"
         end
         def assert_exists
+            locate if defined?(locate)
             unless @o
                 raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
             end
@@ -1777,7 +1782,7 @@ module Watir
         def_wrap :disabled
         def_wrap_guard :value
         def_wrap_guard :title
-
+        
         # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
         # BUG: should use an attribute reader and rename the instance variable
@@ -1889,6 +1894,7 @@ module Watir
         
         # This methods checks to see if the current element actually exists. 
         def exists?
+            locate if defined?(locate)
             @o? true: false
         end
         
@@ -3188,24 +3194,25 @@ module Watir
     # most of the methods available to this element are inherited from the Element class
     #
     class TextField < Element
-        
-        def initialize( container,  how , what )
-            @container = container
-            @how = how
-            @what = what
-
-	      if(how != :from_object) then
-                @o = @container.getObject(@how, @what, supported_types)
-	      else
-		    @o = what
-	      end
-            super( @o )
+        def locate
+            if(@how != :from_object) then
+                ole_object = @container.getObject(@how, @what, supported_types)
+            else
+                ole_object = @what
+            end
+            @o = ole_object
         end
-
         def supported_types
             return ["text" , "password", "textarea"] 
         end
         private :supported_types
+
+        def initialize(container, how, what)
+            @container = container
+            @how = how
+            @what = what
+            super(nil)
+        end
 
         def size
             assert_exists
