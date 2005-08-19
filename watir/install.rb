@@ -1,5 +1,5 @@
-
 # Support both versions of fxRuby
+require 'rubygems'
 begin
     require 'fox'
     require 'fox/colors'
