@@ -25,8 +25,8 @@ Changes in 1.4.1
     added IE#bring_to_front and IE#front?
     fixed failing frame tests
     remove failing test for disabled images
+    better rdoc
     
-
 Changes in 1.4.0
     fix method name for accessing class name of P/Span/Div (change from style to class_name)
     fix for bug 2152 (frame index in show_frames off by 1)
