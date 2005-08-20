@@ -1295,10 +1295,21 @@ module Watir
 
         # Restore the window (after minimizing or maximizing)
         def restore;  set_window_state (:SW_RESTORE);  end
-        
-        def set_window_state (state)
+
+        # Make the window come to the front
+        def bring_to_front
     		autoit = WIN32OLE.new('AutoItX3.Control')
-		    autoit.WinSetState title, '', autoit.send(state)			
+    		autoit.WinActivate title, ''		
+     	end
+
+     	def front?
+    		autoit = WIN32OLE.new('AutoItX3.Control')
+    		1 == autoit.WinActive(title, '')		
+     	end	     	         
+
+     	def set_window_state (state)
+    		autoit = WIN32OLE.new('AutoItX3.Control')
+    		autoit.WinSetState title, '', autoit.send(state)			
         end
         private :set_window_state
                 
@@ -1311,28 +1322,6 @@ module Watir
             autoit.Send key_string
         end
 
-        # this method can be used to capture events that occur in the browser
-        # It is only wired up for the NewWindow event right now, but could be easily expanded
-        # Do not use this when using irb
-        # the new window is available in  the newWindow variable:
-        def capture_events
-            ev = WIN32OLE_EVENT.new(@ie, 'DWebBrowserEvents2')
-            
-            # Note: NewWindow3 interface only on XP SP2 or later!
-            ev.on_event_with_outargs("NewWindow3") {|ppdisp, cancel, flags, fromURL, toURL , args| 
-                
-                # http://msdn.microsoft.com/workshop/browser/webbrowser/reference/ifaces/dwebbrowserevents2/newwindow2.asp
-                # http://groups.google.ca/groups?q=on_event_with_outargs&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=e249d8e7.0410060843.3f55fa05%40posting.google.com&rnum=1
-                # http://groups.google.ca/groups?q=on_event&hl=en&lr=&group=comp.lang.ruby&safe=off&selm=200202211155.UAA05077%40ums509.nifty.ne.jp&rnum=8
-                
-                log "New Window URL: #{ toURL }"
-                log "Flags: #{flags}"
-                args[1] = true
-                @newWindow = IE.new
-                @newWindow.goto(toURL)
-            }
-        end
-        
         # used by the popup code only
         def dir
             return File.expand_path(File.dirname(__FILE__))
@@ -1433,7 +1422,7 @@ module Watir
                 
                 s=nil
             rescue WIN32OLERuntimeError => e
-                @logger.warn 'runtime error in wait ' #  + e.to_s
+                @logger.info "runtime error in wait: #{e}\n#{e.backtrace.join("\\\n")}"
             end
             sleep 0.01
             sleep @defaultSleepTime unless noSleep  == true
@@ -1619,7 +1608,7 @@ module Watir
             puts "Found #{divs.length} div tags"
             index=1
             divs.each do |d|
-                puts "#{index}  id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}  id=#{d.invoke('id')}      class=#{d.invoke("className")}"
                 index+=1
             end
         end
@@ -1641,7 +1630,7 @@ module Watir
             puts "Found #{spans.length} span tags"
             index=1
             spans.each do |d|
-                puts "#{index}   id=#{d.invoke('id')}      style=#{d.invoke("className")}"
+                puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
                 index+=1
             end
         end
@@ -1651,7 +1640,7 @@ module Watir
             puts "Found #{labels.length} label tags"
             index=1
             labels.each do |d|
-                puts "#{index}  text=#{d.invoke('innerText')}      style=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
+                puts "#{index}  text=#{d.invoke('innerText')}      class=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
                 index+=1
             end
         end
@@ -2208,7 +2197,7 @@ module Watir
         # this method is used to populate the properties in the to_s method
         def span_div_string_creator
             n = []
-            n <<   "style:".ljust(TO_S_SIZE) + self.style
+            n <<   "class:".ljust(TO_S_SIZE) + self.class_name
             n <<   "text:".ljust(TO_S_SIZE) + self.text
             return n
          end

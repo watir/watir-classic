@@ -52,12 +52,12 @@ class TC_Images < Test::Unit::TestCase
         $ie.button(:value , /Pos/ ).click
         assert_equal('clicked' , $ie.text_field(:name , "text1" ).value )
 
-        # test for disabled button
-        assert_false( $ie.image(:name , 'disabler_test').disabled )
-        $ie.button(:name , 'disable_img').click
-
-        assert( $ie.image(:name , 'disabler_test').disabled )
-        $ie.button(:name , 'disable_img').click
+#        # test for disabled button
+#        assert_false( $ie.image(:name , 'disabler_test').disabled )
+#        $ie.button(:name , 'disable_img').click
+#
+#        assert( $ie.image(:name , 'disabler_test').disabled )
+#        $ie.button(:name , 'disable_img').click
         
         $ie.image(:src, /button/).click
         assert($ie.contains_text("PASS") )

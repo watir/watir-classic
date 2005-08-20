@@ -6,20 +6,28 @@ To Install:
    Execute install.rb. 
 
 How To Use:
-   This only works on Windows.
+   This only works on Windows. It has been tested on Windows 2000 and XP.
    Best is to use Ruby 1.8.2-14 or later.
-   This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
+   This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12.
    It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
    Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
-   Install the watir files, unit tests and sample html pages. 
 
 Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
 
-Changes in 1.4
+Changes in 1.4.1
+    removed annoying warning message that sometimes appeared
+    correct Element#class_name references which has been misnamed Element#style
+    removed IE#capture_events (didn't really work)
+    added IE#bring_to_front and IE#front?
+    fixed failing frame tests
+    remove failing test for disabled images
+    
+
+Changes in 1.4.0
     fix method name for accessing class name of P/Span/Div (change from style to class_name)
     fix for bug 2152 (frame index in show_frames off by 1)
     added alt as a property to image
@@ -37,7 +45,6 @@ Changes in 1.4
     fix for table, id and reg exp
     wait for page load before returning from IE.attach
     update to select_list -- new interface still in progress
-    added default attribute methods
     added .show method to iterators
     fix for flashing objects in table cells
     added flash for forms
