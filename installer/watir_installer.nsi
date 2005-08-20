@@ -89,26 +89,43 @@ Delete "$1\ruby_env.txt"
   
 SectionEnd
 
-Section "Documentation" SecDocumentation
+SectionGroup "Documentation" 
 
+ Section "Watir Documentation" SecDocumentation
   ;Documentation files
-  SetOutPath "$INSTDIR\documentation"
+  SetOutPath "$INSTDIR\doc"
   File "..\doc\*"
-  SetOutPath "$INSTDIR\documentation\images"
-  File "..\doc\images\*"
   File /r "..\doc\rdoc"
+  SetOutPath "$INSTDIR\doc\images"
+  File "..\doc\images\*"
+  SectionEnd
   
-  
+  Section "Desktop shortcuts" SecDeskShortcuts
   ;create desktop shortcut
-  CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\documentation\watir_user_guide.html" ""
+  CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\doc\index.html" ""
+  CreateShortCut "$DESKTOP\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" ""
+  CreateShortCut "$DESKTOP\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" ""
+  SectionEnd
   
+  Section "Menu shortcuts" SecMenuShortcuts
   ;create menu shortcuts
   CreateDirectory "$SMPROGRAMS\Watir"
-  CreateShortCut "$SMPROGRAMS\Watir\Watir Documentation.lnk" "$INSTDIR\documentation\watir_user_guide.html" 0
-  CreateShortCut "$SMPROGRAMS\Watir\AutoIt Reference.lnk" "$0\watir\AutoItX.chm" 0
+  CreateShortCut "$SMPROGRAMS\Watir\Watir Documentation.lnk" "$INSTDIR\doc\index.html" 0
+  CreateShortCut "$SMPROGRAMS\Watir\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" 0
+  CreateShortCut "$SMPROGRAMS\Watir\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" 0
   CreateShortCut "$SMPROGRAMS\Watir\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
+ SectionEnd
  
-SectionEnd
+ 
+ 
+SectionGroupEnd
+
+;SectionGroup "some stuff"
+;Section "a section"
+;SectionEnd
+;Section "another section"
+;SectionEnd
+;SectionGroupEnd
 
 Section "Examples" SecExamples
 
@@ -140,11 +157,15 @@ SectionEnd
   LangString DESC_SecDocumentation ${LANG_ENGLISH} "This installs the documentation for ${MUI_PRODUCT} into your chosen location"
   LangString DESC_SecExamples ${LANG_ENGLISH} "This installs the examples for ${MUI_PRODUCT} into you chosen location"
   LangString DESC_SecUnitTests ${LANG_ENGLISH} "This installs the unit tests for ${MUI_PRODUCT} into your chosen location"
+  LangString DESC_SecDeskShortcuts ${LANG_ENGLISH} "This installs desktop shortcuts for ${MUI_PRODUCT}"
+  LangString DESC_SecMenuShortcuts ${LANG_ENGLISH} "This installs Start menu shortcuts for ${MUI_PRODUCT}"
   
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SecWatir} $(DESC_SecWatir)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecDocumentation} $(DESC_SecDocumentation)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecDeskShortcuts} $(DESC_SecDeskShortcuts)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecMenuShortcuts} $(DESC_SecMenuShortcuts)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecExamples} $(DESC_SecExamples)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecUnitTests} $(DESC_SecUnitTests)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
@@ -164,6 +185,8 @@ Section "Uninstall"
   
 ;Delete Desktop and Start Menu Shortcuts
 Delete "$DESKTOP\Watir Documentation.lnk"
+Delete "$DESKTOP\Watir User Guide.lnk"
+Delete "$DESKTOP\Watir API Reference.lnk"
 Delete "$SMPROGRAMS\Watir\*.*"
 RmDir "$SMPROGRAMS\Watir"
  
