@@ -1,0 +1,26 @@
+NSIS Installer for Watir version 1.4
+Kingsley Hendrickse @ thoughtworks.com
+(20/08/2005)
+
+double click the watir_installer.exe and follow the wizard
+the ruby_env.bat file must be in the same location as the installer for this installer to function correctly
+
+The installer installs the watir libraries which are mandatory, but then you can choose
+whether to install the documentatio, examples and unit tests.
+
+The installer makes a desktop shortcut to the user manual and also some start menu entries for the 
+manual and the autoit reference as well as an uninstall link
+
+Clicking on the uninstall link from the start menu or from the uninstaller created in the Watir directory
+everything but the ruby libraries is uninstalled.
+
+Enjoy 
+
+Kingsley
+
+
+
+
+
+
+
