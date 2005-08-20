@@ -19,8 +19,9 @@ Unit Tests:
    See the user guide if you are having problems with security blocking.
 
 Changes in 1.4.1
+    (based on watir.rb revision 1.215)
     removed annoying warning message that sometimes appeared
-    correct Element#class_name references which has been misnamed Element#style
+    corrected Element#class_name references which has been misnamed Element#style
     removed IE#capture_events (didn't really work)
     added IE#bring_to_front and IE#front?
     fixed failing frame tests
