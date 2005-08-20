@@ -60,7 +60,7 @@ SectionIn RO
 ReadEnvStr "$1" "TEMP"
 
 ; complicated line that creates a ruby_env.txt file in Temp
-ExecWait 'ruby -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
+ExecWait 'rubyw -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
 FileOpen $R0 "$1\ruby_env.txt" "r"
 FileRead $R0 $0
 FileClose $R0  
