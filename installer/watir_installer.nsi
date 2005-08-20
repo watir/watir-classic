@@ -27,7 +27,7 @@
 
   !define MUI_WELCOMEFINISHPAGE_BITMAP "welcome.bmp"
   !define MUI_WELCOMEPAGE_TITLE "Welcome to the ${MUI_PRODUCT} Install Wizard"
-  !define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of ${MUI_PRODUCT} It is recommended that you close all other applications before running Setup. This will make it possible to update relevant system files without having to reboot your computer.\n\nClick Next to continue"
+  !define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of ${MUI_PRODUCT} \n\n It is recommended that you close all other applications before running Setup. This will make it possible to update relevant system files without having to reboot your computer.\n\nClick Next to continue"
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "watir.bmp" 
   !define MUI_ABORTWARNING
