@@ -1,4 +1,4 @@
-NSIS Installer for Watir version 1.4
+NSIS Installer for Watir version 1.4.1
 Kingsley Hendrickse @ thoughtworks.com
 (20/08/2005)
 
