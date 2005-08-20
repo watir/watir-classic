@@ -1,4 +1,4 @@
-;NSIS Watir Installer for watir version 1.4
+;NSIS Watir Installer for watir version 1.4.1
 ;Uses Modern UI
 ;Written by Kingsley Hendrickse @ thoughtworks.com
 ; 20/08/2005
@@ -12,9 +12,9 @@
 ;General
 
   ;Name and file
-  Name "Watir 1.4"
+  Name "Watir 1.4.1"
   OutFile "watir_installer.exe"
-  !define MUI_PRODUCT "Watir 1.4"
+  !define MUI_PRODUCT "Watir 1.4.1"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\Watir"
@@ -57,12 +57,17 @@ SectionIn RO
  ;Register AutoIt DLL
  Exec 'regsvr32.exe /s "..\watir\AutoItX3.dll"'
  
- ;Get Ruby Installation location - run test.bat which makes a file with the rbconfig sitelib location - read the file to get the location
- ExecWait 'ruby_env.bat'
- FileOpen $R0 "ruby_env.txt" "r"
- FileRead $R0 $0
- FileClose $R0
-  
+ReadEnvStr "$1" "TEMP"
+
+; complicated line that creates a ruby_env.txt file in Temp
+ExecWait 'ruby -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
+FileOpen $R0 "$1\ruby_env.txt" "r"
+FileRead $R0 $0
+FileClose $R0  
+
+; delete file from temp dir
+Delete "$1\ruby_env.txt"
+
  ;Write location to detail window
  DetailPrint "Library installation path $0"
 
@@ -91,6 +96,8 @@ Section "Documentation" SecDocumentation
   File "..\doc\*"
   SetOutPath "$INSTDIR\documentation\images"
   File "..\doc\images\*"
+  File /r "..\doc\rdoc"
+  
   
   ;create desktop shortcut
   CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\documentation\watir_user_guide.html" ""
