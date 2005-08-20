@@ -3100,6 +3100,7 @@ module Watir
             super( @o )
         end
 
+        # BUG: rename me
         # This method determines if a radio button or check box is set.
         # Returns true is set/checked or false if not set/checked.
         # Raises UnknownObjectException if its unable to locate an object.
@@ -3117,9 +3118,9 @@ module Watir
         def clear
             assert_exists
             assert_enabled
-            highlight( :set)
-            set_clear_item( false )
-            highlight( :clear )
+            highlight(:set)
+            set_clear_item(false)
+            highlight(:clear)
         end
         
         # This method sets the radio list item or check box.
@@ -3128,13 +3129,13 @@ module Watir
         def set
             assert_exists
             assert_enabled
-            highlight( :set)
-            set_clear_item( true )
-            highlight( :clear )
+            highlight(:set)
+            set_clear_item(true)
+            highlight(:clear)
         end
     
-        # This method is the common code for setting or clearing checkboxes and radio. A user would normalyy not access this, but use Checkbox#set etc
-        def set_clear_item( set )
+        # This method is the common code for setting or clearing checkboxes and radio.
+        def set_clear_item(set)
             @o.checked = set
             @o.fireEvent("onClick")
             @container.wait
