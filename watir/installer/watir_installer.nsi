@@ -128,19 +128,26 @@ SectionGroup "Documentation"
   
   Section "Desktop shortcuts" SecDeskShortcuts
   ;create desktop shortcut
+  SetOutPath "$INSTDIR\doc"
   CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\doc\index.html" ""
   CreateShortCut "$DESKTOP\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" ""
+  SetOutPath "$INSTDIR\doc\rdoc"
   CreateShortCut "$DESKTOP\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" ""
+  SetOutPath "$INSTDIR\examples"
   CreateShortCut "$DESKTOP\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
   SectionEnd
   
   Section "Menu shortcuts" SecMenuShortcuts
   ;create menu shortcuts
   CreateDirectory "$SMPROGRAMS\Watir"
+  SetOutPath "$INSTDIR\doc"
   CreateShortCut "$SMPROGRAMS\Watir\Watir Documentation.lnk" "$INSTDIR\doc\index.html" 0
   CreateShortCut "$SMPROGRAMS\Watir\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" 0
+  SetOutPath "$INSTDIR\doc\rdoc"
   CreateShortCut "$SMPROGRAMS\Watir\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" 0
+  SetOutPath "$INSTDIR\examples"
   CreateShortCut "$SMPROGRAMS\Watir\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
+  SetOutPath "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\Watir\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
  SectionEnd
  
