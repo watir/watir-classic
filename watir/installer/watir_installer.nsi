@@ -22,6 +22,32 @@
   ;Get installation folder from registry if available
   InstallDirRegKey HKCU "Software\Watir" ""
 
+; TrimNewlines
+ ; input, top of stack  (e.g. whatever$\r$\n)
+ ; output, top of stack (replaces, with e.g. whatever)
+ ; modifies no other variables.
+
+ Function un.TrimNewlines
+   Exch $R0
+   Push $R1
+   Push $R2
+   StrCpy $R1 0
+ 
+ loop:
+   IntOp $R1 $R1 - 1
+   StrCpy $R2 $R0 1 $R1
+   StrCmp $R2 "$\r" loop
+   StrCmp $R2 "$\n" loop
+   IntOp $R1 $R1 + 1
+   IntCmp $R1 0 no_trim_needed
+   StrCpy $R0 $R0 $R1
+ 
+ no_trim_needed:
+   Pop $R2
+   Pop $R1
+   Exch $R0
+ FunctionEnd
+
 ;--------------------------------
 ;Interface Configuration
 
@@ -105,6 +131,7 @@ SectionGroup "Documentation"
   CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\doc\index.html" ""
   CreateShortCut "$DESKTOP\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" ""
   CreateShortCut "$DESKTOP\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" ""
+  CreateShortCut "$DESKTOP\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
   SectionEnd
   
   Section "Menu shortcuts" SecMenuShortcuts
@@ -113,6 +140,7 @@ SectionGroup "Documentation"
   CreateShortCut "$SMPROGRAMS\Watir\Watir Documentation.lnk" "$INSTDIR\doc\index.html" 0
   CreateShortCut "$SMPROGRAMS\Watir\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" 0
   CreateShortCut "$SMPROGRAMS\Watir\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" 0
+  CreateShortCut "$SMPROGRAMS\Watir\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
   CreateShortCut "$SMPROGRAMS\Watir\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
  SectionEnd
  
@@ -140,11 +168,11 @@ SectionEnd
 
 Section "UnitTests" SecUnitTests
 
-  SetOutPath "$INSTDIR\UnitTests"
+  SetOutPath "$INSTDIR\unittests"
   
   ;UnitTests Files
    File "..\unittests\*"
-   SetOutPath "$INSTDIR\UnitTests\html"
+   SetOutPath "$INSTDIR\unittests\html"
    File "..\unittests\html\*"
  
 SectionEnd
@@ -175,11 +203,9 @@ SectionEnd
 
 Section "Uninstall"
 
-  ;ADD YOUR OWN FILES HERE...
+   ;Delete Files 
+  RMDir /r "$INSTDIR\*.*"  
   
-  ;Delete Files 
-  RMDir /r "$INSTDIR\*.*"    
- 
 ;Remove the installation directory
   RMDir "$INSTDIR"
   
@@ -187,17 +213,39 @@ Section "Uninstall"
 Delete "$DESKTOP\Watir Documentation.lnk"
 Delete "$DESKTOP\Watir User Guide.lnk"
 Delete "$DESKTOP\Watir API Reference.lnk"
+Delete "$DESKTOP\Watir Examples.lnk"
 Delete "$SMPROGRAMS\Watir\*.*"
 RmDir "$SMPROGRAMS\Watir"
  
-  
   ;Unregister AutoIt DLL
    Exec 'regsvr32.exe /s /u "..\watir\AutoItX3.dll"'
 
   Delete "$INSTDIR\Uninstall.exe"
 
   RMDir "$INSTDIR"
+  
+  ReadEnvStr "$1" "TEMP"
 
-  DeleteRegKey /ifempty HKCU "Software\Watir"
+; complicated line that creates a ruby_env.txt file in Temp
+ExecWait 'rubyw -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
+FileOpen $R0 "$1\ruby_env.txt" "r"
+FileRead $R0 $0
+FileClose $R0  
+
+; delete file from temp dir
+Delete "$1\ruby_env.txt"
+
+; trim the filepath so it can be used to delete the watir libs
+  Push $0
+    Call un.TrimNewLines
+   Pop $0
+
+ ;Write location to detail window
+ DetailPrint "Library deletion path $0"
+
+Delete "$0\watir.rb"
+RMDir /r "$0\watir\*.*" 
+  
+ DeleteRegKey /ifempty HKCU "Software\Watir"
 
 SectionEnd
