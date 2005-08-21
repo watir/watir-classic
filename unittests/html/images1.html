@@ -6,6 +6,19 @@ Test page for Images
 </head>
 <body>
 CVS Revision: "$Revision $"
+
+<script>
+function disableimage(){
+    if (document.all.disabler_test.disabled==true){
+        document.all.disabler_test.disabled = false;
+        document.all.disable_img.value = 'Click To Disable';
+    } else {
+        document.all.disabler_test.disabled = true;
+        document.all.disable_img.value = 'Click To Enable';
+    }
+}
+</script>
+
 <br>
 <br>
 <table>
@@ -33,8 +46,10 @@ CVS Revision: "$Revision $"
 
 <tr>
 <td>
-<img src = images/button.jpg onClick='javascript:document.location="pass.html";'>
+<img src = images/button.jpg onClick='javascript:document.location="pass.html";' name='disabler_test' >
 <td> this image has a javascript on click event
+<br>
+  CLick to make it a disabled image - so the javascript doesnt fire<input type=button value='Click To Disable' onClick='javascript:disableimage();' name=disable_img >
 
 <tr>
 <td>
