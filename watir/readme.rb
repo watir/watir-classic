@@ -127,8 +127,8 @@ Typical Usage
  with its command line switches.
 
 Javascript Pop Up Support
-   Watir now optionally installs AutoIt - http://www.autoitscript.com/
-   This is the preffered method for dealing wth pop ups, file requesters etc. Support for Winclickers will be removed.
+   Watir now installs AutoIt - http://www.autoitscript.com/
+   This is the preffered method for dealing with pop ups, file requesters etc. Support for Winclickers will be removed.
 
 Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
@@ -146,8 +146,9 @@ Contributors:
    Justin McCarthy
    Chris McMahon
    Elisabeth Hendrickson
-   Michael Kelly
+   Michael Kelly (Indianapolis)
    Peter Chau
+   Jacinda Scott
    Danny Faught
    Andy Sipe
    John Lloyd-Jones
@@ -157,6 +158,7 @@ Contributors:
    Jared Luxenberg
    Alexey Verkhovsky
    Tuyet Cong-Ton-Nu
+   Kingsley Hendrickse
 
 Acknowledgements:
    Chris Morris
@@ -165,7 +167,6 @@ Acknowledgements:
    Penny Tonita
    Janet Gregory
    Andy Tinkham
-   Jacinda Scott (logo creator)
 
    Thanks for your ideas and support!
 
