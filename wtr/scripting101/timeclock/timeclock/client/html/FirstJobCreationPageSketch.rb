@@ -22,7 +22,6 @@ module Timeclock
                                      tr(td(center(BodyBlueFill),
                                            input({:type => 'text',
                                                    :name => 'name',
-										           :id => 'first_job',
                                                    :size => '16',
                                                    :maxlength => '100'}),
 					   input({:type => 'submit',

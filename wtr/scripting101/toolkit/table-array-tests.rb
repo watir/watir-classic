@@ -4,8 +4,8 @@ require 'toolkit/timeclock-recent-records'
 require 'test/unit'
 require 'toolkit/iostring'
 
-require 'watir'
 require 'toolkit/watir-assist'
+#require 'toolkit/iec-assist'
 
 class TestTable < Test::Unit::TestCase
   def test_table_array

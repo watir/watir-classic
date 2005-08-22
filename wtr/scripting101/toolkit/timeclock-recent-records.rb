@@ -42,12 +42,12 @@ def get_results_table_array (document=$ie.document)
   result
 end
 
-def assert_total_job_records( n , document=$ie.document) 
-  assert_equal n+1, get_results_table_array(document).length
+def assert_total_job_records( n ) 
+  assert_equal n+1, get_results_table_array.length
 end
 
-def assert_job_record( index, name, status, document=$ie.document)
-  results = get_results_table_array(document)
+def assert_job_record( index, name, status )
+  results = get_results_table_array
   assert_equal name, results.job_name( index )
   assert_equal status, results.status( index )
 end

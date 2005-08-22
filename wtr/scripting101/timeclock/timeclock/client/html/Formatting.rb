@@ -99,11 +99,11 @@ module Timeclock
         end
 
         def green_p(*args)
-          p({:id => 'last_results'}, TextResultGreen, *args)
+          p(TextResultGreen, *args)
         end
 
         def red_p(*args)
-          p({:id => 'last_results'}, TextResultRed, *args)
+          p(TextResultRed, *args)
         end
           
 

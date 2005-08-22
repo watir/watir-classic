@@ -13,12 +13,11 @@ module Timeclock
 
         def body_guts
           [p("Welcome to Timeclock. Please log in by typing your name and
-              clicking the Login button."),
+              striking Enter/Return."),
             form({:method => 'get',
                    :action => "login"},
                  input({:type => 'text',
                          :name => 'name',
-			             :id => 'login',
                          :value => '',
                          :size => '20',
                          :maxlength => '100'}),

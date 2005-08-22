@@ -42,7 +42,7 @@ module Timeclock
           @quiescent_user = 'rht-other_uncreated'
           session = @handler.ensure_session_for_user(@quiescent_user)
           session.accept_job(Job.named(@default_job_name))
-          @handler.deactivate_session(session.object_id)
+          @handler.deactivate_session(session.id)
           assert(! @handler.user_has_session?(@quiescent_user))
 
           @active_user = 'rht-default'
@@ -53,7 +53,7 @@ module Timeclock
         end
 
         def teardown
-          @handler.deactivate_session(@active_session.object_id)
+          @handler.deactivate_session(@active_session.id)
           no_user(@uncreated_user)
           no_user(@quiescent_user)
           no_user(@active_user)
@@ -68,7 +68,7 @@ module Timeclock
         end
 
         def handle_active(name, args = {})
-          args['session'] = @active_session.object_id
+          args['session'] = @active_session.id
           handle(name, args)
         end
             
@@ -81,7 +81,7 @@ module Timeclock
 
           # Second creation returns previous session.
           second_instance = @handler.ensure_session_for_user(@quiescent_user)
-          assert_equal(first_instance.object_id, second_instance.object_id)
+          assert_equal(first_instance.id, second_instance.id)
 
           # You can create more than one user. (Duh)
           another_user = @handler.ensure_session_for_user(@uncreated_user)

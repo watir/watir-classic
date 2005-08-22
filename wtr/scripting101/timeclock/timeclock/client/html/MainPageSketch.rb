@@ -15,7 +15,7 @@ module Timeclock
         def initialize(user, session, last_result = "",
                        last_result_is_error = false)
           @user = user
-          @session_id = session.object_id
+          @session_id = session.id
           @jobs = session.jobs
           @active_records = session.active_records
           @running = @active_records.values.find { | ar| ar.running? }
@@ -30,7 +30,7 @@ module Timeclock
           column_attrs = {:width => "33%", :align => "center",
                           :style => "vertical-align: top;"} 
           [background_buttons_xhtml,
-           table({:align => 'center' , :id => 'job_and_day'  },
+           table({:align => 'center'},
                  tr(td(column_attrs,
                        vertical(start_job_table_xhtml,
                                 create_job_table_xhtml)),
@@ -100,8 +100,7 @@ module Timeclock
         ## Middle of the page: last command's results and current running job
 
         def last_results_xhtml
-          p({:id => 'last_results'}, 
-            @last_result_is_error ? TextResultRed : TextResultGreen,
+          p(@last_result_is_error ? TextResultRed : TextResultGreen,
             @last_result)
         end
 
@@ -119,11 +118,11 @@ module Timeclock
         def running_job_xhtml
           if @running
             command_form('refresh',
-                         p({:id  => 'running_job'}, center,
+                         p(center,
                            running_job_text,
                            submit('refresh', 'Refresh')))
           else
-            p({:id  => 'running_job'}, center, running_job_text)
+            p(center, running_job_text)
           end
         end
 
@@ -178,8 +177,7 @@ module Timeclock
                td(state)) }
                                          
           table({:align => 'center', :width => '66%', :border => "1",
-                  :cellspacing => "0", :cellpadding => "3",
-                  :id => 'recent_records'},
+                  :cellspacing => "0", :cellpadding => "3"},
                 tr({:bgcolor => HeaderBlueFill},
                    td({:align => "center", :colspan => "4" },
                       'Recent Records')),

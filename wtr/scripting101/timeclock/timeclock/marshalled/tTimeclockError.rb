@@ -11,17 +11,17 @@ module Timeclock
 
       def test_exception_return_self
         e = TimeclockError.new('hi', :code)
-        assert(e.object_id == e.exception.object_id)
+        assert(e.id == e.exception.id)
 
         # Typical use.
         begin
           raise TimeclockError, "hi"
         rescue TimeclockError => e
-          assert(e.object_id == e.exception.object_id)
+          assert(e.id == e.exception.id)
           begin
             raise e
           rescue TimeclockError => new_e
-            assert(e.object_id == new_e.object_id)
+            assert(e.id == new_e.id)
           end
         end
       end
