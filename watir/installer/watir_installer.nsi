@@ -126,18 +126,16 @@ SectionGroup "Documentation"
   File "..\doc\images\*"
   SectionEnd
   
-  Section "Desktop shortcuts" SecDeskShortcuts
+  Section "Desktop shortcuts" SecDocDeskShortcuts
   ;create desktop shortcut
   SetOutPath "$INSTDIR\doc"
   CreateShortCut "$DESKTOP\Watir Documentation.lnk" "$INSTDIR\doc\index.html" ""
   CreateShortCut "$DESKTOP\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" ""
   SetOutPath "$INSTDIR\doc\rdoc"
   CreateShortCut "$DESKTOP\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" ""
-  SetOutPath "$INSTDIR\examples"
-  CreateShortCut "$DESKTOP\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
   SectionEnd
   
-  Section "Menu shortcuts" SecMenuShortcuts
+  Section "Menu shortcuts" SecDocMenuShortcuts
   ;create menu shortcuts
   CreateDirectory "$SMPROGRAMS\Watir"
   SetOutPath "$INSTDIR\doc"
@@ -145,8 +143,6 @@ SectionGroup "Documentation"
   CreateShortCut "$SMPROGRAMS\Watir\Watir User Guide.lnk" "$INSTDIR\doc\watir_user_guide.html" 0
   SetOutPath "$INSTDIR\doc\rdoc"
   CreateShortCut "$SMPROGRAMS\Watir\Watir API Reference.lnk" "$INSTDIR\doc\rdoc\index.html" 0
-  SetOutPath "$INSTDIR\examples"
-  CreateShortCut "$SMPROGRAMS\Watir\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
   SetOutPath "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\Watir\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
  SectionEnd
@@ -155,12 +151,7 @@ SectionGroup "Documentation"
  
 SectionGroupEnd
 
-;SectionGroup "some stuff"
-;Section "a section"
-;SectionEnd
-;Section "another section"
-;SectionEnd
-;SectionGroupEnd
+SectionGroup "Examples" 
 
 Section "Examples" SecExamples
 
@@ -172,6 +163,23 @@ Section "Examples" SecExamples
    File "..\examples\logging\*"
  
 SectionEnd
+
+Section "Desktop shortcuts" SecExDeskShortcuts
+  ;create desktop shortcut
+  SetOutPath "$INSTDIR\examples"
+  CreateShortCut "$DESKTOP\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
+  SectionEnd
+  
+  Section "Menu shortcuts" SecExMenuShortcuts
+  ;create menu shortcuts
+  CreateDirectory "$SMPROGRAMS\Watir"  
+  SetOutPath "$INSTDIR\examples"
+  CreateShortCut "$SMPROGRAMS\Watir\Watir Examples.lnk" "$INSTDIR\examples" "" "$WINDIR\System32\SHELL32.dll" 3
+  SetOutPath "$INSTDIR"
+  CreateShortCut "$SMPROGRAMS\Watir\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\Uninstall.exe" 0
+ SectionEnd
+
+SectionGroupEnd
 
 Section "UnitTests" SecUnitTests
 
@@ -192,15 +200,19 @@ SectionEnd
   LangString DESC_SecDocumentation ${LANG_ENGLISH} "This installs the documentation for ${MUI_PRODUCT} into your chosen location"
   LangString DESC_SecExamples ${LANG_ENGLISH} "This installs the examples for ${MUI_PRODUCT} into you chosen location"
   LangString DESC_SecUnitTests ${LANG_ENGLISH} "This installs the unit tests for ${MUI_PRODUCT} into your chosen location"
-  LangString DESC_SecDeskShortcuts ${LANG_ENGLISH} "This installs desktop shortcuts for ${MUI_PRODUCT}"
-  LangString DESC_SecMenuShortcuts ${LANG_ENGLISH} "This installs Start menu shortcuts for ${MUI_PRODUCT}"
+  LangString DESC_SecDocDeskShortcuts ${LANG_ENGLISH} "This installs desktop shortcuts for ${MUI_PRODUCT} documentation"
+  LangString DESC_SecDocMenuShortcuts ${LANG_ENGLISH} "This installs Start menu shortcuts for ${MUI_PRODUCT} documentation"
+  LangString DESC_SecExDeskShortcuts ${LANG_ENGLISH} "This installs desktop shortcuts for ${MUI_PRODUCT} examples"
+  LangString DESC_SecExMenuShortcuts ${LANG_ENGLISH} "This installs Start menu shortcuts for ${MUI_PRODUCT} examples"
   
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SecWatir} $(DESC_SecWatir)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecDocumentation} $(DESC_SecDocumentation)
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecDeskShortcuts} $(DESC_SecDeskShortcuts)
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecMenuShortcuts} $(DESC_SecMenuShortcuts)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecDocDeskShortcuts} $(DESC_SecDocDeskShortcuts)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecDocMenuShortcuts} $(DESC_SecDocMenuShortcuts)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecExDeskShortcuts} $(DESC_SecExDeskShortcuts)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecExMenuShortcuts} $(DESC_SecExMenuShortcuts)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecExamples} $(DESC_SecExamples)
     !insertmacro MUI_DESCRIPTION_TEXT ${SecUnitTests} $(DESC_SecUnitTests)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
