@@ -21,7 +21,8 @@ $non_core_tests =
      'filefield', # is always visible; takes 40 seconds 
      'jscript',
      'js_events', # is always visible
-     'minmax' # becomes visible
+     'minmax', # becomes visible
+     'send_keys' # uses autoit
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $core_tests = $all_tests - $non_core_tests

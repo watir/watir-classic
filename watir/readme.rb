@@ -2,9 +2,6 @@
 
 This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
-To Install:
-   Execute install.rb. 
-
 How To Use:
    This only works on Windows. It has been tested on Windows 2000 and XP.
    Best is to use Ruby 1.8.2-14 or later.
@@ -27,6 +24,7 @@ Changes in 1.4.1
     fixed failing frame tests
     remove failing test for disabled images
     better rdoc
+    two new installers - one-click and gem
     
 Changes in 1.4.0
     fix method name for accessing class name of P/Span/Div (change from style to class_name)
@@ -127,8 +125,7 @@ Typical Usage
  with its command line switches.
 
 Javascript Pop Up Support
-   Watir now installs AutoIt - http://www.autoitscript.com/
-   This is the preffered method for dealing with pop ups, file requesters etc. Support for Winclickers will be removed.
+   Watir now installs AutoIt - http://www.autoitscript.com/ (one-click installer only -- gem does not install this.)
 
 Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
