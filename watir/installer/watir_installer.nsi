@@ -48,6 +48,27 @@
    Exch $R0
  FunctionEnd
 
+Function TrimNewlines
+   Exch $R0
+   Push $R1
+   Push $R2
+   StrCpy $R1 0
+ 
+ loop:
+   IntOp $R1 $R1 - 1
+   StrCpy $R2 $R0 1 $R1
+   StrCmp $R2 "$\r" loop
+   StrCmp $R2 "$\n" loop
+   IntOp $R1 $R1 + 1
+   IntCmp $R1 0 no_trim_needed
+   StrCpy $R0 $R0 $R1
+ 
+ no_trim_needed:
+   Pop $R2
+   Pop $R1
+   Exch $R0
+ FunctionEnd
+ 
 ;--------------------------------
 ;Interface Configuration
 
@@ -80,17 +101,20 @@
 
 Section "${MUI_PRODUCT}" SecWatir
 SectionIn RO
- ;Register AutoIt DLL
- Exec 'regsvr32.exe /s "..\watir\AutoItX3.dll"'
  
 ReadEnvStr "$1" "TEMP"
 
 ; complicated line that creates a ruby_env.txt file in Temp
-ExecWait 'rubyw -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
+ExecWait 'ruby -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
 FileOpen $R0 "$1\ruby_env.txt" "r"
 FileRead $R0 $0
 FileClose $R0  
 
+; trim the filepath so it can be used to delete the watir libs
+  Push $0
+    Call TrimNewLines
+   Pop $0
+   
 ; delete file from temp dir
 Delete "$1\ruby_env.txt"
 
@@ -102,6 +126,9 @@ Delete "$1\ruby_env.txt"
   File "..\watir.rb"
   SetOutPath "$0\watir"
   File "..\watir\*"
+
+ ;Register AutoIt DLL
+ Exec 'regsvr32.exe /s "$0\watir\AutoItX3.dll"'
 
 ;Create uninstaller
  
@@ -236,17 +263,14 @@ Delete "$DESKTOP\Watir Examples.lnk"
 Delete "$SMPROGRAMS\Watir\*.*"
 RmDir "$SMPROGRAMS\Watir"
  
-  ;Unregister AutoIt DLL
-   Exec 'regsvr32.exe /s /u "..\watir\AutoItX3.dll"'
-
-  Delete "$INSTDIR\Uninstall.exe"
+ Delete "$INSTDIR\Uninstall.exe"
 
   RMDir "$INSTDIR"
   
   ReadEnvStr "$1" "TEMP"
 
 ; complicated line that creates a ruby_env.txt file in Temp
-ExecWait 'rubyw -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
+ExecWait 'ruby -e "File.open(\"#{ENV[\"Temp\"]}/ruby_env.txt\", \"w\"){|f| f.puts Config::CONFIG[\"sitelibdir\"].gsub(%{/}, %{\\}) }"'
 FileOpen $R0 "$1\ruby_env.txt" "r"
 FileRead $R0 $0
 FileClose $R0  
@@ -261,6 +285,9 @@ Delete "$1\ruby_env.txt"
 
  ;Write location to detail window
  DetailPrint "Library deletion path $0"
+
+ ;Unregister AutoIt DLL
+   Exec 'regsvr32.exe /s /u "$0\watir\AutoItX3.dll"'
 
 Delete "$0\watir.rb"
 RMDir /r "$0\watir\*.*" 
