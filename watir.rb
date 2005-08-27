@@ -1783,6 +1783,14 @@ module Watir
         def_wrap_guard :value
         def_wrap_guard :title
         
+        # returns the class name of the span or div is using
+        # raises an ObjectNotFound exception if the object cannot be found
+        def class_name
+            assert_exists
+            return @o.invoke("className")
+        end
+
+
         # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
         # BUG: should use an attribute reader and rename the instance variable
@@ -2171,12 +2179,6 @@ module Watir
             return @o.innerText.strip
         end
 
-        # returns the class name of the span or div is using
-        # raises an ObjectNotFound exception if the object cannot be found
-        def class_name
-            assert_exists
-            return @o.invoke("className")
-        end
 
         # this method returns the type of  object
         # raises an ObjectNotFound exception if the object cannot be found
