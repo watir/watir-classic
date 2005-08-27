@@ -19,6 +19,15 @@ class TC_Radios < Test::Unit::TestCase
        assert_false($ie.radio(:id, "missingid").exists?)   
     end
 
+    def test_radio_class
+       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").class_name }  
+       assert_equal("radio_style" , $ie.radio(:name, "box1").class_name)   
+       assert_equal("" , $ie.radio(:id, "box5").class_name)   
+
+
+
+    end
+
     def test_Radio_Enabled
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").enabled?  }  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:id, "noName").enabled?  }  
