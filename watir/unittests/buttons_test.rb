@@ -59,6 +59,9 @@ class TC_Buttons < Test::Unit::TestCase
         assert_equal("button"  , $ie.button(:index, 1).type  ) 
         assert_equal("Click Me"  , $ie.button(:index, 1).value  ) 
         assert_equal(false  , $ie.button(:index, 1).disabled  ) 
+        assert_equal("italic_button"  , $ie.button(:name, "b1").class_name  ) 
+        assert_equal(""  , $ie.button(:name , "b4").class_name  ) 
+
         
         assert_equal("b1"  , $ie.button(:id, "b2").name  ) 
         assert_equal("b2"  , $ie.button(:id, "b2").id  ) 
