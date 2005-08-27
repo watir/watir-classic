@@ -1,0 +1,33 @@
+        DIV {font-size: 24pt;}
+        .redText {color: red;}
+        .blueText {color: blue;}
+        .italicText {font-style: italic;}
+
+        SPAN {font-size: 18pt;}
+        .redText {color: red;}
+        .blueText {color: blue;}
+        .italicText {font-style: italic;}
+
+
+        P{font-size: 24pt;}
+        .redText {color: red;}
+        .blueText {color: blue;}
+        .italicText {font-style: italic;}
+
+        .italic_button {
+        background-color: silver;
+        border-width: 3;
+        color: black;
+        font-style: italic;
+        }
+
+        .check_box_style {
+        background-color: red;
+        border-width: 3;
+        color: white;
+        width : 3em ; 
+	  height : 3em ; 
+
+        font-style: italic;
+        }
+
