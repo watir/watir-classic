@@ -109,6 +109,9 @@ class TC_Links < Test::Unit::TestCase
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).id }  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).disabled }  
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).type }  
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).class_name }  
+
+
 
         assert_match( /links2/ ,$ie.link(:index, 1).href )
         assert_equal( ""      , $ie.link(:index, 1).value)
@@ -117,6 +120,9 @@ class TC_Links < Test::Unit::TestCase
         assert_equal( ""      , $ie.link(:index, 1).id )
         assert_equal( false   , $ie.link(:index, 1).disabled )  
         assert_equal( "link"  , $ie.link(:index, 1).type )
+        assert_equal( ""      , $ie.link(:index, 1).class_name)
+        assert_equal( "link_class_1"      , $ie.link(:index, 2).class_name)
+
 
         assert_equal( "link_id"   , $ie.link(:index, 6).id )
         assert_equal( "link_name" , $ie.link(:index, 7).name )

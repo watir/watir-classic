@@ -27,9 +27,6 @@ class TC_CheckBox < Test::Unit::TestCase
        assert_equal("check_box_style" , $ie.checkbox(:name, "box1").class_name) 
        assert_equal("" , $ie.checkbox(:name, "box2").class_name) 
 
-
-
-
        assert_equal("1" , $ie.checkbox(:name,"box4").value )
        assert_equal("3" , $ie.checkbox(:name,"box4" , 3).value )
        assert_equal("checkbox" , $ie.checkbox(:name,"box4" , 3).type )
