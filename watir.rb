@@ -2288,8 +2288,9 @@ module Watir
         # Returns an initialized instance of the table object to wich anElement belongs
         #   * container  - an instance of an IE object
         #   * anElement     - a Watir object (TextField, Button, etc.)
-        def Table.create_from_element(container,anElement)
-            o = anElement.getOLEObject.parentElement
+        def Table.create_from_element(container, anElement)
+            anElement.locate if anElement.ole_object == nil
+            o = anElement.ole_object.parentElement
             while(o && o.tagName != 'TABLE')
                 o = o.parentElement
             end

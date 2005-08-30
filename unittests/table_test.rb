@@ -171,11 +171,11 @@ class TC_Tables < Test::Unit::TestCase
     def test_table_from_element
         $ie.goto($htmlRoot + "simple_table_buttons.html")
      
-        button = $ie.button(:id,"b1")
-        table = Table.create_from_element($ie,button)
+        button = $ie.button(:id, "b1")
+        table = Table.create_from_element($ie, button)
        
-        table[2][1].button(:index,1).click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
+        table[2][1].button(:index, 1).click
+        assert($ie.textField(:name, "confirmtext").verify_contains(/CLICK2/i))
     end
 
     def test_complex_table_access
