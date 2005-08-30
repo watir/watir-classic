@@ -1775,21 +1775,25 @@ module Watir
         end
 
         public
-        # doc for Element#type
+        # returns the type of the element
         def_wrap_guard :type        
+        # returns the name of the element (as defined in html)
         def_wrap_guard :name
+        # returns the id of the element
         def_wrap :id
+        # returns whether the element is disabled
         def_wrap :disabled
+        # returns the value of the element
         def_wrap_guard :value
+        # returns the title of the element
         def_wrap_guard :title
         
-        # returns the class name of the span or div is using
+        # returns the class name of the element
         # raises an ObjectNotFound exception if the object cannot be found
         def class_name
             assert_exists
             return @o.invoke("className")
         end
-
 
         # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
