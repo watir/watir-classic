@@ -2289,16 +2289,14 @@ module Watir
     #
     class Table < Element
  
-        # Returns an initialized instance of the table object to wich anElement belongs
+        # Returns the table object containing anElement
         #   * container  - an instance of an IE object
         #   * anElement     - a Watir object (TextField, Button, etc.)
         def Table.create_from_element(container, anElement)
-            anElement.locate if anElement.ole_object == nil
+            anElement.locate if defined?(anElement.locate)
             o = anElement.ole_object.parentElement
-            while(o && o.tagName != 'TABLE')
-                o = o.parentElement
-            end
-            return Table.new(container,:from_object,o)
+            o = o.parentElement until o.tagName == 'TABLE'
+            Table.new(container, :from_object, o)
         end
 
         # Returns an initialized instance of a table object
@@ -2309,15 +2307,15 @@ module Watir
             @container = parent
             @how = how
             @what = what
-
+            
             table = nil
-
-	      if(@how != :from_object) then
-               table=get_table
-	      else
-		    table = @what
-	      end
-
+            
+            if(@how != :from_object) then
+                table=get_table
+            else
+                table = @what
+            end
+            
             parent.log "table - #{@what}, #{@how} Not found " if table ==  nil
             @o = table
             super( @o )
