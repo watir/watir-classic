@@ -8,13 +8,9 @@ class TC_Tables < Test::Unit::TestCase
     include Watir
     
     def setup
-        gotoTablePage
-    end
-    
-    def gotoTablePage()
         $ie.goto($htmlRoot + "table1.html")
     end
-    
+        
     def test_Table_Exists
         assert_false($ie.table(:id , 'missingTable').exists? )
         assert_false($ie.table(:index, 33).exists? )
@@ -71,93 +67,7 @@ class TC_Tables < Test::Unit::TestCase
         table1Expected = [ ["Row 1 Col1" , "Row 1 Col2"] ,[ "Row 2 Col1" , "Row 2 Col2"] ]
         assert_equal(table1Expected, $ie.table(:index , 1).to_a )
     end
-    
-    def test_simple_table_access
-        $ie.goto($htmlRoot + "simple_table.html")
-        
-        table = $ie.table(:index,1)
-        
-        assert_equal("Row 3 Col1",table[3][1].text.strip)
-        assert_equal("Row 1 Col1",table[1][1].text.strip)
-        assert_equal("Row 3 Col2",table[3][2].text.strip)
-        assert_equal(2,table.column_count)
-    end
-    
-    def test_simple_table_buttons
-        $ie.goto($htmlRoot + "simple_table_buttons.html")
-        
-        table = $ie.table(:index,1)
-        
-        table[1][1].button(:index,1).click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
-        table[2][1].button(:index,1).click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
-        
-        table[1][1].button(:id,'b1').click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
-        
-        assert_raises(UnknownObjectException   ) { table[1][1].button(:id,'b_missing').click }
-        
-        table[3][1].button(:index,2).click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
-        
-        table[3][1].button(:value ,"Click too").click
-        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
-        
-        $ie.table(:index,1)[4][1].text_field(:index,1).set("123")
-        assert($ie.text_field(:index,2).verify_contains("123"))
-        
-        # check when a cell contains 2 objects
-        
-        # if there were 2 different html objects in the same cell, some weird things happened ( button caption could change for example)
-        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
-        $ie.table(:index,1)[5][1].text_field(:index,1).click
-        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
-        
-        $ie.table(:index,1)[5][1].button(:index,1).click
-        assert_equal( '' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
-    end
-    
-    def test_simple_table_gif
-        $ie.goto($htmlRoot + "simple_table_buttons.html")
-        
-        table = $ie.table(:index,2)
-        
-        assert_match( /1\.gif/   , table[1][1].image( :index,1).src  )
-        assert_match( /2\.gif/   , table[1][2].image( :index ,1).src )
-        assert_match( /3\.gif/   , table[1][3].image( :index ,1).src    )
-        
-        assert_match( /1\.gif/   , table[3][1].image( :index ,1).src  )
-        assert_match( /2\.gif/   , table[3][2].image( :index ,1).src )
-        assert_match( /3\.gif/   , table[3][3].image( :index ,1).src  )
-        
-        table = $ie.table(:index,3)
-        assert_match( /1\.gif/   , table[1][1].image( :index ,1).src  )
-        assert_match( /2\.gif/   , table[1][1].image( :index ,2).src )
-        assert_match( /3\.gif/   , table[1][1].image( :index ,3).src )
-        
-        assert_match( /1\.gif/  , table[3][1].image( :index ,1).src  )
-        assert_match( /2\.gif/  , table[3][1].image( :index ,2).src    )
-        assert_match( /3\.gif/  , table[3][1].image( :index ,3).src  )
-    end
-    
-    def test_table_with_hidden_or_visible_rows
-        $ie.goto($htmlRoot + "simple_table_buttons.html")
-        t = $ie.table(:id , 'show_hide')
-        
-        # expand the table
-        t.each do |r|
-            r[1].image(:src, /plus/).click if r[1].image(:src, /plus/).exists?
-        end
-        
-        # shrink rows 1,2,3
-        count=1
-        t.each do |r|
-            r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
-            count=2
-        end
-    end
-    
+
     def test_links_and_images_in_table
         table = $ie.table(:id, 'pic_table')
         image = table[1][2].image(:index,1)
@@ -167,29 +77,7 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal("Google", link.innerText)
     end
     
-    def test_table_from_element
-        $ie.goto($htmlRoot + "simple_table_buttons.html")
-        
-        button = $ie.button(:id, "b1")
-        table = Table.create_from_element($ie, button)
-        
-        table[2][1].button(:index, 1).click
-        assert($ie.textField(:name, "confirmtext").verify_contains(/CLICK2/i))
-    end
-    
-    def test_complex_table_access
-        $ie.goto($htmlRoot + "complex_table.html")
-        
-        table = $ie.table(:index,1)
-        
-        assert_equal("subtable1 Row 1 Col1",table[1][1].table(:index,1)[1][1].text.strip)
-        assert_equal("subtable1 Row 1 Col2",table[1][1].table(:index,1)[1][2].text.strip)
-        assert_equal("subtable2 Row 1 Col2",table[2][1].table(:index,1)[1][2].text.strip)
-        assert_equal("subtable2 Row 1 Col1",table[2][1].table(:index,1)[1][1].text.strip)
-    end
-    
     def test_cell_directly
-        
         assert( $ie.cell(:id, 'cell1').exists? )
         assert_false( $ie.cell(:id, 'no_exist').exists? )
         assert_equal( "Row 1 Col1",  $ie.cell(:id, 'cell1').to_s.strip )
@@ -258,45 +146,162 @@ class TC_Tables < Test::Unit::TestCase
             count+=1
         end
     end
+end    
+
+class TC_Tables_Simple < Test::Unit::TestCase
+    include Watir
+
+    def setup
+        $ie.goto($htmlRoot + "simple_table.html")
+    end
+
+    def test_simple_table_access
+        table = $ie.table(:index,1)
+        
+        assert_equal("Row 3 Col1",table[3][1].text.strip)
+        assert_equal("Row 1 Col1",table[1][1].text.strip)
+        assert_equal("Row 3 Col2",table[3][2].text.strip)
+        assert_equal(2,table.column_count)
+    end
+end
+class TC_Tables_Buttons < Test::Unit::TestCase
+    include Watir
     
-    def test_get_columnvalues_single_column
+    def setup
+        $ie.goto($htmlRoot + "simple_table_buttons.html")
+    end
+    
+    def test_simple_table_buttons
+        table = $ie.table(:index,1)
+        
+        table[1][1].button(:index,1).click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
+        table[2][1].button(:index,1).click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK2/i))
+        
+        table[1][1].button(:id,'b1').click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/CLICK1/i))
+        
+        assert_raises(UnknownObjectException   ) { table[1][1].button(:id,'b_missing').click }
+        
+        table[3][1].button(:index,2).click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
+        
+        table[3][1].button(:value ,"Click too").click
+        assert($ie.textField(:name,"confirmtext").verify_contains(/TOO/i))
+        
+        $ie.table(:index,1)[4][1].text_field(:index,1).set("123")
+        assert($ie.text_field(:index,2).verify_contains("123"))
+        
+        # check when a cell contains 2 objects
+        
+        # if there were 2 different html objects in the same cell, some weird things happened ( button caption could change for example)
+        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
+        $ie.table(:index,1)[5][1].text_field(:index,1).click
+        assert_equal( 'Click ->' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
+        
+        $ie.table(:index,1)[5][1].button(:index,1).click
+        assert_equal( '' , $ie.table(:index,1)[5][1].text_field(:index,1).value )
+    end
+    
+    def test_simple_table_gif
+        table = $ie.table(:index,2)
+        
+        assert_match( /1\.gif/   , table[1][1].image( :index,1).src  )
+        assert_match( /2\.gif/   , table[1][2].image( :index ,1).src )
+        assert_match( /3\.gif/   , table[1][3].image( :index ,1).src    )
+        
+        assert_match( /1\.gif/   , table[3][1].image( :index ,1).src  )
+        assert_match( /2\.gif/   , table[3][2].image( :index ,1).src )
+        assert_match( /3\.gif/   , table[3][3].image( :index ,1).src  )
+        
+        table = $ie.table(:index,3)
+        assert_match( /1\.gif/   , table[1][1].image( :index ,1).src  )
+        assert_match( /2\.gif/   , table[1][1].image( :index ,2).src )
+        assert_match( /3\.gif/   , table[1][1].image( :index ,3).src )
+        
+        assert_match( /1\.gif/  , table[3][1].image( :index ,1).src  )
+        assert_match( /2\.gif/  , table[3][1].image( :index ,2).src    )
+        assert_match( /3\.gif/  , table[3][1].image( :index ,3).src  )
+    end
+    
+    def test_table_with_hidden_or_visible_rows
+        t = $ie.table(:id , 'show_hide')
+        
+        # expand the table
+        t.each do |r|
+            r[1].image(:src, /plus/).click if r[1].image(:src, /plus/).exists?
+        end
+        
+        # shrink rows 1,2,3
+        count=1
+        t.each do |r|
+            r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
+            count=2
+        end
+    end
+    
+    def test_table_from_element
+        button = $ie.button(:id, "b1")
+        table = Table.create_from_element($ie, button)
+        
+        table[2][1].button(:index, 1).click
+        assert($ie.textField(:name, "confirmtext").verify_contains(/CLICK2/i))
+    end
+end
+
+class TC_Table_Columns < Test::Unit::TestCase
+    include Watir
+    def setup
         $ie.goto($htmlRoot + "simple_table_columns.html")
+    end
+
+    def test_get_columnvalues_single_column
         assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 1).column_values(1))
     end
     
     def test_colspan
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(2, $ie.table(:index, 3)[2][1].colspan)
         assert_equal(1, $ie.table(:index, 3)[1][1].colspan)
         assert_equal(3, $ie.table(:index, 3)[4][1].colspan)
-        
     end
     
     def test_get_columnvalues_multiple_column
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 2).column_values(1))
         assert_equal(["R1C3", "R2C3", "R3C3"], $ie.table(:index, 2).column_values(3))
     end
     
     def test_get_columnvalues_with_colspan
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R1C1", "R2C1", "R3C1", "R4C1", "R5C1", "R6C2"], $ie.table(:index, 3).column_values(1))
          (2..4).each{|x|assert_raises(UnknownCellException){$ie.table(:index, 3).column_values(x)}}
     end
     
     def test_get_rowvalues_full_row
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R1C1", "R1C2", "R1C3"], $ie.table(:index, 3).row_values(1))
     end
     
     def test_get_rowvalues_with_colspan
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R2C1", "R2C2"], $ie.table(:index, 3).row_values(2))
     end
     
     def test_getrowvalues_with_rowspan
-        $ie.goto($htmlRoot + "simple_table_columns.html")
         assert_equal(["R5C1", "R5C2", "R5C3"], $ie.table(:index, 3).row_values(5))
         assert_equal(["R6C2", "R6C3"], $ie.table(:index, 3).row_values(6))
+    end
+end
+
+class TC_Tables_Complex < Test::Unit::TestCase
+    include Watir
+    def setup
+        $ie.goto($htmlRoot + "complex_table.html")
+    end
+
+    def test_complex_table_access
+        table = $ie.table(:index,1)
+        
+        assert_equal("subtable1 Row 1 Col1",table[1][1].table(:index,1)[1][1].text.strip)
+        assert_equal("subtable1 Row 1 Col2",table[1][1].table(:index,1)[1][2].text.strip)
+        assert_equal("subtable2 Row 1 Col2",table[2][1].table(:index,1)[1][2].text.strip)
+        assert_equal("subtable2 Row 1 Col1",table[2][1].table(:index,1)[1][1].text.strip)
     end
 end
