@@ -180,7 +180,7 @@ module Watir
     #
     # there are many methods available to the Button object
     #
-    # Is includable for classes that have @container, document and document.body
+    # Is includable for classes that have @container, document and ole_inner_elements
     module Container 
         include Watir::Exception
 
@@ -194,7 +194,7 @@ module Watir
         # The color we want to use for the active object. This can be any valid web-friendly color.
         attr_accessor :activeObjectHighLightColor
 
-        def copy_test_config(container)
+        def copy_test_config(container) # only used by form and frame
             @typingspeed = container.typingspeed      
             @activeObjectHighLightColor = container.activeObjectHighLightColor      
         end    
@@ -1731,6 +1731,7 @@ module Watir
     # This is not a class that users would normally access. 
     class Element
         include Watir::Exception
+        include Container # presumes @container is defined
         
         # number of spaces that separate the property from the value in the to_s method
         TO_S_SIZE = 14
@@ -1803,6 +1804,32 @@ module Watir
             return @o
         end
   
+        def ole_inner_elements
+            assert_exists
+            return @o.all
+        end
+        private :ole_inner_elements
+
+        def document
+            assert_exists
+            return @o
+        end
+
+        def typingspeed
+            @container.typingspeed
+        end
+        
+        def activeObjectHighLightColor
+            @container.activeObjectHighLightColor
+        end
+
+        # this method returns the innerText of the object
+        # raises an ObjectNotFound exception if the object cannot be found
+        def text
+            assert_exists
+            return @o.innerText.strip
+        end
+
         # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
         def html
             assert_exists
@@ -1907,18 +1934,18 @@ module Watir
         # Returns whether this element actually exists. 
         def exists?
             begin
-	        locate if defined?(locate)
-	    rescue WIN32OLERuntimeError
-	        @o = nil
-	    end        
-	    @o ? true: false
+                locate if defined?(locate)
+            rescue WIN32OLERuntimeError
+                @o = nil
+            end        
+            @o ? true: false
         end
         
         # Returns true if the element is enabled, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
             assert_exists
-            return ! @o.invoke("disabled")
+            return ! disabled
         end
     end
 
@@ -1938,11 +1965,13 @@ module Watir
             set_show_items
         end
  
+        private 
         def set_show_items
             @show_attributes = AttributeLengthPairs.new( "id" , 20)
             @show_attributes.add( "name" , 20)
         end
 
+        public
         def get_length_of_input_objects(object_type) 
             object_types = 
                 if object_type.kind_of? Array 
@@ -2156,33 +2185,17 @@ module Watir
     #
     class SpanDivCommon < Element
         include Watir::Exception
-        include Container 
+        
+        def locate
+            @o = @container.getNonControlObject(tag , @how, @what)
+        end            
 
-        def initialize( container,  how , what )
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            @o = @container.getNonControlObject(tag , @how, @what )
             super( @o )
-            copy_test_config container
         end
-
-        def ole_inner_elements
-            return @o.all
-        end
-        private :ole_inner_elements
-
-        def document
-            return @o
-        end
-
-        # this method returns the innerText of the object
-        # raises an ObjectNotFound exception if the object cannot be found
-        def text
-            assert_exists
-            return @o.innerText.strip
-        end
-
 
         # this method returns the type of  object
         # raises an ObjectNotFound exception if the object cannot be found
@@ -2288,6 +2301,7 @@ module Watir
     # many of the methods available to this object are inherited from the Element class
     #
     class Table < Element
+        include Container
  
         # Returns the table object containing anElement
         #   * container  - an instance of an IE object
@@ -2476,13 +2490,12 @@ module Watir
 
     end
 
-
     # this class is a collection of the table body objects that exist in the table
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
     # many of the methods available to this object are inherited from the Element class
     #
-    class TableBodies<Element
-        def initialize(container, how, what )
+    class TableBodies < Element
+        def initialize(container, how, what)
             @container = container
             @o= nil
             if how == :direct
@@ -2635,7 +2648,6 @@ module Watir
              super( @o )   
              @how = how   
              @what = what   
-             copy_test_config container
          end 
 
         def ole_inner_elements
@@ -3539,6 +3551,7 @@ module Watir
             get_length_of_input_objects(["button", "submit", "image"])
         end
 
+        private
         def set_show_items
             super
             @show_attributes.add( "disabled" , 9)
@@ -3556,6 +3569,7 @@ module Watir
             get_length_of_input_objects(["file"])
         end
 
+        private
         def set_show_items
             super
             @show_attributes.add( "disabled" , 9)
@@ -3611,6 +3625,7 @@ module Watir
         def element_class; Link; end    
         def element_tag; 'A'; end
 
+        private 
         def set_show_items
             super
             @show_attributes.add("href", 60)
@@ -3628,6 +3643,7 @@ module Watir
             @container.document.images.length
         end
 
+        private 
         def set_show_items
             super
             @show_attributes.add("src", 60)
@@ -3665,6 +3681,7 @@ module Watir
         def element_class; Table; end
         def element_tag; 'TABLE'; end
 
+        private 
         def set_show_items
             super
             @show_attributes.delete( "name")
@@ -3679,6 +3696,7 @@ module Watir
         def element_class; Label; end
         def element_tag; 'LABEL'; end
 
+        private 
         def set_show_items
             super
             @show_attributes.add("htmlFor", 20)
@@ -3692,6 +3710,7 @@ module Watir
         include CommonCollection
         def element_class; P; end
 
+        private
         def set_show_items
             super
             @show_attributes.delete( "name")
@@ -3707,6 +3726,7 @@ module Watir
         include CommonCollection
         def element_class; Span; end
 
+        private
         def set_show_items
             super
             @show_attributes.delete( "name")
@@ -3722,6 +3742,7 @@ module Watir
         include CommonCollection
         def element_class; Div; end
 
+        private 
         def set_show_items
             super
             @show_attributes.delete( "name")
