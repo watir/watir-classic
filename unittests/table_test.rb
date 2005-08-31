@@ -56,7 +56,6 @@ class TC_Tables < Test::Unit::TestCase
     end
     
     def test_columns
-        
         assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').column_count }
         assert_raises( UnknownTableException  ){ $ie.table(:index , 77).column_count }
         assert_equal( 2 , $ie.table(:index , 1).column_count)
@@ -145,6 +144,10 @@ class TC_Tables < Test::Unit::TestCase
             end
             count+=1
         end
+    end
+
+    def test_table_container
+        assert_nothing_raised { $ie.table(:id, 't1').html }
     end
 end    
 
