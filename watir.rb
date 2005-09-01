@@ -766,6 +766,34 @@ module Watir
         end
         private :ole_inner_elements
 
+        # This method shows the available objects on the current page.
+        # This is usually only used for debugging or writing new test scripts.
+        # This is a nice feature to help find out what HTML objects are on a page
+        # when developing a test case using Watir.
+        def show_all_objects
+            puts "-----------Objects in  page -------------" 
+            doc = document
+            s = ""
+            props = ["name" ,"id" , "value" , "alt" , "src"]
+            doc.all.each do |n|
+                begin
+                    s += n.invoke("type").to_s.ljust(16)
+                rescue
+                    next
+                end
+                props.each do |prop|
+                    begin
+                        p = n.invoke(prop)
+                        s += "  " + "#{prop}=#{p}".to_s.ljust(18)
+                    rescue
+                        # this object probably doesnt have this property
+                    end
+                end
+                s += "\n"
+            end
+            puts s
+        end
+
         # This is the main method for finding objects on a web page.
         #
         # This method is used internally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
@@ -1560,34 +1588,6 @@ module Watir
             s += "\n"
         end
         
-        # This method shows the available objects on the current page.
-        # This is usually only used for debugging or writing new test scripts.
-        # This is a nice feature to help find out what HTML objects are on a page
-        # when developing a test case using Watir.
-        def show_all_objects
-            puts "-----------Objects in  page -------------" 
-            doc = document
-            s = ""
-            props=["name" ,"id" , "value" , "alt" , "src"]
-            doc.all.each do |n|
-                begin
-                    s += n.invoke("type").to_s.ljust(16)
-                rescue
-                    next
-                end
-                props.each do |prop|
-                    begin
-                        p = n.invoke(prop)
-                        s += "  " + "#{prop}=#{p}".to_s.ljust(18)
-                    rescue
-                        # this object probably doesnt have this property
-                    end
-                end
-                s += "\n"
-            end
-            puts s + "\n\n\n"
-        end
-
         # this method shows all the divs availble in the document
         def show_divs
             divs = document.getElementsByTagName("DIV")
