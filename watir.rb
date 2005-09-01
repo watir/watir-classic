@@ -859,7 +859,7 @@ module Watir
 
             doc = document
             count = 1
-            images = doc.all.tags("IMG")
+            images = doc.getElementsByTagName("IMG")
             o=nil
             images.each do |img|
                 
@@ -900,7 +900,7 @@ module Watir
         #                     :text  - get link based on the supplied text. uses either a string or regular expression match
         #   * what - depends on how - an integer for index, a string or regexp for url and text
         def getLink( how, what )
-            links = document.links
+            links = document.getElementsByTagName('A')
             
             # Guard ensures watir won't crash if somehow the list of links is nil
             if (links == nil)
@@ -981,7 +981,7 @@ module Watir
         #   * what -  a string or regexp 
         def getTablePart( part , how , what )
              doc = document
-             parts = doc.all.tags( part )
+             parts = doc.getElementsByTagName( part )
              n = nil
              parts.each do | p |
                  next unless n==nil
@@ -998,7 +998,7 @@ module Watir
         def getNonControlObject(part , how, what )
 
              doc = document
-             parts = doc.all.tags( part )
+             parts = doc.getElementsByTagName( part )
              n = nil
              case how
                 when :id
