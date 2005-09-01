@@ -900,7 +900,7 @@ module Watir
         #                     :text  - get link based on the supplied text. uses either a string or regular expression match
         #   * what - depends on how - an integer for index, a string or regexp for url and text
         def getLink( how, what )
-            links = document.all.tags("A")
+            links = document.links
             
             # Guard ensures watir won't crash if somehow the list of links is nil
             if (links == nil)
@@ -1145,11 +1145,12 @@ module Watir
         # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
             url=ie.document.url 
-            #puts "url is " + url
+            # puts "url is " + url
             if /shdoclc.dll/.match(url)
                 #puts "Match on shdoclc.dll"
                 m = /id=IEText.*?>(.*?)</i.match(ie.html)
                 if m
+                
                     #puts "Error is #{m[1]}"
                     raise NavigationException , m[1]
                 end

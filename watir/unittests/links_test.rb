@@ -146,6 +146,11 @@ class TC_Links < Test::Unit::TestCase
             index+=1
         end
     end
+    
+    def test_div_xml_bug
+        $ie.goto($htmlRoot + "div_xml.html")
+        assert_nothing_raised {$ie.link(:text, 'Create').exists? }   
+    end
 end
 
 require 'unittests/iostring'
