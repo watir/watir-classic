@@ -1459,9 +1459,9 @@ module Watir
                 for i in 0..count-1 do  
                     begin
                         fname = allFrames[i.to_s].name.to_s
-                        puts "frame  index: #{i+1} name: #{fname}"
+                        puts "frame  index: #{i + 1} name: #{fname}"
                     rescue => e
-                        puts "frame  index: #{i+1} --Access Denied--" if e.to_s.match(/Access is denied/)
+                        puts "frame  index: #{i + 1} --Access Denied--" if e.to_s.match(/Access is denied/)
                     end
                 end
             else
@@ -1489,52 +1489,51 @@ module Watir
         # this method shows all the images availble in the document
         def show_images
             doc = document
-            index=1
+            index = 1
             doc.images.each do |l|
                 puts "image: name: #{l.name}"
                 puts "         id: #{l.invoke("id")}"
                 puts "        src: #{l.src}"
                 puts "      index: #{index}"
-                index+=1
+                index += 1
             end
         end
         
         # this method shows all the links availble in the document
         def show_links 
-
-            props=       ["name" ,"id" , "href"  ]
-            print_sizes= [12 , 12, 60]
+            props = ["name", "id", "href"]
+            print_sizes = [12, 12, 60]
             doc = document
-            index=0
+            index = 0
             text_size = 60
             # draw the table header
             s = "index".ljust(6) 
-            props.each_with_index do |p,i|
-                s=s+ p.ljust(print_sizes[i]) 
+            props.each_with_index do |p, i|
+                s += p.ljust(print_sizes[i]) 
             end
-            s=s + "text/src".ljust(text_size)
-            s=s+"\n"
-
+            s += "text/src".ljust(text_size)
+            s += "\n"
+            
             # now get the details of the links
             doc.links.each do |n|
-                index+=1
+                index += 1
                 s = s + index.to_s.ljust(6)
-                props.each_with_index do |prop,i|
-                    printsize=print_sizes[i]
+                props.each_with_index do |prop, i|
+                    printsize = print_sizes[i]
                     begin
                         p = n.invoke(prop)
-                         temp_var = "#{p}".to_s.ljust(printsize)
+                        temp_var = "#{p}".to_s.ljust(printsize)
                     rescue
                         # this object probably doesnt have this property
-                         temp_var = "".to_s.ljust(printsize)
+                        temp_var = "".to_s.ljust(printsize)
                     end
-                    s =s+ temp_var
+                    s += temp_var
                 end
-                s=s+  n.innerText
+                s += n.innerText
                 if n.getElementsByTagName("IMG").length > 0
-                     s=s+  " / " + n.getElementsByTagName("IMG")[0.to_s].src
+                    s += " / " + n.getElementsByTagName("IMG")[0.to_s].src
                 end
-                s=s+"\n"
+                s += "\n"
             end
             puts  s
         end
@@ -1546,19 +1545,19 @@ module Watir
             
             current = document.activeElement
             begin
-                s=s+current.invoke("type").to_s.ljust(16)
+                s += current.invoke("type").to_s.ljust(16)
             rescue
             end
-            props=["name", "id", "value", "alt", "src", "innerText", "href"]
+            props = ["name", "id", "value", "alt", "src", "innerText", "href"]
             props.each do |prop|
                 begin
                     p = current.invoke(prop)
-                    s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
+                    s += "  " + "#{prop}=#{p}".to_s.ljust(18)
                 rescue
                     #this object probably doesnt have this property
                 end
             end
-            s=s+"\n"
+            s += "\n"
         end
         
         # This method shows the available objects on the current page.
@@ -1572,31 +1571,31 @@ module Watir
             props=["name" ,"id" , "value" , "alt" , "src"]
             doc.all.each do |n|
                 begin
-                    s=s+n.invoke("type").to_s.ljust(16)
+                    s += n.invoke("type").to_s.ljust(16)
                 rescue
                     next
                 end
                 props.each do |prop|
                     begin
                         p = n.invoke(prop)
-                        s =s+ "  " + "#{prop}=#{p}".to_s.ljust(18)
+                        s += "  " + "#{prop}=#{p}".to_s.ljust(18)
                     rescue
                         # this object probably doesnt have this property
                     end
                 end
-                s=s+"\n"
+                s += "\n"
             end
-            puts s+"\n\n\n"
+            puts s + "\n\n\n"
         end
 
         # this method shows all the divs availble in the document
         def show_divs
             divs = document.getElementsByTagName("DIV")
             puts "Found #{divs.length} div tags"
-            index=1
+            index = 1
             divs.each do |d|
                 puts "#{index}  id=#{d.invoke('id')}      class=#{d.invoke("className")}"
-                index+=1
+                index += 1
             end
         end
 
@@ -1604,10 +1603,10 @@ module Watir
         def show_tables
             tables = document.getElementsByTagName("TABLE")
             puts "Found #{tables.length} tables"
-            index=1
+            index = 1
             tables.each do |d|
                 puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.rows["0"].cells.length }"
-                index+=1
+                index += 1
             end
         end
 
@@ -1615,20 +1614,20 @@ module Watir
         def show_spans
             spans = document.getElementsByTagName("SPAN")
             puts "Found #{spans.length} span tags"
-            index=1
+            index = 1
             spans.each do |d|
                 puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
-                index+=1
+                index += 1
             end
         end
 
         def show_labels
             labels = document.getElementsByTagName("LABEL")
             puts "Found #{labels.length} label tags"
-            index=1
+            index = 1
             labels.each do |d|
                 puts "#{index}  text=#{d.invoke('innerText')}      class=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
-                index+=1
+                index += 1
             end
         end
 
