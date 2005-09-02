@@ -6,8 +6,13 @@ spec = Gem::Specification.new do |s|
   s.version = '1.4.99'
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
-    WATIR stands for "Web Application Testing in Ruby". Watir (pronounced water) is a free, open-source functional testing tool for automating browser-based tests of web applications.
-    Watir drives the Internet Explorer browser the same way an end user would. It clicks links, fills in forms, presses buttons. Watir also checks results, such as whether expected text appears on the page.
+    WATIR stands for "Web Application Testing in Ruby". Watir (pronounced water) is a free, 
+    open-source functional testing tool for automating browser-based tests of web applications. 
+    It works with applications written in any language.
+    Watir drives the Internet Explorer browser the same way an end user would. 
+    It clicks links, fills in forms, presses buttons. 
+    Watir also checks results, such as whether expected text appears on the page, or whether a control is enabled.
+    Watir can test web applications written in any language. 
     Watir is a Ruby library that works with Internet Explorer on Windows.
   EOF
   s.author = 'Paul Rogers, Bret Pettichord'
@@ -19,7 +24,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.requirements << <<-EOF
     Some Watir features require that an included DLL be registered. You'll have to do this manually:
-      > regsvr32.exe watir\AutoItX3.dll 
+      > regsvr32.exe watir\\AutoItX3.dll 
   EOF
   s.require_path = '.'    
   s.autorequire = 'watir'
