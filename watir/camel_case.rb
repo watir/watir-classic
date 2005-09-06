@@ -27,6 +27,7 @@ module Watir
     class Element
         alias getOLEObject ole_object 
         alias fireEvent fire_event        
+        alias innerText text
     end    
     class Frame        
         alias getDocument document
@@ -35,9 +36,5 @@ module Watir
     class Form        
         alias waitForIE wait 
     end
-    
-    class SpanDivCommon
-        alias innerText text
-    end    
     
 end

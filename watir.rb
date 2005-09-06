@@ -1748,10 +1748,11 @@ module Watir
         end
                     
         private
-        def self.def_wrap(method_name)
-            class_eval "def #{method_name}
+        def self.def_wrap(ruby_method_name, ole_method_name=nil)
+            ole_method_name = ruby_method_name unless ole_method_name
+            class_eval "def #{ruby_method_name}
                           assert_exists
-                          @o.invoke('#{method_name}')
+                          @o.invoke('#{ole_method_name}')
                         end"
         end
         def self.def_wrap_guard(method_name)
@@ -1792,10 +1793,7 @@ module Watir
         
         # returns the class name of the element
         # raises an ObjectNotFound exception if the object cannot be found
-        def class_name
-            assert_exists
-            return @o.invoke("className")
-        end
+        def_wrap :class_name, :className
 
         # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
@@ -1832,10 +1830,7 @@ module Watir
         end
 
         # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
-        def html
-            assert_exists
-            return @o.outerHTML
-        end
+        def_wrap :html, :outerHTML
 
         # Return an array with many of the properties, in a format to be used by the to_s method
         def string_creator
@@ -2104,13 +2099,13 @@ module Watir
         end
         
         # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
-        def submit
+        def submit # XXX use assert_exists
             raise UnknownFormException ,  "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
             @ole_object.submit 
             @container.wait
         end   
 
-        def ole_inner_elements
+        def ole_inner_elements # XXX use assert_exists
             raise UnknownFormException , "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
             @ole_object.elements.all
         end   
@@ -2259,16 +2254,7 @@ module Watir
         end
 
         # return the ID of the control that this label is associated with
-        def for
-            assert_exists
-            return @o.htmlFor
-        end
-
-        def text
-            assert_exists
-            return @o.innerText.strip
-        end
-        alias innerText :text
+        def_wrap :for, :htmlFor
 
         # this method is used to populate the properties in the to_s method
         def label_string_creator
@@ -2654,11 +2640,6 @@ module Watir
             return @o  
         end
 
-        # returns the contents of the cell as text
-        def text
-             raise UnknownObjectException , "Unable to locate table cell with #{@how} of #{@what}" if @o == nil
-             return @o.innerText.strip 
-        end
         alias to_s text
  
         def colspan
