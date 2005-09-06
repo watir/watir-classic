@@ -15,6 +15,15 @@ class TC_Links < Test::Unit::TestCase
         assert(exists?{$ie.link(:text, "test1")})   
         assert(exists?{$ie.link(:text, /TEST/i)})   
     end
+    
+    def test_bad_attribute
+        assert_raises(MissingWayOfFindingObjectException) { $ie.link(:bad_attribute, 199).click }  
+        begin
+            $ie.link(:bad_attribute, 199).click 
+        rescue MissingWayOfFindingObjectException => e           
+            assert_equal "bad_attribute is an unknown way of finding a link (199)", e.to_s
+        end
+    end
 
     def xtest_missing_links_dont_exist
         assert_false(exists?{$ie.link(:text, "missing")})   

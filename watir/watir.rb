@@ -992,7 +992,7 @@ module Watir
                     end
                 end
             else
-                raise MissingWayOfFindingObjectException, "#{how.inspect} is an unknown way of finding a link ( #{what} )"
+                raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a link (#{what})"
             end
             
             # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
@@ -1052,7 +1052,7 @@ module Watir
                      count +=1
                   end
               else
-                  raise MissingWayOfFindingObjectException, "unknown way of finding a #{ part} ( {what} )"
+                  raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a #{part} (#{what})"
               end
             return n
 
@@ -1374,6 +1374,7 @@ module Watir
                 else
                     raise MissingWayOfFindingObjectException
                 end 
+            # bug we should remove this...
             rescue MissingWayOfFindingObjectException => e
                 raise e
             rescue
@@ -2066,7 +2067,7 @@ module Watir
         #   * container   - the containing object, normally an instance of IE
         #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
         #   * what        - what we use to access the form
-        def initialize( container, how, what )
+        def initialize(container, how, what)
             @container = container
             @formHow = how
             @formName = what
@@ -2094,7 +2095,7 @@ module Watir
                 when :action
                     @formName.matches(wrapped.action) ? thisForm : nil
                 else
-                    raise MissingWayOfFindingObjectException
+                  raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
                 end
                 count = count +1
             end
