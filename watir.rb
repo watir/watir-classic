@@ -2084,16 +2084,10 @@ module Watir
                 
                 @form =
                 case @formHow
-                when :name 
-                    wrapped.name == @formName ? thisForm : nil
-                when :id
-                    wrapped.id == @formName.to_s ? thisForm : nil
+                when :name, :id, :method, :action 
+                    @formName.matches(wrapped.send(@formHow)) ? thisForm : nil
                 when :index
-                    count == @formName.to_i ? thisForm : nil
-                when :method
-                    wrapped.method.downcase == @formName.downcase ? thisForm : nil
-                when :action
-                    @formName.matches(wrapped.action) ? thisForm : nil
+                    count == @formName ? thisForm : nil
                 else
                   raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
                 end
