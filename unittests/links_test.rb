@@ -7,52 +7,20 @@ require 'unittests/setup'
 class TC_Links < Test::Unit::TestCase
     include Watir
     
-    def gotoLinksPage()
-        $ie.goto($htmlRoot + "links1.html")
-    end
-    
-    def gotoFrameLinksPage()
-        $ie.goto($htmlRoot + "frame_links.html")
-    end
-    
     def setup()
-        gotoLinksPage()
+        $ie.goto($htmlRoot + "links1.html")
     end
     
     def test_new_link_exists
         assert(exists?{$ie.link(:text, "test1")})   
         assert(exists?{$ie.link(:text, /TEST/i)})   
-
-        gotoFrameLinksPage()
-        assert(exists?{$ie.frame("buttonFrame").link(:text, "test1")})   
     end
 
     def xtest_missing_links_dont_exist
         assert_false(exists?{$ie.link(:text, "missing")})   
         assert_false(exists?{$ie.link(:text, /miss/)})   
-        
-        gotoFrameLinksPage()
-        assert_false(exists?{$ie.frame("buttonFrame").link(:text, "missing")})
-        assert_false(exists?{ie.frame("missing").link(:text, "test1")})   
     end
-    
-    def test_links_in_frames
-        gotoFrameLinksPage()
-        
-        assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
-        assert_false($ie.frame("buttonFrame").link(:text, "missing").exists?)   
-        
-        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.frame("buttonFrame").link(:index, 199).href }  
-        assert_match( /links2/ ,$ie.frame("buttonFrame").link(:index, 1).href )
-        
-        count =0
-        $ie.frame("buttonFrame").links.each do |l|
-            count+=1
-        end
-        
-        assert_equal( 9 , count)
-    end
-    
+
     def test_link_Exists
         assert($ie.link(:text, "test1").exists?)   
         assert($ie.link(:text, /TEST/i).exists?)   
@@ -91,17 +59,16 @@ class TC_Links < Test::Unit::TestCase
     def test_link_click
         $ie.link(:text, "test1").click
         assert( $ie.contains_text("Links2-Pass") ) 
-        
-        gotoLinksPage()
+    end
+    def test_link2_click    
         $ie.link(:url, /link_pass.html/).click
         assert( $ie.contains_text("Links3-Pass") ) 
-        
-        gotoLinksPage()
-        
+    end
+    def test_link3_click        
         $ie.link(:index, 1).click
         assert( $ie.contains_text("Links2-Pass") ) 
-        
-        gotoLinksPage()
+    end
+    def test_link4_click        
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).click }  
     end
     
@@ -151,6 +118,37 @@ class TC_Links < Test::Unit::TestCase
         $ie.goto($htmlRoot + "div_xml.html")
         assert_nothing_raised {$ie.link(:text, 'Create').exists? }   
     end
+end
+
+class TC_Frame_Links < Test::Unit::TestCase
+    include Watir
+    
+    def setup()
+        $ie.goto($htmlRoot + "frame_links.html")
+    end
+
+    def test_new_frame_link_exists
+        assert(exists?{$ie.frame("buttonFrame").link(:text, "test1")})   
+    end
+    def xtest_missing_frame_links_dont_exist        
+        assert_false(exists?{$ie.frame("buttonFrame").link(:text, "missing")})
+        assert_false(exists?{ie.frame("missing").link(:text, "test1")})   
+    end
+    
+    def test_links_in_frames
+        assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
+        assert_false($ie.frame("buttonFrame").link(:text, "missing").exists?)   
+        
+        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.frame("buttonFrame").link(:index, 199).href }  
+        assert_match( /links2/ ,$ie.frame("buttonFrame").link(:index, 1).href )
+        
+        count =0
+        $ie.frame("buttonFrame").links.each do |l|
+            count+=1
+        end
+        
+        assert_equal( 9 , count)
+    end    
 end
 
 require 'unittests/iostring'
