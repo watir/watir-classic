@@ -1136,7 +1136,7 @@ module Watir
         end        
         
         def set_defaults
-            @form = nil
+            @ole_object = nil
 
             @enable_spinner = $ENABLE_SPINNER
             @error_checkers= []
@@ -2036,16 +2036,16 @@ module Watir
 
     module FormAccess
         def name
-            @form.getAttributeNode('name').value
+            @ole_object.getAttributeNode('name').value
         end
         def action
-            @form.action
+            @ole_object.action
         end
         def method
-            @form.invoke('method')
+            @ole_object.invoke('method')
         end
         def id
-            @form.invoke("id").to_s
+            @ole_object.invoke('id')
         end
     end        
         
@@ -2053,7 +2053,7 @@ module Watir
     class FormWrapper
         include FormAccess
         def initialize ( ole_object )
-            @form = ole_object
+            @ole_object = ole_object
         end
     end
        
@@ -2069,55 +2069,55 @@ module Watir
         #   * what        - what we use to access the form
         def initialize(container, how, what)
             @container = container
-            @formHow = how
-            @formName = what
+            @how = how
+            @what = what
             
-            log "Get form  formHow is #{@formHow}  formName is #{@formName} "
+            log "Get form how is #{@how}  what is #{@what} "
             count = 1
             doc = @container.document
             doc.forms.each do |thisForm|
-                next unless @form == nil
+                next unless @ole_object == nil
 
                 wrapped = FormWrapper.new(thisForm)
 
                 log "form on page, name is " + wrapped.name
                 
-                @form =
-                case @formHow
+                @ole_object =
+                case @how
                 when :name, :id, :method, :action 
-                    @formName.matches(wrapped.send(@formHow)) ? thisForm : nil
+                    @what.matches(wrapped.send(@how)) ? thisForm : nil
                 when :index
-                    count == @formName ? thisForm : nil
+                    count == @what ? thisForm : nil
                 else
                   raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
                 end
                 count = count +1
             end
             
-            super(@form)
+            super(@ole_object)
             
             copy_test_config container
         end
 
         def exists?
-            @form ? true : false
+            @ole_object ? true : false
         end
         
         # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
         def submit
-            raise UnknownFormException ,  "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @form.submit 
+            raise UnknownFormException ,  "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+            @ole_object.submit 
             @container.wait
         end   
 
         def ole_inner_elements
-            raise UnknownFormException , "Unable to locate a form using #{@formHow} and #{@formName} " if @form == nil
-            @form.elements.all
+            raise UnknownFormException , "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+            @ole_object.elements.all
         end   
         private :ole_inner_elements
 
         def document
-            return @form
+            return @ole_object
         end
 
         def wait(no_sleep = false)
@@ -2157,13 +2157,13 @@ module Watir
             @original_styles = {}
             10.times do
                 count=0
-                @form.elements.each do |element|
+                @ole_object.elements.each do |element|
                     highlight(:set , element , count)
                     count +=1
                 end
                 sleep 0.05
                 count = 0
-                @form.elements.each do |element|
+                @ole_object.elements.each do |element|
                     highlight(:clear , element , count)
                     count +=1
                 end
