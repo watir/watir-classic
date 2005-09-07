@@ -828,7 +828,11 @@ module Watir
             puts s
         end
 
-        # This is the main method for finding objects on a web page.
+        # 
+        #                Locator Methods
+        #
+
+        # Returns the specified ole object for input elements on a web page.
         #
         # This method is used internally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
         #
@@ -838,40 +842,42 @@ module Watir
         #                  - :index
         #                  - :value etc
         #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
-        #   * types - what object types we will look at. Only used when index is specified as the how.
+        #   * types - what object types we will look at. 
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-        def getObject(how, what, types, value=nil)
-            container = ole_inner_elements 
+        def getObject(how, what, types, value = nil)
+            elements = ole_inner_elements 
             how = :value if how == :caption
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
             o = nil
             if how == :index
                 index =  what.to_i
-                log" getting object #{types.to_s}  at index( #{index}"
+                log "getting object #{types} at index #{index}"
                 
-                objectIndex = 1
-                container.each do | thisObject |
+                object_index = 1
+                elements.each do | object |
+                    # TODO: wrap this 
                     begin
-                        this_type = thisObject.invoke("type")
+                        this_type = object.invoke("type")
                     rescue
                         this_type = nil
                     end
                     if types.include?(this_type)
-                        if objectIndex == index
-                            o = thisObject
+                        if object_index == index
+                            o = object
                             break
                         end
-                        objectIndex += 1
+                        object_index += 1
                     end
                 end
                 return o
                 
             else
-                container.each do |object|
-                    next  unless o == nil
+                elements.each do |object|
+                    next unless o == nil
                     
                     begin
+                        # TODO: use a wrapper object and a set of attributes... (guard them all)
                         case how
                         when :id
                             attribute = object.invoke("id")
@@ -888,7 +894,7 @@ module Watir
                         when :afterText
                             attribute = object.getAdjacentText("beforeBegin").strip
                         else
-                            next
+                            next # TODO raise an error
                         end
                         
                         if what.matches(attribute) && types.include?(object.invoke("type"))
@@ -902,7 +908,7 @@ module Watir
                             end
                         end
                         
-                    rescue => e
+                    rescue => e # WTF??? (this is why the individual calls aren't guarded!)
                         log 'IE#getObject error ' + e.to_s 
                     end
                     
@@ -3083,7 +3089,7 @@ module Watir
             if @how == :from_object
                 @o = @what
             else
-                @o = @container.getObject(@how, @what, object_types)
+                @o = @container.getObject(@how, @what, input_types)
             end              
         end
         def initialize(container, how, what)
@@ -3093,174 +3099,22 @@ module Watir
             super(nil)
         end
 
-        def object_types
+        private
+        def input_types
             ["button", "submit", "image", "reset"] 
         end
     end
-
     
-    # File dialog
-    class FileField < Element
-        # Create an instance of the file object
-        def initialize( container,  how , what )
-            @container = container
-            @how = how
-            @what = what
-            super( @o )
-            @o = @container.getObject( @how, @what , ["file"] )
-
-        end
-
-        def set(setPath)
-            assert_exists	        
-            Thread.new {
-                clicker = WinClicker.new
-                clicker.setFileRequesterFileName_newProcess(setPath)
-            }
-            # may need to experiment with this value.  if it takes longer than this
-            # to open the new external Ruby process, the current thread may become
-            # blocked by the file chooser.
-            sleep(1)	
-            self.click
-        end
-    end
-
-    # This class is the class for radio buttons and check boxes. 
-    # It contains methods common to both.
-    # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or Watir::Container#radio methods
-    #
-    # most of the methods available to this element are inherited from the Element class
-    #
-    class RadioCheckCommon < Element
-
-        def initialize( container,  how , what , type, value=nil )
-            @container = container
-            @how = how
-            @what = what
-            @type = type
-            @value = value
-            @o = @container.getObject(@how, @what, @type, @value)
-            super( @o )
-        end
-
-        # BUG: rename me
-        # This method determines if a radio button or check box is set.
-        # Returns true is set/checked or false if not set/checked.
-        # Raises UnknownObjectException if its unable to locate an object.
-        def isSet?
-            assert_exists
-            return @o.checked
-        end
-        alias getState isSet?
-        alias checked? isSet?
-        
-        # This method clears a radio button or check box. Note, with radio buttons one of them will almost always be set.
-        # Returns true if set or false if not set.
-        #   Raises UnknownObjectException if its unable to locate an object
-        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
-        def clear
-            assert_exists
-            assert_enabled
-            highlight(:set)
-            set_clear_item(false)
-            highlight(:clear)
-        end
-        
-        # This method sets the radio list item or check box.
-        #   Raises UnknownObjectException  if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
-        def set
-            assert_exists
-            assert_enabled
-            highlight(:set)
-            set_clear_item(true)
-            highlight(:clear)
-        end
-    
-        # This method is the common code for setting or clearing checkboxes and radio.
-        def set_clear_item(set)
-            @o.checked = set
-            @o.fireEvent("onClick")
-            @container.wait
-        end
-        private :set_clear_item
-    
-    end
-
-    #--
-    #  this class is only used to change the name of the class that radio buttons use to something more meaningful
-    #  and to make the docs better
-    #++
-    # This class is the watir representation of a radio button.        
-    class Radio < RadioCheckCommon 
-
-    end
-
-
-    # This class is the watir representation of a check box.
-    class CheckBox < RadioCheckCommon 
-
-        # This method, with no arguments supplied, sets the check box.
-        # If the optional set_or_clear is supplied, the checkbox is set, when its true and cleared when its false
-        #   Raises UnknownObjectException  if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
-        def set( set_or_clear=true )
-            assert_exists
-            assert_enabled
-            highlight( :set)
-
-            if set_or_clear == true
-                if @o.checked == false
-                    set_clear_item( true )
-                end
-            else
-                self.clear
-            end
-            highlight( :clear )
-        end
-        
-        # This method clears a check box. 
-        # Returns true if set or false if not set.
-        #   Raises UnknownObjectException if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
-        def clear
-            assert_exists
-            assert_enabled
-            highlight( :set)
-            if @o.checked == true
-                set_clear_item( false )
-            end
-            highlight( :clear)
-        end
-        
-
-    end
-
     # This class is the main class for Text Fields
     # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
     #
     # most of the methods available to this element are inherited from the Element class
     #
-    class TextField < Element
-        def locate
-            if @how == :from_object
-                ole_object = @what
-            else
-                ole_object = @container.getObject(@how, @what, supported_types)
-            end
-            @o = ole_object
-        end
-        def supported_types
+    class TextField < Button #!
+        def input_types
             return ["text", "password", "textarea"] 
         end
-        private :supported_types
-
-        def initialize(container, how, what)
-            @container = container
-            @how = how
-            @what = what
-            super(nil)
-        end
+        private :input_types
 
         def_wrap_guard :size
         def_wrap_guard :maxlength
@@ -3438,9 +3292,10 @@ module Watir
             super
         end
 
-        def supported_types
+        def input_types
             return ["hidden"]
         end
+        private :input_types
        
         # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
@@ -3460,6 +3315,143 @@ module Watir
         # this method will do nothing, as you cant set focus to a hidden field
         def focus
         end
+
+    end
+
+    # File dialog
+    class FileField < Element
+        # Create an instance of the file object
+        def initialize( container,  how , what )
+            @container = container
+            @how = how
+            @what = what
+            super( @o )
+            @o = @container.getObject( @how, @what , ["file"] )
+
+        end
+
+        def set(setPath)
+            assert_exists	        
+            Thread.new {
+                clicker = WinClicker.new
+                clicker.setFileRequesterFileName_newProcess(setPath)
+            }
+            # may need to experiment with this value.  if it takes longer than this
+            # to open the new external Ruby process, the current thread may become
+            # blocked by the file chooser.
+            sleep(1)	
+            self.click
+        end
+    end
+
+    # This class is the class for radio buttons and check boxes. 
+    # It contains methods common to both.
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or Watir::Container#radio methods
+    #
+    # most of the methods available to this element are inherited from the Element class
+    #
+    class RadioCheckCommon < Element
+
+        def initialize( container,  how , what , type, value=nil )
+            @container = container
+            @how = how
+            @what = what
+            @type = type
+            @value = value
+            @o = @container.getObject(@how, @what, @type, @value)
+            super( @o )
+        end
+
+        # BUG: rename me
+        # This method determines if a radio button or check box is set.
+        # Returns true is set/checked or false if not set/checked.
+        # Raises UnknownObjectException if its unable to locate an object.
+        def isSet?
+            assert_exists
+            return @o.checked
+        end
+        alias getState isSet?
+        alias checked? isSet?
+        
+        # This method clears a radio button or check box. Note, with radio buttons one of them will almost always be set.
+        # Returns true if set or false if not set.
+        #   Raises UnknownObjectException if its unable to locate an object
+        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
+        def clear
+            assert_exists
+            assert_enabled
+            highlight(:set)
+            set_clear_item(false)
+            highlight(:clear)
+        end
+        
+        # This method sets the radio list item or check box.
+        #   Raises UnknownObjectException  if its unable to locate an object
+        #         ObjectDisabledException  if the object is disabled 
+        def set
+            assert_exists
+            assert_enabled
+            highlight(:set)
+            set_clear_item(true)
+            highlight(:clear)
+        end
+    
+        # This method is the common code for setting or clearing checkboxes and radio.
+        def set_clear_item(set)
+            @o.checked = set
+            @o.fireEvent("onClick")
+            @container.wait
+        end
+        private :set_clear_item
+    
+    end
+
+    #--
+    #  this class is only used to change the name of the class that radio buttons use to something more meaningful
+    #  and to make the docs better
+    #++
+    # This class is the watir representation of a radio button.        
+    class Radio < RadioCheckCommon 
+
+    end
+
+
+    # This class is the watir representation of a check box.
+    class CheckBox < RadioCheckCommon 
+
+        # This method, with no arguments supplied, sets the check box.
+        # If the optional set_or_clear is supplied, the checkbox is set, when its true and cleared when its false
+        #   Raises UnknownObjectException  if its unable to locate an object
+        #         ObjectDisabledException  if the object is disabled 
+        def set( set_or_clear=true )
+            assert_exists
+            assert_enabled
+            highlight( :set)
+
+            if set_or_clear == true
+                if @o.checked == false
+                    set_clear_item( true )
+                end
+            else
+                self.clear
+            end
+            highlight( :clear )
+        end
+        
+        # This method clears a check box. 
+        # Returns true if set or false if not set.
+        #   Raises UnknownObjectException if its unable to locate an object
+        #         ObjectDisabledException  if the object is disabled 
+        def clear
+            assert_exists
+            assert_enabled
+            highlight( :set)
+            if @o.checked == true
+                set_clear_item( false )
+            end
+            highlight( :clear)
+        end
+        
 
     end
 
