@@ -725,6 +725,36 @@ module Watir
             return Ps.new(self)
         end
 
+        # This is the main method for accessing pre tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/pre.asp?frame=true
+        #  *  how   - symbol - how we access the pre, :index, :id, :name 
+        #  *  what  - string, integer or re , what we are looking for, 
+        #
+        # returns a P object
+        #
+        # Typical Usage
+        # 
+        #   ie.pre(:id, /list/)                 # access the first p tag  that matches list.
+        #   ie.pre(:index,2)                    # access the second p tag on the page
+        #   ie.pre(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   
+        def pre(how, what)
+            return Pre.new(self, how, what)
+        end
+
+        # this is the main method for accessing the ps iterator. 
+        # 
+        # Returns a Pres object
+        #
+        # Typical usage:
+        #
+        #   ie.pres.each { |pre| puts pre.to_s }            # iterate through all the pre tags on the page
+        #   ie.pres[1].to_s                             # goto the first pre tag on the page                                   
+        #   ie.pres.length                              # show how many pre tags are on the page.
+        #
+        def pres
+            return Pres.new(self)
+        end
+
         # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
         #  *  how   - symbol - how we access the label, :index, :id, :for
         #  *  what  - string, integer or re , what we are looking for, 
@@ -1611,6 +1641,16 @@ module Watir
             end
         end
 
+		def show_pres
+			pres = document.getElementsByTagName( "PRE" )
+			puts "Found #{ pres.length } pre tags"
+			index = 1
+			pres.each do |d|
+                puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
+                index+=1
+            end
+        end
+
         # this method shows all the spans availble in the document
         def show_spans
             spans = document.getElementsByTagName("SPAN")
@@ -2168,7 +2208,7 @@ module Watir
                 
     end # class Form
     
-    # this class contains items that are common between the span and div objects
+    # this class contains items that are common between the span, div, and pre objects
     # it would not normally be used directly
     #
     # many of the methods available to this object are inherited from the Element class
@@ -2212,6 +2252,12 @@ module Watir
             return r.join("\n")
          end
     end
+	
+	class Pre < SpanDivCommon
+		TAG = 'PRE'
+		def tag; TAG; end
+		def self.tag; TAG; end
+	end
 
     class P < SpanDivCommon 
         TAG = 'P'
@@ -3678,6 +3724,20 @@ module Watir
             @show_attributes.add("htmlFor", 20)
         end
     end
+	
+    # this class accesses the p tags in the document as a collection
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
+    #
+	class Pres < ElementCollections
+		include CommonCollection
+		def element_class; Pre; end
+		
+		def set_show_items
+			super
+			@show_attributes.delete( "name" )
+			@show_attributes.add( "className", 20 )
+		end
+	end
 
     # this class accesses the p tags in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
