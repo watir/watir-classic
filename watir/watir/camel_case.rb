@@ -36,5 +36,9 @@ module Watir
     class Form        
         alias waitForIE wait 
     end
-    
+    class TextField
+        alias readOnly? :readonly?
+        alias getContents value
+        alias maxLength maxlength
+    end    
 end
