@@ -220,6 +220,10 @@ module Watir
         end 
         private :process_default
 
+        #
+        #           Factory Methods
+        #
+
         # this method is the main way of accessing a frame 
         #   *  how   - how the frame is accessed. This can also just be the name of the frame
         #   *  what  - what we want to access.
@@ -253,7 +257,7 @@ module Watir
         #                  - :index
         #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
         def table(how, what)
-            return Table.new( self , how, what)
+            return Table.new(self, how, what)
         end
 
         # this is the main method for accessing the tables iterator. It returns a Tables object
@@ -272,7 +276,7 @@ module Watir
         # 
         # returns a TableCell Object
         def cell(how, what)
-           return TableCell.new( self, how, what)
+           return TableCell.new(self, how, what)
         end
 
         # this method accesses a table row. 
@@ -374,7 +378,7 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field(how, what = nil) # BUG do we need to have default logic here?
+        def text_field(how, what)
             return TextField.new(self, how, what)
         end
 
@@ -1788,7 +1792,7 @@ module Watir
         end
                     
         private
-        def self.def_wrap(ruby_method_name, ole_method_name=nil)
+        def self.def_wrap(ruby_method_name, ole_method_name = nil)
             ole_method_name = ruby_method_name unless ole_method_name
             class_eval "def #{ruby_method_name}
                           assert_exists
@@ -3232,7 +3236,6 @@ module Watir
 
     end
 
-
     # This class is the main class for Text Fields
     # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
     #
@@ -3240,15 +3243,15 @@ module Watir
     #
     class TextField < Element
         def locate
-            if(@how != :from_object) then
-                ole_object = @container.getObject(@how, @what, supported_types)
-            else
+            if @how == :from_object
                 ole_object = @what
+            else
+                ole_object = @container.getObject(@how, @what, supported_types)
             end
             @o = ole_object
         end
         def supported_types
-            return ["text" , "password", "textarea"] 
+            return ["text", "password", "textarea"] 
         end
         private :supported_types
 
@@ -3259,28 +3262,12 @@ module Watir
             super(nil)
         end
 
-        def size
-            assert_exists
-            begin 
-                s=@o.size
-            rescue
-                # TextArea does not support size
-                s=""
-            end
-            return s
+        def_wrap_guard :size
+        def_wrap_guard :maxlength
 
-        end
-
-        def maxLength
-            assert_exists
-            begin 
-                s=@o.maxlength
-            rescue
-                # TextArea does not support maxLength
-                s=""
-            end
-            return s
-        end
+        # Returns true or false if the text field is read only.
+        #   Raises  UnknownObjectException if the object can't be found.
+        def_wrap :readonly?, :readOnly
 
         def text_string_creator
             n = []
@@ -3290,40 +3277,24 @@ module Watir
 
             return n
          end
+         private :text_string_creator
 
          def to_s
             assert_exists
             r = string_creator
-            r=r + text_string_creator
+            r += text_string_creator
             return r.join("\n")
          end
         
-        # This method returns true or false if the text field is read only.
-        #   Raises  UnknownObjectException if the object can't be found.
-        def readonly?
-            assert_exists
-            return @o.readOnly 
-        end
-        alias readOnly? :readonly?
-
         def assert_not_readonly
-            raise ObjectReadOnlyException , "Textfield #{@how} and #{@what} is read only"  if self.readonly?
+            raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only." if self.readonly?
         end                
-        #--
-        # BUG: rename me
-        #++
-        # This method returns the current contents of the text field as a string.
-        #   Raises  UnknownObjectException if the object can't be found
-        def getContents()
-            assert_exists
-            return self.value
-        end
-        
-        # This method returns true orfalse if the text field contents is either a string match 
+
+        # This method returns true or false if the text field contents is either a string match 
         # or a regular expression match to the supplied value.
         #   Raises  UnknownObjectException if the object can't be found
         #   * containsThis - string or reg exp  -  the text to verify 
-        def verify_contains( containsThis )
+        def verify_contains( containsThis ) # BUG: Should have same name and semantics as IE#contains_text (prolly make this work for all elements)
             assert_exists            
             if containsThis.kind_of? String
                 return true if self.value == containsThis
@@ -3428,13 +3399,6 @@ module Watir
             @o.value = v.to_s
         end
 
-        def fire_key_events
-            @o.fireEvent("onKeyDown")
-            @o.fireEvent("onKeyPress")
-            @o.fireEvent("onKeyUp")
-        end
-        private :fire_key_events
-
         # This method is used internally by setText and appendText
         # It should not be used externally.
         #   * value   - string  - The string to enter into the text field
@@ -3454,7 +3418,9 @@ module Watir
                 c = value[i,1]
                 #@container.log  " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
-                fire_key_events
+            @o.fireEvent("onKeyDown")
+            @o.fireEvent("onKeyPress")
+            @o.fireEvent("onKeyUp")
             end
             
         end
@@ -3468,7 +3434,7 @@ module Watir
     #
     class Hidden < TextField 
 
-        def initialize( container,  how , what )
+        def initialize(container,  how, what)
             super
         end
 
@@ -3476,7 +3442,6 @@ module Watir
             return ["hidden"]
         end
        
-
         # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
             self.value=n
@@ -3494,7 +3459,6 @@ module Watir
 
         # this method will do nothing, as you cant set focus to a hidden field
         def focus
-            # do nothing!
         end
 
     end
