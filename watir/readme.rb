@@ -148,6 +148,7 @@ Contributors:
    Jared Luxenberg
    Alexey Verkhovsky
    Tuyet Cong-Ton-Nu
+   Jeff Wood
 
 Acknowledgements:
    Chris Morris
