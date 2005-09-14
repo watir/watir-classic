@@ -1107,6 +1107,8 @@ module Watir
         include Watir::Exception
         include Container 
 
+        @@extra = nil
+
         # The revision number (according to CVS)
         REVISION = "$Revision$"
 
@@ -1236,6 +1238,10 @@ module Watir
         end
         
         def create_browser_window
+            unless @@extra
+                @@extra = WIN32OLE.new('InternetExplorer.Application')
+                @@extra.visible = false
+            end
             @ie = WIN32OLE.new('InternetExplorer.Application')
         end
         private :create_browser_window
