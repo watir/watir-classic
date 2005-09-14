@@ -25,5 +25,10 @@ class TC_Fields < Test::Unit::TestCase
         assert($ie.contains_text('PASS'))
     end
     
+    def test_autoregistration
+        system("regsvr32.exe /s /u " + "#{File.dirname(__FILE__)}/../watir/AutoItX3.dll".gsub('/', '\\'))
+        assert_raises(WIN32OLERuntimeError) { WIN32OLE.new('AutoItX3.Control') }
+        assert_nothing_raised { $ie.send_keys('{tab}') }
+    end    
 end
  

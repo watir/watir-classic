@@ -1360,31 +1360,41 @@ module Watir
         
         # Make the window come to the front
         def bring_to_front
-    		autoit = WIN32OLE.new('AutoItX3.Control')
     		autoit.WinActivate title, ''		
      	end
 
      	def front?
-    		autoit = WIN32OLE.new('AutoItX3.Control')
     		1 == autoit.WinActive(title, '')		
      	end	     	         
 
+        private
         def set_window_state (state)
-    		autoit = WIN32OLE.new('AutoItX3.Control')
 		    autoit.WinSetState title, '', autoit.send(state)			
         end
-        private :set_window_state
+
+        private
+        def autoit
+            unless @autoit
+                begin
+                    @autoit = WIN32OLE.new('AutoItX3.Control')
+                rescue WIN32OLERuntimeError
+                    system("regsvr32.exe /s " + "#{dir}/watir/AutoItX3.dll".gsub('/', '\\'))
+                    @autoit = WIN32OLE.new('AutoItX3.Control')
+                end
+            end
+            @autoit
+        end        
                 
 		# Send key events to IE window. 
 		# See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
 		# for complete documentation on keys supported and syntax.
+        public
         def send_keys (key_string)
-            autoit = WIN32OLE.new 'AutoItX3.Control' 
             autoit.WinActivate title
             autoit.Send key_string
         end
 
-        # used by the popup code only
+        private
         def dir
             return File.expand_path(File.dirname(__FILE__))
         end
@@ -1394,6 +1404,7 @@ module Watir
         #
         
         # Return the current document
+        public
         def document
             return @ie.document
         end
