@@ -97,7 +97,6 @@ class TC_Links < Test::Unit::TestCase
         assert_equal( ""      , $ie.link(:index, 1).name )
         assert_equal( ""      , $ie.link(:index, 1).id )
         assert_equal( false   , $ie.link(:index, 1).disabled )  
-        assert_equal( "link"  , $ie.link(:index, 1).type )
         assert_equal( ""      , $ie.link(:index, 1).class_name)
         assert_equal( "link_class_1"      , $ie.link(:index, 2).class_name)
         
@@ -148,8 +147,8 @@ class TC_Frame_Links < Test::Unit::TestCase
         assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
         assert_false($ie.frame("buttonFrame").link(:text, "missing").exists?)   
         
-        assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.frame("buttonFrame").link(:index, 199).href }  
-        assert_match( /links2/ ,$ie.frame("buttonFrame").link(:index, 1).href )
+        assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { $ie.frame("buttonFrame").link(:index, 199).href }  
+        assert_match(/links2/, $ie.frame("buttonFrame").link(:index, 1).href)
         
         count =0
         $ie.frame("buttonFrame").links.each do |l|

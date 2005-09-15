@@ -191,7 +191,6 @@ class TC_Fields < Test::Unit::TestCase
         assert(          $ie.label(:index,1).enabled?)
         
         assert_equal("label2", $ie.label(:index,2).id )
-        assert_equal("Label" , $ie.label(:index,2).type )
         
         assert_equal("Password With ID ( the text here is a label for it )" , $ie.label(:index,3).innerText)
         assert_equal("password1", $ie.label(:index,3).for)

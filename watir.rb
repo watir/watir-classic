@@ -1845,8 +1845,8 @@ module Watir
         end
 
         public
-        # returns the type of the element
-        def_wrap_guard :type        
+        # returns the type of the element 
+        def_wrap_guard :type #BUG: should only be defined for input elements        
         # returns the name of the element (as defined in html)
         def_wrap_guard :name
         # returns the id of the element
@@ -2240,25 +2240,18 @@ module Watir
     #
     # many of the methods available to this object are inherited from the Element class
     #
-    class SpanDivCommon < Element
+    class NonControlElement < Element
         include Watir::Exception
         
         def locate
-            @o = @container.getNonControlObject(tag , @how, @what)
+            @o = @container.getNonControlObject(tag, @how, @what)
         end            
 
         def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            super( @o )
-        end
-
-        # this method returns the type of  object
-        # raises an ObjectNotFound exception if the object cannot be found
-        def type
-            assert_exists
-            return self.class.name[self.class.name.index("::")+2 .. self.class.name.length ]
+            super(@o)
         end
 
         # this method is used to populate the properties in the to_s method
@@ -2280,13 +2273,13 @@ module Watir
          end
     end
 	
-	class Pre < SpanDivCommon
+	class Pre < NonControlElement
 		TAG = 'PRE'
 		def tag; TAG; end
 		def self.tag; TAG; end
 	end
 
-    class P < SpanDivCommon 
+    class P < NonControlElement 
         TAG = 'P'
         def tag; TAG; end
         def self.tag; TAG; end
@@ -2294,36 +2287,23 @@ module Watir
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
     # It would not normally be created by users
-    class Div < SpanDivCommon 
+    class Div < NonControlElement 
         TAG = 'DIV'
         def tag; TAG; end
         def self.tag; TAG; end
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
-    class Span < SpanDivCommon 
+    class Span < NonControlElement 
         TAG = 'SPAN'
         def tag; TAG; end
         def self.tag; TAG; end
     end
 
-    # this class is used to access a label object on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
-    #
-    # many of the methods available to this object are inherited from the Element class
-    #
-    class Label < Element
-        def initialize(container, how, what)
-            @container = container
-            @how = how
-            @what = what
-            @o = @container.getNonControlObject("LABEL" , @how, @what )
-            super( @o )
-        end
-
-        # return the type of this object
-        def type
-            assert_exists
-            return "Label"
+    # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
+    class Label < NonControlElement
+        def tag
+            "LABEL"
         end
 
         # return the ID of the control that this label is associated with
@@ -2346,7 +2326,6 @@ module Watir
             r=r + label_string_creator
             return r.join("\n")
         end
-
     end
 
     # This class is used for dealing with tables.
@@ -2794,12 +2773,6 @@ module Watir
             return @o.invoke("height").to_s
         end
 
-        # returns the type of the object - 'image'
-        def type 
-            assert_exists
-            return "image"
-        end
- 
         # This method attempts to find out if the image was actually loaded by the web browser. 
         # If the image was not loaded, the browser is unable to determine some of the properties. 
         # We look for these missing properties to see if the image is really there or not. 
@@ -2881,12 +2854,6 @@ module Watir
                 @o = nil
             end
             super( @o )
-        end
-
-        # returns 'link' as the object type
-        def type
-            assert_exists
-            return "link"
         end
 
         # returns the text displayed by the link
