@@ -224,6 +224,22 @@ module Watir
         #           Factory Methods
         #
 
+        private
+        def self.def_creator(method_name, klass_name = nil)
+            klass_name ||= method_name.to_s.capitalize
+            class_eval "def #{method_name}(how, what)
+                          #{klass_name}.new(self, how, what)
+                        end"
+        end
+
+        def self.def_creator_with_default(method_name, default_symbol)
+            klass_name = method_name.to_s.capitalize
+            class_eval "def #{method_name}(how, what = nil)
+                          how, what = process_default :#{default_symbol}, how, what
+                          #{klass_name}.new(self, how, what)
+                        end"
+        end
+                    
         # this method is the main way of accessing a frame 
         #   *  how   - how the frame is accessed. This can also just be the name of the frame
         #   *  what  - what we want to access.
@@ -233,19 +249,14 @@ module Watir
         #   ie.frame(:index, 1) 
         #   ie.frame(:name , 'main_frame')
         #   ie.frame('main_frame')        # in this case, just a name is supplied
-        def frame(how, what = nil)
-            how, what = process_default :name, how, what
-            return Frame.new(self, how, what)
-        end
- 
+        public
+        def_creator_with_default :frame, :name
+
         # this method is used to access a form.
         # available ways of accessing it are, :index , :name, :id, :method, :action
         #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
         #  * what   - String - the text associated with the symbol
-        def form(how, what = nil)
-            how, what = process_default :name, how, what
-            return Form.new(self, how, what)      
-        end
+        def_creator_with_default :form, :name
 
         # This method is used to get a table from the page. 
         # :index (1 based counting)and :id are supported. 
@@ -256,9 +267,7 @@ module Watir
         #                  - :id
         #                  - :index
         #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
-        def table(how, what)
-            return Table.new(self, how, what)
-        end
+        def_creator :table
 
         # this is the main method for accessing the tables iterator. It returns a Tables object
         #
@@ -275,17 +284,13 @@ module Watir
         # how - symbol - how we access the cell,  :id is supported
         # 
         # returns a TableCell Object
-        def cell(how, what)
-           return TableCell.new(self, how, what)
-        end
+        def_creator :cell, :TableCell
 
         # this method accesses a table row. 
         # how - symbol - how we access the row,  :id is supported
         # 
         # returns a TableRow object
-        def row(how, what)
-           return TableRow.new(self, how, what)
-        end
+        def_creator :row, :TableRow
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
         #  *  how   - symbol - how we access the button 
@@ -315,10 +320,7 @@ module Watir
         # if only a single parameter is supplied,  then :value is used 
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
-        def button(how, what = nil)
-            how, what = process_default :value, how, what
-            return Button.new(self, how, what)
-        end
+        def_creator_with_default :button, :value
 
         # this is the main method for accessing the buttons iterator. It returns a Buttons object
         #
@@ -343,9 +345,7 @@ module Watir
         #    ie.file_field(:name, 'upload')                   # access the file upload field with a name of upload
         #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
         #
-        def file_field(how, what)
-            return FileField.new(self, how, what)
-        end
+        def_creator :file_field, :FileField
         
         # this is the main method for accessing the file_fields iterator. It returns a FileFields object
         #
@@ -378,9 +378,7 @@ module Watir
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
-        def text_field(how, what)
-            return TextField.new(self, how, what)
-        end
+        def_creator :text_field, :TextField
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
         #
@@ -538,8 +536,8 @@ module Watir
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
-        def radio(how, what = nil, value = nil)
-            return Radio.new(self, how, what, ["radio"], value) # BUG
+        def radio(how, what = nil, value = nil) # BUG: default logic
+            return Radio.new(self, how, what, ["radio"], value) 
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -581,7 +579,7 @@ module Watir
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #
-        def link(how, what = nil)
+        def link(how, what = nil) # BUG: default logic
             return Link.new(self, how, what)
         end
 
@@ -619,7 +617,7 @@ module Watir
         #   ie.image(:index,2)                  # access the second image on the page
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
-        def image(how , what = nil)
+        def image(how, what = nil) # BUG: default logic
             return Image.new(self, how, what)
         end
         
@@ -657,7 +655,7 @@ module Watir
             return Div.new(self, how, what)
         end
 
-        # this is the main method for accessing the divs iterator. Returns a Divs object
+        # this is the main method for accessing the divs iterator. Returns a Divs collection
         #
         # Typical usage:
         #
@@ -1813,7 +1811,7 @@ module Watir
         def ole_object=(o)
             @o = o
         end
-                    
+
         private
         def self.def_wrap(ruby_method_name, ole_method_name = nil)
             ole_method_name = ruby_method_name unless ole_method_name
