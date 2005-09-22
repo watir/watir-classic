@@ -876,172 +876,34 @@ module Watir
             return o
         end
 
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # this method finds the specified image
-        #    * how  - symbol - how to look
-        #    * what - string or regexp - what to look ofr
-        def getImage( how, what )
-            elements = document.getElementsByTagName("IMG")
+        # returns the ole object for the specified element
+        def locate_tagged_element(tag, how, what)
+            elements = document.getElementsByTagName(tag)
             what = what.to_i if how == :index
+            how = :href if how == :url
             o = nil
             count = 1
-            elements.each do |img|
+            elements.each do |object|
                 next if o
-                element = Element.new(img)
+                element = Element.new(object)
                 if how == :index
                     attribute = count                        
                 else
-                    attribute = element.send(how)
+                    begin
+                        attribute = element.send(how)
+                    rescue NoMethodError
+                        raise MissingWayOfFindingObjectException, 
+                            "#{how} is an unknown way of finding a <#{tag}> element (#{what})"
+                    end
                 end
-                o = img if what.matches(attribute)
+                o = object if what.matches(attribute)
                 count += 1
             end # do
             return o
-        end
+        end  
 
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # This method gets a link from the document. This is a hyperlink, generally declared in the <a href="http://testsite">test site</a> HTML tag.
-        #   * how  - symbol - how we get the link Supported types are:
-        #                     :index - the link at position x , 1 based
-        #                     :url   - get the link that has a url that matches. A regular expression match is performed
-        #                     :text  - get link based on the supplied text. uses either a string or regular expression match
-        #   * what - depends on how - an integer for index, a string or regexp for url and text
-        def getLink( how, what )
-            links = document.getElementsByTagName('A')
-            
-            # Guard ensures watir won't crash if somehow the list of links is nil
-            if (links == nil)
-                raise UnknownObjectException, "Unknown Object in getLink: attempted to click a link when no links present"
-            end
-            
-            link = nil
-            case how
-            when :index
-                begin
-                    link = links[ (what-1).to_s ]
-                rescue
-                    link=nil
-                end
-                
-            when :url
-                links.each do |thisLink|
-                    if what.matches(thisLink.href) 
-                        link = thisLink if link == nil
-                    end
-                end
-                
-            when :text
-                links.each do |thisLink|
-                    if what.matches(thisLink.innerText.strip) 
-                        link = thisLink if link == nil
-                    end
-                end
-                
-            when :id
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("id"))
-                        link = thisLink if link == nil
-                    end
-                end
-            when :name
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("name"))
-                        link = thisLink if link == nil
-                    end
-                end
+    end # module
 
-            when :title
-                links.each do |thisLink|
-                    if what.matches(thisLink.invoke("title"))
-                        link = thisLink if link == nil
-                    end
-                end
-                
-            when :beforeText
-                links.each do |thisLink|
-                    if what.matches(thisLink.getAdjacentText("afterEnd").strip)
-                        link = thisLink if link == nil
-                    end
-                end
-
-            when :afterText
-                links.each do |thisLink|
-                    if what.matches(thisLink.getAdjacentText("beforeBegin").strip)
-                        link = thisLink if link == nil
-                    end
-                end
-            else
-                raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a link (#{what})"
-            end
-            
-            # if no link found, link will be a nil.  This is OK.  Actions taken on links (e.g. "click") should rescue 
-            # the nil-related exceptions and provide useful information to the user.
-            return link
-        
-        end
-
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # This method gets a table row or cell 
-        #   * how  - symbol - how we get the link row or cell types are:
-        #            id
-        #   * what -  a string or regexp 
-        def getTablePart( part , how , what ) # BUG: how and what are ignored!
-             doc = document
-             parts = doc.getElementsByTagName( part )
-             n = nil
-             parts.each do | p |
-                 next unless n==nil
-                 if what.matches( p.invoke("id") )
-                     n = p 
-                 end
-             end
-             return n
-        end
-
-        # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
-        #
-        # this method is used to get elements like SPAN or DIV
-        def getNonControlObject(part , how, what )
-
-             doc = document
-             parts = doc.getElementsByTagName( part )
-             n = nil
-             case how
-                when :id
-                    attribute = "id"
-                when :name
-                    attribute = "name"
-                when :title
-                    attribute = "title"
-                when :for   # only applies to labels
-                    attribute = "htmlFor"
-              end
-
-              if attribute
-                 parts.each do | p |
-                     next unless n==nil
-                     n = p if what.matches( p.invoke(attribute) )
-                 end
-              elsif how == :index
-                  count = 1
-                  parts.each do | p |
-                     next unless n==nil
-                     n = p if what == count
-                     count +=1
-                  end
-              else
-                  raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a #{part} (#{what})"
-              end
-            return n
-
-        end
-
-    end
-
-    
     # This class is the main Internet Explorer Controller
     # An instance of this must be created to access Internet Explorer.
     class IE
@@ -1802,6 +1664,12 @@ module Watir
         def_wrap_guard :alt
         def_wrap_guard :src
         
+        # returns the url the link points to
+        def_wrap :href # link only
+
+        # return the ID of the control that this label is associated with
+        def_wrap :for, :htmlFor # label only
+        
         # returns the class name of the element
         # raises an ObjectNotFound exception if the object cannot be found
         def_wrap :class_name, :className
@@ -2208,7 +2076,7 @@ module Watir
         include Watir::Exception
         
         def locate
-            @o = @container.getNonControlObject(self.class::TAG, @how, @what)
+            @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
         end            
         
         def initialize(container, how, what)
@@ -2263,9 +2131,6 @@ module Watir
     # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
     class Label < NonControlElement
         TAG = 'LABEL'
-
-        # return the ID of the control that this label is associated with
-        def_wrap :for, :htmlFor
 
         # this method is used to populate the properties in the to_s method
         def label_string_creator
@@ -2578,7 +2443,7 @@ module Watir
             if how == :direct
                 @o = what
             else
-                @o = container.getTablePart( "TR" , how , what )   
+                @o = container.locate_tagged_element( "TR" , how , what )   
             end
             update_row_cells
             super( @o )   
@@ -2634,7 +2499,7 @@ module Watir
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
-                 @o = container.getTablePart( "TD" , how , what )   
+                 @o = container.locate_tagged_element( "TD" , how , what )   
              end
              super( @o )   
              @how = how   
@@ -2672,7 +2537,7 @@ module Watir
         end
         
         def locate
-            @o = @container.getImage(@how, @what)
+            @o = @container.locate_tagged_element('IMG', @how, @what)
         end            
 
         # this method produces the properties for an image as an array
@@ -2801,21 +2666,18 @@ module Watir
         
         def locate
             begin
-                @o = @container.getLink(@how, @what)
+                @o = @container.locate_tagged_element('A', @how, @what)
             rescue UnknownObjectException
                 @o = nil
             end
         end
 
         # returns the text displayed by the link
-        def innerText
+        def innerText # BUG: duplicate?
             assert_exists
             return @o.innerText.strip
         end
         alias text innerText # BUG: move to camel_case.rb
-
-        # returns the url the link points to
-        def_wrap :href
 
         # if an image is used as part of the link, this will return true      
         def link_has_image
@@ -2825,7 +2687,7 @@ module Watir
         end
 
         # this method returns the src of an image, if an image is used as part of the link
-        def src
+        def src # BUG?
             assert_exists
             if @o.getElementsByTagName("IMG").length > 0
                 return  @o.getElementsByTagName("IMG")[0.to_s].src
