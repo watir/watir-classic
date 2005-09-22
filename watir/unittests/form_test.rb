@@ -99,7 +99,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_false($ie.form(:action, "missing").exists?)   
     end
 
-    def test_getObject_when_non_watir_object_before_it
+    def test_index_other_element_before_it
         # test for bug reported by Scott Pack,  http://rubyforge.org/pipermail/wtr-general/2005-June/002223.html
         assert_equal("check1" , $ie.checkbox(:index,1).name )
     end
