@@ -861,7 +861,17 @@ module Watir
                 next if o
                 element = Element.new(object)
                 if types.include?(element.type)
-                    if what.matches((how == :index) ? object_index : element.send(how)) 
+                    if how == :index
+                        attribute = object_index
+                    else
+                        begin
+                            attribute = element.send(how)
+                        rescue NoMethodError
+                            raise MissingWayOfFindingObjectException, 
+                            "#{how} is an unknown way of finding a <INPUT> element (#{what})"
+                        end
+                    end
+                    if what.matches(attribute) 
                         if value
                             if element.value == value
                                 o = object
@@ -2180,8 +2190,8 @@ module Watir
             
             table = nil
            
-            if(@how != :from_object) then
-                table=get_table
+            unless @how == :from_object
+                table = container.locate_tagged_element('TABLE', how, what)
             else
                 table = @what
             end
@@ -2190,33 +2200,6 @@ module Watir
             @o = table
             super( @o )
         end
-
-        # --- 
-        # BUG: should be private
-        # +++
-        # this method finds the specified table on the page
-        def get_table
-                allTables = @container.document.getElementsByTagName("TABLE")
-                @container.log "There are #{ allTables.length } tables"
-                tableIndex = 1
-                table=nil
-                allTables.each do |t|
-                    next  unless table == nil
-                    case @how
-                        when :id
-                        if @what.matches( t.invoke("id").to_s )
-                            table = t
-                        end
-                        when :index
-                        if tableIndex == @what.to_i
-                            table = t
-                        end
-                    end
-                    tableIndex = tableIndex + 1
-                end
-            return table
-        end
-
 
         # override the highlight method, as if the tables rows are set to have a background color, 
         # this will override the table background color,  and the normal flsh method wont work

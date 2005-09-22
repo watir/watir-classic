@@ -12,20 +12,21 @@ class TC_Tables < Test::Unit::TestCase
     end
         
     def test_Table_Exists
-        assert_false($ie.table(:id , 'missingTable').exists? )
-        assert_false($ie.table(:index, 33).exists? )
+        assert_false($ie.table(:id, 'missingTable').exists?)
+        assert_false($ie.table(:index, 33).exists?)
         
-        assert($ie.table(:id, 't1').exists? )
-        assert($ie.table(:id, /t/).exists? )
-        assert_false($ie.table(:id , /missing_table/).exists? )
+        assert($ie.table(:id, 't1').exists?)
+        assert($ie.table(:id, /t/).exists?)
+        assert_false($ie.table(:id , /missing_table/).exists?)
         
-        assert($ie.table(:index, 1).exists? )
-        assert($ie.table(:index, 2).exists? )
+        assert($ie.table(:index, 1).exists?)
+        assert($ie.table(:index, 2).exists?)
     end
     
     def test_rows
-        assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').row_count }
-        assert_raises( UnknownTableException  ){ $ie.table(:index , 66).row_count }
+        assert_raises( UnknownTableException ){ $ie.table(:id , 'missingTable').row_count }
+        assert_raises( UnknownTableException ){ $ie.table(:index , 66).row_count }
+        assert_raises(MissingWayOfFindingObjectException){ $ie.table(:bad_attribute, 99).row_count }
         
         assert_equal( 2 , $ie.table(:index , 1).row_count)
         assert_equal( 5 , $ie.table(:id, 't1').row_count)   # 4 rows and a header 
