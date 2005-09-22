@@ -87,6 +87,12 @@ class Regexp
     end
 end
 
+class Integer
+    def matches (x)
+        return self == x
+    end
+end
+
 # ARGV needs to be deleted to enable the Test::Unit functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
 # Note: this means that watir must be require'd BEFORE test/unit.
@@ -845,74 +851,28 @@ module Watir
         def getObject(how, what, types, value = nil)
             elements = ole_inner_elements 
             how = :value if how == :caption
+            what = what.to_i if how == :index
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
             o = nil
-            if how == :index
-                index =  what.to_i
-                log "getting object #{types} at index #{index}"
-                
-                object_index = 1
-                elements.each do | object |
-                    # TODO: wrap this 
-                    begin
-                        this_type = object.invoke("type")
-                    rescue
-                        this_type = nil
-                    end
-                    if types.include?(this_type)
-                        if object_index == index
-                            o = object
-                            break
-                        end
-                        object_index += 1
-                    end
-                end
-                return o
-                
-            else
-                elements.each do |object|
-                    next unless o == nil
-                    
-                    begin
-                        # TODO: use a wrapper object and a set of attributes... (guard them all)
-                        case how
-                        when :id
-                            attribute = object.invoke("id")
-                        when :name
-                            attribute = object.invoke("name")
-                        when :value
-                            attribute = object.value
-                        when :alt
-                            attribute = object.alt
-                        when :src
-                            attribute = object.src
-                        when :beforeText
-                            attribute = object.getAdjacentText("afterEnd").strip
-                        when :afterText
-                            attribute = object.getAdjacentText("beforeBegin").strip
-                        else
-                            next # TODO raise an error
-                        end
-                        
-                        if what.matches(attribute) && types.include?(object.invoke("type"))
-                            if value
-                                log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                                if object.value.to_s == value.to_s
-                                    o = object
-                                end
-                            else # no value
+            object_index = 1
+            elements.each do |object|
+                next unless o == nil
+                element = Element.new(object)
+                if types.include?(element.type)
+                    if what.matches((how == :index) ? object_index : element.send(how)) 
+                        if value
+                            log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
+                            if object.value.to_s == value.to_s
                                 o = object
                             end
+                        else # no value
+                            o = object
                         end
-                        
-                    rescue => e # WTF??? (this is why the individual calls aren't guarded!)
-                        log 'IE#getObject error ' + e.to_s 
                     end
-                    
+                    object_index += 1
                 end
             end
-            
             return o
         end
 
@@ -926,7 +886,7 @@ module Watir
             doc = document
             count = 1
             images = doc.getElementsByTagName("IMG")
-            o=nil
+            o = nil
             images.each do |img|
                 
                 #puts "Image on page: src = #{img.src}"
@@ -1045,7 +1005,7 @@ module Watir
         #   * how  - symbol - how we get the link row or cell types are:
         #            id
         #   * what -  a string or regexp 
-        def getTablePart( part , how , what )
+        def getTablePart( part , how , what ) # BUG: how and what are ignored!
              doc = document
              parts = doc.getElementsByTagName( part )
              n = nil
@@ -1848,7 +1808,7 @@ module Watir
         # returns the name of the element (as defined in html)
         def_wrap_guard :name
         # returns the id of the element
-        def_wrap :id
+        def_wrap_guard :id
         # returns whether the element is disabled
         def_wrap :disabled # BUG: should be "disabled?"
         # returns the value of the element
@@ -1856,9 +1816,32 @@ module Watir
         # returns the title of the element
         def_wrap_guard :title
         
+        def_wrap_guard :alt
+        def_wrap_guard :src
+        
         # returns the class name of the element
         # raises an ObjectNotFound exception if the object cannot be found
         def_wrap :class_name, :className
+
+        def before_text
+            assert_exists
+            begin
+                @o.getAdjacentText("afterEnd").strip
+            rescue 
+                ''
+            end
+        end
+        alias beforeText before_text
+
+        def after_text
+            assert_exists
+            begin
+                @o.getAdjacentText("beforeBegin").strip
+            rescue 
+                ''
+            end
+        end
+        alias afterText after_text
 
         # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
         #--    
@@ -2730,8 +2713,6 @@ module Watir
             return r.join("\n")
         end
 
-        def_wrap :src
-
         # this method returns the file created date of the image
         def fileCreatedDate
             assert_exists
@@ -2749,13 +2730,6 @@ module Watir
             assert_exists
             return @o.invoke("width").to_s
         end
-
-        # returns the alt text of the image
-        def alt
-            assert_exists
-            return @o.invoke("alt").to_s
-        end
-
 
         # returns the height in pixels of the image, as a string
         def height
