@@ -2698,18 +2698,16 @@ module Watir
     # many of the methods available to this object are inherited from the Element class
     #
     class Image < Element
-        
-        # Returns an initialized instance of a image  object
-        #   * container  - an instance of a container
-        #   * how         - symbol - how we access the image
-        #   * what         - what we use to access the image, name, src, index, id or alt
-        def initialize( container,  how , what )
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            @o = @container.getImage(@how, @what)
-            super( @o )
+            super nil
         end
+        
+        def locate
+            @o = @container.getImage(@how, @what)
+        end            
 
         # this method produces the properties for an image as an array
         def image_string_creator
@@ -2770,8 +2768,9 @@ module Watir
         # We look for these missing properties to see if the image is really there or not. 
         # If the Disk cache is full ( tools menu -> Internet options -> Temporary Internet Files) , it may produce incorrect responses.
         def hasLoaded?
-            raise UnknownObjectException ,  "Unable to locate image using #{@how} and #{@what} " if @o==nil
-            return false  if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
+            locate
+            raise UnknownObjectException, "Unable to locate image using #{@how} and #{@what}" if @o == nil
+            return false if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
             return true
         end
 
@@ -2836,16 +2835,19 @@ module Watir
         #   * container  - an instance of a container
         #   * how         - symbol - how we access the link
         #   * what         - what we use to access the link, text, url, index etc
-        def initialize( container,  how , what )
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
+            super(nil)
+        end
+        
+        def locate
             begin
-                @o = @container.getLink( @how, @what )
+                @o = @container.getLink(@how, @what)
             rescue UnknownObjectException
                 @o = nil
             end
-            super( @o )
         end
 
         # returns the text displayed by the link
@@ -2853,19 +2855,21 @@ module Watir
             assert_exists
             return @o.innerText.strip
         end
-        alias text innerText
+        alias text innerText # BUG: move to camel_case.rb
 
         # returns the url the link points to
         def_wrap :href
 
         # if an image is used as part of the link, this will return true      
         def link_has_image
+            assert_exist
             return true  if @o.getElementsByTagName("IMG").length > 0
             return false
         end
 
         # this method returns the src of an image, if an image is used as part of the link
         def src
+            assert_exists
             if @o.getElementsByTagName("IMG").length > 0
                 return  @o.getElementsByTagName("IMG")[0.to_s].src
             else
@@ -2890,25 +2894,28 @@ module Watir
          end
     end
     
-    # This class is the way in which select boxes are manipulated.
-    # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
-    #
-    # many of the methods available to this object are inherited from the Element class
-    #
-    class SelectList < Element
-        # returns an initialized instance of a SelectList object
-        #   * container  - an instance of a container
-        #   * how          - symbol - how we access the select box
-        #   * what         - what we use to access the select box, name, id etc
-        def initialize( container,  how , what )
+    class InputElement < Element
+        def locate
+            if @how == :from_object
+                @o = @what
+            else
+                @o = @container.getObject(@how, @what, self.class::INPUT_TYPES)
+            end              
+        end
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            @o = @container.getObject(@how, @what, ["select-one", "select-multiple"])
-            super( @o )
+            super(nil)
         end
+    end
+    
+    # This class is the way in which select boxes are manipulated.
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
+    class SelectList < InputElement
+        INPUT_TYPES = ["select-one", "select-multiple"]
         
-        attr :o
+        attr_accessor :o
 
         # This method clears the selected items in the select box
         def clearSelection
@@ -2997,6 +3004,7 @@ module Watir
         end
         
         def option (attribute, value)
+            assert_exists
             Option.new(self, attribute, value)
         end
     end
@@ -3055,22 +3063,6 @@ module Watir
         end
     end    
 
-    class InputElement < Element
-        def locate
-            if @how == :from_object
-                @o = @what
-            else
-                @o = @container.getObject(@how, @what, self.class::INPUT_TYPES)
-            end              
-        end
-        def initialize(container, how, what)
-            @container = container
-            @how = how
-            @what = what
-            super(nil)
-        end
-    end
-    
     # This is the main class for accessing buttons.
     # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
     class Button < InputElement

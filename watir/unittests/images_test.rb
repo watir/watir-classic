@@ -94,9 +94,7 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileCreatedDate }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileSize }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).alt}
-
         
-        assert_equal( "image"  , $ie.image(:index, 2).type ) 
         assert_equal( ""       , $ie.image(:index, 2).name ) 
         assert_equal( "square" , $ie.image(:index, 2).id )
         assert_match( /square\.jpg/i ,$ie.image(:index, 2).src )
