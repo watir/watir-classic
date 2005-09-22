@@ -1843,14 +1843,14 @@ module Watir
         end
 
         public
-        # returns the type of the element 
-        def_wrap_guard :type #BUG: should only be defined for input elements        
+        # returns the type of the element
+        def_wrap_guard :type # BUG: should only be defined for input elements        
         # returns the name of the element (as defined in html)
         def_wrap_guard :name
         # returns the id of the element
         def_wrap :id
         # returns whether the element is disabled
-        def_wrap :disabled
+        def_wrap :disabled # BUG: should be "disabled?"
         # returns the value of the element
         def_wrap_guard :value
         # returns the title of the element
@@ -2218,13 +2218,13 @@ module Watir
             10.times do
                 count=0
                 @ole_object.elements.each do |element|
-                    highlight(:set , element , count)
+                    highlight(:set, element, count)
                     count +=1
                 end
                 sleep 0.05
                 count = 0
                 @ole_object.elements.each do |element|
-                    highlight(:clear , element , count)
+                    highlight(:clear, element, count)
                     count +=1
                 end
                 sleep 0.05
@@ -2242,44 +2242,42 @@ module Watir
         include Watir::Exception
         
         def locate
-            @o = @container.getNonControlObject(tag, @how, @what)
+            @o = @container.getNonControlObject(self.class::TAG, @how, @what)
         end            
-
+        
         def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            super(@o)
+            super(nil)
         end
-
+        
         # this method is used to populate the properties in the to_s method
         def span_div_string_creator
             n = []
             n <<   "class:".ljust(TO_S_SIZE) + self.class_name
             n <<   "text:".ljust(TO_S_SIZE) + self.text
             return n
-         end
-         private :span_div_string_creator
-
-         # returns the properties of the object in a string
-         # raises an ObjectNotFound exception if the object cannot be found
-         def to_s
+        end
+        private :span_div_string_creator
+        
+        # returns the properties of the object in a string
+        # raises an ObjectNotFound exception if the object cannot be found
+        def to_s
             assert_exists
             r = string_creator
-            r=r + span_div_string_creator
+            r += span_div_string_creator
             return r.join("\n")
-         end
+        end
     end
 	
 	class Pre < NonControlElement
 		TAG = 'PRE'
-		def tag; TAG; end
 		def self.tag; TAG; end
 	end
 
     class P < NonControlElement 
         TAG = 'P'
-        def tag; TAG; end
         def self.tag; TAG; end
     end
 
@@ -2287,22 +2285,18 @@ module Watir
     # It would not normally be created by users
     class Div < NonControlElement 
         TAG = 'DIV'
-        def tag; TAG; end
         def self.tag; TAG; end
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
     class Span < NonControlElement 
         TAG = 'SPAN'
-        def tag; TAG; end
         def self.tag; TAG; end
     end
 
     # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
     class Label < NonControlElement
-        def tag
-            "LABEL"
-        end
+        TAG = 'LABEL'
 
         # return the ID of the control that this label is associated with
         def_wrap :for, :htmlFor
@@ -2345,23 +2339,23 @@ module Watir
         end
 
         # Returns an initialized instance of a table object
-        #   * parent      - the container
+        #   * container      - the container
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
-        def initialize( parent,  how , what )
-            @container = parent
+        def initialize(container,  how, what)
+            @container = container
             @how = how
             @what = what
             
             table = nil
-            
+           
             if(@how != :from_object) then
                 table=get_table
             else
                 table = @what
             end
             
-            parent.log "table - #{@what}, #{@how} Not found " if table ==  nil
+            container.log "table - #{@what}, #{@how} Not found " if table ==  nil
             @o = table
             super( @o )
         end
@@ -3061,17 +3055,12 @@ module Watir
         end
     end    
 
-    # This is the main class for accessing buttons.
-    # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
-    #
-    # most of the methods available to Button objects are inherited from the Element class
-    #
-    class Button < Element
+    class InputElement < Element
         def locate
             if @how == :from_object
                 @o = @what
             else
-                @o = @container.getObject(@how, @what, input_types)
+                @o = @container.getObject(@how, @what, self.class::INPUT_TYPES)
             end              
         end
         def initialize(container, how, what)
@@ -3080,23 +3069,18 @@ module Watir
             @what = what
             super(nil)
         end
-
-        private
-        def input_types
-            ["button", "submit", "image", "reset"] 
-        end
+    end
+    
+    # This is the main class for accessing buttons.
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
+    class Button < InputElement
+        INPUT_TYPES = ["button", "submit", "image", "reset"] 
     end
     
     # This class is the main class for Text Fields
     # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
-    #
-    # most of the methods available to this element are inherited from the Element class
-    #
-    class TextField < Button #!
-        def input_types
-            return ["text", "password", "textarea"] 
-        end
-        private :input_types
+    class TextField < InputElement
+        INPUT_TYPES = ["text", "password", "textarea"] 
 
         def_wrap_guard :size
         def_wrap_guard :maxlength
@@ -3265,19 +3249,8 @@ module Watir
 
     # this class can be used to access hidden field objects
     # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
-    #
-    # most of the methods available to this element are inherited from the Element class
-    #
     class Hidden < TextField 
-
-        def initialize(container,  how, what)
-            super
-        end
-
-        def input_types
-            return ["hidden"]
-        end
-        private :input_types
+        INPUT_TYPES =  ["hidden"]
        
         # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
@@ -3300,17 +3273,8 @@ module Watir
 
     end
 
-    # File dialog
-    class FileField < Element
-        # Create an instance of the file object
-        def initialize( container,  how , what )
-            @container = container
-            @how = how
-            @what = what
-            super( @o )
-            @o = @container.getObject( @how, @what , ["file"] )
-
-        end
+    class FileField < InputElement
+        INPUT_TYPES = ["file"]
 
         def set(setPath)
             assert_exists	        
@@ -3333,15 +3297,16 @@ module Watir
     # most of the methods available to this element are inherited from the Element class
     #
     class RadioCheckCommon < Element
-
-        def initialize( container,  how , what , type, value=nil )
+        def locate
+            @o = @container.getObject(@how, @what, @type, @value)
+        end
+        def initialize(container, how, what, type, value = nil)
             @container = container
             @how = how
             @what = what
             @type = type
             @value = value
-            @o = @container.getObject(@how, @what, @type, @value)
-            super( @o )
+            super(nil)
         end
 
         # BUG: rename me
@@ -3389,14 +3354,11 @@ module Watir
     end
 
     #--
-    #  this class is only used to change the name of the class that radio buttons use to something more meaningful
-    #  and to make the docs better
+    #  this class makes the docs better
     #++
     # This class is the watir representation of a radio button.        
     class Radio < RadioCheckCommon 
-
     end
-
 
     # This class is the watir representation of a check box.
     class CheckBox < RadioCheckCommon 
