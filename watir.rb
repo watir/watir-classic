@@ -848,25 +848,25 @@ module Watir
         #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
         #   * types - what object types we will look at. 
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-        def getObject(how, what, types, value = nil)
+        def locate_input_element(how, what, types, value = nil)
             elements = ole_inner_elements 
             how = :value if how == :caption
             what = what.to_i if how == :index
+            value = value.to_s if value
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
             
             o = nil
             object_index = 1
             elements.each do |object|
-                next unless o == nil
+                next if o
                 element = Element.new(object)
                 if types.include?(element.type)
                     if what.matches((how == :index) ? object_index : element.send(how)) 
                         if value
-                            log "checking value supplied #{value} ( #{value.class}) actual #{object.value} ( #{object.value.class})"
-                            if object.value.to_s == value.to_s
+                            if element.value == value
                                 o = object
                             end
-                        else # no value
+                        else
                             o = object
                         end
                     end
@@ -882,39 +882,22 @@ module Watir
         #    * how  - symbol - how to look
         #    * what - string or regexp - what to look ofr
         def getImage( how, what )
-
-            doc = document
-            count = 1
-            images = doc.getElementsByTagName("IMG")
+            elements = document.getElementsByTagName("IMG")
+            what = what.to_i if how == :index
             o = nil
-            images.each do |img|
-                
-                #puts "Image on page: src = #{img.src}"
-                
-                next unless o == nil
+            count = 1
+            elements.each do |img|
+                next if o
+                element = Element.new(img)
                 if how == :index
-                    o = img if count == what.to_i
-                else                
-                    case how
-                        
-                    when :src
-                        attribute = img.src
-                    when :name
-                        attribute = img.name
-                    when :id
-                        attribute = img.invoke("id")
-                    when :alt
-                        attribute = img.invoke("alt")
-                    else
-                        next
-                    end
-                    
-                    o = img if what.matches(attribute)
+                    attribute = count                        
+                else
+                    attribute = element.send(how)
                 end
-                count +=1
+                o = img if what.matches(attribute)
+                count += 1
             end # do
             return o
-
         end
 
         # This method is used iternally by Watir and should not be used externally. It cannot be marked as private because of the way mixins and inheritance work in watir
@@ -2873,7 +2856,7 @@ module Watir
             if @how == :from_object
                 @o = @what
             else
-                @o = @container.getObject(@how, @what, self.class::INPUT_TYPES)
+                @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
             end              
         end
         def initialize(container, how, what)
@@ -3264,7 +3247,7 @@ module Watir
     #
     class RadioCheckCommon < Element
         def locate
-            @o = @container.getObject(@how, @what, @type, @value)
+            @o = @container.locate_input_element(@how, @what, @type, @value)
         end
         def initialize(container, how, what, type, value = nil)
             @container = container
