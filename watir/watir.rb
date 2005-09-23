@@ -444,7 +444,7 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        def select_list(how , what = nil) # BUG default logic?
+        def select_list(how, what) 
             return SelectList.new(self, how, what)
         end
 
@@ -493,8 +493,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
-        def checkbox(how, what = nil , value = nil) # BUG default logic?
-            return CheckBox.new(self, how, what, ["checkbox"], value) # BUG
+        def checkbox(how, what, value = nil) 
+            return CheckBox.new(self, how, what, ["checkbox"], value) 
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -542,7 +542,7 @@ module Watir
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #
-        def radio(how, what = nil, value = nil) # BUG: default logic
+        def radio(how, what, value = nil) 
             return Radio.new(self, how, what, ["radio"], value) 
         end
 
@@ -585,7 +585,7 @@ module Watir
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #
-        def link(how, what = nil) # BUG: default logic
+        def link(how, what) 
             return Link.new(self, how, what)
         end
 
@@ -623,7 +623,7 @@ module Watir
         #   ie.image(:index,2)                  # access the second image on the page
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   
-        def image(how, what = nil) # BUG: default logic
+        def image(how, what) 
             return Image.new(self, how, what)
         end
         
@@ -642,7 +642,7 @@ module Watir
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
         def popup         # BUG this should not be on the container object!        
-            return PopUp.new(self )
+            return PopUp.new(self)
         end
 
         # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
@@ -1623,6 +1623,10 @@ module Watir
             @original_color = nil
         end
         
+        # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
+        def ole_object # BUG: should use an attribute reader and rename the instance variable
+            return @o
+        end
         def ole_object=(o)
             @o = o
         end
@@ -1658,14 +1662,13 @@ module Watir
         end
 
         public
-        # returns the type of the element
-        def_wrap_guard :type # BUG: should only be defined for input elements        
         # returns the name of the element (as defined in html)
         def_wrap_guard :name
         # returns the id of the element
         def_wrap_guard :id
         # returns whether the element is disabled
-        def_wrap :disabled # BUG: should be "disabled?"
+        def_wrap :disabled 
+        alias disabled? disabled
         # returns the value of the element
         def_wrap_guard :value
         # returns the title of the element
@@ -1674,6 +1677,9 @@ module Watir
         def_wrap_guard :alt
         def_wrap_guard :src
         
+        # returns the type of the element
+        def_wrap_guard :type # input elements only        
+
         # returns the url the link points to
         def_wrap :href # link only
 
@@ -1684,6 +1690,10 @@ module Watir
         # raises an ObjectNotFound exception if the object cannot be found
         def_wrap :class_name, :className
 
+        # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
+        def_wrap :html, :outerHTML
+
+        # returns the text before the element
         def before_text
             assert_exists
             begin
@@ -1692,8 +1702,8 @@ module Watir
                 ''
             end
         end
-        alias beforeText before_text
 
+        # returns the text after the element
         def after_text
             assert_exists
             begin
@@ -1702,16 +1712,14 @@ module Watir
                 ''
             end
         end
-        alias afterText after_text
 
-        # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
-        #--    
-        # BUG: should use an attribute reader and rename the instance variable
-        #++
-        def ole_object
-            return @o
+        # this method returns the innerText of the object
+        # raises an ObjectNotFound exception if the object cannot be found
+        def text
+            assert_exists
+            return @o.innerText.strip
         end
-  
+
         def ole_inner_elements
             assert_exists
             return @o.all
@@ -1730,16 +1738,6 @@ module Watir
         def activeObjectHighLightColor
             @container.activeObjectHighLightColor
         end
-
-        # this method returns the innerText of the object
-        # raises an ObjectNotFound exception if the object cannot be found
-        def text
-            assert_exists
-            return @o.innerText.strip
-        end
-
-        # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
-        def_wrap :html, :outerHTML
 
         # Return an array with many of the properties, in a format to be used by the to_s method
         def string_creator
@@ -2478,7 +2476,7 @@ module Watir
         def initialize(container,  how, what)   
             @container = container    
             #puts "How = #{how}"
-             if how == :direct # BUG !?
+             if how == :direct 
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
@@ -2655,13 +2653,6 @@ module Watir
             end
         end
 
-        # returns the text displayed by the link
-        def innerText # BUG: duplicate?
-            assert_exists
-            return @o.innerText.strip
-        end
-        alias text innerText # BUG: move to camel_case.rb
-
         # if an image is used as part of the link, this will return true      
         def link_has_image
             assert_exist
@@ -2753,7 +2744,7 @@ module Watir
         # Selects something from the select box
         #  * name  - symbol  :value or :text - how we find an item in the select box
         #  * item  - string or reg exp - what we are looking for
-        def select_item_in_select_list( attribute, value )
+        def select_item_in_select_list(attribute, value)
             assert_exists
             highlight( :set )
             doBreak = false
@@ -2782,7 +2773,7 @@ module Watir
         # Returns all the items in the select list as an array. 
         # An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
-        def getAllContents()
+        def getAllContents() # BUG: camel_case.rb
             assert_exists
             @container.log "There are #{@o.length} items"
             returnArray = []
