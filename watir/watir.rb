@@ -2181,24 +2181,21 @@ module Watir
         #   * container      - the container
         #   * how         - symbol - how we access the table
         #   * what         - what we use to access the table - id, name index etc 
-        def initialize(container,  how, what)
+        def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
-            
-            table = nil
-           
-            unless @how == :from_object
-                table = container.locate_tagged_element('TABLE', how, what)
-            else
-                table = @what
-            end
-            
-            container.log "table - #{@what}, #{@how} Not found " if table ==  nil
-            @o = table
-            super( @o )
+            super nil
         end
 
+        def locate
+            unless @how == :from_object
+                @o = @container.locate_tagged_element('TABLE', @how, @what)
+            else
+                @o = @what
+            end
+        end
+        
         # override the highlight method, as if the tables rows are set to have a background color, 
         # this will override the table background color,  and the normal flsh method wont work
         def highlight(set_or_clear )
@@ -2254,30 +2251,30 @@ module Watir
         # Returns a row in the table
         #   * index         - the index of the row
         def [](index)
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
-            return  TableRow.new(@container ,:direct, row(index) )
+            assert_exists
+            return TableRow.new(@container ,:direct, row(index) )
         end
 
         # This method returns the number of rows in the table.
-        # Raises an UnknownTableException if the table doesnt exist.
+        # Raises an UnknownObjectException if the table doesnt exist.
         def row_count 
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+            assert_exists
             #return table_body.children.length
             return @o.getElementsByTagName("TR").length
         end
 
         # This method returns the number of columns in a row of the table.
-        # Raises an UnknownTableException if the table doesn't exist.
+        # Raises an UnknownObjectException if the table doesn't exist.
         #   * index         - the index of the row
         def column_count(index=1) 
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+            assert_exists
             row(index).cells.length
         end
 
         # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
-        # Raises an UnknownTableException if the table doesn't exist.
+        # Raises an UnknownObjectException if the table doesn't exist.
         def to_a
-            raise UnknownTableException ,  "Unable to locate a table using #{@how} and #{@what} " if @o == nil
+            assert_exists
             y = []
             table_rows = @o.getElementsByTagName("TR")
             for row in table_rows
@@ -2288,20 +2285,20 @@ module Watir
                 y << x
             end
             return y
-            
         end
 
-        def table_body(index=1)
+        def table_body(index = 1)
             return @o.getElementsByTagName('TBODY')[index]
         end
         private :table_body
 
-        def body( how , what )
-            return TableBody.new( @container, how, what , self)
+        def body(how, what)
+            return TableBody.new(@container, how, what, self)
         end
 
         def bodies
-            return TableBodies.new(@container,  :direct , @o)
+            assert_exists
+            return TableBodies.new(@container, :direct, @o)
         end
    
         def row(index)
@@ -2311,7 +2308,7 @@ module Watir
 
         # Returns an array containing all the text values in the specified column
         # Raises an UnknownCellException if the specified column does not exist in every
-        # Raises an UnknownTableException if the table doesn't exist.
+        # Raises an UnknownObjectException if the table doesn't exist.
         # row of the table
         #   * columnnumber  - column index to extract values from
         def column_values(columnnumber)
@@ -2319,7 +2316,7 @@ module Watir
         end
         
         # Returns an array containing all the text values in the specified row
-        # Raises an UnknownTableException if the table doesn't exist.
+        # Raises an UnknownObjectException if the table doesn't exist.
         #   * rownumber  - row index to extract values from
         def row_values(rownumber)
             return (1..column_count(rownumber)).collect {|idx| self[rownumber][idx].text}

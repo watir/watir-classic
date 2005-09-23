@@ -24,8 +24,8 @@ class TC_Tables < Test::Unit::TestCase
     end
     
     def test_rows
-        assert_raises( UnknownTableException ){ $ie.table(:id , 'missingTable').row_count }
-        assert_raises( UnknownTableException ){ $ie.table(:index , 66).row_count }
+        assert_raises( UnknownObjectException ){ $ie.table(:id , 'missingTable').row_count }
+        assert_raises( UnknownObjectException ){ $ie.table(:index , 66).row_count }
         assert_raises(MissingWayOfFindingObjectException){ $ie.table(:bad_attribute, 99).row_count }
         
         assert_equal( 2 , $ie.table(:index , 1).row_count)
@@ -57,8 +57,8 @@ class TC_Tables < Test::Unit::TestCase
     end
     
     def test_columns
-        assert_raises( UnknownTableException  ){ $ie.table(:id , 'missingTable').column_count }
-        assert_raises( UnknownTableException  ){ $ie.table(:index , 77).column_count }
+        assert_raises( UnknownObjectException  ){ $ie.table(:id , 'missingTable').column_count }
+        assert_raises( UnknownObjectException  ){ $ie.table(:index , 77).column_count }
         assert_equal( 2 , $ie.table(:index , 1).column_count)
         assert_equal( 1 , $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
     end
