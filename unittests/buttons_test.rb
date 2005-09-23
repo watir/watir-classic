@@ -54,8 +54,8 @@ class TC_Buttons < Test::Unit::TestCase
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").type   }  
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").value   }  
         
-        assert_equal("b1"  , $ie.button(:index, 1).name  ) 
-        assert_equal("b2"  , $ie.button(:index, 1).id  ) 
+        assert_equal("b1"  , $ie.button(:index, 1).name ) 
+        assert_equal("b2"  , $ie.button(:index, 1).id ) 
         assert_equal("button"  , $ie.button(:index, 1).type  ) 
         assert_equal("Click Me"  , $ie.button(:index, 1).value  ) 
         assert_equal(false  , $ie.button(:index, 1).disabled  ) 

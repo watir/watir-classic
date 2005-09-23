@@ -187,7 +187,7 @@ class TC_Fields < Test::Unit::TestCase
         assert($ie.label(:index,1).exists?) 
         
         assert_equal("", $ie.label(:index,1).id)
-        assert_false(    $ie.label(:index,1).disabled) # BUG: disabled should have a question mark
+        assert_false(    $ie.label(:index,1).disabled?) 
         assert(          $ie.label(:index,1).enabled?)
         
         assert_equal("label2", $ie.label(:index,2).id )
