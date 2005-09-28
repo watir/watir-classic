@@ -112,7 +112,7 @@ class TC_Tables < Test::Unit::TestCase
         assert_equal( 3, $ie.table(:id, 'body_test' ).bodies.length )
         
         count = 1
-        $ie.table(:id, 'body_test' ).bodies.each do |n|
+        $ie.table(:id, 'body_test').bodies.each do |n|
             
             # do something better here!
             # n.flash # this line commented out to speed up the test
@@ -126,22 +126,22 @@ class TC_Tables < Test::Unit::TestCase
                 compare_text = "This text is in the THIRD TBODY."
             end
             
-            assert_equal( compare_text , n[1][1].to_s.strip )   # this is the 1st cell of the first row of this particular body
+            assert_equal(compare_text, n[1][1].to_s.strip )   # this is the 1st cell of the first row of this particular body
             
-            count +=1
+            count += 1
         end
-        assert_equal( count-1, $ie.table(:id, 'body_test' ).bodies.length  )
+        assert_equal( count - 1, $ie.table(:id, 'body_test').bodies.length )
         
         assert_equal( "This text is in the THIRD TBODY." ,$ie.table(:id, 'body_test' ).body(:index,3)[1][1].to_s.strip ) 
         
         # iterate through all the rows in a table body
         count = 1
-        $ie.table(:id, 'body_test' ).body(:index,2).each do | row |
+        $ie.table(:id, 'body_test').body(:index, 2).each do | row |
             # row.flash    # this line commented out, to speed up the tests
             if count == 1
-                assert_equal('This text is in the SECOND TBODY.' , row[1].text.strip )
-            elsif count == 1
-                assert_equal('This text is also in the SECOND TBODY.' , row[1].text.strip )
+                assert_equal('This text is in the SECOND TBODY.', row[1].text.strip )
+            elsif count == 1 # BUG: Huh?
+                assert_equal('This text is also in the SECOND TBODY.', row[1].text.strip )
             end
             count+=1
         end
