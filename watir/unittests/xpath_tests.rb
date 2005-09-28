@@ -4,6 +4,7 @@ $LOAD_PATH.unshift TOPDIR
 require 'unittests/setup.rb'
 
 Dir.chdir TOPDIR
-$core_tests.each {|x| require x unless x =~ /xpath/}
+$all_tests.each {|x| require x if x =~ /xpath/}
+
 
 

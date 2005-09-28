@@ -111,6 +111,9 @@ $ENABLE_SPINNER = command_line_flag('-x')
 # Constant to set fast speed
 $FAST_SPEED = command_line_flag('-f')
 
+# Constant to set path for tidy.dll
+$TIDY_PATH = File.expand_path(File.dirname(__FILE__)) + "/watir/tidy.dll"
+
 # Eat the -s command line switch (deprecated)
 command_line_flag('-s')
 
@@ -268,11 +271,13 @@ module Watir
         # :index (1 based counting)and :id are supported. 
         #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
         # :index can be used when there are multiple tables on a page. 
+        # :xpath can be used to select table using XPath query.
         # The first form can be accessed with :index 1, the second :index 2, etc. 
         #   * how - symbol - the way we look for the table. Supported values are
         #                  - :id
         #                  - :index
-        #   * what  - string the thing we are looking for, ex. id or index of the object we are looking for
+        #                  - :xpath
+        #   * what  - string the thing we are looking for, ex. id, index or xpath query, of the object we are looking for
         def_creator :table
 
         # this is the main method for accessing the tables iterator. It returns a Tables object
@@ -287,20 +292,24 @@ module Watir
         end
 
         # this method accesses a table cell. 
-        # how - symbol - how we access the cell,  :id is supported
+        # how - symbol - how we access the cell, valid values are
+        #    :id       - find the table cell with given id.
+        #    :xpath    - find the table cell using xpath query.
         # 
         # returns a TableCell Object
         def_creator :cell, :TableCell
 
         # this method accesses a table row. 
-        # how - symbol - how we access the row,  :id is supported
+        # how - symbol - how we access the row, valid values are
+        #    :id       - find the table row with given id.
+        #    :xpath    - find the table row using xpath query.
         # 
         # returns a TableRow object
         def_creator :row, :TableRow
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
         #  *  how   - symbol - how we access the button 
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  what  - string, int, re or xpath query , what we are looking for, 
         # Returns a Button object.
         #
         # Valid values for 'how' are
@@ -313,6 +322,7 @@ module Watir
         #    :caption    - same as value
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified text
+        #    :xpath      - finds the item using xpath query
         #
         # Typical Usage
         #
@@ -326,6 +336,7 @@ module Watir
         # if only a single parameter is supplied,  then :value is used 
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
+        #    ie.button(:xpath, "//input[@value='Click Me']/")     # access the button with a value of Click Me
         def_creator_with_default :button, :value
 
         # this is the main method for accessing the buttons iterator. It returns a Buttons object
@@ -340,8 +351,12 @@ module Watir
         end
 
         # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
-        #  *  how   - symbol - how we access the field , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the field , valid values are
+        #    :index      - find the file field using index
+        #    :id         - find the file field using id attribute
+        #    :name       - find the file field using name attribute
+        #    :xpath      - find the file field using xpath query
+        #  *  what  - string, int, re or xpath query , what we are looking for, 
         #
         # returns a FileField object
         #
@@ -377,13 +392,16 @@ module Watir
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
         #    :beforeText - finds the item immediately before the specified text
-        #    :afterText  - finds the item immediately after the specified text
+        #    :afterText  - finds the item immediately after the specified texti
+        #    :xpath      - find the item using xpath query 
         #
         # Typical Usage
         #
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
         #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.text_field(:xpath, "//textarea[@id='user_name']/")    ## access the text field with an ID of user_name
+
         def_creator :text_field, :TextField
 
         # this is the method for accessing the text_fields iterator. It returns a Text_Fields object
@@ -398,7 +416,11 @@ module Watir
         end
 
         # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
-        #  *  how   - symbol - how we access the field , :index, :id, :name etc
+        #  *  how   - symbol - how we access the field , valid values are
+        #    :index      - find the item using index
+        #    :id         - find the item using id attribute
+        #    :name       - find the item using name attribute
+        #    :xpath      - find the item using xpath query etc
         #  *  what  - string, int or re , what we are looking for, 
         #
         # returns a Hidden object
@@ -408,6 +430,7 @@ module Watir
         #    ie.hidden(:id, 'session_id')                 # access the hidden field with an ID of session_id
         #    ie.hidden(:name, 'temp_value')               # access the hidden field with a name of temp_value
         #    ie.hidden(:index, 2)                         # access the second hidden field on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.hidden(:xpath, "//input[@type='hidden' and @id='session_value']/")    # access the hidden field with an ID of session_id
         def hidden(how, what)
             return Hidden.new(self, how, what)
         end
@@ -437,6 +460,7 @@ module Watir
         #    :id         - find the item using the id attribute
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified text
+        #    :xpath      - finds the item using xpath query
         #
         # Typical usage
         #
@@ -444,6 +468,7 @@ module Watir
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
         #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
         #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.select(:xpath, "//select[@id='currency']/")    # access the select box with an id of currency 
         def select_list(how, what) 
             return SelectList.new(self, how, what)
         end
@@ -475,6 +500,7 @@ module Watir
         #    :id         - find the item using the id attribute
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified text
+        #    :xpath      - finds the item that matches xpath query
         #
         # Typical usage
         #
@@ -493,6 +519,7 @@ module Watir
         #
         #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
         #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
+        #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
         def checkbox(how, what, value = nil) 
             return CheckBox.new(self, how, what, ["checkbox"], value) 
         end
@@ -523,6 +550,7 @@ module Watir
         #    :id         - find the item using the id attribute
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified text
+        #    :xpath      - finds the item that matches xpath query
         #
         # Typical usage
         #
@@ -541,7 +569,7 @@ module Watir
         #
         #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
         #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
-        #
+        #    ie.radio(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the radio button with a name of email_frequency and a value of 'daily'
         def radio(how, what, value = nil) 
             return Radio.new(self, how, what, ["radio"], value) 
         end
@@ -575,6 +603,7 @@ module Watir
         #    :url        - finds the link based on the url. This must be the full path to the link, so is best used with a regular expression
         #    :text       - finds a link using the innerText of the link, ie the Text that is displayed to the user
         #    :title      - finds the item using the tool tip text
+        #    :xpath      - finds the item that matches xpath query    
         #
         # Typical Usage
         # 
@@ -584,7 +613,7 @@ module Watir
         #   ie.link(:title , "Picture")         # access a link using the tool tip
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
-        #
+        #   ie.link(:xpath, "//a[contains(.,'Click Me')]/")      # access the link with Click Me as its text
         def link(how, what) 
             return Link.new(self, how, what)
         end
@@ -615,6 +644,7 @@ module Watir
         #    :id         - find the item using the id attribute
         #    :alt        - finds the item using the tool tip text
         #    :src        - finds the item using the src tag. This must be the fully qualified name, so is best used with a regular expression
+        #    :xpath      - finds the item that matches xpath query
         #
         # Typical Usage
         # 
@@ -622,6 +652,7 @@ module Watir
         #                                       # but the complete path must be used, ie.image(:src, 'http://myserver.com/my_path/my_image.jpg')
         #   ie.image(:index,2)                  # access the second image on the page
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
+        #   ie.image(:xpath, "//img[@alt='A Picture']/")    # access an image using the alt text
         #   
         def image(how, what) 
             return Image.new(self, how, what)
@@ -646,8 +677,13 @@ module Watir
         end
 
         # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
-        #  *  how   - symbol - how we access the div, :index, :id, :title
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  how   - symbol - how we access the div, valid values are
+        #    :index      - finds the item using its index
+        #    :id         - finds the item using id attribute
+        #    :title      - finds the item using title attribute
+        #    :xpath      - finds the item that matches xpath query
+        # 
+        #  *  what  - string, integer, re or xpath query , what we are looking for, 
         #
         # returns an Div object
         #
@@ -656,7 +692,8 @@ module Watir
         #   ie.div(:id, /list/)                 # access the first div that matches list.
         #   ie.div(:index,2)                    # access the second div on the page
         #   ie.div(:title , "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-        #   
+        #   ie.div(:xpath, "//div[@id='list']/")    # access the first div whose id is 'list'
+        #
         def div(how, what)
             return Div.new(self, how, what)
         end
@@ -674,8 +711,12 @@ module Watir
         end
 
         # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/span.asp?frame=true
-        #  *  how   - symbol - how we access the span, :index, :id, :name 
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  how   - symbol - how we access the span, valid values are
+        #    :index      - finds the item using its index
+        #    :id         - finds the item using its id attribute
+        #    :name       - finds the item using its name attribute
+        #
+        #  *  what  - string, integer or re, what we are looking for, 
         #
         # returns a Span object
         #
@@ -704,7 +745,10 @@ module Watir
         end
 
         # This is the main method for accessing p tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
-        #  *  how   - symbol - how we access the p, :index, :id, :name 
+        #  *  how   - symbol - how we access the p, valid values are
+        #    :index      - finds the item using its index
+        #    :id         - finds the item using its id attribute
+        #    :name       - finds the item using its name attribute
         #  *  what  - string, integer or re , what we are looking for, 
         #
         # returns a P object
@@ -734,16 +778,19 @@ module Watir
         end
 
         # This is the main method for accessing pre tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/pre.asp?frame=true
-        #  *  how   - symbol - how we access the pre, :index, :id, :name 
+        #  *  how   - symbol - how we access the pre, valid values are
+        #    :index      - finds the item using its index
+        #    :id         - finds the item using its id attribute
+        #    :name       - finds the item using its name attribute
         #  *  what  - string, integer or re , what we are looking for, 
         #
-        # returns a P object
+        # returns a Pre object
         #
         # Typical Usage
         # 
-        #   ie.pre(:id, /list/)                 # access the first p tag  that matches list.
-        #   ie.pre(:index,2)                    # access the second p tag on the page
-        #   ie.pre(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   ie.pre(:id, /list/)                 # access the first pre tag  that matches list.
+        #   ie.pre(:index,2)                    # access the second pre tag on the page
+        #   ie.pre(:title , "A Picture")        # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   
         def pre(how, what)
             return Pre.new(self, how, what)
@@ -764,7 +811,10 @@ module Watir
         end
 
         # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
-        #  *  how   - symbol - how we access the label, :index, :id, :for
+        #  *  how   - symbol - how we access the label, valid values are
+        #    :index      - finds the item using its index
+        #    :id         - finds the item using its id attribute
+        #    :for        - finds the item which has an object associated with it.
         #  *  what  - string, integer or re , what we are looking for, 
         #
         # returns a Label object
@@ -1295,6 +1345,8 @@ module Watir
                             @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
                         end
                     rescue=>e
+                        #puts 'Setting rexmlDomobject to nil'. Used for finding element using xpath.
+                        @rexmlDomobject = nil
                         @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
                     end
                 else
@@ -1307,6 +1359,9 @@ module Watir
                 print "\b" unless @enable_spinner == false
                 
                 s=nil
+                #Variables used for supporting xpath queries.
+                #puts 'Setting rexmlDomobject to nil'
+                @rexmlDomobject = nil
             rescue WIN32OLERuntimeError => e
                 @logger.info "runtime error in wait: #{e}\n#{e.backtrace.join("\\\n")}"
             end
@@ -1519,7 +1574,178 @@ module Watir
             document.activeElement.blur
             document.focus
         end
-       
+      
+        #Functions written for using xpath for getting the elements.
+
+        # Get the Rexml object.
+        def getRexmlDocumentObject
+                #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
+                if @rexmlDomobject == nil
+                        createRexmlDocumentObject()
+                end
+                return @rexmlDomobject
+        end
+
+        # Create the Rexml object if it is nil. This method is private so can be called only
+        # from getRexmlDocumentObject method.
+        def createRexmlDocumentObject
+                #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
+                if @rexmlDomobject == nil
+                        #puts 'Here creating rexmlDomobject'
+                        html = self.html() #$ie.html()
+
+                        #Replace form tag so that Tidy don't mess up with the tags.
+                        html = html.gsub(/<\s*FORM ([^>]*)>/, "")
+                        html = html.gsub(/<\s*\/FORM\s*>/, "" )
+
+                        # Use tidy to clean the HTML.
+                        Tidy.path = $TIDY_PATH
+                        outputXhtml = Tidy.open(:show_warnings=>true) do |tidy|
+                              # Add appropriate options for Tidy
+                              tidy.options.output_xhtml = true
+                              tidy.options.write_back = "no"
+                              tidy.options.indent = "auto"
+                              tidy.options.add_xml_decl = "yes"
+                              tidy.options.fix_bad_comments = "yes"
+                              tidy.options.join_styles = "no"
+                              tidy.options.merge_divs = "no"
+                              tidy.options.force_output = "yes"
+                              tidy.options.quiet = "yes"
+
+                              outputXhtml = tidy.clean(html)
+                              #puts outputXhtml
+                              outputXhtml
+                        end
+                        outputXhtml = outputXhtml.gsub(/<\s*form\s*>/, "")
+                        outputXhtml = outputXhtml.gsub(/<\s*\/form\s*>/, "" )
+
+                        # Give the output of tidy to Rexml.
+                        @rexmlDomobject = REXML::Document.new(outputXhtml)
+                 end
+
+        end
+        private :createRexmlDocumentObject
+
+        #execute xpath and return an array of elements
+        def getElementsByXpath(xpath)
+                 doc = getRexmlDocumentObject()
+                 modifiedXpath = ""
+                 selectedElements = Array.new
+                 doc.elements.each(xpath) do |element|
+                        modifiedXpath  =  element.xpath
+                        temp = getElementByAbsoluteXpath(modifiedXpath)
+                        selectedElements << temp if temp != nil
+                 end
+                 #puts selectedElements.length
+                 if selectedElements.length == 0
+                        return nil
+                 else
+                        return selectedElements
+                 end
+        end
+
+        # Method that iterates over IE DOM object and get the elements for the given
+        # xpath.
+        def getElementByAbsoluteXpath(xpath)
+                curElem = nil
+
+                #puts "Hello; Given xpath is : #{xpath}"
+                doc = document
+                curElem = doc.getElementsByTagName("body")["0"]
+                xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
+                xpath = $1
+
+                if xpath == nil
+                        puts "Function Requires absolute XPath."
+                        return
+                end
+
+                arr = xpath.split(/\//)
+                return nil if arr.length == 0
+
+                lastTagName = arr[arr.length-1].to_s.upcase
+
+                # lastTagName is like tagName[number] or just tagName. For the first case we need to
+                # separate tagName and number.
+                lastTagName =~ /(\w*)\[?\d*\]?/
+                lastTagName = $1
+                #puts lastTagName
+
+                for element in arr do
+                        element =~ /(\w*)\[?(\d*)\]?/
+                        tagname = $1
+                        tagname = tagname.upcase
+
+                        if $2 != nil && $2 != ""
+                                index = $2
+                                index = "#{index}".to_i - 1
+                        else
+                                index = 0
+                        end
+
+                        #puts "#{element} #{tagname} #{index}"
+                        allElemns = curElem.childnodes
+                        if allElemns == nil || allElemns.length == 0
+                                puts "#{element} is null"
+                                next
+                        end
+
+                        #puts "Current element is : #{curElem.tagName}"
+                        allElemns.each do |child|
+                                gotIt = false
+                                begin
+                                   curTag = child.tagName
+                                rescue
+                                   next
+                                end
+                                #puts child.tagName
+                                #Special handling for FORM and SPAN tags because sometimes tidy
+                                #changes their position while outputting the clean html. There may
+                                #more tags but we found only these two while testing.
+                                #So you can't have an xpath that contains form or span tag.
+                                if curTag == "FORM" || curTag == "SPAN"
+                                        tmpFormElems = child.childnodes
+                                        tmpFormElems.each do |formChild|
+                                        begin
+                                           tmpCurTag = formChild.tagName
+                                        rescue
+                                           next
+                                        end
+
+                                        if tmpCurTag == tagname
+                                                index-=1
+                                                if index < 0
+                                                        curElem = formChild
+                                                        gotIt = true
+                                                        break
+                                                end
+                                        end
+                                        end
+                                end
+                                break if gotIt
+                                if curTag == tagname
+                                        index-=1
+                                        if index < 0
+                                                curElem = child
+                                                break
+                                        end
+                                end
+                        end
+
+                        #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
+                end
+                begin
+                if curElem.tagName == lastTagName
+                        #puts curElem.tagName
+                        return curElem
+                else
+                        return nil
+                end
+                rescue
+                        return nil
+                end
+        end
+
     end # class IE
         
     # 
@@ -2084,7 +2310,16 @@ module Watir
         include Watir::Exception
         
         def locate
-            @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
+            if(@how == :xpath)
+                 temp = @container.getElementsByXpath(@what)
+                 if temp != nil
+                    @o = temp[0]
+                 else
+                    @o = nil
+                 end
+            else
+                 @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
+            end
         end            
         
         def initialize(container, how, what)
@@ -2190,7 +2425,17 @@ module Watir
 
         def locate
             unless @how == :from_object
-                @o = @container.locate_tagged_element('TABLE', @how, @what)
+                # Get element using xpath.
+                if @how == :xpath
+                   temp = @container.getElementsByXpath(@what)
+                   if temp != nil
+                      @o = temp[0]
+                   else
+                      @o = nil
+                   end
+                else
+                   @o = @container.locate_tagged_element('TABLE', @how, @what)
+                end
             else
                 @o = @what
             end
@@ -2418,7 +2663,14 @@ module Watir
             @how = how   
             @what = what   
             @o=nil
-            if how == :direct
+            if @how == :xpath
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil
+                   @o = temp[0]
+                else
+                   @o = nil
+                end
+            elsif how == :direct
                 @o = what
             else
                 @o = container.locate_tagged_element( "TR" , how , what )   
@@ -2473,7 +2725,14 @@ module Watir
         def initialize(container,  how, what)   
             @container = container    
             #puts "How = #{how}"
-             if how == :direct 
+             if how == :xpath
+               temp = @container.getElementsByXpath(what)
+               if temp != nil
+                 @o = temp[0]
+               else
+                 @o = nil
+               end
+             elsif how == :direct 
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
@@ -2515,7 +2774,18 @@ module Watir
         end
         
         def locate
-            @o = @container.locate_tagged_element('IMG', @how, @what)
+            # Get element using xpath.  
+            if @how == :xpath
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil
+                   @o = temp[0]
+                else
+                   @o = nil
+                end
+            else
+                @o = @container.locate_tagged_element('IMG', @how, @what)
+            end
+
         end            
 
         # this method produces the properties for an image as an array
@@ -2643,10 +2913,20 @@ module Watir
         end
         
         def locate
-            begin
-                @o = @container.locate_tagged_element('A', @how, @what)
-            rescue UnknownObjectException
-                @o = nil
+            # Get element using xpath
+            if @how == :xpath
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil
+                    @o = temp[0]
+                else
+                    @o = nil
+                end
+            else
+                begin
+                    @o = @container.locate_tagged_element('A', @how, @what)
+                rescue UnknownObjectException
+                    @o = nil
+                end
             end
         end
 
@@ -2686,7 +2966,15 @@ module Watir
     
     class InputElement < Element
         def locate
-            if @how == :from_object
+            # Get element using xpath.
+            if @how == :xpath
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil
+                   @o = temp[0]
+                else
+                   @o = nil
+                end
+            elsif @how == :from_object
                 @o = @what
             else
                 @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
@@ -2912,8 +3200,16 @@ module Watir
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
         def dragContentsTo( destination_how , destination_what)
             assert_exists
-            destination = @container.textField(destination_how , destination_what)
-
+            if destination_how == :xpath
+                temp = @container.getElementsByXpath(@what) # BUG: should be a TextField, not an ole_object
+                if temp != nil
+                   destination = temp[0]
+                else
+                   destination = nil
+                end
+            else
+                destination = @container.textField(destination_how , destination_what)
+            end
             raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
@@ -3080,7 +3376,16 @@ module Watir
     #
     class RadioCheckCommon < Element
         def locate
-            @o = @container.locate_input_element(@how, @what, @type, @value)
+            if @how == :xpath
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil
+                   @o = temp[0]
+                else
+                   @o = nil
+                end
+            else
+                @o = @container.locate_input_element(@how, @what, @type, @value)
+            end
         end
         def initialize(container, how, what, type, value = nil)
             @container = container
