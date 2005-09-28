@@ -1257,7 +1257,6 @@ module Watir
             autoit.Send key_string
         end
 
-        private
         def dir
             return File.expand_path(File.dirname(__FILE__))
         end
@@ -2551,16 +2550,19 @@ end
         end
         private :table_body
 
+        # returns a watir object
         def body(how, what)
             return TableBody.new(@container, how, what, self)
         end
 
+        # returns a watir object
         def bodies
             assert_exists
-            return TableBodies.new(@container, :direct, @o)
+            return TableBodies.new(@container, @o)
         end
    
-        def row(index)
+        # returns an ole object
+        def row(index) 
             return @o.invoke("rows")[(index-1).to_s]
         end
         private :row
@@ -2587,13 +2589,10 @@ end
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
     # many of the methods available to this object are inherited from the Element class
     #
-    class TableBodies < Element # BUG: Why isn't this a subclass of ElementCollections?
-        def initialize(container, how, what)
+    class TableBodies < Element 
+        def initialize(container, parent_table)
             @container = container
-            @o = nil
-            if how == :direct
-                @o = what     # in this case, @o is the parent table
-            end
+            @o = parent_table     # in this case, @o is the parent table
         end
  
         # returns the number of TableBodies that exist in the table
@@ -2605,20 +2604,20 @@ end
         # returns the n'th Body as a Watir TableBody object
         def []n
             assert_exists
-            return TableBody.new( @container, :direct, @o.tBodies[(n-1).to_s] )
+            return TableBody.new(@container, :direct, ole_table_body_at_index(n))
         end
 
-        def get_IE_table_body_at_index(n)
+        # returns an ole table body
+        def ole_table_body_at_index(n)
             return @o.tBodies[(n-1).to_s]
         end
 
         # iterates through each of the TableBodies in the Table. Yields a TableBody object
         def each
-            0.upto( @o.tBodies.length - 1 ) { |i| yield TableBody.new(@container, :direct, @o.tBodies[i.to_s]) }
+            1.upto( @o.tBodies.length ) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
         end
 
     end
-
 
     # this class is a table body
     class TableBody < Element
@@ -2627,7 +2626,7 @@ end
             if @how == :direct
                 @o = @what     # in this case, @o is the table body
             elsif @how == :index
-                @o = @parent_table.bodies.get_IE_table_body_at_index(@what)
+                @o = @parent_table.bodies.ole_table_body_at_index(@what)
             end
             @rows = []
             if @o
@@ -2726,38 +2725,42 @@ end
         include Watir::Exception
         include Container 
 
+        def locate
+            if @how == :xpath
+                @o = @container.getElementByXpath(@what)
+            elsif @how == :direct 
+                @o = @what
+            else
+                @o = @container.locate_tagged_element("TD", @how, @what)   
+            end
+        end
+
         # Returns an initialized instance of a table cell          
         #   * container  - an  IE object       
         #   * how        - symbol - how we access the cell        
         #   * what       - what we use to access the cell - id, name index etc
         def initialize(container, how, what)   
             @container = container    
-            #puts "How = #{how}"
-             if how == :xpath
-                 @o = @container.getElementByXpath(what)
-             elsif how == :direct 
-                 @o = what
-                 #puts "@o.class=#{@o.class}"
-             else
-                 @o = container.locate_tagged_element( "TD" , how , what )   
-             end
-             super( @o )   
-             @how = how   
-             @what = what   
-         end 
+            @how = how   
+            @what = what   
+            super nil   
+        end 
 
         def ole_inner_elements
+            locate
             return @o.all
         end
         private :ole_inner_elements
 
         def document
+            locate
             return @o  
         end
 
         alias to_s text
  
         def colspan
+            locate
             @o.colSpan
         end
 
@@ -3744,6 +3747,19 @@ end
 
     end
 
+    
+    def autoit
+        unless @@autoit
+            begin
+                @@autoit = WIN32OLE.new('AutoItX3.Control')
+            rescue WIN32OLERuntimeError
+                system("regsvr32.exe /s " + "#{dir}/watir/AutoItX3.dll".gsub('/', '\\'))
+                @@autoit = WIN32OLE.new('AutoItX3.Control')
+            end
+        end
+        @@autoit
+    end        
+                
 end
 
 require 'watir/camel_case'
