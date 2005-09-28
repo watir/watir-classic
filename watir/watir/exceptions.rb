@@ -36,10 +36,6 @@ module Watir
     class MissingWayOfFindingObjectException < WatirException
     end
 
-    # This exception is raised if an attempt is made to access a table that doesn't exist
-    class UnknownTableException < WatirException
-    end
-
     # this exception is raised if an attempt is made to  access a table cell that doesnt exist
     class UnknownCellException < WatirException
     end

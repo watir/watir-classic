@@ -682,7 +682,7 @@ module Watir
         #    :id         - finds the item using id attribute
         #    :title      - finds the item using title attribute
         #    :xpath      - finds the item that matches xpath query
-        # 
+        #
         #  *  what  - string, integer, re or xpath query , what we are looking for, 
         #
         # returns an Div object
@@ -693,7 +693,7 @@ module Watir
         #   ie.div(:index,2)                    # access the second div on the page
         #   ie.div(:title , "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   ie.div(:xpath, "//div[@id='list']/")    # access the first div whose id is 'list'
-        #
+        #   
         def div(how, what)
             return Div.new(self, how, what)
         end
@@ -716,7 +716,7 @@ module Watir
         #    :id         - finds the item using its id attribute
         #    :name       - finds the item using its name attribute
         #
-        #  *  what  - string, integer or re, what we are looking for, 
+        #  *  what  - string, integer or re , what we are looking for, 
         #
         # returns a Span object
         #
@@ -1213,13 +1213,13 @@ module Watir
         end
         
         # Maximize the window (expands to fill the screen)
-        def maximize; set_window_state (:SW_MAXIMIZE); end
+        def maximize; set_window_state :SW_MAXIMIZE; end
         
         # Minimize the window (appears as icon on taskbar)
-        def minimize; set_window_state (:SW_MINIMIZE); end
+        def minimize; set_window_state :SW_MINIMIZE; end
 
         # Restore the window (after minimizing or maximizing)
-        def restore;  set_window_state (:SW_RESTORE);  end
+        def restore;  set_window_state :SW_RESTORE;  end
         
         # Make the window come to the front
         def bring_to_front
@@ -1574,7 +1574,7 @@ module Watir
             document.activeElement.blur
             document.focus
         end
-
+       
         #      
         # Functions written for using xpath for getting the elements.
         #
@@ -1792,62 +1792,9 @@ end
         end
     end
     
-    class Frame
-        include Container
-
-        # Find the frame denoted by how and what in the container and return its ole_object
-        def self.locate(container, how, what)
-            frames = container.document.frames
-            target = nil
-
-            for i in 0 .. frames.length-1
-                next unless target == nil
-                this_frame = frames.item(i)
-                if how == :index 
-                    if i+1 == what
-                        target = this_frame
-                    end
-                elsif how == :name
-                    begin
-                        if what.matches(this_frame.name)
-                            target = this_frame
-                        end
-                    rescue # access denied?
-                    end
-                elsif how == :id
-                    # BUG: Won't work for IFRAMES
-                    if what.matches(container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
-                        target = this_frame
-                    end
-                else
-                    raise ArgumentError, "Argument #{how} not supported"
-                end
-            end
-            
-            unless target
-                raise UnknownFrameException , "Unable to locate a frame with name #{ what} " 
-            end
-            target        
-        end
-    
-        def initialize(container, how, what)
-            @container = container
-            @frame = Frame.locate(container, how, what)
-            copy_test_config container
-        end
-
-        def document
-            @frame.document
-        end
-
-        def wait(no_sleep = false)
-            @container.wait(no_sleep)
-        end
-    end
-    
     # Base class for html elements.
     # This is not a class that users would normally access. 
-    class Element
+    class Element #Wrapper
         include Watir::Exception
         include Container # presumes @container is defined
         
@@ -1873,14 +1820,14 @@ end
             ole_method_name = ruby_method_name unless ole_method_name
             class_eval "def #{ruby_method_name}
                           assert_exists
-                          @o.invoke('#{ole_method_name}')
+                          ole_object.invoke('#{ole_method_name}')
                         end"
         end
         def self.def_wrap_guard(method_name)
             class_eval "def #{method_name}
                           assert_exists
                           begin
-                            @o.invoke('#{method_name}')
+                            ole_object.invoke('#{method_name}')
                           rescue
                             ''
                           end
@@ -1888,7 +1835,7 @@ end
         end
         def assert_exists
             locate if defined?(locate)
-            unless @o
+            unless ole_object
                 raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
             end
         end
@@ -1931,20 +1878,20 @@ end
         def_wrap :html, :outerHTML
 
         # returns the text before the element
-        def before_text
+        def before_text # label only
             assert_exists
             begin
-                @o.getAdjacentText("afterEnd").strip
+                ole_object.getAdjacentText("afterEnd").strip
             rescue 
                 ''
             end
         end
 
         # returns the text after the element
-        def after_text
+        def after_text # label only
             assert_exists
             begin
-                @o.getAdjacentText("beforeBegin").strip
+                ole_object.getAdjacentText("beforeBegin").strip
             rescue 
                 ''
             end
@@ -1954,18 +1901,18 @@ end
         # raises an ObjectNotFound exception if the object cannot be found
         def text
             assert_exists
-            return @o.innerText.strip
+            return ole_object.innerText.strip
         end
 
         def ole_inner_elements
             assert_exists
-            return @o.all
+            return ole_object.all
         end
         private :ole_inner_elements
 
         def document
             assert_exists
-            return @o
+            return ole_object
         end
 
         def typingspeed
@@ -2006,14 +1953,14 @@ end
         def highlight(set_or_clear)
             if set_or_clear == :set
                 begin
-                    @original_color = @o.style.backgroundColor
-                    @o.style.backgroundColor = @container.activeObjectHighLightColor
+                    @original_color = ole_object.style.backgroundColor
+                    ole_object.style.backgroundColor = @container.activeObjectHighLightColor
                 rescue 
                     @original_color = nil
                 end
             else # BUG: assumes is :clear, but could actually be anything
                 begin 
-                    @o.style.backgroundColor = @original_color unless @original_color == nil
+                    ole_object.style.backgroundColor = @original_color unless @original_color == nil
                 rescue
                     # we could be here for a number of reasons...
                 ensure
@@ -2031,7 +1978,7 @@ end
             assert_enabled
            
             highlight(:set)
-            @o.click()
+            ole_object.click()
             @container.wait()
             highlight(:clear)
         end
@@ -2048,7 +1995,7 @@ end
             nil
         end
         
-        # This method executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
+        # Executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
         #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
@@ -2057,7 +2004,7 @@ end
             assert_enabled
 
             highlight(:set)
-            @o.fireEvent(event)
+            ole_object.fireEvent(event)
             @container.wait()
             highlight(:clear)
         end
@@ -2065,10 +2012,10 @@ end
         # This method sets focus on the active element.
         #   raises: UnknownObjectException  if the object is not found
         #           ObjectDisabledException if the object is currently disabled
-        def focus()
+        def focus
             assert_exists
             assert_enabled
-            @o.focus()
+            ole_object.focus()
         end
         
         # Returns whether this element actually exists. 
@@ -2089,7 +2036,76 @@ end
         end
     end
 
+    class ElementMapper # Still to be used
+        include Container
+        
+        def initialize wrapper_class, container, how, what
+            @wrapper_class = wrapper_class
+            @container = container
+            @how = how
+            @what = what
+        end
+        
+        def method_missing method, *args
+            locate
+            @wrapper_class.new(@o).send(method, *args)
+        end
+    end
 
+    class Frame 
+        include Container
+
+        # Find the frame denoted by how and what in the container and return its ole_object
+        def locate
+            how = @how
+            what = @what
+            frames = @container.document.frames
+            target = nil
+
+            for i in 0 .. (frames.length - 1)
+                next unless target == nil
+                this_frame = frames.item(i)
+                if how == :index 
+                    if i + 1 == what
+                        target = this_frame
+                    end
+                elsif how == :name
+                    begin
+                        if what.matches(this_frame.name)
+                            target = this_frame
+                        end
+                    rescue # access denied?
+                    end
+                elsif how == :id
+                    # BUG: Won't work for IFRAMES
+                    if what.matches(@container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
+                        target = this_frame
+                    end
+                else
+                    raise ArgumentError, "Argument #{how} not supported"
+                end
+            end
+            
+            unless target
+                raise UnknownFrameException, "Unable to locate a frame with name #{ what} " 
+            end
+            target        
+        end
+    
+        def initialize(container, how, what)
+            @container = container
+            @how = how
+            @what = what
+            @o = locate
+            copy_test_config container
+        end
+
+        def document
+            @o.document
+        end
+
+    end
+    
     # this class is the super class for the iterator classes ( buttons, links, spans etc
     # it would normally only be accessed by the iterator methods ( spans , links etc) of IE
     class ElementCollections
@@ -2325,7 +2341,7 @@ end
                 @o = @container.getElementByXpath(@what)
             else
                 @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
-            end
+            end            
         end            
         
         def initialize(container, how, what)
@@ -2410,12 +2426,12 @@ end
  
         # Returns the table object containing anElement
         #   * container  - an instance of an IE object
-        #   * anElement     - a Watir object (TextField, Button, etc.)
+        #   * anElement  - a Watir object (TextField, Button, etc.)
         def Table.create_from_element(container, anElement)
             anElement.locate if defined?(anElement.locate)
             o = anElement.ole_object.parentElement
             o = o.parentElement until o.tagName == 'TABLE'
-            Table.new(container, :from_object, o)
+            Table.new(container, :direct, o)
         end
 
         # Returns an initialized instance of a table object
@@ -2432,7 +2448,7 @@ end
         def locate
             if @how == :xpath
                 @o = @container.getElementByXpath(@what)
-            elsif @how == :from_object
+            elsif @how == :direct
                 @o = @what
             else
                 @o = @container.locate_tagged_element('TABLE', @how, @what)
@@ -2488,14 +2504,14 @@ end
         # iterates through the rows in the table. Yields a TableRow object
         def each
             assert_exists
-            1.upto( @o.getElementsByTagName("TR").length ) { |i |  yield TableRow.new(@container ,:direct, row(i) )    }
+            1.upto( @o.getElementsByTagName("TR").length) { |i|  yield TableRow.new(@container, :direct, row(i) )    }
         end
  
         # Returns a row in the table
         #   * index         - the index of the row
         def [](index)
             assert_exists
-            return TableRow.new(@container ,:direct, row(index) )
+            return TableRow.new(@container, :direct, row(index))
         end
 
         # This method returns the number of rows in the table.
@@ -2571,10 +2587,10 @@ end
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
     # many of the methods available to this object are inherited from the Element class
     #
-    class TableBodies < Element
+    class TableBodies < Element # BUG: Why isn't this a subclass of ElementCollections?
         def initialize(container, how, what)
             @container = container
-            @o= nil
+            @o = nil
             if how == :direct
                 @o = what     # in this case, @o is the parent table
             end
@@ -2589,56 +2605,56 @@ end
         # returns the n'th Body as a Watir TableBody object
         def []n
             assert_exists
-            return TableBody.new( @container , :direct , @o.tBodies[(n-1).to_s] )
+            return TableBody.new( @container, :direct, @o.tBodies[(n-1).to_s] )
         end
 
-        def get_IE_table_body_at_index( n )
+        def get_IE_table_body_at_index(n)
             return @o.tBodies[(n-1).to_s]
         end
 
         # iterates through each of the TableBodies in the Table. Yields a TableBody object
         def each
-            0.upto( @o.tBodies.length-1 ) { |i | yield TableBody.new( @container , :direct , @o.tBodies[i.to_s] )   }
+            0.upto( @o.tBodies.length - 1 ) { |i| yield TableBody.new(@container, :direct, @o.tBodies[i.to_s]) }
         end
 
     end
 
 
     # this class is a table body
-    class TableBody<Element
-        def initialize(container, how, what, parent_table=nil )
-            @container = container
-            @o= nil
-            if how == :direct
-                @o = what     # in this case, @o is the table body
-            elsif how == :index
-                @o=parent_table.bodies.get_IE_table_body_at_index( what )
+    class TableBody < Element
+        def locate
+            @o = nil
+            if @how == :direct
+                @o = @what     # in this case, @o is the table body
+            elsif @how == :index
+                @o = @parent_table.bodies.get_IE_table_body_at_index(@what)
             end
             @rows = []
-            update_rows
-            super(@o)
-        end
- 
-        # This method updates the internal representation of the table. It can be used on dynamic tables to update the watir representation 
-        # after the table has changed
-        # BUG: Remove
-        def update_rows
             if @o
                 @o.rows.each do |oo|
                     @rows << TableRow.new(@container, :direct, oo)
                 end
             end
-        end
+        end            
 
+        def initialize(container, how, what, parent_table = nil)
+            @container = container
+            @how = how
+            @what = what
+            @parent_table = parent_table
+            super nil
+        end
+ 
         # returns the specified row as a TableRow object
-        def []n
+        def [](n)
             assert_exists
-            return TableRow.new( @container , :direct , @rows[n-1] )
+            return @rows[n - 1]
         end
 
         # iterates through all the rows in the table body
         def each
-            0.upto( @rows.length-1 ) { |i | yield @rows[i]    }
+            locate
+            0.upto(@rows.length - 1) { |i| yield @rows[i] }
         end
 
         # returns the number of rows in this table body.
@@ -2651,6 +2667,23 @@ end
     # this class is a table row
     class TableRow < Element
 
+        def locate
+            @o = nil
+            if @how == :direct
+                @o = @what
+            elsif @how == :xpath
+                @o = @container.getElementByXpath(@what)
+            else
+                @o = @container.locate_tagged_element("TR", @how, @what)   
+            end
+            if @o # cant call the assert_exists here, as an exists? method call will fail
+                @cells = []
+                @o.cells.each do |oo|
+                    @cells << TableCell.new(@container, :direct, oo)
+                end
+            end
+        end
+
         # Returns an initialized instance of a table row          
         #   * o  - the object contained in the row
         #   * container  - an instance of an IE object       
@@ -2660,48 +2693,31 @@ end
             @container = container
             @how = how   
             @what = what   
-            @o = nil
-            if how == :xpath
-                @o = @container.getElementByXpath(what)
-            elsif how == :direct
-                @o = what
-            else
-                @o = container.locate_tagged_element("TR", how, what)   
-            end
-            update_row_cells
-            super( @o )   
+            super nil
         end
    
-        # this method updates the internal list of cells. 
-        def update_row_cells
-            if @o   # cant call the assert_exists here, as an exists? method call will fail
-                @cells=[]
-                @o.cells.each do |oo|
-                    @cells << TableCell.new(@container, :direct, oo)
-                end
-            end
-        end
-
         # this method iterates through each of the cells in the row. Yields a TableCell object
         def each
-            0.upto( @cells.length-1 ) { |i | yield @cells[i]    }
+            locate
+            0.upto( @cells.length-1 ) { |i| yield @cells[i] }
         end
 
    	  # Returns an element from the row as a TableCell object
         def [](index)
             assert_exists
-            raise UnknownCellException , "Unable to locate a cell at index #{index}" if @cells.length < index
-            return @cells[(index-1)]
+            raise UnknownCellException, "Unable to locate a cell at index #{index}" if @cells.length < index
+            return @cells[(index - 1)]
         end
 
-        #defaults all missing methods to the array of elements, to be able to
+        # defaults all missing methods to the array of elements, to be able to
         # use the row as an array
-        def method_missing(aSymbol,*args)
-            return @o.send(aSymbol,*args)
-        end
+#        def method_missing(aSymbol, *args)
+#            return @o.send(aSymbol, *args)
+#        end
    
         def column_count
-             @cells.length
+            locate
+            @cells.length
         end
     end
  
@@ -2712,8 +2728,8 @@ end
 
         # Returns an initialized instance of a table cell          
         #   * container  - an  IE object       
-        #   * how         - symbol - how we access the cell        
-        #   * what         - what we use to access the cell - id, name index etc
+        #   * how        - symbol - how we access the cell        
+        #   * what       - what we use to access the cell - id, name index etc
         def initialize(container, how, what)   
             @container = container    
             #puts "How = #{how}"
@@ -2723,9 +2739,9 @@ end
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
-                 @o = container.locate_tagged_element("TD", how, what)   
+                 @o = container.locate_tagged_element( "TD" , how , what )   
              end
-             super(@o)   
+             super( @o )   
              @how = how   
              @what = what   
          end 
@@ -2764,8 +2780,8 @@ end
             if @how == :xpath
                 @o = @container.getElementByXpath(@what)
             else
-                @o = @container.locate_tagged_element('IMG', @how, @what)
-            end
+            @o = @container.locate_tagged_element('IMG', @how, @what)
+        end            
         end            
 
         # this method produces the properties for an image as an array
@@ -2896,12 +2912,12 @@ end
             if @how == :xpath
                 @o = @container.getElementByXpath(@what)
             else
-                begin
-                    @o = @container.locate_tagged_element('A', @how, @what)
-                rescue UnknownObjectException
-                    @o = nil
-                end
+            begin
+                @o = @container.locate_tagged_element('A', @how, @what)
+            rescue UnknownObjectException
+                @o = nil
             end
+        end
         end
 
         # if an image is used as part of the link, this will return true      
@@ -2942,7 +2958,7 @@ end
         def locate
             if @how == :xpath
                 @o = @container.getElementByXpath(@what)
-            elsif @how == :from_object
+            elsif @how == :direct
                 @o = @what
             else
                 @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
@@ -3166,10 +3182,10 @@ end
         #  19 Jan 2005 - It is added as prototype functionality, and may change
         #   * destination_how   - symbol, :id, :name how we identify the drop target 
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
-        def dragContentsTo(destination_how , destination_what)
+        def dragContentsTo( destination_how , destination_what)
             assert_exists
             destination = @container.text_field(destination_how, destination_what)
-            raise UnknownObjectException,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
+            raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
             @o.select()
