@@ -28,6 +28,8 @@ module Watir
         alias getOLEObject ole_object 
         alias fireEvent fire_event        
         alias innerText text
+        alias afterText after_text
+        alias beforeText before_text
     end    
     class Frame        
         alias getDocument document
