@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_CheckBox_XPath < Test::Unit::TestCase
     include Watir
 
-    def setup()
+    def setup
         $ie.goto($htmlRoot + "checkboxes1.html")
     end
 
@@ -28,22 +28,7 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
        assert_equal("" , $ie.checkbox(:xpath , "//input[@name='box4' and @value='4']/").title)
     end
 
-    def test_onClick
-       assert_false($ie.button(:value , "foo").enabled?)
-       $ie.checkbox(:name, "box5").set
-       assert($ie.button(:value , "foo").enabled?)
-
-       $ie.checkbox(:name, "box5").clear
-       assert_false($ie.button(:value , "foo").enabled?)
-
-       $ie.checkbox(:name, "box5").clear
-       assert_false($ie.button(:value , "foo").enabled?)
-    end
-
     def test_CheckBox_Exists
-       assert($ie.checkbox(:name, "box1").exists?)   
-       assert_false($ie.checkbox(:name, "missing").exists?)   
-
        assert($ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").exists?)   
        assert_false($ie.checkbox(:xpath , "//input[@name='box4' and @value='22']/").exists?)   
     end

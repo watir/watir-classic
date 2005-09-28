@@ -17,39 +17,12 @@ class TC_Tables_XPath < Test::Unit::TestCase
 
     def test_Table_Exists
        assert_false($ie.table(:xpath , "//table[@id='missingTable']/").exists? )
-       #assert_false($ie.table(:index, 33).exists? )
-
        assert($ie.table(:xpath , "//table[@id='t1']/").exists? )
-       #assert($ie.table(:id, /t/).exists? )
-       #assert_false($ie.table(:id , /missing_table/).exists? )
-
-
-       #assert($ie.table(:index, 1).exists? )
-       #assert($ie.table(:index, 2).exists? )
     end
 
     def test_rows
-       assert_raises( UnknownObjectException  ){ $ie.table(:xpath , "//table[@id='missingTable']/").row_count }
-       #assert_raises( UnknownObjectException  ){ $ie.table(:index , 66).row_count }
-
-        #assert_equal( 2 , $ie.table(:index , 1).row_count)
+        assert_raises( UnknownObjectException  ){ $ie.table(:xpath , "//table[@id='missingTable']/").row_count }
         assert_equal( 5 , $ie.table(:xpath , "//table[@id='t1']/").row_count)   # 4 rows and a header 
-        #assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
-
-        # test the each iterator on rows - ie, go through each cell
-        #row = $ie.table(:index, 2)[2]
-        #count=1
-        #row.each do |cell|
-            #  cell.flash   # this line commented out to speed up the test
-         #   if count == 1
-          #      assert_equal('Row 1 Col1' , cell.to_s.strip )
-           # elsif count==2
-           #     assert_equal('Row 1 Col2' , cell.to_s.strip )
-            #end
-          #  count+=1
-       # end
-       # assert_equal(2, count -1)
-      #  assert_equal(2, $ie.table(:index, 2)[2].column_count)        
     end
   
     def test_dynamic_tables
@@ -61,28 +34,8 @@ class TC_Tables_XPath < Test::Unit::TestCase
     end
 
     def test_columns
-
         assert_raises( UnknownObjectException  ){ $ie.table(:xpath , "//table[@id='missingTable']/").column_count }
-        #assert_raises( UnknownObjectException  ){ $ie.table(:index , 77).column_count }
-        #assert_equal( 2 , $ie.table(:index , 1).column_count)
         assert_equal( 1 , $ie.table(:xpath , "//table[@id='t1']/").column_count)   # row one has 1 cell with a colspan of 2
-    end
-
-    def test_table_with_hidden_or_visible_rows
-        $ie.goto($htmlRoot + "simple_table_buttons.html")
-        t = $ie.table(:xpath , "//table[@id='show_hide']/")
-
-        # expand the table
-        t.each do |r|
-            r[1].image(:src, /plus/).click if r[1].image(:src, /plus/).exists?
-        end
-
-        # shrink rows 1,2,3
-        count=1
-        t.each do |r|
-            r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
-            count=2
-        end
     end
 
     def test_links_and_images_in_table
@@ -91,8 +44,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
         assert_equal("106", image.width)
 
         link = table[1][4].link(:index,1)
-        #assert_equal("Google", link.innerText)
-        #The above assertion fails. It says link doesn't have innerText method or property.
+        assert_equal("Google", link.innerText)
     end
 
     def test_table_from_element
@@ -110,9 +62,6 @@ class TC_Tables_XPath < Test::Unit::TestCase
         assert( $ie.cell(:xpath , "//td[@id='cell1']/").exists? )
         assert_false( $ie.cell(:xpath , "//td[@id='no_exist']/").exists? )
         assert_equal( "Row 1 Col1",  $ie.cell(:xpath , "//td[@id='cell1']/").to_s.strip )
-
-        # not really cell directly, but just to show another way of geting the cell
-        #assert_equal( "Row 1 Col1",  $ie.table(:index,1)[1][1].to_s.strip )
     end
 
     def test_row_directly
@@ -124,7 +73,6 @@ class TC_Tables_XPath < Test::Unit::TestCase
 
 
     def test_table_body
-        #assert_equal( 1, $ie.table(:index,1).bodies.length )
         assert_equal( 3, $ie.table(:xpath , "//table[@id='body_test']/").bodies.length )
 
         count = 1

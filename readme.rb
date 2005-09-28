@@ -149,6 +149,7 @@ Contributors:
    Alexey Verkhovsky
    Tuyet Cong-Ton-Nu
    Jeff Wood
+   Angrez Singh
 
 Acknowledgements:
    Chris Morris
