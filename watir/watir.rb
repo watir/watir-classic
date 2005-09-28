@@ -1574,177 +1574,188 @@ module Watir
             document.activeElement.blur
             document.focus
         end
-      
-        #Functions written for using xpath for getting the elements.
+
+        #      
+        # Functions written for using xpath for getting the elements.
+        #
 
         # Get the Rexml object.
         def getRexmlDocumentObject
-                #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
-                if @rexmlDomobject == nil
-                        createRexmlDocumentObject()
-                end
-                return @rexmlDomobject
+            #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
+            if @rexmlDomobject == nil
+                createRexmlDocumentObject()
+            end
+            return @rexmlDomobject
         end
-
+        
         # Create the Rexml object if it is nil. This method is private so can be called only
         # from getRexmlDocumentObject method.
         def createRexmlDocumentObject
-                #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
-                if @rexmlDomobject == nil
-                        #puts 'Here creating rexmlDomobject'
-                        html = self.html() #$ie.html()
-
-                        #Replace form tag so that Tidy don't mess up with the tags.
-                        html = html.gsub(/<\s*FORM ([^>]*)>/, "")
-                        html = html.gsub(/<\s*\/FORM\s*>/, "" )
-
-                        # Use tidy to clean the HTML.
-                        Tidy.path = $TIDY_PATH
-                        outputXhtml = Tidy.open(:show_warnings=>true) do |tidy|
-                              # Add appropriate options for Tidy
-                              tidy.options.output_xhtml = true
-                              tidy.options.write_back = "no"
-                              tidy.options.indent = "auto"
-                              tidy.options.add_xml_decl = "yes"
-                              tidy.options.fix_bad_comments = "yes"
-                              tidy.options.join_styles = "no"
-                              tidy.options.merge_divs = "no"
-                              tidy.options.force_output = "yes"
-                              tidy.options.quiet = "yes"
-
-                              outputXhtml = tidy.clean(html)
-                              #puts outputXhtml
-                              outputXhtml
-                        end
-                        outputXhtml = outputXhtml.gsub(/<\s*form\s*>/, "")
-                        outputXhtml = outputXhtml.gsub(/<\s*\/form\s*>/, "" )
-
-                        # Give the output of tidy to Rexml.
-                        @rexmlDomobject = REXML::Document.new(outputXhtml)
-                 end
-
+            require 'rexml/document'
+            require 'tidy'
+            #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
+            if @rexmlDomobject == nil
+                #puts 'Here creating rexmlDomobject'
+                html = self.html() #$ie.html()
+                
+                #Replace form tag so that Tidy don't mess up with the tags.
+                html = html.gsub(/<\s*FORM ([^>]*)>/, "")
+                html = html.gsub(/<\s*\/FORM\s*>/, "" )
+                
+                # Use tidy to clean the HTML.
+                Tidy.path = $TIDY_PATH
+                outputXhtml = Tidy.open(:show_warnings=>true) do |tidy|
+                    # Add appropriate options for Tidy
+                    tidy.options.output_xhtml = true
+                    tidy.options.write_back = "no"
+                    tidy.options.indent = "auto"
+                    tidy.options.add_xml_decl = "yes"
+                    tidy.options.fix_bad_comments = "yes"
+                    tidy.options.join_styles = "no"
+                    tidy.options.merge_divs = "no"
+                    tidy.options.force_output = "yes"
+                    tidy.options.quiet = "yes"
+                    
+                    outputXhtml = tidy.clean(html)
+                    #puts outputXhtml
+                    outputXhtml
+                end
+                outputXhtml = outputXhtml.gsub(/<\s*form\s*>/, "")
+                outputXhtml = outputXhtml.gsub(/<\s*\/form\s*>/, "" )
+                
+                # Give the output of tidy to Rexml.
+                @rexmlDomobject = REXML::Document.new(outputXhtml)
+            end
+            
         end
         private :createRexmlDocumentObject
-
-        #execute xpath and return an array of elements
+        
+        # return the first element that matches the xpath
+        def getElementByXpath(xpath)
+            temp = getElementsByXpath(xpath)
+            temp = temp[0] if temp
+            return temp
+        end
+        
+        # execute xpath and return an array of elements
         def getElementsByXpath(xpath)
-                 doc = getRexmlDocumentObject()
-                 modifiedXpath = ""
-                 selectedElements = Array.new
-                 doc.elements.each(xpath) do |element|
-                        modifiedXpath  =  element.xpath
-                        temp = getElementByAbsoluteXpath(modifiedXpath)
-                        selectedElements << temp if temp != nil
-                 end
-                 #puts selectedElements.length
-                 if selectedElements.length == 0
-                        return nil
-                 else
-                        return selectedElements
-                 end
+            doc = getRexmlDocumentObject()
+            modifiedXpath = ""
+            selectedElements = Array.new
+            doc.elements.each(xpath) do |element|
+                modifiedXpath  =  element.xpath
+                temp = getElementByAbsoluteXpath(modifiedXpath)
+                selectedElements << temp if temp != nil
+            end
+            #puts selectedElements.length
+            if selectedElements.length == 0
+                return nil
+            else
+                return selectedElements
+            end
+end
+
+# Method that iterates over IE DOM object and get the elements for the given
+# xpath.
+def getElementByAbsoluteXpath(xpath)
+    curElem = nil
+    
+    #puts "Hello; Given xpath is : #{xpath}"
+    doc = document
+    curElem = doc.getElementsByTagName("body")["0"]
+    xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
+    xpath = $1
+    
+    if xpath == nil
+        puts "Function Requires absolute XPath."
+        return
+    end
+    
+    arr = xpath.split(/\//)
+    return nil if arr.length == 0
+    
+    lastTagName = arr[arr.length-1].to_s.upcase
+    
+    # lastTagName is like tagName[number] or just tagName. For the first case we need to
+    # separate tagName and number.
+    lastTagName =~ /(\w*)\[?\d*\]?/
+    lastTagName = $1
+    #puts lastTagName
+    
+    for element in arr do
+        element =~ /(\w*)\[?(\d*)\]?/
+        tagname = $1
+        tagname = tagname.upcase
+        
+        if $2 != nil && $2 != ""
+            index = $2
+            index = "#{index}".to_i - 1
+        else
+            index = 0
         end
-
-        # Method that iterates over IE DOM object and get the elements for the given
-        # xpath.
-        def getElementByAbsoluteXpath(xpath)
-                curElem = nil
-
-                #puts "Hello; Given xpath is : #{xpath}"
-                doc = document
-                curElem = doc.getElementsByTagName("body")["0"]
-                xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
-                xpath = $1
-
-                if xpath == nil
-                        puts "Function Requires absolute XPath."
-                        return
-                end
-
-                arr = xpath.split(/\//)
-                return nil if arr.length == 0
-
-                lastTagName = arr[arr.length-1].to_s.upcase
-
-                # lastTagName is like tagName[number] or just tagName. For the first case we need to
-                # separate tagName and number.
-                lastTagName =~ /(\w*)\[?\d*\]?/
-                lastTagName = $1
-                #puts lastTagName
-
-                for element in arr do
-                        element =~ /(\w*)\[?(\d*)\]?/
-                        tagname = $1
-                        tagname = tagname.upcase
-
-                        if $2 != nil && $2 != ""
-                                index = $2
-                                index = "#{index}".to_i - 1
-                        else
-                                index = 0
-                        end
-
-                        #puts "#{element} #{tagname} #{index}"
-                        allElemns = curElem.childnodes
-                        if allElemns == nil || allElemns.length == 0
-                                puts "#{element} is null"
-                                next
-                        end
-
-                        #puts "Current element is : #{curElem.tagName}"
-                        allElemns.each do |child|
-                                gotIt = false
-                                begin
-                                   curTag = child.tagName
-                                rescue
-                                   next
-                                end
-                                #puts child.tagName
-                                #Special handling for FORM and SPAN tags because sometimes tidy
-                                #changes their position while outputting the clean html. There may
-                                #more tags but we found only these two while testing.
-                                #So you can't have an xpath that contains form or span tag.
-                                if curTag == "FORM" || curTag == "SPAN"
-                                        tmpFormElems = child.childnodes
-                                        tmpFormElems.each do |formChild|
-                                        begin
-                                           tmpCurTag = formChild.tagName
-                                        rescue
-                                           next
-                                        end
-
-                                        if tmpCurTag == tagname
-                                                index-=1
-                                                if index < 0
-                                                        curElem = formChild
-                                                        gotIt = true
-                                                        break
-                                                end
-                                        end
-                                        end
-                                end
-                                break if gotIt
-                                if curTag == tagname
-                                        index-=1
-                                        if index < 0
-                                                curElem = child
-                                                break
-                                        end
-                                end
-                        end
-
-                        #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
-                end
-                begin
-                if curElem.tagName == lastTagName
-                        #puts curElem.tagName
-                        return curElem
-                else
-                        return nil
-                end
-                rescue
-                        return nil
-                end
+        
+        #puts "#{element} #{tagname} #{index}"
+        allElemns = curElem.childnodes
+        if allElemns == nil || allElemns.length == 0
+            puts "#{element} is null"
+            next
         end
+        
+        #puts "Current element is : #{curElem.tagName}"
+        allElemns.each do |child|
+            gotIt = false
+            begin
+                curTag = child.tagName
+            rescue
+                next
+            end
+            #puts child.tagName
+            #Special handling for FORM and SPAN tags because sometimes tidy
+            #changes their position while outputting the clean html. There may
+            #more tags but we found only these two while testing.
+            #So you can't have an xpath that contains form or span tag.
+            if curTag == "FORM" || curTag == "SPAN"
+                tmpFormElems = child.childnodes
+                tmpFormElems.each do |formChild|
+                    begin
+                        tmpCurTag = formChild.tagName
+                    rescue
+                        next
+                    end
+                    
+                    if tmpCurTag == tagname
+                        index-=1
+                        if index < 0
+                            curElem = formChild
+                            gotIt = true
+                            break
+                        end
+                    end
+                end
+            end
+            break if gotIt
+            if curTag == tagname
+                index-=1
+                if index < 0
+                    curElem = child
+                    break
+                end
+            end
+        end
+        
+        #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
+    end
+    begin
+        if curElem.tagName == lastTagName
+            #puts curElem.tagName
+            return curElem
+        else
+            return nil
+        end
+    rescue
+        return nil
+    end
+end
 
     end # class IE
         
@@ -2310,15 +2321,10 @@ module Watir
         include Watir::Exception
         
         def locate
-            if(@how == :xpath)
-                 temp = @container.getElementsByXpath(@what)
-                 if temp != nil
-                    @o = temp[0]
-                 else
-                    @o = nil
-                 end
+            if @how == :xpath
+                @o = @container.getElementByXpath(@what)
             else
-                 @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
+                @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
             end
         end            
         
@@ -2424,20 +2430,12 @@ module Watir
         end
 
         def locate
-            unless @how == :from_object
-                # Get element using xpath.
-                if @how == :xpath
-                   temp = @container.getElementsByXpath(@what)
-                   if temp != nil
-                      @o = temp[0]
-                   else
-                      @o = nil
-                   end
-                else
-                   @o = @container.locate_tagged_element('TABLE', @how, @what)
-                end
-            else
+            if @how == :xpath
+                @o = @container.getElementByXpath(@what)
+            elsif @how == :from_object
                 @o = @what
+            else
+                @o = @container.locate_tagged_element('TABLE', @how, @what)
             end
         end
         
@@ -2658,28 +2656,22 @@ module Watir
         #   * container  - an instance of an IE object       
         #   * how          - symbol - how we access the row        
         #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
-        def initialize(container , how, what)
+        def initialize(container, how, what)
             @container = container
             @how = how   
             @what = what   
-            @o=nil
-            if @how == :xpath
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil
-                   @o = temp[0]
-                else
-                   @o = nil
-                end
+            @o = nil
+            if how == :xpath
+                @o = @container.getElementByXpath(what)
             elsif how == :direct
                 @o = what
             else
-                @o = container.locate_tagged_element( "TR" , how , what )   
+                @o = container.locate_tagged_element("TR", how, what)   
             end
             update_row_cells
             super( @o )   
         end
    
-
         # this method updates the internal list of cells. 
         def update_row_cells
             if @o   # cant call the assert_exists here, as an exists? method call will fail
@@ -2722,23 +2714,18 @@ module Watir
         #   * container  - an  IE object       
         #   * how         - symbol - how we access the cell        
         #   * what         - what we use to access the cell - id, name index etc
-        def initialize(container,  how, what)   
+        def initialize(container, how, what)   
             @container = container    
             #puts "How = #{how}"
              if how == :xpath
-               temp = @container.getElementsByXpath(what)
-               if temp != nil
-                 @o = temp[0]
-               else
-                 @o = nil
-               end
+                 @o = @container.getElementByXpath(what)
              elsif how == :direct 
                  @o = what
                  #puts "@o.class=#{@o.class}"
              else
-                 @o = container.locate_tagged_element( "TD" , how , what )   
+                 @o = container.locate_tagged_element("TD", how, what)   
              end
-             super( @o )   
+             super(@o)   
              @how = how   
              @what = what   
          end 
@@ -2774,18 +2761,11 @@ module Watir
         end
         
         def locate
-            # Get element using xpath.  
             if @how == :xpath
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil
-                   @o = temp[0]
-                else
-                   @o = nil
-                end
+                @o = @container.getElementByXpath(@what)
             else
                 @o = @container.locate_tagged_element('IMG', @how, @what)
             end
-
         end            
 
         # this method produces the properties for an image as an array
@@ -2913,14 +2893,8 @@ module Watir
         end
         
         def locate
-            # Get element using xpath
             if @how == :xpath
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil
-                    @o = temp[0]
-                else
-                    @o = nil
-                end
+                @o = @container.getElementByXpath(@what)
             else
                 begin
                     @o = @container.locate_tagged_element('A', @how, @what)
@@ -2966,14 +2940,8 @@ module Watir
     
     class InputElement < Element
         def locate
-            # Get element using xpath.
             if @how == :xpath
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil
-                   @o = temp[0]
-                else
-                   @o = nil
-                end
+                @o = @container.getElementByXpath(@what)
             elsif @how == :from_object
                 @o = @what
             else
@@ -3198,19 +3166,10 @@ module Watir
         #  19 Jan 2005 - It is added as prototype functionality, and may change
         #   * destination_how   - symbol, :id, :name how we identify the drop target 
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
-        def dragContentsTo( destination_how , destination_what)
+        def dragContentsTo(destination_how , destination_what)
             assert_exists
-            if destination_how == :xpath
-                temp = @container.getElementsByXpath(@what) # BUG: should be a TextField, not an ole_object
-                if temp != nil
-                   destination = temp[0]
-                else
-                   destination = nil
-                end
-            else
-                destination = @container.textField(destination_how , destination_what)
-            end
-            raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
+            destination = @container.text_field(destination_how, destination_what)
+            raise UnknownObjectException,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
             @o.select()
@@ -3377,12 +3336,7 @@ module Watir
     class RadioCheckCommon < Element
         def locate
             if @how == :xpath
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil
-                   @o = temp[0]
-                else
-                   @o = nil
-                end
+                @o = @container.getElementByXpath(@what)
             else
                 @o = @container.locate_input_element(@how, @what, @type, @value)
             end

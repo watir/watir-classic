@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_FileField_XPath < Test::Unit::TestCase
   include Watir
 
-  def gotoPage()
+  def gotoPage
 	$ie.goto($htmlRoot + "fileupload.html")
   end
 

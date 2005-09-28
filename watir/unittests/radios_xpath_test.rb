@@ -97,49 +97,5 @@ class TC_Radios_XPath < Test::Unit::TestCase
        assert($ie.radio(:xpath, "//input[@name='box4' and @value='3']/").isSet?)   
     end
 
-    def test_radio_properties
-
-        #assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).value}  
-        #assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).name }  
-        #assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).id }  
-        #assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).disabled }  
-        #assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).type }  
-
-        #assert_equal("on"   ,    $ie.radio(:index, 1).value)  
-        #assert_equal("box1" ,    $ie.radio(:index, 1).name )  
-        #assert_equal(""     ,    $ie.radio(:index, 1).id )  
-        #assert_equal("radio",    $ie.radio(:index, 1).type )  
-
-        #assert_equal( false, $ie.radio(:index, 1).disabled )
-        #assert_equal( true,  $ie.radio(:index, 3).disabled )
-
-        #assert_equal("box5"  ,    $ie.radio(:index, 2).id )  
-        #assert_equal(""      ,    $ie.radio(:index, 2).name )  
-
-        #assert_equal("box4-value5", $ie.radio(:name , "box4" , 5 ).title  )
-        #assert_equal("", $ie.radio(:name , "box4" , 4 ).title  )
-
-
-    end
-
-    def test_radio_iterators
-
-        #assert_equal(11, $ie.radios.length)
-        #assert_equal("box5" , $ie.radios[2].id )
-        #assert_equal(true ,  $ie.radios[3].disabled )
-        #assert_equal(false ,  $ie.radios[1].disabled )
-
-        #index = 1
-        #$ie.radios.each do |r|
-         #   assert_equal( $ie.radio(:index, index).name , r.name )
-          #  assert_equal( $ie.radio(:index, index).id , r.id )
-           # assert_equal( $ie.radio(:index, index).value, r.value)
-           # assert_equal( $ie.radio(:index, index).disabled , r.disabled )
-           # index+=1
-        #end
-        #assert_equal(index -1, $ie.radios.length)
-    end
-
-
 end
 

@@ -22,7 +22,8 @@ $non_core_tests =
      'jscript',
      'js_events', # is always visible
      'minmax', # becomes visible
-     'dialog' # visible
+     'dialog', # visible
+     'send_keys' #visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $core_tests = $all_tests - $non_core_tests

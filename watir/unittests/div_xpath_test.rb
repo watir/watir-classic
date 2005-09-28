@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Divs_XPath < Test::Unit::TestCase
     include Watir
     
-    def setup()
+    def setup
         $ie.goto($htmlRoot + "div.html")
     end
 
@@ -52,20 +52,6 @@ class TC_Divs_XPath < Test::Unit::TestCase
         assert_equal( 3 , $ie.div(:xpath , "//div[@id='text_fields1']/").text_fields.length )
     end
     
-    #---- Span Tests ---
-    def test_spans
-        assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
-        assert_raises(UnknownObjectException) {$ie.span(:title , "span77").click }
-        
-        assert($ie.text_field(:name, "text2").verify_contains("0") )  
-        $ie.span(:id , "span3").click
-        assert($ie.text_field(:name, "text2").verify_contains("1") )  
-        
-        $ie.span(:id , "span4").click
-        assert($ie.text_field(:name, "text2").verify_contains("0") )  
-
-    end
-
     def test_span_properties
         assert_raises(UnknownObjectException) {$ie.span(:xpath , "//span[@id='span77']/").text }
         assert_raises(UnknownObjectException) {$ie.span(:xpath , "//span[@title='span77']/").text }
@@ -76,7 +62,6 @@ class TC_Divs_XPath < Test::Unit::TestCase
         assert_raises(UnknownObjectException) {$ie.span(:xpath , "//span[@id='span77']/").class_name }
         assert_equal("blueText" ,   $ie.span(:xpath , "//span[@id='span2']/").class_name )
         assert_equal("" ,   $ie.span(:xpath , "//span[@id='span1']/").class_name )
-        
     end
     
     def test_objects_in_span
@@ -106,7 +91,6 @@ class TC_Divs_XPath < Test::Unit::TestCase
         assert_raises( UnknownObjectException) {$ie.p(:xpath , "//p[@id='missing']/").text }
         assert_raises( UnknownObjectException) {$ie.p(:xpath , "//p[@id='missing']/").title }
         assert_raises( UnknownObjectException) {$ie.p(:xpath , "//p[@id='missing']/").to_s }
-        assert_raises( UnknownObjectException) {$ie.p(:xpath , "//p[@id='missing']/").disabled }
-        
+        assert_raises( UnknownObjectException) {$ie.p(:xpath , "//p[@id='missing']/").disabled }        
     end
 end

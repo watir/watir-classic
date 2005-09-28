@@ -20,15 +20,12 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
        #assert($ie.text_field(:xpath , "//input[@beforeText='This Text After']/").exists? )
        #assert($ie.text_field(:xpath , "//input[@afterText='This Text Before']/").exists? )
-
-       #assert($ie.text_field(:beforeText , /after/i).exists? )
-       #assert($ie.text_field(:afterText , /before/i).exists? )
     end
 
     def test_text_field_dragContentsTo
-        #$ie.text_field(:xpath , "//input[@name='text1']/").dragContentsTo(:xpath , "//input[@id='text2']/")
-        #assert_equal($ie.text_field(:xpath , "//input[@name='text1']/").value, "" ) 
-        #assert_equal($ie.text_field(:xpath , "//input[@id='text2']/").value, "goodbye allHello World" ) 
+        $ie.text_field(:xpath , "//input[@name='text1']/").dragContentsTo(:xpath , "//input[@id='text2']/")
+        assert_equal($ie.text_field(:xpath , "//input[@name='text1']/").value, "" ) 
+        assert_equal($ie.text_field(:xpath , "//input[@id='text2']/").value, "goodbye allHello World" ) 
     end
 
     def test_text_field_VerifyContents
@@ -40,7 +37,6 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
        assert($ie.text_field(:xpath , "//input[@id='text2']/").verify_contains("goodbye all") )  
        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.text_field(:xpath , "//input[@id='noID']/").verify_contains("No field to get a value of") }  
-
     end
 
     def test_text_field_enabled
@@ -71,11 +67,6 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
          $ie.text_field(:xpath , "//input[@name='text1']/").append(" Some Text")
          assert_equal(  "Hello World Some Text" , $ie.text_field(:xpath , "//input[@name='text1']/").value )  
-
-         # may need this to see that it really happened
-         #puts "press return to continue"
-         #gets 
-
     end
 
 
@@ -86,11 +77,6 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
          $ie.text_field(:xpath , "//input[@name='text1']/").clear()
          assert_equal(  "" , $ie.text_field(:xpath , "//input[@name='text1']/").value )  
-
-         # may need this to see that it really happened
-         #puts "press return to continue"
-         #gets 
-
     end
 
     def test_text_field_Set
@@ -100,10 +86,6 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
          $ie.text_field(:xpath , "//input[@name='text1']/").set("watir IE Controller")
          assert_equal(  "watir IE Controller" , $ie.text_field(:xpath , "//input[@name='text1']/").value )  
-
-         # may need this to see that it really happened
-         #puts "press return to continue"
-         #gets 
     end
 
     def test_JS_Events
@@ -116,11 +98,9 @@ class TC_Fields_XPath < Test::Unit::TestCase
 
         # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
         assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , $ie.text_field(:xpath , "//textarea[@name='events_text']/").value.gsub("\r\n" , "") )
-
     end
 
     def test_password
-
         $ie.text_field(:xpath , "//input[@name='password1']/").set("secret")
         assert( 'secret' , $ie.text_field(:xpath , "//input[@name='password1']/").value )
 
