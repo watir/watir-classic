@@ -1,0 +1,166 @@
+# feature tests for Tables
+# revision: $Revision$
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+require 'unittests/setup'
+
+class TC_Tables_XPath < Test::Unit::TestCase
+    include Watir
+
+    def setup
+        gotoTablePage
+    end
+
+    def gotoTablePage()
+        $ie.goto($htmlRoot + "table1.html")
+    end
+
+    def test_Table_Exists
+       assert_false($ie.table(:xpath , "//table[@id='missingTable']/").exists? )
+       #assert_false($ie.table(:index, 33).exists? )
+
+       assert($ie.table(:xpath , "//table[@id='t1']/").exists? )
+       #assert($ie.table(:id, /t/).exists? )
+       #assert_false($ie.table(:id , /missing_table/).exists? )
+
+
+       #assert($ie.table(:index, 1).exists? )
+       #assert($ie.table(:index, 2).exists? )
+    end
+
+    def test_rows
+       assert_raises( UnknownObjectException  ){ $ie.table(:xpath , "//table[@id='missingTable']/").row_count }
+       #assert_raises( UnknownObjectException  ){ $ie.table(:index , 66).row_count }
+
+        #assert_equal( 2 , $ie.table(:index , 1).row_count)
+        assert_equal( 5 , $ie.table(:xpath , "//table[@id='t1']/").row_count)   # 4 rows and a header 
+        #assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
+
+        # test the each iterator on rows - ie, go through each cell
+        #row = $ie.table(:index, 2)[2]
+        #count=1
+        #row.each do |cell|
+            #  cell.flash   # this line commented out to speed up the test
+         #   if count == 1
+          #      assert_equal('Row 1 Col1' , cell.to_s.strip )
+           # elsif count==2
+           #     assert_equal('Row 1 Col2' , cell.to_s.strip )
+            #end
+          #  count+=1
+       # end
+       # assert_equal(2, count -1)
+      #  assert_equal(2, $ie.table(:index, 2)[2].column_count)        
+    end
+  
+    def test_dynamic_tables
+        t = $ie.table(:xpath , "//table[@id='t1']/")
+        assert_equal( 5, t.row_count)
+
+        $ie.button(:xpath,"//input[@value='add row']/").click
+        assert_equal( 6, t.row_count)
+    end
+
+    def test_columns
+
+        assert_raises( UnknownObjectException  ){ $ie.table(:xpath , "//table[@id='missingTable']/").column_count }
+        #assert_raises( UnknownObjectException  ){ $ie.table(:index , 77).column_count }
+        #assert_equal( 2 , $ie.table(:index , 1).column_count)
+        assert_equal( 1 , $ie.table(:xpath , "//table[@id='t1']/").column_count)   # row one has 1 cell with a colspan of 2
+    end
+
+    def test_table_with_hidden_or_visible_rows
+        $ie.goto($htmlRoot + "simple_table_buttons.html")
+        t = $ie.table(:xpath , "//table[@id='show_hide']/")
+
+        # expand the table
+        t.each do |r|
+            r[1].image(:src, /plus/).click if r[1].image(:src, /plus/).exists?
+        end
+
+        # shrink rows 1,2,3
+        count=1
+        t.each do |r|
+            r[1].image(:src, /minus/).click if r[1].image(:src, /minus/).exists? and (1..3) === count 
+            count=2
+        end
+    end
+
+    def test_links_and_images_in_table
+        table = $ie.table(:xpath , "//table[@id='pic_table']/")
+        image = table[1][2].image(:index,1)
+        assert_equal("106", image.width)
+
+        link = table[1][4].link(:index,1)
+        #assert_equal("Google", link.innerText)
+        #The above assertion fails. It says link doesn't have innerText method or property.
+    end
+
+    def test_table_from_element
+        $ie.goto($htmlRoot + "simple_table_buttons.html")
+     
+        button = $ie.button(:xpath , "//input[@id='b1']/")
+        table = Table.create_from_element($ie,button)
+       
+        table[2][1].button(:index,1).click
+        assert($ie.text_field(:name,"confirmtext").verify_contains(/CLICK2/i))
+    end
+
+    def test_cell_directly
+
+        assert( $ie.cell(:xpath , "//td[@id='cell1']/").exists? )
+        assert_false( $ie.cell(:xpath , "//td[@id='no_exist']/").exists? )
+        assert_equal( "Row 1 Col1",  $ie.cell(:xpath , "//td[@id='cell1']/").to_s.strip )
+
+        # not really cell directly, but just to show another way of geting the cell
+        #assert_equal( "Row 1 Col1",  $ie.table(:index,1)[1][1].to_s.strip )
+    end
+
+    def test_row_directly
+        assert( $ie.row(:xpath , "//tr[@id='row1']/").exists? )  
+        assert_false( $ie.row(:xpath , "//tr[@id='no_exist']/").exists? )
+
+        assert_equal('Row 2 Col1' ,  $ie.row(:xpath , "//tr[@id='row1']/")[1].to_s.strip )
+    end
+
+
+    def test_table_body
+        #assert_equal( 1, $ie.table(:index,1).bodies.length )
+        assert_equal( 3, $ie.table(:xpath , "//table[@id='body_test']/").bodies.length )
+
+        count = 1
+        $ie.table(:xpath , "//table[@id='body_test']/").bodies.each do |n|
+
+            # do something better here!
+            # n.flash # this line commented out to speed up the test
+
+            case count 
+                when 1 
+                    compare_text = "This text is in the FRST TBODY."
+                when 2 
+                    compare_text = "This text is in the SECOND TBODY."
+                when 3 
+                    compare_text = "This text is in the THIRD TBODY."
+            end
+
+            assert_equal( compare_text , n[1][1].to_s.strip )   # this is the 1st cell of the first row of this particular body
+
+            count +=1
+        end
+        assert_equal( count-1, $ie.table(:xpath , "//table[@id='body_test']/").bodies.length  )
+
+        assert_equal( "This text is in the THIRD TBODY." ,$ie.table(:xpath , "//table[@id='body_test']/").body(:index,3)[1][1].to_s.strip ) 
+
+        # iterate through all the rows in a table body
+        count = 1
+        $ie.table(:xpath , "//table[@id='body_test']/").body(:index,2).each do | row |
+            # row.flash    # this line commented out, to speed up the tests
+            if count == 1
+                assert_equal('This text is in the SECOND TBODY.' , row[1].text.strip )
+            elsif count == 1
+                 assert_equal('This text is also in the SECOND TBODY.' , row[1].text.strip )
+            end
+            count+=1
+        end
+    end
+
+end
