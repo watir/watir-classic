@@ -8,7 +8,7 @@ body {
 	
 h1 {
 	margin-bottom:	1em;
-	font-size:	1.5em;
+	font-size:		1.5em;
 	font-weight:	bold;
 }
 
@@ -26,7 +26,7 @@ p {
 }
 
 a:link {
-	color:	          #215997;
+	color:	      #215997;
 }
 
 a:visited {
@@ -42,15 +42,15 @@ a:active {
 }
 
 #banner {
-        width:		     95%;
-	height:	             95px;
+    width:		         95%;
+	height:	             100px;
 	background-image:    url(images/watir.gif);
 	background-repeat:   no-repeat;
 	background-position: 30px 0px;
 }
 
 #banner h1 {
-	margin-left:	     150px;
+	margin-left:	     200px;
 	height:	             70px;
 	background-image:    url(images/watirwords.gif);
 	background-repeat:   no-repeat;
@@ -58,7 +58,7 @@ a:active {
 }
 
 #left-column {
-        margin-top: 0;
+    margin-top: 0;
 	float: 	    left;
 	position:   absolute;
 	width: 	    130px;
@@ -67,43 +67,38 @@ a:active {
 }
 
 #left-column p {
-        margin-top:	0px;
+    margin-top:	    0px;
 	margin-bottom:	1em;
-	font-size:     1em;
+	font-size:      1em;
 }
 
 #left-column h2 {
-	margin:		0;
+	margin:	    	0;
 	margin-bottom:  0;
-	font-size:     1.1em;
-	font-weight:   bold;
+	font-size:      1.1em;
+	font-weight:    bold;
 }
 
 #left-column ul {
-	margin-top:    0;
-	margin-bottom: 1em;
-	margin-left: 15;
-	padding:       0;
-	font-size:     1em;
+	margin-top:    	0;
+	margin-bottom: 	1em;
+	margin-left: 	15;
+	padding:       	0;
+	font-size:     	1em;
 }
 
 #left-column ul li {
 	margin:	 0 0 0.2em 0;
 	padding: 0;
-
 }
 
 #right-column {
-	        position:     absolute;
+	    position:     absolute;
 		width:	      70%;
 		margin-top:   15px;
 		margin-left:  200px;
 		margin-right: auto;
 		text-align:   left;
-	}
-
-#right-column p {
-	font-size:     1em;
 }
 
 #right-column h2 {
@@ -134,39 +129,47 @@ a:active {
 	text-align:   left;
 }
 p.navigation-bar {
-        background-color: #205996;
+    background-color: #205996;
 	color:            white;
 	border:           1px #efefef solid;
 	text-align:       center;
 }
 
 p.navigation-bar a:link {
-        background-color:#205996;
+    background-color:#205996;
 	color:           white;
-        text-decoration: none;
+    text-decoration: none;
 }
 
 p.navigation-bar a:visited {
 	color:           white;
-        text-decoration: none;
+    text-decoration: none;
 }
 
 p.navigation-bar a:hover {
 	background-color: #97C6DD;
-        color:            white;
-        text-decoration: underline;
+    color:            white;
+    text-decoration:  underline;
 }
 
 .about {
 	margin-bottom:	     1em;
 	margin-top:          0px;
-	padding:	     10px;
- 	font-size:           1.1em;
+	padding:	     	 10px;
+	padding-left:		 20px;
+	font-size:			 0.9em;
 	background-color:    #EFEFEF;
-	border:		     1px solid #999;
-	font-weight:   bold;
+	border:		     	 1px solid #999;
+	font-weight:   		 bold;
 }
-.about p {
-        margin-top:	    0px;
-	margin-bottom:	    0px;
+
+p.quote { 
+	text-align: 	center;
+	font-size:		1.1em;
+	font-style:		italic;
+}
+
+span.quote {
+	font-size:		smaller;
+	font-style:		normal;
 }
