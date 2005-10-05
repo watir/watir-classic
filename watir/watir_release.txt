@@ -1,4 +1,7 @@
 Watir Release How To
+TODO: describe how to build the nullsoft installer and the gem.
+
+ZIP-BASED RELEASE
 
 Check everything out of cvs.
 In watir.rb, change the VERSION constant to be the new release number.
@@ -23,6 +26,13 @@ Copy readme.rb to readme.txt.
 
 Zip up. Note the filename is watir_v1_3_1.zip.
 
-Useful other things
--------------------
-Delete the watir_bonus directories.
+Note: Don't forget to delete the watir_bonus directories.
+
+UPDATE WEBSITE
+
+Upload the home page and basic user documentation
+   psftp -b website-upload.scr bret@rubyforge.org
+
+Upload the rdocs (assumes rdocs have been build already)
+   cd doc
+   pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
