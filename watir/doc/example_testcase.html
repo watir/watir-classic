@@ -261,7 +261,7 @@ to the test case using Watir to evaluate the results.</p>
 <p>What you see in the text editor:</p>
 <div class="testexample"> puts <font color="purple">"Expected Result: "</font><br>
 puts <font color="purple">" - a Google page with results should be
-shown. "Programming Ruby" should be high on the list."</font>
+shown. 'Programming Ruby' should be high on the list."</font>
 </div>
 <p>These two statements simply print the Expected Result of the test to
 the screen.</p>
@@ -271,7 +271,7 @@ whether the test case passed or failed.</p>
 <div class="testexample">
 puts <font color="purple">"Actual Result: Check that the 'Programming
 Ruby' link appears on the search results page"<br>
-</font><font color="darkblue">if</font> ie.contains_test("<font
+</font><font color="darkblue">if</font> ie.contains_text("<font
  color="purple">Programming Ruby</font>")
 <br>
 &nbsp;&nbsp; puts <font color="purple">"Test Passed. Found the
