@@ -1157,7 +1157,7 @@ module Watir
         # Accessing data outside the document
         #
         
-        # Return the title of the window
+        # Return the title of the document
         def title
             @ie.document.title
         end
