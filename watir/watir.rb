@@ -1277,19 +1277,20 @@ module Watir
         end
 
         # Search the current page for specified text or regexp.
-        # Returns true if the specified text was found.
+        # Returns the index if the specified text was found.
         # Returns matchdata object if the specified regexp was found.
-        #  * text - string or regular expression - the string to look for
-        def contains_text(text)
+        # In either case, this method is suitable for use in an if or assert statement.
+        #  * target - string or regular expression - the string to look for
+        def contains_text(target)
             returnValue = false
             retryCount = 0
             begin
                 retryCount += 1
                 returnValue = 
-                if text.kind_of? Regexp
-                    document.body.innerText.match(text)
-                elsif text.kind_of? String
-                    document.body.innerText.index(text)
+                if target.kind_of? Regexp
+                    self.text.match(target)
+                elsif target.kind_of? String
+                    self.text.index(target)
                 else
                     raise MissingWayOfFindingObjectException
                 end 
@@ -1391,12 +1392,12 @@ module Watir
 
         # The HTML of the current page
         def html
-            return document.body.outerHTML
+            return document.body.parentelement.outerhtml
         end
         
         # The text of the current document
         def text
-            return document.body.innerText.strip
+            return document.body.parentelement.innertext.strip
         end
 
         #
