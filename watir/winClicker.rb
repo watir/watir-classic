@@ -97,7 +97,7 @@ class WinClicker
         hWnd = getWindowHandle("Choose file" )
         if hWnd != -1
 
-           makeWindowActive (hWnd)
+           makeWindowActive(hWnd)
            return getTextValueForFileNameField( hWnd ) 
 
         else
@@ -244,11 +244,11 @@ class WinClicker
          makeWindowActive(hwnd)
 
          d = getChildHandle( hwnd , buttonCaption )
-         puts ("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s )
+         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s) 
 
          if d != -1 
              makeWindowActive(hwnd)
-             clickButtonWithHandle (d)
+             clickButtonWithHandle(d)
          else
              return false
          end
@@ -288,11 +288,11 @@ class WinClicker
          end
 
          d = getChildHandle( hwnd , buttonCaption )
-         puts ("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s )
+         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s )
 
          if d != -1 
              makeWindowActive(hwnd)
-             clickButtonWithHandle (d)
+             clickButtonWithHandle(d)
          else
              return false
          end
