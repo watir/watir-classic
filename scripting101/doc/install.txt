@@ -5,9 +5,9 @@ h2. Installation Instructions
 These instructions describe how to install the software we use in
 our _Scripting Web Tests_ class (also called _Scripting for Testers_).
 
-We will be using Ruby (a programming language) and Watir
-(a library) on your machine to test server software. You will also run the
-server software on your computer. 
+We will use Ruby (a programming language) and Watir
+(a library written in Ruby) on your machine to test Timeclock (web-based software written in Ruby). 
+Ruby and Watir can just as easily be used to test web-based software written in other languages.
 
 h3. Hardware Requirements
 
@@ -36,7 +36,7 @@ these materials can be found online.
 h4. Ruby
 
 We are currently using 
-"Ruby for Windows 1.8.2-14":http://rubyforge.org/frs/?group_id=167&release_id=1346 
+"Ruby for Windows 1.8.2-15":http://rubyforge.org/frs/?group_id=167&release_id=1346 
 (There are known problems with Ruby 1.8.1-13; don't use it.)
 
 #      Double-click this exe file to install.
@@ -47,15 +47,14 @@ We are currently using
 
 h4. Watir
 
-We are using "Watir 1.3.1":http://rubyforge.org/frs/?group_id=104&release_id=2164
+We are using "Watir 1.4.1":http://rubyforge.org/frs/?group_id=104&release_id=2725
 
-# Unzip this into c:\watir
-# Execute install.rb
-# Use all the default installation options
+#	   Double-click the exe file (not the gem).
+#      Select the default installation options
 
 h4. Scripting Class Materials
 
-We are using "Scripting101 1.5.2":http://rubyforge.org/frs/?group_id=104&release_id=2181
+We are using "Scripting101 1.6":http://rubyforge.org/frs/?group_id=104&release_id=2516
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.
