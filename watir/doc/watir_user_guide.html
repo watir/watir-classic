@@ -667,22 +667,22 @@ Explorer DOM</a>, and can check to see if a page contains the objects
 that are expected for the test to pass.</p>
 <p></p>
 <h3>Object Exists</h3>
-<p>A simple verification point is to use the Watir method <i>contains_text</i>:</p>
+<p>A simple verification point is to use the method <i>include?</i>:</p>
 <p>In our test, imagine we have gone through a sequence of steps to
 reach the desired point. This is a web page that contains the following
 text:</p>
 <div class="browserexample">Reached test verification point.</div>
 <p>Our test will pass if this is what is displayed on the page at our
 verification point.</p>
-<p>Watir code to check that the text exists on the web page <i>contains_text</i>
+<p>Watir code to check that the text exists on the web page <i>include?</i>
 method: </p>
-<div class="testexample">ie.contains_text("Reached test
+<div class="testexample">ie.text.include?("Reached test
 verification point.") </div>
 <p>We will need to add some scripting code to validate that this
 occurred, or use Ruby's test::unit testing framework.</p>
 Scripting code to let us know whether the test passed or not:
 <p></p>
-<div class="testexample">if ie.contains_text("Reached test
+<div class="testexample">if ie.text.include?("Reached test
 verification point.") <br>
 &nbsp; puts: "Test passed. Page contains the text: Reached test
 verification point."<br>
@@ -693,16 +693,13 @@ end</div>
 <p></p>
 <p>This is what the scripting code above does:</p>
 <ol>
-  <li>assign this method call to, and store results in variable <i>a</i></li>
-  <li>if <i>a</i> is false, the page did not contain the text:
-"Reached test verification point."</li>
-  <li>print our failure message to the screen</li>
-  <li><i>a</i> is not false, meaning it is true; the page did contain
-the text we are looking for</li>
-  <li>print our passing message to the screen</li>
-  <li>end our <i>if</i> block</li>
+  <li>get the text of the current page. (ie.text) </li>
+  <li>test whether this text includes the verification point message.
+(include?(...))</li>
+  <li>if yes (true), print "Test passed."</li>
+  <li>if no (false), print "Test failed!"<br>
+  </li>
 </ol>
-<p></p>
 <h3>Using test::unit Assertions</h3>
 <p>Using xUnit assertions can be a more powerful way of validating test
 results. (For a good explanation of assertions, visit this NUnit page
@@ -762,7 +759,7 @@ the order expected.
 end </div>
 <h4>Use Assertions</h4>
 <p>Watir can support assertions by wrapping Watir methods within an <i>assert</i>:</p>
-<div class="testexample">assert(ie.contains_text("Reached test
+<div class="testexample">assert(ie.text.include?("Reached test
 verification point.")</div>
 <p>Watir can test for many different states of objects. We can use
 assertions to check of objects <i>exist</i>, are <i>enabled</i> or <i>disabled</i>,

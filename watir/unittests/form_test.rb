@@ -161,7 +161,7 @@ class TC_Forms3 < Test::Unit::TestCase
         assert_false( $ie.button(:src , /missing/).exists? )
         assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
         
-        assert( $ie.contains_text("PASS") )
+        assert( $ie.text.include?("PASS") )
     end
 end
 
@@ -202,7 +202,7 @@ class TC_Forms4 < Test::Unit::TestCase
     
     def test_submit
         $ie.form(:name, 'apple_form').submit
-        assert( $ie.contains_text("PASS") )
+        assert( $ie.text.include?("PASS") )
     end
 end
 

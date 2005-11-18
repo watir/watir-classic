@@ -83,12 +83,12 @@ class TC_Buttons < Test::Unit::TestCase
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button( "Missing Caption").click   }  
         
         $ie.button("Click Me").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_Button_click_only
         $ie.button(:caption, "Click Me").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_button_click
@@ -98,7 +98,7 @@ class TC_Buttons < Test::Unit::TestCase
         assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:caption, "Disabled Button").click   }  
         
         $ie.button(:caption, "Click Me").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_Button_Exists

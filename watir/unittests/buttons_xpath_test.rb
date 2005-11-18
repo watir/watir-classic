@@ -28,12 +28,12 @@ class TC_Buttons_XPath < Test::Unit::TestCase
         assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@value='Missing Caption']/").click   }  
         
         $ie.button(:xpath, "//input[@value='Click Me']/").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_Button_click_only
         $ie.button(:xpath, "//input[@value='Click Me']/").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_button_click
@@ -43,7 +43,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
         assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@value='Disabled Button']/").click   }  
         
         $ie.button(:xpath, "//input[@value='Click Me']/").click
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_Button_Exists

@@ -59,7 +59,7 @@ class TC_Images_XPath < Test::Unit::TestCase
         # $ie.button(:name , 'disable_img').click
         
         # $ie.image(:src, /button/).click
-        # assert($ie.contains_text("PASS") )
+        # assert($ie.text.include?("PASS") )
 
     end
     

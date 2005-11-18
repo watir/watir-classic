@@ -57,7 +57,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    
    #use this block for our assertion, and printing the results to the screen. You could also easily print results to a file with this method.
    begin
-      assert($ie.contains_text("Programming Ruby") )
+      assert($ie.text.include?("Programming Ruby") )
 	 puts("TEST PASSED. Found test string 'Programming Ruby' ")
    rescue => e
          puts("TEST FAILED." + e.message + "\n" + e.backtrace.join("\n")) 

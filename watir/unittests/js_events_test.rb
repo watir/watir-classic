@@ -35,7 +35,7 @@ class TC_JSEvents < Test::Unit::TestCase
        puts "Clicking the button"
 
        $ie.button(:caption, "Button 1").click
-       assert($ie.contains_text("PASS") )
+       assert($ie.text.include?("PASS") )
     end
 
 #onMouseOver tests

@@ -9,7 +9,7 @@ class TC_article_example < Test::Unit::TestCase
     ie.goto("http://www.google.com")
     ie.text_field(:name, "q").set("pickaxe")
     ie.button(:value, "Google Search").click
-    assert(ie.contains_text("Programming Ruby, 2nd Ed."))
+    assert(ie.text.include?("Programming Ruby, 2nd Ed."))
   end
 
 end

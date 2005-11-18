@@ -67,15 +67,15 @@ class TC_Links < Test::Unit::TestCase
     
     def test_link_click
         $ie.link(:text, "test1").click
-        assert( $ie.contains_text("Links2-Pass") ) 
+        assert( $ie.text.include?("Links2-Pass") ) 
     end
     def test_link2_click    
         $ie.link(:url, /link_pass.html/).click
-        assert( $ie.contains_text("Links3-Pass") ) 
+        assert( $ie.text.include?("Links3-Pass") ) 
     end
     def test_link3_click        
         $ie.link(:index, 1).click
-        assert( $ie.contains_text("Links2-Pass") ) 
+        assert( $ie.text.include?("Links2-Pass") ) 
     end
     def test_link4_click        
         assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.link(:index, 199).click }  
