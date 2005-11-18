@@ -130,13 +130,13 @@ class TC_Selectbox < Test::Unit::TestCase
         # these are to test the onchange event
         # the event shouldnt get fired, as this is the selected item
         $ie.selectBox( :name , "sel3").select( /3/ )
-        assert_false($ie.contains_text("Pass") )
+        assert_false($ie.text.include?("Pass") )
     end
     
     def test_selectBox_select2
         # the event should get fired
         $ie.selectBox( :name , "sel3").select( /2/ )
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_selectBox_select_using_value
@@ -162,13 +162,13 @@ class TC_Selectbox < Test::Unit::TestCase
         # these are to test the onchange event
         # the event shouldnt get fired, as this is the selected item
         $ie.select_list( :name , "sel3").select_value( /3/ )
-        assert_false($ie.contains_text("Pass") )
+        assert_false($ie.text.include?("Pass") )
     end
     
     def test_select_list_select_using_value2
         # the event should get fired
         $ie.select_list( :name , "sel3").select_value( /2/ )
-        assert($ie.contains_text("PASS") )
+        assert($ie.text.include?("PASS") )
     end
     
     def test_select_list_properties

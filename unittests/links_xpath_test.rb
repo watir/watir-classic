@@ -41,7 +41,7 @@ class TC_Links_XPath < Test::Unit::TestCase
 
     def test_Link_click
         $ie.link(:xpath , "//a[contains(.,'test1')]/").click
-        assert( $ie.contains_text("Links2-Pass") )
+        assert( $ie.text.include?("Links2-Pass") )
     end 
 end
 

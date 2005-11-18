@@ -271,7 +271,7 @@ whether the test case passed or failed.</p>
 <div class="testexample">
 puts <font color="purple">"Actual Result: Check that the 'Programming
 Ruby' link appears on the search results page"<br>
-</font><font color="darkblue">if</font> ie.contains_text("<font
+</font><font color="darkblue">if</font> ie.text.include?("<font
  color="purple">Programming Ruby</font>")
 <br>
 &nbsp;&nbsp; puts <font color="purple">"Test Passed. Found the
@@ -286,16 +286,16 @@ find: Programming Ruby"</font> <br>
 <ul>
   <li>The first line prints out the "Actual Result" heading to the
 screen.</li>
-  <li>The second line calls the "contains_text" method, and asks it
-to verify that <i>Programming Ruby</i> appears on the
+  <li>The second line gets the text of the page and then calls the "include?" method
+	  to determine whether <i>Programming Ruby</i> appears on the
 first page.</li>
   <li>Using an <i>if</i> statement, we evaluate whether the
-"contains_text" method was True or False.</li>
+"include?" method was True or False.</li>
   <ul>
-    <li>If pageContainsText returns false, the text <i>Programming
+    <li>If "include?" returns false, the text <i>Programming
 Ruby</i> does not appear. The test case fails and we print
 the "Test Failed!" message.</li>
-    <li>Else, if pageContainsText returns true (or actually anything
+    <li>Else, if "include?" returns true (or actually anything
 but false), the text <i>Programming
 Ruby</i> appears. The test case passes and we
 print the "Test Passed." message.</li>

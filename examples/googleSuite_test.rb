@@ -55,7 +55,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - a google page with results should be shown. "Programming Ruby" should be high on the list.'
   
    puts 'Actual Result: Check that the "Programming Ruby" link actually appears on the page by using an assertion'
-   assert($ie.contains_text("Programming Ruby") )
+   assert($ie.text.include?("Programming Ruby") )
 
    puts '  '
    puts '## End of test: google search'
@@ -93,7 +93,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - The Google News Canada site should be displayed'
   
    puts 'Actual Result: Check that "Canada" appears on the page by using an assertion'
-   assert($ie.contains_text("Canada") )
+   assert($ie.text.include?("Canada") )
 
    puts '  '
    puts '## End of test: google news selection'
@@ -134,7 +134,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' a google page with results should be shown. "Collaborative Software Testing" should be high on the list.'
   
    puts 'Actual Result: Check that "Collaborative Software Testing" appears on the page by using an assertion'
-   assert($ie.contains_text("Collaborative Software Testing") )
+   assert($ie.text.include?("Collaborative Software Testing") )
 
    puts '  '
    puts '## End of test: google Canada search selection'
@@ -175,7 +175,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts ' - The Google Groups page for comp.lang.ruby should be shown.'
    
    puts 'Actual Result: Check that the "comp.lang.ruby" link actually appears on the page by using an assertion'
-   assert($ie.contains_text("comp.lang.ruby") )
+   assert($ie.text.include?("comp.lang.ruby") )
    
    puts '  '
    puts '## End of test: google groups'

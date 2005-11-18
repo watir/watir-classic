@@ -57,7 +57,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts ' - a Yahoo page with results should be shown. A result containing "Programming Ruby" should be high on the list.'
   
    puts 'Actual Result: Check that the "Programming Ruby" link actually appears on the page by using an assertion'
-   assert($ie.contains_text("Programming Ruby") )
+   assert($ie.text.include?("Programming Ruby") )
 
    puts '  '
    puts '## End of test: yahoo simple search'
@@ -107,7 +107,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Save button.'
   
    puts 'Step 2: Check that the "Maps" link actually appears on the Yahoo Search page by using an assertion'
-   assert($ie.contains_text("Maps") )
+   assert($ie.text.include?("Maps") )
    
    puts '  '
    puts '## End of test: Yahoo Save Maps Edit'
@@ -145,7 +145,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Save button.'
    
    puts 'Step 2: Check that the "Maps" link does not appear on the Yahoo Search page by using an assertion'
-   assert_false($ie.contains_text("Maps") )
+   assert_false($ie.text.include?("Maps") )
    
    puts '  '
    puts '## End of test: Verify Edit Actions saved'

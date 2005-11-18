@@ -22,7 +22,7 @@ class TC_Fields < Test::Unit::TestCase
         $ie.text_field(:name, 'text1').focus
         $ie.send_keys('{tab}{tab}{tab}{tab}')
         $ie.send_keys('Dooby{enter}')
-        assert($ie.contains_text('PASS'))
+        assert($ie.text.include?('PASS'))
     end
     
     def test_autoregistration
