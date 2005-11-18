@@ -111,9 +111,6 @@ $ENABLE_SPINNER = command_line_flag('-x')
 # Constant to set fast speed
 $FAST_SPEED = command_line_flag('-f')
 
-# Constant to set path for tidy.dll
-$TIDY_PATH = File.expand_path(File.dirname(__FILE__)) + "/watir/tidy.dll"
-
 # Eat the -s command line switch (deprecated)
 command_line_flag('-s')
 
@@ -262,7 +259,7 @@ module Watir
         def_creator_with_default :frame, :name
 
         # this method is used to access a form.
-        # available ways of accessing it are, :index , :name, :id, :method, :action
+        # available ways of accessing it are, :index , :name, :id, :method, :action, :xpath
         #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
         #  * what   - String - the text associated with the symbol
         def_creator_with_default :form, :name
@@ -1058,6 +1055,11 @@ module Watir
 
             @url_list = []
 
+            # IE inserts some element whose tagName is empty and just acts as block level element
+            # Probably some IE method of cleaning things
+            # To pass the same to REXML we need to give some name to empty tagName  
+            @DUMMY_EMPTY_TAG = "DUMMY"
+            
             # add an error checker for http navigation errors, such as 404, 500 etc
             navigation_checker=Proc.new{ |ie|
                 if ie.document.frames.length > 1
@@ -1592,44 +1594,187 @@ module Watir
         # from getRexmlDocumentObject method.
         def createRexmlDocumentObject
             require 'rexml/document'
-            require 'tidy'
-            #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
+            require 'rexml/document'
             if @rexmlDomobject == nil
                 #puts 'Here creating rexmlDomobject'
-                html = self.html() #$ie.html()
-                
-                #Replace form tag so that Tidy don't mess up with the tags.
-                html = html.gsub(/<\s*FORM ([^>]*)>/, "")
-                html = html.gsub(/<\s*\/FORM\s*>/, "" )
-                
-                # Use tidy to clean the HTML.
-                Tidy.path = $TIDY_PATH
-                outputXhtml = Tidy.open(:show_warnings=>true) do |tidy|
-                    # Add appropriate options for Tidy
-                    tidy.options.output_xhtml = true
-                    tidy.options.write_back = "no"
-                    tidy.options.indent = "auto"
-                    tidy.options.add_xml_decl = "yes"
-                    tidy.options.fix_bad_comments = "yes"
-                    tidy.options.join_styles = "no"
-                    tidy.options.merge_divs = "no"
-                    tidy.options.force_output = "yes"
-                    tidy.options.quiet = "yes"
-                    
-                    outputXhtml = tidy.clean(html)
-                    #puts outputXhtml
-                    outputXhtml
+                htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
+                htmlSource = getHTMLSource(document.body,htmlSource," ")
+                htmlSource += "\n</HTML>\n"
+                #puts htmlSource
+                #Give htmlSource as input to Rexml.
+                begin
+                    @rexmlDomobject = REXML::Document.new(htmlSource)
+                rescue  => e
+                    #puts e.to_s
+                    error = File.open("error.xml","w")
+                    error.print(htmlSource)
+                    error.close()
+                    #puts htmlSource
+                    #gets   
                 end
-                outputXhtml = outputXhtml.gsub(/<\s*form\s*>/, "")
-                outputXhtml = outputXhtml.gsub(/<\s*\/form\s*>/, "" )
-                
-                # Give the output of tidy to Rexml.
-                @rexmlDomobject = REXML::Document.new(outputXhtml)
             end
-            
         end
         private :createRexmlDocumentObject
-        
+       
+        #Function Tokenizes the tag line and returns array of tokens.
+        #Token could be either tagName or "=" or attribute name or attribute value
+        #Attribute value could be either quoted string or single word
+        def tokenizeTagline(outerHtml)
+            outerHtml = outerHtml.gsub(/\n|\r/," ")
+            #removing "< symbol", opening of current tag
+            outerHtml =~ /^\s*<(.*)$/
+            outerHtml = $1
+            tokens = Array.new
+            i = startOffset  = 0
+            length = outerHtml.length
+            #puts outerHtml
+            parsingValue = false
+            while i < length do
+                i +=1 while (i < length && outerHtml[i,1] =~ /\s/)
+                next if i == length
+                currentToken = outerHtml[i,1]
+
+                #Either current tag has been closed or user has not closed the tag > 
+                # and we have received the opening of next element
+                break if currentToken =~ /<|>/
+
+                #parse quoted value
+                if(currentToken == "\"" || currentToken == "'")
+                    parsingValue = false
+                    quote = currentToken
+                    startOffset = i
+                    i += 1
+                    i += 1 while (i < length && (outerHtml[i,1] != quote || outerHtml[i-1,1] == "\\"))
+                    if i == length 
+                        tokens.push  quote + outerHtml[startOffset..i-1]
+                    else    
+                        tokens.push  outerHtml[startOffset..i]
+                    end 
+                elsif currentToken == "="
+                    tokens.push "=" 
+                    parsingValue = true
+                else
+                    startOffset = i
+                    i += 1 while(i < length && !(outerHtml[i,1] =~ /\s|=|<|>/)) if !parsingValue
+                    i += 1 while(i < length && !(outerHtml[i,1] =~ /\s|<|>/)) if parsingValue
+                    parsingValue = false
+                    i -= 1
+                    tokens.push outerHtml[startOffset..i]
+                end
+                i += 1
+            end
+            return tokens
+        end 
+        private :tokenizeTagline
+
+        # This function get and clean all the attributes of the tag.
+        def getAllAttributes(outerHtml)
+            tokens = tokenizeTagline(outerHtml)
+            #puts tokens
+            tagLine = ""
+            count = 1
+            tokensLength = tokens.length
+            expectedEqualityOP= false
+            while count < tokensLength do
+                if expectedEqualityOP == false
+                    #print Attribute Name
+                    # If attribute name is valid. Refer: http://www.w3.org/TR/REC-xml/#NT-Name
+                    if tokens[count] =~ /^(\w|_|:)(.*)$/
+                        tagLine += " #{tokens[count]}"                                
+                        expectedEqualityOP = true
+                    end
+                elsif tokens[count] == "=" 
+                    count += 1
+                    if count == tokensLength
+                        tagLine += "=\"\""
+                    elsif(tokens[count][0,1] == "\"" || tokens[count][0,1] == "'")
+                        tagLine += "=#{tokens[count]}"
+                    else
+                        tagLine += "=\"#{tokens[count]}\""
+                    end
+                    expectedEqualityOP = false
+                else
+                    #Opps! equality was expected but its not there. 
+                    #Set value same as the attribute name e.g. selected="selected"
+                    tagLine += "=\"#{tokens[count-1]}\""
+                    expectedEqualityOP = false
+                    next
+                end
+                count += 1 
+            end
+            tagLine += "=\"#{tokens[count-1]}\" " if expectedEqualityOP == true
+            #puts tagLine
+            return tagLine
+        end
+        private :getAllAttributes
+
+        # This function is used to escape the characters that are not valid XML data.
+        def xmlEscape (str)
+            str = str.gsub(/&/,'&amp;')
+            str = str.gsub(/</,'&lt;')
+            str = str.gsub(/>/,'&gt;')
+            str = str.gsub(/"/, '&quot;')
+            str
+        end
+        private :xmlEscape
+
+        #Returns HTML Source 
+        #Traverse the DOM tree rooted at body element  
+        #and generate the HTML source. 
+        #element: Represent Current element
+        #htmlString:HTML Source
+        #spaces:(Used for debugging). Helps in indentation  
+        def getHTMLSource(element, htmlString, spaceString)
+            begin
+                tagLine = ""
+                outerHtml = ""
+                tagName = ""
+                begin
+                    tagName = element.tagName.downcase
+                    tagName = @DUMMY_EMPTY_TAG if tagName == ""  
+                    # If tag is a mismatched tag.
+                    if !(tagName =~ /^(\w|_|:)(.*)$/)
+                        return htmlString
+                    end
+                rescue
+                    #handling text nodes
+                    htmlString +=  xmlEscape(element.toString)
+                    return htmlString
+                end
+                #puts tagName
+                #Skip comment and script tag
+                if tagName =~ /^!/ || tagName== "script" || tagName =="style"           
+                    return htmlString
+                end
+                #tagLine += spaceString
+                outerHtml = getAllAttributes(element.outerHtml) if tagName != @DUMMY_EMPTY_TAG
+                tagLine += "\n<#{tagName} #{outerHtml}"
+
+                canHaveChildren = element.canHaveChildren
+                if canHaveChildren 
+                    tagLine += "> \n" 
+                else
+                    tagLine += "/> \n" #self closing tag
+                end
+                #spaceString += spaceString
+                htmlString += tagLine
+                childElements = element.childnodes
+                childElements.each do |child|
+                    htmlString = getHTMLSource(child,htmlString,spaceString)
+                end
+                if canHaveChildren
+                #tagLine += spaceString
+                    tagLine ="\n</" + tagName + ">\n"
+                    htmlString += tagLine 
+                end
+                return htmlString
+            rescue => e
+                puts e.to_s 
+            end
+            return htmlString
+        end
+        private :getHTMLSource
+ 
         # return the first element that matches the xpath
         def getElementByXpath(xpath)
             temp = getElementsByXpath(xpath)
@@ -1653,109 +1798,86 @@ module Watir
             else
                 return selectedElements
             end
-end
+        end
 
-# Method that iterates over IE DOM object and get the elements for the given
-# xpath.
-def getElementByAbsoluteXpath(xpath)
-    curElem = nil
-    
-    #puts "Hello; Given xpath is : #{xpath}"
-    doc = document
-    curElem = doc.getElementsByTagName("body")["0"]
-    xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
-    xpath = $1
-    
-    if xpath == nil
-        puts "Function Requires absolute XPath."
-        return
-    end
-    
-    arr = xpath.split(/\//)
-    return nil if arr.length == 0
-    
-    lastTagName = arr[arr.length-1].to_s.upcase
-    
-    # lastTagName is like tagName[number] or just tagName. For the first case we need to
-    # separate tagName and number.
-    lastTagName =~ /(\w*)\[?\d*\]?/
-    lastTagName = $1
-    #puts lastTagName
-    
-    for element in arr do
-        element =~ /(\w*)\[?(\d*)\]?/
-        tagname = $1
-        tagname = tagname.upcase
-        
-        if $2 != nil && $2 != ""
-            index = $2
-            index = "#{index}".to_i - 1
-        else
-            index = 0
-        end
-        
-        #puts "#{element} #{tagname} #{index}"
-        allElemns = curElem.childnodes
-        if allElemns == nil || allElemns.length == 0
-            puts "#{element} is null"
-            next
-        end
-        
-        #puts "Current element is : #{curElem.tagName}"
-        allElemns.each do |child|
-            gotIt = false
-            begin
-                curTag = child.tagName
-            rescue
-                next
+        # Method that iterates over IE DOM object and get the elements for the given
+        # xpath.
+        def getElementByAbsoluteXpath(xpath)
+            curElem = nil
+
+            #puts "Hello; Given xpath is : #{xpath}"
+            doc = document()
+            curElem = doc.getElementsByTagName("body")["0"]
+            xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
+            xpath = $1
+
+            if xpath == nil
+                puts "Function Requires absolute XPath."
+                return
             end
-            #puts child.tagName
-            #Special handling for FORM and SPAN tags because sometimes tidy
-            #changes their position while outputting the clean html. There may
-            #more tags but we found only these two while testing.
-            #So you can't have an xpath that contains form or span tag.
-            if curTag == "FORM" || curTag == "SPAN"
-                tmpFormElems = child.childnodes
-                tmpFormElems.each do |formChild|
+
+            arr = xpath.split(/\//)
+            return nil if arr.length == 0
+
+            lastTagName = arr[arr.length-1].to_s.upcase
+
+            # lastTagName is like tagName[number] or just tagName. For the first case we need to
+            # separate tagName and number.
+            lastTagName =~ /(\w*)\[?\d*\]?/
+            lastTagName = $1
+            #puts lastTagName
+
+            for element in arr do
+                element =~ /(\w*)\[?(\d*)\]?/
+                tagname = $1
+                tagname = tagname.upcase
+
+                if $2 != nil && $2 != ""
+                    index = $2
+                    index = "#{index}".to_i - 1
+                else
+                    index = 0
+                end
+
+                #puts "#{element} #{tagname} #{index}"
+                allElemns = curElem.childnodes
+                if allElemns == nil || allElemns.length == 0
+                    puts "#{element} is null"
+                    next # Go to next element
+                end
+
+                #puts "Current element is : #{curElem.tagName}"
+                allElemns.each do |child|
+                    gotIt = false
                     begin
-                        tmpCurTag = formChild.tagName
+                        curTag = child.tagName
+                        curTag = @DUMMY_EMPTY_TAG if curTag == ""  
                     rescue
                         next
                     end
-                    
-                    if tmpCurTag == tagname
+                    #puts child.tagName
+                    if curTag == tagname
                         index-=1
                         if index < 0
-                            curElem = formChild
-                            gotIt = true
+                            curElem = child
                             break
                         end
                     end
                 end
+
+                #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
             end
-            break if gotIt
-            if curTag == tagname
-                index-=1
-                if index < 0
-                    curElem = child
-                    break
+            begin
+                if curElem.tagName == lastTagName
+                    #puts curElem.tagName
+                    return curElem
+                else
+                    return nil
                 end
+            rescue
+                return nil
             end
         end
-        
-        #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
-    end
-    begin
-        if curElem.tagName == lastTagName
-            #puts curElem.tagName
-            return curElem
-        else
-            return nil
-        end
-    rescue
-        return nil
-    end
-end
 
     end # class IE
         
@@ -2228,27 +2350,37 @@ end
             @what = what
             
             log "Get form how is #{@how}  what is #{@what} "
-            count = 1
-            doc = @container.document
-            doc.forms.each do |thisForm|
-                next unless @ole_object == nil
-
-                wrapped = FormWrapper.new(thisForm)
-
-                log "form on page, name is " + wrapped.name
-                
-                @ole_object =
-                case @how
-                when :name, :id, :method, :action 
-                    @what.matches(wrapped.send(@how)) ? thisForm : nil
-                when :index
-                    count == @what ? thisForm : nil
-                else
-                  raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
-                end
-                count = count +1
-            end
             
+            # Get form using xpath.
+            if @how == :xpath    
+                temp = @container.getElementsByXpath(@what)
+                if temp != nil          
+                   @ole_object = temp[0]         
+                else                            
+                   @ole_object = nil                     
+                end                     
+            else
+                count = 1
+                doc = @container.document
+                doc.forms.each do |thisForm|
+                    next unless @ole_object == nil
+
+                    wrapped = FormWrapper.new(thisForm)
+
+                    log "form on page, name is " + wrapped.name
+                
+                    @ole_object =
+                    case @how
+                    when :name, :id, :method, :action 
+                        @what.matches(wrapped.send(@how)) ? thisForm : nil
+                    when :index
+                        count == @what ? thisForm : nil
+                    else
+                        raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
+                    end
+                    count = count +1
+                end
+            end
             super(@ole_object)
             
             copy_test_config container
