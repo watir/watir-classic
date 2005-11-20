@@ -6,72 +6,52 @@ require 'unittests/setup'
 
 class TC_JSEvents < Test::Unit::TestCase
     include Watir
-
     
-    def gotoJavaScriptEventsPage()
+    def setup
         $ie.goto($htmlRoot + "javascriptevents.html")
     end
-
   
     def test_Button_disabled
-       gotoJavaScriptEventsPage()
-       assert_false($ie.button(:caption, "Button 1").enabled?) 
+       assert(! $ie.button(:caption, "Button 1").enabled?) 
     end
 
     def test_Button_Enabled
-       gotoJavaScriptEventsPage()    
-     
        $ie.text_field(:name, "entertext").fire_event("onkeyup")
        assert($ie.button(:caption, "Button 1").enabled?)   
-     
     end
 
     def test_Button_click
-
-       gotoJavaScriptEventsPage()
-       
-       puts "Firing event to make button enabled"
+       # Firing event to make button enabled
        $ie.text_field(:name, "entertext").fire_event("onKeyUp")
-       puts "Clicking the button"
-
+       # Clicking the button
        $ie.button(:caption, "Button 1").click
        assert($ie.text.include?("PASS") )
     end
 
 #onMouseOver tests
- #window status
+#window status
 
     def test_no_status_bar_exception
-        gotoJavaScriptEventsPage()
         $ie.link(:text, "New Window No Status Bar").click
         status_bar_test_win = nil
+        # Note: this test will fail if the Google toolbar popup blocker is turned on
         assert_nothing_raised { status_bar_test_win = Watir::IE.attach(:title, "Pass Page") }
         assert_raises( Watir::NoStatusBarException ) { status_bar_test_win.status }
         status_bar_test_win.close
         status_bar_test_win = nil
-
     end
-
     
     def test_page_nostatus
-       gotoJavaScriptEventsPage()
-       assert_false($ie.status == "Here is your status") 
+       assert_equal("Done", $ie.status) 
     end
   
-    def test_page_status
-       gotoJavaScriptEventsPage()
+    def test_set_page_status
        $ie.link(:text, "Check the Status").fire_event("onMouseOver")
-       assert($ie.status, "It worked") 
+       assert_equal("It worked", $ie.status) 
     end
     
-    def test_page_status
-       gotoJavaScriptEventsPage()
+    def test_clear_page_status
        $ie.link(:text, "Clear the Status").fire_event("onMouseOver")
-       assert($ie.status, "") 
+       assert_equal("Done", $ie.status) 
     end
- #end of window status
-
-#end of onMouseOver tests
-
 end
-
