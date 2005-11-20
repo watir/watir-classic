@@ -1,5 +1,5 @@
 h1. Scripting Web Tests
-
+ 
 h2. Installation Instructions
 
 These instructions describe how to install the software we use in
@@ -35,7 +35,7 @@ these materials can be found online.
 
 h4. Ruby
 
-We are currently using 
+We use 
 "Ruby for Windows 1.8.2-15":http://rubyforge.org/frs/?group_id=167&release_id=1346 
 (There are known problems with Ruby 1.8.1-13; don't use it.)
 
@@ -47,21 +47,21 @@ We are currently using
 
 h4. Watir
 
-We are using "Watir 1.4.1":http://rubyforge.org/frs/?group_id=104&release_id=2725
+We use "Watir 1.4.1":http://rubyforge.org/frs/?group_id=104&release_id=2725
 
 #	   Double-click the exe file (not the gem).
 #      Select the default installation options
 
 h4. Scripting Class Materials
 
-We are using "Scripting101 1.6":http://rubyforge.org/frs/?group_id=104&release_id=2516
+We use "Scripting101 1.6":http://rubyforge.org/frs/?group_id=104&release_id=2516
 
 # Extract the contents of this archive into your hard drive (c:). A
   "scripting101" directory will be created automatically.
   
 h4. SpySmith
 
-We are using "SpySmith v 1.0":http://www.qualityforge.com/download/spysmith.zip from QualityForge. 
+We use "SpySmith 1.0":http://www.qualityforge.com/download/spysmith.zip from QualityForge. 
 This is a commercial tool available for free as a 90-day evaluation.
 
 # Open the zip file using WinZip.
@@ -81,7 +81,7 @@ You will need to start up a timeclock server on your machine.
 
 #      Start a command shell. (Start-> Run, enter "cmd".)
 #      Enter "cd c:\scripting101\timeclock\bin".
-#      Enter "ruby http-server.rb". The server is now running.
+#      Enter "http-server.rb". The server is now running.
 
 Note: If you close this command window, the server will stop.
 
@@ -89,7 +89,8 @@ You can verify that the server is running correctly by running some
 sample tests.
 
 #      Start a new command shell.
-#      Enter "ruby c:\scripting101\solutions\suite.rb -b".
+#	   Enter "cd c:\scripting101\solutions".
+#      Enter "suite.rb -b -f".
 
 Note: These tests will run unbearably slowly if Internet Explorer is 
 configured to use a proxy server that happens to be unavailable.
