@@ -987,14 +987,14 @@ module Watir
         # The default color for highlighting objects as they are accessed.
         DEFAULT_HIGHLIGHT_COLOR = "yellow"
         
-        # This is used to change how long after a page has finished loading that we wait for.
-        attr_accessor :defaultSleepTime
-        
-        # use this to switch the spinner on and off
+        # Whether the spinner is on and off
         attr_accessor :enable_spinner
 
-        # use this to get the time for the last page download
+        # The download time for the last command
         attr_reader :down_load_time
+        
+        # Whether the speed is :fast or :slow
+        attr_reader :speed
         
         # the ole internet explorer object        
         attr_reader :ie
@@ -1091,15 +1091,26 @@ module Watir
                 end
             end
         end
+        
+        def speed=(how_fast)
+            case how_fast
+            when :fast : set_fast_speed
+            when :slow : set_slow_speed
+            else
+              raise ArgumentError, "Invalid speed: #{how_fast}"
+            end
+        end
 
         def set_fast_speed
             @typingspeed = 0
             @defaultSleepTime = 0.01
+            @speed = :fast
         end            
 
         def set_slow_speed
             @typingspeed = DEFAULT_TYPING_SPEED
             @defaultSleepTime = DEFAULT_SLEEP_TIME
+            @speed = :slow
         end
         
         def create_browser_window
