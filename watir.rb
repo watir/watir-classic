@@ -1058,7 +1058,7 @@ module Watir
             # IE inserts some element whose tagName is empty and just acts as block level element
             # Probably some IE method of cleaning things
             # To pass the same to REXML we need to give some name to empty tagName  
-            @DUMMY_EMPTY_TAG = "DUMMY"
+            @empty_tag_name = "DUMMY"
             
             # add an error checker for http navigation errors, such as 404, 500 etc
             navigation_checker=Proc.new{ |ie|
@@ -1731,7 +1731,7 @@ module Watir
                 tagName = ""
                 begin
                     tagName = element.tagName.downcase
-                    tagName = @DUMMY_EMPTY_TAG if tagName == ""  
+                    tagName = @empty_tag_name if tagName == ""  
                     # If tag is a mismatched tag.
                     if !(tagName =~ /^(\w|_|:)(.*)$/)
                         return htmlString
@@ -1747,7 +1747,7 @@ module Watir
                     return htmlString
                 end
                 #tagLine += spaceString
-                outerHtml = getAllAttributes(element.outerHtml) if tagName != @DUMMY_EMPTY_TAG
+                outerHtml = getAllAttributes(element.outerHtml) if tagName != @empty_tag_name
                 tagLine += "\n<#{tagName} #{outerHtml}"
 
                 canHaveChildren = element.canHaveChildren
@@ -1851,7 +1851,7 @@ module Watir
                     gotIt = false
                     begin
                         curTag = child.tagName
-                        curTag = @DUMMY_EMPTY_TAG if curTag == ""  
+                        curTag = @empty_tag_name if curTag == ""  
                     rescue
                         next
                     end
