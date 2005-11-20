@@ -145,9 +145,8 @@ module Watir
         end
     end
     
-    # This class displays the spinner object that appears in the console when a page is being loaded
+    # Displays the spinner object that appears in the console when a page is being loaded
     class Spinner
-        
         def initialize(enabled = true)
             @s = [ "\b/" , "\b|" , "\b\\" , "\b-"]
             @i=0
@@ -213,7 +212,7 @@ module Watir
 
         # Wait until Internet Explorer has finished loading the page.
         def wait(no_sleep = false)
-             @container.wait(no_sleep)
+            @container.wait(no_sleep)
         end
 
         # Determine the how and what when defaults are possible.
@@ -1091,7 +1090,7 @@ module Watir
                 end
             end
         end
-        
+
         def speed=(how_fast)
             case how_fast
             when :fast : set_fast_speed
