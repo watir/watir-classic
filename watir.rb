@@ -967,6 +967,15 @@ module Watir
         include Container 
 
         @@extra = nil
+        
+        # Maximum number of seconds to wait when attaching to a window
+        @@attach_timeout = 0.2
+        def self.attach_timeout
+            @@attach_timeout
+        end
+        def self.attach_timeout=(timeout)
+            @@attach_timeout = timeout
+        end
 
         # The revision number (according to CVS)
         REVISION = "$Revision$"
@@ -977,10 +986,12 @@ module Watir
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4         
         
-        # The default delay when entering text on a web page.
+        # TODO: the following constants should be able to be specified by object (not class)
+
+        # The delay when entering text on a web page when speed = :slow.
         DEFAULT_TYPING_SPEED = 0.08
         
-        # The default time we wait after a page has loaded.
+        # The default time we wait after a page has loaded when speed = :slow.
         DEFAULT_SLEEP_TIME = 0.1
         
         # The default color for highlighting objects as they are accessed.
@@ -1121,18 +1132,16 @@ module Watir
         end
         private :create_browser_window
 
-        def attach_browser_window(how, what)
-            log "Seeking Window with #{how}: #{ what }"
+        # return window as specified; otherwise nil
+        def find_window(how, what)
             shell = WIN32OLE.new("Shell.Application")
-            appWindows = shell.Windows
-            
             ieTemp = nil
-            appWindows.each do |aWin| 
-                log "Found a window: #{aWin}. "
+            shell.Windows.each do |aWin| 
+                log "Found a window: #{aWin}"
                 
                 case how
                 when :url
-                    log " url is: #{aWin.locationURL}\n"
+                    log "url is: #{aWin.locationURL}\n"
                     ieTemp = aWin if (what.matches(aWin.locationURL) )
                 when :title
                     # normal windows explorer shells do not have document
@@ -1141,16 +1150,26 @@ module Watir
                         title = aWin.document.title
                     rescue WIN32OLERuntimeError
                     end
-                    ieTemp = aWin if (what.matches( title ) ) 
+                    ieTemp = aWin if (what.matches(title) ) 
                 else
                     raise ArgumentError
                 end
             end
+            return ieTemp
+        end
+        private :find_window
 
-            #if it can not find window
-            if ieTemp == nil
+        def attach_browser_window(how, what)
+            log "Seeking Window with #{how}: #{what}"
+            start_time = Time.now
+            ieTemp = nil
+            until ieTemp or Time.now - start_time > @@attach_timeout do
+              ieTemp = find_window(how, what)
+              sleep 0.05 unless ieTemp            
+            end
+            unless ieTemp
                  raise NoMatchingWindowFoundException,
-                 "Unable to locate a window with #{ how} of #{what}"
+                 "Unable to locate a window with #{how} of #{what}"
             end
             @ie = ieTemp
         end

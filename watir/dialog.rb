@@ -37,7 +37,7 @@ module Watir
     end
     
     class IE # modification
-        def remote_eval(command)
+        def eval_in_spawned_process(command)
             command.strip!
             load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
             ruby_code = "require 'watir'; ie = Watir::IE.attach(:title, '#{title}'); ie.instance_eval(#{command.inspect})"

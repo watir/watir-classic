@@ -19,15 +19,16 @@ class TC_Dialog_Test < Test::Unit::TestCase
     end
     
     def test_alert_without_bonus_script
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:id, 'btnAlert').click
         END
+        sleep 0.1
         dialog.button("OK").click
         assert_match(/Alert button!/, $ie.text_field(:id, "testResult").value)  
     end
 
     def test_button_name_not_found
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:id, 'btnAlert').click
         END
         assert_raises(UnknownObjectException) { dialog.button("Yes").click }
@@ -37,7 +38,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
     def test_exists
         autoit = WIN32OLE.new('AutoItX3.Control')
         assert_false dialog.exists?
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:id, 'btnAlert').click
         END
         assert dialog.exists?
@@ -46,7 +47,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
     
     def test_leaves_dialog_open
         # should be closed in teardown
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:id, 'btnAlert').click
         END
     end
@@ -61,7 +62,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
     end
 
     def test_confirm_ok
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:value, 'confirm').click
         END
         assert dialog.exists?
@@ -70,7 +71,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
     end
 
     def test_confirm_ok
-        $ie.remote_eval <<-END
+        $ie.eval_in_spawned_process <<-END
             button(:value, 'confirm').click
         END
         assert dialog.exists?
