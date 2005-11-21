@@ -627,8 +627,8 @@ module Watir
         end
 
         # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
-        #  *  how   - symbol - how we access the image, :index, :id, :name , :src or :alt are supported
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
+        #  *  what  - string or regexp - what we are looking for 
         #
         # returns an Image object
         #
@@ -638,9 +638,10 @@ module Watir
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
-        #    :alt        - finds the item using the tool tip text
+        #    :alt        - finds the item using the alt text (tool tip)
         #    :src        - finds the item using the src tag. This must be the fully qualified name, so is best used with a regular expression
         #    :xpath      - finds the item that matches xpath query
+        #    :title      - finds the item using the title (tool tip)
         #
         # Typical Usage
         # 
@@ -650,9 +651,7 @@ module Watir
         #   ie.image(:alt , "A Picture")        # access an image using the alt text
         #   ie.image(:xpath, "//img[@alt='A Picture']/")    # access an image using the alt text
         #   
-        def image(how, what) 
-            return Image.new(self, how, what)
-        end
+        def_creator :image
         
         # This is the main method for accessing the images collection. Returns an Images object
         #
@@ -1123,6 +1122,13 @@ module Watir
             @speed = :slow
         end
         
+        def visible
+            @ie.visible
+        end
+        def visible=(boolean)
+            @ie.visible = boolean
+        end
+            
         def create_browser_window
             unless @@extra
                 @@extra = WIN32OLE.new('InternetExplorer.Application')
