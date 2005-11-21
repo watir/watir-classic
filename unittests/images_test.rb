@@ -11,34 +11,37 @@ class TC_Images < Test::Unit::TestCase
     include Watir
     
     def setup
-        gotoImagePage
+        $ie.goto($htmlRoot + "images1.html")
         @saved_img_path = build_path("sample.img.dat");
+        clean_saved_image
     end
     
-    def gotoImagePage()
-        $ie.goto($htmlRoot + "images1.html")
+    def teardown
+        clean_saved_image
     end
-
+    
     def test_imageExists
-        assert_false( $ie.image(:name , "missing_name").exists?  )
-        assert(       $ie.image(:name , "circle").exists?  )
-        assert(       $ie.image(:name , /circ/ ).exists?  )
+        assert( !  $ie.image(:name , "missing_name").exists?  )
+        assert(    $ie.image(:name , "circle").exists?  )
+        assert(    $ie.image(:name , /circ/ ).exists?  )
         
-        assert_false( $ie.image(:id , "missing_id").exists?  )
-        assert(       $ie.image(:id , "square").exists?  )
-        assert(       $ie.image(:id , /squ/ ).exists?  )
+        assert( !  $ie.image(:id , "missing_id").exists?  )
+        assert(    $ie.image(:id , "square").exists?  )
+        assert(    $ie.image(:id , /squ/ ).exists?  )
         
-        assert_false( $ie.image(:src, "missingsrc.gif").exists?  )
+        assert( !  $ie.image(:src, "missingsrc.gif").exists?  )
         
-        # BP -- This fails for me but not for Paul. It doesn't make sense to me that it should pass.  
-        #        assert(       $ie.image(:src , "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
-        assert(       $ie.image(:src , /triangle/ ).exists?  )
+        assert(    $ie.image(:src, "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
+        assert(    $ie.image(:src , /triangle/ ).exists?  )
         
-        assert(       $ie.image(:alt , "circle" ).exists?  )
-        assert(       $ie.image(:alt , /cir/ ).exists?  )
+        assert(    $ie.image(:alt , "circle" ).exists?  )
+        assert(    $ie.image(:alt , /cir/ ).exists?  )
         
-        assert_false(  $ie.image(:alt , "triangle" ).exists?  )
-        assert_false(  $ie.image(:alt , /tri/ ).exists?  )
+        assert( !  $ie.image(:alt , "triangle" ).exists?  )
+        assert( !  $ie.image(:alt , /tri/ ).exists?  )
+        
+        assert(    $ie.image(:title, 'square_image').exists? )
+        assert( !  $ie.image(:title, 'pentagram').exists? )
     end
     
     def test_image_click
@@ -53,7 +56,7 @@ class TC_Images < Test::Unit::TestCase
         assert_equal('clicked' , $ie.text_field(:name , "text1" ).value )
 
         # test for disabled button
-        assert_false( $ie.image(:name , 'disabler_test').disabled )
+        assert( ! $ie.image(:name , 'disabler_test').disabled )
         $ie.button(:name , 'disable_img').click
 
         assert( $ie.image(:name , 'disabler_test').disabled )
@@ -61,18 +64,15 @@ class TC_Images < Test::Unit::TestCase
         
         $ie.image(:src, /button/).click
         assert($ie.text.include?("PASS") )
-
     end
     
-
-
     def test_imageHasLoaded
         assert_raises(UnknownObjectException ) { $ie.image(:name, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:id, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:src, "no_image_with_this").hasLoaded? }
         assert_raises(UnknownObjectException ) { $ie.image(:alt, "no_image_with_this").hasLoaded? }
         
-        assert_false( $ie.image(:name, "themissingimage").hasLoaded?  )
+        assert( ! $ie.image(:name, "themissingimage").hasLoaded?  )
         assert( $ie.image(:name, "circle").hasLoaded?  )
         
         assert( $ie.image(:alt, "circle").hasLoaded?  )
@@ -94,6 +94,7 @@ class TC_Images < Test::Unit::TestCase
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileCreatedDate }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).fileSize }
         assert_raises(UnknownObjectException ) { $ie.image(:index, 82).alt}
+        assert_raises(UnknownObjectException ) { $ie.image(:index, 82).title}
         
         assert_equal( ""       , $ie.image(:index, 2).name ) 
         assert_equal( "square" , $ie.image(:index, 2).id )
@@ -102,26 +103,25 @@ class TC_Images < Test::Unit::TestCase
         assert_equal( "88" , $ie.image(:index, 2).height )
         assert_equal( "88" , $ie.image(:index, 2).width )
         
-
         # this line fails, as the date is when it is installed on the local oc, not the date the file was really created
         #assert_equal( "03/10/2005" , $ie.image(:index, 2).fileCreatedDate )
         assert_equal( "788",  $ie.image(:index, 2).fileSize )
        
-        # alt text
+        # tool tips: alt text + title
         assert_equal('circle' , $ie.image(:index, 6).alt) 
         assert_equal( ""      , $ie.image(:index, 2).alt) 
+        assert_equal('square_image', $ie.image(:id, 'square').title)
 
- 
-        # to string tests -- output should be verified!
-        puts $ie.image(:name  , "circle").to_s
-        puts $ie.image(:index , 2).to_s
+        # TODO: to string tests -- output should be verified!
+        $ie.image(:name  , "circle").to_s
+        $ie.image(:index , 2).to_s
     end
     
     def test_image_iterator
         assert_equal(6 , $ie.images.length)
         assert_equal("" , $ie.images[2].name )
-        assert_equal("square" , $ie.images[2].id )
-        assert_match(/square/ , $ie.images[2].src )
+        assert_equal("square", $ie.images[2].id )
+        assert_match(/square/, $ie.images[2].src )
         
         index = 1
         $ie.images.each do |i|
@@ -137,37 +137,16 @@ class TC_Images < Test::Unit::TestCase
     end
     
     def test_save_local_image
-        gotoImagePage()
-        safe_file_block(1) do
-            assert(File.compare(@saved_img_path, $ie.images[1].src.gsub(/^file:\/\/\//, '')))
-        end
-        safe_file_block(2) do
-             assert(File.compare(@saved_img_path, $ie.images[2].src.gsub(/^file:\/\/\//, '')))
-        end
-    end
-    
-    def test_save_local_image_returns_original_page
-        gotoImagePage()
-        safe_file_block(1) {}
-        assert_equal(6 , $ie.images.length)
-    end
-    
-    def safe_file_block(*imgstosave)
-        clean_saved_image
-        begin
-            imgstosave.each {|imgidx| $ie.images[imgidx].save(build_windows_path("sample.img.dat"))}
-            yield
-        ensure
-            clean_saved_image
-        end
+        $ie.images[1].save(build_windows_path("sample.img.dat"))
+        assert(File.compare(@saved_img_path, $ie.images[1].src.gsub(/^file:\/\/\//, '')))
     end
     
     def clean_saved_image
-      File.unlink(@saved_img_path) if (File.exists?(@saved_img_path))
+        File.delete(@saved_img_path) if (File.exists?(@saved_img_path))
     end
     
     def build_windows_path(part) 
-      build_path(part).gsub(/\//, "\\")
+        build_path(part).gsub(/\//, "\\")
     end
     
     def build_path(part) 

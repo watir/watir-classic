@@ -16,14 +16,16 @@ $non_core_tests =
                # must be visible
                # will be revised to use autoit 
                # takes 15 seconds to run
-     'images', # failing tests; also assumes working dir is unittests
-     'screen_capture', # is always visible; takes 25 secons
+     'images', # save file must must be visible
+     'screen_capture', # is always visible; takes 25 seconds
      'filefield', # is always visible; takes 40 seconds 
      'jscript',
      'js_events', # is always visible
      'minmax', # becomes visible
      'dialog', # visible
-     'send_keys' #visible
+     'send_keys', # visible
+     'attachToExistingWindow', # creates new window
+     'modal_dialog' # modal is visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $core_tests = $all_tests - $non_core_tests
