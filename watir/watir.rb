@@ -1617,23 +1617,23 @@ module Watir
         #
 
         # Get the Rexml object.
-        def getRexmlDocumentObject
+        def rexml_document_object
             #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
             if @rexmlDomobject == nil
-                createRexmlDocumentObject()
+                create_rexml_document_object()
             end
             return @rexmlDomobject
         end
         
         # Create the Rexml object if it is nil. This method is private so can be called only
-        # from getRexmlDocumentObject method.
-        def createRexmlDocumentObject
+        # from rexml_document_object method.
+        def create_rexml_document_object
             require 'rexml/document'
             require 'rexml/document'
             if @rexmlDomobject == nil
                 #puts 'Here creating rexmlDomobject'
                 htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
-                htmlSource = getHTMLSource(document.body,htmlSource," ")
+                htmlSource = html_source(document.body,htmlSource," ")
                 htmlSource += "\n</HTML>\n"
                 #puts htmlSource
                 #Give htmlSource as input to Rexml.
@@ -1649,12 +1649,12 @@ module Watir
                 end
             end
         end
-        private :createRexmlDocumentObject
+        private :create_rexml_document_object
        
         #Function Tokenizes the tag line and returns array of tokens.
         #Token could be either tagName or "=" or attribute name or attribute value
         #Attribute value could be either quoted string or single word
-        def tokenizeTagline(outerHtml)
+        def tokenize_tagline(outerHtml)
             outerHtml = outerHtml.gsub(/\n|\r/," ")
             #removing "< symbol", opening of current tag
             outerHtml =~ /^\s*<(.*)$/
@@ -1700,11 +1700,11 @@ module Watir
             end
             return tokens
         end 
-        private :tokenizeTagline
+        private :tokenize_tagline
 
         # This function get and clean all the attributes of the tag.
-        def getAllAttributes(outerHtml)
-            tokens = tokenizeTagline(outerHtml)
+        def all_tag_attributes(outerHtml)
+            tokens = tokenize_tagline(outerHtml)
             #puts tokens
             tagLine = ""
             count = 1
@@ -1741,17 +1741,17 @@ module Watir
             #puts tagLine
             return tagLine
         end
-        private :getAllAttributes
+        private :all_tag_attributes
 
         # This function is used to escape the characters that are not valid XML data.
-        def xmlEscape (str)
+        def xml_escape (str)
             str = str.gsub(/&/,'&amp;')
             str = str.gsub(/</,'&lt;')
             str = str.gsub(/>/,'&gt;')
             str = str.gsub(/"/, '&quot;')
             str
         end
-        private :xmlEscape
+        private :xml_escape
 
         #Returns HTML Source 
         #Traverse the DOM tree rooted at body element  
@@ -1759,7 +1759,7 @@ module Watir
         #element: Represent Current element
         #htmlString:HTML Source
         #spaces:(Used for debugging). Helps in indentation  
-        def getHTMLSource(element, htmlString, spaceString)
+        def html_source(element, htmlString, spaceString)
             begin
                 tagLine = ""
                 outerHtml = ""
@@ -1773,7 +1773,7 @@ module Watir
                     end
                 rescue
                     #handling text nodes
-                    htmlString +=  xmlEscape(element.toString)
+                    htmlString +=  xml_escape(element.toString)
                     return htmlString
                 end
                 #puts tagName
@@ -1782,7 +1782,7 @@ module Watir
                     return htmlString
                 end
                 #tagLine += spaceString
-                outerHtml = getAllAttributes(element.outerHtml) if tagName != @empty_tag_name
+                outerHtml = all_tag_attributes(element.outerHtml) if tagName != @empty_tag_name
                 tagLine += "\n<#{tagName} #{outerHtml}"
 
                 canHaveChildren = element.canHaveChildren
@@ -1795,7 +1795,7 @@ module Watir
                 htmlString += tagLine
                 childElements = element.childnodes
                 childElements.each do |child|
-                    htmlString = getHTMLSource(child,htmlString,spaceString)
+                    htmlString = html_source(child,htmlString,spaceString)
                 end
                 if canHaveChildren
                 #tagLine += spaceString
@@ -1808,18 +1808,18 @@ module Watir
             end
             return htmlString
         end
-        private :getHTMLSource
+        private :html_source
  
         # return the first element that matches the xpath
-        def getElementByXpath(xpath)
-            temp = getElementsByXpath(xpath)
+        def element_by_xpath(xpath)
+            temp = elements_by_xpath(xpath)
             temp = temp[0] if temp
             return temp
         end
         
         # execute xpath and return an array of elements
-        def getElementsByXpath(xpath)
-            doc = getRexmlDocumentObject()
+        def elements_by_xpath(xpath)
+            doc = rexml_document_object()
             modifiedXpath = ""
             selectedElements = Array.new
             doc.elements.each(xpath) do |element|
@@ -2388,12 +2388,7 @@ module Watir
             
             # Get form using xpath.
             if @how == :xpath    
-                temp = @container.getElementsByXpath(@what)
-                if temp != nil          
-                   @ole_object = temp[0]         
-                else                            
-                   @ole_object = nil                     
-                end                     
+                @ole_object = @container.element_by_xpath(@what)
             else
                 count = 1
                 doc = @container.document
@@ -2505,7 +2500,7 @@ module Watir
         
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             else
                 @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
             end            
@@ -2614,7 +2609,7 @@ module Watir
 
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             elsif @how == :direct
                 @o = @what
             else
@@ -2839,7 +2834,7 @@ module Watir
             if @how == :direct
                 @o = @what
             elsif @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             else
                 @o = @container.locate_tagged_element("TR", @how, @what)   
             end
@@ -2895,7 +2890,7 @@ module Watir
 
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             elsif @how == :direct 
                 @o = @what
             else
@@ -2949,7 +2944,7 @@ module Watir
         
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             else
             @o = @container.locate_tagged_element('IMG', @how, @what)
         end            
@@ -3081,7 +3076,7 @@ module Watir
         
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             else
             begin
                 @o = @container.locate_tagged_element('A', @how, @what)
@@ -3128,7 +3123,7 @@ module Watir
     class InputElement < Element
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             elsif @how == :direct
                 @o = @what
             else
@@ -3523,7 +3518,7 @@ module Watir
     class RadioCheckCommon < Element
         def locate
             if @how == :xpath
-                @o = @container.getElementByXpath(@what)
+                @o = @container.element_by_xpath(@what)
             else
                 @o = @container.locate_input_element(@how, @what, @type, @value)
             end
