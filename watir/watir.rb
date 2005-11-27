@@ -1914,6 +1914,14 @@ module Watir
             end
         end
 
+        def eval_in_spawned_process(command)
+            command.strip!
+            load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
+            ruby_code = "require 'watir'; ie = Watir::IE.attach(:title, '#{title}'); ie.instance_eval(#{command.inspect})"
+            exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
+            Thread.new { system(exec_string) }
+        end
+                
     end # class IE
         
     # 
@@ -2120,6 +2128,7 @@ module Watir
                     ole_object.style.backgroundColor = @original_color unless @original_color == nil
                 rescue
                     # we could be here for a number of reasons...
+                    # e.g. page may have reloaded and the reference is no longer valid
                 ensure
                     @original_color = nil
                 end
@@ -2137,6 +2146,17 @@ module Watir
             highlight(:set)
             ole_object.click()
             @container.wait()
+            highlight(:clear)
+        end
+        
+        def click_no_wait
+            assert_exists
+            assert_enabled
+
+            highlight(:set)
+            object = "#{self.class}.new(self, #{@how.inspect}, #{@what.inspect})"
+            # currently only defined when @container is IE:
+            @container.eval_in_spawned_process(object + ".click")
             highlight(:clear)
         end
 
@@ -3088,7 +3108,7 @@ module Watir
 
         # if an image is used as part of the link, this will return true      
         def link_has_image
-            assert_exist
+            assert_exists
             return true  if @o.getElementsByTagName("IMG").length > 0
             return false
         end
@@ -3115,7 +3135,7 @@ module Watir
          def to_s
             assert_exists
             r = string_creator
-            r=r + link_string_creator
+            r = r + link_string_creator
             return r.join("\n")
          end
     end
@@ -3922,7 +3942,11 @@ module Watir
         end
         @@autoit
     end        
-                
 end
+
+# why won't this work when placed in the module (where it properly belongs)
+def _code_that_copies_readonly_array(array, name)
+    "temp = Array.new(#{array.inspect}); #{name}.clear; temp.each {|element| #{name} << element}"
+end        
 
 require 'watir/camel_case'
