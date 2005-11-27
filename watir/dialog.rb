@@ -36,20 +36,6 @@ module Watir
         end
     end
     
-    class IE # modification
-        def eval_in_spawned_process(command)
-            command.strip!
-            load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
-            ruby_code = "require 'watir'; ie = Watir::IE.attach(:title, '#{title}'); ie.instance_eval(#{command.inspect})"
-            exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
-            Thread.new { system(exec_string) }
-        end
-    end
-
 end
 
-    # why won't this work when placed in the module (where it properly belongs)
-    def _code_that_copies_readonly_array(array, name)
-        "temp = Array.new(#{array.inspect}); #{name}.clear; temp.each {|element| #{name} << element}"
-    end        
 

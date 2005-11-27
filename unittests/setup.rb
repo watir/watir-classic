@@ -24,7 +24,7 @@ $non_core_tests =
      'minmax', # becomes visible
      'dialog', # visible
      'send_keys', # visible
-     'attachToExistingWindow', # creates new window
+     'attach_to_new_window', # creates new window
      'modal_dialog' # modal is visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
