@@ -1629,7 +1629,6 @@ module Watir
         # from rexml_document_object method.
         def create_rexml_document_object
             require 'rexml/document'
-            require 'rexml/document'
             if @rexmlDomobject == nil
                 #puts 'Here creating rexmlDomobject'
                 htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
@@ -1824,7 +1823,7 @@ module Watir
             selectedElements = Array.new
             doc.elements.each(xpath) do |element|
                 modifiedXpath  =  element.xpath
-                temp = getElementByAbsoluteXpath(modifiedXpath)
+                temp = element_by_absolute_xpath(modifiedXpath)
                 selectedElements << temp if temp != nil
             end
             #puts selectedElements.length
@@ -1837,7 +1836,7 @@ module Watir
 
         # Method that iterates over IE DOM object and get the elements for the given
         # xpath.
-        def getElementByAbsoluteXpath(xpath)
+        def element_by_absolute_xpath(xpath)
             curElem = nil
 
             #puts "Hello; Given xpath is : #{xpath}"
@@ -1913,6 +1912,7 @@ module Watir
                 return nil
             end
         end
+        private :element_by_absolute_xpath
 
         def eval_in_spawned_process(command)
             command.strip!
