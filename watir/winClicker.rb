@@ -108,7 +108,7 @@ class WinClicker
 
     # Click Javascript Dialog
 
-    def clickJavaScriptDialog(button="Ok" , parenthWnd = -1)
+    def clickJavaScriptDialog(button="OK" , parenthWnd = -1)
 
        clickWindowsButton("Microsoft Internet Explorer" , button )
 
