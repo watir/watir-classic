@@ -2211,6 +2211,14 @@ module Watir
             assert_exists
             return ! disabled
         end
+
+        # Angrez: Added method to get attribute value for any attribute of the element.
+        # Returns null if attribute doesn't exists
+        def attribute_value(attribute_name)
+            assert_exists
+            return ole_object.getAttribute(attribute_name)
+        end
+
     end
 
     class ElementMapper # Still to be used
@@ -2583,7 +2591,7 @@ module Watir
         def label_string_creator
             n = []
             n <<   "for:".ljust(TO_S_SIZE) + self.for
-            n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
+            n <<   "inner text:".ljust(TO_S_SIZE) + self.innertext
             return n
         end
         private :label_string_creator
@@ -3126,7 +3134,7 @@ module Watir
         def link_string_creator
             n = []
             n <<   "href:".ljust(TO_S_SIZE) + self.href
-            n <<   "inner text:".ljust(TO_S_SIZE) + self.innerText
+            n <<   "inner text:".ljust(TO_S_SIZE) + self.innertext
             n <<   "img src:".ljust(TO_S_SIZE) + self.src if self.link_has_image
             return n
          end
@@ -3332,7 +3340,7 @@ module Watir
         def text_string_creator
             n = []
             n <<   "length:".ljust(TO_S_SIZE) + self.size.to_s
-            n <<   "max length:".ljust(TO_S_SIZE) + self.maxLength.to_s
+            n <<   "max length:".ljust(TO_S_SIZE) + self.maxlength.to_s
             n <<   "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
 
             return n
