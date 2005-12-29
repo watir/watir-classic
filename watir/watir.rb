@@ -2292,17 +2292,17 @@ module Watir
 
         # Super class for all the iteractor classes
         #   * container  - an instance of an IE object
-        def initialize( container)
+        def initialize(container)
             @container = container
             @length = length() # defined by subclasses
 
-            # set up the items we want to display when the show method s used
+            # set up the items we want to display when the show method is used
             set_show_items
         end
  
         private 
         def set_show_items
-            @show_attributes = AttributeLengthPairs.new( "id" , 20)
+            @show_attributes = AttributeLengthPairs.new("id", 20)
             @show_attributes.add( "name" , 20)
         end
 
@@ -2327,7 +2327,7 @@ module Watir
 
         # iterate through each of the elements in the collection in turn
         def each
-            0.upto( @length-1 ) { |i | yield iterator_object(i) }
+            0.upto( @length-1 ) { |i| yield iterator_object(i) }
         end
 
         # allows access to a specific item in the collection
@@ -2337,23 +2337,23 @@ module Watir
 
         # this method is the way to show the objects, normally used from irb
         def show
-            s="index".ljust(6)
+            s = "index".ljust(6)
             @show_attributes.each do |attribute_length_pair| 
-                s=s + attribute_length_pair.attribute.ljust(attribute_length_pair.length)
+                s += attribute_length_pair.attribute.ljust(attribute_length_pair.length)
             end
 
             index = 1
             self.each do |o|
-                s= s+"\n"
-                s=s + index.to_s.ljust(6)
+                s += "\n"
+                s += index.to_s.ljust(6)
                 @show_attributes.each do |attribute_length_pair| 
                     begin
-                        s=s  + eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
-                    rescue=>e
-                        s=s+ " ".ljust( attribute_length_pair.length )
+                        s += eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
+                    rescue => e
+                        s += " ".ljust(attribute_length_pair.length)
                     end
                 end
-                index+=1
+                index += 1
             end
             puts s 
         end
@@ -2361,7 +2361,7 @@ module Watir
         # this method creates an object of the correct type that the iterators use
         private
         def iterator_object(i)
-            element_class.new(@container, :index, i+1)
+            element_class.new(@container, :index, i + 1)
         end
     end
 
@@ -3708,10 +3708,8 @@ module Watir
     #    resume rdoc
     #++   
     
-
     # this class accesses the buttons in the document as a collection
     # it would normally only be accessed by the Watir::Container#buttons method
-    #
     class Buttons < ElementCollections
         def element_class; Button; end
         def length
@@ -3721,16 +3719,15 @@ module Watir
         private
         def set_show_items
             super
-            @show_attributes.add( "disabled" , 9)
-            @show_attributes.add( "value" , 20)
+            @show_attributes.add("disabled", 9)
+            @show_attributes.add("value", 20)
         end
     end
 
 
     # this class accesses the file fields in the document as a collection
     # it would normally only be accessed by the Watir::Container#file_fields method
-    #
-    class FileFields< ElementCollections
+    class FileFields < ElementCollections
         def element_class; FileField; end
         def length
             get_length_of_input_objects(["file"])
@@ -3739,21 +3736,20 @@ module Watir
         private
         def set_show_items
             super
-            @show_attributes.add( "disabled" , 9)
-            @show_attributes.add( "value" , 20)
+            @show_attributes.add("disabled", 9)
+            @show_attributes.add("value", 20)
         end
     end
 
 
     # this class accesses the check boxes in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
-    #
     class CheckBoxes < ElementCollections
         def element_class; CheckBox; end  
         def length
             get_length_of_input_objects("checkbox")
         end
-        # this method creates an object of the correct type that the iterators use
+
         private
         def iterator_object(i)
             @container.checkbox(:index, i+1)
@@ -3762,22 +3758,20 @@ module Watir
 
     # this class accesses the radio buttons in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#radios method
-    #
     class Radios < ElementCollections
         def element_class; Radio; end
         def length
             get_length_of_input_objects("radio")
         end
-        # this method creates an object of the correct type that the iterators use
+
         private
         def iterator_object(i)
-            @container.radio(:index, i+1)
+            @container.radio(:index, i + 1)
         end
     end
 
     # this class accesses the select boxes  in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#select_lists method
-    #
     class SelectLists < ElementCollections
         include CommonCollection
         def element_class; SelectList; end
@@ -3786,7 +3780,6 @@ module Watir
 
     # this class accesses the links in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#links method
-    #
     class Links < ElementCollections
         include CommonCollection
         def element_class; Link; end    
@@ -3796,14 +3789,12 @@ module Watir
         def set_show_items
             super
             @show_attributes.add("href", 60)
-            @show_attributes.add("innerText" , 60)
+            @show_attributes.add("innerText", 60)
         end
-
     end
 
     # this class accesses the imnages in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
-    #
     class Images < ElementCollections
         def element_class; Image; end 
         def length
@@ -3816,17 +3807,15 @@ module Watir
             @show_attributes.add("src", 60)
             @show_attributes.add("alt", 30)
         end 
-
     end
 
     # this class accesses the text fields in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#text_fields method
-    #
     class TextFields < ElementCollections
         def element_class; TextField; end
         def length
             # text areas are also included in the TextFields, but we need to get them seperately
-            get_length_of_input_objects( ["text" , "password"] ) +
+            get_length_of_input_objects(["text", "password"]) +
                 @container.document.getElementsByTagName("textarea").length
         end
     end
@@ -3842,7 +3831,6 @@ module Watir
 
     # this class accesses the text fields in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#tables method
-    #
     class Tables < ElementCollections
         include CommonCollection
         def element_class; Table; end
@@ -3851,7 +3839,7 @@ module Watir
         private 
         def set_show_items
             super
-            @show_attributes.delete( "name")
+            @show_attributes.delete("name")
         end
     end
 
@@ -3870,17 +3858,17 @@ module Watir
         end
     end
 	
-    # this class accesses the p tags in the document as a collection
-    # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
-    #
+    # this class accesses the pre tags in the document as a collection
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#pres method
 	class Pres < ElementCollections
 		include CommonCollection
 		def element_class; Pre; end
-		
+
+        private		
 		def set_show_items
 			super
-			@show_attributes.delete( "name" )
-			@show_attributes.add( "className", 20 )
+			@show_attributes.delete("name")
+			@show_attributes.add("className", 20)
 		end
 	end
 
@@ -3894,8 +3882,8 @@ module Watir
         private
         def set_show_items
             super
-            @show_attributes.delete( "name")
-            @show_attributes.add( "className" , 20)
+            @show_attributes.delete("name")
+            @show_attributes.add("className", 20)
         end
 
     end
@@ -3910,15 +3898,13 @@ module Watir
         private
         def set_show_items
             super
-            @show_attributes.delete( "name")
-            @show_attributes.add( "className" , 20)
+            @show_attributes.delete("name")
+            @show_attributes.add("className", 20)
         end
-
     end
 
     # this class accesses the divs in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#divs method
-    #
     class Divs < ElementCollections
         include CommonCollection
         def element_class; Div; end
@@ -3926,10 +3912,9 @@ module Watir
         private 
         def set_show_items
             super
-            @show_attributes.delete( "name")
-            @show_attributes.add( "className" , 20)
+            @show_attributes.delete("name")
+            @show_attributes.add("className" , 20)
         end
-
     end
 
     @@autoit = nil
