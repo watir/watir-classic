@@ -2208,8 +2208,8 @@ module Watir
             return ! disabled
         end
 
-        # Angrez: Added method to get attribute value for any attribute of the element.
-        # Returns null if attribute doesn't exists
+        # Get attribute value for any attribute of the element.
+        # Returns null if attribute doesn't exist.
         def attribute_value(attribute_name)
             assert_exists
             return ole_object.getAttribute(attribute_name)
