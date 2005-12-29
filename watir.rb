@@ -117,6 +117,8 @@ command_line_flag('-s')
 module Watir
     include Watir::Exception
 
+    @@dir = File.expand_path(File.dirname(__FILE__))
+
     # BUG: this won't work right until the null objects are pulled out
     def exists?
         begin
@@ -1274,15 +1276,7 @@ module Watir
 
         private
         def autoit
-            unless @autoit
-                begin
-                    @autoit = WIN32OLE.new('AutoItX3.Control')
-                rescue WIN32OLERuntimeError
-                    system("regsvr32.exe /s " + "#{dir}/watir/AutoItX3.dll".gsub('/', '\\'))
-                    @autoit = WIN32OLE.new('AutoItX3.Control')
-                end
-            end
-            @autoit
+            Watir::autoit
         end        
                 
 		# Send key events to IE window. 
@@ -3938,18 +3932,26 @@ module Watir
 
     end
 
+    @@autoit = nil
     
-    def autoit
+    def self.autoit
         unless @@autoit
             begin
                 @@autoit = WIN32OLE.new('AutoItX3.Control')
             rescue WIN32OLERuntimeError
-                system("regsvr32.exe /s " + "#{dir}/watir/AutoItX3.dll".gsub('/', '\\'))
+                _register('AutoItX3.dll')
                 @@autoit = WIN32OLE.new('AutoItX3.Control')
             end
         end
         @@autoit
-    end        
+    end
+    
+    def self._register(dll)
+      system("regsvr32.exe /s "    + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
+    end
+    def self._unregister(dll)
+      system("regsvr32.exe /s /u " + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
+    end    
 end
 
 # why won't this work when placed in the module (where it properly belongs)
