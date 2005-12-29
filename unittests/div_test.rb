@@ -112,8 +112,8 @@ class TC_Divs < Test::Unit::TestCase
     end
     
     def test_span_iterator
-        assert_equal( 7 , $ie.spans.length)
-        assert_equal( "span1" , $ie.spans[1].id )
+        assert_equal(7, $ie.spans.length)
+        assert_equal("span1", $ie.spans[1].id)
         
         index = 1
         $ie.spans.each do |s|
@@ -121,9 +121,9 @@ class TC_Divs < Test::Unit::TestCase
             assert_equal($ie.span(:index, index ).name , s.name )
             assert_equal($ie.span(:index, index ).id , s.id )
             assert_equal($ie.span(:index, index ).class_name , s.class_name )
-            index +=1
+            index += 1
         end
-        assert_equal(index-1, $ie.spans.length)   # -1 as we add 1 at the end of the loop
+        assert_equal(index - 1, $ie.spans.length)   # -1 as we add 1 at the end of the loop
     end
     
     def test_objects_in_span
