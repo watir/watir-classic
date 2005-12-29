@@ -2016,6 +2016,8 @@ module Watir
         def_wrap_guard :value
         # returns the title of the element
         def_wrap_guard :title
+        # returns the style of the element
+        def_wrap_guard :style
         
         def_wrap_guard :alt
         def_wrap_guard :src
