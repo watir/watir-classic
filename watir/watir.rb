@@ -2114,14 +2114,14 @@ module Watir
         def highlight(set_or_clear)
             if set_or_clear == :set
                 begin
-                    @original_color = ole_object.style.backgroundColor
-                    ole_object.style.backgroundColor = @container.activeObjectHighLightColor
+                    @original_color = style.backgroundColor
+                    style.backgroundColor = @container.activeObjectHighLightColor
                 rescue 
                     @original_color = nil
                 end
             else # BUG: assumes is :clear, but could actually be anything
                 begin 
-                    ole_object.style.backgroundColor = @original_color unless @original_color == nil
+                    style.backgroundColor = @original_color unless @original_color == nil
                 rescue
                     # we could be here for a number of reasons...
                     # e.g. page may have reloaded and the reference is no longer valid
@@ -2497,16 +2497,16 @@ module Watir
         def flash
             @original_styles = {}
             10.times do
-                count=0
+                count = 0
                 @ole_object.elements.each do |element|
                     highlight(:set, element, count)
-                    count +=1
+                    count += 1
                 end
                 sleep 0.05
                 count = 0
                 @ole_object.elements.each do |element|
                     highlight(:clear, element, count)
-                    count +=1
+                    count += 1
                 end
                 sleep 0.05
             end
@@ -3892,7 +3892,6 @@ module Watir
 
     # this class accesses the spans in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#spans method
-    #
     class Spans < ElementCollections
         include CommonCollection
         def element_class; Span; end
