@@ -11,6 +11,16 @@ Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
 end
 
+$window_tests =
+    ['js_events', # is always visible
+     'modal_dialog', # modal is visible
+     'attachToExistingWindow', # could actually run robustly as part of the core suite!
+     'attach_to_new_window', # creates new window
+     'jscript',
+     'send_keys', # visible
+     'iedialog' # broken (and is visible)
+    ].collect {|x| "unittests/#{x}_test.rb"}
+
 $non_core_tests = 
     ['popups', # has problems when run in a suite (is ok when run alone); 
                # must be visible
@@ -19,16 +29,11 @@ $non_core_tests =
      'images', # save file must must be visible
      'screen_capture', # is always visible; takes 25 seconds
      'filefield', # is always visible; takes 40 seconds 
-     'jscript',
-     'js_events', # is always visible
      'minmax', # becomes visible
-     'dialog', # visible
-     'send_keys', # visible
-     'attach_to_new_window', # creates new window
-     'modal_dialog' # modal is visible
+     'dialog' # visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
-$core_tests = $all_tests - $non_core_tests
+$core_tests = $all_tests - $non_core_tests - $window_tests
 
 def start_ie_with_logger
   $ie = Watir::IE.new()
