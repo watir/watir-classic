@@ -2,7 +2,9 @@ require 'Win32API'
 require 'win32ole'
  
 #test, make sure we can connect to the IEDialog.dll
-fnShowString = Win32API.new('IEDialog', 'ShowString', ['p'], 'v')
+# this will find the IEDialog.dll file in its build location
+iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+fnShowString = Win32API.new(iedialog_file, 'ShowString', ['p'], 'v')
 fnShowString.call("from ruby!") 
 
 
@@ -19,7 +21,7 @@ puts webbrowser.Busy
 sleep(5)
 puts webbrowser.Busy
 
-fnGetUnknown = Win32API.new('IEDialog', 'GetUnknown', ['p', 'p'], 'v')
+fnGetUnknown = Win32API.new(iedialog_file, 'GetUnknown', ['p', 'p'], 'v')
 
 intPointer = " " * 4	#will contain the int value of the IUnknown*
 fnGetUnknown.call("Google - Microsoft Internet Explorer", intPointer)
