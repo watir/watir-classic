@@ -5,13 +5,10 @@
 	function disp_confirm()
 	{
 		testResult = document.getElementById('testResult');
-		var name=confirm("Press a button")
-		if (name==true)	{
-			testResult.value = "You pressed the Confirm and OK button!"
-		}
-		else{
-			testResult.value = "You pressed the Confirm and Cancel button!"
-		}
+		if (confirm("Press a button.")) 
+			testResult.value = "You pressed the Confirm and OK button!";
+		else
+			testResult.value = "You pressed the Confirm and Cancel button!";
 	}
 	function disp_alert()
 	{
