@@ -151,6 +151,7 @@ Contributors:
    Jeff Wood
    Angrez Singh
    Abhishek Goliya
+   Yaxin Wang
 
 Acknowledgements:
    Chris Morris
