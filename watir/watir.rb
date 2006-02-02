@@ -102,7 +102,7 @@ def command_line_flag(switch)
     return setting
 end            
 
-# Constant to make Internet explorer minimisez. -b stands for background
+# Constant to make Internet explorer minimize. -b stands for background
 $HIDE_IE = command_line_flag('-b') 
 
 # Constant to enable/disable the spinner
@@ -1953,7 +1953,7 @@ module Watir
     
     # Base class for html elements.
     # This is not a class that users would normally access. 
-    class Element #Wrapper
+    class Element # Wrapper
         include Watir::Exception
         include Container # presumes @container is defined
         
@@ -2140,8 +2140,8 @@ module Watir
             assert_enabled
            
             highlight(:set)
-            ole_object.click()
-            @container.wait()
+            ole_object.click
+            @container.wait
             highlight(:clear)
         end
         
@@ -2558,25 +2558,21 @@ module Watir
 	
 	class Pre < NonControlElement
 		TAG = 'PRE'
-		def self.tag; TAG; end
 	end
 
     class P < NonControlElement 
         TAG = 'P'
-        def self.tag; TAG; end
     end
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
     # It would not normally be created by users
     class Div < NonControlElement 
         TAG = 'DIV'
-        def self.tag; TAG; end
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
     class Span < NonControlElement 
         TAG = 'SPAN'
-        def self.tag; TAG; end
     end
 
     # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
@@ -3654,7 +3650,7 @@ module Watir
     # for subclasses of ElementCollections
     module CommonCollection
         def element_tag
-            element_class.tag
+            element_class::TAG
         end
         def length
             @container.document.getElementsByTagName(element_tag).length
