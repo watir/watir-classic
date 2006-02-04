@@ -3465,21 +3465,22 @@ module Watir
             begin
                 maxLength = @o.maxLength
                 if value.length > maxLength
-                    value = suppliedValue[0 .. maxLength ]
-                    @container.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
+                    original_value = value        
+                    value = original_value[0 .. maxLength ]
+                    @container.log " Supplied string is #{original_value.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
                 end
             rescue
                 # probably a text area - so it doesnt have a max Length
                 maxLength = -1
             end
             for i in 0 .. value.length-1   
-                sleep @container.typingspeed   # typing speed
+                sleep @container.typingspeed
                 c = value[i,1]
                 #@container.log  " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
-            @o.fireEvent("onKeyDown")
-            @o.fireEvent("onKeyPress")
-            @o.fireEvent("onKeyUp")
+                @o.fireEvent("onKeyDown")
+                @o.fireEvent("onKeyPress")
+                @o.fireEvent("onKeyUp")
             end
             
         end
