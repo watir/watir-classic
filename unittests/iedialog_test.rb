@@ -20,15 +20,25 @@ class TC_IEDialog < Test::Unit::TestCase
   def xtest_connect_to_iedialog 
     # make sure we can connect to the IEDialog.dll
     fnShowString = Win32API.new(@@iedialog_file, 'ShowString', ['p'], 'v')
-    fnShowString.call("from ruby!") 
+    fnShowString.call("from ruby!") # blocks
+  end
+
+  def test_find_window   
+    $ie.goto($htmlRoot + "pass.html")
+    fnFindWindow = Win32API.new('user32.dll', 'FindWindow', ['p', 'p'], 'l')
+    hwnd = fnFindWindow.call(nil, "Pass Page - Microsoft Internet Explorer")
+    assert(hwnd != 0)
   end
 
   def test_all    
     $ie.goto($htmlRoot + "pass.html")
 
+    fnFindWindow = Win32API.new('user32.dll', 'FindWindow', ['p', 'p'], 'l')
+    hwnd = fnFindWindow.call(nil, "Pass Page - Microsoft Internet Explorer")
+
     fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['p', 'p'], 'v')
     intPointer = " " * 4 # will contain the int value of the IUnknown*
-    fnGetUnknown.call("Pass Page - Microsoft Internet Explorer", intPointer)
+    fnGetUnknown.call(hwnd, intPointer)
     
     intArray = intPointer.unpack('L')
     intUnknown = intArray.first
