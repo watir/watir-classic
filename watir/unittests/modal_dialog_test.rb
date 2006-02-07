@@ -18,8 +18,8 @@ class TC_ModalDialog < Test::Unit::TestCase
   
   def test_modal_use_case
     $ie.button(:value, 'Launch Dialog').click_no_wait
-    sleep 1
     modal = attach_modal('Modal Dialog -- Web Page Dialog')
+
     assert(modal.text.include?('Enter some text:'))
     modal.text_field(:name, 'modal_text').set('hello')
     modal.button(:value, 'Close').click
@@ -28,15 +28,18 @@ class TC_ModalDialog < Test::Unit::TestCase
 
   # this will find the IEDialog.dll file in its build location
   @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+  @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
+  @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
 
   def attach_modal(title)
-    fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
-    hwnd_modal = fnFindWindowEx.call(0, 0, nil, title)
-    assert(hwnd_modal > 0)
+    hwnd_modal = 0
+    wait_up_to(10) do
+      hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, title)
+      hwnd_modal > 0
+    end
      
-    fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
     intPointer = " " * 4 # will contain the int value of the IUnknown*
-    fnGetUnknown.call(hwnd_modal, intPointer)
+    @@fnGetUnknown.call(hwnd_modal, intPointer)
     
     intArray = intPointer.unpack('L')
     intUnknown = intArray.first
@@ -44,6 +47,20 @@ class TC_ModalDialog < Test::Unit::TestCase
     
     htmlDoc = WIN32OLE.connect_unknown(intUnknown)    
     ModalPage.new(htmlDoc)
+  end
+
+  def wait_for_modal(title)
+    wait_up_to(10) do
+      intPointer = " " * 4
+      @@fnFindWindowEx.call(0, 0, nil, title) > 0
+    end
+  end
+
+  def wait_up_to(timeout) # block
+    start_time = Time.now
+    until yield or Time.now - start_time > timeout do
+      sleep 0.05
+    end
   end
 end
 
