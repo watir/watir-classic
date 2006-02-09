@@ -33,7 +33,7 @@ class TC_ModalDialog < Test::Unit::TestCase
 
   def attach_modal(title)
     hwnd_modal = 0
-    wait_up_to(10) do
+    until_with_timeout(10) do
       hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, title)
       hwnd_modal > 0
     end
@@ -44,19 +44,12 @@ class TC_ModalDialog < Test::Unit::TestCase
     intArray = intPointer.unpack('L')
     intUnknown = intArray.first
     assert(intUnknown > 0)
-    
+      
     htmlDoc = WIN32OLE.connect_unknown(intUnknown)    
     ModalPage.new(htmlDoc)
   end
 
-  def wait_for_modal(title)
-    wait_up_to(10) do
-      intPointer = " " * 4
-      @@fnFindWindowEx.call(0, 0, nil, title) > 0
-    end
-  end
-
-  def wait_up_to(timeout) # block
+  def until_with_timeout(timeout) # block
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
       sleep 0.05
