@@ -152,6 +152,7 @@ Contributors:
    Angrez Singh
    Abhishek Goliya
    Yaxin Wang
+   Michael Bolton
 
 Acknowledgements:
    Chris Morris

@@ -35,6 +35,8 @@ However: use extra spaces with vertical bars. Thus:
     
 Also, always uses spaces with operators. Thus:
     a = b + c if d == e
+Exception:
+    def foo(bar=true)    
     
 Capitalization rules -- Straight from Ruby Style:
 
