@@ -3,21 +3,21 @@
   ---------------------------------------------------------------------------
   Copyright (c) 2004-2005, Paul Rogers and Bret Pettichord
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   1. Redistributions of source code must retain the above copyright notice,
   this list of conditions and the following disclaimer.
-  
+
   2. Redistributions in binary form must reproduce the above copyright
   notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
-  
+
   3. Neither the names Paul Rogers, Bret Pettichord nor the names of contributors to
   this software may be used to endorse or promote products derived from this
   software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS
   IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
   THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -38,23 +38,27 @@
 #
 #  Version "$Revision$"
 #
-#  Typical usage: 
-#   # include the controller 
-#   require "watir" 
-#   # go to the page you want to test 
-#   ie = Watir::IE.start("http://myserver/mypage")  
-#   # enter "Paul" into an input field named "username" 
-#   ie.text_field(:name, "username").set("Paul") 
-#   # enter "Ruby Co" into input field with id "company_ID" 
-#   ie.text_field(:id ,"company_ID").set("Ruby Co") 
-#   # click button that has a caption of "Cancel" 
-#   ie.button(:value, "Cancel").click 
-#   
+#  Typical usage:
+#   # include the controller
+#   require "watir"
+#
+#   # go to the page you want to test
+#   ie = Watir::IE.start("http://myserver/mypage")
+#
+#   # enter "Paul" into an input field named "username"
+#   ie.text_field(:name, "username").set("Paul")
+#
+#   # enter "Ruby Co" into input field with id "company_ID"
+#   ie.text_field(:id ,"company_ID").set("Ruby Co")
+#
+#   # click button that has a caption of "Cancel"
+#   ie.button(:value, "Cancel").click
+#
 #  The ways that are available to identify an html object depend upon the object type, but include
 #   :id           used for an object that has an ID attribute -- this is the best way!
-#   :name         used for an object that has a name attribute. 
-#   :value        value of text fields, captions of buttons 
-#   :index        finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
+#   :name         used for an object that has a name attribute.
+#   :value        value of text fields, captions of buttons
+#   :index        finds the nth object of the specified type - eg button(:index, 2) finds the second button. This is 1 based. <br>
 #   :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
 #   :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
 #
@@ -76,19 +80,19 @@ require 'watir/winClicker'
 require 'watir/exceptions'
 
 class String
-    def matches (x)
+    def matches(x)
         return self == x
     end
 end
 
 class Regexp
-    def matches (x)
-        return self.match(x) 
+    def matches(x)
+        return self.match(x)
     end
 end
 
 class Integer
-    def matches (x)
+    def matches(x)
         return self == x
     end
 end
@@ -97,16 +101,16 @@ end
 # the remaining ARGV as a filter on what tests to run.
 # Note: this means that watir must be require'd BEFORE test/unit.
 def command_line_flag(switch)
-    setting = ARGV.include?(switch) 
+    setting = ARGV.include?(switch)
     ARGV.delete(switch)
     return setting
-end            
+end
 
-# Constant to make Internet explorer minimize. -b stands for background
-$HIDE_IE = command_line_flag('-b') 
+# Constant to make Internet Explorer minimize. -b stands for background
+$HIDE_IE = command_line_flag('-b')
 
 # Constant to enable/disable the spinner
-$ENABLE_SPINNER = command_line_flag('-x') 
+$ENABLE_SPINNER = command_line_flag('-x')
 
 # Constant to set fast speed
 $FAST_SPEED = command_line_flag('-f')
@@ -130,14 +134,14 @@ module Watir
     end
 
     class WatirLogger < Logger
-        def initialize(  filName , logsToKeep, maxLogSize )
-            super( filName , logsToKeep, maxLogSize )
+        def initialize(filName, logsToKeep, maxLogSize)
+            super(filName, logsToKeep, maxLogSize)
             self.level = Logger::DEBUG
             self.datetime_format = "%d-%b-%Y %H:%M:%S"
             self.debug("Watir starting")
         end
     end
-    
+
     class DefaultLogger < Logger
         def initialize()
             super(STDERR)
@@ -146,20 +150,20 @@ module Watir
             self.info "Log started"
         end
     end
-    
+
     # Displays the spinner object that appears in the console when a page is being loaded
     class Spinner
-        def initialize(enabled = true)
-            @s = [ "\b/" , "\b|" , "\b\\" , "\b-"]
+        def initialize(enabled=true)
+            @s = ["\b/", "\b|", "\b\\", "\b-"]
             @i=0
             @enabled = enabled
         end
-        
+
         # reverse the direction of spinning
         def reverse
             @s.reverse!
         end
-        
+
         def spin
             print self.next if @enabled
         end
@@ -188,12 +192,12 @@ module Watir
     # there are many methods available to the Button object
     #
     # Is includable for classes that have @container, document and ole_inner_elements
-    module Container 
+    module Container
         include Watir::Exception
 
-        # Note: @container is the container of this object, i.e. the container 
-        # of this container. 
-        # In other words, for ie.table().this_thing().text_field().set, 
+        # Note: @container is the container of this object, i.e. the container
+        # of this container.
+        # In other words, for ie.table().this_thing().text_field().set,
         # container of this_thing is the table.
 
         # This is used to change the typing speed when entering text on a page.
@@ -202,9 +206,9 @@ module Watir
         attr_accessor :activeObjectHighLightColor
 
         def copy_test_config(container) # only used by form and frame
-            @typingspeed = container.typingspeed      
-            @activeObjectHighLightColor = container.activeObjectHighLightColor      
-        end    
+            @typingspeed = container.typingspeed
+            @activeObjectHighLightColor = container.activeObjectHighLightColor
+        end
         private :copy_test_config
 
         # Write the specified string to the log.
@@ -213,7 +217,7 @@ module Watir
         end
 
         # Wait until Internet Explorer has finished loading the page.
-        def wait(no_sleep = false)
+        def wait(no_sleep=false)
             @container.wait(no_sleep)
         end
 
@@ -221,10 +225,10 @@ module Watir
         def process_default(default_attribute, how, what)
             if what == nil
                 what = how
-                how = default_attribute 
+                how = default_attribute
             end
             return how, what
-        end 
+        end
         private :process_default
 
         #
@@ -232,7 +236,7 @@ module Watir
         #
 
         private
-        def self.def_creator(method_name, klass_name = nil)
+        def self.def_creator(method_name, klass_name=nil)
             klass_name ||= method_name.to_s.capitalize
             class_eval "def #{method_name}(how, what)
                           #{klass_name}.new(self, how, what)
@@ -241,36 +245,36 @@ module Watir
 
         def self.def_creator_with_default(method_name, default_symbol)
             klass_name = method_name.to_s.capitalize
-            class_eval "def #{method_name}(how, what = nil)
+            class_eval "def #{method_name}(how, what=nil)
                           how, what = process_default :#{default_symbol}, how, what
                           #{klass_name}.new(self, how, what)
                         end"
         end
-                    
-        # this method is the main way of accessing a frame 
+
+        # this method is the main way of accessing a frame
         #   *  how   - how the frame is accessed. This can also just be the name of the frame
         #   *  what  - what we want to access.
         #
         # Typical usage:
         #
-        #   ie.frame(:index, 1) 
-        #   ie.frame(:name , 'main_frame')
+        #   ie.frame(:index, 1)
+        #   ie.frame(:name, 'main_frame')
         #   ie.frame('main_frame')        # in this case, just a name is supplied
         public
         def_creator_with_default :frame, :name
 
         # this method is used to access a form.
-        # available ways of accessing it are, :index , :name, :id, :method, :action, :xpath
+        # available ways of accessing it are, :index, :name, :id, :method, :action, :xpath
         #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
         #  * what   - String - the text associated with the symbol
         def_creator_with_default :form, :name
 
-        # This method is used to get a table from the page. 
-        # :index (1 based counting)and :id are supported. 
+        # This method is used to get a table from the page.
+        # :index (1 based counting) and :id are supported.
         #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.
-        # :index can be used when there are multiple tables on a page. 
+        # :index can be used when there are multiple tables on a page.
         # :xpath can be used to select table using XPath query.
-        # The first form can be accessed with :index 1, the second :index 2, etc. 
+        # The first form can be accessed with :index 1, the second :index 2, etc.
         #   * how - symbol - the way we look for the table. Supported values are
         #                  - :id
         #                  - :index
@@ -283,40 +287,40 @@ module Watir
         # Typical usage:
         #
         #   ie.tables.each { |t| puts t.to_s }            # iterate through all the tables on the page
-        #   ie.tables[1].to_s                             # goto the first table on the page                                   
+        #   ie.tables[1].to_s                             # goto the first table on the page
         #   ie.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
         def tables
             return Tables.new(self)
         end
 
-        # this method accesses a table cell. 
+        # this method accesses a table cell.
         # how - symbol - how we access the cell, valid values are
         #    :id       - find the table cell with given id.
         #    :xpath    - find the table cell using xpath query.
-        # 
+        #
         # returns a TableCell Object
         def_creator :cell, :TableCell
 
-        # this method accesses a table row. 
+        # this method accesses a table row.
         # how - symbol - how we access the row, valid values are
         #    :id       - find the table row with given id.
         #    :xpath    - find the table row using xpath query.
-        # 
+        #
         # returns a TableRow object
         def_creator :row, :TableRow
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
-        #  *  how   - symbol - how we access the button 
-        #  *  what  - string, int, re or xpath query , what we are looking for, 
+        #  *  how   - symbol - how we access the button
+        #  *  what  - string, int, re or xpath query, what we are looking for,
         # Returns a Button object.
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P)
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
-        #    :value      - find the item using the value attribute ( in this case the button caption)
+        #    :value      - find the item using the value attribute (in this case the button caption)
         #    :caption    - same as value
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified text
@@ -329,9 +333,9 @@ module Watir
         #    ie.button(:value, 'Login')                     # access the button with a value (the text displayed on the button) of Login
         #    ie.button(:caption, 'Login')                   # same as above
         #    ie.button(:value, /Log/)                       # access the button that has text matching /Log/
-        #    ie.button(:index, 2)                           # access the second button on the page ( 1 based, so the first button is accessed with :index,1)
+        #    ie.button(:index, 2)                           # access the second button on the page (1 based, so the first button is accessed with :index,1)
         #
-        # if only a single parameter is supplied,  then :value is used 
+        # if only a single parameter is supplied, then :value is used
         #
         #    ie.button('Click Me')                          # access the button with a value of Click Me
         #    ie.button(:xpath, "//input[@value='Click Me']/")     # access the button with a value of Click Me
@@ -342,19 +346,19 @@ module Watir
         # Typical usage:
         #
         #   ie.buttons.each { |b| puts b.to_s }            # iterate through all the buttons on the page
-        #   ie.buttons[1].to_s                             # goto the first button on the page                                   
-        #   ie.buttons.length                              # show how many buttons are on the page. 
+        #   ie.buttons[1].to_s                             # goto the first button on the page
+        #   ie.buttons.length                              # show how many buttons are on the page.
         def buttons
             return Buttons.new(self)
         end
 
-        # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.  
-        #  *  how   - symbol - how we access the field , valid values are
+        # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.
+        #  *  how   - symbol - how we access the field, valid values are
         #    :index      - find the file field using index
         #    :id         - find the file field using id attribute
         #    :name       - find the file field using name attribute
         #    :xpath      - find the file field using xpath query
-        #  *  what  - string, int, re or xpath query , what we are looking for, 
+        #  *  what  - string, int, re or xpath query, what we are looking for,
         #
         # returns a FileField object
         #
@@ -362,42 +366,42 @@ module Watir
         #
         #    ie.file_field(:id,   'up_1')                     # access the file upload field with an ID of up_1
         #    ie.file_field(:name, 'upload')                   # access the file upload field with a name of upload
-        #    ie.file_field(:index, 2)                         # access the second file upload on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.file_field(:index, 2)                         # access the second file upload on the page (1 based, so the first field is accessed with :index,1)
         #
         def_creator :file_field, :FileField
-        
+
         # this is the main method for accessing the file_fields iterator. It returns a FileFields object
         #
         # Typical usage:
         #
         #   ie.file_fields.each { |f| puts f.to_s }            # iterate through all the file fields on the page
-        #   ie.file_fields[1].to_s                             # goto the first file field on the page                                   
-        #   ie.file_fields.length                              # show how many file fields are on the page. 
+        #   ie.file_fields[1].to_s                             # goto the first file field on the page
+        #   ie.file_fields.length                              # show how many file fields are on the page.
         def file_fields
             return FileFields.new(self)
         end
 
         # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
-        #  *  how   - symbol - how we access the field , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the field, :index, :id, :name etc
+        #  *  what  - string, int or re, what we are looking for,
         #
         # returns a TextField object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
         #    :beforeText - finds the item immediately before the specified text
         #    :afterText  - finds the item immediately after the specified texti
-        #    :xpath      - find the item using xpath query 
+        #    :xpath      - find the item using xpath query
         #
         # Typical Usage
         #
         #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
         #    ie.text_field(:name, 'address')                   # access the text field with a name of address
-        #    ie.text_field(:index, 2)                          # access the second text field on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.text_field(:index, 2)                          # access the second text field on the page (1 based, so the first field is accessed with :index,1)
         #    ie.text_field(:xpath, "//textarea[@id='user_name']/")    ## access the text field with an ID of user_name
 
         def_creator :text_field, :TextField
@@ -407,19 +411,19 @@ module Watir
         # Typical usage:
         #
         #   ie.text_fields.each { |t| puts t.to_s }            # iterate through all the text fields on the page
-        #   ie.text_fields[1].to_s                             # goto the first text field on the page                                   
+        #   ie.text_fields[1].to_s                             # goto the first text field on the page
         #   ie.text_fields.length                              # show how many text field are on the page.
         def text_fields
             return TextFields.new(self)
         end
 
         # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
-        #  *  how   - symbol - how we access the field , valid values are
+        #  *  how   - symbol - how we access the field, valid values are
         #    :index      - find the item using index
         #    :id         - find the item using id attribute
         #    :name       - find the item using name attribute
         #    :xpath      - find the item using xpath query etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  what  - string, int or re, what we are looking for,
         #
         # returns a Hidden object
         #
@@ -427,7 +431,7 @@ module Watir
         #
         #    ie.hidden(:id, 'session_id')                 # access the hidden field with an ID of session_id
         #    ie.hidden(:name, 'temp_value')               # access the hidden field with a name of temp_value
-        #    ie.hidden(:index, 2)                         # access the second hidden field on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.hidden(:index, 2)                         # access the second hidden field on the page (1 based, so the first field is accessed with :index,1)
         #    ie.hidden(:xpath, "//input[@type='hidden' and @id='session_value']/")    # access the hidden field with an ID of session_id
         def hidden(how, what)
             return Hidden.new(self, how, what)
@@ -437,22 +441,22 @@ module Watir
         #
         # Typical usage:
         #
-        #   ie.hiddens.each { |t|  puts t.to_s }           # iterate through all the hidden fields on the page
-        #   ie.hiddens[1].to_s                             # goto the first hidden field on the page                                   
+        #   ie.hiddens.each { |t| puts t.to_s }           # iterate through all the hidden fields on the page
+        #   ie.hiddens[1].to_s                             # goto the first hidden field on the page
         #   ie.hiddens.length                              # show how many hidden fields are on the page.
         def hiddens
             return Hiddens.new(self)
         end
 
         # This is the main method for accessing a selection list. Usually a <select> HTML tag.
-        #  *  how   - symbol - how we access the selection list , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the selection list, :index, :id, :name etc
+        #  *  what  - string, int or re, what we are looking for,
         #
         # returns a SelectList object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
@@ -464,10 +468,10 @@ module Watir
         #
         #    ie.select_list(:id, 'currency')                   # access the select box with an id of currency
         #    ie.select_list(:name, 'country')                  # access the select box with a name of country
-        #    ie.select_list(:name, /n_/ )                      # access the first select box whose name matches n_
-        #    ie.select_list(:index, 2)                         # access the second select box on the page ( 1 based, so the first field is accessed with :index,1)
-        #    ie.select(:xpath, "//select[@id='currency']/")    # access the select box with an id of currency 
-        def select_list(how, what) 
+        #    ie.select_list(:name, /n_/)                      # access the first select box whose name matches n_
+        #    ie.select_list(:index, 2)                         # access the second select box on the page (1 based, so the first field is accessed with :index,1)
+        #    ie.select(:xpath, "//select[@id='currency']/")    # access the select box with an id of currency
+        def select_list(how, what)
             return SelectList.new(self, how, what)
         end
 
@@ -476,23 +480,23 @@ module Watir
         # Typical usage:
         #
         #   ie.select_lists.each { |s| puts s.to_s }            # iterate through all the select boxes on the page
-        #   ie.select_lists[1].to_s                             # goto the first select boxes on the page                                   
+        #   ie.select_lists[1].to_s                             # goto the first select boxes on the page
         #   ie.select_lists.length                              # show how many select boxes are on the page.
         def select_lists
             return SelectLists.new(self)
         end
-        
+
         # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
         #
-        #  *  how   - symbol - how we access the check box , :index, :id, :name etc
-        #  *  what  - string, int or re , what we are looking for, 
+        #  *  how   - symbol - how we access the check box, :index, :id, :name etc
+        #  *  what  - string, int or re, what we are looking for,
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         #
         # returns a CheckBox object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
@@ -504,8 +508,8 @@ module Watir
         #
         #    ie.checkbox(:id, 'send_email')                   # access the check box with an id of send_mail
         #    ie.checkbox(:name, 'send_copy')                  # access the check box with a name of send_copy
-        #    ie.checkbox(:name, /n_/ )                        # access the first check box whose name matches n_
-        #    ie.checkbox(:index, 2)                           # access the second check box on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.checkbox(:name, /n_/)                        # access the first check box whose name matches n_
+        #    ie.checkbox(:index, 2)                           # access the second check box on the page (1 based, so the first field is accessed with :index,1)
         #
         # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
         #
@@ -515,11 +519,11 @@ module Watir
         #
         # Watir can access these using the following:
         #
-        #    ie.checkbox(:id, 'day_to_send' , 'monday' )         # access the check box with an id of day_to_send and a value of monday
-        #    ie.checkbox(:name ,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
+        #    ie.checkbox(:id, 'day_to_send', 'monday')         # access the check box with an id of day_to_send and a value of monday
+        #    ie.checkbox(:name,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
         #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
-        def checkbox(how, what, value = nil) 
-            return CheckBox.new(self, how, what, ["checkbox"], value) 
+        def checkbox(how, what, value = nil)
+            return CheckBox.new(self, how, what, ["checkbox"], value)
         end
 
         # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -527,7 +531,7 @@ module Watir
         # Typical usage:
         #
         #   ie.checkboxes.each { |c| puts c.to_s }           # iterate through all the check boxes on the page
-        #   ie.checkboxes[1].to_s                             # goto the first check box on the page                                   
+        #   ie.checkboxes[1].to_s                             # goto the first check box on the page
         #   ie.checkboxes.length                              # show how many check boxes are on the page.
         def checkboxes
             return CheckBoxes.new(self)
@@ -535,14 +539,14 @@ module Watir
 
         # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
         #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
-        #  *  what  - string, int or regexp , what we are looking for, 
+        #  *  what  - string, int or regexp, what we are looking for,
         #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
         #
         # returns a Radio object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
@@ -554,22 +558,22 @@ module Watir
         #
         #    ie.radio(:id, 'send_email')                   # access the radio button with an id of currency
         #    ie.radio(:name, 'send_copy')                  # access the radio button with a name of country
-        #    ie.radio(:name, /n_/ )                        # access the first radio button whose name matches n_
-        #    ie.radio(:index, 2)                           # access the second radio button on the page ( 1 based, so the first field is accessed with :index,1)
+        #    ie.radio(:name, /n_/)                        # access the first radio button whose name matches n_
+        #    ie.radio(:index, 2)                           # access the second radio button on the page (1 based, so the first field is accessed with :index,1)
         #
         # In many instances, radio buttons on an html page have the same name, but are identified by different values. An example is shown next.
         #
-        #  <input type = radio  name = email_frequency value = 'daily' > Daily Email
-        #  <input type = radio  name = email_frequency value = 'Weekly'> Weekly Email
-        #  <input type = radio  name = email_frequency value = 'monthly'>Monthly Email
+        #  <input type="radio" name="email_frequency" value="daily">Daily Email</input>
+        #  <input type="radio" name="email_frequency" value="weekly">Weekly Email</input>
+        #  <input type="radio" name="email_frequency" value="monthly">Monthly Email</input>
         #
         # Watir can access these using the following:
         #
-        #    ie.radio(:id, 'day_to_send' , 'monday' )         # access the radio button with an id of day_to_send and a value of monday
-        #    ie.radio(:name ,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
+        #    ie.radio(:id, 'day_to_send', 'monday')         # access the radio button with an id of day_to_send and a value of monday
+        #    ie.radio(:name,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
         #    ie.radio(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the radio button with a name of email_frequency and a value of 'daily'
-        def radio(how, what, value = nil) 
-            return Radio.new(self, how, what, ["radio"], value) 
+        def radio(how, what, value=nil)
+            return Radio.new(self, how, what, ["radio"], value)
         end
 
         # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -577,22 +581,22 @@ module Watir
         # Typical usage:
         #
         #   ie.radios.each { |r| puts r.to_s }            # iterate through all the radio buttons on the page
-        #   ie.radios[1].to_s                             # goto the first radio button on the page                                   
+        #   ie.radios[1].to_s                             # goto the first radio button on the page
         #   ie.radios.length                              # show how many radio buttons are on the page.
         #
         def radios
             return Radios.new(self)
         end
-        
+
         # This is the main method for accessing a link.
-        #  *  how   - symbol - how we access the link, :index, :id, :name , :beforetext, :afterText, :title , :text , :url
-        #  *  what  - string, int or re , what we are looking for
+        #  *  how   - symbol - how we access the link, :index, :id, :name, :beforetext, :afterText, :title, :text, :url
+        #  *  what  - string, int or re, what we are looking for
         #
         # returns a Link object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
@@ -601,18 +605,18 @@ module Watir
         #    :url        - finds the link based on the url. This must be the full path to the link, so is best used with a regular expression
         #    :text       - finds a link using the innerText of the link, ie the Text that is displayed to the user
         #    :title      - finds the item using the tool tip text
-        #    :xpath      - finds the item that matches xpath query    
+        #    :xpath      - finds the item that matches xpath query
         #
         # Typical Usage
-        # 
+        #
         #   ie.link(:url, /login/)              # access the first link whose url matches login. We can use a string in place of the regular expression
         #                                       # but the complete path must be used, ie.link(:url, 'http://myserver.com/my_path/login.asp')
         #   ie.link(:index,2)                   # access the second link on the page
-        #   ie.link(:title , "Picture")         # access a link using the tool tip
+        #   ie.link(:title, "Picture")         # access a link using the tool tip
         #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
         #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
         #   ie.link(:xpath, "//a[contains(.,'Click Me')]/")      # access the link with Click Me as its text
-        def link(how, what) 
+        def link(how, what)
             return Link.new(self, how, what)
         end
 
@@ -621,7 +625,7 @@ module Watir
         # Typical usage:
         #
         #   ie.links.each { |l| puts l.to_s }            # iterate through all the links on the page
-        #   ie.links[1].to_s                             # goto the first link on the page                                   
+        #   ie.links[1].to_s                             # goto the first link on the page
         #   ie.links.length                              # show how many links are on the page.
         #
         def links
@@ -630,13 +634,13 @@ module Watir
 
         # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
         #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
-        #  *  what  - string or regexp - what we are looking for 
+        #  *  what  - string or regexp - what we are looking for
         #
         # returns an Image object
         #
         # Valid values for 'how' are
         #
-        #    :index      - find the item using the index in the container ( a container can be a document, a TableCell, a Span, a Div or a P
+        #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
         #                  index is 1 based
         #    :name       - find the item using the name attribute
         #    :id         - find the item using the id attribute
@@ -646,21 +650,21 @@ module Watir
         #    :title      - finds the item using the title (tool tip)
         #
         # Typical Usage
-        # 
+        #
         #   ie.image(:src, /myPic/)             # access the first image that matches myPic. We can use a string in place of the regular expression
         #                                       # but the complete path must be used, ie.image(:src, 'http://myserver.com/my_path/my_image.jpg')
         #   ie.image(:index,2)                  # access the second image on the page
-        #   ie.image(:alt , "A Picture")        # access an image using the alt text
+        #   ie.image(:alt, "A Picture")        # access an image using the alt text
         #   ie.image(:xpath, "//img[@alt='A Picture']/")    # access an image using the alt text
-        #   
+        #
         def_creator :image
-        
+
         # This is the main method for accessing the images collection. Returns an Images object
         #
         # Typical usage:
         #
         #   ie.images.each { |i| puts i.to_s }            # iterate through all the images on the page
-        #   ie.images[1].to_s                             # goto the first image on the page                                   
+        #   ie.images[1].to_s                             # goto the first image on the page
         #   ie.images.length                              # show how many images are on the page.
         #
         def images
@@ -669,7 +673,7 @@ module Watir
 
         # This is the main method for accessing JavaScript popups.
         # returns a PopUp object
-        def popup         # BUG this should not be on the container object!        
+        def popup         # BUG this should not be on the container object!
             return PopUp.new(self)
         end
 
@@ -680,17 +684,17 @@ module Watir
         #    :title      - finds the item using title attribute
         #    :xpath      - finds the item that matches xpath query
         #
-        #  *  what  - string, integer, re or xpath query , what we are looking for, 
+        #  *  what  - string, integer, re or xpath query, what we are looking for,
         #
         # returns an Div object
         #
         # Typical Usage
-        # 
+        #
         #   ie.div(:id, /list/)                 # access the first div that matches list.
         #   ie.div(:index,2)                    # access the second div on the page
-        #   ie.div(:title , "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #   ie.div(:title, "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
         #   ie.div(:xpath, "//div[@id='list']/")    # access the first div whose id is 'list'
-        #   
+        #
         def div(how, what)
             return Div.new(self, how, what)
         end
@@ -700,7 +704,7 @@ module Watir
         # Typical usage:
         #
         #   ie.divs.each { |d| puts d.to_s }            # iterate through all the divs on the page
-        #   ie.divs[1].to_s                             # goto the first div on the page                                   
+        #   ie.divs[1].to_s                             # goto the first div on the page
         #   ie.divs.length                              # show how many divs are on the page.
         #
         def divs
@@ -713,28 +717,28 @@ module Watir
         #    :id         - finds the item using its id attribute
         #    :name       - finds the item using its name attribute
         #
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  what  - string, integer or re, what we are looking for,
         #
         # returns a Span object
         #
         # Typical Usage
-        # 
+        #
         #   ie.span(:id, /list/)                 # access the first span that matches list.
         #   ie.span(:index,2)                    # access the second span on the page
-        #   ie.span(:title , "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-        #   
+        #   ie.span(:title, "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #
         def span(how, what)
             return Span.new(self, how, what)
         end
 
-        # this is the main method for accessing the spans iterator. 
-        # 
+        # this is the main method for accessing the spans iterator.
+        #
         # Returns a Spans object
         #
         # Typical usage:
         #
         #   ie.spans.each { |s| puts s.to_s }            # iterate through all the spans on the page
-        #   ie.spans[1].to_s                             # goto the first span on the page                                   
+        #   ie.spans[1].to_s                             # goto the first span on the page
         #   ie.spans.length                              # show how many spans are on the page.
         #
         def spans
@@ -746,28 +750,28 @@ module Watir
         #    :index      - finds the item using its index
         #    :id         - finds the item using its id attribute
         #    :name       - finds the item using its name attribute
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  what  - string, integer or re, what we are looking for,
         #
         # returns a P object
         #
         # Typical Usage
-        # 
+        #
         #   ie.p(:id, /list/)                 # access the first p tag  that matches list.
         #   ie.p(:index,2)                    # access the second p tag on the page
-        #   ie.p(:title , "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-        #   
+        #   ie.p(:title, "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #
         def p(how, what)
             return P.new(self, how, what)
         end
 
-        # this is the main method for accessing the ps iterator. 
-        # 
+        # this is the main method for accessing the ps iterator.
+        #
         # Returns a Ps object
         #
         # Typical usage:
         #
         #   ie.ps.each { |p| puts p.to_s }            # iterate through all the p tags on the page
-        #   ie.ps[1].to_s                             # goto the first p tag on the page                                   
+        #   ie.ps[1].to_s                             # goto the first p tag on the page
         #   ie.ps.length                              # show how many p tags are on the page.
         #
         def ps
@@ -779,28 +783,28 @@ module Watir
         #    :index      - finds the item using its index
         #    :id         - finds the item using its id attribute
         #    :name       - finds the item using its name attribute
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  what  - string, integer or re, what we are looking for,
         #
         # returns a Pre object
         #
         # Typical Usage
-        # 
+        #
         #   ie.pre(:id, /list/)                 # access the first pre tag  that matches list.
         #   ie.pre(:index,2)                    # access the second pre tag on the page
-        #   ie.pre(:title , "A Picture")        # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-        #   
+        #   ie.pre(:title, "A Picture")        # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+        #
         def pre(how, what)
             return Pre.new(self, how, what)
         end
 
-        # this is the main method for accessing the ps iterator. 
-        # 
+        # this is the main method for accessing the ps iterator.
+        #
         # Returns a Pres object
         #
         # Typical usage:
         #
         #   ie.pres.each { |pre| puts pre.to_s }            # iterate through all the pre tags on the page
-        #   ie.pres[1].to_s                             # goto the first pre tag on the page                                   
+        #   ie.pres[1].to_s                             # goto the first pre tag on the page
         #   ie.pres.length                              # show how many pre tags are on the page.
         #
         def pres
@@ -812,28 +816,28 @@ module Watir
         #    :index      - finds the item using its index
         #    :id         - finds the item using its id attribute
         #    :for        - finds the item which has an object associated with it.
-        #  *  what  - string, integer or re , what we are looking for, 
+        #  *  what  - string, integer or re, what we are looking for,
         #
         # returns a Label object
         #
         # Typical Usage
-        # 
+        #
         #   ie.label(:id, /list/)                 # access the first span that matches list.
         #   ie.label(:index,2)                    # access the second label on the page
         #   ie.label(:for, "text_1")              # access a the label that is associated with the object that has an id of text_1
-        #   
+        #
         def label(how, what)
             return Label.new(self, how, what)
         end
 
         # this is the main method for accessing the labels iterator. It returns a Labels object
-        # 
+        #
         # Returns a Labels object
         #
         # Typical usage:
         #
         #   ie.labels.each { |l| puts l.to_s }            # iterate through all the labels on the page
-        #   ie.labels[1].to_s                             # goto the first label on the page                                   
+        #   ie.labels[1].to_s                             # goto the first label on the page
         #   ie.labels.length                              # show how many labels are on the page.
         #
         def labels
@@ -844,10 +848,10 @@ module Watir
         #
         # Searching for Page Elements
         # Not for external consumption
-        #        
+        #
         #++
         def ole_inner_elements
-            return document.body.all 
+            return document.body.all
         end
         private :ole_inner_elements
 
@@ -856,10 +860,10 @@ module Watir
         # This is a nice feature to help find out what HTML objects are on a page
         # when developing a test case using Watir.
         def show_all_objects
-            puts "-----------Objects in  page -------------" 
+            puts "-----------Objects in page -------------"
             doc = document
             s = ""
-            props = ["name" ,"id" , "value" , "alt" , "src"]
+            props = ["name", "id", "value", "alt", "src"]
             doc.all.each do |n|
                 begin
                     s += n.invoke("type").to_s.ljust(16)
@@ -879,7 +883,7 @@ module Watir
             puts s
         end
 
-        # 
+        #
         #                Locator Methods
         #
 
@@ -893,15 +897,15 @@ module Watir
         #                  - :index
         #                  - :value etc
         #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
-        #   * types - what object types we will look at. 
+        #   * types - what object types we will look at.
         #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-        def locate_input_element(how, what, types, value = nil)
-            elements = ole_inner_elements 
+        def locate_input_element(how, what, types, value=nil)
+            elements = ole_inner_elements
             how = :value if how == :caption
             what = what.to_i if how == :index
             value = value.to_s if value
             log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
-            
+
             o = nil
             object_index = 1
             elements.each do |object|
@@ -914,11 +918,11 @@ module Watir
                         begin
                             attribute = element.send(how)
                         rescue NoMethodError
-                            raise MissingWayOfFindingObjectException, 
-                            "#{how} is an unknown way of finding a <INPUT> element (#{what})"
+                            raise MissingWayOfFindingObjectException,
+                            "#{how} is an unknown way of finding an <INPUT> element (#{what})"
                         end
                     end
-                    if what.matches(attribute) 
+                    if what.matches(attribute)
                         if value
                             if element.value == value
                                 o = object
@@ -944,12 +948,12 @@ module Watir
                 next if o
                 element = Element.new(object)
                 if how == :index
-                    attribute = count                        
+                    attribute = count
                 else
                     begin
                         attribute = element.send(how)
                     rescue NoMethodError
-                        raise MissingWayOfFindingObjectException, 
+                        raise MissingWayOfFindingObjectException,
                             "#{how} is an unknown way of finding a <#{tag}> element (#{what})"
                     end
                 end
@@ -957,7 +961,7 @@ module Watir
                 count += 1
             end # do
             return o
-        end  
+        end
 
     end # module
 
@@ -965,10 +969,10 @@ module Watir
     # An instance of this must be created to access Internet Explorer.
     class IE
         include Watir::Exception
-        include Container 
+        include Container
 
         @@extra = nil
-        
+
         # Maximum number of seconds to wait when attaching to a window
         @@attach_timeout = 0.2
         def self.attach_timeout
@@ -983,38 +987,38 @@ module Watir
 
         # The Release number
         VERSION = "1.4"
-        
+
         # Used internally to determine when IE has finished loading a page
-        READYSTATE_COMPLETE = 4         
-        
+        READYSTATE_COMPLETE = 4
+
         # TODO: the following constants should be able to be specified by object (not class)
 
         # The delay when entering text on a web page when speed = :slow.
         DEFAULT_TYPING_SPEED = 0.08
-        
+
         # The default time we wait after a page has loaded when speed = :slow.
         DEFAULT_SLEEP_TIME = 0.1
-        
+
         # The default color for highlighting objects as they are accessed.
         DEFAULT_HIGHLIGHT_COLOR = "yellow"
-        
+
         # Whether the spinner is on and off
         attr_accessor :enable_spinner
 
         # The download time for the last command
         attr_reader :down_load_time
-        
+
         # Whether the speed is :fast or :slow
         attr_reader :speed
-        
-        # the ole internet explorer object        
+
+        # the OLE Internet Explorer object
         attr_reader :ie
 
         # access to the logger object
         attr_accessor :logger
 
         # this contains the list of unique urls that have been visited
-        attr_reader :url_list                        
+        attr_reader :url_list
 
         def initialize(suppress_new_window=nil)
             unless suppress_new_window
@@ -1022,32 +1026,32 @@ module Watir
                 set_defaults
             end
         end
-        
+
         # Create a new IE Window, starting at the specified url.
         # If no url is given, start empty.
-        def self.start(url = nil)
+        def self.start(url=nil)
             ie = new
             ie.goto(url) if url
             return ie
         end
-        
+
         # Attach to an existing IE window, either by url or title.
         # IE.attach(:url, 'http://www.google.com')
-        # IE.attach(:title, 'Google') 
+        # IE.attach(:title, 'Google')
         def self.attach(how, what)
             ie = new(true) # don't create window
             ie.attach_init(how, what)
             return ie
-        end   
+        end
 
         # this method is used internally to attach to an existing window
         # dont make private
-        def attach_init( how, what )
+        def attach_init(how, what)
             attach_browser_window(how, what)
             set_defaults
-            wait                        
-        end        
-        
+            wait
+        end
+
         def set_defaults
             @ole_object = nil
 
@@ -1068,37 +1072,37 @@ module Watir
 
             # IE inserts some element whose tagName is empty and just acts as block level element
             # Probably some IE method of cleaning things
-            # To pass the same to REXML we need to give some name to empty tagName  
+            # To pass the same to REXML we need to give some name to empty tagName
             @empty_tag_name = "DUMMY"
-            
+
             # add an error checker for http navigation errors, such as 404, 500 etc
             navigation_checker=Proc.new{ |ie|
                 if ie.document.frames.length > 1
                     1.upto ie.document.frames.length do |i|
-                        check_for_http_error(ie.frame(:index, i)  )
+                        check_for_http_error(ie.frame(:index, i) )
                     end
                 else
                     check_for_http_error(ie)
                 end
              }
 
-            add_checker(  navigation_checker )       
+            add_checker(navigation_checker)
 
         end
-        private :set_defaults        
-        
+        private :set_defaults
+
         # This method checks the currently displayed page for http errors, 404, 500 etc
         # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
-            url=ie.document.url 
+            url=ie.document.url
             # puts "url is " + url
             if /shdoclc.dll/.match(url)
                 #puts "Match on shdoclc.dll"
                 m = /id=IEText.*?>(.*?)</i.match(ie.html)
                 if m
-                
+
                     #puts "Error is #{m[1]}"
-                    raise NavigationException , m[1]
+                    raise NavigationException, m[1]
                 end
             end
         end
@@ -1116,21 +1120,21 @@ module Watir
             @typingspeed = 0
             @defaultSleepTime = 0.01
             @speed = :fast
-        end            
+        end
 
         def set_slow_speed
             @typingspeed = DEFAULT_TYPING_SPEED
             @defaultSleepTime = DEFAULT_SLEEP_TIME
             @speed = :slow
         end
-        
+
         def visible
             @ie.visible
         end
         def visible=(boolean)
             @ie.visible = boolean
         end
-            
+
         def create_browser_window
             unless @@extra
                 @@extra = WIN32OLE.new('InternetExplorer.Application')
@@ -1144,13 +1148,13 @@ module Watir
         def find_window(how, what)
             shell = WIN32OLE.new("Shell.Application")
             ieTemp = nil
-            shell.Windows.each do |aWin| 
+            shell.Windows.each do |aWin|
                 log "Found a window: #{aWin}"
-                
+
                 case how
                 when :url
                     log "url is: #{aWin.locationURL}\n"
-                    ieTemp = aWin if (what.matches(aWin.locationURL) )
+                    ieTemp = aWin if(what.matches(aWin.locationURL))
                 when :title
                     # normal windows explorer shells do not have document
                     title = nil
@@ -1158,7 +1162,7 @@ module Watir
                         title = aWin.document.title
                     rescue WIN32OLERuntimeError
                     end
-                    ieTemp = aWin if (what.matches(title) ) 
+                    ieTemp = aWin if(what.matches(title))
                 else
                     raise ArgumentError
                 end
@@ -1173,7 +1177,7 @@ module Watir
             ieTemp = nil
             until ieTemp or Time.now - start_time > @@attach_timeout do
               ieTemp = find_window(how, what)
-              sleep 0.05 unless ieTemp            
+              sleep 0.05 unless ieTemp
             end
             unless ieTemp
                  raise NoMatchingWindowFoundException,
@@ -1188,19 +1192,19 @@ module Watir
             @logger = logger
         end
 
-        def log (what)
+        def log(what)
             @logger.debug(what) if @logger
         end
-        
+
         #
         # Accessing data outside the document
         #
-        
+
         # Return the title of the document
         def title
             @ie.document.title
         end
-        
+
         # Return the status of the window, typically from the status bar at the bottom.
         def status
             raise NoStatusBarException if !@ie.statusBar
@@ -1212,14 +1216,14 @@ module Watir
         #
 
         # Navigate to the specified URL.
-        #  * url  - string - the URL to navigate to
+        #  * url - string - the URL to navigate to
         def goto(url)
             @ie.navigate(url)
             wait()
             sleep 0.2
             return @down_load_time
         end
-        
+
         # Go to the previous page - the same as clicking the browsers back button
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
         def back
@@ -1233,14 +1237,14 @@ module Watir
             @ie.GoForward()
             wait
         end
-        
+
         # Refresh the current page - the same as clicking the browsers refresh button
         # an WIN32OLERuntimeError exception is raised if the browser cant refresh
         def refresh
             @ie.refresh2(3)
             wait
         end
-        
+
         # clear the list of urls that we have visited
         def clear_url_list
             @url_list.clear
@@ -1250,40 +1254,46 @@ module Watir
         def close
             @ie.quit
         end
-        
+
         # Maximize the window (expands to fill the screen)
-        def maximize; set_window_state :SW_MAXIMIZE; end
-        
+        def maximize
+            set_window_state :SW_MAXIMIZE
+        end
+
         # Minimize the window (appears as icon on taskbar)
-        def minimize; set_window_state :SW_MINIMIZE; end
+        def minimize
+            set_window_state :SW_MINIMIZE
+        end
 
         # Restore the window (after minimizing or maximizing)
-        def restore;  set_window_state :SW_RESTORE;  end
-        
+        def restore
+            set_window_state :SW_RESTORE
+        end
+
         # Make the window come to the front
         def bring_to_front
-    		autoit.WinActivate title, ''		
-     	end
+            autoit.WinActivate title, ''
+        end
 
-     	def front?
-    		1 == autoit.WinActive(title, '')		
-     	end	     	         
+        def front?
+            1 == autoit.WinActive(title, '')
+        end
 
         private
-        def set_window_state (state)
-		    autoit.WinSetState title, '', autoit.send(state)			
+        def set_window_state(state)
+            autoit.WinSetState title, '', autoit.send(state)
         end
 
         private
         def autoit
             Watir::autoit
-        end        
-                
-		# Send key events to IE window. 
-		# See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
-		# for complete documentation on keys supported and syntax.
+        end
+
+    # Send key events to IE window.
+    # See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
+    # for complete documentation on keys supported and syntax.
         public
-        def send_keys (key_string)
+        def send_keys(key_string)
             autoit.WinActivate title
             autoit.Send key_string
         end
@@ -1291,18 +1301,18 @@ module Watir
         def dir
             return File.expand_path(File.dirname(__FILE__))
         end
-        
+
         #
         # Document and Document Data
         #
-        
+
         # Return the current document
         public
         def document
             return @ie.document
         end
-           
-        # returns the current url, as displayed in the address bar of the browser 
+
+        # returns the current url, as displayed in the address bar of the browser
         def url
             return @ie.LocationURL
         end
@@ -1317,34 +1327,34 @@ module Watir
             retryCount = 0
             begin
                 retryCount += 1
-                returnValue = 
+                returnValue =
                 if target.kind_of? Regexp
                     self.text.match(target)
                 elsif target.kind_of? String
                     self.text.index(target)
                 else
                     raise MissingWayOfFindingObjectException
-                end 
+                end
             # bug we should remove this...
             rescue MissingWayOfFindingObjectException => e
                 raise e
             rescue
-                retry if retryCount < 2 
+                retry if retryCount < 2
             end
             return returnValue
         end
 
-        # 
+        #
         # Synchronization
         #
-        
+
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
-        def wait(no_sleep = false)
+        def wait(no_sleep=false)
             begin
                 @down_load_time=0
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
-                
+
                 s= Spinner.new(@enable_spinner)
                 while @ie.busy
                     @pageHasReloaded = true
@@ -1352,20 +1362,20 @@ module Watir
                     s.spin
                 end
                 s.reverse
-                
-                log "wait: readystate=" + @ie.readyState.to_s 
+
+                log "wait: readystate=" + @ie.readyState.to_s
                 until @ie.readyState == READYSTATE_COMPLETE
                     @pageHasReloaded = true
                     sleep 0.02
                     s.spin
                 end
                 sleep 0.02
-                
+
                 until @ie.document.readyState == "complete"
                     sleep 0.02
                     s.spin
                 end
-                                
+
                 if @ie.document.frames.length > 1
                     begin
                         0.upto @ie.document.frames.length-1 do |i|
@@ -1383,12 +1393,12 @@ module Watir
                 else
                     @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
                 end
-                @down_load_time = Time.now - pageLoadStart 
+                @down_load_time = Time.now - pageLoadStart
 
                 run_error_checks
 
                 print "\b" unless @enable_spinner == false
-                
+
                 s=nil
                 #Variables used for supporting xpath queries.
                 #puts 'Setting rexmlDomobject to nil'
@@ -1410,14 +1420,14 @@ module Watir
         end
 
         # this method is used to add an error checker that gets executed on every page load
-        # *  checker   Proc Object, that contains the code to be run 
-        def add_checker( checker) 
+        # *  checker   Proc Object, that contains the code to be run
+        def add_checker(checker)
             @error_checkers << checker
         end
-        
+
         # this allows a checker to be disabled
         # *  checker   Proc Object, the checker that is to be disabled
-        def disable_checker( checker )
+        def disable_checker(checker)
             @error_checkers.delete(checker)
         end
 
@@ -1425,7 +1435,7 @@ module Watir
         def html
             return document.body.parentelement.outerhtml
         end
-        
+
         # The text of the current document
         def text
             return document.body.parentelement.innertext.strip
@@ -1433,15 +1443,15 @@ module Watir
 
         #
         # Show me state
-        #        
-        
+        #
+
         # This method is used to display the available html frames that Internet Explorer currently has loaded.
         # This method is usually only used for debugging test scripts.
         def show_frames
             if allFrames = document.frames
                 count = allFrames.length
                 puts "there are #{count} frames"
-                for i in 0..count-1 do  
+                for i in 0..count-1 do
                     begin
                         fname = allFrames[i.to_s].name.to_s
                         puts "frame  index: #{i + 1} name: #{fname}"
@@ -1453,7 +1463,7 @@ module Watir
                 puts "no frames"
             end
         end
-        
+
         # Show all forms displays all the forms that are on a web page.
         def show_forms
             if allForms = document.forms
@@ -1483,22 +1493,22 @@ module Watir
                 index += 1
             end
         end
-        
+
         # this method shows all the links availble in the document
-        def show_links 
+        def show_links
             props = ["name", "id", "href"]
             print_sizes = [12, 12, 60]
             doc = document
             index = 0
             text_size = 60
             # draw the table header
-            s = "index".ljust(6) 
+            s = "index".ljust(6)
             props.each_with_index do |p, i|
-                s += p.ljust(print_sizes[i]) 
+                s += p.ljust(print_sizes[i])
             end
             s += "text/src".ljust(text_size)
             s += "\n"
-            
+
             # now get the details of the links
             doc.links.each do |n|
                 index += 1
@@ -1520,14 +1530,14 @@ module Watir
                 end
                 s += "\n"
             end
-            puts  s
+            puts s
         end
 
         # this method shows the name, id etc of the object that is currently active - ie the element that has focus
         # its mostly used in irb when creating a script
         def show_active
-            s = "" 
-            
+            s = ""
+
             current = document.activeElement
             begin
                 s += current.invoke("type").to_s.ljust(16)
@@ -1544,7 +1554,7 @@ module Watir
             end
             s += "\n"
         end
-        
+
         # this method shows all the divs availble in the document
         def show_divs
             divs = document.getElementsByTagName("DIV")
@@ -1567,11 +1577,11 @@ module Watir
             end
         end
 
-		def show_pres
-			pres = document.getElementsByTagName( "PRE" )
-			puts "Found #{ pres.length } pre tags"
-			index = 1
-			pres.each do |d|
+    def show_pres
+      pres = document.getElementsByTagName("PRE")
+      puts "Found #{ pres.length } pre tags"
+      index = 1
+      pres.each do |d|
                 puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
                 index+=1
             end
@@ -1605,8 +1615,8 @@ module Watir
             document.activeElement.blur
             document.focus
         end
-       
-        #      
+
+        #
         # Functions written for using xpath for getting the elements.
         #
 
@@ -1618,7 +1628,7 @@ module Watir
             end
             return @rexmlDomobject
         end
-        
+
         # Create the Rexml object if it is nil. This method is private so can be called only
         # from rexml_document_object method.
         def create_rexml_document_object
@@ -1632,18 +1642,18 @@ module Watir
                 #Give htmlSource as input to Rexml.
                 begin
                     @rexmlDomobject = REXML::Document.new(htmlSource)
-                rescue  => e
+                rescue => e
                     #puts e.to_s
                     error = File.open("error.xml","w")
                     error.print(htmlSource)
                     error.close()
                     #puts htmlSource
-                    #gets   
+                    #gets
                 end
             end
         end
         private :create_rexml_document_object
-       
+
         #Function Tokenizes the tag line and returns array of tokens.
         #Token could be either tagName or "=" or attribute name or attribute value
         #Attribute value could be either quoted string or single word
@@ -1653,7 +1663,7 @@ module Watir
             outerHtml =~ /^\s*<(.*)$/
             outerHtml = $1
             tokens = Array.new
-            i = startOffset  = 0
+            i = startOffset = 0
             length = outerHtml.length
             #puts outerHtml
             parsingValue = false
@@ -1662,7 +1672,7 @@ module Watir
                 next if i == length
                 currentToken = outerHtml[i,1]
 
-                #Either current tag has been closed or user has not closed the tag > 
+                #Either current tag has been closed or user has not closed the tag >
                 # and we have received the opening of next element
                 break if currentToken =~ /<|>/
 
@@ -1673,18 +1683,18 @@ module Watir
                     startOffset = i
                     i += 1
                     i += 1 while (i < length && (outerHtml[i,1] != quote || outerHtml[i-1,1] == "\\"))
-                    if i == length 
-                        tokens.push  quote + outerHtml[startOffset..i-1]
-                    else    
-                        tokens.push  outerHtml[startOffset..i]
-                    end 
+                    if i == length
+                        tokens.push quote + outerHtml[startOffset..i-1]
+                    else
+                        tokens.push outerHtml[startOffset..i]
+                    end
                 elsif currentToken == "="
-                    tokens.push "=" 
+                    tokens.push "="
                     parsingValue = true
                 else
                     startOffset = i
-                    i += 1 while(i < length && !(outerHtml[i,1] =~ /\s|=|<|>/)) if !parsingValue
-                    i += 1 while(i < length && !(outerHtml[i,1] =~ /\s|<|>/)) if parsingValue
+                    i += 1 while (i < length && !(outerHtml[i,1] =~ /\s|=|<|>/)) if !parsingValue
+                    i += 1 while (i < length && !(outerHtml[i,1] =~ /\s|<|>/)) if parsingValue
                     parsingValue = false
                     i -= 1
                     tokens.push outerHtml[startOffset..i]
@@ -1692,7 +1702,7 @@ module Watir
                 i += 1
             end
             return tokens
-        end 
+        end
         private :tokenize_tagline
 
         # This function get and clean all the attributes of the tag.
@@ -1708,10 +1718,10 @@ module Watir
                     #print Attribute Name
                     # If attribute name is valid. Refer: http://www.w3.org/TR/REC-xml/#NT-Name
                     if tokens[count] =~ /^(\w|_|:)(.*)$/
-                        tagLine += " #{tokens[count]}"                                
+                        tagLine += " #{tokens[count]}"
                         expectedEqualityOP = true
                     end
-                elsif tokens[count] == "=" 
+                elsif tokens[count] == "="
                     count += 1
                     if count == tokensLength
                         tagLine += "=\"\""
@@ -1722,13 +1732,13 @@ module Watir
                     end
                     expectedEqualityOP = false
                 else
-                    #Opps! equality was expected but its not there. 
+                    #Opps! equality was expected but its not there.
                     #Set value same as the attribute name e.g. selected="selected"
                     tagLine += "=\"#{tokens[count-1]}\""
                     expectedEqualityOP = false
                     next
                 end
-                count += 1 
+                count += 1
             end
             tagLine += "=\"#{tokens[count-1]}\" " if expectedEqualityOP == true
             #puts tagLine
@@ -1737,7 +1747,7 @@ module Watir
         private :all_tag_attributes
 
         # This function is used to escape the characters that are not valid XML data.
-        def xml_escape (str)
+        def xml_escape(str)
             str = str.gsub(/&/,'&amp;')
             str = str.gsub(/</,'&lt;')
             str = str.gsub(/>/,'&gt;')
@@ -1746,12 +1756,12 @@ module Watir
         end
         private :xml_escape
 
-        #Returns HTML Source 
-        #Traverse the DOM tree rooted at body element  
-        #and generate the HTML source. 
+        #Returns HTML Source
+        #Traverse the DOM tree rooted at body element
+        #and generate the HTML source.
         #element: Represent Current element
         #htmlString:HTML Source
-        #spaces:(Used for debugging). Helps in indentation  
+        #spaces:(Used for debugging). Helps in indentation
         def html_source(element, htmlString, spaceString)
             begin
                 tagLine = ""
@@ -1759,19 +1769,19 @@ module Watir
                 tagName = ""
                 begin
                     tagName = element.tagName.downcase
-                    tagName = @empty_tag_name if tagName == ""  
+                    tagName = @empty_tag_name if tagName == ""
                     # If tag is a mismatched tag.
                     if !(tagName =~ /^(\w|_|:)(.*)$/)
                         return htmlString
                     end
                 rescue
                     #handling text nodes
-                    htmlString +=  xml_escape(element.toString)
+                    htmlString += xml_escape(element.toString)
                     return htmlString
                 end
                 #puts tagName
                 #Skip comment and script tag
-                if tagName =~ /^!/ || tagName== "script" || tagName =="style"           
+                if tagName =~ /^!/ || tagName== "script" || tagName =="style"
                     return htmlString
                 end
                 #tagLine += spaceString
@@ -1779,8 +1789,8 @@ module Watir
                 tagLine += "\n<#{tagName} #{outerHtml}"
 
                 canHaveChildren = element.canHaveChildren
-                if canHaveChildren 
-                    tagLine += "> \n" 
+                if canHaveChildren
+                    tagLine += "> \n"
                 else
                     tagLine += "/> \n" #self closing tag
                 end
@@ -1793,30 +1803,30 @@ module Watir
                 if canHaveChildren
                 #tagLine += spaceString
                     tagLine ="\n</" + tagName + ">\n"
-                    htmlString += tagLine 
+                    htmlString += tagLine
                 end
                 return htmlString
             rescue => e
-                puts e.to_s 
+                puts e.to_s
             end
             return htmlString
         end
         private :html_source
- 
+
         # return the first element that matches the xpath
         def element_by_xpath(xpath)
             temp = elements_by_xpath(xpath)
             temp = temp[0] if temp
             return temp
         end
-        
+
         # execute xpath and return an array of elements
         def elements_by_xpath(xpath)
             doc = rexml_document_object()
             modifiedXpath = ""
             selectedElements = Array.new
             doc.elements.each(xpath) do |element|
-                modifiedXpath  =  element.xpath
+                modifiedXpath = element.xpath
                 temp = element_by_absolute_xpath(modifiedXpath)
                 selectedElements << temp if temp != nil
             end
@@ -1879,7 +1889,7 @@ module Watir
                     gotIt = false
                     begin
                         curTag = child.tagName
-                        curTag = @empty_tag_name if curTag == ""  
+                        curTag = @empty_tag_name if curTag == ""
                     rescue
                         next
                     end
@@ -1915,58 +1925,58 @@ module Watir
             exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
             Thread.new { system(exec_string) }
         end
-                
+
     end # class IE
-        
-    # 
+
+    #
     # MOVETO: watir/popup.rb
     # Module Watir::Popup
     #
-    
+
     # POPUP object
     class PopUp
-        def initialize( container )
+        def initialize(container)
             @container = container
         end
-        
-        def button( caption )
-            return JSButton.new(  @container.getIE.hwnd , caption )
+
+        def button(caption)
+            return JSButton.new(@container.getIE.hwnd, caption)
         end
     end
-    
-    class JSButton 
-        def initialize( hWnd , caption )
+
+    class JSButton
+        def initialize(hWnd, caption)
             @hWnd = hWnd
             @caption = caption
         end
-        
-        def startClicker( waitTime = 3 )
+
+        def startClicker(waitTime=3)
             clicker = WinClicker.new
             clicker.clickJSDialog_Thread
-            # clickerThread = Thread.new( @caption ) {
+            # clickerThread = Thread.new(@caption) {
             #   sleep waitTime
             #   puts "After the wait time in startClicker"
-            #   clickWindowsButton_hwnd(hwnd , buttonCaption )
+            #   clickWindowsButton_hwnd(hwnd, buttonCaption)
             #}
         end
     end
-    
+
     # Base class for html elements.
-    # This is not a class that users would normally access. 
+    # This is not a class that users would normally access.
     class Element # Wrapper
         include Watir::Exception
         include Container # presumes @container is defined
-        
+
         # number of spaces that separate the property from the value in the to_s method
         TO_S_SIZE = 14
-        
+
         # ole_object - the ole object for the element being wrapped
         def initialize(ole_object)
             @o = ole_object
             @original_color = nil
         end
-        
-        # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.    
+
+        # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
         def ole_object # BUG: should use an attribute reader and rename the instance variable
             return @o
         end
@@ -1975,7 +1985,7 @@ module Watir
         end
 
         private
-        def self.def_wrap(ruby_method_name, ole_method_name = nil)
+        def self.def_wrap(ruby_method_name, ole_method_name=nil)
             ole_method_name = ruby_method_name unless ole_method_name
             class_eval "def #{ruby_method_name}
                           assert_exists
@@ -2001,7 +2011,7 @@ module Watir
         def assert_enabled
             unless enabled?
                 raise ObjectDisabledException, "object #{@how} and #{@what} is disabled"
-            end                
+            end
         end
 
         public
@@ -2010,7 +2020,7 @@ module Watir
         # returns the id of the element
         def_wrap_guard :id
         # returns whether the element is disabled
-        def_wrap :disabled 
+        def_wrap :disabled
         alias disabled? disabled
         # returns the value of the element
         def_wrap_guard :value
@@ -2018,19 +2028,19 @@ module Watir
         def_wrap_guard :title
         # returns the style of the element
         def_wrap_guard :style
-        
+
         def_wrap_guard :alt
         def_wrap_guard :src
-        
+
         # returns the type of the element
-        def_wrap_guard :type # input elements only        
+        def_wrap_guard :type # input elements only
 
         # returns the url the link points to
         def_wrap :href # link only
 
         # return the ID of the control that this label is associated with
         def_wrap :for, :htmlFor # label only
-        
+
         # returns the class name of the element
         # raises an ObjectNotFound exception if the object cannot be found
         def_wrap :class_name, :className
@@ -2043,7 +2053,7 @@ module Watir
             assert_exists
             begin
                 ole_object.getAdjacentText("afterEnd").strip
-            rescue 
+            rescue
                 ''
             end
         end
@@ -2053,7 +2063,7 @@ module Watir
             assert_exists
             begin
                 ole_object.getAdjacentText("beforeBegin").strip
-            rescue 
+            rescue
                 ''
             end
         end
@@ -2079,7 +2089,7 @@ module Watir
         def typingspeed
             @container.typingspeed
         end
-        
+
         def activeObjectHighLightColor
             @container.activeObjectHighLightColor
         end
@@ -2095,7 +2105,7 @@ module Watir
             return n
         end
         private :string_creator
-        
+
         # Display basic details about the object. Sample output for a button is shown.
         # Raises UnknownObjectException if the object is not found.
         #      name      b4
@@ -2107,7 +2117,7 @@ module Watir
             assert_exists
             return string_creator.join("\n")
         end
-        
+
         # This method is responsible for setting and clearing the colored highlighting on the currently active element.
         # use :set   to set the highlight
         #   :clear  to clear the highlight
@@ -2116,11 +2126,11 @@ module Watir
                 begin
                     @original_color = style.backgroundColor
                     style.backgroundColor = @container.activeObjectHighLightColor
-                rescue 
+                rescue
                     @original_color = nil
                 end
             else # BUG: assumes is :clear, but could actually be anything
-                begin 
+                begin
                     style.backgroundColor = @original_color unless @original_color == nil
                 rescue
                     # we could be here for a number of reasons...
@@ -2131,20 +2141,20 @@ module Watir
             end
         end
         private :highlight
-        
+
         #   This method clicks the active element.
         #   raises: UnknownObjectException  if the object is not found
         #   ObjectDisabledException if the object is currently disabled
         def click
             assert_exists
             assert_enabled
-           
+
             highlight(:set)
             ole_object.click
             @container.wait
             highlight(:clear)
         end
-        
+
         def click_no_wait
             assert_exists
             assert_enabled
@@ -2156,7 +2166,7 @@ module Watir
             highlight(:clear)
         end
 
-        # causes the object to flash. Normally used in IRB when creating scripts        
+        # causes the object to flash. Normally used in IRB when creating scripts
         def flash
             assert_exists
             10.times do
@@ -2167,7 +2177,7 @@ module Watir
             end
             nil
         end
-        
+
         # Executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
         #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
         #   raises: UnknownObjectException  if the object is not found
@@ -2190,17 +2200,17 @@ module Watir
             assert_enabled
             ole_object.focus()
         end
-        
-        # Returns whether this element actually exists. 
+
+        # Returns whether this element actually exists.
         def exists?
             begin
                 locate if defined?(locate)
             rescue WIN32OLERuntimeError
                 @o = nil
-            end        
+            end
             @o ? true: false
         end
-        
+
         # Returns true if the element is enabled, false if it isn't.
         #   raises: UnknownObjectException  if the object is not found
         def enabled?
@@ -2219,21 +2229,21 @@ module Watir
 
     class ElementMapper # Still to be used
         include Container
-        
+
         def initialize wrapper_class, container, how, what
             @wrapper_class = wrapper_class
             @container = container
             @how = how
             @what = what
         end
-        
+
         def method_missing method, *args
             locate
             @wrapper_class.new(@o).send(method, *args)
         end
     end
 
-    class Frame 
+    class Frame
         include Container
 
         # Find the frame denoted by how and what in the container and return its ole_object
@@ -2243,10 +2253,10 @@ module Watir
             frames = @container.document.frames
             target = nil
 
-            for i in 0 .. (frames.length - 1)
+            for i in 0..(frames.length - 1)
                 next unless target == nil
                 this_frame = frames.item(i)
-                if how == :index 
+                if how == :index
                     if i + 1 == what
                         target = this_frame
                     end
@@ -2266,13 +2276,13 @@ module Watir
                     raise ArgumentError, "Argument #{how} not supported"
                 end
             end
-            
+
             unless target
-                raise UnknownFrameException, "Unable to locate a frame with name #{ what} " 
+                raise UnknownFrameException, "Unable to locate a frame with name #{ what} "
             end
-            target        
+            target
         end
-    
+
         def initialize(container, how, what)
             @container = container
             @how = how
@@ -2286,14 +2296,14 @@ module Watir
         end
 
     end
-    
-    # this class is the super class for the iterator classes ( buttons, links, spans etc
-    # it would normally only be accessed by the iterator methods ( spans , links etc) of IE
+
+    # this class is the super class for the iterator classes (buttons, links, spans etc
+    # it would normally only be accessed by the iterator methods (spans, links etc) of IE
     class ElementCollections
         include Enumerable
 
         # Super class for all the iteractor classes
-        #   * container  - an instance of an IE object
+        #   * container - an instance of an IE object
         def initialize(container)
             @container = container
             @length = length() # defined by subclasses
@@ -2301,35 +2311,35 @@ module Watir
             # set up the items we want to display when the show method is used
             set_show_items
         end
- 
-        private 
+
+        private
         def set_show_items
             @show_attributes = AttributeLengthPairs.new("id", 20)
-            @show_attributes.add( "name" , 20)
+            @show_attributes.add("name", 20)
         end
 
         public
-        def get_length_of_input_objects(object_type) 
-            object_types = 
-                if object_type.kind_of? Array 
-                    object_type  
+        def get_length_of_input_objects(object_type)
+            object_types =
+                if object_type.kind_of? Array
+                    object_type
                 else
-                    [ object_type ]
+                    [object_type]
                 end
 
             length = 0
             objects = @container.document.getElementsByTagName("INPUT")
-            if  objects.length > 0 
+            if objects.length > 0
                 objects.each do |o|
-                   length += 1 if object_types.include?(o.invoke("type").downcase )
+                   length += 1 if object_types.include?(o.invoke("type").downcase)
                 end
-            end    
+            end
             return length
         end
 
         # iterate through each of the elements in the collection in turn
         def each
-            0.upto( @length-1 ) { |i| yield iterator_object(i) }
+            0.upto(@length-1) { |i| yield iterator_object(i) }
         end
 
         # allows access to a specific item in the collection
@@ -2340,7 +2350,7 @@ module Watir
         # this method is the way to show the objects, normally used from irb
         def show
             s = "index".ljust(6)
-            @show_attributes.each do |attribute_length_pair| 
+            @show_attributes.each do |attribute_length_pair|
                 s += attribute_length_pair.attribute.ljust(attribute_length_pair.length)
             end
 
@@ -2348,16 +2358,16 @@ module Watir
             self.each do |o|
                 s += "\n"
                 s += index.to_s.ljust(6)
-                @show_attributes.each do |attribute_length_pair| 
+                @show_attributes.each do |attribute_length_pair|
                     begin
-                        s += eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
+                        s += eval('o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust(attribute_length_pair.length)
                     rescue => e
                         s += " ".ljust(attribute_length_pair.length)
                     end
                 end
                 index += 1
             end
-            puts s 
+            puts s
         end
 
         # this method creates an object of the correct type that the iterators use
@@ -2383,17 +2393,17 @@ module Watir
         def id
             @ole_object.invoke('id')
         end
-    end        
-        
+    end
+
     # wraps around a form OLE object
     class FormWrapper
         include FormAccess
-        def initialize ( ole_object )
+        def initialize(ole_object)
             @ole_object = ole_object
         end
     end
-       
-    #   Form Factory object 
+
+    #   Form Factory object
     class Form < Element
         include FormAccess
         include Container
@@ -2407,11 +2417,11 @@ module Watir
             @container = container
             @how = how
             @what = what
-            
+
             log "Get form how is #{@how}  what is #{@what} "
-            
+
             # Get form using xpath.
-            if @how == :xpath    
+            if @how == :xpath
                 @ole_object = @container.element_by_xpath(@what)
             else
                 count = 1
@@ -2422,10 +2432,10 @@ module Watir
                     wrapped = FormWrapper.new(thisForm)
 
                     log "form on page, name is " + wrapped.name
-                
+
                     @ole_object =
                     case @how
-                    when :name, :id, :method, :action 
+                    when :name, :id, :method, :action
                         @what.matches(wrapped.send(@how)) ? thisForm : nil
                     when :index
                         count == @what ? thisForm : nil
@@ -2436,54 +2446,54 @@ module Watir
                 end
             end
             super(@ole_object)
-            
+
             copy_test_config container
         end
 
         def exists?
             @ole_object ? true : false
         end
-        
-        # Submit the data -- equivalent to pressing Enter or Return to submit a form. 
+
+        # Submit the data -- equivalent to pressing Enter or Return to submit a form.
         def submit # XXX use assert_exists
-            raise UnknownFormException ,  "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
-            @ole_object.submit 
+            raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+            @ole_object.submit
             @container.wait
-        end   
+        end
 
         def ole_inner_elements # XXX use assert_exists
-            raise UnknownFormException , "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+            raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
             @ole_object.elements.all
-        end   
+        end
         private :ole_inner_elements
 
         def document
             return @ole_object
         end
 
-        def wait(no_sleep = false)
+        def wait(no_sleep=false)
             @container.wait(no_sleep)
         end
-                
+
         # This method is responsible for setting and clearing the colored highlighting on the specified form.
-        # use :set   to set the highlight
+        # use :set  to set the highlight
         #   :clear  to clear the highlight
         def highlight(set_or_clear, element, count)
 
             if set_or_clear == :set
                 begin
                     original_color = element.style.backgroundColor
-                    original_color = "" if original_color== nil
+                    original_color = "" if original_color==nil
                     element.style.backgroundColor = activeObjectHighLightColor
                 rescue => e
-                    puts e 
+                    puts e
                     puts e.backtrace.join("\n")
                     original_color = ""
                 end
-                @original_styles[ count ] = original_color 
+                @original_styles[count] = original_color
             else
-                begin 
-                    element.style.backgroundColor  = @original_styles[ count]
+                begin
+                    element.style.backgroundColor = @original_styles[ count]
                 rescue => e
                     puts e
                     # we could be here for a number of reasons...
@@ -2493,7 +2503,7 @@ module Watir
         end
         private :highlight
 
-        # causes the object to flash. Normally used in IRB when creating scripts        
+        # causes the object to flash. Normally used in IRB when creating scripts
         def flash
             @original_styles = {}
             10.times do
@@ -2511,9 +2521,9 @@ module Watir
                 sleep 0.05
             end
         end
-                
+
     end # class Form
-    
+
     # this class contains items that are common between the span, div, and pre objects
     # it would not normally be used directly
     #
@@ -2521,22 +2531,22 @@ module Watir
     #
     class NonControlElement < Element
         include Watir::Exception
-        
+
         def locate
             if @how == :xpath
                 @o = @container.element_by_xpath(@what)
             else
                 @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
-            end            
-        end            
-        
+            end
+        end
+
         def initialize(container, how, what)
             @container = container
             @how = how
             @what = what
             super(nil)
         end
-        
+
         # this method is used to populate the properties in the to_s method
         def span_div_string_creator
             n = []
@@ -2545,7 +2555,7 @@ module Watir
             return n
         end
         private :span_div_string_creator
-        
+
         # returns the properties of the object in a string
         # raises an ObjectNotFound exception if the object cannot be found
         def to_s
@@ -2555,23 +2565,23 @@ module Watir
             return r.join("\n")
         end
     end
-	
-	class Pre < NonControlElement
-		TAG = 'PRE'
-	end
 
-    class P < NonControlElement 
+  class Pre < NonControlElement
+    TAG = 'PRE'
+  end
+
+    class P < NonControlElement
         TAG = 'P'
     end
 
     # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
     # It would not normally be created by users
-    class Div < NonControlElement 
+    class Div < NonControlElement
         TAG = 'DIV'
     end
 
     # this class is used to deal with Span tags in the html page. It would not normally be created by users
-    class Span < NonControlElement 
+    class Span < NonControlElement
         TAG = 'SPAN'
     end
 
@@ -2605,7 +2615,7 @@ module Watir
     #
     class Table < Element
         include Container
- 
+
         # Returns the table object containing anElement
         #   * container  - an instance of an IE object
         #   * anElement  - a Watir object (TextField, Button, etc.)
@@ -2619,7 +2629,7 @@ module Watir
         # Returns an initialized instance of a table object
         #   * container      - the container
         #   * how         - symbol - how we access the table
-        #   * what         - what we use to access the table - id, name index etc 
+        #   * what         - what we use to access the table - id, name index etc
         def initialize(container, how, what)
             @container = container
             @how = how
@@ -2636,10 +2646,10 @@ module Watir
                 @o = @container.locate_tagged_element('TABLE', @how, @what)
             end
         end
-        
-        # override the highlight method, as if the tables rows are set to have a background color, 
-        # this will override the table background color,  and the normal flsh method wont work
-        def highlight(set_or_clear )
+
+        # override the highlight method, as if the tables rows are set to have a background color,
+        # this will override the table background color, and the normal flash method won't work
+        def highlight(set_or_clear)
 
            if set_or_clear == :set
                 begin
@@ -2653,7 +2663,7 @@ module Watir
                     @original_border = nil
                 end
             else
-                begin 
+                begin
                     @o.border= @original_border unless @original_border == nil
                     @original_border = nil
                 rescue
@@ -2662,7 +2672,7 @@ module Watir
                     @original_border = nil
                 end
             end
-            super    
+            super
         end
 
         # this method is used to ppulate the properties in the to_s method
@@ -2686,9 +2696,9 @@ module Watir
         # iterates through the rows in the table. Yields a TableRow object
         def each
             assert_exists
-            1.upto( @o.getElementsByTagName("TR").length) { |i|  yield TableRow.new(@container, :direct, row(i) )    }
+            1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :direct, row(i))    }
         end
- 
+
         # Returns a row in the table
         #   * index         - the index of the row
         def [](index)
@@ -2698,7 +2708,7 @@ module Watir
 
         # This method returns the number of rows in the table.
         # Raises an UnknownObjectException if the table doesnt exist.
-        def row_count 
+        def row_count
             assert_exists
             #return table_body.children.length
             return @o.getElementsByTagName("TR").length
@@ -2707,7 +2717,7 @@ module Watir
         # This method returns the number of columns in a row of the table.
         # Raises an UnknownObjectException if the table doesn't exist.
         #   * index         - the index of the row
-        def column_count(index=1) 
+        def column_count(index=1)
             assert_exists
             row(index).cells.length
         end
@@ -2728,7 +2738,7 @@ module Watir
             return y
         end
 
-        def table_body(index = 1)
+        def table_body(index=1)
             return @o.getElementsByTagName('TBODY')[index]
         end
         private :table_body
@@ -2743,9 +2753,9 @@ module Watir
             assert_exists
             return TableBodies.new(@container, @o)
         end
-   
+
         # returns an ole object
-        def row(index) 
+        def row(index)
             return @o.invoke("rows")[(index-1).to_s]
         end
         private :row
@@ -2756,14 +2766,14 @@ module Watir
         # row of the table
         #   * columnnumber  - column index to extract values from
         def column_values(columnnumber)
-            return (1..row_count).collect {|idx| self[idx][columnnumber].text}
+            return(1..row_count).collect {|idx| self[idx][columnnumber].text}
         end
-        
+
         # Returns an array containing all the text values in the specified row
         # Raises an UnknownObjectException if the table doesn't exist.
         #   * rownumber  - row index to extract values from
         def row_values(rownumber)
-            return (1..column_count(rownumber)).collect {|idx| self[rownumber][idx].text}
+            return(1..column_count(rownumber)).collect {|idx| self[rownumber][idx].text}
         end
 
     end
@@ -2772,12 +2782,12 @@ module Watir
     # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
     # many of the methods available to this object are inherited from the Element class
     #
-    class TableBodies < Element 
+    class TableBodies < Element
         def initialize(container, parent_table)
             @container = container
             @o = parent_table     # in this case, @o is the parent table
         end
- 
+
         # returns the number of TableBodies that exist in the table
         def length
             assert_exists
@@ -2797,7 +2807,7 @@ module Watir
 
         # iterates through each of the TableBodies in the Table. Yields a TableBody object
         def each
-            1.upto( @o.tBodies.length ) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
+            1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
         end
 
     end
@@ -2817,16 +2827,16 @@ module Watir
                     @rows << TableRow.new(@container, :direct, oo)
                 end
             end
-        end            
+        end
 
-        def initialize(container, how, what, parent_table = nil)
+        def initialize(container, how, what, parent_table=nil)
             @container = container
             @how = how
             @what = what
             @parent_table = parent_table
             super nil
         end
- 
+
         # returns the specified row as a TableRow object
         def [](n)
             assert_exists
@@ -2856,7 +2866,7 @@ module Watir
             elsif @how == :xpath
                 @o = @container.element_by_xpath(@what)
             else
-                @o = @container.locate_tagged_element("TR", @how, @what)   
+                @o = @container.locate_tagged_element("TR", @how, @what)
             end
             if @o # cant call the assert_exists here, as an exists? method call will fail
                 @cells = []
@@ -2866,25 +2876,25 @@ module Watir
             end
         end
 
-        # Returns an initialized instance of a table row          
+        # Returns an initialized instance of a table row
         #   * o  - the object contained in the row
-        #   * container  - an instance of an IE object       
-        #   * how          - symbol - how we access the row        
-        #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row 
+        #   * container  - an instance of an IE object
+        #   * how          - symbol - how we access the row
+        #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row
         def initialize(container, how, what)
             @container = container
-            @how = how   
-            @what = what   
+            @how = how
+            @what = what
             super nil
         end
-   
+
         # this method iterates through each of the cells in the row. Yields a TableCell object
         def each
             locate
-            0.upto( @cells.length-1 ) { |i| yield @cells[i] }
+            0.upto(@cells.length-1) { |i| yield @cells[i] }
         end
 
-   	  # Returns an element from the row as a TableCell object
+      # Returns an element from the row as a TableCell object
         def [](index)
             assert_exists
             raise UnknownCellException, "Unable to locate a cell at index #{index}" if @cells.length < index
@@ -2896,38 +2906,38 @@ module Watir
 #        def method_missing(aSymbol, *args)
 #            return @o.send(aSymbol, *args)
 #        end
-   
+
         def column_count
             locate
             @cells.length
         end
     end
- 
+
     # this class is a table cell - when called via the Table object
     class TableCell < Element
         include Watir::Exception
-        include Container 
+        include Container
 
         def locate
             if @how == :xpath
                 @o = @container.element_by_xpath(@what)
-            elsif @how == :direct 
+            elsif @how == :direct
                 @o = @what
             else
-                @o = @container.locate_tagged_element("TD", @how, @what)   
+                @o = @container.locate_tagged_element("TD", @how, @what)
             end
         end
 
-        # Returns an initialized instance of a table cell          
-        #   * container  - an  IE object       
-        #   * how        - symbol - how we access the cell        
+        # Returns an initialized instance of a table cell
+        #   * container  - an  IE object
+        #   * how        - symbol - how we access the cell
         #   * what       - what we use to access the cell - id, name index etc
-        def initialize(container, how, what)   
-            @container = container    
-            @how = how   
-            @what = what   
-            super nil   
-        end 
+        def initialize(container, how, what)
+            @container = container
+            @how = how
+            @what = what
+            super nil
+        end
 
         def ole_inner_elements
             locate
@@ -2937,11 +2947,11 @@ module Watir
 
         def document
             locate
-            return @o  
+            return @o
         end
 
         alias to_s text
- 
+
         def colspan
             locate
             @o.colSpan
@@ -2961,14 +2971,14 @@ module Watir
             @what = what
             super nil
         end
-        
+
         def locate
             if @how == :xpath
                 @o = @container.element_by_xpath(@what)
             else
             @o = @container.locate_tagged_element('IMG', @how, @what)
-        end            
-        end            
+        end
+        end
 
         # this method produces the properties for an image as an array
         def image_string_creator
@@ -3015,20 +3025,20 @@ module Watir
             return @o.invoke("height").to_s
         end
 
-        # This method attempts to find out if the image was actually loaded by the web browser. 
-        # If the image was not loaded, the browser is unable to determine some of the properties. 
-        # We look for these missing properties to see if the image is really there or not. 
-        # If the Disk cache is full ( tools menu -> Internet options -> Temporary Internet Files) , it may produce incorrect responses.
+        # This method attempts to find out if the image was actually loaded by the web browser.
+        # If the image was not loaded, the browser is unable to determine some of the properties.
+        # We look for these missing properties to see if the image is really there or not.
+        # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
         def hasLoaded?
             locate
             raise UnknownObjectException, "Unable to locate image using #{@how} and #{@what}" if @o == nil
-            return false if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
+            return false if @o.fileCreatedDate == "" and @o.fileSize.to_i == -1
             return true
         end
 
-        # this method highlights the image ( in fact it adds or removes a border around the image)
+        # this method highlights the image (in fact it adds or removes a border around the image)
         #  * set_or_clear   - symbol - :set to set the border, :clear to remove it
-        def highlight( set_or_clear )
+        def highlight(set_or_clear)
             if set_or_clear == :set
                 begin
                     @original_border = @o.border
@@ -3037,8 +3047,8 @@ module Watir
                     @original_border = nil
                 end
             else
-                begin 
-                    @o.border = @original_border 
+                begin
+                    @o.border = @original_border
                     @original_border = nil
                 rescue
                     # we could be here for a number of reasons...
@@ -3049,7 +3059,7 @@ module Watir
         end
         private :highlight
 
-        # This method saves the image to the file path that is given.  The 
+        # This method saves the image to the file path that is given.  The
         # path must be in windows format (c:\\dirname\\somename.gif).  This method
         # will not overwrite a previously existing image.  If an image already
         # exists at the given path then a dialog will be displayed prompting
@@ -3068,16 +3078,16 @@ module Watir
                 @container.back
             end
         end
-        
+
         def fill_save_image_dialog(path)
-            Thread.new do 
-                system("ruby -e \"require 'win32ole'; @autoit = WIN32OLE.new('AutoItX3.Control'); waitresult = @autoit.WinWait 'Save Picture', '', 15; if waitresult == 1\" -e \"@autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\" -e \"end\"")
+            Thread.new do
+                system("ruby -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Save Picture', '', 15; if waitresult == 1\" -e \"@autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\" -e \"end\"")
             end
         end
         private :fill_save_image_dialog
-    end                                                      
-    
-    
+    end
+
+
     # This class is the means of accessing a link on a page
     # Normally a user would not need to create this object as it is returned by the Watir::Container#link method
     # many of the methods available to this object are inherited from the Element class
@@ -3093,7 +3103,7 @@ module Watir
             @what = what
             super(nil)
         end
-        
+
         def locate
             if @how == :xpath
                 @o = @container.element_by_xpath(@what)
@@ -3106,10 +3116,10 @@ module Watir
         end
         end
 
-        # if an image is used as part of the link, this will return true      
+        # if an image is used as part of the link, this will return true
         def link_has_image
             assert_exists
-            return true  if @o.getElementsByTagName("IMG").length > 0
+            return true if @o.getElementsByTagName("IMG").length > 0
             return false
         end
 
@@ -3117,7 +3127,7 @@ module Watir
         def src # BUG?
             assert_exists
             if @o.getElementsByTagName("IMG").length > 0
-                return  @o.getElementsByTagName("IMG")[0.to_s].src
+                return @o.getElementsByTagName("IMG")[0.to_s].src
             else
                 return ""
             end
@@ -3139,7 +3149,7 @@ module Watir
             return r.join("\n")
          end
     end
-    
+
     class InputElement < Element
         def locate
             if @how == :xpath
@@ -3148,7 +3158,7 @@ module Watir
                 @o = @what
             else
                 @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
-            end              
+            end
         end
         def initialize(container, how, what)
             @container = container
@@ -3157,18 +3167,18 @@ module Watir
             super(nil)
         end
     end
-    
+
     # This class is the way in which select boxes are manipulated.
     # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
     class SelectList < InputElement
         INPUT_TYPES = ["select-one", "select-multiple"]
-        
+
         attr_accessor :o
 
         # This method clears the selected items in the select box
         def clearSelection
             assert_exists
-            highlight( :set)
+            highlight(:set)
             wait = false
             @o.each do |selectBoxItem|
                 if selectBoxItem.selected
@@ -3177,22 +3187,22 @@ module Watir
                 end
             end
             @container.wait if wait
-            highlight( :clear)
+            highlight(:clear)
         end
 #        private :clearSelection
-        
+
         # This method selects an item, or items in a select box, by text.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the thing to select, string or reg exp
-        def select( item )
+        def select(item)
             select_item_in_select_list(:text, item)
         end
 
         # Selects an item, or items in a select box, by value.
         # Raises NoValueFoundException   if the specified value is not found.
         #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
-        def select_value( item )
-            select_item_in_select_list( :value , item )
+        def select_value(item)
+            select_item_in_select_list(:value, item)
         end
 
         # BUG: Should be private
@@ -3201,11 +3211,11 @@ module Watir
         #  * item  - string or reg exp - what we are looking for
         def select_item_in_select_list(attribute, value)
             assert_exists
-            highlight( :set )
+            highlight(:set)
             doBreak = false
             @container.log "Setting box #{@o.name} to #{attribute} #{value} "
             @o.each do |option| # items in the list
-                if value.matches( option.invoke(attribute.to_s))
+                if value.matches(option.invoke(attribute.to_s))
                     if option.selected
                         doBreak = true
                         break
@@ -3219,13 +3229,13 @@ module Watir
                 end
             end
             unless doBreak
-                raise NoValueFoundException, 
-                        "No option with #{attribute.to_s} of #{value} in this select element"  
+                raise NoValueFoundException,
+                        "No option with #{attribute.to_s} of #{value} in this select element"
             end
-            highlight( :clear )
+            highlight(:clear)
         end
-        
-        # Returns all the items in the select list as an array. 
+
+        # Returns all the items in the select list as an array.
         # An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
         def getAllContents() # BUG: camel_case.rb
@@ -3233,9 +3243,9 @@ module Watir
             @container.log "There are #{@o.length} items"
             returnArray = []
             @o.each { |thisItem| returnArray << thisItem.text }
-            return returnArray 
+            return returnArray
         end
-        
+
         # Returns the selected items as an array.
         # Raises UnknownObjectException if the select box is not found.
         def getSelectedItems
@@ -3244,14 +3254,14 @@ module Watir
             @container.log "There are #{@o.length} items"
             @o.each do |thisItem|
                 if thisItem.selected
-                    @container.log "Item ( #{thisItem.text} ) is selected"
-                    returnArray << thisItem.text 
+                    @container.log "Item (#{thisItem.text}) is selected"
+                    returnArray << thisItem.text
                 end
             end
-            return returnArray 
+            return returnArray
         end
-        
-        def option (attribute, value)
+
+        def option(attribute, value)
             assert_exists
             Option.new(self, attribute, value)
         end
@@ -3271,7 +3281,7 @@ module Watir
 
     class OptionWrapper
         include OptionAccess
-        def initialize (option)
+        def initialize(option)
             @option = option
         end
     end
@@ -3280,27 +3290,27 @@ module Watir
     class Option
         include OptionAccess
         include Watir::Exception
-        def initialize (select_list, attribute, value)
+        def initialize(select_list, attribute, value)
             @select_list = select_list
             @how = attribute
             @what = value
             @option = nil
 
-            unless [:text, :value].include? attribute 
+            unless [:text, :value].include? attribute
                 raise MissingWayOfFindingObjectException,
                     "Option does not support attribute #{@how}"
             end
             @select_list.o.each do |option| # items in the list
-                if value.matches( option.invoke(attribute.to_s))
+                if value.matches(option.invoke(attribute.to_s))
                     @option = option
                     break
                 end
             end
-                
+
         end
         def assert_exists
             unless @option
-                raise UnknownObjectException,  
+                raise UnknownObjectException,
                     "Unable to locate an option using #{@how} and #{@what}"
             end
         end
@@ -3309,24 +3319,24 @@ module Watir
             assert_exists
             @select_list.select_item_in_select_list(@how, @what)
         end
-    end    
+    end
 
     # This is the main class for accessing buttons.
     # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
     class Button < InputElement
-        INPUT_TYPES = ["button", "submit", "image", "reset"] 
+        INPUT_TYPES = ["button", "submit", "image", "reset"]
     end
-    
+
     # This class is the main class for Text Fields
     # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
     class TextField < InputElement
-        INPUT_TYPES = ["text", "password", "textarea"] 
+        INPUT_TYPES = ["text", "password", "textarea"]
 
         def_wrap_guard :size
         def_wrap_guard :maxlength
 
         # Returns true or false if the text field is read only.
-        #   Raises  UnknownObjectException if the object can't be found.
+        #   Raises UnknownObjectException if the object can't be found.
         def_wrap :readonly?, :readOnly
 
         def text_string_creator
@@ -3345,17 +3355,17 @@ module Watir
             r += text_string_creator
             return r.join("\n")
          end
-        
+
         def assert_not_readonly
             raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only." if self.readonly?
-        end                
+        end
 
-        # This method returns true or false if the text field contents is either a string match 
+        # This method returns true or false if the text field contents is either a string match
         # or a regular expression match to the supplied value.
-        #   Raises  UnknownObjectException if the object can't be found
-        #   * containsThis - string or reg exp  -  the text to verify 
-        def verify_contains( containsThis ) # BUG: Should have same name and semantics as IE#contains_text (prolly make this work for all elements)
-            assert_exists            
+        #   Raises UnknownObjectException if the object can't be found
+        #   * containsThis - string or reg exp - the text to verify
+        def verify_contains(containsThis) # BUG: Should have same name and semantics as IE#contains_text (prolly make this work for all elements)
+            assert_exists
             if containsThis.kind_of? String
                 return true if self.value == containsThis
             elsif containsThis.kind_of? Regexp
@@ -3366,12 +3376,12 @@ module Watir
 
         # this method is used to drag the entire contents of the text field to another text field
         #  19 Jan 2005 - It is added as prototype functionality, and may change
-        #   * destination_how   - symbol, :id, :name how we identify the drop target 
+        #   * destination_how   - symbol, :id, :name how we identify the drop target
         #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
-        def dragContentsTo( destination_how , destination_what)
+        def dragContentsTo(destination_how, destination_what)
             assert_exists
             destination = @container.text_field(destination_how, destination_what)
-            raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
+            raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
             @o.select()
@@ -3385,21 +3395,21 @@ module Watir
             destination.fireEvent("ondrop")
 
             @o.fireEvent("ondragend")
-            destination.value= ( destination.value + value.to_s  )
+            destination.value = destination.value + value.to_s
             self.value = ""
         end
 
         # This method clears the contents of the text box.
-        #   Raises  UnknownObjectException if the object can't be found
-        #   Raises  ObjectDisabledException if the object is disabled
-        #   Raises  ObjectReadOnlyException if the object is read only
+        #   Raises UnknownObjectException if the object can't be found
+        #   Raises ObjectDisabledException if the object is disabled
+        #   Raises ObjectReadOnlyException if the object is read only
         def clear
             assert_exists
             assert_enabled
             assert_not_readonly
-            
+
             highlight(:set)
-            
+
             @o.scrollIntoView
             @o.focus
             @o.select()
@@ -3410,34 +3420,34 @@ module Watir
             @container.wait()
             highlight(:clear)
         end
-        
+
         # This method appens the supplied text to the contents of the text box.
-        #   Raises  UnknownObjectException if the object cant be found
-        #   Raises  ObjectDisabledException if the object is disabled
-        #   Raises  ObjectReadOnlyException if the object is read only
+        #   Raises UnknownObjectException if the object cant be found
+        #   Raises ObjectDisabledException if the object is disabled
+        #   Raises ObjectReadOnlyException if the object is read only
         #   * setThis  - string - the text to append
-        def append( setThis)
+        def append(setThis)
             assert_exists
             assert_enabled
             assert_not_readonly
-            
+
             highlight(:set)
             @o.scrollIntoView
             @o.focus
-            doKeyPress( setThis )
+            doKeyPress(setThis)
             highlight(:clear)
         end
-        
-        # This method sets the contents of the text box to the supplied text 
-        #   Raises  UnknownObjectException if the object cant be found
-        #   Raises  ObjectDisabledException if the object is disabled
-        #   Raises  ObjectReadOnlyException if the object is read only
-        #   * setThis  - string - the text to set 
-        def set( setThis )
+
+        # This method sets the contents of the text box to the supplied text
+        #   Raises UnknownObjectException if the object cant be found
+        #   Raises ObjectDisabledException if the object is disabled
+        #   Raises ObjectReadOnlyException if the object is read only
+        #   * setThis - string - the text to set
+        def set(setThis)
             assert_exists
             assert_enabled
             assert_not_readonly
-            
+
             highlight(:set)
             @o.scrollIntoView
             @o.focus
@@ -3445,12 +3455,12 @@ module Watir
             @o.fireEvent("onSelect")
             @o.value = ""
             @o.fireEvent("onKeyPress")
-            doKeyPress( setThis )
+            doKeyPress(setThis)
             highlight(:clear)
             @o.fireEvent("onChange")
             @o.fireEvent("onBlur")
         end
-        
+
         # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
         # it is preffered to use the set method.
         def value=(v)
@@ -3460,12 +3470,12 @@ module Watir
 
         # This method is used internally by setText and appendText
         # It should not be used externally.
-        #   * value   - string  - The string to enter into the text field
-        def doKeyPress( value )
+        #   * value - string - The string to enter into the text field
+        def doKeyPress(value)
             begin
                 maxLength = @o.maxLength
                 if value.length > maxLength
-                    original_value = value        
+                    original_value = value
                     value = original_value[0 .. maxLength ]
                     @container.log " Supplied string is #{original_value.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
                 end
@@ -3473,30 +3483,30 @@ module Watir
                 # probably a text area - so it doesnt have a max Length
                 maxLength = -1
             end
-            for i in 0 .. value.length-1   
+            for i in 0 .. value.length-1
                 sleep @container.typingspeed
                 c = value[i,1]
-                #@container.log  " adding c.chr " + c  #.chr.to_s
+                #@container.log " adding c.chr " + c  #.chr.to_s
                 @o.value = @o.value.to_s + c   #c.chr
                 @o.fireEvent("onKeyDown")
                 @o.fireEvent("onKeyPress")
                 @o.fireEvent("onKeyUp")
             end
-            
+
         end
         private :doKeyPress
     end
 
     # this class can be used to access hidden field objects
     # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
-    class Hidden < TextField 
-        INPUT_TYPES =  ["hidden"]
-       
+    class Hidden < TextField
+        INPUT_TYPES = ["hidden"]
+
         # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
             self.value=n
         end
- 
+
         # override the append method, so that focus isnt set to the hidden object
         def append(n)
             self.value = self.value.to_s + n.to_s
@@ -3517,7 +3527,7 @@ module Watir
         INPUT_TYPES = ["file"]
 
         def set(setPath)
-            assert_exists	        
+            assert_exists
             Thread.new {
                 clicker = WinClicker.new
                 clicker.setFileRequesterFileName_newProcess(setPath)
@@ -3525,12 +3535,12 @@ module Watir
             # may need to experiment with this value.  if it takes longer than this
             # to open the new external Ruby process, the current thread may become
             # blocked by the file chooser.
-            sleep(1)	
+            sleep(1)
             self.click
         end
     end
 
-    # This class is the class for radio buttons and check boxes. 
+    # This class is the class for radio buttons and check boxes.
     # It contains methods common to both.
     # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or Watir::Container#radio methods
     #
@@ -3544,7 +3554,7 @@ module Watir
                 @o = @container.locate_input_element(@how, @what, @type, @value)
             end
         end
-        def initialize(container, how, what, type, value = nil)
+        def initialize(container, how, what, type, value=nil)
             @container = container
             @how = how
             @what = what
@@ -3563,11 +3573,11 @@ module Watir
         end
         alias getState isSet?
         alias checked? isSet?
-        
+
         # This method clears a radio button or check box. Note, with radio buttons one of them will almost always be set.
         # Returns true if set or false if not set.
         #   Raises UnknownObjectException if its unable to locate an object
-        #         ObjectDisabledException  IF THE OBJECT IS DISABLED 
+        #         ObjectDisabledException IF THE OBJECT IS DISABLED
         def clear
             assert_exists
             assert_enabled
@@ -3575,10 +3585,10 @@ module Watir
             set_clear_item(false)
             highlight(:clear)
         end
-        
+
         # This method sets the radio list item or check box.
-        #   Raises UnknownObjectException  if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
+        #   Raises UnknownObjectException  if it's unable to locate an object
+        #         ObjectDisabledException  if the object is disabled
         def set
             assert_exists
             assert_enabled
@@ -3586,7 +3596,7 @@ module Watir
             set_clear_item(true)
             highlight(:clear)
         end
-    
+
         # This method is the common code for setting or clearing checkboxes and radio.
         def set_clear_item(set)
             @o.checked = set
@@ -3594,52 +3604,52 @@ module Watir
             @container.wait
         end
         private :set_clear_item
-    
+
     end
 
     #--
     #  this class makes the docs better
     #++
-    # This class is the watir representation of a radio button.        
-    class Radio < RadioCheckCommon 
+    # This class is the watir representation of a radio button.
+    class Radio < RadioCheckCommon
     end
 
     # This class is the watir representation of a check box.
-    class CheckBox < RadioCheckCommon 
+    class CheckBox < RadioCheckCommon
 
         # This method, with no arguments supplied, sets the check box.
         # If the optional set_or_clear is supplied, the checkbox is set, when its true and cleared when its false
-        #   Raises UnknownObjectException  if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
-        def set( set_or_clear=true )
+        #   Raises UnknownObjectException if it's unable to locate an object
+        #         ObjectDisabledException if the object is disabled
+        def set(set_or_clear=true)
             assert_exists
             assert_enabled
-            highlight( :set)
+            highlight(:set)
 
             if set_or_clear == true
                 if @o.checked == false
-                    set_clear_item( true )
+                    set_clear_item(true)
                 end
             else
                 self.clear
             end
-            highlight( :clear )
+            highlight(:clear)
         end
-        
-        # This method clears a check box. 
+
+        # This method clears a check box.
         # Returns true if set or false if not set.
         #   Raises UnknownObjectException if its unable to locate an object
-        #         ObjectDisabledException  if the object is disabled 
+        #         ObjectDisabledException if the object is disabled
         def clear
             assert_exists
             assert_enabled
-            highlight( :set)
+            highlight(:set)
             if @o.checked == true
-                set_clear_item( false )
+                set_clear_item(false)
             end
-            highlight( :clear)
+            highlight(:clear)
         end
-        
+
 
     end
 
@@ -3656,33 +3666,33 @@ module Watir
         def length
             @container.document.getElementsByTagName(element_tag).length
         end
-    end        
-    
+    end
+
     # This class is used as part of the .show method of the iterators class
     # it would not normally be used by a user
     class AttributeLengthPairs
-        
+
         # This class is used as part of the .show method of the iterators class
         # it would not normally be used by a user
         class AttributeLengthHolder
             attr_accessor :attribute
             attr_accessor :length
-            
-            def initialize( attrib, length)
+
+            def initialize(attrib, length)
                 @attribute = attrib
                 @length = length
             end
         end
-        
-        def initialize( attrib=nil , length=nil)
+
+        def initialize(attrib=nil, length=nil)
             @attr=[]
-            add( attrib , length ) if attrib
+            add(attrib, length) if attrib
             @index_counter=0
         end
 
         # BUG: Untested. (Null implementation passes all tests.)
-        def add( attrib , length)
-            @attr <<  AttributeLengthHolder.new( attrib , length )
+        def add(attrib, length)
+            @attr << AttributeLengthHolder.new(attrib, length)
         end
 
         def delete(attrib)
@@ -3690,7 +3700,7 @@ module Watir
             @attr.each_with_index do |e,i|
                 item_to_delete = i if e.attribute==attrib
             end
-            @attr.delete_at(item_to_delete ) unless item_to_delete == nil
+            @attr.delete_at(item_to_delete) unless item_to_delete == nil
         end
 
         def next
@@ -3700,13 +3710,13 @@ module Watir
         end
 
         def each
-             0.upto( @attr.length-1 ) { |i | yield @attr[i]   }
+             0.upto(@attr.length-1) { |i | yield @attr[i]   }
         end
     end
 
     #    resume rdoc
-    #++   
-    
+    #++
+
     # this class accesses the buttons in the document as a collection
     # it would normally only be accessed by the Watir::Container#buttons method
     class Buttons < ElementCollections
@@ -3744,7 +3754,7 @@ module Watir
     # this class accesses the check boxes in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
     class CheckBoxes < ElementCollections
-        def element_class; CheckBox; end  
+        def element_class; CheckBox; end
         def length
             get_length_of_input_objects("checkbox")
         end
@@ -3769,7 +3779,7 @@ module Watir
         end
     end
 
-    # this class accesses the select boxes  in the document as a collection
+    # this class accesses the select boxes in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#select_lists method
     class SelectLists < ElementCollections
         include CommonCollection
@@ -3781,10 +3791,10 @@ module Watir
     # Normally a user would not need to create this object as it is returned by the Watir::Container#links method
     class Links < ElementCollections
         include CommonCollection
-        def element_class; Link; end    
+        def element_class; Link; end
         def element_tag; 'A'; end
 
-        private 
+        private
         def set_show_items
             super
             @show_attributes.add("href", 60)
@@ -3795,17 +3805,17 @@ module Watir
     # this class accesses the imnages in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
     class Images < ElementCollections
-        def element_class; Image; end 
+        def element_class; Image; end
         def length
             @container.document.images.length
         end
 
-        private 
+        private
         def set_show_items
             super
             @show_attributes.add("src", 60)
             @show_attributes.add("alt", 30)
-        end 
+        end
     end
 
     # this class accesses the text fields in the document as a collection
@@ -3835,7 +3845,7 @@ module Watir
         def element_class; Table; end
         def element_tag; 'TABLE'; end
 
-        private 
+        private
         def set_show_items
             super
             @show_attributes.delete("name")
@@ -3850,26 +3860,26 @@ module Watir
         def element_class; Label; end
         def element_tag; 'LABEL'; end
 
-        private 
+        private
         def set_show_items
             super
             @show_attributes.add("htmlFor", 20)
         end
     end
-	
+
     # this class accesses the pre tags in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#pres method
-	class Pres < ElementCollections
-		include CommonCollection
-		def element_class; Pre; end
+  class Pres < ElementCollections
+    include CommonCollection
+    def element_class; Pre; end
 
-        private		
-		def set_show_items
-			super
-			@show_attributes.delete("name")
-			@show_attributes.add("className", 20)
-		end
-	end
+        private
+    def set_show_items
+      super
+      @show_attributes.delete("name")
+      @show_attributes.add("className", 20)
+    end
+  end
 
     # this class accesses the p tags in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
@@ -3907,16 +3917,16 @@ module Watir
         include CommonCollection
         def element_class; Div; end
 
-        private 
+        private
         def set_show_items
             super
             @show_attributes.delete("name")
-            @show_attributes.add("className" , 20)
+            @show_attributes.add("className", 20)
         end
     end
 
     @@autoit = nil
-    
+
     def self.autoit
         unless @@autoit
             begin
@@ -3928,18 +3938,19 @@ module Watir
         end
         @@autoit
     end
-    
+
     def self._register(dll)
       system("regsvr32.exe /s "    + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
     end
     def self._unregister(dll)
       system("regsvr32.exe /s /u " + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
-    end    
+    end
 end
 
 # why won't this work when placed in the module (where it properly belongs)
 def _code_that_copies_readonly_array(array, name)
     "temp = Array.new(#{array.inspect}); #{name}.clear; temp.each {|element| #{name} << element}"
-end        
+end
 
 require 'watir/camel_case'
+
