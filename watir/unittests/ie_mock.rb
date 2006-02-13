@@ -56,7 +56,7 @@ class StubExplorer
         return @document
     end
     
-    def busy ()
+    def busy
         sleep @timeToWait
         return FALSE
     end

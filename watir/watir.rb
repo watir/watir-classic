@@ -143,7 +143,7 @@ module Watir
     end
 
     class DefaultLogger < Logger
-        def initialize()
+        def initialize
             super(STDERR)
             self.level = Logger::WARN
             self.datetime_format = "%d-%b-%Y %H:%M:%S"
@@ -155,7 +155,7 @@ module Watir
     class Spinner
         def initialize(enabled=true)
             @s = ["\b/", "\b|", "\b\\", "\b-"]
-            @i=0
+            @i = 0
             @enabled = enabled
         end
 
@@ -170,8 +170,8 @@ module Watir
 
         # get the next character to display
         def next
-            @i=@i+1
-            @i=0 if @i>@s.length-1
+            @i = @i + 1
+            @i = 0 if @i > @s.length - 1
             return @s[@i]
         end
     end
@@ -1076,7 +1076,7 @@ module Watir
             @empty_tag_name = "DUMMY"
 
             # add an error checker for http navigation errors, such as 404, 500 etc
-            navigation_checker=Proc.new{ |ie|
+            navigation_checker = Proc.new{ |ie|
                 if ie.document.frames.length > 1
                     1.upto ie.document.frames.length do |i|
                         check_for_http_error(ie.frame(:index, i) )
@@ -1094,7 +1094,7 @@ module Watir
         # This method checks the currently displayed page for http errors, 404, 500 etc
         # It gets called internally by the wait method, so a user does not need to call it explicitly
         def check_for_http_error(ie)
-            url=ie.document.url
+            url = ie.document.url
             # puts "url is " + url
             if /shdoclc.dll/.match(url)
                 #puts "Match on shdoclc.dll"
@@ -1351,7 +1351,7 @@ module Watir
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
         def wait(no_sleep=false)
             begin
-                @down_load_time=0
+                @down_load_time = 0
                 pageLoadStart = Time.now
                 @pageHasReloaded= false
 
@@ -1399,7 +1399,7 @@ module Watir
 
                 print "\b" unless @enable_spinner == false
 
-                s=nil
+                s = nil
                 #Variables used for supporting xpath queries.
                 #puts 'Setting rexmlDomobject to nil'
                 @rexmlDomobject = nil
@@ -2603,7 +2603,7 @@ module Watir
         def to_s
             assert_exists
             r = string_creator
-            r=r + label_string_creator
+            r += label_string_creator
             return r.join("\n")
         end
     end
@@ -2657,7 +2657,7 @@ module Watir
                     if @o.border.to_i==1
                         @o.border = 2
                     else
-                        @o.border=1
+                        @o.border = 1
                     end
                 rescue
                     @original_border = nil
@@ -2689,7 +2689,7 @@ module Watir
         def to_s
             assert_exists
             r = string_creator
-            r=r + table_string_creator
+            r += table_string_creator
             return r.join("\n")
         end
 
@@ -2997,7 +2997,7 @@ module Watir
         def to_s
             assert_exists
             r = string_creator
-            r=r + image_string_creator
+            r += image_string_creator
             return r.join("\n")
         end
 
@@ -3238,7 +3238,7 @@ module Watir
         # Returns all the items in the select list as an array.
         # An empty array is returned if the select box has no contents.
         # Raises UnknownObjectException if the select box is not found
-        def getAllContents() # BUG: camel_case.rb
+        def getAllContents # BUG: camel_case.rb
             assert_exists
             @container.log "There are #{@o.length} items"
             returnArray = []
@@ -3504,7 +3504,7 @@ module Watir
 
         # set is overriden in this class, as there is no way to set focus to a hidden field
         def set(n)
-            self.value=n
+            self.value = n
         end
 
         # override the append method, so that focus isnt set to the hidden object
@@ -3687,7 +3687,7 @@ module Watir
         def initialize(attrib=nil, length=nil)
             @attr=[]
             add(attrib, length) if attrib
-            @index_counter=0
+            @index_counter = 0
         end
 
         # BUG: Untested. (Null implementation passes all tests.)
@@ -3696,16 +3696,16 @@ module Watir
         end
 
         def delete(attrib)
-            item_to_delete=nil
+            item_to_delete = nil
             @attr.each_with_index do |e,i|
-                item_to_delete = i if e.attribute==attrib
+                item_to_delete = i if e.attribute == attrib
             end
             @attr.delete_at(item_to_delete) unless item_to_delete == nil
         end
 
         def next
             temp = @attr[@index_counter]
-            @index_counter +=1
+            @index_counter += 1
             return temp
         end
 
@@ -3761,7 +3761,7 @@ module Watir
 
         private
         def iterator_object(i)
-            @container.checkbox(:index, i+1)
+            @container.checkbox(:index, i + 1)
         end
     end
 

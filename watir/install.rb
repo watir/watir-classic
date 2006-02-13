@@ -157,7 +157,7 @@ application = FXApp.new("mainWindow", "Watir Installer")
 main = FXMainWindow.new(application, "Watir Installer", nil, nil, DECOR_ALL, 0, 0, 380, 250)
 
 # Load mini icons
-icon=loadGifIcon(application, "watir.gif")
+icon = loadGifIcon(application, "watir.gif")
 main.setMiniIcon(icon)
         
 # Text book - can add additional information here
@@ -167,7 +167,7 @@ infoTextBox = FXLabel.new(main, infoTextValue, nil, LAYOUT_SIDE_TOP | JUSTIFY_LE
 # Directory browsing
 browseFrame = FXHorizontalFrame.new(main)
 browseText = FXTextField.new(browseFrame, 50)
-browseText.text=bonus_location                               # set browserText to default directory
+browseText.text = bonus_location                               # set browserText to default directory
 browseButton = FXButton.new(browseFrame, "Browse...", nil, application)
 browseButton.connect(SEL_COMMAND) do |sender, sel, checked|    
     dirSelected = directoryBrowser(main, browseText.text)
