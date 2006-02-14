@@ -133,6 +133,15 @@ module Watir
         end
     end
     
+    def self.avoids_error(error) # block
+        begin
+            yield
+            true
+        rescue error
+            false
+        end
+    end
+    
     # BUG: this won't work right until the null objects are pulled out
     def exists?
         begin
@@ -1383,14 +1392,11 @@ module Watir
 
         # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
         def wait(no_sleep=false)
-            begin
                 @down_load_time = 0
-                pageLoadStart = Time.now
-                @pageHasReloaded= false
+                start_load_time = Time.now
 
                 s= Spinner.new(@enable_spinner)
                 while @ie.busy
-                    @pageHasReloaded = true
                     sleep 0.02
                     s.spin
                 end
@@ -1398,11 +1404,14 @@ module Watir
 
                 log "wait: readystate=" + @ie.readyState.to_s
                 until @ie.readyState == READYSTATE_COMPLETE
-                    @pageHasReloaded = true
                     sleep 0.02
                     s.spin
                 end
                 sleep 0.02
+                
+                until Watir::avoids_error(WIN32OLERuntimeError) {@ie.document} do
+                    sleep 0.02
+                end
 
                 until @ie.document.readyState == "complete"
                     sleep 0.02
@@ -1418,29 +1427,20 @@ module Watir
                             end
                             @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
                         end
-                    rescue=>e
-                        #puts 'Setting rexmlDomobject to nil'. Used for finding element using xpath.
+                    rescue => e
                         @rexmlDomobject = nil
                         @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
                     end
                 else
                     @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
                 end
-                @down_load_time = Time.now - pageLoadStart
-
+                @down_load_time = Time.now - start_load_time
                 run_error_checks
-
-                print "\b" unless @enable_spinner == false
-
+                print "\b" if @enable_spinner
                 s = nil
-                #Variables used for supporting xpath queries.
-                #puts 'Setting rexmlDomobject to nil'
                 @rexmlDomobject = nil
-            rescue WIN32OLERuntimeError => e
-                @logger.info "runtime error in wait: #{e}\n#{e.backtrace.join("\\\n")}"
-            end
             sleep 0.01
-            sleep @defaultSleepTime unless no_sleep == true
+            sleep @defaultSleepTime unless no_sleep
         end
 
         # Error checkers
