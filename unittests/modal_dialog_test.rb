@@ -1,10 +1,6 @@
 # feature tests for modal web dialog support
 # revision: $Revision$
 
-# Use our modified win32ole library
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'watir', 'win32ole')
-require 'win32ole'
-
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 require 'Win32API'
