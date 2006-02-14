@@ -74,7 +74,10 @@
 #  -f  (fast)         Run tests fast
 #  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
 
+# Use our modified win32ole library
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
 require 'win32ole'
+
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
