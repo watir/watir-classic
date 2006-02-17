@@ -33,46 +33,107 @@
   (based on BSD Open Source License)
 =end
 
-#  This is Watir, Web Application Testing In Ruby
-#  Home page is http://wtr.rubyforge.org
-#
-#  Version "$Revision$"
-#
-#  Typical usage:
-#   # include the controller
-#   require "watir"
-#
-#   # go to the page you want to test
-#   ie = Watir::IE.start("http://myserver/mypage")
-#
-#   # enter "Paul" into an input field named "username"
-#   ie.text_field(:name, "username").set("Paul")
-#
-#   # enter "Ruby Co" into input field with id "company_ID"
-#   ie.text_field(:id ,"company_ID").set("Ruby Co")
-#
-#   # click button that has a caption of "Cancel"
-#   ie.button(:value, "Cancel").click
-#
-#  The ways that are available to identify an html object depend upon the object type, but include
-#   :id           used for an object that has an ID attribute -- this is the best way!
-#   :name         used for an object that has a name attribute.
-#   :value        value of text fields, captions of buttons
-#   :index        finds the nth object of the specified type - eg button(:index, 2) finds the second button. This is 1 based. <br>
-#   :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
-#   :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
-#
+=begin rdoc
+   This is Watir, Web Application Testing In Ruby
+   The home page for this project is is http://wtr.rubyforge.org
 
+   Version "$Revision$"
 
-# These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
-# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
-# http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+   Typical usage:
+    # include the controller
+    require "watir"
 
-# command line options:
-#
-#  -b  (background)   Run Internet Explorer invisible
-#  -f  (fast)         Run tests fast
-#  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
+    # go to the page you want to test
+    ie = Watir::IE.start("http://myserver/mypage")
+
+    # enter "Paul" into an input field named "username"
+    ie.text_field(:name, "username").set("Paul")
+
+    # enter "Ruby Co" into input field with id "company_ID"
+    ie.text_field(:id, "company_ID").set("Ruby Co")
+
+    # click on a link that has "green" somewhere in the text that is displayed
+    # to the user, using a regular expression
+    ie.link(:text, /green/)
+
+    # click button that has a caption of "Cancel"
+    ie.button(:value, "Cancel").click
+
+   WATIR allows your script to read and interact with HTML objects--HTML tags
+   and their attributes and contents.  Types of objects that WATIR can identify
+   include:
+
+   Type         Description
+   ===========  ===============================================================
+   button       <input> tags, with the type="button" attribute
+   check_box    <input> tags, with the type="checkbox" attribute
+   div          <div> tags
+   form
+   frame
+   hidden       hidden <input> tags
+   image        <img> tags
+   label
+   link         <a> (anchor) tags
+   p            <p> (paragraph) tags
+   radio        radio buttons; <input> tags, with the type="radio" attribute
+   select_list  <select> tags, known informally as drop-down boxes
+   span         <span> tags
+   table        <table> tags
+   text_field   <input> tags with the type="text" attribute (a single-line
+                text field), the type="text_area" attribute (a multi-line
+                text field), and the type="password" attribute (a
+                single-line field in which the input is replaced with asterisks)
+
+   In general, there are several ways to identify a specific object.  WATIR's
+   syntax is in the form (how, what), where "how" is a means of identifying
+   the object, and "what" is the specific string or regular expression
+   that WATIR will seek, as shown in the examples above.  Available "how"
+   options depend upon the type of object, but here are a few examples:
+
+   How           Description
+   ============  ===============================================================
+   :id           Used to find an object that has an "id=" attribute. Since each
+                 id should be unique, according to the XHTML specification,
+                 this is recommended as the most reliable method to find an
+                 object.
+   :name         Used to find an object that has a "name=" attribute.  This is
+                 useful for older versions of HTML, but "name" is deprecated
+                 in XHTML.
+   :value        Used to find a text field with a given default value, or a
+                 button with a given caption
+   :index        Used to find the nth object of the specified type on a page.
+                 For example, button(:index, 2) finds the second button.
+                 Current versions of WATIR use 1-based indexing, but future
+                 versions will use 0-based indexing.
+   :before_text  Used to find the object immediately before the specified text.
+                 Note:  This fails if the text is in a table cell.
+   :after_text   Used to find the object immediately before the specified text.
+                 Note:  This fails if the text is in a table cell.
+
+   Note that the XHTML specification requires that tags and their attributes be
+   in lower case.  WATIR doesn't enforce this; WATIR will find tags and
+   attributes whether they're in upper, lower, or mixed case.  This is either
+   a bug or a feature.
+
+   WATIR uses Microsoft's Document Object Model (DOM) as implemented by Internet
+   Explorer.  For further information on Internet Explorer and on the DOM, go to
+   the following Web pages:
+
+   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
+   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+
+   WATIR supports command-line options:
+
+   -b  (background)   Run Internet Explorer invisibly
+   -f  (fast)         By default, WATIR types slowly and pauses briefly between
+                      actions.  This switch removes the delays and sets WATIR
+                      to run at full speed.  The set_fast_speed method of the
+                      IE object performs the same function; set_slow_speed
+                      returns WATIR to its default behaviour.
+   -x  (spinner)      Adds a spinner that displays in the command window when
+                      pages are waiting to be loaded.
+
+=end
 
 # Use our modified win32ole library
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
@@ -125,14 +186,14 @@ module Watir
     include Watir::Exception
 
     @@dir = File.expand_path(File.dirname(__FILE__))
-    
+
     def self.until_with_timeout(timeout) # block
         start_time = Time.now
         until yield or Time.now - start_time > timeout do
             sleep 0.05
         end
     end
-    
+
     def self.avoids_error(error) # block
         begin
             yield
@@ -141,7 +202,7 @@ module Watir
             false
         end
     end
-    
+
     # BUG: this won't work right until the null objects are pulled out
     def exists?
         begin
@@ -1205,30 +1266,30 @@ module Watir
             @ie = ieTemp
         end
         private :attach_browser_window
-        
+
         # this will find the IEDialog.dll file in its build location
         @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
         @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
         @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
-        
+
         def self.attach_modal(title)
             hwnd_modal = 0
             Watir::until_with_timeout(10) do
                 hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, title)
                 hwnd_modal > 0
             end
-            
+
             intPointer = " " * 4 # will contain the int value of the IUnknown*
             @@fnGetUnknown.call(hwnd_modal, intPointer)
-            
+
             intArray = intPointer.unpack('L')
             intUnknown = intArray.first
             raise "Unable to attach to Modal Window #{title}" unless intUnknown > 0
-            
-            htmlDoc = WIN32OLE.connect_unknown(intUnknown)    
+
+            htmlDoc = WIN32OLE.connect_unknown(intUnknown)
             ModalPage.new(htmlDoc)
         end
-        
+
         # deprecated: use logger= instead
         def set_logger(logger)
             @logger = logger
@@ -1408,7 +1469,7 @@ module Watir
                     s.spin
                 end
                 sleep 0.02
-                
+
                 until Watir::avoids_error(WIN32OLERuntimeError) {@ie.document} do
                     sleep 0.02
                 end
