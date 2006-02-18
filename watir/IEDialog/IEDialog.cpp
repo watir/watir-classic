@@ -50,17 +50,10 @@ void DoClick(LPCTSTR windowName, LPCTSTR elementId, LPCTSTR elementName)
 	CoUninitialize();
 }
 
-void GetUnknown(LPCTSTR windowName, int* pOut)
+void GetUnknown(HWND hWindow, int* pOut)
 {
 	*pOut = 0;
-
-	HWND hWindow = ::FindWindow(NULL, windowName);
-	 if(hWindow == NULL)
-	 {
-		 MessageBox(NULL, "Cannot find window", "Error", MB_OK);
-		 return;
-	 }
-
+	
 	HINSTANCE hInst = ::LoadLibrary( TEXT("OLEACC.DLL") );
 	if(hInst == NULL)
 	{

@@ -4,7 +4,7 @@ extern "C" _declspec(dllexport) void DoElementClick(LPCTSTR windowName, LPCTSTR 
 
 extern "C" _declspec(dllexport) void DoButtonClick(LPCTSTR windowName, LPCTSTR buttonName);
 
-extern "C" _declspec(dllexport) void GetUnknown(LPCTSTR windowName, int* pOut);
+extern "C" _declspec(dllexport) void GetUnknown(HWND hWindow, int* pOut);
 
 void DoClick(LPCTSTR windowName, LPCTSTR elementId, LPCTSTR elementName);
 
