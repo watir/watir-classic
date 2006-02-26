@@ -66,23 +66,23 @@
 
    Type         Description
    ===========  ===============================================================
-   button       <input> tags, with the type="button" attribute
-   check_box    <input> tags, with the type="checkbox" attribute
+   button       <input> tags with type=button, submit, image or reset
+   check_box    <input> tags with type=checkbox
    div          <div> tags
    form
    frame
-   hidden       hidden <input> tags
+   hidden       <input> tags with type=hidden
    image        <img> tags
    label
    link         <a> (anchor) tags
    p            <p> (paragraph) tags
-   radio        radio buttons; <input> tags, with the type="radio" attribute
+   radio        radio buttons; <input> tags with the type=radio
    select_list  <select> tags, known informally as drop-down boxes
    span         <span> tags
    table        <table> tags
-   text_field   <input> tags with the type="text" attribute (a single-line
-                text field), the type="text_area" attribute (a multi-line
-                text field), and the type="password" attribute (a
+   text_field   <input> tags with the type=text attribute (a single-line
+                text field), the type=textarea attribute (a multi-line
+                text field), and the type=password attribute (a
                 single-line field in which the input is replaced with asterisks)
 
    In general, there are several ways to identify a specific object.  WATIR's
@@ -110,6 +110,7 @@
                  Note:  This fails if the text is in a table cell.
    :after_text   Used to find the object immediately before the specified text.
                  Note:  This fails if the text is in a table cell.
+   :xpath        Uses xpath (see separate doc)
 
    Note that the XHTML specification requires that tags and their attributes be
    in lower case.  WATIR doesn't enforce this; WATIR will find tags and
@@ -1063,11 +1064,13 @@ module Watir
             @@attach_timeout = timeout
         end
 
-        # The revision number (according to CVS)
-        REVISION = "$Revision$"
+        # The revision number (according to Subversion)
+        REVISION_STRING = "$Revision$"
+        REVISION_STRING.scan(/Revision: (\d*)/)
+        REVISION = $1
 
         # The Release number
-        VERSION = "1.5 preview"
+        VERSION = "1.5.0." + REVISION
 
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4
