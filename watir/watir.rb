@@ -1,7 +1,7 @@
 =begin
   license
   ---------------------------------------------------------------------------
-  Copyright (c) 2004-2005, Paul Rogers and Bret Pettichord
+  Copyright (c) 2004-2006, Paul Rogers and Bret Pettichord
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -14,9 +14,10 @@
   notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
 
-  3. Neither the names Paul Rogers, Bret Pettichord nor the names of contributors to
-  this software may be used to endorse or promote products derived from this
-  software without specific prior written permission.
+  3. Neither the names Paul Rogers, nor Bret Pettichord nor the names of any 
+  other contributors to this software may be used to endorse or promote 
+  products derived from this software without specific prior written 
+  permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS
   IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -1066,7 +1067,7 @@ module Watir
         REVISION = "$Revision$"
 
         # The Release number
-        VERSION = "1.4"
+        VERSION = "1.5 preview"
 
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4
