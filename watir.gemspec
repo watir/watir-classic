@@ -1,9 +1,13 @@
 $__watir_source_patterns = ['watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 'readme.rb',
-    'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*']
+    'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*', 
+    'watir/IEDialog/Release/IEDialog.dll', 'watir/win32ole/win32ole.so']
+
+$LOAD_PATH.unshift File.dirname(__FILE__)
+require 'watir'
 
 spec = Gem::Specification.new do |s|
   s.name = 'watir'
-  s.version = '1.4.99'
+  s.version = Watir::IE::VERSION
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
     WATIR stands for "Web Application Testing in Ruby". Watir (pronounced water) is a free, 
@@ -30,8 +34,12 @@ spec = Gem::Specification.new do |s|
   s.autorequire = 'watir'
 
   s.has_rdoc = true
-  # note: duplicated from build-rdoc.bat -- these options should actually be stored in a separate file and then referenced indirectly from both locations.
-  s.rdoc_options = ['-t', "Watir API Reference", '-A', "def_wrap=R,def_wrap_guard=R", '-m', 'ReadMe', '-x', "unittests|camel_case.rb|testUnitAddons.rb"]
+  s.rdoc_options << 
+        '--title' << 'Watir API Reference' <<
+  		'--accessor' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R' <<
+  		'--main' << 'ReadMe' << 
+  		'--exclude' << 'unittests|camel_case.rb|testUnitAddons.rb'
+  s.extra_rdoc_files = 'readme.rb'
 
   s.test_file  = 'unittests/core_tests.rb'
 
