@@ -1065,12 +1065,13 @@ module Watir
         end
 
         # The revision number (according to Subversion)
-        REVISION_STRING = "$Revision$"
+        REVISION_STRING = '$Revision$'
         REVISION_STRING.scan(/Revision: (\d*)/)
         REVISION = $1
 
         # The Release number
-        VERSION = "1.5.0." + REVISION
+        VERSION_SHORT = '1.5.0'
+        VERSION = VERSION_SHORT + '.' + REVISION
 
         # Used internally to determine when IE has finished loading a page
         READYSTATE_COMPLETE = 4
@@ -1084,7 +1085,7 @@ module Watir
         DEFAULT_SLEEP_TIME = 0.1
 
         # The default color for highlighting objects as they are accessed.
-        DEFAULT_HIGHLIGHT_COLOR = "yellow"
+        DEFAULT_HIGHLIGHT_COLOR = 'yellow'
 
         # Whether the spinner is on and off
         attr_accessor :enable_spinner

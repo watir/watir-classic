@@ -7,6 +7,19 @@ $VERBOSE = nil
 
 # Standard Rails tasks
 
+desc 'Generate Watir API Documentation'
+Rake::RDocTask.new('rdoc') do |rdoc| 
+  rdoc.title = 'Watir API Reference'
+  rdoc.main = 'ReadMe' 
+  rdoc.rdoc_dir = 'doc/rdoc'
+  rdoc.options << '-A' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R'
+  rdoc.rdoc_files.include('watir.rb')
+  rdoc.rdoc_files.include('readme.rb')
+  rdoc.rdoc_files.include('watir/*.rb')
+  rdoc.rdoc_files.exclude('watir/camel_case.rb')
+  rdoc.rdoc_files.exclude('watir/testUnitAddons.rb')
+end
+
 # Additional tasks (not standard Rails)
 CLEAN << 'pkg' << 'html'
 
