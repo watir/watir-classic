@@ -1,0 +1,33 @@
+<project>
+    <name>Watir</name>
+    <jiraId>10080</jiraId>
+    <jiraName>WTR</jiraName>
+    <confluenceName>WTR</confluenceName>
+
+    <forums>
+        <usersId>5</usersId>
+        <devId>6</devId>
+    </forums>
+
+    <docs>
+        <url>index.html</url>
+    </docs>
+
+    <owners>
+        <person>
+            <name>Bret Pettichord</name>
+            <email>bret@pettichord.com</email>
+        </person>
+    </owners>
+
+    <!--<developers>-->
+        <!--<person>-->
+            <!--<name>Paul Hammant</name>-->
+            <!--<email>paul@thoughtworks.com</email>-->
+        <!--</person>-->
+    <!--</developers>-->
+
+    <releases>
+    </releases>
+
+</project>
