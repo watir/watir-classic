@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>
+Test page for pop ups
+</title>
+
+<script language = javascript>
+function doConfirmBox() {
+     var a =confirm('Do you really want to do this');
+     if (a == true)
+         document.all.confirmtext.value = "OK"
+     else
+         document.all.confirmtext.value = "Cancel";
+}
+
+function doPromptBox() {
+     var a =prompt('Enter something delightful' , '');
+     if (a == null)
+         document.all.prompttext.value = "Cancel"
+     else
+         document.all.prompttext.value = a;
+}
+
+
+</script>
+
+</head>
+<body>
+CVS Revision: "$Revision: 1.1 $"
+<br>
+<br>
+<table>
+
+<tr>
+<td>
+<input type = button value = "Alert" onClick	= "javascript:alert('This is an alert box');">This Button shows an alert pop up</q>
+<br>
+
+<tr>
+<td>
+<input type = button value = "Prompt" onClick= "javascript:doPromptBox();">This button shows a prompt pop up. This text box shows what text was entered <input type = text name = prompttext>
+
+<br>
+<tr>
+<td>
+<input type = button value = "Confirm" onClick= "javascript:doConfirmBox();">This button shows a prompt pop up. This text box shows which button was clicked  <input type = text name = confirmtext>
+<br>
+
+<tr>
+<td>
+<input type = file name = up>This button shows a file upload box</q>
+<br>
+
+
+<tr>
+<td>
+</table>
+
+
+</html>

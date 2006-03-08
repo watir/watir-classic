@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>
+Test page for select boxes
+</title>
+  <link rel="stylesheet" type="text/css" href="watir_unit_tests.css">
+</head>
+<body>
+CVS Revision: $Revision: 1.5 $
+<br>
+<br>
+<table>
+
+<tr>
+<td>
+<select name = sel1 class='list_style'>
+<option value=o1 >Option 1
+<option value=o2 >Option 2
+<option value=o3 SELECTED >Option 3
+<option value=o4 >Option 4
+</select>
+<tr>
+<td>
+<select name = sel2 multiple>
+<option value=o1  >Option 1
+<option value=o2 class='option_style'>Option 2
+<option value=o3 class='option_style' SELECTED >Option 3
+<option value=o4 class='option_style'>Option 4
+<option value=o6 class='option_style'>Option 5
+<option value=o6 class='option_style' SELECTED >Option 6
+
+
+</form>
+
+<tr>
+<td>
+<select name = sel3 onChange = 'javascript:document.location="pass.html";'>
+<option value = o1>Option 1
+<option value = o2>Option 2
+<option value = o3 selected>Option 3
+<option value = o4>Option 4
+</select>
+
+<td> This box is used for testing the onchange event
+
+<tr>
+<td><select id = 'selectbox_4' disabled><option value = o1>Option 1<option value = o2>Option 2
+
+<td>This box has an id
+
+</table>
+
+
+
+
+</html>

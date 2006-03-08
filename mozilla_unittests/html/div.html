@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Test page for Div</title>
+
+  <link rel="stylesheet" type="text/css" href="watir_unit_tests.css">
+
+
+</head>
+<body>
+CVS Revision: "$Revision: 1.6 $"
+<br>
+<br>
+<div id = div1 title = "Test1" >This text is in a div with an id of div1 and title of test1</div>
+<br>
+<div id = div2 class="blueText">This text is in a div with an id of div2</div>
+<br>
+<div id = div3 onClick = "javascript:document.all.text1.value=parseInt(document.all.text1.value)+1">This div has an onClick that increments text1</div>
+<div id = div4 onClick = "javascript:document.all.text1.value=parseInt(document.all.text1.value)-1">This div has an onClick that decrements text1</div>
+
+This input field gets its value from div3. Its name is text1<input type = text name = text1 value = 0>
+<br>
+<br> The following DIVS are used to test buttons and other objects in a div
+
+<div id=buttons1>
+   <input type=button name=b1 value="Button 1" onClick="javascript:document.all.div_text1.value='button1';">
+</div>
+<div id=buttons2>
+  <input type=button name=b2 value="Button 2" onClick="javascript:document.all.div_text1.value='button2';">
+  <input type=button name=b3 value="Button 3" onClick="javascript:document.all.div_text1.value='button3';">
+</div>
+
+<div id=text_fields1>
+   Text1: <input type=text name=div_text1 >&nbsp;&nbsp;&nbsp;&nbsp;   Text2: <input type=text name=div_text2 >&nbsp;&nbsp;&nbsp;&nbsp;   Text3: <input type=text name=div_text3>
+</div>
+
+
+
+
+<br>
+<hr>
+Span Tests
+<br>
+<br>
+<span id = span1 title = "Test2" >This text is in a span with an id of span1 and title of test2</span>
+<br>
+<span id = span2 class="blueText">This text is in a span with an id of span2</span>
+<br>
+<span id = span3 onClick = "javascript:document.all.text2.value=parseInt(document.all.text2.value)+1">This span has an onClick that increments text2</span>
+<br>
+<span id = span4 onClick = "javascript:document.all.text2.value=parseInt(document.all.text2.value)-1">This span has an onClick that decrements text2</span>
+<br>
+This input field gets its value from span3. Its name is text1<input type = text name = text2 value = 0>
+
+<br>
+<br> The following spans are used to test buttons and other objects in a span
+<br>
+<span id=buttons1>
+   <input type=button name=b1 value="Button 1" onClick="javascript:document.all.span_text1.value='button1';">
+</span>
+<br>
+<span id=buttons2>
+  <input type=button name=b2 value="Button 2" onClick="javascript:document.all.span_text1.value='button2';">
+  <input type=button name=b3 value="Button 3" onClick="javascript:document.all.span_text1.value='button3';">
+</span>
+<br>
+<span id=text_fields1>
+   Text1: <input type=text name=span_text1 >&nbsp;&nbsp;&nbsp;&nbsp;   Text2: <input type=text name=span_text2 >&nbsp;&nbsp;&nbsp;&nbsp;   Text3: <input type=text name=span_text3>
+</span>
+
+
+
+<br>
+<br>
+<p id = number1 title = "P_tag_1" class=redText >This text is in a p with an id of number1 and title of P_tag_1</p>
+<br>
+<p id = number2 title = "P_tag_2" class=italicText >This text is in a p with an id of number2</p>
+<br>
+<p id = number3 title = "test_3" class=blueText >This text is in a p with an id of number3</p>
+
+
+
+
+
+
+</body>
+</html>

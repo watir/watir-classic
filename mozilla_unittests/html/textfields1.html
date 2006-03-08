@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>
+Test page for Text Fields
+</title>
+</head>
+<body>
+CVS Revision: "$Revision: 1.7 $"
+
+<script>
+function addEvent(e) {
+    document.all.events_text.value = document.all.events_text.value + "\n" + e
+}
+</script>
+
+
+
+<br>
+<br>
+<table>
+
+<tr>
+<td>
+<input type = text name = text1 value = 'Hello World'>number 1
+<br>
+<label for=text2>Label For this Field  </label><input type = text id= text2 value = 'goodbye all'>
+
+
+<td>These text fields are not in a form
+
+
+<tr>
+<td>
+<input type = text name = disabled value = "Cant enter text in me" disabled>
+<td>
+Disabled text box
+
+<tr>
+<td>
+<input type = text name = readOnly value = "Cant enter text in me" readonly>
+<br>
+<label for=readOnly2 id=label2>Another Label (pointless- its a readonly box!)  </label><input type = text id= readOnly2 value = "Cant enter text in me" readonly>
+<td>
+readonly text boxes
+
+
+
+
+<form name = test1 method = get action = pass.html>
+<tr>
+<td>
+<input type = text name = text1 value = 'Ruby'>
+<td> This is used in text1 in form test1
+
+
+
+</form>
+</table>
+
+These text fields are used to test :beforeText and :afterText
+<br>
+<input type = text name = beforetest value = 'Before Text Test'>This Text After
+<br>
+This Text Before<input type = text name=aftertest  value = 'AfterText Test' title = "This used to test :afterText">
+
+<br>
+<br>
+
+This Field has javascript events in it
+<input type = text name= events_tester onKeyUp='javascript:addEvent("keyup")' onKeyDown='javascript:addEvent("keydown")' onKeyPress='javascript:addEvent("keypress")'>
+<br>
+
+<textarea name = events_text cols = 20 rows = 10 ></textarea>
+<input type=button onClick='document.all.events_text.value=""' value="Clear Events Box">
+
+
+<br>
+Password Fields
+<br>
+
+Password With Name<input type = password name =password1>
+<br>
+<label for=password1>Password With ID ( the text here is a label for it )</label><input type = password id =password1>
+<div name="divvy">Div Text</div>
+</body>
+
+</html>

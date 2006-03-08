@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>
+Test page for Forms
+</title>
+
+<script>
+function showHidden(){
+
+document.all.vis1.value = document.all.hid1.value;
+document.all.vis2.value = document.getElementById("hidden_1").value;
+
+}
+
+
+</script>
+
+</head>
+<body>
+CVS Revision: "$Revision: 1.7 $"
+<br>
+<br>
+<table>
+<tr>
+<td>
+<form  method = get action = pass.html>
+  <input type = button name = b1 id = b2 value = "Click Me" >
+</form>
+
+<td> 
+
+
+<tr>
+<td>
+<form name = test2 method = get action = pass2.html>
+<ul>
+<li>ListItem1 	</li>
+<li><span>ListItem2</span></li>
+</ul>
+
+
+<br><input type = checkbox name = check1 value = 10 >
+<br><input type = checkbox name = check1 value = 20 >
+<br><input type = checkbox name = check1 value = 30 >
+
+<br><input selected type = radio name = r1 value = 'a' >
+<br><input type = radio name = r1 value = 'b' >
+<br><input type = radio name = r1 value = 'c' >
+<br><input type = radio name = r1 value = 'd' >
+
+<br><input type = text id = t1>
+<br><input type = text id = t2>
+
+<br><select name = s1>
+    <option>1</option>
+    <option>2</option>
+</select>
+
+<br><select multiple visible=3 name = s2>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+
+</select>
+
+
+
+<br><input type = submit value=Submit><input type = reset id = reset_button>
+
+
+
+
+</form>
+<td>
+<tr bgcolor=blue>
+<td>
+  <input type = text name = g1 value = 'textfield' >
+  <br>
+  <input type = button name = g1 value ='button'>
+  <br>
+  <input type = checkbox name = g1 value='1'>
+  <br>
+  <input type = radio name = g1 value = '2'>
+  <br>
+  
+<td> These objects all have the same name
+
+
+<tr bgcolor=lightblue>
+<td >
+  <input type = text id = g1 value = 'textfield_id' >
+  <br>
+  <input type = button id = g1 value ='button_id'>
+  <br>
+  <input type = checkbox id= g1 value='1_id'>
+  <br>
+  <input type = radio id = g1 value = '2_id'>
+  <br>
+  
+<td> These objects all have the same id
+
+<tr>
+<td>
+<form name = buttonsubmit method = get action = pass.html>
+<p>This form  is has a submit button that is an image</p>
+<input type = text name = tt1>
+<input type = image src = images/button.jpg alt = "submit" name=imm>
+</form>
+
+<form name = has_a_hidden>
+This is in a form. The form has hidden objects. 
+<br>
+The first has a name - hid1<input type = hidden name = hid1>
+<br>
+The second has an id- hidden_1<input type = hidden id= hidden_1>
+
+Click This Button to see the values in these boxes
+<input type = button value='Show Hidden' onClick='javascript:showHidden();'>
+<br>
+<input type = text name = vis1> 
+<br>
+<input type = text name = vis2> 
+
+</form
+
+
+
+</body>
+</html>

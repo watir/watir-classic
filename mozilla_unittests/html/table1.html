@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>
+Test page for Tables
+</title>
+</head>
+<body>
+
+<script language=javascript>
+
+function addRow() {
+
+    var tbody = document.getElementById('t1' ).getElementsByTagName("TBODY")[0];
+
+    // Create a TR
+    var row = document.createElement("TR");
+    row.setAttribute("class", "normal");
+    row.setAttribute("border", "1");
+    
+    for (j=0 ; j < document.getElementById('t1' ).rows(1).cells.length; j++) {
+       // Create a TD 
+       var td = document.createElement("TD");
+       td.setAttribute("border","1");
+       td.innerHTML = "New Cell";
+
+       // Assign TD to TR and then assign TR to TBODY
+        row.appendChild(td);
+    }
+    tbody.appendChild(row);
+}
+
+</script>
+
+
+CVS Revision: "$Revision: 1.8 $"
+<br>
+<br>
+<table >
+    <tr>
+      <td> Row 1 Col1
+      <td> Row 1 Col2
+    <tr>
+      <td> Row 2 Col1
+      <td> Row 2 Col2
+</table>
+
+
+<br>
+<br>
+<table id= 't1'>
+    <Tr><td colspan=2>Table 2
+    <tr>
+      <td id=cell1> Row 1 Col1
+      <td> Row 1 Col2
+    <tr id=row1>
+      <td> Row 2 Col1
+      <td> Row 2 Col2
+    <tr>
+      <td> Row 3 Col1
+      <td> Row 3 Col2
+    <tr>
+      <td> Row 4 Col1
+      <td> Row 4 Col2
+
+</table>
+<br>
+<input type=button value='add row' onClick='javascript:addRow()'>
+
+<br>
+<br>
+
+The following has a nested table
+<table id='t2' border=1>
+<tr>
+<td>
+cell 1
+<td>
+cell2
+<tr>
+<td>
+    <table><tr><td>nest1<td>nest2</table>
+<td>
+Normal
+
+</table>
+
+
+<br>
+This table has 3 body tags. Mostly based on http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/tbody.asp?frame=true
+<br><br>
+<table id=body_test>
+<THEAD>
+<TR>
+<TD>
+This text is in the THEAD.
+</TD>
+</TR>
+</THEAD>
+<TBODY>
+<TR>
+<TD>
+This text is in the FRST TBODY.
+</TD>
+</TR>
+</TBODY>
+
+<TBODY>
+<TR>
+<TD>
+This text is in the SECOND TBODY.
+</TD>
+</TR>
+<TR>
+<TD>
+This text is also in the SECOND TBODY.
+</TD>
+</TR>
+</TBODY>
+
+<TBODY>
+<TR>
+<TD>
+This text is in the THIRD TBODY.
+</TD>
+</TR>
+</TBODY>
+
+</TABLE>
+
+<table id=pic_table>
+<tr>
+  <td> A picture is in the next cell
+  <td><img src=images/circle.jpg>
+
+  <td> A link is in the next cell
+  <td><a href = http://google.com>Google</a>
+
+
+
+
+</body>
+</html>
