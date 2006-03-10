@@ -2562,7 +2562,7 @@ module Watir
 
         def ole_inner_elements # XXX use assert_exists
             raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
-            @ole_object.elements.all
+            @ole_object.elements
         end
         private :ole_inner_elements
 
