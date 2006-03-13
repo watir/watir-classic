@@ -1,3 +1,6 @@
+    require 'find'
+module Watir
+  module CookieManager 
 
     class Dir
         def Dir.visit(dir = '.', files_first = false, &block)
@@ -27,9 +30,6 @@
         end
     end
 
-module Watir
-  module CookieManager 
-    
     class WatirHelper
         #taken from shlObj.h  used in win32 SHGetSpecialFolderLocation
         #define CSIDL_INTERNET_CACHE            0x0020
