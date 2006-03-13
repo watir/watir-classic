@@ -12,9 +12,9 @@
 ;General
 
   ;Name and file
-  Name "Watir 1.4.1"
+  Name "Watir 1.5.0"
   OutFile "watir_installer.exe"
-  !define MUI_PRODUCT "Watir 1.4.1"
+  !define MUI_PRODUCT "Watir 1.5.0"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\Watir"
