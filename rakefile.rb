@@ -5,8 +5,6 @@ require 'rake/rdoctask'
 
 $VERBOSE = nil
 
-# Standard Rails tasks
-
 desc 'Generate Watir API Documentation'
 Rake::RDocTask.new('rdoc') do |rdoc| 
   rdoc.title = 'Watir API Reference'
@@ -20,11 +18,18 @@ Rake::RDocTask.new('rdoc') do |rdoc|
   rdoc.rdoc_files.exclude('watir/testUnitAddons.rb')
 end
 
-# Additional tasks (not standard Rails)
 CLEAN << 'pkg' << 'html'
 
 desc 'Run all tests'
 task :default => :package
+
+desc 'Build the one-click installer'
+file 'installer/watir_installer.exe' do
+  Dir.chdir 'installer'
+  system('c:\program files\nsis\makensis watir_installer.nsi')
+end
+task :one_click => ['installer/watir_installer.exe']
+
 
 begin
   require 'rubygems'
