@@ -1087,7 +1087,7 @@ module Watir
                     end
                 rescue
                     #handling text nodes
-                    htmlString +=  xml_escape(element.to_s)
+                    htmlString +=  xml_escape(element.toString)
                     return htmlString
                 end
                 #puts tagName
