@@ -9,7 +9,6 @@ class TC_Defaults < Test::Unit::TestCase
 
     def test_using_default
         @ie1 = IE.new
-        assert_equal(:slow, @ie1.speed)
         @ie1.speed = :fast
         assert_equal(:fast, @ie1.speed)
         @ie1.speed = :slow
