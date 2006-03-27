@@ -14,7 +14,7 @@ class TC_ModalDialog < Test::Unit::TestCase
   
   def test_modal_use_case
     $ie.button(:value, 'Launch Dialog').click_no_wait
-    modal = IE.attach_modal('Modal Dialog -- Web Page Dialog')
+    modal = $ie.attach_modal('Modal Dialog')
 
     assert(modal.text.include?('Enter some text:'))
     modal.text_field(:name, 'modal_text').set('hello')
@@ -22,17 +22,4 @@ class TC_ModalDialog < Test::Unit::TestCase
     assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
-end
-
-class ModalPage < Watir::IE
-  def initialize(document)
-    @document = document
-    set_fast_speed
-    @ie = $ie.ie
-    @url_list = []
-    @error_checkers = []
-  end  
-  def document
-    return @document
-  end
 end

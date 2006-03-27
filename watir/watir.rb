@@ -1291,10 +1291,10 @@ module Watir
         @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
         @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
 
-        def self.attach_modal(title)
+        def attach_modal(title)
             hwnd_modal = 0
             Watir::until_with_timeout(10) do
-                hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, title)
+                hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
                 hwnd_modal > 0
             end
 
@@ -1306,7 +1306,7 @@ module Watir
             raise "Unable to attach to Modal Window #{title}" unless intUnknown > 0
 
             htmlDoc = WIN32OLE.connect_unknown(intUnknown)
-            ModalPage.new(htmlDoc)
+            ModalPage.new(htmlDoc, self)
         end
 
         # deprecated: use logger= instead
@@ -1745,6 +1745,8 @@ module Watir
         # Create the Rexml object if it is nil. This method is private so can be called only
         # from rexml_document_object method.
         def create_rexml_document_object
+            # Use our modified rexml libraries
+            $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir')
             require 'rexml/document'
             if @rexmlDomobject == nil
                 #puts 'Here creating rexmlDomobject'
@@ -2041,6 +2043,19 @@ module Watir
 
     end # class IE
 
+    class ModalPage < IE
+        def initialize(document, parent)
+            @ie = parent.ie
+            # Bug should be transferred from parent
+            @document = document
+            set_fast_speed
+            @url_list = []
+            @error_checkers = []
+        end  
+        def document
+            return @document
+        end
+    end
     #
     # MOVETO: watir/popup.rb
     # Module Watir::Popup
