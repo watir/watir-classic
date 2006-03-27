@@ -1054,6 +1054,18 @@ module Watir
         include Container
 
         @@extra = nil
+        @@persist_ole_connection = nil
+        
+        def self.quit
+            @@extra.quit if @@extra
+        end
+
+        # Normally, if you often close and open IE windows for each test
+        # then you can run into OLE errors. Setting this to TRUE will 
+        # workaround this problem.        
+        def self.persist_ole_connect=(boolean)
+            @@persist_ole_connection = boolean
+        end
 
         # Maximum number of seconds to wait when attaching to a window
         @@attach_timeout = 0.2
@@ -1221,9 +1233,11 @@ module Watir
         end
 
         def create_browser_window
-            unless @@extra
-                @@extra = WIN32OLE.new('InternetExplorer.Application')
-                @@extra.visible = false
+            if @@persist_ole_connection
+                unless @@extra 
+                    @@extra = WIN32OLE.new('InternetExplorer.Application')
+                    @@extra.visible = false
+                end
             end
             @ie = WIN32OLE.new('InternetExplorer.Application')
         end
