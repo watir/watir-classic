@@ -56,7 +56,7 @@ end
 class TC_Frames2 < Test::Unit::TestCase
     include Watir
     
-    def setup()
+    def setup
         $ie.goto($htmlRoot + "frame_multi.html")
     end
 
@@ -66,6 +66,7 @@ class TC_Frames2 < Test::Unit::TestCase
     
     def test_frame_by_id
         assert_raises(UnknownFrameException) { $ie.frame(:id , "missingFrame").button(:id, "b2").enabled?  }  
+        assert($ie.frame(:id, 'first_frame').button(:id, "b2").enabled?)
     end
 end
 
