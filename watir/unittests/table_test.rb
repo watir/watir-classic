@@ -17,32 +17,35 @@ class TC_Tables < Test::Unit::TestCase
         
         assert($ie.table(:id, 't1').exists?)
         assert($ie.table(:id, /t/).exists?)
-        assert_false($ie.table(:id , /missing_table/).exists?)
+        assert_false($ie.table(:id, /missing_table/).exists?)
         
         assert($ie.table(:index, 1).exists?)
         assert($ie.table(:index, 2).exists?)
     end
     
     def test_rows
-        assert_raises( UnknownObjectException ){ $ie.table(:id , 'missingTable').row_count }
-        assert_raises( UnknownObjectException ){ $ie.table(:index , 66).row_count }
+        assert_raises(UnknownObjectException ){ $ie.table(:id, 'missingTable').row_count }
+        assert_raises(UnknownObjectException ){ $ie.table(:index, 66).row_count }
         assert_raises(MissingWayOfFindingObjectException){ $ie.table(:bad_attribute, 99).row_count }
         
-        assert_equal( 2 , $ie.table(:index , 1).row_count)
-        assert_equal( 5 , $ie.table(:id, 't1').row_count)   # 4 rows and a header 
-        assert_equal( 5 , $ie.table(:index, 2).row_count)   # same table as above, just accessed by index 
+        assert_equal(2, $ie.table(:index, 1).row_count)
+        assert_equal(2, $ie.table(:index, 1).rows.length)
+        
+        assert_equal(5, $ie.table(:id, 't1').row_count)  # 4 rows and a header 
+        assert_equal(5, $ie.table(:index, 2).row_count)  # same table as above, just accessed by index 
+        assert_equal(5, $ie.table(:id, 't1').rows.length)   
         
         # test the each iterator on rows - ie, go through each cell
         row = $ie.table(:index, 2)[2]
-        count=1
+        count = 1
         row.each do |cell|
             #  cell.flash   # this line commented out to speed up the test
             if count == 1
-                assert_equal('Row 1 Col1' , cell.to_s.strip )
+                assert_equal('Row 1 Col1', cell.to_s.strip)
             elsif count==2
-                assert_equal('Row 1 Col2' , cell.to_s.strip )
+                assert_equal('Row 1 Col2', cell.to_s.strip)
             end
-            count+=1
+            count += 1
         end
         assert_equal(2, count -1)
         assert_equal(2, $ie.table(:index, 2)[2].column_count)        
@@ -50,17 +53,17 @@ class TC_Tables < Test::Unit::TestCase
     
     def test_dynamic_tables
         t = $ie.table(:id, 't1')
-        assert_equal( 5, t.row_count)
+        assert_equal(5, t.row_count)
         
-        $ie.button(:value , 'add row').click
-        assert_equal( 6, t.row_count)
+        $ie.button(:value, 'add row').click
+        assert_equal(6, t.row_count)
     end
     
     def test_columns
-        assert_raises( UnknownObjectException  ){ $ie.table(:id , 'missingTable').column_count }
-        assert_raises( UnknownObjectException  ){ $ie.table(:index , 77).column_count }
-        assert_equal( 2 , $ie.table(:index , 1).column_count)
-        assert_equal( 1 , $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
+        assert_raises(UnknownObjectException  ){ $ie.table(:id, 'missingTable').column_count }
+        assert_raises(UnknownObjectException  ){ $ie.table(:index, 77).column_count }
+        assert_equal(2, $ie.table(:index, 1).column_count)
+        assert_equal(1, $ie.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
     end
     
     def test_to_a
@@ -94,19 +97,42 @@ class TC_Tables < Test::Unit::TestCase
     end
     
     def test_row_iterator
-        t = $ie.table(:index,1)
-        count =1
+        t = $ie.table(:index, 1)
+        count = 1 
         t.each do |row|
-            if count==1
-                assert( "Row 1 Col1" , row[1].text )
-                assert( "Row 1 Col2" , row[2].text )
-            elsif count==2
-                assert( "Row 2 Col1" , row[1].text )
-                assert( "Row 2 Col2" , row[2].text )
+            if count == 1
+                assert("Row 1 Col1", row[1].text)
+                assert("Row 1 Col2", row[2].text)
+            elsif count == 2
+                assert("Row 2 Col1", row[1].text)
+                assert("Row 2 Col2", row[2].text)
             end
+            count += 1
         end
     end
     
+    def test_row_collection
+        t = $ie.table(:index,1)
+        count = 1
+        t.rows.each do |row|
+            if count == 1
+                assert("Row 1 Col1", row[1].text)
+                assert("Row 1 Col2", row[2].text)
+            elsif count == 2
+                assert("Row 2 Col1", row[1].text)
+                assert("Row 2 Col2", row[2].text)
+            end
+            count += 1
+        end
+    end 
+    
+    def test_cell_collection
+        t = $ie.table(:index,1)
+        count = 1
+        contents = t.cells.collect {|c| c.text}
+        assert_equal(["Row 1 Col1","Row 1 Col2","Row 2 Col1","Row 2 Col2"], contents)
+    end    
+          
     def test_table_body
         assert_equal( 1, $ie.table(:index,1).bodies.length )
         assert_equal( 3, $ie.table(:id, 'body_test' ).bodies.length )

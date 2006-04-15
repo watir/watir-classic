@@ -382,6 +382,9 @@ module Watir
         #
         # returns a TableCell Object
         def_creator :cell, :TableCell
+        def cells
+            return TableCells.new(self)
+        end
 
         # this method accesses a table row.
         # how - symbol - how we access the row, valid values are
@@ -390,6 +393,9 @@ module Watir
         #
         # returns a TableRow object
         def_creator :row, :TableRow
+        def rows
+            return TableRows.new(self)
+        end
 
         # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
         #  *  how   - symbol - how we access the button
@@ -2196,8 +2202,8 @@ module Watir
             end
         end
 
-        # this method returns the innerText of the object
-        # raises an ObjectNotFound exception if the object cannot be found
+        # Return the innerText of the object
+        # Raise an ObjectNotFound exception if the object cannot be found
         def text
             assert_exists
             return ole_object.innerText.strip
@@ -3861,9 +3867,8 @@ module Watir
         end
     end
 
-
     # this class accesses the file fields in the document as a collection
-    # it would normally only be accessed by the Watir::Container#file_fields method
+    # normal access is via the Container#file_fields method
     class FileFields < ElementCollections
         def element_class; FileField; end
         def length
@@ -3877,7 +3882,6 @@ module Watir
             @show_attributes.add("value", 20)
         end
     end
-
 
     # this class accesses the check boxes in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
@@ -3979,10 +3983,22 @@ module Watir
             @show_attributes.delete("name")
         end
     end
-
+    # this class accesses the table rows in the document as a collection
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#rows method
+    class TableRows < ElementCollections
+        include CommonCollection
+        def element_class; TableRow; end
+        def element_tag; 'TR'; end
+    end
+    # this class accesses the table cells in the document as a collection
+    # Normally a user would not need to create this object as it is returned by the Watir::Container#cells method
+    class TableCells < ElementCollections
+        include CommonCollection
+        def element_class; TableCell; end
+        def element_tag; 'TD'; end
+    end
     # this class accesses the labels in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#labels method
-    #
     class Labels < ElementCollections
         include CommonCollection
         def element_class; Label; end
@@ -3997,21 +4013,20 @@ module Watir
 
     # this class accesses the pre tags in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#pres method
-  class Pres < ElementCollections
-    include CommonCollection
-    def element_class; Pre; end
-
-        private
-    def set_show_items
-      super
-      @show_attributes.delete("name")
-      @show_attributes.add("className", 20)
+    class Pres < ElementCollections
+      include CommonCollection
+      def element_class; Pre; end
+      
+      private
+      def set_show_items
+        super
+        @show_attributes.delete("name")
+        @show_attributes.add("className", 20)
+      end
     end
-  end
 
     # this class accesses the p tags in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
-    #
     class Ps < ElementCollections
         include CommonCollection
         def element_class; P; end
@@ -4024,7 +4039,6 @@ module Watir
         end
 
     end
-
     # this class accesses the spans in the document as a collection
     # Normally a user would not need to create this object as it is returned by the Watir::Container#spans method
     class Spans < ElementCollections
@@ -4052,6 +4066,7 @@ module Watir
             @show_attributes.add("className", 20)
         end
     end
+
 
     @@autoit = nil
 
