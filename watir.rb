@@ -2061,6 +2061,8 @@ module Watir
         def document
             return @document
         end
+        def wait
+        end
     end
     #
     # MOVETO: watir/popup.rb
@@ -3760,7 +3762,7 @@ module Watir
             assert_enabled
             highlight(:set)
 
-            if set_or_clear == true
+            if set_or_clear
                 if @o.checked == false
                     set_clear_item(true)
                 end
