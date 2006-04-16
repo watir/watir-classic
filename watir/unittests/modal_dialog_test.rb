@@ -21,4 +21,15 @@ class TC_ModalDialog < Test::Unit::TestCase
     assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
+  def test_wait_should_not_block
+    $ie.button(:value, 'Launch Dialog').click_no_wait
+    modal = $ie.attach_modal('Modal Dialog')
+
+    modal.text_field(:name, 'modal_text').set('hello')
+    modal.wait
+
+    modal.button(:value, 'Close').click
+  end
+
+
 end
