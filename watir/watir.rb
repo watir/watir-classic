@@ -1752,8 +1752,10 @@ module Watir
         # from rexml_document_object method.
         def create_rexml_document_object
             # Use our modified rexml libraries
-            $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir')
             require 'rexml/document'
+            unless REXML::Version >= '3.1.4'
+              raise "Requires REXML version of at least 3.1.4. Actual: #{REXML::Version}"
+            end
             if @rexmlDomobject == nil
                 #puts 'Here creating rexmlDomobject'
                 htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
