@@ -1169,7 +1169,7 @@ module Watir
                 set_slow_speed
             end
 
-            @logger = DefaultLogger.new()
+            @logger = DefaultLogger.new
 
             @url_list = []
 
@@ -1347,7 +1347,7 @@ module Watir
         #  * url - string - the URL to navigate to
         def goto(url)
             @ie.navigate(url)
-            wait()
+            wait
             sleep 0.2
             return @down_load_time
         end
@@ -1355,14 +1355,14 @@ module Watir
         # Go to the previous page - the same as clicking the browsers back button
         # an WIN32OLERuntimeError exception is raised if the browser cant go back
         def back
-            @ie.GoBack()
+            @ie.GoBack
             wait
         end
 
         # Go to the next page - the same as clicking the browsers forward button
         # an WIN32OLERuntimeError exception is raised if the browser cant go forward
         def forward
-            @ie.GoForward()
+            @ie.GoForward
             wait
         end
 
@@ -1743,7 +1743,7 @@ module Watir
         def rexml_document_object
             #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
             if @rexmlDomobject == nil
-                create_rexml_document_object()
+                create_rexml_document_object
             end
             return @rexmlDomobject
         end
@@ -1767,7 +1767,7 @@ module Watir
                     #puts e.to_s
                     error = File.open("error.xml","w")
                     error.print(htmlSource)
-                    error.close()
+                    error.close
                     #puts htmlSource
                     #gets
                 end
@@ -1943,7 +1943,7 @@ module Watir
 
         # execute xpath and return an array of elements
         def elements_by_xpath(xpath)
-            doc = rexml_document_object()
+            doc = rexml_document_object
             modifiedXpath = ""
             selectedElements = Array.new
             doc.elements.each(xpath) do |element|
@@ -1965,7 +1965,7 @@ module Watir
             curElem = nil
 
             #puts "Hello; Given xpath is : #{xpath}"
-            doc = document()
+            doc = document
             curElem = doc.getElementsByTagName("body")["0"]
             xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
             xpath = $1
@@ -2324,7 +2324,7 @@ module Watir
 
             highlight(:set)
             ole_object.fireEvent(event)
-            @container.wait()
+            @container.wait
             highlight(:clear)
         end
 
@@ -2334,7 +2334,7 @@ module Watir
         def focus
             assert_exists
             assert_enabled
-            ole_object.focus()
+            ole_object.focus
         end
 
         # Returns whether this element actually exists.
@@ -2442,7 +2442,7 @@ module Watir
         #   * container - an instance of an IE object
         def initialize(container)
             @container = container
-            @length = length() # defined by subclasses
+            @length = length # defined by subclasses
 
             # set up the items we want to display when the show method is used
             set_show_items
@@ -3520,7 +3520,7 @@ module Watir
             raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
 
             @o.focus
-            @o.select()
+            @o.select
             value = self.value
 
             @o.fireEvent("onSelect")
@@ -3548,12 +3548,12 @@ module Watir
 
             @o.scrollIntoView
             @o.focus
-            @o.select()
+            @o.select
             @o.fireEvent("onSelect")
             @o.value = ""
             @o.fireEvent("onKeyPress")
             @o.fireEvent("onChange")
-            @container.wait()
+            @container.wait
             highlight(:clear)
         end
 
@@ -3587,7 +3587,7 @@ module Watir
             highlight(:set)
             @o.scrollIntoView
             @o.focus
-            @o.select()
+            @o.select
             @o.fireEvent("onSelect")
             @o.value = ""
             @o.fireEvent("onKeyPress")
