@@ -42,6 +42,12 @@ class TC_Links_XPath < Test::Unit::TestCase
     def test_Link_click
         $ie.link(:xpath , "//a[contains(.,'test1')]/").click
         assert( $ie.text.include?("Links2-Pass") )
-    end 
+    end
+    
+    def test_link_with_text_call
+        $ie.link(:xpath , "//a[text()='test1']").click
+        assert( $ie.text.include?("Links2-Pass") )
+    end
+     
 end
 
