@@ -1907,13 +1907,13 @@ module Watir
                 end
                 #tagLine += spaceString
                 outerHtml = all_tag_attributes(element.outerHtml) if tagName != @empty_tag_name
-                tagLine += "\n<#{tagName} #{outerHtml}"
+                tagLine += "<#{tagName} #{outerHtml}"
 
                 canHaveChildren = element.canHaveChildren
                 if canHaveChildren
-                    tagLine += "> \n"
+                    tagLine += ">"
                 else
-                    tagLine += "/> \n" #self closing tag
+                    tagLine += "/>" #self closing tag
                 end
                 #spaceString += spaceString
                 htmlString += tagLine
@@ -1923,7 +1923,7 @@ module Watir
                 end
                 if canHaveChildren
                 #tagLine += spaceString
-                    tagLine ="\n</" + tagName + ">\n"
+                    tagLine ="</" + tagName + ">"
                     htmlString += tagLine
                 end
                 return htmlString
