@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'UnitTests/setup'
 
-class TC_Forms2 < Test::Unit::TestCase
+class TC_Forms2_XPath < Test::Unit::TestCase
   def setup()
     $ie.goto($htmlRoot + "forms2.html")
   end
