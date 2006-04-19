@@ -3,9 +3,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
-require 'ftools'
-require 'webrick'
-require 'watir/cookiemanager'
 
 class TC_TableCell_XPath < Test::Unit::TestCase
   include Watir
