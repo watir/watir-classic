@@ -1,7 +1,7 @@
 In general, Pickaxe is our style manual. Make your code look like theirs. 
 The following is mostly elaboration; exceptions are marked as house style.
 
-We use four spaces for each indentation level. (house style)
+We use two spaces for each indentation level.
 
 Returns are allowed (but not required) on the last line of a method. (house style)
 

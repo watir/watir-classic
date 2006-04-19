@@ -14,19 +14,19 @@ require 'unittests/checkbox_test'
 require 'test/unit/testsuite'
 require 'thread'
 class ConcurrentTestSuite < Test::Unit::TestSuite
-
-      # Runs the tests and/or suites contained in this TestSuite.
-      def run(result, &progress_block)
-        yield(STARTED, name)
-        threads = []
-        @tests.each do |test|
-          threads << Thread.new do
-            test.run(result, &progress_block)
-          end
-        end
-        threads.each {|t| t.join}
-        yield(FINISHED, name)
+  
+  # Runs the tests and/or suites contained in this TestSuite.
+  def run(result, &progress_block)
+    yield(STARTED, name)
+    threads = []
+    @tests.each do |test|
+      threads << Thread.new do
+        test.run(result, &progress_block)
       end
+    end
+    threads.each {|t| t.join}
+    yield(FINISHED, name)
+  end
 end
 
 # create a suite
@@ -36,19 +36,19 @@ require 'test/unit/collector'
 include Test::Unit::Collector
 
 
-          @filters = []
-          suite = ConcurrentTestSuite.new('super suite')
-          sub_suites = []
-          ::ObjectSpace.each_object(Class) do |klass|
-            if(Test::Unit::TestCase > klass)
-              puts sub_suites, klass.suite
-              add_suite(sub_suites, klass.suite)
-            end
-          end
-          sort(sub_suites).each{|s| suite << s}
+@filters = []
+suite = ConcurrentTestSuite.new('super suite')
+sub_suites = []
+::ObjectSpace.each_object(Class) do |klass|
+  if(Test::Unit::TestCase > klass)
+    puts sub_suites, klass.suite
+    add_suite(sub_suites, klass.suite)
+  end
+end
+sort(sub_suites).each{|s| suite << s}
 
 
-        
+
 # select a runner
 require 'test/unit/ui/console/testrunner'
 Test::Unit::UI::Console::TestRunner.run(suite)
