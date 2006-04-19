@@ -3,17 +3,18 @@
 This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
 To Install:
-   Execute install.rb. 
+   Best way to install is to use the gem.
+   From your command line: "gem install watir"
+   This will download and install watir.
 
 How To Use:
    This only works on Windows.
    Best is to use Ruby 1.8.2-14 or later.
-   This has been developed and tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
+   This has also been tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
    It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
    Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
-   Install the watir files, unit tests and sample html pages. 
 
 Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
