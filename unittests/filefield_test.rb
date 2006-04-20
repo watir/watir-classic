@@ -7,12 +7,12 @@ require 'unittests/setup'
 class TC_FileField < Test::Unit::TestCase
   include Watir
   
-  def gotoPage
+  def goto_page
     $ie.goto($htmlRoot + "fileupload.html")
   end
   
   def test_fileField_Exists
-    gotoPage
+    goto_page
     #test for existance of 4 file area
     assert($ie.fileField(:name,"file1").exists?)
     assert($ie.fileField(:id,"file2").exists?)
@@ -28,7 +28,7 @@ class TC_FileField < Test::Unit::TestCase
   end
   
   def test_iterator
-    gotoPage
+    goto_page
     assert_equal(6, $ie.file_fields.length)
   end
   
