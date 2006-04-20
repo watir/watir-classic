@@ -19,15 +19,15 @@ class TC_Images_XPath < Test::Unit::TestCase
   end
   
   def test_imageExists
-    assert_false( $ie.image(:xpath , "//img[@name='missing_name']/").exists?  )
+    assert(! $ie.image(:xpath , "//img[@name='missing_name']/").exists?  )
     assert(       $ie.image(:xpath , "//img[@name='circle']/").exists?  )
     # assert(       $ie.image(:name , /circ/ ).exists?  )
     
-    assert_false( $ie.image(:xpath , "//img[@id='missing_id']/").exists?  )
+    assert(! $ie.image(:xpath , "//img[@id='missing_id']/").exists?  )
     assert(       $ie.image(:xpath , "//img[@id='square']/").exists?  )
     # assert(       $ie.image(:id , /squ/ ).exists?  )
     
-    assert_false( $ie.image(:xpath , "//img[@src='missingsrc.gif']/").exists?  )
+    assert(! $ie.image(:xpath , "//img[@src='missingsrc.gif']/").exists?  )
     
     # BP -- This fails for me but not for Paul. It doesn't make sense to me that it should pass.  
     # assert(       $ie.image(:src , "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
@@ -36,8 +36,8 @@ class TC_Images_XPath < Test::Unit::TestCase
     assert(       $ie.image(:alt , "circle" ).exists?  )
     # assert(       $ie.image(:alt , /cir/ ).exists?  )
     
-    assert_false(  $ie.image(:alt , "triangle" ).exists?  )
-    # assert_false(  $ie.image(:alt , /tri/ ).exists?  )
+    assert(!  $ie.image(:alt , "triangle" ).exists?  )
+    # assert(!  $ie.image(:alt , /tri/ ).exists?  )
   end
   
   def test_image_click
@@ -52,7 +52,7 @@ class TC_Images_XPath < Test::Unit::TestCase
     assert_equal('clicked' , $ie.text_field(:name , "text1" ).value )
     
     # test for disabled button
-    # assert_false( $ie.image(:name , 'disabler_test').disabled )
+    # assert(! $ie.image(:name , 'disabler_test').disabled )
     # $ie.button(:name , 'disable_img').click
     
     # assert( $ie.image(:name , 'disabler_test').disabled )
@@ -71,7 +71,7 @@ class TC_Images_XPath < Test::Unit::TestCase
     assert_raises(UnknownObjectException ) { $ie.image(:xpath , "//img[@src='no_image_with_this']/").hasLoaded? }
     assert_raises(UnknownObjectException ) { $ie.image(:xpath , "//img[@alt='no_image_with_this']/").hasLoaded? }
     
-    assert_false( $ie.image(:xpath , "//img[@name='themissingimage']/").hasLoaded?  )
+    assert(! $ie.image(:xpath , "//img[@name='themissingimage']/").hasLoaded?  )
     assert( $ie.image(:xpath , "//img[@name='circle']/").hasLoaded?  )
     
     assert( $ie.image(:xpath , "//img[@alt='circle']/").hasLoaded?  )

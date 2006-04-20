@@ -15,14 +15,14 @@ class TC_Frames < Test::Unit::TestCase
     assert_raises(UnknownFrameException) { $ie.frame("missingFrame").button(:id, "b2").enabled?  }  
     assert_raises(UnknownObjectException) { $ie.frame("buttonFrame2").button(:id, "b2").enabled?  }  
     assert($ie.frame("buttonFrame").button(:id, "b2").enabled?)   
-    assert_false($ie.frame("buttonFrame").button(:caption, "Disabled Button").enabled?)
+    assert(!$ie.frame("buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
   
   def test_frame_using_name
     assert_raises(UnknownFrameException) { $ie.frame(:name , "missingFrame").button(:id, "b2").enabled?  }  
     assert_raises(UnknownObjectException) { $ie.frame(:name, "buttonFrame2").button(:id, "b2").enabled?  }  
     assert($ie.frame(:name, "buttonFrame").button(:id, "b2").enabled?)   
-    assert_false($ie.frame(:name , "buttonFrame").button(:caption, "Disabled Button").enabled?)
+    assert(!$ie.frame(:name , "buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
   
   def test_frame_using_name_and_regexp
@@ -34,7 +34,7 @@ class TC_Frames < Test::Unit::TestCase
     assert_raises(UnknownFrameException) { $ie.frame(:index, 8).button(:id, "b2").enabled?  }  
     assert_raises(UnknownObjectException) { $ie.frame(:index, 2).button(:id, "b2").enabled?  }  
     assert($ie.frame(:index, 1 ).button(:id, "b2").enabled?)   
-    assert_false($ie.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
+    assert(!$ie.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
   end
   
   def test_frame_with_invalid_attribute

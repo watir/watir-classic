@@ -15,8 +15,8 @@ class TC_Radios < Test::Unit::TestCase
     assert($ie.radio(:name, "box1").exists?)   
     assert($ie.radio(:id, "box5").exists?)   
     
-    assert_false($ie.radio(:name, "missingname").exists?)   
-    assert_false($ie.radio(:id, "missingid").exists?)   
+    assert(!$ie.radio(:name, "missingname").exists?)   
+    assert(!$ie.radio(:id, "missingid").exists?)   
   end
   
   def test_radio_class
@@ -33,19 +33,19 @@ class TC_Radios < Test::Unit::TestCase
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:id, "noName").enabled?  }  
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "box4" , 6).enabled?  }  
     
-    assert_false($ie.radio(:name, "box2").enabled?)   
+    assert(!$ie.radio(:name, "box2").enabled?)   
     assert($ie.radio(:id, "box5").enabled?)   
     assert($ie.radio(:name, "box1").enabled?)   
   end
   
   def test_little
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
   end
   
   def test_onClick
     
-    assert_false($ie.radio(:name, "box5").isSet?)
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.radio(:name, "box5").isSet?)
+    assert(!$ie.button(:value , "foo").enabled?)
     
     # first click the button is enabled and the radio is set
     $ie.radio(:name, "box5" , 1).set
@@ -55,7 +55,7 @@ class TC_Radios < Test::Unit::TestCase
     # second click the button is disabled and the radio is still set
     $ie.radio(:name, "box5", 1).set
     assert($ie.radio(:name, "box5",1).isSet?)
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
     
     # third click the button is enabled and the radio is still set
     $ie.radio(:name, "box5", 1).set
@@ -64,9 +64,9 @@ class TC_Radios < Test::Unit::TestCase
     
     # click the radio with a value of 2 , button is disabled and the radio is still set
     $ie.radio(:name, "box5", 2).set
-    assert_false($ie.radio(:name, "box5" ,1).isSet?)
+    assert(!$ie.radio(:name, "box5" ,1).isSet?)
     assert($ie.radio(:name, "box5" ,2).isSet?)
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
     
     
     
@@ -76,27 +76,27 @@ class TC_Radios < Test::Unit::TestCase
   def test_Radio_isSet
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").isSet?  }  
     
-    assert_false($ie.radio(:name, "box1").isSet?)   
+    assert(!$ie.radio(:name, "box1").isSet?)   
     assert( $ie.radio(:name, "box3").isSet?)   
-    assert_false($ie.radio(:name, "box2").isSet?)   
+    assert(!$ie.radio(:name, "box2").isSet?)   
     assert( $ie.radio(:name, "box4" , 1 ).isSet?)   
-    assert_false($ie.radio(:name, "box4" , 2 ).isSet?)   
+    assert(!$ie.radio(:name, "box4" , 2 ).isSet?)   
   end
   
   def test_radio_clear
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").clear  }  
     
     $ie.radio(:name, "box1").clear
-    assert_false($ie.radio(:name, "box1").isSet?)   
+    assert(!$ie.radio(:name, "box1").isSet?)   
     
     assert_raises(ObjectDisabledException, "ObjectDisabledException was supposed to be thrown" ) {   $ie.radio(:name, "box2").clear  } 
-    assert_false($ie.radio(:name, "box2").isSet?)   
+    assert(!$ie.radio(:name, "box2").isSet?)   
     
     $ie.radio(:name, "box3").clear
-    assert_false($ie.radio(:name, "box3").isSet?)   
+    assert(!$ie.radio(:name, "box3").isSet?)   
     
     $ie.radio(:name, "box4" , 1).clear
-    assert_false($ie.radio(:name, "box4" , 1).isSet?)   
+    assert(!$ie.radio(:name, "box4" , 1).isSet?)   
   end
   
   def test_radio_getState

@@ -26,15 +26,15 @@ class TC_Links < Test::Unit::TestCase
   end
   
   def xtest_missing_links_dont_exist
-    assert_false(exists?{$ie.link(:text, "missing")})   
-    assert_false(exists?{$ie.link(:text, /miss/)})   
+    assert(!exists?{$ie.link(:text, "missing")})   
+    assert(!exists?{$ie.link(:text, /miss/)})   
   end
   
   def test_link_Exists
     assert($ie.link(:text, "test1").exists?)   
     assert($ie.link(:text, /TEST/i).exists?)   
-    assert_false($ie.link(:text, "missing").exists?)   
-    assert_false($ie.link(:text, /miss/).exists?)   
+    assert(!$ie.link(:text, "missing").exists?)   
+    assert(!$ie.link(:text, /miss/).exists?)   
     
     # this assert we have to build up the path
     #  this is what it looks like if you do a to_s on the link  file:///C:/watir_bonus/unitTests/html/links1.HTML
@@ -42,27 +42,27 @@ class TC_Links < Test::Unit::TestCase
     # assert($ie.link(:url,'file:///C:/watir_bonus/unitTests/html/links1.HTML' ).exists?)   
     
     assert($ie.link(:url, /link_pass.html/).exists?)   
-    assert_false($ie.link(:url, "alsomissing.html").exists?)   
+    assert(!$ie.link(:url, "alsomissing.html").exists?)   
     
     assert($ie.link(:id, "link_id").exists?)   
-    assert_false($ie.link(:id, "alsomissing").exists?)   
+    assert(!$ie.link(:id, "alsomissing").exists?)   
     
     assert($ie.link(:id, /_id/).exists?)   
-    assert_false($ie.link(:id, /alsomissing/).exists?)   
+    assert(!$ie.link(:id, /alsomissing/).exists?)   
     
     assert($ie.link(:name, "link_name").exists?)   
-    assert_false($ie.link(:name, "alsomissing").exists?)   
+    assert(!$ie.link(:name, "alsomissing").exists?)   
     
     assert($ie.link(:name, /_n/).exists?)   
-    assert_false($ie.link(:name, /missing/).exists?)   
+    assert(!$ie.link(:name, /missing/).exists?)   
     
     assert($ie.link(:title, /ti/).exists?)   
     assert($ie.link(:title, "link_title").exists?)   
     
-    assert_false($ie.link(:title, /missing/).exists?)   
+    assert(!$ie.link(:title, /missing/).exists?)   
     
     assert($ie.link(:url, /_pass/).exists?)   
-    assert_false($ie.link(:url, /dont_exist/).exists?)   
+    assert(!$ie.link(:url, /dont_exist/).exists?)   
   end
   
   def test_link_click
@@ -139,13 +139,13 @@ class TC_Frame_Links < Test::Unit::TestCase
     assert(exists?{$ie.frame("buttonFrame").link(:text, "test1")})   
   end
   def xtest_missing_frame_links_dont_exist        
-    assert_false(exists?{$ie.frame("buttonFrame").link(:text, "missing")})
-    assert_false(exists?{ie.frame("missing").link(:text, "test1")})   
+    assert(!exists?{$ie.frame("buttonFrame").link(:text, "missing")})
+    assert(!exists?{ie.frame("missing").link(:text, "test1")})   
   end
   
   def test_links_in_frames
     assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
-    assert_false($ie.frame("buttonFrame").link(:text, "missing").exists?)   
+    assert(!$ie.frame("buttonFrame").link(:text, "missing").exists?)   
     
     assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { $ie.frame("buttonFrame").link(:index, 199).href }  
     assert_match(/links2/, $ie.frame("buttonFrame").link(:index, 1).href)

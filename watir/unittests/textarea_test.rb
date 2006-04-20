@@ -24,8 +24,8 @@ class TC_TextArea < Test::Unit::TestCase
     assert($ie.text_field(:id,"txtMultiLine3").exists?)
     assert($ie.text_field(:id,"txtReadOnly").exists?)
     #test for missing 
-    assert_false($ie.text_field(:name, "missing").exists?)   
-    assert_false($ie.text_field(:name,"txtMultiLine4").exists?)
+    assert(!$ie.text_field(:name, "missing").exists?)   
+    assert(!$ie.text_field(:name,"txtMultiLine4").exists?)
   end
   
   def test_textarea_to_s
@@ -37,11 +37,11 @@ class TC_TextArea < Test::Unit::TestCase
     gotoPage
     
     # test for read only method
-    assert_false($ie.text_field(:name, "txtMultiLine1").readonly? )  
+    assert(!$ie.text_field(:name, "txtMultiLine1").readonly? )  
     assert($ie.text_field(:name,"txtReadOnly").readonly?)
     
     # test for enabled? method
-    assert_false($ie.text_field(:name, "txtDisabled").enabled? )  
+    assert(!$ie.text_field(:name, "txtDisabled").enabled? )  
     assert($ie.text_field(:id, "txtMultiLine1").enabled? )  
     
     

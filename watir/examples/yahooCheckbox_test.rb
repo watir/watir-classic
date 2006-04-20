@@ -126,7 +126,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Edit link'
 
    $ie.checkbox(:name, "tab[]", "maps").clear
-   assert_false($ie.checkbox(:name, "tab[]", "maps").checked?) 
+   assert(!$ie.checkbox(:name, "tab[]", "maps").checked?) 
 
    puts '  '
    puts '## End of test: Yahoo Uncheck Maps Edit'
@@ -145,7 +145,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: clicked the Save button.'
    
    puts 'Step 2: Check that the "Maps" link does not appear on the Yahoo Search page by using an assertion'
-   assert_false($ie.text.include?("Maps") )
+   assert(!$ie.text.include?("Maps") )
    
    puts '  '
    puts '## End of test: Verify Edit Actions saved'

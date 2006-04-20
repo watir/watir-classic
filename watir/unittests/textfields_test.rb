@@ -13,10 +13,10 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_text_field_exists
     assert($ie.text_field(:name, "text1").exists?)   
-    assert_false($ie.text_field(:name, "missing").exists?)   
+    assert(!$ie.text_field(:name, "missing").exists?)   
     
     assert($ie.text_field(:id, "text2").exists?)   
-    assert_false($ie.text_field(:id, "alsomissing").exists?)   
+    assert(!$ie.text_field(:id, "alsomissing").exists?)   
     
     assert($ie.text_field(:beforeText, "This Text After").exists? )
     assert($ie.text_field(:afterText, "This Text Before").exists? )
@@ -34,8 +34,8 @@ class TC_Fields < Test::Unit::TestCase
   def test_text_field_verify_contains
     assert($ie.text_field(:name, "text1").verify_contains("Hello World"))  
     assert($ie.text_field(:name, "text1").verify_contains(/Hello\sW/))  
-    assert_false($ie.text_field(:name, "text1").verify_contains("Ruby"))  
-    assert_false($ie.text_field(:name, "text1").verify_contains(/R/))  
+    assert(!$ie.text_field(:name, "text1").verify_contains("Ruby"))  
+    assert(!$ie.text_field(:name, "text1").verify_contains(/R/))  
     assert_raises(UnknownObjectException) { $ie.text_field(:name, "NoName").verify_contains("No field to get a value of") } 
     
     assert($ie.text_field(:id, "text2").verify_contains("goodbye all") )  
@@ -43,13 +43,13 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_text_field_enabled
-    assert_false($ie.text_field(:name, "disabled").enabled? )  
+    assert(!$ie.text_field(:name, "disabled").enabled? )  
     assert($ie.text_field(:name, "text1").enabled? )  
     assert($ie.text_field(:id, "text2").enabled? )  
   end
   
   def test_text_field_readonly
-    assert_false($ie.text_field(:name, "disabled").readonly? )  
+    assert(!$ie.text_field(:name, "disabled").readonly? )  
     assert($ie.text_field(:name, "readOnly").readonly? )  
     assert($ie.text_field(:id, "readOnly2").readonly? )  
   end
@@ -182,12 +182,12 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { $ie.label(:index,20).type } 
     assert_raises(UnknownObjectException) { $ie.label(:index,20).id } 
     
-    assert_false($ie.label(:index,10).exists?) 
-    assert_false($ie.label(:id,'missing').exists?) 
+    assert(!$ie.label(:index,10).exists?) 
+    assert(!$ie.label(:id,'missing').exists?) 
     assert($ie.label(:index,1).exists?) 
     
     assert_equal("", $ie.label(:index,1).id)
-    assert_false(    $ie.label(:index,1).disabled?) 
+    assert(!    $ie.label(:index,1).disabled?) 
     assert(          $ie.label(:index,1).enabled?)
     
     assert_equal("label2", $ie.label(:index,2).id )

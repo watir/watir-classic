@@ -38,23 +38,23 @@ class TC_CheckBox < Test::Unit::TestCase
   end
   
   def test_onClick
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
     $ie.checkBox(:name, "box5").set
     assert($ie.button(:value , "foo").enabled?)
     
     $ie.checkBox(:name, "box5").clear
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
     
     $ie.checkBox(:name, "box5").clear
-    assert_false($ie.button(:value , "foo").enabled?)
+    assert(!$ie.button(:value , "foo").enabled?)
   end
   
   def test_CheckBox_Exists
     assert($ie.checkBox(:name, "box1").exists?)   
-    assert_false($ie.checkBox(:name, "missing").exists?)   
+    assert(!$ie.checkBox(:name, "missing").exists?)   
     
     assert($ie.checkbox(:name, "box4" , 1).exists?)   
-    assert_false($ie.checkbox(:name, "box4" , 22).exists?)   
+    assert(!$ie.checkbox(:name, "box4" , 22).exists?)   
   end
   
   def test_checkbox_Enabled
@@ -63,36 +63,36 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { $ie.checkbox(:name, "box4" , 6).enabled? }  
     
     assert($ie.checkbox(:name, "box1").enabled?)   
-    assert_false($ie.checkbox(:name, "box2").enabled?)   
+    assert(!$ie.checkbox(:name, "box2").enabled?)   
     
     assert($ie.checkbox(:name, "box4", 4).enabled?)   
-    assert_false($ie.checkbox(:name, "box4" , 5 ).enabled?)   
+    assert(!$ie.checkbox(:name, "box4" , 5 ).enabled?)   
   end
   
   def test_checkbox_isSet
     assert_raises(UnknownObjectException ) { $ie.checkbox(:name, "noName").isSet? }  
     
-    assert_false($ie.checkbox(:name, "box1").isSet?)   
-    assert_false($ie.checkbox(:name, "box2").isSet?)   
+    assert(!$ie.checkbox(:name, "box1").isSet?)   
+    assert(!$ie.checkbox(:name, "box2").isSet?)   
     assert($ie.checkbox(:name, "box3").isSet?)   
     
-    assert_false($ie.checkbox(:name, "box4" , 2 ).isSet?)   
+    assert(!$ie.checkbox(:name, "box4" , 2 ).isSet?)   
     assert($ie.checkbox(:name, "box4" , 1 ).isSet?)   
   end
   
   def test_checkbox_clear
     assert_raises(UnknownObjectException) { $ie.checkbox(:name, "noName").clear }  
     $ie.checkbox(:name, "box1").clear
-    assert_false($ie.checkbox(:name, "box1").isSet?)   
+    assert(!$ie.checkbox(:name, "box1").isSet?)   
     
     assert_raises(ObjectDisabledException) { $ie.checkbox(:name, "box2").clear } 
-    assert_false($ie.checkbox(:name, "box2").isSet?)   
+    assert(!$ie.checkbox(:name, "box2").isSet?)   
     
     $ie.checkbox(:name, "box3").clear
-    assert_false($ie.checkbox(:name, "box3").isSet?)   
+    assert(!$ie.checkbox(:name, "box3").isSet?)   
     
     $ie.checkbox(:name, "box4" , 1).clear
-    assert_false($ie.checkbox(:name, "box4" , 1).isSet?)   
+    assert(!$ie.checkbox(:name, "box4" , 1).isSet?)   
   end
   
   def test_checkbox_getState
@@ -122,7 +122,7 @@ class TC_CheckBox < Test::Unit::TestCase
     # test set using the optinal true/false
     # assumes the checkbox is already checked
     $ie.checkbox(:name, "box1").set( false )
-    assert_false($ie.checkbox(:name, "box1").isSet?)   
+    assert(!$ie.checkbox(:name, "box1").isSet?)   
     
     $ie.checkbox(:name, "box1").set( true )
     assert($ie.checkbox(:name, "box1").isSet?)   
