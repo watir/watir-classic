@@ -34,7 +34,7 @@ class TC_contains_text < Test::Unit::TestCase
   
   def test_bad_search_argument
     assert_raises(ArgumentError) do
-      $ie.contains_text()
+      $ie.contains_text
     end
     assert_raises(MissingWayOfFindingObjectException) do
       $ie.contains_text(nil)

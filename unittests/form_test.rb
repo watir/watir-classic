@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "forms2.html")
   end
   
@@ -73,7 +73,7 @@ END_OF_MESSAGE
 end
 
 class TC_Forms3 < Test::Unit::TestCase
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "forms3.html")
   end
   
@@ -177,7 +177,7 @@ class TC_Forms3_Display < Test::Unit::TestCase
 end
 
 class TC_Forms4 < Test::Unit::TestCase
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "forms4.html")
   end
   

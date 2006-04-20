@@ -36,7 +36,7 @@ $non_core_tests =
 $core_tests = $all_tests - $non_core_tests - $window_tests
 
 def start_ie_with_logger
-  $ie = Watir::IE.new()
+  $ie = Watir::IE.new
 #  $ie.logger = Watir::WatirLogger.new( 'debug.txt', 4, 10000 )
   $ie.set_fast_speed
 end

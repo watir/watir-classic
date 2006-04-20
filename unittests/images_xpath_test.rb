@@ -14,7 +14,7 @@ class TC_Images_XPath < Test::Unit::TestCase
     gotoImagePage
   end
   
-  def gotoImagePage()
+  def gotoImagePage
     $ie.goto($htmlRoot + "images1.html")
   end
   

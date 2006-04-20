@@ -11,7 +11,7 @@ class FakeDoc
   
   attr_accessor :links, :all
   
-  def initialize()
+  def initialize
     @links = ""
     @doc = self
   end
@@ -21,7 +21,7 @@ class FakeDoc
   end
   
   def frames
-    return FakeFrame.new()
+    return FakeFrame.new
   end
   
   def readyState
@@ -46,10 +46,10 @@ class StubExplorer
   
   attr_accessor :timeToWait
   
-  def initialize()
+  def initialize
     @timeToWait = 1
     @visible = $HIDE_IE
-    @document = FakeDoc.new()
+    @document = FakeDoc.new
   end
   
   def document
@@ -73,7 +73,7 @@ end
 class TestIE < Watir::IE
   
   def create_browser_window
-    @ie = StubExplorer.new()
+    @ie = StubExplorer.new
   end
   
   def addLink(link)

@@ -11,7 +11,7 @@ class TC_TableCell_XPath < Test::Unit::TestCase
     gotoTableCellPage
   end
   
-  def gotoTableCellPage()
+  def gotoTableCellPage
     $ie.goto($htmlRoot + "tableCell_using_xpath.html")
   end
   

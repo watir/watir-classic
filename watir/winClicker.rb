@@ -33,7 +33,7 @@ class WinClicker
 
     # these are the most used methods
 
-    def initialize()
+    def initialize
        @User32 = DL.dlopen("user32")
 
        # we must determine the path we are in
@@ -148,7 +148,7 @@ class WinClicker
     end
 
 
-    def clearSecurityAlertBox()
+    def clearSecurityAlertBox
          clickWindowsButton("Security Alert" , "&Yes" )
     end
 

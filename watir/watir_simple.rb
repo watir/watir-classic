@@ -71,7 +71,7 @@ module Watir
   def navigate_to_link_with_url(url)
     # FIXME: this should be moved into Watir!
     wait_before_and_after do
-      doc = @@browser.getDocument()
+      doc = @@browser.getDocument
       links = doc.links
       link = nil
       links.each do |n|
@@ -97,7 +97,7 @@ module Watir
   def navigate_to_link_with_id(id)
     # FIXME: this should be moved into Watir!
     wait_before_and_after do
-      doc = @@browser.getDocument()
+      doc = @@browser.getDocument
       links = doc.links
       link = nil
       links.each do |n|

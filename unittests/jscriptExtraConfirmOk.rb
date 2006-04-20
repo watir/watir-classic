@@ -4,4 +4,4 @@ require 'watir/WindowHelper'
 
 
 helper = WindowHelper.new
-helper.push_confirm_button_ok()
+helper.push_confirm_button_ok

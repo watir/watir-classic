@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Links < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "links1.html")
   end
   
@@ -131,7 +131,7 @@ end
 class TC_Frame_Links < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "frame_links.html")
   end
   
