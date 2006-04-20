@@ -7,12 +7,12 @@ require 'unittests/setup'
 class TC_TextArea < Test::Unit::TestCase
   include Watir
   
-  def gotoPage
+  def goto_page
     $ie.goto($htmlRoot + "textArea.html")
   end
   
   def test_textarea_field_exists
-    gotoPage
+    goto_page
     #test for existance of 4 text area
     assert($ie.text_field(:name,"txtMultiLine1").exists?)
     assert($ie.text_field(:name,"txtMultiLine2").exists?)
@@ -34,7 +34,7 @@ class TC_TextArea < Test::Unit::TestCase
   end
   
   def test_textarea_field
-    gotoPage
+    goto_page
     
     # test for read only method
     assert(!$ie.text_field(:name, "txtMultiLine1").readonly? )  
