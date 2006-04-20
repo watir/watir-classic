@@ -28,16 +28,16 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     assert_match( expected_result, testResult )  
   end
   
-  def test_alert_button()
+  def test_alert_button
     check_dialog('jscriptExtraAlert', /Alert button!/){ $ie.button(:id, 'btnAlert').click }
   end
-  def test_alert_button2()
+  def test_alert_button2
     check_dialog('jscriptPushButton', /Alert button!/){ sleep 0.1; WindowHelper.new.push_alert_button }
   end
-  def test_confirm_button_ok()
+  def test_confirm_button_ok
     check_dialog('jscriptExtraConfirmOk', /Confirm and OK button!/){ push_confirm_button }
   end
-  def test_confirm_button_Cancel()
+  def test_confirm_button_Cancel
     check_dialog('jscriptExtraConfirmCancel', /Confirm and Cancel button!/){push_confirm_button}
   end
   

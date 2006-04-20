@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Fields < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "textfields1.html")
   end
   

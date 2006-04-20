@@ -5,22 +5,22 @@ class WindowHelper
         @autoit = WIN32OLE.new('AutoItX3.Control')
     end
     
-    def push_alert_button()
+    def push_alert_button
         @autoit.WinWait "Microsoft Internet Explorer", ""
         @autoit.Send "{ENTER}"
     end
     
-    def push_confirm_button_ok()
+    def push_confirm_button_ok
         @autoit.WinWait "Microsoft Internet Explorer", ""
         @autoit.Send "{ENTER}"
     end
     
-    def push_confirm_button_cancel()
+    def push_confirm_button_cancel
         @autoit.WinWait "Microsoft Internet Explorer", ""
         @autoit.Send "{ESCAPE}"
     end
     
-    def push_security_alert_yes()
+    def push_security_alert_yes
         @autoit.WinWait "Security Alert", ""
         @autoit.Send "{TAB}"
         @autoit.Send "{TAB}"

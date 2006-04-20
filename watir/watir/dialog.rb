@@ -18,7 +18,7 @@ module Watir
     end
     
     def dialog
-        Dialog.new()
+        Dialog.new
     end
 
     class DialogButton

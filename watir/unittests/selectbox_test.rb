@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_SelectList < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "selectboxes1.html")
   end
   
@@ -60,7 +60,7 @@ end
 class TC_Selectbox < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "selectboxes1.html")
   end
   
@@ -214,7 +214,7 @@ end
 class TC_Select_Options < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "select_tealeaf.html")
   end
   

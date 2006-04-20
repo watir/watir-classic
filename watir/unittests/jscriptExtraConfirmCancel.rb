@@ -4,4 +4,4 @@ require 'watir/WindowHelper'
 
 
 helper = WindowHelper.new
-helper.push_confirm_button_cancel()
+helper.push_confirm_button_cancel

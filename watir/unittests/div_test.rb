@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Divs < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "div.html")
   end
   

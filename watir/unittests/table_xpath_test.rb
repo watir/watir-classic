@@ -11,7 +11,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
     gotoTablePage
   end
   
-  def gotoTablePage()
+  def gotoTablePage
     $ie.goto($htmlRoot + "table1.html")
   end
   

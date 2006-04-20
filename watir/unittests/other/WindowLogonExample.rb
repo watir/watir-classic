@@ -5,19 +5,19 @@ require 'watir/WindowHelper'
 class TC_Logon_Test < Test::Unit::TestCase
   include Watir
   
-  def goto_windows_login_page()
+  def goto_windows_login_page
     $ie.goto('http://clio.lyris.com/')
   end
   
   
-  def test_window_logon()
+  def test_window_logon
     
     a = Thread.new {
       system('ruby WindowLogonExtra.rb')
       
     }
     b = Thread.new { 
-      goto_windows_login_page()
+      goto_windows_login_page
     }
     a.join
     b.join

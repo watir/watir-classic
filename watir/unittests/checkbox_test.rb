@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_CheckBox < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "checkboxes1.html")
   end
   

@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Selectbox_XPath < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "selectboxes1.html")
   end
   

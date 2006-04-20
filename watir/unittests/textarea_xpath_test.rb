@@ -7,12 +7,12 @@ require 'unittests/setup'
 class TC_TextArea_XPath < Test::Unit::TestCase
   include Watir
   
-  def gotoPage()
+  def gotoPage
     $ie.goto($htmlRoot + "textArea.html")
   end
   
   def test_textarea_field_exists
-    gotoPage()
+    gotoPage
     #test for existance of 4 text area
     assert($ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").exists?)
     assert($ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").exists?)
@@ -30,12 +30,12 @@ class TC_TextArea_XPath < Test::Unit::TestCase
   
   def test_textarea_to_s
     # bug reported by Zeljko Filipin
-    # assert_nothing_raised() { $ie.text_field(:xpath , "//textarea[@id='txtMultiLine3']/").to_s  }
+    # assert_nothing_raised { $ie.text_field(:xpath , "//textarea[@id='txtMultiLine3']/").to_s  }
     # The above assertion fails. No property or method called maxlength
   end
   
   def test_textarea_field
-    gotoPage()
+    gotoPage
     
     # test for read only method
     assert_false($ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").readonly? )  
@@ -74,7 +74,7 @@ class TC_TextArea_XPath < Test::Unit::TestCase
     assert_raises(ObjectDisabledException   , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:xpath , "//textarea[@name='txtDisabled']/").append("Some Text") }  
     assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:xpath , "//textarea[@name='missing_field']/").append("Some Text") }  
     
-    $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").clear()
+    $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").clear
     assert_equal(  "" , $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").value )  
     
   end

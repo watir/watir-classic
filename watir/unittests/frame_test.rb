@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Frames < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "frame_buttons.html")
   end
   
@@ -73,7 +73,7 @@ end
 class TC_NestedFrames < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "nestedFrames.html")
   end
   
@@ -82,7 +82,7 @@ class TC_NestedFrames < Test::Unit::TestCase
     assert_raises(UnknownFrameException) { $ie.frame("nestedFrame").frame("subFrame").button(:id, "b2").enabled?  }  
     assert($ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").enabled?)   
     $ie.frame("nestedFrame").frame("senderFrame").text_field(:index, "1").set("Hello")
-    $ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").click()
+    $ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").click
     assert($ie.frame("nestedFrame").frame("receiverFrame").text_field(:name, "receiverText").verify_contains("Hello"))   
   end
   
@@ -91,7 +91,7 @@ end
 class TC_IFrames < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "iframeTest.html")
   end
   

@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Radios < Test::Unit::TestCase
   include Watir
   
-  def setup()
+  def setup
     $ie.goto($htmlRoot + "radioButtons1.html")
   end
   

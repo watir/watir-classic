@@ -11,7 +11,7 @@ class TC_Buttons < Test::Unit::TestCase
     $ie.goto($htmlRoot + "buttons1.html")
   end
   
-  def goto_frames_page()
+  def goto_frames_page
     $ie.goto($htmlRoot + "frame_buttons.html")
   end
   
@@ -124,7 +124,7 @@ class TC_Buttons < Test::Unit::TestCase
   end
   
   def test_frame
-    goto_frames_page()
+    goto_frames_page
     
     assert($ie.frame("buttonFrame").button(:caption, "Click Me").enabled?)   
     assert_raises(  UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { $ie.button(:caption, "Disabled Button").enabled?}  

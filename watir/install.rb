@@ -194,9 +194,9 @@ installButton = FXButton.new(vFrame, "Install", nil, application, BUTTON_NORMAL)
 installButton.connect(SEL_COMMAND) do |sender, sel, checked|    
     install(browseText.text, startMenuShortcut.checkState, desktopIcon.checkState ,installAUtoIt.checkState  )
     puts "Installation Completed"
-    application.exit()   
+    application.exit   
 end
 
-application.create()
+application.create
 main.show(PLACEMENT_SCREEN)
-application.run()
+application.run

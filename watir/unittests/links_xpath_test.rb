@@ -7,12 +7,12 @@ require 'unittests/setup'
 class TC_Links_XPath < Test::Unit::TestCase
   include Watir
   
-  def gotoLinksPage()
+  def gotoLinksPage
     $ie.goto($htmlRoot + "links1.html")
   end
   
-  def setup()
-    gotoLinksPage()
+  def setup
+    gotoLinksPage
   end
   
   def xtest_new_link_exists

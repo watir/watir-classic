@@ -40,12 +40,12 @@ class TC_CSS < Test::Unit::TestCase
     return s
   end
   
-  def gotoCSSPage()
+  def gotoCSSPage
     $ie.goto($htmlRoot + "cssTest.html")
   end
   
   def test_SuccessMessage
-    gotoCSSPage()
+    gotoCSSPage
     $ie.button( :caption , "Success").click
     
     #isMessageDisplayed( "Success" )
