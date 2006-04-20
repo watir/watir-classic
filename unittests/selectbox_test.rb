@@ -13,14 +13,14 @@ class TC_SelectList < Test::Unit::TestCase
   
   def test_SelectList_exists
     assert($ie.select_list(:name, "sel1").exists?)   
-    assert_false($ie.select_list(:name, "missing").exists?)   
-    assert_false($ie.select_list(:id, "missing").exists?)   
+    assert(!$ie.select_list(:name, "missing").exists?)   
+    assert(!$ie.select_list(:id, "missing").exists?)   
   end
   
   def test_SelectList_enabled
     assert($ie.select_list(:name, "sel1").enabled?)   
     assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").enabled? }  
-    assert_false($ie.select_list(:id, 'selectbox_4').enabled?)
+    assert(!$ie.select_list(:id, 'selectbox_4').enabled?)
   end
   
   def test_SelectList_class_name
@@ -66,8 +66,8 @@ class TC_Selectbox < Test::Unit::TestCase
   
   def test_selectBox_Exists
     assert($ie.selectBox(:name, "sel1").exists?)   
-    assert_false($ie.selectBox(:name, "missing").exists?)   
-    assert_false($ie.selectBox(:id, "missing").exists?)   
+    assert(!$ie.selectBox(:name, "missing").exists?)   
+    assert(!$ie.selectBox(:id, "missing").exists?)   
   end
   
   def test_selectBox_enabled
@@ -130,7 +130,7 @@ class TC_Selectbox < Test::Unit::TestCase
     # these are to test the onchange event
     # the event shouldnt get fired, as this is the selected item
     $ie.selectBox( :name , "sel3").select( /3/ )
-    assert_false($ie.text.include?("Pass") )
+    assert(!$ie.text.include?("Pass") )
   end
   
   def test_selectBox_select2
@@ -162,7 +162,7 @@ class TC_Selectbox < Test::Unit::TestCase
     # these are to test the onchange event
     # the event shouldnt get fired, as this is the selected item
     $ie.select_list( :name , "sel3").select_value( /3/ )
-    assert_false($ie.text.include?("Pass") )
+    assert(!$ie.text.include?("Pass") )
   end
   
   def test_select_list_select_using_value2
@@ -187,7 +187,7 @@ class TC_Selectbox < Test::Unit::TestCase
     $ie.select_list(:index,1).select(/1/)
     assert_equal("o1"   ,    $ie.select_list(:index, 1).value)  
     
-    assert_false( $ie.select_list(:index, 1).disabled )
+    assert(! $ie.select_list(:index, 1).disabled )
     assert( $ie.select_list(:index, 4).disabled )
     assert( $ie.select_list(:id, 'selectbox_4').disabled )
   end

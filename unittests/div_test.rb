@@ -62,12 +62,12 @@ class TC_Divs < Test::Unit::TestCase
   
   def test_objects_in_div
     assert($ie.div(:id, 'buttons1').button(:index,1).exists? )
-    assert_false($ie.div(:id, 'buttons1').button(:index,3).exists? )
+    assert(!$ie.div(:id, 'buttons1').button(:index,3).exists? )
     assert($ie.div(:id, 'buttons1').button(:name,'b1').exists? )
     
     assert($ie.div(:id, 'buttons2').button(:index,1).exists? )
     assert($ie.div(:id, 'buttons2').button(:index,2).exists? )
-    assert_false($ie.div(:id, 'buttons1').button(:index,3).exists? )
+    assert(!$ie.div(:id, 'buttons1').button(:index,3).exists? )
     
     $ie.div(:id, 'buttons1').button(:index,1).click
     
@@ -128,12 +128,12 @@ class TC_Divs < Test::Unit::TestCase
   
   def test_objects_in_span
     assert($ie.span(:id, 'buttons1').button(:index,1).exists? )
-    assert_false($ie.span(:id, 'buttons1').button(:index,3).exists? )
+    assert(!$ie.span(:id, 'buttons1').button(:index,3).exists? )
     assert($ie.span(:id, 'buttons1').button(:name,'b1').exists? )
     
     assert($ie.span(:id, 'buttons2').button(:index,1).exists? )
     assert($ie.span(:id, 'buttons2').button(:index,2).exists? )
-    assert_false($ie.span(:id, 'buttons1').button(:index,3).exists? )
+    assert(!$ie.span(:id, 'buttons1').button(:index,3).exists? )
     
     $ie.span(:id, 'buttons1').button(:index,1).click
     
@@ -147,9 +147,9 @@ class TC_Divs < Test::Unit::TestCase
     assert($ie.p(:index, 3).exists?)
     assert($ie.p(:title, 'test_3').exists?)
     
-    assert_false($ie.p(:id, 'missing').exists?)
-    assert_false($ie.p(:index, 8).exists?)
-    assert_false($ie.p(:title, 'test_55').exists?)
+    assert(!$ie.p(:id, 'missing').exists?)
+    assert(!$ie.p(:index, 8).exists?)
+    assert(!$ie.p(:title, 'test_55').exists?)
     
     assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').class_name }
     assert_raises( UnknownObjectException) {$ie.p(:id , 'missing').text }

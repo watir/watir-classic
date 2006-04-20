@@ -108,17 +108,17 @@ class TC_Buttons < Test::Unit::TestCase
     assert($ie.button(:id, "b2").exists?)   
     assert($ie.button(:caption, /sub/i).exists?)   
     
-    assert_false($ie.button(:caption, "missingcaption").exists?)   
-    assert_false($ie.button(:name, "missingname").exists?)   
-    assert_false($ie.button(:id, "missingid").exists?)   
-    assert_false($ie.button(:caption, /missing/i).exists?)   
+    assert(!$ie.button(:caption, "missingcaption").exists?)   
+    assert(!$ie.button(:name, "missingname").exists?)   
+    assert(!$ie.button(:id, "missingid").exists?)   
+    assert(!$ie.button(:caption, /missing/i).exists?)   
   end
   
   def test_Button_Enabled
     assert($ie.button(:caption, "Click Me").enabled?)   
-    assert_false($ie.button(:caption, "Disabled Button").enabled?)   
-    assert_false($ie.button(:name, "b4").enabled?)   
-    assert_false($ie.button(:id, "b5").enabled?)   
+    assert(!$ie.button(:caption, "Disabled Button").enabled?)   
+    assert(!$ie.button(:name, "b4").enabled?)   
+    assert(!$ie.button(:id, "b5").enabled?)   
     
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:name, "noName").enabled?  }  
   end

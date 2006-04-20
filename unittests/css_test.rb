@@ -54,7 +54,7 @@ class TC_CSS < Test::Unit::TestCase
     
     $ie.button( :caption , "Failure").click
     
-    assert_false(isMessageDisplayed("Success") )
+    assert(!isMessageDisplayed("Success") )
   end
 end
 
