@@ -1303,17 +1303,22 @@ module Watir
         hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
         hwnd_modal > 0
       end
-      
-      intPointer = " " * 4 # will contain the int value of the IUnknown*
-      @@fnGetUnknown.call(hwnd_modal, intPointer)
-      
-      intArray = intPointer.unpack('L')
-      intUnknown = intArray.first
+
+      intUnknown = 0  
+      Watir::until_with_timeout(10) do
+        intPointer = " " * 4 # will contain the int value of the IUnknown*
+        @@fnGetUnknown.call(hwnd_modal, intPointer)
+        intArray = intPointer.unpack('L')
+        intUnknown = intArray.first
+        intUnknown > 0
+      end
+
       raise "Unable to attach to Modal Window #{title}" unless intUnknown > 0
       
       htmlDoc = WIN32OLE.connect_unknown(intUnknown)
       ModalPage.new(htmlDoc, self)
     end
+
     
     # deprecated: use logger= instead
     def set_logger(logger)
