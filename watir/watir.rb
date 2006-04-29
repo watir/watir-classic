@@ -1732,9 +1732,7 @@ module Watir
       end
     end
     
-    #
-    # This method gives focus to the frame
-    # It may be removed and become part of the frame object
+    # Gives focus to the frame
     def focus
       document.activeElement.blur
       document.focus
@@ -1762,25 +1760,26 @@ module Watir
         raise "Requires REXML version of at least 3.1.4. Actual: #{REXML::Version}"
       end
       if @rexmlDomobject == nil
-        #puts 'Here creating rexmlDomobject'
         htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
-        #puts htmlSource
-        #Give htmlSource as input to Rexml.
         begin
           @rexmlDomobject = REXML::Document.new(htmlSource)
+          raise
         rescue => e
-          #puts e.to_s
-          error = File.open("error.xml","w")
-          error.print(htmlSource)
-          error.close
-          #puts htmlSource
-          #gets
+          output_rexml_document("error.xml", htmlSource)
+          raise e
         end
       end
     end
     private :create_rexml_document_object
+    
+    def output_rexml_document(name, text)
+      file = File.open(name,"w")
+      file.print(text)
+      file.close
+    end
+    private :output_rexml_document
     
     #Function Tokenizes the tag line and returns array of tokens.
     #Token could be either tagName or "=" or attribute name or attribute value
@@ -1884,12 +1883,12 @@ module Watir
     end
     private :xml_escape
     
-    #Returns HTML Source
-    #Traverse the DOM tree rooted at body element
-    #and generate the HTML source.
-    #element: Represent Current element
-    #htmlString:HTML Source
-    #spaces:(Used for debugging). Helps in indentation
+    # Returns HTML Source
+    # Traverse the DOM tree rooted at body element
+    # and generate the HTML source.
+    # element: Represent Current element
+    # htmlString:HTML Source
+    # spaces:(Used for debugging). Helps in indentation
     def html_source(element, htmlString, spaceString)
       begin
         tagLine = ""
@@ -1954,8 +1953,12 @@ module Watir
       modifiedXpath = ""
       selectedElements = Array.new
       doc.elements.each(xpath) do |element|
-        modifiedXpath = element.xpath
-        temp = element_by_absolute_xpath(modifiedXpath)
+        modifiedXpath = element.xpath                   # element = a REXML element
+#        puts "modified xpath: #{modifiedXpath}"
+#        puts "text: #{element.text}"
+#        puts "class: #{element.attributes['class']}"
+#        require 'breakpoint'; breakpoint
+        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
         selectedElements << temp if temp != nil
       end
       #puts selectedElements.length
@@ -2031,7 +2034,7 @@ module Watir
           end
         end
         
-        #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
+      #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
       end
       begin
         if curElem.tagName == lastTagName
