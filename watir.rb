@@ -1765,7 +1765,6 @@ module Watir
         htmlSource += "\n</HTML>\n"
         begin
           @rexmlDomobject = REXML::Document.new(htmlSource)
-          raise
         rescue => e
           output_rexml_document("error.xml", htmlSource)
           raise e
