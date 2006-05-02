@@ -1580,7 +1580,7 @@ module Watir
             fname = allFrames[i.to_s].name.to_s
             puts "frame  index: #{i + 1} name: #{fname}"
           rescue => e
-            puts "frame  index: #{i + 1} --Access Denied--" if e.to_s.match(/Access is denied/)
+            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#FAQ-Accessdeniedwhentryingtoaccessaframe" if e.to_s.match(/Access is denied/)
           end
         end
       else
