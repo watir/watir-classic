@@ -205,16 +205,6 @@ module Watir
     end
   end
   
-  # BUG: this won't work right until the null objects are pulled out
-  def exists?
-    begin
-      yield
-      true
-    rescue
-      false
-    end
-  end
-  
   class WatirLogger < Logger
     def initialize(filName, logsToKeep, maxLogSize)
       super(filName, logsToKeep, maxLogSize)
@@ -1319,6 +1309,15 @@ module Watir
       ModalPage.new(htmlDoc, self)
     end
 
+	# Are we attached to an open browser?
+    def exists?
+      return false if @closing
+      begin
+        @ie.name == 'Microsoft Internet Explorer'
+      rescue WIN32OLERuntimeError
+        false
+      end
+    end
     
     # deprecated: use logger= instead
     def set_logger(logger)
@@ -1385,6 +1384,7 @@ module Watir
     
     # Closes the Browser
     def close
+      @closing = true
       @ie.quit
     end
     

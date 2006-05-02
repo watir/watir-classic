@@ -11,11 +11,6 @@ class TC_Links < Test::Unit::TestCase
     $ie.goto($htmlRoot + "links1.html")
   end
   
-  def test_new_link_exists
-    assert(exists?{$ie.link(:text, "test1")})   
-    assert(exists?{$ie.link(:text, /TEST/i)})   
-  end
-  
   def test_bad_attribute
     assert_raises(MissingWayOfFindingObjectException) { $ie.link(:bad_attribute, 199).click }  
     begin
@@ -133,14 +128,6 @@ class TC_Frame_Links < Test::Unit::TestCase
   
   def setup
     $ie.goto($htmlRoot + "frame_links.html")
-  end
-  
-  def test_new_frame_link_exists
-    assert(exists?{$ie.frame("buttonFrame").link(:text, "test1")})   
-  end
-  def xtest_missing_frame_links_dont_exist        
-    assert(!exists?{$ie.frame("buttonFrame").link(:text, "missing")})
-    assert(!exists?{ie.frame("missing").link(:text, "test1")})   
   end
   
   def test_links_in_frames
