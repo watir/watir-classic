@@ -12,6 +12,16 @@
 
     <docs>
         <url>index.html</url>
+        <items>
+            <item>
+                <name>FAQ</name>
+                <url>http://wiki.openqa.org/display/WTR/FAQ</url>
+            </item>
+            <item>
+                <name>Wiki</name>
+                <url>http://wiki.openqa.org/display/WTR/Project+Home</url>
+            </item>
+        </items>        
     </docs>
 
     <owners>
