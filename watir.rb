@@ -205,6 +205,17 @@ module Watir
     end
   end
   
+  # add an error checker for http navigation errors, such as 404, 500 etc
+  NAVIGATION_CHECKER = Proc.new do |ie|
+      if ie.document.frames.length > 1
+          1.upto ie.document.frames.length do |i|
+              ie.check_for_http_error(ie.frame(:index, i) )
+          end
+      else
+          ie.check_for_http_error(ie)
+      end
+  end
+
   class WatirLogger < Logger
     def initialize(filName, logsToKeep, maxLogSize)
       super(filName, logsToKeep, maxLogSize)
@@ -1149,7 +1160,7 @@ module Watir
       @ole_object = nil
       
       @enable_spinner = $ENABLE_SPINNER
-      @error_checkers= []
+      @error_checkers = []
       
       @ie.visible = ! $HIDE_IE
       @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
@@ -1167,19 +1178,8 @@ module Watir
       # Probably some IE method of cleaning things
       # To pass the same to REXML we need to give some name to empty tagName
       @empty_tag_name = "DUMMY"
-      
-      # add an error checker for http navigation errors, such as 404, 500 etc
-      navigation_checker = Proc.new{ |ie|
-        if ie.document.frames.length > 1
-          1.upto ie.document.frames.length do |i|
-            check_for_http_error(ie.frame(:index, i) )
-          end
-        else
-          check_for_http_error(ie)
-        end
-      }
-      
-      add_checker(navigation_checker)
+            
+      add_checker(NAVIGATION_CHECKER)
       
     end
     private :set_defaults
