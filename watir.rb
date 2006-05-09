@@ -189,7 +189,7 @@ module Watir
   
   @@dir = File.expand_path(File.dirname(__FILE__))
   
-  def self.until_with_timeout(timeout) # block
+  def self.until_with_timeout(timeout=10) # block
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
       sleep 0.05
@@ -1287,6 +1287,9 @@ module Watir
     @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
     @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
     
+    # Attach to a modal dialog, returns a ModalPage object (acts like an IE object).
+    # Note: unlike Watir.attach, this returns before the page is assured to have 
+    # loaded.
     def attach_modal(title)
       hwnd_modal = 0
       Watir::until_with_timeout(10) do
@@ -1580,7 +1583,7 @@ module Watir
             fname = allFrames[i.to_s].name.to_s
             puts "frame  index: #{i + 1} name: #{fname}"
           rescue => e
-            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#FAQ-Accessdeniedwhentryingtoaccessaframe" if e.to_s.match(/Access is denied/)
+            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" if e.to_s.match(/Access is denied/)
           end
         end
       else
@@ -1696,7 +1699,7 @@ module Watir
       puts "Found #{tables.length} tables"
       index = 1
       tables.each do |d|
-        puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{d.rows["0"].cells.length }"
+        puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{begin d.rows["0"].cells.length; rescue; end}"
         index += 1
       end
     end
