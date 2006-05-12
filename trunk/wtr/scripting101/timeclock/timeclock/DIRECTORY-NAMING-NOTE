@@ -1,7 +1,0 @@
-The 'client' and 'server' directories are misnomers. The program has
-evolved beyond them. The 'server' code handles persistence. The
-client code is a client of the persistence code, but sometimes it's
-embedded in a server (an http server). 
-
-I don't have the strength at the moment to deal with CVS and renaming
-directories.
