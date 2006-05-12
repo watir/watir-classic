@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head><title>Better Software Article Resource: Watir Works</title>
+<link rel="stylesheet" type="text/css" href="style.css"></head>
+<body>
+<body>		
+<div id="banner">
+
+	<h1>&nbsp;</h1>
+	
+</div>
+
+<div id="left-column">
+
+   <p>&nbsp;</p> 
+   <h2>Home Page</h2>
+   <p>Go to the  <a href="http://wtr.rubyforge.org/" target="_blank">Watir</a> home page.</p>
+   
+   <h2>User Guide</h2>
+   <p>Read the <a href="http://wtr.rubyforge.org/watir_user_guide.html" target="_blank">User Guide</a></p>
+   
+   <h2>Need Help?</h2>
+   <p>Sign up to the <a href="http://rubyforge.org/mailman/listinfo/wtr-general" target="_blank">Watir mailing list</a> and ask questions.
+   No question is too basic, and the Watir community has a wealth of knowledge they are happy to share.</p>
+
+     
+     </div>
+<div id="right-column">
+<h1>Better Software <i>Watir Works</i> Readers:</h1>
+<h2>Installing Ruby on Windows</h2> 
+<p>
+Begin by going to <a href="http://rubyinstaller.rubyforge.org/wiki/wiki.pl" target="_blank">the Ruby One-Click Installer</a> site. Click on the <a href="http://rubyforge.org/frs/?group_id=167" target="_blank">[Downloads]</a> link. You'll see various versions of Ruby available. 
+This article was tested with Ruby 1.8.1, which is the version named ruby181-11, dated 2004-01-28. A more recent version should also work, 
+though there may be small differences in output. Do not use ruby181-13, it will NOT work well with Watir. There was a bug in a library in that release that Watir relies on.
+</p>
+<p>The latest release: <a href="http://rubyforge.org/frs/download.php/2407/ruby182-14.exe" target="_blank">1.8.2-14 Final</a> is a good Ruby version to use.</p>
+<p>Once it has downloaded, double click on the .exe file to start the installation process. 
+</p>
+<p>
+You'll be able to follow along with the article by using Start > Programs > Ruby 1.8.2-14 > Interactive Ruby Shell. This will start up
+<b>IRB</b> which allows you to work with Ruby interactively.
+</p>
+<h2>Installing Watir</h2> 
+<p>This article was written using Watir version 1.0.3. Later versions still support the syntax, but there are some <a href="#changes">minor changes</a>.</p>
+<p>Download Watir v. 1.0.3 <a href="http://rubyforge.org/frs/download.php/2594/watir-v1_0_3.zip" target="_blank">here</a>. We recommend following along with the
+article using version 1.0.3 at first.</p>
+<p>Install:
+<ol>
+<li>Unzip the file to a temporary folder such as C:\watir_temp</li>
+<li>Open a DOS command prompt, and change to that directory</li>
+<ul><li>Select Start > Run... type "CMD" in the "Open" field, and click the "OK" button to start a command prompt</li>
+<li>Change directories like this: cd C:\watir_temp</li></ul>
+<li>Once you are in the temporary directory in your console, type <b>install</b> at the prompt and press Enter</li>
+<li>The Watir installer will start up. Check the path it has selected for the "watir_bonus" directory.</li>
+<ul><li>This is where the examples, documentation and unit tests are installed.</li></ul>
+<li>If you want to change the directory path where "watir_bonus" will be installed, type the letter <b>c</b>, and press Enter.</li>
+<ul><li>Type in the full path to where this should be installed with a folder name: ie. C:\watir_bonus</li>
+<li>You will also be prompted about shortcuts. Just press Enter at these prompts.</li></ul>
+<li>To continue the installation, press Enter. When the installation completes, you will have your DOS prompt back.</li></ol>
+<p>Once the installation is complete, change directories to "watir_bonus", and you should see these folders: doc, examples, RDoc, unitTests.
+Change directories to the examples folder, and type in <b>articleExample</b> and press Enter. The Google search example in Figure 1 of the article will run.</p>
+<p><i><b>*Note:</b></i> If you are using Windows XP with Service Pack 2, see the <a href="http://wtr.rubyforge.org/watir_user_guide.html" target="_blank">User Guide</a> if you are having problems running tests with Watir.
+There are instructions in the "Having Problems?" section to deal with security blocking.</p>
+
+</p>
+<h2><a name="changes"></a>Changes in Watir</h2>
+<p>After release 1.0.3, some changes have been made to improve Watir.</p>
+<p>In Watir versions after 1.0.3, to execute <i>ie = IE.new</i>, you must include the Watir module after the
+<i>require watir</i> statement in your script like this:<br>
+<font face="Courier New">require 'watir'<br>
+<b>include Watir</b><br>
+ie = IE.new<br></font></p>
+<p>Alternatively, you can include the Watir module inline like this:<br>
+<font face="Courier New">require 'watir'<br>
+ie = <b>Watir::</b>IE.new<br></font></p>
+
+<b>Other Changes</b>
+<p>Watir now uses method names according to Ruby programming standards which means they are in <b>this_case</b> instead of the Java-like <b>camelCase</b>.
+The original camelCase methods are still supported, but Watir is now standardizing method names using <b>this_case</b>. For example, the "textField" method can now be called 
+like this: <b>text_field</b>.
+</p>
+</div>
+</body></html>
+
