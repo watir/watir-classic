@@ -1,0 +1,44 @@
+<project>
+    <name>Watir</name>
+    <jiraId>10080</jiraId>
+    <jiraName>WTR</jiraName>
+    <confluenceName>WTR</confluenceName>
+
+    <forums>
+        <usersId>5</usersId>
+        <devId>6</devId>
+        <jiraId>22</jiraId>
+    </forums>
+
+    <docs>
+        <url>index.html</url>
+        <items>
+            <item>
+                <name>FAQ</name>
+                <url>http://wiki.openqa.org/display/WTR/FAQ</url>
+            </item>
+            <item>
+                <name>Wiki</name>
+                <url>http://wiki.openqa.org/display/WTR/Project+Home</url>
+            </item>
+        </items>        
+    </docs>
+
+    <owners>
+        <person>
+            <name>Bret Pettichord</name>
+            <email>bret@pettichord.com</email>
+        </person>
+    </owners>
+
+    <!--<developers>-->
+        <!--<person>-->
+            <!--<name>Paul Hammant</name>-->
+            <!--<email>paul@thoughtworks.com</email>-->
+        <!--</person>-->
+    <!--</developers>-->
+
+    <releases>
+    </releases>
+
+</project>

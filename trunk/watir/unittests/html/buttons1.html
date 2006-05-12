@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>
+Test page for buttons
+</title>
+  <link rel="stylesheet" type="text/css" href="watir_unit_tests.css">
+</head>
+<body>
+CVS Revision: $Revision$
+<br>
+<br>
+<table>
+<tr>
+<td>
+<form name = test1 method = get action = pass.html>
+
+<input type = button class="italic_button"  name = b1 id = b2 value = "Click Me" onClick="javascript:document.location='pass.html';" title = "this is button1">
+<br><input type = button name = b4 id=b5 value = "Disabled Button" onClick="javascript:document.location='fail.html';" disabled>
+
+</form>
+<td> The top button is for testing buttons with names
+<br> The second button is used for testing disabled buttons
+
+
+<tr>
+<td>
+<form name = test2 method = get action = pass2.html>
+<br><input type = submit value=Submit>
+</form>
+<td> This button is a submit ( the others are buttons)
+
+<tr>
+<td>
+<form name = test3 method = get action = pass3.html>
+<br><input type = image src=images/button.jpg name =sub3>
+</form>
+<td> This button is an image. It should behave the same as a submit
+
+
+
+</html>

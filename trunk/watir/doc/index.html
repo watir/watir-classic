@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Watir: Web Application Testing in Ruby</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script language="JavaScript">
+function doSearch() {
+  form = document.getElementById("search");
+  if (form.sitesearch[1].checked){
+    form.q.value = form.qfirst.value + " inurl:wtr-general";
+  } else {
+    form.q.value = form.qfirst.value;
+  }
+}
+  </script>
+</head>
+<body>
+<div id="banner">
+<h1>&nbsp;</h1>
+</div>
+<div style="left: 0px; width: 150px;" id="left-column"><br>
+<h2>Download</h2>
+<p><a href="http://rubyforge.org/frs/?group_id=167" target="_blank">Ruby</a><br>
+<a href="http://rubyforge.org/frs/?group_id=104" target="_blank">Watir</a>&nbsp;&nbsp;&nbsp;
+</p>
+<h2>Documentation</h2>
+<p><a href="watir_user_guide.html" target="_blank">User's Guide</a><br>
+<a href="example_testcase.html" target="_blank">Sample Test</a><br>
+<a href="./rdoc/index.html">Technical Doc </a><br>
+<a href="http://wtr.rubyforge.org/wiki/wiki.pl?FrequentQuestions">FAQ</a><br>
+<a href="http://wtr.rubyforge.org/s101/doc/">Tutorial</a><br>
+<a href="http://wtr.rubyforge.org/wiki/wiki.pl" target="_blank">Wiki</a><br>
+</p>
+<h2>Project
+</h2>
+<p> <a href="http://rubyforge.org/mailman/listinfo/wtr-general"
+ target="_blank">Mailing List</a><br>
+<a href="http://rubyforge.org/projects/wtr/" target="_blank">RubyForge</a><a
+ href="http://wtr.rubyforge.org/wiki/wiki.pl" target="_blank"><br>
+</a></p>
+<h2>Search</h2>
+<!-- SiteSearch Google -->
+<form id="search" method="get" action="http://www.google.com/search"
+ onsubmit="doSearch();"><input
+ name=" ie="" value="UTF-8" type="hidden">
+  <input name="oe" value="UTF-8" type="hidden">
+  <table bgcolor="#ffffff">
+    <tbody>
+      <tr>
+        <td> <input name="qfirst" size="10" maxlength="255" value=""
+ type="text"> <input name="q" type="hidden"><font size="-1"><input
+ name="btnG" value="Go" type="submit"> <input
+ name="domains" value="rubyforge.org" type="hidden"> <input
+ name="sitesearch" value="wtr.rubyforge.org" checked="checked"
+ type="radio">Website<br>
+        <input name="sitesearch" value="rubyforge.org" type="radio">Mail
+Archive </font></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<!-- SiteSearch Google -->
+<h2>Creators</h2>
+<p><small>Watir development is led by <a
+ href="http://www.paulrogers.ca/" target="_blank">Paul Rogers</a> and <a
+ href="http://www.pettichord.com/" target="_blank">Bret Pettichord</a>.
+<br>
+Documentation effort led by <a href="http://www.kohl.ca/"
+ target="_blank">Jonathan
+Kohl</a>.</small></p>
+<p><small>See the full list of <a
+ href="http://rubyforge.org/project/memberlist.php?group_id=104">commiters</a>.</small></p>
+<p><small>Watir logo developed by Jacinda Scott</small></p>
+</div>
+<!-- TOP OF COLUMN -->
+<div style="left: 26px; width: 70%;" id="right-column">
+<div class="about">
+<p>WATIR stands for "Web Application Testing in Ruby". Watir
+is a free, open-source functional testing tool for
+automating browser-based tests of web applications. It is pronounced <span
+ style="font-style: italic;">water.</span>
+</p>
+<p>
+Watir drives the Internet Explorer browser the same way people do. It
+clicks links, fills in forms, presses buttons. Watir also
+checks results, such as whether expected text appears
+on the page. </p>
+<p>
+Watir is a Ruby library that works with Internet Explorer on Windows.
+Like other powerful programming languages, Ruby gives you the power to
+connect to databases, read data files, export XML and structure your
+code into reusable libraries.<br>
+</p>
+</div>
+<p class="quote">
+"Watir Rocks! Truly awesome!!" <span class="quote">&#8212;&nbsp;Shashank Date</span></p>
+<p class="quote">
+"Watir is the most compelling alternative [to Fit] for filling <br>
+the automated
+acceptance
+testing need." <span class="quote">&#8212;&nbsp;Ward Cunningham</span>
+</p>
+<p class="quote">
+"I have limited scripting experience and none with Ruby,
+<br>
+but I was able to follow your examples and be productive in short
+order." <span class="quote">&#8212;&nbsp;Kevin Sheehy</span></p>
+<p class="quote">
+"I've been trying to find the Holy Grail of Automated Web UI
+Testing.... <br>
+And
+the one I'm currently enamored with is Watir. <span class="quote">&#8212;&nbsp;Scott
+Hanselman</span>
+</p>
+<p class="quote">"I wanted to run around my office dancing
+and celebrating." <span class="quote">&#8212;&nbsp;Beth Ferguson</span>
+</p>
+<h2>Why Watir?</h2>
+<p> </p>
+<ul>
+  <li>It's a free <a
+ href="http://www.opensource.org/docs/definition.php" target="_blank">Open
+Source</a> tool. There are no costs to use the tool.</li>
+  <li>There's a very active and growing community behind it.</li>
+  <li>It uses <a href="http://www.rubycentral.com/" target="_blank">Ruby</a>,
+a full-featured object-oriented scripting language, rather than a <a
+ href="http://www.stickyminds.com/sitewide.asp?ObjectId=2326&amp;ObjectType=COL&amp;Function=edetail"
+ target="_blank">proprietary vendorscript</a>.</li>
+  <li>Watir is powerful and easy to use.</li>
+  <li>Don't just take our word for it, <a
+ href="http://wtr.rubyforge.org/wiki/wiki.pl?WatirTestimonials"
+ target="_blank">read what our users are saying</a>. </li>
+</ul>
+<h2>Getting Started</h2>
+<p> </p>
+<ol>
+  <li>Install Ruby: Use the <a
+ href="http://rubyforge.org/frs/?group_id=167" target="_blank">Ruby
+One-Click Installer for Windows</a>.</li>
+  <li>Install Watir: Use the&nbsp; <a
+ href="http://rubyforge.org/frs/?group_id=104" target="_blank">Watir
+One-Click Installer (exe)</a>. <br>
+  </li>
+  <span style="font-style: italic;">(Ruby programmers may prefer to use
+the gem: "gem install watir".)</span><br>
+  <li>Read the <a href="http://wtr.rubyforge.org/watir_user_guide.html">User's
+Guide</a>, documentation, examples and tests. Figure out
+your test case,
+start typing your script, and run it!</li>
+</ol>
+</div>
+</body>
+</html>

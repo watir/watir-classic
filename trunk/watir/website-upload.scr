@@ -1,0 +1,12 @@
+cd /var/www/gforge-projects/wtr/
+lcd doc
+put index.html
+put example_testcase.html
+put style.css
+put watir_user_guide.html
+put article.html
+cd images
+lcd images
+put doit.gif
+put watir.gif
+put watirwords.gif
