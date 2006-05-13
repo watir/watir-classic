@@ -44,11 +44,9 @@ module Test
       def self.method_added id
         @methods ||= []
         @methods << id.id2name
-        puts "#{self}.#{id.id2name}"
       end
       def self.execute order
         @order = order
-        puts "#{self} #{order}"
       end
     end
   end

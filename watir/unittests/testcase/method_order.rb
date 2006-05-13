@@ -1,6 +1,6 @@
 # the default behavior of Test::Unit::TestCase should be to execute test 
 # methods in alphabetical order.
-# When executed, should print "A.B.C.D.E.F.G.H."
+# When executed, should print "A.B.C.D.E.F.G.H.I.J.K.L."
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
 
