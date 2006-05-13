@@ -10,7 +10,6 @@ module Test
       def self.sorted_test_methods
         method_names = @methods.clone
         method_names.delete_if {|method_name| method_name !~ /^test./}
-        puts @order, @@order
         @order ||= @@order
         case @order
         when :alphabetically
