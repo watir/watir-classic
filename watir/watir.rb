@@ -145,6 +145,13 @@ require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
 
+require 'dl/import'
+require 'dl/struct'
+require 'Win32API'
+
+require 'wet/constants/winconstants'
+require 'wet/utils/TextUtils'
+
 class String
   def matches(x)
     return self == x
@@ -188,7 +195,27 @@ module Watir
   include Watir::Exception
   
   @@dir = File.expand_path(File.dirname(__FILE__))
-  
+  # this will find the IEDialog.dll file in its build location
+  $iedialog_file = (@@dir + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+
+  User32 = DL.dlopen('user32')
+
+  $fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
+  $fnGetUnknown = Win32API.new($iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
+
+  # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
+  $fnGetWindow = Win32API.new('user32.dll', 'GetWindow', ['l', 'l'], 'i')
+
+  ## GetWindows Constants
+  GW_HWNDFIRST = 0
+  GW_HWNDLAST = 1
+  GW_HWNDNEXT = 2
+  GW_HWNDPREV = 3
+  GW_OWNER = 4
+  GW_CHILD = 5
+  GW_ENABLEDPOPUP = 6
+  GW_MAX = 6
+
   def self.until_with_timeout(timeout=10) # block
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
@@ -356,7 +383,21 @@ module Watir
       # join all the elements to form the result string.
       array.reverse.join('.')
     end
-    
+
+    def enabled_popup(timeout=4)
+      # Use handle of our parent window to see if we have any currently
+      # enabled popup.
+      hwnd_modal = 0
+      Watir::until_with_timeout(timeout) do
+        hwnd_modal, arr = $fnGetWindow.call(@container.hwnd, GW_ENABLEDPOPUP)
+        hwnd_modal > 0
+      end
+      if hwnd_modal === @container.hwnd || 0 == hwnd_modal
+        hwnd_modal = nil
+      end
+      hwnd_modal
+    end
+
     # Determine the how and what when defaults are possible.
     def process_default(default_attribute, how, what)
       if what == nil
@@ -1372,25 +1413,20 @@ module Watir
       (@ie && @ie.HWND) || raise("Cannot find parents window handle (hwnd)")
     end
 
-    # this will find the IEDialog.dll file in its build location
-    @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
-    @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
-    @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
-    
     # Attach to a modal dialog, returns a ModalPage object (acts like an IE object).
     # Note: unlike Watir.attach, this returns before the page is assured to have 
     # loaded.
     def attach_modal(title)
       hwnd_modal = 0
       Watir::until_with_timeout(10) do
-        hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
+        hwnd_modal = $fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
         hwnd_modal > 0
       end
 
       intUnknown = 0  
       Watir::until_with_timeout(10) do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
-        @@fnGetUnknown.call(hwnd_modal, intPointer)
+        $fnGetUnknown.call(hwnd_modal, intPointer)
         intArray = intPointer.unpack('L')
         intUnknown = intArray.first
         intUnknown > 0
@@ -2519,24 +2555,6 @@ module Watir
   class ModalDialog
     include Container
 
-    ## GetWindows Constants
-    GW_HWNDFIRST = 0
-    GW_HWNDLAST = 1
-    GW_HWNDNEXT = 2
-    GW_HWNDPREV = 3
-    GW_OWNER = 4
-    GW_CHILD = 5
-    GW_ENABLEDPOPUP = 6
-    GW_MAX = 6
-
-    # this will find the IEDialog.dll file in its build location
-    @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
-    @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
-    @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
-
-    # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
-    @@fnGetWindow = Win32API.new('user32.dll', 'GetWindow', ['l', 'l'], 'i')
-
     def locate
       how = @how
       what = @what
@@ -2544,21 +2562,14 @@ module Watir
 
       case how
       when :hwnd
-        # find handle of our parent window
-        parent_hwnd = @container.hwnd
-      
-        # find handle of any enabled modal dialog using GetWindow
-        Watir::until_with_timeout(10) do
-          hwnd_modal = @@fnGetWindow.call(parent_hwnd, GW_ENABLEDPOPUP)
-          hwnd_modal > 0
-        end
-        raise "No Modal Dialog found for current Watir::IE page." if 0 == hwnd_modal
+        hwnd_modal = enabled_popup(10)
+        raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
       when :title
         case what.class.to_s
         # :TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
           Watir::until_with_timeout(10) do
-            hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
+            hwnd_modal = $fnFindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
             hwnd_modal > 0
           end
         when "Regexp"
@@ -2574,7 +2585,7 @@ module Watir
       intUnknown = 0  
       Watir::until_with_timeout(10) do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
-        @@fnGetUnknown.call(hwnd_modal, intPointer)
+        $fnGetUnknown.call(hwnd_modal, intPointer)
         intArray = intPointer.unpack('L')
         intUnknown = intArray.first
         intUnknown > 0
