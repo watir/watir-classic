@@ -19,7 +19,8 @@ class TC_NewWindow< Test::Unit::TestCase
   end
   
   def test_attach_to_new_window_using_separate_process
-    $ie.eval_in_spawned_process "link(:text, 'New Window').click"
+#    $ie.eval_in_spawned_process "link(:text, 'New Window').click"
+    $ie.link(:text, 'New Window').click_no_wait
     IE.attach_timeout = 1.0
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
