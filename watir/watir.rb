@@ -149,9 +149,6 @@ require 'dl/import'
 require 'dl/struct'
 require 'Win32API'
 
-require 'wet/constants/winconstants'
-require 'wet/utils/TextUtils'
-
 class String
   def matches(x)
     return self == x
@@ -2570,7 +2567,7 @@ module Watir
         raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
       when :title
         case what.class.to_s
-        # :TODO: re-write like WET's so we can select on regular expressions too.
+        # TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
           Watir::until_with_timeout(10) do
             hwnd_modal, arr = $fnFindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
