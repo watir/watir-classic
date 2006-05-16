@@ -197,14 +197,18 @@ module Watir
   @@dir = File.expand_path(File.dirname(__FILE__))
   # this will find the IEDialog.dll file in its build location
   $iedialog_file = (@@dir + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+  IeDialog = DL.dlopen($iedialog_file)
 
   User32 = DL.dlopen('user32')
 
-  $fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
+#  $fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
+  $fnFindWindowEx = User32['FindWindowEx', 'LLLpp']
   $fnGetUnknown = Win32API.new($iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
+#  $fnGetUnknown = IeDialog['GetUnknown', 'llp']
 
   # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
-  $fnGetWindow = Win32API.new('user32.dll', 'GetWindow', ['l', 'l'], 'i')
+#  $fnGetWindow = Win32API.new('user32.dll', 'GetWindow', ['l', 'l'], 'i')
+  $fnGetWindow = User32['GetWindow', 'ILL']
 
   ## GetWindows Constants
   GW_HWNDFIRST = 0
@@ -341,7 +345,6 @@ module Watir
     
     # The HTML of the current page
     def html
-      puts "DJS: class.html"
       return document.body.parentelement.outerhtml
     end
     
@@ -389,10 +392,11 @@ module Watir
       # enabled popup.
       hwnd_modal = 0
       Watir::until_with_timeout(timeout) do
-        hwnd_modal, arr = $fnGetWindow.call(@container.hwnd, GW_ENABLEDPOPUP)
+        hwnd_modal, arr = $fnGetWindow.call(hwnd, GW_ENABLEDPOPUP)
         hwnd_modal > 0
       end
-      if hwnd_modal === @container.hwnd || 0 == hwnd_modal
+      # use hwnd() method to find the IE or Container hwnd (overriden by IE)
+      if hwnd_modal === hwnd() || 0 == hwnd_modal
         hwnd_modal = nil
       end
       hwnd_modal
@@ -407,6 +411,173 @@ module Watir
       return how, what
     end
     private :process_default
+    
+    #
+    # Show me state
+    #
+    
+    # This method is used to display the available html frames that Internet Explorer currently has loaded.
+    # This method is usually only used for debugging test scripts.
+    def show_frames
+      if allFrames = document.frames
+        count = allFrames.length
+        puts "there are #{count} frames"
+        for i in 0..count-1 do
+          begin
+            fname = allFrames[i.to_s].name.to_s
+            puts "frame  index: #{i + 1} name: #{fname}"
+          rescue => e
+            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" if e.to_s.match(/Access is denied/)
+          end
+        end
+      else
+        puts "no frames"
+      end
+    end
+    
+    # Show all forms displays all the forms that are on a web page.
+    def show_forms
+      if allForms = document.forms
+        count = allForms.length
+        puts "There are #{count} forms"
+        for i in 0..count-1 do
+          wrapped = FormWrapper.new(allForms.item(i))
+          puts "Form name: #{wrapped.name}"
+          puts "       id: #{wrapped.id}"
+          puts "   method: #{wrapped.method}"
+          puts "   action: #{wrapped.action}"
+        end
+      else
+        puts "No forms"
+      end
+    end
+    
+    # this method shows all the images availble in the document
+    def show_images
+      doc = document
+      index = 1
+      doc.images.each do |l|
+        puts "image: name: #{l.name}"
+        puts "         id: #{l.invoke("id")}"
+        puts "        src: #{l.src}"
+        puts "      index: #{index}"
+        index += 1
+      end
+    end
+    
+    # this method shows all the links availble in the document
+    def show_links
+      props = ["name", "id", "href"]
+      print_sizes = [12, 12, 60]
+      doc = document
+      index = 0
+      text_size = 60
+      # draw the table header
+      s = "index".ljust(6)
+      props.each_with_index do |p, i|
+        s += p.ljust(print_sizes[i])
+      end
+      s += "text/src".ljust(text_size)
+      s += "\n"
+      
+      # now get the details of the links
+      doc.links.each do |n|
+        index += 1
+        s = s + index.to_s.ljust(6)
+        props.each_with_index do |prop, i|
+          printsize = print_sizes[i]
+          begin
+            p = n.invoke(prop)
+            temp_var = "#{p}".to_s.ljust(printsize)
+          rescue
+            # this object probably doesnt have this property
+            temp_var = "".to_s.ljust(printsize)
+          end
+          s += temp_var
+        end
+        s += n.innerText
+        if n.getElementsByTagName("IMG").length > 0
+          s += " / " + n.getElementsByTagName("IMG")[0.to_s].src
+        end
+        s += "\n"
+      end
+      puts s
+    end
+    
+    # this method shows the name, id etc of the object that is currently active - ie the element that has focus
+    # its mostly used in irb when creating a script
+    def show_active
+      s = ""
+      
+      current = document.activeElement
+      begin
+        s += current.invoke("type").to_s.ljust(16)
+      rescue
+      end
+      props = ["name", "id", "value", "alt", "src", "innerText", "href"]
+      props.each do |prop|
+        begin
+          p = current.invoke(prop)
+          s += "  " + "#{prop}=#{p}".to_s.ljust(18)
+        rescue
+          #this object probably doesnt have this property
+        end
+      end
+      s += "\n"
+    end
+    
+    # this method shows all the divs availble in the document
+    def show_divs
+      divs = document.getElementsByTagName("DIV")
+      puts "Found #{divs.length} div tags"
+      index = 1
+      divs.each do |d|
+        puts "#{index}  id=#{d.invoke('id')}      class=#{d.invoke("className")}"
+        index += 1
+      end
+    end
+    
+    # this method is used to show all the tables that are available
+    def show_tables
+      tables = document.getElementsByTagName("TABLE")
+      puts "Found #{tables.length} tables"
+      index = 1
+      tables.each do |d|
+        puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{begin d.rows["0"].cells.length; rescue; end}"
+        index += 1
+      end
+    end
+    
+    def show_pres
+      pres = document.getElementsByTagName("PRE")
+      puts "Found #{ pres.length } pre tags"
+      index = 1
+      pres.each do |d|
+        puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
+        index+=1
+      end
+    end
+    
+    # this method shows all the spans availble in the document
+    def show_spans
+      spans = document.getElementsByTagName("SPAN")
+      puts "Found #{spans.length} span tags"
+      index = 1
+      spans.each do |d|
+        puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
+        index += 1
+      end
+    end
+    
+    def show_labels
+      labels = document.getElementsByTagName("LABEL")
+      puts "Found #{labels.length} label tags"
+      index = 1
+      labels.each do |d|
+        puts "#{index}  text=#{d.invoke('innerText')}      class=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
+        index += 1
+      end
+    end
     
     #
     #           Factory Methods
@@ -1308,12 +1479,12 @@ module Watir
     
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
-    def check_for_http_error(ie)
-      url = ie.document.url
+    def check_for_http_error(container)
+      url = container.document.url
       # puts "url is " + url
       if /shdoclc.dll/.match(url)
         #puts "Match on shdoclc.dll"
-        m = /id=IEText.*?>(.*?)</i.match(ie.html)
+        m = /id=IEText.*?>(.*?)</i.match(container.html)
         if m
           
           #puts "Error is #{m[1]}"
@@ -1419,7 +1590,7 @@ module Watir
     def attach_modal(title)
       hwnd_modal = 0
       Watir::until_with_timeout(10) do
-        hwnd_modal = $fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
+        hwnd_modal, arr = $fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
         hwnd_modal > 0
       end
 
@@ -1682,173 +1853,6 @@ module Watir
     # *  checker   Proc Object, the checker that is to be disabled
     def disable_checker(checker)
       @error_checkers.delete(checker)
-    end
-    
-    #
-    # Show me state
-    #
-    
-    # This method is used to display the available html frames that Internet Explorer currently has loaded.
-    # This method is usually only used for debugging test scripts.
-    def show_frames
-      if allFrames = document.frames
-        count = allFrames.length
-        puts "there are #{count} frames"
-        for i in 0..count-1 do
-          begin
-            fname = allFrames[i.to_s].name.to_s
-            puts "frame  index: #{i + 1} name: #{fname}"
-          rescue => e
-            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" if e.to_s.match(/Access is denied/)
-          end
-        end
-      else
-        puts "no frames"
-      end
-    end
-    
-    # Show all forms displays all the forms that are on a web page.
-    def show_forms
-      if allForms = document.forms
-        count = allForms.length
-        puts "There are #{count} forms"
-        for i in 0..count-1 do
-          wrapped = FormWrapper.new(allForms.item(i))
-          puts "Form name: #{wrapped.name}"
-          puts "       id: #{wrapped.id}"
-          puts "   method: #{wrapped.method}"
-          puts "   action: #{wrapped.action}"
-        end
-      else
-        puts "No forms"
-      end
-    end
-    
-    # this method shows all the images availble in the document
-    def show_images
-      doc = document
-      index = 1
-      doc.images.each do |l|
-        puts "image: name: #{l.name}"
-        puts "         id: #{l.invoke("id")}"
-        puts "        src: #{l.src}"
-        puts "      index: #{index}"
-        index += 1
-      end
-    end
-    
-    # this method shows all the links availble in the document
-    def show_links
-      props = ["name", "id", "href"]
-      print_sizes = [12, 12, 60]
-      doc = document
-      index = 0
-      text_size = 60
-      # draw the table header
-      s = "index".ljust(6)
-      props.each_with_index do |p, i|
-        s += p.ljust(print_sizes[i])
-      end
-      s += "text/src".ljust(text_size)
-      s += "\n"
-      
-      # now get the details of the links
-      doc.links.each do |n|
-        index += 1
-        s = s + index.to_s.ljust(6)
-        props.each_with_index do |prop, i|
-          printsize = print_sizes[i]
-          begin
-            p = n.invoke(prop)
-            temp_var = "#{p}".to_s.ljust(printsize)
-          rescue
-            # this object probably doesnt have this property
-            temp_var = "".to_s.ljust(printsize)
-          end
-          s += temp_var
-        end
-        s += n.innerText
-        if n.getElementsByTagName("IMG").length > 0
-          s += " / " + n.getElementsByTagName("IMG")[0.to_s].src
-        end
-        s += "\n"
-      end
-      puts s
-    end
-    
-    # this method shows the name, id etc of the object that is currently active - ie the element that has focus
-    # its mostly used in irb when creating a script
-    def show_active
-      s = ""
-      
-      current = document.activeElement
-      begin
-        s += current.invoke("type").to_s.ljust(16)
-      rescue
-      end
-      props = ["name", "id", "value", "alt", "src", "innerText", "href"]
-      props.each do |prop|
-        begin
-          p = current.invoke(prop)
-          s += "  " + "#{prop}=#{p}".to_s.ljust(18)
-        rescue
-          #this object probably doesnt have this property
-        end
-      end
-      s += "\n"
-    end
-    
-    # this method shows all the divs availble in the document
-    def show_divs
-      divs = document.getElementsByTagName("DIV")
-      puts "Found #{divs.length} div tags"
-      index = 1
-      divs.each do |d|
-        puts "#{index}  id=#{d.invoke('id')}      class=#{d.invoke("className")}"
-        index += 1
-      end
-    end
-    
-    # this method is used to show all the tables that are available
-    def show_tables
-      tables = document.getElementsByTagName("TABLE")
-      puts "Found #{tables.length} tables"
-      index = 1
-      tables.each do |d|
-        puts "#{index}  id=#{d.invoke('id')}      rows=#{d.rows.length}   columns=#{begin d.rows["0"].cells.length; rescue; end}"
-        index += 1
-      end
-    end
-    
-    def show_pres
-      pres = document.getElementsByTagName("PRE")
-      puts "Found #{ pres.length } pre tags"
-      index = 1
-      pres.each do |d|
-        puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
-        index+=1
-      end
-    end
-    
-    # this method shows all the spans availble in the document
-    def show_spans
-      spans = document.getElementsByTagName("SPAN")
-      puts "Found #{spans.length} span tags"
-      index = 1
-      spans.each do |d|
-        puts "#{index}   id=#{d.invoke('id')}      class=#{d.invoke("className")}"
-        index += 1
-      end
-    end
-    
-    def show_labels
-      labels = document.getElementsByTagName("LABEL")
-      puts "Found #{labels.length} label tags"
-      index = 1
-      labels.each do |d|
-        puts "#{index}  text=#{d.invoke('innerText')}      class=#{d.invoke("className")}  for=#{d.invoke("htmlFor")}"
-        index += 1
-      end
     end
     
     # Gives focus to the frame
@@ -2569,7 +2573,7 @@ module Watir
         # :TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
           Watir::until_with_timeout(10) do
-            hwnd_modal = $fnFindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
+            hwnd_modal, arr = $fnFindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
             hwnd_modal > 0
           end
         when "Regexp"
@@ -2610,7 +2614,7 @@ module Watir
     end
 
     # don't do waits in a modal dialog as they block
-    def wait
+    def wait(no_sleep=false)
     end
   end
 
@@ -3639,7 +3643,8 @@ module Watir
   end
   
   # This is the main class for accessing buttons.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
+  # Normally a user would not need to create this object as it is
+  # returned by the Watir::Container#button method
   class Button < InputElement
     INPUT_TYPES = ["button", "submit", "image", "reset"]
   end
