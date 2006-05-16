@@ -11,3 +11,4 @@ Things that need to be addressed before committing this code.
 9. do we really want to attach an error checker to frames?
 10. revert globals to class variables
 11. click_no_wait appears to be broken
+12. enabled_popup should be private
