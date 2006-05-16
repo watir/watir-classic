@@ -1,0 +1,136 @@
+Loaded suite C:/workspace/watir-modal/unittests/modal_dialog_test
+Started
+Unknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+FUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+FUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+EUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+FUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+FUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+EUnknown property or method `HWND'
+    HRESULT error code:0x80020006
+      Unknown name.
+E
+Finished in 69.845 seconds.
+
+  1) Failure:
+test_modal_dialog_use_case_default(TC_ModalDialog) [C:/workspace/watir-modal/unittests/modal_dialog_test.rb:47]:
+<nil> is not true.
+
+  2) Failure:
+test_modal_dialog_use_case_hwnd(TC_ModalDialog) [C:/workspace/watir-modal/unittests/modal_dialog_test.rb:70]:
+<nil> is not true.
+
+  3) Error:
+test_modal_dialog_use_case_invalid(TC_ModalDialog):
+RuntimeError: No Modal Dialog found for current Watir::IE page.
+    C:/workspace/watir-modal/unittests/../watir.rb:2567:in `locate'
+    C:/workspace/watir-modal/unittests/../watir.rb:2605:in `initialize'
+    C:/workspace/watir-modal/unittests/../watir.rb:688:in `new'
+    C:/workspace/watir-modal/unittests/../watir.rb:688:in `modal_dialog'
+    C:/workspace/watir-modal/unittests/modal_dialog_test.rb:137:in `test_modal_dialog_use_case_invalid'
+
+  4) Failure:
+test_modal_dialog_use_case_title(TC_ModalDialog) [C:/workspace/watir-modal/unittests/modal_dialog_test.rb:93]:
+<nil> is not true.
+
+  5) Failure:
+test_modal_dialog_use_case_title_regexp(TC_ModalDialog) [C:/workspace/watir-modal/unittests/modal_dialog_test.rb:116]:
+<nil> is not true.
+
+  6) Error:
+test_modal_use_case(TC_ModalDialog):
+RuntimeError: Unable to attach to Modal Window Modal Dialog
+    C:/workspace/watir-modal/unittests/../watir.rb:1603:in `attach_modal'
+    C:/workspace/watir-modal/unittests/modal_dialog_test.rb:23:in `test_modal_use_case'
+
+  7) Error:
+test_wait_should_not_block(TC_ModalDialog):
+RuntimeError: Unable to attach to Modal Window Modal Dialog
+    C:/workspace/watir-modal/unittests/../watir.rb:1603:in `attach_modal'
+    C:/workspace/watir-modal/unittests/modal_dialog_test.rb:33:in `test_wait_should_not_block'
+
+7 tests, 5 assertions, 4 failures, 3 errors
+
+
+----
+
+Loaded suite C:/workspace/watir-modal/unittests/window_tests
+Started
+.................ArgumentError
+FArgumentError
+FArgumentError
+EArgumentError
+FArgumentError
+FArgumentError
+EArgumentError
+E.ArgumentError
+Eundefined method `link' for main:Object
+E...
+Finished in 95.705 seconds.
+
+  1) Failure:
+test_modal_dialog_use_case_default(TC_ModalDialog) [C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:47]:
+<nil> is not true.
+
+  2) Failure:
+test_modal_dialog_use_case_hwnd(TC_ModalDialog) [C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:70]:
+<nil> is not true.
+
+  3) Error:
+test_modal_dialog_use_case_invalid(TC_ModalDialog):
+RuntimeError: No Modal Dialog found for current Watir::IE page.
+    C:/workspace/watir-modal/unittests/../watir.rb:2567:in `locate'
+    C:/workspace/watir-modal/unittests/../watir.rb:2605:in `initialize'
+    C:/workspace/watir-modal/unittests/../watir.rb:688:in `new'
+    C:/workspace/watir-modal/unittests/../watir.rb:688:in `modal_dialog'
+    C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:137:in `test_modal_dialog_use_case_invalid'
+
+  4) Failure:
+test_modal_dialog_use_case_title(TC_ModalDialog) [C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:93]:
+<nil> is not true.
+
+  5) Failure:
+test_modal_dialog_use_case_title_regexp(TC_ModalDialog) [C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:116]:
+<nil> is not true.
+
+  6) Error:
+test_modal_use_case(TC_ModalDialog):
+RuntimeError: Unable to attach to Modal Window Modal Dialog
+    C:/workspace/watir-modal/unittests/../watir.rb:1603:in `attach_modal'
+    C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:23:in `test_modal_use_case'
+
+  7) Error:
+test_wait_should_not_block(TC_ModalDialog):
+RuntimeError: Unable to attach to Modal Window Modal Dialog
+    C:/workspace/watir-modal/unittests/../watir.rb:1603:in `attach_modal'
+    C:/workspace/watir-modal/unittests/../unittests/modal_dialog_test.rb:33:in `test_wait_should_not_block'
+
+  8) Error:
+test_attach_to_new_window_using_click_no_wait(TC_NewWindow):
+Watir::Exception::NoMatchingWindowFoundException: Unable to locate a window with title of "Pass Page"
+    C:/workspace/watir-modal/unittests/../watir.rb:1572:in `attach_browser_window'
+    C:/workspace/watir-modal/unittests/../watir.rb:1444:in `attach_init'
+    C:/workspace/watir-modal/unittests/../watir.rb:1437:in `attach'
+    C:/ruby/lib/ruby/gems/1.8/gems/watir-1.5.0.945/./unittests/attach_to_new_window_test.rb:32:in `test_attach_to_new_window_using_click_no_wait'
+
+  9) Error:
+test_attach_to_new_window_using_separate_process(TC_NewWindow):
+Watir::Exception::NoMatchingWindowFoundException: Unable to locate a window with title of "Pass Page"
+    C:/workspace/watir-modal/unittests/../watir.rb:1572:in `attach_browser_window'
+    C:/workspace/watir-modal/unittests/../watir.rb:1444:in `attach_init'
+    C:/workspace/watir-modal/unittests/../watir.rb:1437:in `attach'
+    C:/ruby/lib/ruby/gems/1.8/gems/watir-1.5.0.945/./unittests/attach_to_new_window_test.rb:24:in `test_attach_to_new_window_using_separate_process'
+
+30 tests, 36 assertions, 4 failures, 5 errors

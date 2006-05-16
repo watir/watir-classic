@@ -1,0 +1,13 @@
+Things that need to be addressed before committing this code.
+
+1. hwnd_modal === 
+2. logic in hwnd() -- should set @hwnd, no?
+3. need tests to verify click_no_wait, etc work with other containers
+4. need tests to verify text(), html() work with frames and other containers (suspect this is broken)
+5. remove duplication between attach_modal and modal_dialog
+6. remove :title option
+7. fix modal_dailog_test errors
+8. make enabled_popup private
+9. do we really want to attach an error checker to frames?
+10. revert globals to class variables
+11. click_no_wait appears to be broken
