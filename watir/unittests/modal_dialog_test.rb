@@ -44,7 +44,7 @@ class TC_ModalDialog < Test::Unit::TestCase
     $ie.button(:value, 'Launch Dialog').click_no_wait
 
     # Test that enabled_popup sees a popup window.
-    assert($ie.enabled_popup)
+    assert_not_nil($ie.enabled_popup)
 
     modal = $ie.modal_dialog
 
@@ -59,7 +59,7 @@ class TC_ModalDialog < Test::Unit::TestCase
     modal.button(:value, 'Close').click
 
     # Assert that we no longer have any popups
-    assert(!$ie.enabled_popup(1))
+    assert_nil($ie.enabled_popup(1))
     assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
@@ -67,7 +67,7 @@ class TC_ModalDialog < Test::Unit::TestCase
   def test_modal_dialog_use_case_hwnd
     $ie.button(:value, 'Launch Dialog').click_no_wait
     # Test that enabled_popup sees a popup window.
-    assert($ie.enabled_popup)
+    assert_not_nil($ie.enabled_popup)
 
     modal = $ie.modal_dialog(:hwnd)
 
@@ -90,7 +90,7 @@ class TC_ModalDialog < Test::Unit::TestCase
   def test_modal_dialog_use_case_title
     $ie.button(:value, 'Launch Dialog').click_no_wait
     # Test that enabled_popup sees a popup window.
-    assert($ie.enabled_popup)
+    assert_not_nil($ie.enabled_popup)
 
     modal = $ie.modal_dialog(:title, 'Modal Dialog')
 
@@ -113,7 +113,7 @@ class TC_ModalDialog < Test::Unit::TestCase
   def test_modal_dialog_use_case_title_regexp
     $ie.button(:value, 'Launch Dialog').click_no_wait
     # Test that enabled_popup sees a popup window.
-    assert($ie.enabled_popup)
+    assert_not_nil($ie.enabled_popup)
 
     modal = $ie.modal_dialog(:title, /dal Dia/)
 
