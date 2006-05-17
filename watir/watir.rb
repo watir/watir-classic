@@ -3345,7 +3345,8 @@ module Watir
     def select(item)
       select_item_in_select_list(:text, item)
     end
-    
+    alias :set :select 
+       
     # Selects an item, or items in a select box, by value.
     # Raises NoValueFoundException   if the specified value is not found.
     #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
