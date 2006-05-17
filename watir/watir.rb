@@ -138,6 +138,10 @@
 =end
 
 # Use our modified win32ole library
+# Bret's spawned command:
+# rubyw -e "temp = Array.new([\"C:/workspace/watir-modal/unittests/../watir/win32ole\", \"C:/workspace/watir-modal/unittests/..\", \"C:\\\\workspace\\\\watir-modal\", \"C:\\\\workspace\\\\watir-modal\\\\unittests\", \"C:/ruby/lib/ruby/site_ruby/1.8\", \"C:/ruby/lib/ruby/site_ruby/1.8/i386-msvcrt\", \"C:/ruby/lib/ruby/site_ruby\", \"C:/ruby/lib/ruby/1.8\", \"C:/ruby/lib/ruby/1.8/i386-mswin32\", \".\"]); $LOAD_PATH.clear; temp.each {|element| $LOAD_PATH << element};begin; require 'watir'; include Watir; IE.attach(:hwnd, 1053954).button(:id, \"btnAlert\").click; rescue => e; puts e; end;"
+#$LOAD_PATH.unshift( "C:\\\\Documents and Settings\\\\davids\\\\My Documents\\\\Rails\\\\modal_dialog",
+#                    "C:\\\\Documents and Settings\\\\davids\\\\My Documents\\\\Rails\\\\modal_dialog\\\\unittests" )
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
 require 'win32ole'
 
@@ -362,26 +366,48 @@ module Watir
     # Uses the :hwnd method for the Watir::IE object to guarantee
     # that we are communicating to the SAME instance of Internet Explorer.
     def to_identifier
-      current_object = self
-      array = []
-
-      # Generate a string to identify the current object, suitable
-      # for passing to an external process or thread for click_no_wait.
-      while current_object and !current_object.instance_of?(Watir::IE)
-        parent_object = current_object.instance_variable_get("@container")
-        class_string = current_object.class.to_s.sub('Watir::', '').downcase
-        how_string = current_object.instance_variable_get("@how").inspect
-        what_string = current_object.instance_variable_get("@what").inspect
-        # Get object string (like "Button(:id, '<button id>')"
-        array <<
-           "#{class_string}(#{how_string}, #{what_string})"
-        current_object = parent_object
+      if @ie
+        return "IE.attach(:hwnd, #{@ie.HWND})"
+      else
+        identifier = @container.to_identifier
+        identifier += ".#{method_name}(#{@how.inspect}, #{@what.inspect})"
+        return identifier
       end
-      array << "IE.attach(:hwnd, #{current_object.ie.HWND})"
-      
-      # Since each element is added in reverse order, reverse and then
-      # join all the elements to form the result string.
-      array.reverse.join('.')
+    end
+
+    # In the method_names method below we determine the class by using
+    # self.name.  If this is simply a method included with Container
+    # then "self" equals "Container" (not the class including Container).
+    # Thanks to Ezra Zygmuntowicz (ez@brainspl.at) for this method
+    # which will create a class instance method when included into
+    # a class.
+    # This code is here to support easier unit testing of the
+    # method_name method
+    def self.included(base)
+      base.extend(ClassMethods)         # Create <class>.method_names
+      base.send(:include, ClassMethods) #   and <object>.method_names
+    end
+
+    module ClassMethods
+      # Take our class name and convert from CamelCase to
+      # underscore to get our method name.  (This is overriden
+      # in some classes where the method name doesn't conform
+      # like "PopUp" -> "popup" or "TableCell" -> "cell".)
+      def method_name
+        self.methods_class_name.sub('Watir::', '').
+          gsub(/::/, '/'). 
+          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2'). 
+          gsub(/([a-z\d])([A-Z])/,'\1_\2'). 
+          tr("-", "_"). 
+          downcase
+      end
+      def methods_class_name
+        if Class == self.class
+          self.to_s
+        else
+          self.class.to_s
+        end
+      end
     end
 
     def enabled_popup(timeout=4)
@@ -1775,7 +1801,7 @@ module Watir
       end
       return returnValue
     end
-    
+
     #
     # Synchronization
     #
@@ -2186,6 +2212,9 @@ module Watir
     end
     def wait
     end
+    def self.method_name
+      'attach_modal'
+    end
   end
   #
   # MOVETO: watir/popup.rb
@@ -2200,6 +2229,10 @@ module Watir
     
     def button(caption)
       return JSButton.new(@container.getIE.hwnd, caption)
+    end
+    
+    def self.method_name
+      'popup'
     end
   end
   
@@ -3129,7 +3162,10 @@ module Watir
     def each
       1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
     end
-    
+
+    def self.method_name
+      'bodies'
+    end
   end
   
   # this class is a table body
@@ -3172,6 +3208,10 @@ module Watir
     # returns the number of rows in this table body.
     def length
       return @rows.length
+    end
+    
+    def self.method_name
+      'body'
     end
   end
   
@@ -3231,6 +3271,10 @@ module Watir
       locate
       @cells.length
     end
+
+    def self.method_name
+      'row'
+    end
   end
   
   # this class is a table cell - when called via the Table object
@@ -3277,6 +3321,9 @@ module Watir
       @o.colSpan
     end
     
+    def self.method_name
+      'cell'
+    end
   end
   
   # This class is the means of accessing an image on a page.
@@ -3971,7 +4018,9 @@ module Watir
       highlight(:clear)
     end
     
-    
+    def self.method_name
+      'checkbox'
+    end
   end
   
   #--
@@ -4176,6 +4225,9 @@ module Watir
     include CommonCollection
     def element_class; TableRow; end
     def element_tag; 'TR'; end
+    def self.method_name
+      'rows'
+    end
   end
   # this class accesses the table cells in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#cells method
@@ -4183,6 +4235,9 @@ module Watir
     include CommonCollection
     def element_class; TableCell; end
     def element_tag; 'TD'; end
+    def self.method_name
+      'cells'
+    end
   end
   # this class accesses the labels in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#labels method
