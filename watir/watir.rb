@@ -1549,9 +1549,11 @@ module Watir
           end
           ieTemp = aWin if(what.matches(title))
         when :hwnd
-          # find window by HWND
-          log " hwnd is: #{aWin.HWND}"
-          ieTemp = aWin if (what == (aWin.HWND))
+          begin
+            log "hwnd is: #{aWin.HWND}"
+            ieTemp = aWin if (what == (aWin.HWND))
+          rescue WIN32OLERuntimeError
+          end
         else
           raise ArgumentError
         end
