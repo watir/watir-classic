@@ -144,6 +144,7 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
+require 'watir/utils'
 
 class String
   def matches(x)
@@ -193,15 +194,6 @@ module Watir
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
       sleep 0.05
-    end
-  end
-  
-  def self.avoids_error(error) # block
-    begin
-      yield
-      true
-    rescue error
-      false
     end
   end
   
@@ -1076,13 +1068,14 @@ module Watir
     def page
       document.body.parentelement
     end
+    private :page
         
     # The HTML of the current page
     def html
       page.outerhtml
     end
     
-    # The text of the current p
+    # The text of the current page
     def text
       page.innertext.strip
     end
@@ -1292,7 +1285,7 @@ module Watir
       ieTemp = nil
       until ieTemp or Time.now - start_time > @@attach_timeout do
         ieTemp = find_window(how, what)
-        sleep 0.05 unless ieTemp
+        sleep 0.02 unless ieTemp
       end
       unless ieTemp
         raise NoMatchingWindowFoundException,
@@ -1499,58 +1492,62 @@ module Watir
     #
     # Synchronization
     #
+    include Watir::Utils
     
-    # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
+    # Block execution until the page has loaded.
     def wait(no_sleep=false)
       @down_load_time = 0
       start_load_time = Time.now
-      
-      s= Spinner.new(@enable_spinner)
-      while @ie.busy
-        sleep 0.02
-        s.spin
+      s = Spinner.new(@enable_spinner)
+
+      begin      
+        while @ie.busy
+          sleep 0.02; s.spin
+        end
+        s.reverse
+      rescue WIN32OLERuntimeError # IE window must have been closed
+        @down_load_time = Time.now - start_load_time
+        print "\b" if @enable_spinner
+        @rexmlDomobject = nil
+        return @down_load_time
       end
-      s.reverse
-      
-      log "wait: readystate=" + @ie.readyState.to_s
-      until @ie.readyState == READYSTATE_COMPLETE
-        sleep 0.02
-        s.spin
+              
+      until @ie.readyState == READYSTATE_COMPLETE do
+        sleep 0.02; s.spin
       end
-      sleep 0.02
-      
-      until Watir::avoids_error(WIN32OLERuntimeError) {@ie.document} do
-        sleep 0.02
+
+      sleep 0.02; s.spin
+
+      # at this point IE says it's ready, but still need to check each document     
+      until suppress_ole_error {@ie.document} do
+        sleep 0.02; s.spin
       end
       
-      until @ie.document.readyState == "complete"
-        sleep 0.02
-        s.spin
+      until @ie.document.readyState == "complete" 
+        sleep 0.02; s.spin
       end
       
       if @ie.document.frames.length > 1
         begin
           0.upto @ie.document.frames.length-1 do |i|
             until @ie.document.frames[i.to_s].document.readyState == "complete"
-              sleep 0.02
-              s.spin
+              sleep 0.02; s.spin
             end
-            @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
+            url = @ie.document.frames[i.to_s].document.url
+            @url_list << url unless url_list.include?(url)
           end
-        rescue => e
-          @rexmlDomobject = nil
-          @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
+        rescue WIN32OLERuntimeError
         end
       else
-        @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
+        url = @ie.document.url
+        @url_list << url unless @url_list.include?(url)
       end
       @down_load_time = Time.now - start_load_time
       run_error_checks
       print "\b" if @enable_spinner
-      s = nil
       @rexmlDomobject = nil
-      sleep 0.01
       sleep @defaultSleepTime unless no_sleep
+      @down_load_time
     end
     
     # Error checkers
@@ -4088,10 +4085,11 @@ module Watir
       @show_attributes.add("className", 20)
     end
   end
+
+  # Move to Watir::Utils
   
-  
-  @@autoit = nil
-  
+  @@autoit = nil  
+
   def self.autoit
     unless @@autoit
       begin

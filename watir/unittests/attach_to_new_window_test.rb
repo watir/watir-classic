@@ -3,12 +3,18 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
+require 'watir/testcase'
 
 class TC_NewWindow< Test::Unit::TestCase
   include Watir
+  execute :sequentially
   
   def setup
     $ie.goto($htmlRoot + "new_browser.html")
+    IE.attach_timeout = 0.2
+  end
+  def teardown
+    IE.attach_timeout = 0.2
   end
   
   def test_simply_attach_to_new_window
@@ -20,7 +26,7 @@ class TC_NewWindow< Test::Unit::TestCase
   
   def test_attach_to_new_window_using_separate_process
     $ie.eval_in_spawned_process "link(:text, 'New Window').click"
-    IE.attach_timeout = 1.0
+    IE.attach_timeout = 2.0
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
     ie_new.close
@@ -44,7 +50,7 @@ class TC_NewWindow< Test::Unit::TestCase
   
   def test_attach_to_slow_window_works_without_waiting
     $ie.span(:text, 'New Window Slowly').click
-    IE.attach_timeout = 0.8
+    IE.attach_timeout = 3.0
     ie_new = IE.attach(:title, 'Test page for buttons')
     assert(ie_new.text.include?('Blank page to fill in the frames'))
     ie_new.close
@@ -56,7 +62,7 @@ class TC_NewWindow< Test::Unit::TestCase
     assert_raise(Watir::Exception::NoMatchingWindowFoundException) do
       IE.attach(:title, 'Test page for buttons')
     end
-    sleep 2 # clean up
+    sleep 2.0 # clean up
     IE.attach(:title, 'Test page for buttons').close
   end        
   
