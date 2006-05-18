@@ -207,13 +207,18 @@ module Watir
   
   # add an error checker for http navigation errors, such as 404, 500 etc
   NAVIGATION_CHECKER = Proc.new do |ie|
-      if ie.document.frames.length > 1
-          1.upto ie.document.frames.length do |i|
-              ie.check_for_http_error(ie.frame(:index, i) )
-          end
-      else
-          ie.check_for_http_error(ie)
+    if ie.document.frames.length > 1
+      1.upto ie.document.frames.length do |i|
+        begin
+          ie.check_for_http_error(ie.frame(:index, i)  )
+        rescue Watir::Exception::UnknownFrameException
+          # frame can be already destroyed
+        end          
+        ie.check_for_http_error(ie.frame(:index, i) )
       end
+    else
+      ie.check_for_http_error(ie)
+    end
   end
 
   class WatirLogger < Logger
