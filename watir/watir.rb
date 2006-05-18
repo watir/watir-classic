@@ -2600,6 +2600,7 @@ module Watir
       when :hwnd
         hwnd_modal = enabled_popup(10)
         raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
+        @what = hwnd_modal    # save modal's hwnd in case we need to re-attach
       when :title
         case what.class.to_s
         # TODO: re-write like WET's so we can select on regular expressions too.

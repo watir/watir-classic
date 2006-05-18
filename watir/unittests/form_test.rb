@@ -15,12 +15,15 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     
     assert($ie.form("test2").exists?)   
     assert(!$ie.form( "missing").exists?)   
-    
+
     assert($ie.form(:index,  1).exists?)   
     assert(!$ie.form(:index, 88).exists?)   
     
     assert($ie.form(:method, "get").exists?)   
     assert(!$ie.form(:method, "missing").exists?)   
+    
+    assert($ie.form(:id, 'form2').exists?)   
+    assert(!$ie.form(:id, 'missing').exists?)   
     
     assert($ie.form(:action, "pass.html").exists?)   
     assert(!$ie.form(:action, "missing").exists?)   
@@ -32,7 +35,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   
   # The following tests from bug 2261 
   def test_form_html 
-    assert_equal("\r\n<FORM name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
+    assert_equal("\r\n<FORM id=form2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
     $ie.form(:name, 'test2').html)
   end
   def test_form_flash
@@ -57,7 +60,7 @@ Form name:
    method: get
    action: pass.html
 Form name: test2
-       id: 
+       id: form2
    method: get
    action: pass2.html
 Form name: test3
