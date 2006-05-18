@@ -210,14 +210,13 @@ module Watir
     if ie.document.frames.length > 1
       1.upto ie.document.frames.length do |i|
         begin
-          ie.check_for_http_error(ie.frame(:index, i)  )
+          ie.frame(:index, i).check_for_http_error
         rescue Watir::Exception::UnknownFrameException
           # frame can be already destroyed
         end          
-        ie.check_for_http_error(ie.frame(:index, i) )
       end
     else
-      ie.check_for_http_error(ie)
+      ie.check_for_http_error
     end
   end
 
@@ -1059,11 +1058,43 @@ module Watir
     
   end # module
   
+  module PageContainer
+    include Watir::Exception
+
+    # This method checks the currently displayed page for http errors, 404, 500 etc
+    # It gets called internally by the wait method, so a user does not need to call it explicitly
+    def check_for_http_error
+      url = self.document.url
+      if /shdoclc.dll/.match(url)
+        m = /id=IEText.*?>(.*?)</i.match(self.html)
+        raise NavigationException, m[1] if m
+      end
+      false
+    end
+    
+    # The HTML Page
+    def page
+      document.body.parentelement
+    end
+        
+    # The HTML of the current page
+    def html
+      page.outerhtml
+    end
+    
+    # The text of the current p
+    def text
+      page.innertext.strip
+    end
+
+  end # module
+  
   # This class is the main Internet Explorer Controller
   # An instance of this must be created to access Internet Explorer.
   class IE
     include Watir::Exception
     include Container
+    include PageContainer
     
     @@extra = nil
     @@persist_ole_connection = nil
@@ -1188,23 +1219,7 @@ module Watir
       
     end
     private :set_defaults
-    
-    # This method checks the currently displayed page for http errors, 404, 500 etc
-    # It gets called internally by the wait method, so a user does not need to call it explicitly
-    def check_for_http_error(ie)
-      url = ie.document.url
-      # puts "url is " + url
-      if /shdoclc.dll/.match(url)
-        #puts "Match on shdoclc.dll"
-        m = /id=IEText.*?>(.*?)</i.match(ie.html)
-        if m
-          
-          #puts "Error is #{m[1]}"
-          raise NavigationException, m[1]
-        end
-      end
-    end
-    
+        
     def speed=(how_fast)
       case how_fast
       when :fast : set_fast_speed
@@ -1360,7 +1375,6 @@ module Watir
     def goto(url)
       @ie.navigate(url)
       wait
-      sleep 0.2
       return @down_load_time
     end
     
@@ -1424,16 +1438,14 @@ module Watir
     def set_window_state(state)
       autoit.WinSetState title, '', autoit.send(state)
     end
-    
-    private
     def autoit
       Watir::autoit
     end
+    public
     
     # Send key events to IE window.
     # See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
     # for complete documentation on keys supported and syntax.
-    public
     def send_keys(key_string)
       autoit.WinActivate title
       autoit.Send key_string
@@ -1448,7 +1460,6 @@ module Watir
     #
     
     # Return the current document
-    public
     def document
       return @ie.document
     end
@@ -1561,16 +1572,6 @@ module Watir
     # *  checker   Proc Object, the checker that is to be disabled
     def disable_checker(checker)
       @error_checkers.delete(checker)
-    end
-    
-    # The HTML of the current page
-    def html
-      return document.body.parentelement.outerhtml
-    end
-    
-    # The text of the current document
-    def text
-      return document.body.parentelement.innertext.strip
     end
     
     #
@@ -2398,6 +2399,7 @@ module Watir
   
   class Frame
     include Container
+    include PageContainer
     
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate

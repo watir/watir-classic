@@ -1,9 +1,9 @@
+# libraries used by feature tests
+require 'watir'
 END {$ie.close if $ie; Watir::IE.quit} # close ie at completion of the tests
 
-# libraries used by feature tests
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-require 'watir'
 require 'watir/testUnitAddons'
 
 topdir = File.join(File.dirname(__FILE__), '..')
