@@ -48,7 +48,7 @@ class TC_IEDialog < Test::Unit::TestCase
     # now we get the HTML DOM object!
     doc2 = scriptEngine.document
     body = doc2.body
-    assert_equal('PASS', body.innerHTML.strip)    
+    assert_match(/^PASS/, body.innerHTML.strip)    
   end
 end
 

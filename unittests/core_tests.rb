@@ -6,7 +6,7 @@ $LOAD_PATH.unshift TOPDIR
 require 'unittests/setup.rb'
 
 Dir.chdir TOPDIR
-$core_tests.each {|x| require x unless x =~ /xpath/}
+$core_tests.each {|x| require x}
 
 $HIDE_IE = true
 $ie.visible = false

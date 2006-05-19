@@ -29,3 +29,5 @@ class TC3_Alphabetical_Specified < Test::Unit::TestCase
   def test_c; print 'K'; end
 end
 
+class TC4_No_Test_Methods < Test::Unit::TestCase
+end
