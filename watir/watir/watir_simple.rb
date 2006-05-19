@@ -259,7 +259,7 @@ module Watir
   # * mesg - An assertion-failed message.
 	def assert_text_not_in_body(text,mesg=nil)
 		if mesg.nil? then
-			assert(! @@browser.pageContainsText(text), "couldn't find in body: [#{text}]")
+			assert(! @@browser.pageContainsText(text), "found in body: [#{text}]")
 		else
 			assert(! @@browser.pageContainsText(text), mesg)
 		end
