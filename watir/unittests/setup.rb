@@ -5,10 +5,12 @@ END {$ie.close if $ie; Watir::IE.quit} # close ie at completion of the tests
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
+require 'watir/testcase'
 
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
+  $xpath_tests = Dir["unittests/*_xpath_test.rb"]
 end
 
 $window_tests =
@@ -33,7 +35,7 @@ $non_core_tests =
      'dialog' # visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
-$core_tests = $all_tests - $non_core_tests - $window_tests
+$core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
 
 def start_ie_with_logger
   $ie = Watir::IE.new

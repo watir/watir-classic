@@ -8,6 +8,7 @@ module Test
         @@order = order
       end
       def self.sorted_test_methods
+        @methods ||= []
         method_names = @methods.clone
         method_names.delete_if {|method_name| method_name !~ /^test./}
         @order ||= @@order
