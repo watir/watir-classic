@@ -16,7 +16,7 @@ end
 $window_tests =
     ['js_events', # is always visible
      'modal_dialog', # modal is visible
-     'attachToExistingWindow', # could actually run robustly as part of the core suite!
+     'attach_to_existing_window', # could actually run robustly as part of the core suite!
      'attach_to_new_window', # creates new window
      'jscript',
      'send_keys', # visible
