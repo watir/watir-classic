@@ -146,6 +146,10 @@ require 'watir/winClicker'
 require 'watir/exceptions'
 require 'watir/utils'
 
+require 'dl/import'
+require 'dl/struct'
+require 'Win32API'
+
 class String
   def matches(x)
     return self == x
@@ -173,13 +177,13 @@ def command_line_flag(switch)
   return setting
 end
 
-# Constant to make Internet Explorer minimize. -b stands for background
+# Make Internet Explorer minimize. -b stands for background
 $HIDE_IE = command_line_flag('-b')
 
-# Constant to enable/disable the spinner
+# Display a spinner when IE is waiting. This works when run on the console.
 $ENABLE_SPINNER = command_line_flag('-x')
 
-# Constant to set fast speed
+# Run fast
 $FAST_SPEED = command_line_flag('-f')
 
 # Eat the -s command line switch (deprecated)
@@ -189,7 +193,7 @@ module Watir
   include Watir::Exception
   
   @@dir = File.expand_path(File.dirname(__FILE__))
-  
+
   def self.until_with_timeout(timeout=10) # block
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
@@ -253,6 +257,27 @@ module Watir
       @i = 0 if @i > @s.length - 1
       return @s[@i]
     end
+  end
+  
+  module Win32
+    # this will find the IEDialog.dll file in its build location
+    @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+
+    GetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')    
+    User32 = DL.dlopen('user32')
+    FindWindowEx = User32['FindWindowEx', 'LLLpp']    
+    # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
+    GetWindow = User32['GetWindow', 'ILL']
+    
+    ## GetWindows Constants
+    GW_HWNDFIRST = 0
+    GW_HWNDLAST = 1
+    GW_HWNDNEXT = 2
+    GW_HWNDPREV = 3
+    GW_OWNER = 4
+    GW_CHILD = 5
+    GW_ENABLEDPOPUP = 6
+    GW_MAX = 6
   end
   
   # This module contains the factory methods that are used to access most html objects
@@ -394,6 +419,34 @@ module Watir
       return TableRows.new(self)
     end
     
+    # This is the main method for accessing a modal dialog, which looks mostly like
+    # an IE or Frame object.
+    #  *  how   - symbol - how we access the button
+    #  *  what  - string, int, re or xpath query, what we are looking for,
+    # Returns a ModalDialog object.
+    #
+    # Valid values for 'how' are
+    #
+    #    :hwnd       - find the item using a window handle (HWND).  (Defaults to HWND
+    #                  of the dialog's parent Watir::IE or Watir::ModalDialog object.)
+    #    :title      - find the item using the modal dialog's title attribute
+    #
+    # Typical Usage
+    #
+    #    ie.modal_dialog                                # access the modal dialog using ie.ie.HWND
+    #    ie.modal_dialog(:hwnd)                         #   "     "    "     "      "       "
+    #    ie.modal_dialog(:title, 'Title')               # access the modal dialog with a title of Title
+    #    ie.modal_dialog.modal_dialog                   # access a modal dialog's modal dialog (by HWND)
+    #
+    #    By default, modal_dialog will be identified by it's
+    #    parent window which can be a Watir::IE window or
+    #    another modal dialog.
+    
+    # Don't use factory method so we can make :hwnd the default "how".
+    def modal_dialog(how=:hwnd, what=nil)
+      ModalDialog.new(self, how, what)
+    end
+
     # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
     #  *  how   - symbol - how we access the button
     #  *  what  - string, int, re or xpath query, what we are looking for,
@@ -1271,6 +1324,12 @@ module Watir
           rescue WIN32OLERuntimeError
           end
           ieTemp = aWin if(what.matches(title))
+        when :hwnd
+          begin
+            log "hwnd is: #{aWin.HWND}"
+            ieTemp = aWin if (what == (aWin.HWND))
+          rescue WIN32OLERuntimeError
+          end
         else
           raise ArgumentError
         end
@@ -1295,10 +1354,29 @@ module Watir
     end
     private :attach_browser_window
     
-    # this will find the IEDialog.dll file in its build location
-    @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
-    @@fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
-    @@fnGetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
+    def enabled_popup(timeout=4)
+      # Use handle of our parent window to see if we have any currently
+      # enabled popup.
+      hwnd_modal = 0
+      Watir::until_with_timeout(timeout) do
+        hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
+        
+        hwnd_modal > 0
+      end
+      # use hwnd() method to find the IE or Container hwnd (overriden by IE)
+      if hwnd_modal === hwnd() || 0 == hwnd_modal
+        hwnd_modal = nil
+      end
+      hwnd_modal
+    end
+
+    # Return the current window handle
+    def hwnd
+      raise "Not attached to a browser" if @ie.nil? 
+      @hwnd ||= @ie.hwnd
+    end
+    
+    include Watir::Win32
     
     # Attach to a modal dialog, returns a ModalPage object (acts like an IE object).
     # Note: unlike Watir.attach, this returns before the page is assured to have 
@@ -1306,14 +1384,14 @@ module Watir
     def attach_modal(title)
       hwnd_modal = 0
       Watir::until_with_timeout(10) do
-        hwnd_modal = @@fnFindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
+        hwnd_modal, arr = FindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
         hwnd_modal > 0
       end
 
       intUnknown = 0  
       Watir::until_with_timeout(10) do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
-        @@fnGetUnknown.call(hwnd_modal, intPointer)
+        GetUnknown.call(hwnd_modal, intPointer)
         intArray = intPointer.unpack('L')
         intUnknown = intArray.first
         intUnknown > 0
@@ -1325,7 +1403,7 @@ module Watir
       ModalPage.new(htmlDoc, self)
     end
 
-	# Are we attached to an open browser?
+  	# Are we attached to an open browser?
     def exists?
       return false if @closing
       begin
@@ -2449,6 +2527,74 @@ module Watir
     
   end
   
+  class ModalDialog
+    include Container
+    include PageContainer
+    include Win32
+
+    # Return the current window handle
+    attr_reader :hwnd
+
+    def locate
+      how = @how
+      what = @what
+      hwnd_modal = 0  # (to give it scope outside of loop
+
+      case how
+      when :hwnd
+        hwnd_modal = @container.enabled_popup(10)
+        raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
+        @what = hwnd_modal    # save modal's hwnd in case we need to re-attach
+      when :title
+        case what.class.to_s
+        # TODO: re-write like WET's so we can select on regular expressions too.
+        when "String"
+          Watir::until_with_timeout(10) do
+            hwnd_modal, arr = FindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
+            hwnd_modal > 0
+          end
+        when "Regexp"
+          raise ArgumentError, "Regexp matches not supported yet (what=#{what.inspect})"
+        else
+          raise ArgumentError, "Title value must be String or Regexp"
+        end
+      else
+        raise ArgumentError, "Only :hwnd and :title methods are supported for modal_dialog"
+      end
+      @hwnd = hwnd_modal
+
+      intUnknown = 0  
+      Watir::until_with_timeout(10) do
+        intPointer = " " * 4 # will contain the int value of the IUnknown*
+        GetUnknown.call(hwnd_modal, intPointer)
+        intArray = intPointer.unpack('L')
+        intUnknown = intArray.first
+        intUnknown > 0
+      end
+
+      raise "Unable to attach to Modal Window #{what.inspect}" unless intUnknown > 0
+      
+      WIN32OLE.connect_unknown(intUnknown)
+    end
+
+    def initialize(container, how, what=nil)
+      @container = container
+      @how = how
+      @what = what
+      # locate our modal dialog's Document object and save it
+      @o = locate
+      copy_test_config container
+    end
+
+    def document
+      @o
+    end
+
+    # don't do waits in a modal dialog as they block
+    def wait(no_sleep=false)
+    end
+  end
+
   # this class is the super class for the iterator classes (buttons, links, spans etc
   # it would normally only be accessed by the iterator methods (spans, links etc) of IE
   class ElementCollections
@@ -3475,7 +3621,8 @@ module Watir
   end
   
   # This is the main class for accessing buttons.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#button method
+  # Normally a user would not need to create this object as it is
+  # returned by the Watir::Container#button method
   class Button < InputElement
     INPUT_TYPES = ["button", "submit", "image", "reset"]
   end

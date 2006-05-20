@@ -28,7 +28,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
   
   def test_button_name_not_found
     $ie.button(:id, 'btnAlert').click_no_wait
-    sleep 0.4 # FIXME
+    sleep 0.4 # FIXME replace with dialog.exists?
     assert_raises(UnknownObjectException) { dialog.button("Yes").click }
     dialog.button("OK").click
   end

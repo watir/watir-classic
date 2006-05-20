@@ -3,6 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
+require 'CGI'
 
 class TC_Links < Test::Unit::TestCase
   include Watir
@@ -155,8 +156,8 @@ class TC_showlinks < Test::Unit::TestCase
     $stdout = @mockout
     $ie.showLinks
     expected = [/^index name +id +href + text\/src$/,
-    get_path_regex(1, "links2.html","test1"),
-    get_path_regex(2, "link_pass.html","test1"),
+    get_path_regex(1, "links2.html", "test1"),
+    get_path_regex(2, "link_pass.html", "test1"),
     get_path_regex(3, "pass3.html", " / file:///#{$myDir.downcase}/html/images/button.jpg"),
     get_path_regex(4, "textarea.html", "new window"),
     get_path_regex(5, "textarea.html", "new window"),
@@ -164,7 +165,7 @@ class TC_showlinks < Test::Unit::TestCase
     get_path_regex(7, "links1.html", "link using a name", "link_name"),
     get_path_regex(8, "links1.html", "link using a title"),
     get_path_regex(9, "pass.html", "image and a text link / file:///#{$myDir.downcase}/html/images/triangle.jpg")]
-    items = @mockout.split(/\n/).collect {|s|s.downcase.strip}
+    items = @mockout.split(/\n/).collect {|s| CGI.unescape(s.downcase.strip)}
     expected.each_with_index{|regex, x| assert_match(regex, items[x])}
   end
   
