@@ -1496,7 +1496,7 @@ module Watir
     
     # Block execution until the page has loaded.
     def wait(no_sleep=false)
-      @down_load_time = 0
+      @down_load_time = 0.0
       start_load_time = Time.now
       s = Spinner.new(@enable_spinner)
 
