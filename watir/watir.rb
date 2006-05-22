@@ -325,6 +325,41 @@ module Watir
       @container.wait(no_sleep)
     end
     
+    # In the method_names method below we determine the class by using
+    # self.name.  If this is simply a method included with Container
+    # then "self" equals "Container" (not the class including Container).
+    # Thanks to Ezra Zygmuntowicz (ez@brainspl.at) for this method
+    # which will create a class instance method when included into
+    # a class.
+    # This code is here to support easier unit testing of the
+    # method_name method
+    def self.included(base)
+      base.extend(ClassMethods)         # Create <class>.method_names
+      base.send(:include, ClassMethods) #   and <object>.method_names
+    end
+
+    module ClassMethods
+      # Take our class name and convert from CamelCase to
+      # underscore to get our method name.  (This is overriden
+      # in some classes where the method name doesn't conform
+      # like "PopUp" -> "popup" or "TableCell" -> "cell".)
+      def method_name
+        self.methods_class_name.sub('Watir::', '').
+          gsub(/::/, '/'). 
+          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2'). 
+          gsub(/([a-z\d])([A-Z])/,'\1_\2'). 
+          tr("-", "_"). 
+          downcase
+      end
+      def methods_class_name
+        if Class == self.class
+          self.to_s
+        else
+          self.class.to_s
+        end
+      end
+    end
+
     # Determine the how and what when defaults are possible.
     def process_default(default_attribute, how, what)
       if what == nil
