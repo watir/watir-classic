@@ -4,51 +4,48 @@ module Test
   module Unit
     class TestCase
       @@order = :alphabetically
-      def self.default_order= order
-        @@order = order
-      end
-      def self.sorted_test_methods
-        @methods ||= []
-        method_names = @methods.clone
-        method_names.delete_if {|method_name| method_name !~ /^test./}
-        @order ||= @@order
-        case @order
-        when :alphabetically
-          method_names.sort
-        when :sequentially
-          method_names
-        when :reversed_sequentially
-          method_names.reverse
-        when :reversed_alphabetically
-          method_names.sort.reverse
-        else
-          raise ArgumentError, "Execute option not supported: #{@order}"
+      class << self
+        attr_accessor :test_methods, :order
+        def test_methods
+          @test_methods ||= []
         end
-      end
-      def self.suite
-        tests = sorted_test_methods
-        suite = TestSuite.new(name)
-        tests.each do
-          |test|
-          catch(:invalid_test) do
-            suite << new(test)
+        def order
+          @order || @@order
+        end
+        def default_order= order
+          @@order = order
+        end
+        def sorted_test_methods
+          case order
+          when :alphabetically:          test_methods.sort
+          when :sequentially:            test_methods
+          when :reversed_sequentially:   test_methods.reverse
+          when :reversed_alphabetically: test_methods.sort.reverse
+          else raise ArgumentError, "Execute option not supported: #{@order}"
           end
         end
-        if (suite.empty?)
-          catch(:invalid_test) do
-            suite << new(:default_test)
+        def suite
+          suite = TestSuite.new(name)
+          sorted_test_methods.each do |test|
+            catch :invalid_test do
+              suite << new(test)
+            end
           end
+          if (suite.empty?)
+            catch :invalid_test do
+              suite << new(:default_test)
+            end
+          end
+          return suite
         end
-        return suite
-      end
-      def self.method_added id
-        @methods ||= []
-        @methods << id.id2name
-      end
-      def self.execute order
-        @order = order
+        def method_added id
+          name = id.id2name
+          test_methods << name if name =~ /^test./
+        end
+        def execute order
+          @order = order
+        end
       end
     end
   end
 end  
-
