@@ -2191,6 +2191,9 @@ module Watir
     end
     def wait
     end
+    def self.method_name
+      'attach_modal'
+    end
   end
   #
   # MOVETO: watir/popup.rb
@@ -2205,6 +2208,10 @@ module Watir
     
     def button(caption)
       return JSButton.new(@container.getIE.hwnd, caption)
+    end
+
+    def self.method_name
+      'popup'
     end
   end
   
@@ -3143,6 +3150,9 @@ module Watir
       1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
     end
     
+    def self.method_name
+      'bodies'
+    end
   end
   
   # this class is a table body
@@ -3185,6 +3195,10 @@ module Watir
     # returns the number of rows in this table body.
     def length
       return @rows.length
+    end
+    
+    def self.method_name
+      'body'
     end
   end
   
@@ -3244,6 +3258,10 @@ module Watir
       locate
       @cells.length
     end
+
+    def self.method_name
+      'row'
+    end
   end
   
   # this class is a table cell - when called via the Table object
@@ -3290,6 +3308,9 @@ module Watir
       @o.colSpan
     end
     
+    def self.method_name
+      'cell'
+    end
   end
   
   # This class is the means of accessing an image on a page.
@@ -3984,8 +4005,10 @@ module Watir
       end
       highlight(:clear)
     end
-    
-    
+
+    def self.method_name
+      'checkbox'
+    end
   end
   
   #--
