@@ -2891,7 +2891,7 @@ module Watir
     def label_string_creator
       n = []
       n <<   "for:".ljust(TO_S_SIZE) + self.for
-      n <<   "inner text:".ljust(TO_S_SIZE) + self.innertext
+      n <<   "text:".ljust(TO_S_SIZE) + self.text
       return n
     end
     private :label_string_creator
@@ -3434,7 +3434,7 @@ module Watir
     def link_string_creator
       n = []
       n <<   "href:".ljust(TO_S_SIZE) + self.href
-      n <<   "inner text:".ljust(TO_S_SIZE) + self.innertext
+      n <<   "inner text:".ljust(TO_S_SIZE) + self.text
       n <<   "img src:".ljust(TO_S_SIZE) + self.src if self.link_has_image
       return n
     end
