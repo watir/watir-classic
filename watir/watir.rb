@@ -138,10 +138,6 @@
 =end
 
 # Use our modified win32ole library
-# Bret's spawned command:
-# rubyw -e "temp = Array.new([\"C:/workspace/watir-modal/unittests/../watir/win32ole\", \"C:/workspace/watir-modal/unittests/..\", \"C:\\\\workspace\\\\watir-modal\", \"C:\\\\workspace\\\\watir-modal\\\\unittests\", \"C:/ruby/lib/ruby/site_ruby/1.8\", \"C:/ruby/lib/ruby/site_ruby/1.8/i386-msvcrt\", \"C:/ruby/lib/ruby/site_ruby\", \"C:/ruby/lib/ruby/1.8\", \"C:/ruby/lib/ruby/1.8/i386-mswin32\", \".\"]); $LOAD_PATH.clear; temp.each {|element| $LOAD_PATH << element};begin; require 'watir'; include Watir; IE.attach(:hwnd, 1053954).button(:id, \"btnAlert\").click; rescue => e; puts e; end;"
-#$LOAD_PATH.unshift( "C:\\\\Documents and Settings\\\\davids\\\\My Documents\\\\Rails\\\\modal_dialog",
-#                    "C:\\\\Documents and Settings\\\\davids\\\\My Documents\\\\Rails\\\\modal_dialog\\\\unittests" )
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
 require 'win32ole'
 
@@ -197,29 +193,19 @@ module Watir
   
   @@dir = File.expand_path(File.dirname(__FILE__))
   # this will find the IEDialog.dll file in its build location
-  $iedialog_file = (@@dir + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
-  IeDialog = DL.dlopen($iedialog_file)
-
-  User32 = DL.dlopen('user32')
-
-#  $fnFindWindowEx = Win32API.new('user32.dll', 'FindWindowEx', ['l', 'l', 'p', 'p'], 'l')
-  $fnFindWindowEx = User32['FindWindowEx', 'LLLpp']
-  $fnGetUnknown = Win32API.new($iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
+  iedialog_file = (@@dir + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+#  IeDialog = DL.dlopen(iedialog_file)
+  $fnGetUnknown = Win32API.new(iedialog_file, 'GetUnknown', ['l', 'p'], 'v')
 #  $fnGetUnknown = IeDialog['GetUnknown', 'llp']
 
+  User32 = DL.dlopen('user32')
+  $fnFindWindowEx = User32['FindWindowEx', 'LLLpp']
+
   # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
-#  $fnGetWindow = Win32API.new('user32.dll', 'GetWindow', ['l', 'l'], 'i')
   $fnGetWindow = User32['GetWindow', 'ILL']
 
-  ## GetWindows Constants
-  GW_HWNDFIRST = 0
-  GW_HWNDLAST = 1
-  GW_HWNDNEXT = 2
-  GW_HWNDPREV = 3
-  GW_OWNER = 4
-  GW_CHILD = 5
+  ## GetWindows Constant to get the HWND of an enabled popup.
   GW_ENABLEDPOPUP = 6
-  GW_MAX = 6
 
   def self.until_with_timeout(timeout=10) # block
     start_time = Time.now
@@ -419,7 +405,7 @@ module Watir
         hwnd_modal > 0
       end
       # use hwnd() method to find the IE or Container hwnd (overriden by IE)
-      if hwnd_modal === hwnd() || 0 == hwnd_modal
+      if hwnd_modal == hwnd() || 0 == hwnd_modal
         hwnd_modal = nil
       end
       hwnd_modal

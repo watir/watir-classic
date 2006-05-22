@@ -1,14 +1,47 @@
 Things that need to be addressed before committing this code.
 
 1. hwnd_modal === 
+	Looks like it was (is) a bug in WET as there's no way hwnd_modal can === hwnd().  changed to ==
+
 2. logic in hwnd() -- should set @hwnd, no?
+	No, hwnd is found in the ie COM object via ie.HWND or set in ModalDialog.  Anywhere else the method
+	will follow up the inheritance path.
+
 3. need tests to verify click_no_wait, etc work with other containers
+
 4. need tests to verify text(), html() work with frames and other containers (suspect this is broken)
+	It was.  Simple fix was to move html() and text() to Container instead of having it in IE.
+
 5. remove duplication between attach_modal and modal_dialog
+	Should I just remove attach_modal?  Right now it doesn't conflict so we *could* support them both.
+
 6. remove :title option
+	I disagree.  No harm in leaving :title option in modal_dialog, and it works fine.  (See modal_dialog_tests.rb)
+
 7. fix modal_dailog_test errors
+	Only error is the test that tries to use a regexp for title, which isn't implemented yet.
+
 8. make enabled_popup private
+	I disagree.  This is a VERY useful public function.  In scraping I use the following series:
+	A.	Call click_no_wait at the end of a page.
+	B.	Call enabled_popups() to see if *any* popup occurs (modal, javascript or security)
+	C.	Call the proper method to attach to and clear the popup, depending on the page.
+
 9. do we really want to attach an error checker to frames?
+	I'm not sure why this is here?  It's not a part of implementing modal dialog support
+
 10. revert globals to class variables
+	Since the functions are called from within different classes they need to be global
+
 11. click_no_wait appears to be broken
-12. enabled_popup should be private
+	Fixed.  Needed to catch an exception in find_window for windows with no HWND function.
+
+
+Outside modal_dialog:
+
+1. There aren't any tests to click on a table cell (ie.cell(:text, /click here/).click)
+
+2. ie.tables.show only shows index and id, and misses an existing id on table1.html
+	ie.show_tables shows index, id, # rows, # columns
+
+3. No tests for table(:class_name, //)

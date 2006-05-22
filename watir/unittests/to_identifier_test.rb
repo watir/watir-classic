@@ -139,7 +139,83 @@ class TC_ToIdentifier< Test::Unit::TestCase
     assert_equal("IE.attach(:hwnd, #{hwnd}).form(:id, #{form.id.inspect})", identifier)
   end
 
-#
+#    assert_equal(Table.method_name, 'table')
+#    assert($ie.respond_to?(Table.method_name))
+
+  def test_to_identifier_ie_table_id
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:id, 't1')
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:id, #{table.id.inspect})", identifier)
+  end
+
+  def test_to_identifier_ie_table_index
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:index, 2)
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:index, 2)", identifier)
+  end
+
+  def test_to_identifier_ie_table_name
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:name, 't1name')
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:name, #{table.name.inspect})", identifier)
+  end
+
+  def test_to_identifier_ie_table_class_name
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:class_name, 't1class')
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:class_name, #{table.class_name.inspect})", identifier)
+  end
+
+  def test_to_identifier_ie_table_text
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:text, "Row 1 Col1 Row 1 Col2 \r\nRow 2 Col1 Row 2 Col2")
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:text, #{table.text.inspect})", identifier)
+  end
+
+  def test_to_identifier_ie_table_text_regexp
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    table = $ie.table(:text, /Row/)
+    identifier = table.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:text, /Row/)", identifier)
+  end
+
+#    assert_equal(TableBody.method_name, 'body')
+#    assert($ie.table(:index, 1).respond_to?(TableBody.method_name))
+
+  def test_to_identifier_ie_table_body_id
+    $ie.goto($htmlRoot + 'table1.html')
+    hwnd = $ie.hwnd
+    body = $ie.table(:id, 'body_test').body(:id, 'tbody_id')
+    identifier = body.to_identifier
+    assert_equal(identifier.class, String)
+    assert_equal("IE.attach(:hwnd, #{hwnd}).table(:id, 'body_test').body(:id, \"tbody_id\")", identifier)
+  end
+
+#    assert_equal(TableRow.method_name, 'row')
+#    assert($ie.respond_to?(TableRow.method_name))
+
+#    assert_equal(TableCell.method_name, 'cell')
+#    assert($ie.respond_to?(TableCell.method_name))
+
+
+
 #    assert_equal(Pre.method_name, 'pre')
 #    assert($ie.respond_to?(Pre.method_name))
 #
@@ -155,20 +231,8 @@ class TC_ToIdentifier< Test::Unit::TestCase
 #    assert_equal(Label.method_name, 'label')
 #    assert($ie.respond_to?(Label.method_name))
 #
-#    assert_equal(Table.method_name, 'table')
-#    assert($ie.respond_to?(Table.method_name))
-#
 #    assert_equal(TableBodies.method_name, 'bodies')
 #    assert($ie.table(:index, 1).respond_to?(TableBodies.method_name))
-#
-#    assert_equal(TableBody.method_name, 'body')
-#    assert($ie.table(:index, 1).respond_to?(TableBody.method_name))
-#
-#    assert_equal(TableRow.method_name, 'row')
-#    assert($ie.respond_to?(TableRow.method_name))
-#
-#    assert_equal(TableCell.method_name, 'cell')
-#    assert($ie.respond_to?(TableCell.method_name))
 #
 #    assert_equal(Image.method_name, 'image')
 #    assert($ie.respond_to?(Image.method_name))
