@@ -1,9 +1,12 @@
 require 'test/unit'
 
-module Test
-  module Unit
-    class TestCase
-      @@order = :alphabetically
+module Watir
+    class TestCase < Test::Unit::TestCase
+      @@order = :sequentially
+      def initialize name
+        throw :invalid_test if name == :default_test && self.class == Watir::TestCase
+        super
+      end        
       class << self
         attr_accessor :test_methods, :order
         def test_methods
@@ -25,7 +28,7 @@ module Test
           end
         end
         def suite
-          suite = TestSuite.new(name)
+          suite = Test::Unit::TestSuite.new(name)
           sorted_test_methods.each do |test|
             catch :invalid_test do
               suite << new(test)
@@ -47,5 +50,4 @@ module Test
         end
       end
     end
-  end
 end  

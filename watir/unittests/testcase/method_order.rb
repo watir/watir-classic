@@ -7,22 +7,22 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE
 
 require 'watir/testcase'
 
-class TC1_Alphabetical_Default < Test::Unit::TestCase
+class TC1_Alphabetical_Default < Watir::TestCase
+  execute :alphabetically
   def test_b; print 'B'; end 
   def test_a; print 'A'; end
   def test_d; print 'D'; end
   def test_c; print 'C'; end
 end
 
-class TC2_Sequential < Test::Unit::TestCase
-  execute :sequentially
+class TC2_Sequential < Watir::TestCase
   def test_b; print 'E'; end 
   def test_a; print 'F'; end
   def test_d; print 'G'; end
   def test_c; print 'H'; end
 end
 
-class TC3_Alphabetical_Specified < Test::Unit::TestCase
+class TC3_Alphabetical_Specified < Watir::TestCase
   execute :alphabetically
   def test_b; print 'J'; end 
   def test_a; print 'I'; end
@@ -30,5 +30,5 @@ class TC3_Alphabetical_Specified < Test::Unit::TestCase
   def test_c; print 'K'; end
 end
 
-class TC4_No_Test_Methods < Test::Unit::TestCase
+class TC4_No_Test_Methods < Watir::TestCase
 end
