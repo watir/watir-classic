@@ -6,20 +6,24 @@ require 'unittests/setup'
 
 class TC_ExistingWindow< Test::Unit::TestCase
   include Watir
-  
-  def goto_page(page)
-    $ie.goto($htmlRoot + page)
+
+  def setup
+    $ie.goto($htmlRoot + 'buttons1.html')
   end
+  def teardown
+    IE.attach_timeout = 2.0
+  end
+
+  def test_missing_window
+    IE.attach_timeout = 0.1
+    assert_raises(NoMatchingWindowFoundException) { IE.attach(:title, "missing") }
+    assert_raises(NoMatchingWindowFoundException) { IE.attach(:title, /missing/) }
+    assert_raises(NoMatchingWindowFoundException) { IE.attach(:url, "missing") }
+    assert_raises(NoMatchingWindowFoundException) { IE.attach(:url, /missing/) }
+  end    
   
-  def test_ExistingWindow
-    goto_page 'buttons1.html'
+  def test_existing_window
     ie3 = nil
-    
-    assert_raises(NoMatchingWindowFoundException) { ie3 = IE.attach(:title, "missing") }
-    assert_raises(NoMatchingWindowFoundException) { ie3 = IE.attach(:title, /missing/) }
-    assert_raises(NoMatchingWindowFoundException) { ie3 = IE.attach(:url, "missing") }
-    assert_raises(NoMatchingWindowFoundException) { ie3 = IE.attach(:url, /missing/) }
-    
     ie3 = IE.attach(:title , /buttons/i)
     assert_equal("Test page for buttons", ie3.title)
     ie3 = nil

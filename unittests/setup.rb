@@ -20,7 +20,8 @@ $window_tests =
      'attach_to_new_window', # creates new window
      'jscript',
      'send_keys', # visible
-     'iedialog' # broken (and is visible)
+     'iedialog', # visible
+     'close_window', # creates new window
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $non_core_tests = 
