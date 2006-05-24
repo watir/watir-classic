@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-class TC_CloseWindow < Test::Unit::TestCase
+class TC_CloseWindow < Watir::TestCase
   include Watir
   execute :sequentially
   
