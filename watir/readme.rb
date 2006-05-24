@@ -155,7 +155,9 @@ Contributors:
    Yaxin Wang
    Michael Bolton
    Paul Carvalho
-   Konstantin Sobolev 
+   Konstantin Sobolev
+   David Schmidt 
+   Dara Lillis
 
 Acknowledgements:
    Chris Morris

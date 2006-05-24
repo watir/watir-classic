@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 require 'watir/testcase'
 
-class TC_NewWindow< Test::Unit::TestCase
+class TC_NewWindow< Watir::TestCase
   include Watir
   execute :sequentially
   
@@ -34,7 +34,7 @@ class TC_NewWindow< Test::Unit::TestCase
   
   def test_attach_to_new_window_using_click_no_wait
     $ie.link(:text, 'New Window').click_no_wait
-    IE.attach_timeout = 1.0
+    IE.attach_timeout = 2.0
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
     ie_new.close

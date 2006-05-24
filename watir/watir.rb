@@ -145,6 +145,7 @@ require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
 require 'watir/utils'
+require 'watir/close_all'
 
 require 'dl/import'
 require 'dl/struct'
@@ -194,9 +195,13 @@ module Watir
   
   @@dir = File.expand_path(File.dirname(__FILE__))
 
-  def self.until_with_timeout(timeout=10) # block
+  # Like regular Ruby "until", except that a TimeOutException is raised
+  # if the timeout is exceeded. Default timeout is IE.attach_timeout.
+  def self.until_with_timeout(timeout=nil) # block
+    timeout ||= IE.attach_timeout
     start_time = Time.now
-    until yield or Time.now - start_time > timeout do
+    until yield do
+      raise TimeOutException if Time.now - start_time > timeout 
       sleep 0.05
     end
   end
@@ -1157,7 +1162,7 @@ module Watir
     end
     
     # Maximum number of seconds to wait when attaching to a window
-    @@attach_timeout = 0.2
+    @@attach_timeout = 2.0
     def self.attach_timeout
       @@attach_timeout
     end
@@ -1315,7 +1320,7 @@ module Watir
         case how
         when :url
           log "url is: #{aWin.locationURL}\n"
-          ieTemp = aWin if(what.matches(aWin.locationURL))
+          ieTemp = aWin if (what.matches(aWin.locationURL))
         when :title
           # normal windows explorer shells do not have document
           title = nil
@@ -1323,7 +1328,7 @@ module Watir
             title = aWin.document.title
           rescue WIN32OLERuntimeError
           end
-          ieTemp = aWin if(what.matches(title))
+          ieTemp = aWin if (what.matches(title))
         when :hwnd
           begin
             log "hwnd is: #{aWin.HWND}"
@@ -1342,9 +1347,10 @@ module Watir
       log "Seeking Window with #{how}: #{what}"
       start_time = Time.now
       ieTemp = nil
+      # XXX use until_with_timeout
       until ieTemp or Time.now - start_time > @@attach_timeout do
         ieTemp = find_window(how, what)
-        sleep 0.02 unless ieTemp
+        sleep 0.05 unless ieTemp
       end
       unless ieTemp
         raise NoMatchingWindowFoundException,
@@ -1354,17 +1360,19 @@ module Watir
     end
     private :attach_browser_window
     
-    def enabled_popup(timeout=4)
+    def enabled_popup
       # Use handle of our parent window to see if we have any currently
       # enabled popup.
       hwnd_modal = 0
-      Watir::until_with_timeout(timeout) do
-        hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
-        
-        hwnd_modal > 0
+      begin
+        Watir::until_with_timeout do
+          hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
+          hwnd_modal > 0
+        end
+      rescue TimeOutException
+        return nil
       end
-      # use hwnd() method to find the IE or Container hwnd (overriden by IE)
-      if hwnd_modal === hwnd() || 0 == hwnd_modal
+      if hwnd_modal == self.hwnd || hwnd_modal == 0
         hwnd_modal = nil
       end
       hwnd_modal
@@ -1579,7 +1587,7 @@ module Watir
       s = Spinner.new(@enable_spinner)
 
       begin      
-        while @ie.busy
+        while @ie.busy # XXX need to add time out
           sleep 0.02; s.spin
         end
         s.reverse
@@ -2538,13 +2546,16 @@ module Watir
     def locate
       how = @how
       what = @what
-      hwnd_modal = 0  # (to give it scope outside of loop
+      hwnd_modal = 0  
 
       case how
       when :hwnd
-        hwnd_modal = @container.enabled_popup(10)
-        raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
-        @what = hwnd_modal    # save modal's hwnd in case we need to re-attach
+        hwnd_modal = @container.enabled_popup
+        unless hwnd_modal 
+          raise NoMatchingWindowFoundException, 
+            "No Modal Dialog found for current Watir::IE page."
+        end
+        @hwnd = hwnd_modal    # save modal's hwnd in case we need to re-attach XXX
       when :title
         case what.class.to_s
         # TODO: re-write like WET's so we can select on regular expressions too.
@@ -2588,6 +2599,10 @@ module Watir
 
     def document
       @o
+    end
+    
+    def close
+      document.parentWindow.close
     end
 
     # don't do waits in a modal dialog as they block
