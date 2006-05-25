@@ -2399,7 +2399,16 @@ module Watir
       highlight(:set)
       object = "#{self.class}.new(self, #{@how.inspect}, #{@what.inspect})"
       # currently only defined when @container is IE:
-      @container.eval_in_spawned_process(object + ".click")
+      @container.eval_in_spawned_process(object + ".click!")
+      highlight(:clear)
+    end
+
+    def click!
+      assert_exists
+      assert_enabled
+      
+      highlight(:set)
+      ole_object.click
       highlight(:clear)
     end
     
