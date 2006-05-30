@@ -11,6 +11,16 @@ class TC_ModalDialog < Watir::TestCase
     $ie.goto($htmlRoot + 'modal_dialog_launcher.html')
   end
 
+  def xteardown # XXX need to improve timeout logic
+    if $ie 
+      begin
+        modal = $ie.modal_dialog
+        modal.close if modal 
+      rescue TimeOutException, NoMatchingWindowFoundException 
+      end
+    end
+  end
+
   def assert_no_modals
     IE.attach_timeout = 0.2 
     begin
@@ -68,6 +78,8 @@ class TC_ModalDialog < Watir::TestCase
 
     modal = $ie.modal_dialog(:title, 'Modal Dialog')
     assert_not_equal($ie.hwnd, modal.hwnd)
+
+    assert_equal('Modal Dialog', modal.title)
 
     assert(modal.text.include?('Enter some text:'))
     modal.button(:value, 'Close').click
