@@ -2552,6 +2552,10 @@ module Watir
       @document
     end
     
+    # Return the title of the document
+    def title
+      document.title
+    end
     def close
       document.parentWindow.close
     end
