@@ -13,11 +13,11 @@ class TC_ModalDialog < Watir::TestCase
 
   def teardown
     if $ie 
-      modal = begin 
-                $ie.modal_dialog
-              rescue TimeOutException, NoMatchingWindowFoundException 
-              end
-      modal.close if modal 
+      begin
+        modal = $ie.modal_dialog
+        modal.close if modal 
+      rescue TimeOutException, NoMatchingWindowFoundException 
+      end
     end
   end
 
@@ -32,6 +32,7 @@ class TC_ModalDialog < Watir::TestCase
     end
   end 
      
+  # attach_modal
   def test_modal_use_case
     $ie.button(:value, 'Launch Dialog').click_no_wait
     modal = $ie.attach_modal('Modal Dialog')
@@ -42,15 +43,18 @@ class TC_ModalDialog < Watir::TestCase
     assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
+  # attach_modal
   def test_wait_should_not_block
     $ie.button(:value, 'Launch Dialog').click_no_wait
     modal = $ie.attach_modal('Modal Dialog')
 
     modal.text_field(:name, 'modal_text').set('hello')
+    modal.wait
 
     modal.button(:value, 'Close').click
   end
 
+  # modal_dialog
   # Using the modal_dialog method the default "how" is :hwnd which
   # lets us guarantee we attach to the correct IE instance.
   def test_modal_dialog_use_case_default
