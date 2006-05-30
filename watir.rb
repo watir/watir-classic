@@ -424,31 +424,18 @@ module Watir
       return TableRows.new(self)
     end
     
-    # This is the main method for accessing a modal dialog, which looks mostly like
-    # an IE or Frame object.
-    #  *  how   - symbol - how we access the button
-    #  *  what  - string, int, re or xpath query, what we are looking for,
+    # Access a modal web dialog, which is a PageContainer, like IE or Frame. 
     # Returns a ModalDialog object.
     #
-    # Valid values for 'how' are
-    #
-    #    :hwnd       - find the item using a window handle (HWND).  (Defaults to HWND
-    #                  of the dialog's parent Watir::IE or Watir::ModalDialog object.)
-    #    :title      - find the item using the modal dialog's title attribute
-    #
     # Typical Usage
+    #    ie.modal_dialog                  # access the modal dialog of ie
+    #    ie.modal_dialog(:title, 'Title') # access the modal dialog by title
+    #    ie.modal_dialog.modal_dialog     # access a modal dialog's modal dialog XXX untested!
     #
-    #    ie.modal_dialog                                # access the modal dialog using ie.ie.HWND
-    #    ie.modal_dialog(:hwnd)                         #   "     "    "     "      "       "
-    #    ie.modal_dialog(:title, 'Title')               # access the modal dialog with a title of Title
-    #    ie.modal_dialog.modal_dialog                   # access a modal dialog's modal dialog (by HWND)
-    #
-    #    By default, modal_dialog will be identified by it's
-    #    parent window which can be a Watir::IE window or
-    #    another modal dialog.
+    # Note: unlike Watir.attach, this returns before the page is assured to have 
+    # loaded.
     
-    # Don't use factory method so we can make :hwnd the default "how".
-    def modal_dialog(how=:hwnd, what=nil)
+    def modal_dialog(how=nil, what=nil)
       ModalDialog.new(self, how, what)
     end
 
@@ -1360,24 +1347,6 @@ module Watir
     end
     private :attach_browser_window
     
-    def enabled_popup
-      # Use handle of our parent window to see if we have any currently
-      # enabled popup.
-      hwnd_modal = 0
-      begin
-        Watir::until_with_timeout do
-          hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
-          hwnd_modal > 0
-        end
-      rescue TimeOutException
-        return nil
-      end
-      if hwnd_modal == self.hwnd || hwnd_modal == 0
-        hwnd_modal = nil
-      end
-      hwnd_modal
-    end
-
     # Return the current window handle
     def hwnd
       raise "Not attached to a browser" if @ie.nil? 
@@ -1385,31 +1354,6 @@ module Watir
     end
     
     include Watir::Win32
-    
-    # Attach to a modal dialog, returns a ModalPage object (acts like an IE object).
-    # Note: unlike Watir.attach, this returns before the page is assured to have 
-    # loaded.
-    def attach_modal(title)
-      hwnd_modal = 0
-      Watir::until_with_timeout(10) do
-        hwnd_modal, arr = FindWindowEx.call(0, 0, nil, "#{title} -- Web Page Dialog")
-        hwnd_modal > 0
-      end
-
-      intUnknown = 0  
-      Watir::until_with_timeout(10) do
-        intPointer = " " * 4 # will contain the int value of the IUnknown*
-        GetUnknown.call(hwnd_modal, intPointer)
-        intArray = intPointer.unpack('L')
-        intUnknown = intArray.first
-        intUnknown > 0
-      end
-
-      raise "Unable to attach to Modal Window #{title}" unless intUnknown > 0
-      
-      htmlDoc = WIN32OLE.connect_unknown(intUnknown)
-      ModalPage.new(htmlDoc, self)
-    end
 
   	# Are we attached to an open browser?
     def exists?
@@ -2150,21 +2094,6 @@ module Watir
     
   end # class IE
   
-  class ModalPage < IE
-    def initialize(document, parent)
-      @ie = parent.ie
-      # Bug should be transferred from parent
-      @document = document
-      set_fast_speed
-      @url_list = []
-      @error_checkers = []
-    end  
-    def document
-      return @document
-    end
-    def wait
-    end
-  end
   #
   # MOVETO: watir/popup.rb
   # Module Watir::Popup
@@ -2552,41 +2481,54 @@ module Watir
     # Return the current window handle
     attr_reader :hwnd
 
+    def find_modal_from_window(hwnd)
+      # Use handle of our parent window to see if we have any currently
+      # enabled popup.
+      hwnd_modal = 0
+      begin
+        Watir::until_with_timeout do
+          hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
+          hwnd_modal > 0
+        end
+      rescue TimeOutException
+        return nil
+      end
+      if hwnd_modal == hwnd || hwnd_modal == 0
+        hwnd_modal = nil
+      end
+      @hwnd = hwnd_modal
+    end
+    private :find_modal_from_window
+
     def locate
       how = @how
       what = @what
-      hwnd_modal = 0  
 
       case how
-      when :hwnd
-        hwnd_modal = @container.enabled_popup
-        unless hwnd_modal 
+      when nil
+        unless find_modal_from_window @container.hwnd 
           raise NoMatchingWindowFoundException, 
             "No Modal Dialog found for current Watir::IE page."
         end
-        @hwnd = hwnd_modal    # save modal's hwnd in case we need to re-attach XXX
       when :title
         case what.class.to_s
         # TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
           Watir::until_with_timeout(10) do
-            hwnd_modal, arr = FindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
-            hwnd_modal > 0
+            @hwnd, arr = FindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
+            @hwnd > 0
           end
-        when "Regexp"
-          raise ArgumentError, "Regexp matches not supported yet (what=#{what.inspect})"
         else
-          raise ArgumentError, "Title value must be String or Regexp"
+          raise ArgumentError, "Title value must be String"
         end
       else
-        raise ArgumentError, "Only :hwnd and :title methods are supported for modal_dialog"
+        raise ArgumentError, "Only null and :title methods are supported"
       end
-      @hwnd = hwnd_modal
 
       intUnknown = 0  
       Watir::until_with_timeout(10) do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
-        GetUnknown.call(hwnd_modal, intPointer)
+        GetUnknown.call(@hwnd, intPointer)
         intArray = intPointer.unpack('L')
         intUnknown = intArray.first
         intUnknown > 0
@@ -2594,7 +2536,7 @@ module Watir
 
       raise "Unable to attach to Modal Window #{what.inspect}" unless intUnknown > 0
       
-      WIN32OLE.connect_unknown(intUnknown)
+      @document = WIN32OLE.connect_unknown(intUnknown)
     end
 
     def initialize(container, how, what=nil)
@@ -2602,12 +2544,12 @@ module Watir
       @how = how
       @what = what
       # locate our modal dialog's Document object and save it
-      @o = locate
+      locate
       copy_test_config container
     end
 
     def document
-      @o
+      @document
     end
     
     def close

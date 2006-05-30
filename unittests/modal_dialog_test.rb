@@ -11,16 +11,6 @@ class TC_ModalDialog < Watir::TestCase
     $ie.goto($htmlRoot + 'modal_dialog_launcher.html')
   end
 
-  def teardown
-    if $ie 
-      begin
-        modal = $ie.modal_dialog
-        modal.close if modal 
-      rescue TimeOutException, NoMatchingWindowFoundException 
-      end
-    end
-  end
-
   def assert_no_modals
     IE.attach_timeout = 0.2 
     begin
@@ -32,10 +22,9 @@ class TC_ModalDialog < Watir::TestCase
     end
   end 
      
-  # attach_modal
-  def test_modal_use_case
+  def test_modal_simple_use_case
     $ie.button(:value, 'Launch Dialog').click_no_wait
-    modal = $ie.attach_modal('Modal Dialog')
+    modal = $ie.modal_dialog(:title, 'Modal Dialog')
 
     assert(modal.text.include?('Enter some text:'))
     modal.text_field(:name, 'modal_text').set('hello')
@@ -43,10 +32,9 @@ class TC_ModalDialog < Watir::TestCase
     assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
-  # attach_modal
   def test_wait_should_not_block
     $ie.button(:value, 'Launch Dialog').click_no_wait
-    modal = $ie.attach_modal('Modal Dialog')
+    modal = $ie.modal_dialog(:title, 'Modal Dialog')
 
     modal.text_field(:name, 'modal_text').set('hello')
     modal.wait
@@ -54,34 +42,10 @@ class TC_ModalDialog < Watir::TestCase
     modal.button(:value, 'Close').click
   end
 
-  # modal_dialog
-  # Using the modal_dialog method the default "how" is :hwnd which
-  # lets us guarantee we attach to the correct IE instance.
   def test_modal_dialog_use_case_default
     $ie.button(:value, 'Launch Dialog').click_no_wait
 
     modal = $ie.modal_dialog
-    assert_not_nil modal
-
-    # Make sure that we have attached to modal and that the hwnd method
-    # is working properly to show the HWND of our parent.
-    assert_not_equal($ie.hwnd, modal.hwnd)
-
-    # Once attached just treat the modal_dialog like any IE or Frame
-    # object.
-    assert(modal.text.include?('Enter some text:'))
-    modal.text_field(:name, 'modal_text').set('hello')
-    modal.button(:value, 'Close').click
-
-    assert_no_modals
-    assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
-  end
-
-  # Now explicitly supply the :hwnd parameter.
-  def test_modal_dialog_use_case_hwnd
-    $ie.button(:value, 'Launch Dialog').click_no_wait
-
-    modal = $ie.modal_dialog(:hwnd)
     assert_not_nil modal
 
     # Make sure that we have attached to modal and that the hwnd method
@@ -103,38 +67,15 @@ class TC_ModalDialog < Watir::TestCase
     $ie.button(:value, 'Launch Dialog').click_no_wait
 
     modal = $ie.modal_dialog(:title, 'Modal Dialog')
-    assert modal
-
-    # Make sure that we have attached to modal and that the hwnd method
-    # is working properly to show the HWND of our parent.
     assert_not_equal($ie.hwnd, modal.hwnd)
 
-    # Once attached just treat the modal_dialog like any IE or Frame
-    # object.
     assert(modal.text.include?('Enter some text:'))
-    modal.text_field(:name, 'modal_text').set('hello')
     modal.button(:value, 'Close').click
-
-    assert_no_modals
-    assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
   end
 
   # Now explicitly supply the :title parameter with regexp match
-  def xtest_modal_dialog_use_case_title_regexp
-    $ie.button(:value, 'Launch Dialog').click_no_wait
-
-    modal = $ie.modal_dialog(:title, /dal Dia/)
-    assert_not_nil modal
-
-    # Once attached just treat the modal_dialog like any IE or Frame
-    # object.
-    assert(modal.text.include?('Enter some text:'))
-    modal.text_field(:name, 'modal_text').set('hello')
-    modal.button(:value, 'Close').click
-
-    assert_no_modals
-    assert_equal('hello', $ie.text_field(:name, 'modaloutput').value)
-
+  def test_modal_dialog_use_case_title_regexp
+    assert_raises(ArgumentError){$ie.modal_dialog(:title, /dal Dia/)}
   end
 
   # Now explicitly supply an invalid "how" value
