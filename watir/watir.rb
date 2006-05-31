@@ -1332,14 +1332,12 @@ module Watir
     
     def attach_browser_window(how, what)
       log "Seeking Window with #{how}: #{what}"
-      start_time = Time.now
       ieTemp = nil
-      # XXX use until_with_timeout
-      until ieTemp or Time.now - start_time > @@attach_timeout do
-        ieTemp = find_window(how, what)
-        sleep 0.05 unless ieTemp
-      end
-      unless ieTemp
+      begin
+        Watir::until_with_timeout do
+          ieTemp = find_window(how, what)
+        end
+      rescue TimeOutException
         raise NoMatchingWindowFoundException,
                  "Unable to locate a window with #{how} of #{what}"
       end
@@ -1541,7 +1539,7 @@ module Watir
         @rexmlDomobject = nil
         return @down_load_time
       end
-              
+            
       until @ie.readyState == READYSTATE_COMPLETE do
         sleep 0.02; s.spin
       end
