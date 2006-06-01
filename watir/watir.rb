@@ -144,6 +144,7 @@ require 'win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
+require 'watir/utils'
 
 require 'dl/import'
 require 'dl/struct'
@@ -1489,16 +1490,23 @@ module Watir
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
     def check_for_http_error(container)
-      url = container.document.url
-      # puts "url is " + url
-      if /shdoclc.dll/.match(url)
-        #puts "Match on shdoclc.dll"
-        m = /id=IEText.*?>(.*?)</i.match(container.html)
-        if m
-          
-          #puts "Error is #{m[1]}"
-          raise NavigationException, m[1]
+      begin
+        url = container.document.url
+        # puts "url is " + url
+        if /shdoclc.dll/.match(url)
+          #puts "Match on shdoclc.dll"
+          m = /id=IEText.*?>(.*?)</i.match(container.html)
+          if m
+            
+            #puts "Error is #{m[1]}"
+            raise NavigationException, m[1]
+          end
         end
+      # If container doesn't have document (or it isn't ready yet)
+      # then we will get a WIN32OLERuntimeError.  Catch it and ignore
+      # until we find a better solution.
+      # TODO: handle cases where the document doesn't exist (yet)
+      rescue WIN32OLERuntimeError
       end
     end
     
@@ -1791,7 +1799,8 @@ module Watir
     #
     # Synchronization
     #
-    
+    include Watir::Utils
+
     # This method is used internally to cause an execution to stop until the page has loaded in Internet Explorer.
     def wait(no_sleep=false)
       @down_load_time = 0
@@ -1811,30 +1820,57 @@ module Watir
       end
       sleep 0.02
       
-      until Watir::avoids_error(WIN32OLERuntimeError) {@ie.document} do
-        sleep 0.02
+      # at this point IE says it's ready, but still need to check each document     
+      until suppress_ole_error {@ie.document} do
+        sleep 0.02; s.spin
       end
       
       until @ie.document.readyState == "complete"
         sleep 0.02
         s.spin
       end
+
+      # Add base URL to URL list if it's not already there
+      @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
       
-      if @ie.document.frames.length > 1
+      # If there are any frames, wait for them all here.
+      # NOTE: If code in any frame causes a new page or frame
+      # to be loaded then the document reference may fail.  Since
+      # a full page load may also change the number of frames we
+      # need to check to see if we have any frames each time we
+      # restart due to a WIN32OLERuntimeError exception.
+#      Watir::until_with_timeout do
+#        begin
+#          if @ie.document.frames.length > 0
+#            0.upto @ie.document.frames.length-1 do |i|
+#              until @ie.document.frames[i.to_s].document.readyState == "complete"
+#                sleep 0.02
+#                s.spin
+#              end
+#              @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
+#            end
+#          end
+#        rescue WIN32OLERuntimeError
+#          false
+#        rescue => e
+#          @rexmlDomobject = nil
+#          @logger.warn 'frame error in wait: '   + e.to_s + "\n" + e.backtrace.join("\n")
+#        end
+#      end
+      if @ie.document.frames.length > 0
         begin
           0.upto @ie.document.frames.length-1 do |i|
             until @ie.document.frames[i.to_s].document.readyState == "complete"
-              sleep 0.02
-              s.spin
+              sleep 0.02; s.spin
             end
-            @url_list << @ie.document.frames[i.to_s].document.url unless url_list.include?(@ie.document.frames[i.to_s].document.url)
+            url = @ie.document.frames[i.to_s].document.url
+            @url_list << url unless url_list.include?(url)
           end
-        rescue => e
-          @rexmlDomobject = nil
-          @logger.warn 'frame error in wait'   + e.to_s + "\n" + e.backtrace.join("\n")
+        rescue WIN32OLERuntimeError
         end
       else
-        @url_list << @ie.document.url unless @url_list.include?(@ie.document.url)
+        url = @ie.document.url
+        @url_list << url unless @url_list.include?(url)
       end
       @down_load_time = Time.now - start_load_time
       run_error_checks
@@ -2487,7 +2523,44 @@ module Watir
       end
       @o ? true: false
     end
-    
+ 
+    # Determine if we can write to a DOM element.
+    # If any parent element isn't visible then we cannot write to the
+    # element.  The only realiable way to determine this is to iterate
+    # up the DOM elemint tree checking every element to make sure it's
+    # visible.
+    def writable?
+      assert_exists
+      # First make sure the element itself is writable
+      begin
+        assert_enabled
+        assert_not_readonly
+      rescue Watir::Exception::ObjectDisabledException, Watir::Exception::ObjectReadOnlyException
+        return false
+      end
+      return false if ! document.iscontentEditable
+      
+      # Now iterate up the DOM element tree and return false if any
+      # parent element isn't visible or is disabled.
+      object = document
+      while object
+        begin
+          if object.style.invoke('visibility') =~ /^hidden$/i
+            return false
+          end
+          if object.style.invoke('display') =~ /^none$/i
+            return false
+          end
+          if object.invoke('isDisabled')
+            return false
+          end
+        rescue WIN32OLERuntimeError
+        end
+        object += '.parentElement'
+      end
+      true
+    end
+
     # Returns true if the element is enabled, false if it isn't.
     #   raises: UnknownObjectException  if the object is not found
     def enabled?
