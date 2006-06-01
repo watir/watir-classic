@@ -1190,7 +1190,7 @@ module Watir
     attr_reader :speed
     
     # the OLE Internet Explorer object
-    attr_reader :ie
+    attr_accessor :ie
     
     # access to the logger object
     attr_accessor :logger
@@ -1297,29 +1297,42 @@ module Watir
     end
     private :create_browser_window
     
-    # return window as specified; otherwise nil
-    def find_window(how, what)
+    # return internet explorer instance as specified. if none is found, 
+    # return nil.
+    # arguments:
+    #   :url, url -- the URL of the IE browser window
+    #   :title, title -- the title of the browser page
+    #   :hwnd, hwnd -- the window handle of the browser window.
+    def self.find(how, what)
+      ie_ole = IE._find(how, what)
+      if ie_ole
+         ie = IE.new true
+         ie.ie = ie_ole
+         ie
+      end
+    end
+  
+    def self._find(how, what)
       shell = WIN32OLE.new("Shell.Application")
       ieTemp = nil
-      shell.Windows.each do |aWin|
-        log "Found a window: #{aWin}"
+      shell.Windows.each do |window|
+      next unless window.path =~ /Internet Explorer/ 
         
         case how
         when :url
-          log "url is: #{aWin.locationURL}\n"
-          ieTemp = aWin if (what.matches(aWin.locationURL))
+          ieTemp = window if (what.matches(window.locationURL))
         when :title
           # normal windows explorer shells do not have document
+          # note window.document will fail for "new" browsers
           title = nil
           begin
-            title = aWin.document.title
+            title = window.document.title
           rescue WIN32OLERuntimeError
           end
-          ieTemp = aWin if (what.matches(title))
+          ieTemp = window if (what.matches(title))
         when :hwnd
           begin
-            log "hwnd is: #{aWin.HWND}"
-            ieTemp = aWin if (what == (aWin.HWND))
+            ieTemp = window if what == window.HWND
           rescue WIN32OLERuntimeError
           end
         else
@@ -1328,14 +1341,13 @@ module Watir
       end
       return ieTemp
     end
-    private :find_window
     
     def attach_browser_window(how, what)
       log "Seeking Window with #{how}: #{what}"
       ieTemp = nil
       begin
         Watir::until_with_timeout do
-          ieTemp = find_window(how, what)
+          ieTemp = IE._find(how, what)
         end
       rescue TimeOutException
         raise NoMatchingWindowFoundException,
