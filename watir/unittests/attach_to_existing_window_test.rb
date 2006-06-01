@@ -14,6 +14,16 @@ class TC_ExistingWindow< Test::Unit::TestCase
     IE.attach_timeout = 2.0
   end
 
+  def test_find_window
+    ie = IE.find(:title, 'Test page for buttons')
+    assert_equal("Test page for buttons", ie.title)
+  end
+  
+  def test_find_window_misses
+    ie = IE.find(:title, 'no such window')
+    assert_nil ie
+  end
+
   def test_missing_window
     IE.attach_timeout = 0.1
     assert_raises(NoMatchingWindowFoundException) { IE.attach(:title, "missing") }
