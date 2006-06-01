@@ -202,7 +202,7 @@ module Watir
     start_time = Time.now
     until yield do
       raise TimeOutException if Time.now - start_time > timeout 
-      sleep 0.05
+      sleep 0.5
     end
   end
   
@@ -1530,7 +1530,7 @@ module Watir
 
       begin      
         while @ie.busy # XXX need to add time out
-          sleep 0.02; s.spin
+          sleep 0.2; s.spin
         end
         s.reverse
       rescue WIN32OLERuntimeError # IE window must have been closed
@@ -1541,25 +1541,25 @@ module Watir
       end
             
       until @ie.readyState == READYSTATE_COMPLETE do
-        sleep 0.02; s.spin
+        sleep 0.2; s.spin
       end
 
-      sleep 0.02; s.spin
+      sleep 0.2; s.spin
 
       # at this point IE says it's ready, but still need to check each document     
       until suppress_ole_error {@ie.document} do
-        sleep 0.02; s.spin
+        sleep 0.2; s.spin
       end
       
       until @ie.document.readyState == "complete" 
-        sleep 0.02; s.spin
+        sleep 0.2; s.spin
       end
       
       if @ie.document.frames.length > 1
         begin
           0.upto @ie.document.frames.length-1 do |i|
             until @ie.document.frames[i.to_s].document.readyState == "complete"
-              sleep 0.02; s.spin
+              sleep 0.2; s.spin
             end
             url = @ie.document.frames[i.to_s].document.url
             @url_list << url unless url_list.include?(url)
@@ -2512,7 +2512,7 @@ module Watir
         case what.class.to_s
         # TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
-          Watir::until_with_timeout(10) do
+          Watir::until_with_timeout do
             @hwnd, arr = FindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
             @hwnd > 0
           end
@@ -2524,7 +2524,7 @@ module Watir
       end
 
       intUnknown = 0  
-      Watir::until_with_timeout(10) do
+      Watir::until_with_timeout do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
         GetUnknown.call(@hwnd, intPointer)
         intArray = intPointer.unpack('L')
