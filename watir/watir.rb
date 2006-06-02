@@ -1111,7 +1111,7 @@ module Watir
     
     # The HTML Page
     def page
-      document.body.parentelement
+      document.documentelement
     end
     private :page
         
@@ -1123,6 +1123,16 @@ module Watir
     # The text of the current page
     def text
       page.innertext.strip
+    end
+
+    def eval_in_spawned_process(command)
+      command.strip!
+      load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
+      ruby_code = "require 'watir';"
+      ruby_code << "ie = #{attach_command};"
+      ruby_code << "ie.instance_eval(#{command.inspect})"
+      exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
+      Thread.new { system(exec_string) }
     end
 
   end # module
@@ -1232,12 +1242,11 @@ module Watir
     
     def set_defaults
       @ole_object = nil
-      
       @enable_spinner = $ENABLE_SPINNER
       @error_checkers = []
-      
       @ie.visible = ! $HIDE_IE
       @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
+
       if $FAST_SPEED
         set_fast_speed
       else
@@ -1245,7 +1254,6 @@ module Watir
       end
       
       @logger = DefaultLogger.new
-      
       @url_list = []
       
       # IE inserts some element whose tagName is empty and just acts as block level element
@@ -1254,9 +1262,7 @@ module Watir
       @empty_tag_name = "DUMMY"
             
       add_checker(NAVIGATION_CHECKER)
-      
     end
-    private :set_defaults
         
     def speed=(how_fast)
       case how_fast
@@ -1305,11 +1311,14 @@ module Watir
     #   :hwnd, hwnd -- the window handle of the browser window.
     def self.find(how, what)
       ie_ole = IE._find(how, what)
-      if ie_ole
-         ie = IE.new true
-         ie.ie = ie_ole
-         ie
-      end
+      IE.bind ie_ole if ie_ole
+    end
+
+    def self.bind(ie_window)
+      ie = IE.new true
+      ie.ie = ie_window
+      ie.set_defaults
+      ie
     end
   
     def self._find(how, what)
@@ -1324,8 +1333,8 @@ module Watir
         when :title
           # normal windows explorer shells do not have document
           # note window.document will fail for "new" browsers
-          title = nil
           begin
+            title = window.locationname
             title = window.document.title
           rescue WIN32OLERuntimeError
           end
@@ -2094,13 +2103,10 @@ module Watir
     end
     private :element_by_absolute_xpath
     
-    def eval_in_spawned_process(command)
-      command.strip!
-      load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
-      ruby_code = "require 'watir'; ie = Watir::IE.attach(:title, '#{title}'); ie.instance_eval(#{command.inspect})"
-      exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
-      Thread.new { system(exec_string) }
+    def attach_command
+      "Watir::IE.attach(:title, '#{title}')"
     end
+    
     
   end # class IE
   
@@ -2566,11 +2572,15 @@ module Watir
     def title
       document.title
     end
+
     def close
       document.parentWindow.close
     end
 
-    # don't do waits in a modal dialog as they block
+    def attach_command
+      "Watir::IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
+    end
+      
     def wait(no_sleep=false)
     end
   end
