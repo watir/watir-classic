@@ -95,15 +95,14 @@ class TC_ModalDialog < Watir::TestCase
     assert_raise(ArgumentError) { $ie.modal_dialog(:esp) }
   end
 
-  def test_modal_sleeps_causing_click_timeout
-    $ie.button(:value, 'Launch Dialog').click_no_wait # default = 2.0 seconds
-
-    modal = $ie.modal_dialog(:title, 'Modal Dialog')
-    assert modal
-    
-    sleep 4.0
-
-    modal.button(:value, 'Close').click
+  def test_double_modal
+    $ie.button(:value, 'Launch Dialog').click_no_wait
+    modal1 = $ie.modal_dialog
+    modal1.button(:text, 'Another Modal').click_no_wait
+    modal2 = modal1.modal_dialog
+    assert_equal modal2.title, 'Pass Page'
+    modal2.close
+    modal1.close
   end
-
+    
 end
