@@ -3,14 +3,8 @@ require 'watir'
 module Watir
   class IE
     def self.close_all
-      catch :no_more do
-        while true
-          begin
-            attach(:title, //).close
-          rescue NoMatchingWindowFoundException
-            throw :no_more
-          end
-        end
+      while browser = find(:title, //)
+        browser.close; sleep 0.5
       end
     end
   end
