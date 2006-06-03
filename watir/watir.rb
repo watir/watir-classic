@@ -335,7 +335,7 @@ module Watir
     def html
       return document.body.parentelement.outerhtml
     end
-    
+
     # The text of the current document
     def text
       return document.body.parentelement.innertext.strip
@@ -2534,11 +2534,12 @@ module Watir
       # First make sure the element itself is writable
       begin
         assert_enabled
-        assert_not_readonly
+        # :TODO: make available for checkboxes.
+#        assert_not_readonly
       rescue Watir::Exception::ObjectDisabledException, Watir::Exception::ObjectReadOnlyException
         return false
       end
-      return false if ! document.iscontentEditable
+ #     return false if ! document.iscontentEditable
       
       # Now iterate up the DOM element tree and return false if any
       # parent element isn't visible or is disabled.
@@ -2556,7 +2557,7 @@ module Watir
           end
         rescue WIN32OLERuntimeError
         end
-        object += '.parentElement'
+        object = object.parentElement
       end
       true
     end
