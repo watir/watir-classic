@@ -313,6 +313,8 @@ module Watir
     attr_accessor :typingspeed
     # The color we want to use for the active object. This can be any valid web-friendly color.
     attr_accessor :activeObjectHighLightColor
+    # The PageContainer object containing this element
+    attr_accessor :page_container
     
     def copy_test_config(container) # only used by form and frame
       @typingspeed = container.typingspeed
@@ -340,6 +342,11 @@ module Watir
     end
     private :process_default
     
+    def set_container container
+      @container = container 
+      @page_container = container.page_container
+    end
+        
     #
     #           Factory Methods
     #
@@ -1134,6 +1141,12 @@ module Watir
       exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
       Thread.new { system(exec_string) }
     end
+    
+    def set_container container
+      @container = container
+      @page_container = self
+    end
+    
 
   end # module
   
@@ -1242,6 +1255,7 @@ module Watir
     
     def set_defaults
       @ole_object = nil
+      @page_container = self
       @enable_spinner = $ENABLE_SPINNER
       @error_checkers = []
       @ie.visible = ! $HIDE_IE
@@ -2119,6 +2133,7 @@ module Watir
   class PopUp
     def initialize(container)
       @container = container
+      @page_container = container.page_container
     end
     
     def button(caption)
@@ -2197,40 +2212,38 @@ module Watir
     end
     
     public
-    # returns the name of the element (as defined in html)
+    # return the name of the element (as defined in html)
     def_wrap_guard :name
-    # returns the id of the element
+    # return the id of the element
     def_wrap_guard :id
-    # returns whether the element is disabled
+    # return whether the element is disabled
     def_wrap :disabled
     alias disabled? disabled
-    # returns the value of the element
+    # return the value of the element
     def_wrap_guard :value
-    # returns the title of the element
+    # return the title of the element
     def_wrap_guard :title
-    # returns the style of the element
+    # return the style of the element
     def_wrap_guard :style
     
     def_wrap_guard :alt
     def_wrap_guard :src
     
-    # returns the type of the element
+    # return the type of the element
     def_wrap_guard :type # input elements only
-    
-    # returns the url the link points to
+    # return the url the link points to
     def_wrap :href # link only
-    
     # return the ID of the control that this label is associated with
     def_wrap :for, :htmlFor # label only
-    
-    # returns the class name of the element
-    # raises an ObjectNotFound exception if the object cannot be found
+    # return the class name of the element
+    # raise an ObjectNotFound exception if the object cannot be found
     def_wrap :class_name, :className
-    
+    # return the unique COM number for the element
+    def_wrap :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     def_wrap :html, :outerHTML
-    
-    # returns the text before the element
+
+    # return the text before the element
     def before_text # label only
       assert_exists
       begin
@@ -2240,7 +2253,7 @@ module Watir
       end
     end
     
-    # returns the text after the element
+    # return the text after the element
     def after_text # label only
       assert_exists
       begin
@@ -2342,9 +2355,9 @@ module Watir
       assert_enabled
       
       highlight(:set)
-      object = "#{self.class}.new(self, #{@how.inspect}, #{@what.inspect})"
+      object = "#{self.class}.new(self, :unique_number, #{self.unique_number})"
       # currently only defined when @container is IE:
-      @container.eval_in_spawned_process(object + ".click!")
+      @page_container.eval_in_spawned_process(object + ".click!")
       highlight(:clear)
     end
 
@@ -2423,7 +2436,7 @@ module Watir
     
     def initialize wrapper_class, container, how, what
       @wrapper_class = wrapper_class
-      @container = container
+      set_container
       @how = how
       @what = what
     end
@@ -2476,7 +2489,7 @@ module Watir
     end
     
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       @o = locate
@@ -2557,7 +2570,7 @@ module Watir
     end
 
     def initialize(container, how, what=nil)
-      @container = container
+      set_container container
       @how = how
       @what = what
       # locate our modal dialog's Document object and save it
@@ -2595,6 +2608,7 @@ module Watir
     #   * container - an instance of an IE object
     def initialize(container)
       @container = container
+      @page_container = container.page_container
       @length = length # defined by subclasses
       
       # set up the items we want to display when the show method is used
@@ -2703,7 +2717,7 @@ module Watir
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
     #   * what        - what we use to access the form
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       
@@ -2830,7 +2844,7 @@ module Watir
     end
     
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super(nil)
@@ -2912,7 +2926,7 @@ module Watir
       anElement.locate if defined?(anElement.locate)
       o = anElement.ole_object.parentElement
       o = o.parentElement until o.tagName == 'TABLE'
-      Table.new(container, :direct, o)
+      Table.new(container, :ole_object, o)
     end
     
     # Returns an initialized instance of a table object
@@ -2920,7 +2934,7 @@ module Watir
     #   * how         - symbol - how we access the table
     #   * what         - what we use to access the table - id, name index etc
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super nil
@@ -2929,7 +2943,7 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
-      elsif @how == :direct
+      elsif @how == :ole_object
         @o = @what
       else
         @o = @container.locate_tagged_element('TABLE', @how, @what)
@@ -2985,14 +2999,14 @@ module Watir
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
-      1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :direct, row(i))    }
+      1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :ole_object, row(i))    }
     end
     
     # Returns a row in the table
     #   * index         - the index of the row
     def [](index)
       assert_exists
-      return TableRow.new(@container, :direct, row(index))
+      return TableRow.new(@container, :ole_object, row(index))
     end
     
     # This method returns the number of rows in the table.
@@ -3073,7 +3087,7 @@ module Watir
   #
   class TableBodies < Element
     def initialize(container, parent_table)
-      @container = container
+      set_container container
       @o = parent_table     # in this case, @o is the parent table
     end
     
@@ -3086,7 +3100,7 @@ module Watir
     # returns the n'th Body as a Watir TableBody object
     def []n
       assert_exists
-      return TableBody.new(@container, :direct, ole_table_body_at_index(n))
+      return TableBody.new(@container, :ole_object, ole_table_body_at_index(n))
     end
     
     # returns an ole table body
@@ -3096,7 +3110,7 @@ module Watir
     
     # iterates through each of the TableBodies in the Table. Yields a TableBody object
     def each
-      1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :direct, ole_table_body_at_index(i)) }
+      1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :ole_object, ole_table_body_at_index(i)) }
     end
     
   end
@@ -3105,7 +3119,7 @@ module Watir
   class TableBody < Element
     def locate
       @o = nil
-      if @how == :direct
+      if @how == :ole_object
         @o = @what     # in this case, @o is the table body
       elsif @how == :index
         @o = @parent_table.bodies.ole_table_body_at_index(@what)
@@ -3113,13 +3127,13 @@ module Watir
       @rows = []
       if @o
         @o.rows.each do |oo|
-          @rows << TableRow.new(@container, :direct, oo)
+          @rows << TableRow.new(@container, :ole_object, oo)
         end
       end
     end
     
     def initialize(container, how, what, parent_table=nil)
-      @container = container
+      set_container container
       @how = how
       @what = what
       @parent_table = parent_table
@@ -3150,7 +3164,7 @@ module Watir
     
     def locate
       @o = nil
-      if @how == :direct
+      if @how == :ole_object
         @o = @what
       elsif @how == :xpath
         @o = @container.element_by_xpath(@what)
@@ -3160,7 +3174,7 @@ module Watir
       if @o # cant call the assert_exists here, as an exists? method call will fail
         @cells = []
         @o.cells.each do |oo|
-          @cells << TableCell.new(@container, :direct, oo)
+          @cells << TableCell.new(@container, :ole_object, oo)
         end
       end
     end
@@ -3169,9 +3183,9 @@ module Watir
     #   * o  - the object contained in the row
     #   * container  - an instance of an IE object
     #   * how          - symbol - how we access the row
-    #   * what         - what we use to access the row - id, index etc. If how is :direct then what is a Internet Explorer Raw Row
+    #   * what         - what we use to access the row - id, index etc. If how is :ole_object then what is a Internet Explorer Raw Row
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super nil
@@ -3210,7 +3224,7 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
-      elsif @how == :direct
+      elsif @how == :ole_object
         @o = @what
       else
         @o = @container.locate_tagged_element("TD", @how, @what)
@@ -3222,7 +3236,7 @@ module Watir
     #   * how        - symbol - how we access the cell
     #   * what       - what we use to access the cell - id, name index etc
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super nil
@@ -3255,7 +3269,7 @@ module Watir
   #
   class Image < Element
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super nil
@@ -3387,7 +3401,7 @@ module Watir
     #   * how         - symbol - how we access the link
     #   * what         - what we use to access the link, text, url, index etc
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super(nil)
@@ -3443,14 +3457,14 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
-      elsif @how == :direct
+      elsif @how == :ole_object
         @o = @what
       else
         @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
       end
     end
     def initialize(container, how, what)
-      @container = container
+      set_container container
       @how = how
       @what = what
       super(nil)
@@ -3846,7 +3860,7 @@ module Watir
       end
     end
     def initialize(container, how, what, type, value=nil)
-      @container = container
+      set_container container
       @how = how
       @what = what
       @type = type

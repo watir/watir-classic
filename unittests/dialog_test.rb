@@ -63,7 +63,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
     assert_equal "You pressed the Confirm and OK button!", $ie.text_field(:id, 'testResult').value
   end
   
-  def test_confirm_cancel
+  def xtest_confirm_cancel
     $ie.button(:value, 'confirm').click_no_wait
     assert dialog.exists?
     dialog.button('Cancel').click

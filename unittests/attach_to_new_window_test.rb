@@ -7,7 +7,6 @@ require 'watir/testcase'
 
 class TC_NewWindow< Watir::TestCase
   include Watir
-  execute :sequentially
   
   def setup
     $ie.goto($htmlRoot + "new_browser.html")
@@ -34,6 +33,14 @@ class TC_NewWindow< Watir::TestCase
   
   def test_attach_to_new_window_using_click_no_wait
     $ie.link(:text, 'New Window').click_no_wait
+    IE.attach_timeout = 2.0
+    ie_new = IE.attach(:title, 'Pass Page')
+    assert(ie_new.text.include?('PASS'))
+    ie_new.close
+  end
+  
+  def test_click_no_wait_works_in_a_container
+    $ie.p(:index, 1).link(:text, 'New Window').click_no_wait
     IE.attach_timeout = 2.0
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
