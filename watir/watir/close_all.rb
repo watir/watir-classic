@@ -31,7 +31,7 @@ module Watir
         IE.attach_timeout = 0
         self.modal_dialog.close
         true
-      rescue NoMatchingWindowFoundException
+      rescue NoMatchingWindowFoundException, TimeOutException
         false
       ensure
         IE.attach_timeout = original_attach_timeout
