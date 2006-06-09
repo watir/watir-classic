@@ -2497,9 +2497,10 @@ module Watir
     # Return the current window handle
     attr_reader :hwnd
 
-    def find_modal_from_window(hwnd)
+    def find_modal_from_window
       # Use handle of our parent window to see if we have any currently
       # enabled popup.
+      hwnd = @container.hwnd
       hwnd_modal = 0
       begin
         Watir::until_with_timeout do
@@ -2522,7 +2523,7 @@ module Watir
 
       case how
       when nil
-        unless find_modal_from_window @container.hwnd 
+        unless find_modal_from_window
           raise NoMatchingWindowFoundException, 
             "No Modal Dialog found for current Watir::IE page."
         end

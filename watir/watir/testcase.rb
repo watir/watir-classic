@@ -49,5 +49,6 @@ module Watir
           @order = order
         end
       end
+      public :add_assertion
     end
 end  
