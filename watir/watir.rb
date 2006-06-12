@@ -201,7 +201,9 @@ module Watir
     timeout ||= IE.attach_timeout
     start_time = Time.now
     until yield do
-      raise TimeOutException if Time.now - start_time > timeout 
+       if (duration = Time.now - start_time) > timeout 
+         raise TimeOutException.new(duration, timeout), "Timed out after #{duration} seconds."
+       end
       sleep 0.5
     end
   end
@@ -1167,7 +1169,7 @@ module Watir
     # Normally, if you often close and open IE windows for each test
     # then you can run into OLE errors. Setting this to TRUE will 
     # workaround this problem.        
-    def self.persist_ole_connect=(boolean)
+    def self.persist_ole_connection=(boolean)
       @@persist_ole_connection = boolean
     end
     
@@ -2199,6 +2201,8 @@ module Watir
                           end
                         end"
     end
+
+    public
     def assert_exists
       locate if defined?(locate)
       unless ole_object
@@ -2211,7 +2215,6 @@ module Watir
       end
     end
     
-    public
     # return the name of the element (as defined in html)
     def_wrap_guard :name
     # return the id of the element
@@ -2538,7 +2541,7 @@ module Watir
       when nil
         unless find_modal_from_window
           raise NoMatchingWindowFoundException, 
-            "No Modal Dialog found for current Watir::IE page."
+            "Modal Dialog not found. Timeout = #{Watir::IE.attach_timeout}"
         end
       when :title
         case what.class.to_s
@@ -2555,16 +2558,18 @@ module Watir
         raise ArgumentError, "Only null and :title methods are supported"
       end
 
-      intUnknown = 0  
-      Watir::until_with_timeout do
-        intPointer = " " * 4 # will contain the int value of the IUnknown*
-        GetUnknown.call(@hwnd, intPointer)
-        intArray = intPointer.unpack('L')
-        intUnknown = intArray.first
-        intUnknown > 0
+      intUnknown = 0
+      begin
+        Watir::until_with_timeout do
+          intPointer = " " * 4 # will contain the int value of the IUnknown*
+          GetUnknown.call(@hwnd, intPointer)
+          intArray = intPointer.unpack('L')
+          intUnknown = intArray.first
+          intUnknown > 0
+        end
+      rescue TimeOutException => e        
+        raise "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
       end
-
-      raise "Unable to attach to Modal Window #{what.inspect}" unless intUnknown > 0
       
       @document = WIN32OLE.connect_unknown(intUnknown)
     end
@@ -2663,7 +2668,7 @@ module Watir
         s += index.to_s.ljust(6)
         @show_attributes.each do |attribute_length_pair|
           begin
-            s += eval('o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust(attribute_length_pair.length)
+            s += eval('o.ole_object.invoke("#{attribute_length_pair.attribute}")').to_s.ljust(attribute_length_pair.length)
           rescue => e
             s += " ".ljust(attribute_length_pair.length)
           end
