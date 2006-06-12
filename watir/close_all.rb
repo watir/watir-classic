@@ -17,7 +17,7 @@ module Watir
         next unless window.path =~ /Internet Explorer/ 
         ie = IE.bind window
         ie.close_modal
-        ie.close unless except && except.hwnd == window.hwnd
+        ie.close unless except and except.hwnd == window.hwnd
       end
       sleep 1.0 # replace with polling for window count to be zero?
     end

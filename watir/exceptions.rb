@@ -31,7 +31,12 @@ module Watir
     # This exception is thrown if an http error, such as a 404, 500 etc is encountered while navigating
     class NavigationException < WatirException; end
     # This exception is raised if a timeout is exceeded
-    class TimeOutException < WatirException; end
+    class TimeOutException < WatirException
+      def initialize(duration, timeout)
+        @duration, @timeout = duration, timeout
+      end 
+      attr_reader :duration, :timeout
+    end
     
   end
 end
