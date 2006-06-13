@@ -755,7 +755,7 @@ module Watir
     #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
     #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
     #   ie.link(:xpath, "//a[contains(.,'Click Me')]/")      # access the link with Click Me as its text
-    def link(how, what)
+    def link(how, what=nil)
       return Link.new(self, how, what)
     end
     
@@ -1041,6 +1041,7 @@ module Watir
     def locate_input_element(how, what, types, value=nil)
       elements = ole_inner_elements
       how = :value if how == :caption
+      how = :class_name if how == :class
       what = what.to_i if how == :index
       value = value.to_s if value
       log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
@@ -1078,31 +1079,78 @@ module Watir
     
     # returns the ole object for the specified element
     def locate_tagged_element(tag, how, what)
-      elements = document.getElementsByTagName(tag)
-      what = what.to_i if how == :index
-      how = :href if how == :url
-      o = nil
-      count = 1
-      elements.each do |object|
-        next if o
-        element = Element.new(object)
-        if how == :index
-          attribute = count
-        else
-          begin
-            attribute = element.send(how)
-          rescue NoMethodError
-            raise MissingWayOfFindingObjectException,
-                            "#{how} is an unknown way of finding a <#{tag}> element (#{what})"
-          end
-        end
-        o = object if what.matches(attribute)
-        count += 1
-      end # do
-      return o
+      locator = TaggedElementLocator.new(self, tag)
+      locator.set_specifier(how, what)
+      locator.locate
+    end
+
+  end # module
+    
+  class TaggedElementLocator
+    include Watir
+    include Watir::Exception
+
+    def initialize(container, tag)
+      @container = container
+      @tag = tag
     end
     
-  end # module
+    def set_specifier(how, what)    
+      if how.class == Hash && what.nil?
+        specifiers = how
+      else
+        specifiers = {how => what}
+      end
+        
+      @specifiers = {:index => 1} # default if not specified
+
+      specifiers.each do |how, what|  
+        what = what.to_i if how == :index
+        how = :href if how == :url
+        how = :class_name if how == :class
+        
+        @specifiers[how] = what
+      end
+
+    end
+
+    def locate
+      elements = @container.document.getElementsByTagName(@tag)
+      index_target = @specifiers[:index]
+
+      count = 0
+      elements.each do |object|
+        element = Element.new(object)
+        
+        catch :next_element do
+          @specifiers.each do |how, what|
+            next if how == :index
+            unless what.matches send_message(how, element, what)
+              throw :next_element
+            end
+          end
+          count += 1
+          unless index_target == count
+            throw :next_element
+          end
+          return object          
+        end
+
+      end # elements
+      nil
+    end
+    
+    def send_message(how, element, what)
+      begin
+        return element.send(how)
+      rescue NoMethodError
+        raise MissingWayOfFindingObjectException,
+              "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+      end
+    end
+    private :send_message
+  end  
+    
   
   module PageContainer
     include Watir::Exception
