@@ -1341,7 +1341,7 @@ module Watir
       shell = WIN32OLE.new("Shell.Application")
       ieTemp = nil
       shell.Windows.each do |window|
-      next unless window.path =~ /Internet Explorer/ 
+      next unless window.path =~ /Internet Explorer/ rescue false
         
         case how
         when :url
