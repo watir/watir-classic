@@ -336,7 +336,7 @@ module Watir
     
     # Determine the how and what when defaults are possible.
     def process_default(default_attribute, how, what)
-      if what == nil
+      if what == nil && how.class == Symbol
         what = how
         how = default_attribute
       end
@@ -356,7 +356,7 @@ module Watir
     private
     def self.def_creator(method_name, klass_name=nil)
       klass_name ||= method_name.to_s.capitalize
-      class_eval "def #{method_name}(how, what)
+      class_eval "def #{method_name}(how, what=nil)
                           #{klass_name}.new(self, how, what)
                         end"
     end
@@ -1389,7 +1389,7 @@ module Watir
       shell = WIN32OLE.new("Shell.Application")
       ieTemp = nil
       shell.Windows.each do |window|
-      next unless window.path =~ /Internet Explorer/ rescue false
+      next unless (window.path =~ /Internet Explorer/ rescue false)
         
         case how
         when :url
