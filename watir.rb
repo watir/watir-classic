@@ -1188,8 +1188,8 @@ module Watir
       ruby_code = "require 'watir';"
       ruby_code << "ie = #{attach_command};"
       ruby_code << "ie.instance_eval(#{command.inspect})"
-      exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
-      Thread.new { system(exec_string) }
+      exec_string = "start rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
+      system(exec_string)
     end
     
     def set_container container
