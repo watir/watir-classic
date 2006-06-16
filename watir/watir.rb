@@ -2540,7 +2540,10 @@ module Watir
         return false
       end
  #     return false if ! document.iscontentEditable
-      
+      visible?
+    end
+    
+    def visible?
       # Now iterate up the DOM element tree and return false if any
       # parent element isn't visible or is disabled.
       object = document
