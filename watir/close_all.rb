@@ -14,7 +14,7 @@ module Watir
     def self.close_all_but(except=nil)
       shell = WIN32OLE.new 'Shell.Application'
       shell.windows.each do |window|
-        next unless window.path =~ /Internet Explorer/ 
+        next unless (window.path =~ /Internet Explorer/ rescue false)
         ie = IE.bind window
         ie.close_modal
         ie.close unless except and except.hwnd == window.hwnd
