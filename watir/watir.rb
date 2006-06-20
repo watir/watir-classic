@@ -336,7 +336,7 @@ module Watir
     
     # Determine the how and what when defaults are possible.
     def process_default(default_attribute, how, what)
-      if what == nil && how.class == Symbol
+      if how.class == String && what == nil
         what = how
         how = default_attribute
       end
