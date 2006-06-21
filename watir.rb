@@ -1308,7 +1308,7 @@ module Watir
       @page_container = self
       @enable_spinner = $ENABLE_SPINNER
       @error_checkers = []
-      @ie.visible = ! $HIDE_IE
+      self.visible = ! $HIDE_IE
       @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
 
       if $FAST_SPEED
@@ -1353,7 +1353,7 @@ module Watir
       @ie.visible
     end
     def visible=(boolean)
-      @ie.visible = boolean
+      @ie.visible = boolean if boolean != @ie.visible
     end
     
     def create_browser_window
