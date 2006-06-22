@@ -68,6 +68,9 @@ class StubExplorer
   def visible=(value)
   end
   
+  def visible
+  end
+  
 end
 
 class TestIE < Watir::IE
