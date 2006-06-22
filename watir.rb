@@ -1046,10 +1046,8 @@ module Watir
       value = value.to_s if value
       log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
       
-      o = nil
       object_index = 1
       elements.each do |object|
-        next if o
         element = Element.new(object)
         if types.include?(element.type)
           if how == :index
@@ -1065,16 +1063,16 @@ module Watir
           if what.matches(attribute)
             if value
               if element.value == value
-                o = object
+                return object
               end
             else
-              o = object
+              return object
             end
           end
           object_index += 1
         end
       end
-      return o
+      return nil
     end
     
     # returns the ole object for the specified element
@@ -1639,8 +1637,8 @@ module Watir
       until @ie.document.readyState == "complete" 
         sleep 0.2; s.spin
       end
-      
-      if @ie.document.frames.length > 1
+
+      if @ie.document.frames.length > 0
         begin
           0.upto @ie.document.frames.length-1 do |i|
             until @ie.document.frames[i.to_s].document.readyState == "complete"
@@ -3031,7 +3029,7 @@ module Watir
       super
     end
     
-    # this method is used to ppulate the properties in the to_s method
+    # this method is used to populate the properties in the to_s method
     def table_string_creator
       n = []
       n <<   "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
@@ -3122,6 +3120,7 @@ module Watir
     # row of the table
     #   * columnnumber  - column index to extract values from
     def column_values(columnnumber)
+
       return(1..row_count).collect {|idx| self[idx][columnnumber].text}
     end
     
