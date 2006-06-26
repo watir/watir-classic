@@ -191,6 +191,10 @@ command_line_flag('-s')
 
 module Watir
   include Watir::Exception
+
+  # Loop sleep time
+  $loop_sleep_time = 0.25
+
   
   @@dir = File.expand_path(File.dirname(__FILE__))
   # this will find the IEDialog.dll file in its build location
@@ -211,7 +215,7 @@ module Watir
   def self.until_with_timeout(timeout=10) # block
     start_time = Time.now
     until yield or Time.now - start_time > timeout do
-      sleep 0.05
+      sleep $loop_sleep_time
     end
   end
   
@@ -1292,16 +1296,22 @@ module Watir
     #   * types - what object types we will look at.
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
     def locate_input_element(how, what, types, value=nil)
-      elements = ole_inner_elements
+      begin
+        case how
+        when :id:   return document.getElementById(what)
+        when :name: elements = document.getElementsByName(what)
+        else        elements = ole_inner_elements
+        end
+      rescue
+        elements = ole_inner_elements
+      end
       how = :value if how == :caption
       what = what.to_i if how == :index
       value = value.to_s if value
       log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
       
-      o = nil
       object_index = 1
       elements.each do |object|
-        next if o
         element = Element.new(object)
         if types.include?(element.type)
           if how == :index
@@ -1317,16 +1327,16 @@ module Watir
           if what.matches(attribute)
             if value
               if element.value == value
-                o = object
+                return object
               end
             else
-              o = object
+              return object
             end
           end
           object_index += 1
         end
       end
-      return o
+      return nil
     end
     
     # returns the ole object for the specified element
@@ -1392,7 +1402,7 @@ module Watir
     REVISION = $1
     
     # The Release number
-    VERSION_SHORT = '1.5.0'
+    VERSION_SHORT = '1.5.1'
     VERSION = VERSION_SHORT + '.' + REVISION
     
     # Used internally to determine when IE has finished loading a page
@@ -1808,25 +1818,25 @@ module Watir
       
       s= Spinner.new(@enable_spinner)
       while @ie.busy
-        sleep 0.02
+        sleep $loop_sleep_time
         s.spin
       end
       s.reverse
       
       log "wait: readystate=" + @ie.readyState.to_s
       until @ie.readyState == READYSTATE_COMPLETE
-        sleep 0.02
+        sleep $loop_sleep_time
         s.spin
       end
       sleep 0.02
       
       # at this point IE says it's ready, but still need to check each document     
       until suppress_ole_error {@ie.document} do
-        sleep 0.02; s.spin
+        sleep $loop_sleep_time; s.spin
       end
       
       until @ie.document.readyState == "complete"
-        sleep 0.02
+        sleep $loop_sleep_time
         s.spin
       end
 
@@ -1861,7 +1871,7 @@ module Watir
         begin
           0.upto @ie.document.frames.length-1 do |i|
             until @ie.document.frames[i.to_s].document.readyState == "complete"
-              sleep 0.02; s.spin
+              sleep $loop_sleep_time; s.spin
             end
             url = @ie.document.frames[i.to_s].document.url
             @url_list << url unless url_list.include?(url)
