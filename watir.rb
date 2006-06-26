@@ -1039,7 +1039,11 @@ module Watir
     #   * types - what object types we will look at.
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
     def locate_input_element(how, what, types, value=nil)
-      elements = ole_inner_elements
+      case how
+      when :id:   return document.getElementById(what)
+      when :name: elements = document.getElementsByName(what)
+      else        elements = ole_inner_elements
+      end
       how = :value if how == :caption
       how = :class_name if how == :class
       what = what.to_i if how == :index
