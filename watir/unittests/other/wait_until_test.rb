@@ -1,29 +1,11 @@
 # feature tests for wait_until
 
 require 'watir/testcase'
-require 'watir'
+require 'watir/waiter'
 require 'spec' # gem install rspec
 
-class TimeKeeper
-  attr_reader :sleep_time
-  def initialize 
-    @sleep_time = 0.0
-  end
-  def sleep seconds
-    @sleep_time += seconds
-    Kernel.sleep seconds
-  end
-  def now
-    Time.now
-  end
-end
-
 # used for unit testing
-class MockTimeKeeper
-  attr_reader :sleep_time
-  def initialize 
-    @sleep_time = 0.0
-  end
+class MockTimeKeeper < Watir::TimeKeeper
   def sleep seconds
     @sleep_time += seconds
   end
@@ -32,42 +14,14 @@ class MockTimeKeeper
   end
 end
 
-class Waiter
-  attr_accessor :timer
-  attr_accessor :polling_interval
-  attr_reader :default_timeout
-  def initialize(polling_interval=0.5, default_timeout=10.0)
-    @polling_interval = polling_interval
-    @default_timeout = default_timeout
-    @timer = TimeKeeper.new
-  end
-  
-  def wait_until(timeout=nil) #block
-    timeout ||= default_timeout
-    start_time = now
-    until yield do
-      if (duration = now - start_time) > timeout
-        raise Watir::Exception::TimeOutException.new(duration, timeout),
-          "Timed out after #{duration} seconds."
-      end
-      sleep @polling_interval
-    end
-  end  
-      
-  def sleep seconds
-    @timer.sleep seconds
-  end
-  def now
-    @timer.now
-  end
-end  
-    
 class WaitUntilTest < Watir::TestCase
   
   def setup
-    @waiter = Waiter.new
-    @waiter.timer = MockTimeKeeper.new
+    @waiter = Watir::Waiter.new
     @mock_checkee = Spec::Api::Mock.new "mock_checkee"
+
+    # remove this to test with actual TimeKeeper intead of the Mock
+    @waiter.timer = MockTimeKeeper.new
   end
 
   def teardown
@@ -96,7 +50,7 @@ class WaitUntilTest < Watir::TestCase
     @waiter.polling_interval = 0.1
     @mock_checkee.should_receive(:check).any_number_of_times.and_return false
     lambda{@waiter.wait_until {@mock_checkee.check}}.should_raise Watir::Exception::TimeOutException
-    @waiter.timer.sleep_time.should_be_close 10.05, 0.06
+    @waiter.timer.sleep_time.should_be_close 10.05, 0.07
   end
 
   def test_timeout_duration
