@@ -146,6 +146,7 @@ require 'watir/winClicker'
 require 'watir/exceptions'
 require 'watir/utils'
 require 'watir/close_all'
+require 'watir/waiter'
 
 require 'dl/import'
 require 'dl/struct'
@@ -195,17 +196,18 @@ module Watir
   
   @@dir = File.expand_path(File.dirname(__FILE__))
 
+  def wait_until(*args)
+    Waiter.wait_until(*args) {yield}
+  end
+
+  ATTACHER = Waiter.new
+
   # Like regular Ruby "until", except that a TimeOutException is raised
   # if the timeout is exceeded. Default timeout is IE.attach_timeout.
   def self.until_with_timeout(timeout=nil) # block
     timeout ||= IE.attach_timeout
-    start_time = Time.now
-    until yield do
-       if (duration = Time.now - start_time) > timeout 
-         raise TimeOutException.new(duration, timeout), "Timed out after #{duration} seconds."
-       end
-      sleep 0.5
-    end
+    ATTACHER.timeout = timeout
+    ATTACHER.wait_until { yield }
   end
   
   # add an error checker for http navigation errors, such as 404, 500 etc
@@ -1192,6 +1194,7 @@ module Watir
       command.strip!
       load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
       ruby_code = "require 'watir';"
+#      ruby_code = "$HIDE_IE = #{$HIDE_IE};" # This prevents attaching to a window from setting it visible. However modal dialogs cannot be attached to when not visible.
       ruby_code << "ie = #{attach_command};"
       ruby_code << "ie.instance_eval(#{command.inspect})"
       exec_string = "start rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"

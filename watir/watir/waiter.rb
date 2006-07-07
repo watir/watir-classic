@@ -1,4 +1,4 @@
-require 'watir'
+require 'watir/exceptions'
 
 module Watir
 
@@ -25,27 +25,30 @@ class Waiter
   # loop. In seconds.
   attr_accessor :polling_interval
 
-  # Default timeout for wait_until if not specified explicitly.
-  attr_reader :default_timeout
+  # Timeout for wait_until.
+  attr_accessor :timeout
+  
+  @@default_polling_interval = 0.5
+  @@default_timeout = 60.0
 
-  def initialize(polling_interval=0.5, default_timeout=10.0)
+  def initialize(timeout=@@default_timeout,
+                 polling_interval=@@default_polling_interval)
+    @timeout = timeout
     @polling_interval = polling_interval
-    @default_timeout = default_timeout
     @timer = TimeKeeper.new
   end
 
-  # Executed the provided block until either (1) it returns true, or
+  # Execute the provided block until either (1) it returns true, or
   # (2) the timeout (in seconds) has been reached. If the timeout is reached,
   # a TimeOutException will be raised. The block will always
   # execute at least once.  
   # 
-  # waiter = Waiter.new
-  # waiter.wait_until(5) {puts 'hello'}
+  # waiter = Waiter.new(5)
+  # waiter.wait_until {puts 'hello'}
   # 
   # This code will print out "hello" for five seconds, and then raise a 
   # Watir::TimeOutException.
-  def wait_until(timeout=nil) # block
-    timeout ||= default_timeout
+  def wait_until # block
     start_time = now
     until yield do
       if (duration = now - start_time) > timeout
@@ -55,7 +58,22 @@ class Waiter
       sleep @polling_interval
     end
   end  
-      
+
+  # Execute the provided block until either (1) it returns true, or
+  # (2) the timeout (in seconds) has been reached. If the timeout is reached,
+  # a TimeOutException will be raised. The block will always
+  # execute at least once.  
+  # 
+  # Waiter.wait_until(5) {puts 'hello'}
+  # 
+  # This code will print out "hello" for five seconds, and then raise a 
+  # Watir::TimeOutException.  
+  def self.wait_until(timeout=@@default_timeout,
+                      polling_interval=@@default_polling_interval)
+    waiter = new(timeout, polling_interval)
+    waiter.wait_until { yield }
+  end
+     
   private
   def sleep seconds
     @timer.sleep seconds
