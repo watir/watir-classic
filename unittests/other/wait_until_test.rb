@@ -2,6 +2,7 @@
 
 require 'watir/testcase'
 require 'watir/waiter'
+require 'watir'
 require 'spec' # gem install rspec
 
 # used for unit testing
@@ -14,19 +15,23 @@ class MockTimeKeeper < Watir::TimeKeeper
   end
 end
 
-class WaitUntilTest < Watir::TestCase
+class WaitUntilInstanceTest < Watir::TestCase
   
   def setup
     @waiter = Watir::Waiter.new
+    @waiter.timeout = 10.0
     @mock_checkee = Spec::Api::Mock.new "mock_checkee"
 
-    # remove this to test with actual TimeKeeper intead of the Mock
+    # remove this line to test with actual TimeKeeper intead of the Mock
+    # (slower, but more accurate)
     @waiter.timer = MockTimeKeeper.new
   end
 
   def teardown
-    @mock_checkee.__verify
+    @mock_checkee.__verify if @test_passed
   end
+  
+  # Instance Method
   
   def test_no_time_passes_if_true
     @waiter.wait_until {true}
@@ -63,12 +68,32 @@ class WaitUntilTest < Watir::TestCase
       e.timeout.should_equal 10.0
     end
   end
+end
+
+class WaitUntilClassTest < Watir::TestCase
   
-  def test_timeout_override
-    @waiter.polling_interval = 0.1
-    @mock_checkee.should_receive(:check).any_number_of_times.and_return false
-    lambda{@waiter.wait_until(2) {@mock_checkee.check}}.should_raise Watir::Exception::TimeOutException
-    @waiter.timer.sleep_time.should_be_close 2.05, 0.06
+  def setup
+    @mock_checkee = Spec::Api::Mock.new "mock_checkee"
+    @mock_checkee.should_receive(:check).exactly(3).times.and_return [false, false, true]
   end
+
+  def teardown
+    @mock_checkee.__verify if @test_passed
+  end
+  # Class method
+  
+  def test_class_method_with_args
+    Watir::Waiter.wait_until(5, 0.1) {@mock_checkee.check}
+  end
+  
+  def test_class_method_with_defaults
+    Watir::Waiter.wait_until {@mock_checkee.check}
+  end
+  
+  include Watir
+  def test_watir_method
+    wait_until {@mock_checkee.check}
+  end
+
 end    
     
