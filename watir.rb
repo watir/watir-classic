@@ -1456,6 +1456,7 @@ module Watir
         false
       end
     end
+    alias :exist :exists
     
     # deprecated: use logger= instead
     def set_logger(logger)
@@ -2474,6 +2475,7 @@ module Watir
       end
       @o ? true: false
     end
+    alias :exist? :exists?
     
     # Returns true if the element is enabled, false if it isn't.
     #   raises: UnknownObjectException  if the object is not found
@@ -2605,7 +2607,8 @@ module Watir
         # TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
           Watir::until_with_timeout do
-            @hwnd, arr = FindWindowEx.call(0, 0, nil, "#{what} -- Web Page Dialog")
+            title = "#{what} -- Web Page Dialog"
+            @hwnd, arr = FindWindowEx.call(0, 0, nil, title)
             @hwnd > 0
           end
         else
@@ -2628,6 +2631,7 @@ module Watir
         raise "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
       end
       
+      copy_test_config @parent_container
       @document = WIN32OLE.connect_unknown(intUnknown)
     end
 
@@ -2635,9 +2639,9 @@ module Watir
       set_container container
       @how = how
       @what = what
+      @parent_container = container
       # locate our modal dialog's Document object and save it
       locate
-      copy_test_config container
     end
 
     def document
@@ -2818,6 +2822,7 @@ module Watir
     def exists?
       @ole_object ? true : false
     end
+    alias :exist? :exists?
     
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.
     def submit # XXX use assert_exists
