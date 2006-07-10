@@ -1456,7 +1456,7 @@ module Watir
         false
       end
     end
-    alias :exist :exists
+    alias :exist? :exists?
     
     # deprecated: use logger= instead
     def set_logger(logger)
