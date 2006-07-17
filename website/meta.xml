@@ -15,7 +15,7 @@
         <items>
             <item>
                 <name>User Guide</name>
-                <url>http://www.openqa.org/watir/watir_user_guide.html</url>
+                <url>watir_user_guide.html</url>
             </item>        
             <item>
                 <name>FAQ</name>
