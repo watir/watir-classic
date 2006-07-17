@@ -14,6 +14,10 @@
         <url>index.html</url>
         <items>
             <item>
+                <name>User Guide</name>
+                <url>http://www.openqa.org/watir/watir_user_guide.html</url>
+            </item>        
+            <item>
                 <name>FAQ</name>
                 <url>http://wiki.openqa.org/display/WTR/FAQ</url>
             </item>
@@ -30,13 +34,6 @@
             <email>bret@pettichord.com</email>
         </person>
     </owners>
-
-    <!--<developers>-->
-        <!--<person>-->
-            <!--<name>Paul Hammant</name>-->
-            <!--<email>paul@thoughtworks.com</email>-->
-        <!--</person>-->
-    <!--</developers>-->
 
     <releases>
     </releases>
