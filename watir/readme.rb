@@ -120,7 +120,7 @@ Typical Usage
 
 Javascript Pop Up Support
    Watir now optionally installs AutoIt - http://www.autoitscript.com/
-   This is the preffered method for dealing wth pop ups, file requesters etc. Support for Winclickers will be removed.
+   This is the prefered method for dealing wth pop ups, file requesters etc. Support for Winclickers will be removed.
 
 Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
@@ -204,7 +204,65 @@ License
   (based on BSD Open Source License)
 
 
+  (Eclipse will automatically show these and other tagged comments from the
+   source in the Tasks view.)
 
+Performance
+- TODO: backout David's commit to trunk
+        - move to watir/contrib/performance-improvement.rb
+        - get all unit tests working again
+
+Watir::TestCase
+- TODO: Watir.test_case 'name of what we are testing' do; end
+        - the body becomes a test method
+        - the name of the file becomes the name of the testsuite
+        WHY? (1) cleaner to read, (2) avoids name collisions
+        - Watir.setup defines setup method (same with teardown)
+        - We may need a new autorunner
+- TODO: measure & display how long each test takes to execute        
+        
+Documentation
+- TODO: rdoc: autocreate from "macro" methods.
+- TODO: Add rake task to create bonus file
+        includes: examples, rdoc, doc, unittests
+
+Time Outs
+- TODO: time-out settings for (1) new window (2) page loading
+        ATTACHER.wait_until, LOADER.wait_until
+- TODO: time-outs: distinguish between optomistic and pessimistic?
+        - wait a short while if we aren't expecting the window
+          (and wait for it to go away)
+        - wait a long time if we are expecting it.
+          (and wait for it to appear)
+- IDEA: wait_until: when timeout is nil, there is no timeout
+
+Completions
+- IDEA: review use of src method/attribute in links and images
+- TODO: does click_no_wait work for objects in frames?
+- IDEA: add locate method for frames
+        - support ie.frame(:name, 'foo').link(:text, 'bar').exists?
+          returns false when frame does not exist (currently raises an error).
+- IDEA: Add child_row, child_cell to Table and TableRow
+        also child_rows and child_cells
+
+Refactoring
+- TODO: new elements: make it super easy to add support for new elements
+- IDEA: modules: Elemental, Inputable, Tagged
+- IDEA: classes: ElementWrapper, ElementMapper
+- IDEA: reuse wrapper element in locators
+- IDEA: continue use of strategy pattern for locator methods
+- IDEA: use publish/subscribe to handle page reloading nofications
+
+ Xpath
+- IDEA: xpath: use unique_number in xpath locator (may fix bugs)
+- IDEA: xpath: remove redundancy in xpath tests
+- IDEA: xpath: remove writes to STDOUT in xpath tests
+        filefield, form, radios
+        also check links for errors
+
+Other
+- IDEA: measure coverage of watir testsuite with rcov (rspec)
+- IDEA: gem server: use one for development builds. see gem FAQ 4.2.
 
 =end
 class ReadMe
