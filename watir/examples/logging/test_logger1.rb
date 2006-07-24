@@ -48,6 +48,7 @@ class TC_google_logging < Test::Unit::TestCase
 
    $logger.log("Actual Result: Check that the 'Programming Ruby' link actually appears on the page by using an assertion")
 
+   #FIXME! bad example
    begin
         assert($ie.text.include?("Programming Ruby") )
         $logger.log("Passed. Found test string 'Programming Ruby' ")
@@ -87,6 +88,7 @@ class TC_google_logging < Test::Unit::TestCase
   
    $logger.log(" Actual Result: Check that 'Canada' appears on the page by using an assertion")
    
+   #FIXME bad example
    begin
        assert($ie.text.include?("Canada") )
        $logger.log("TEST PASSED. Found test string 'Canada' ")
