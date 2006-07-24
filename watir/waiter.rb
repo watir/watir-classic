@@ -68,6 +68,8 @@ class Waiter
   # 
   # This code will print out "hello" for five seconds, and then raise a 
   # Watir::TimeOutException.  
+
+  # IDEA: wait_until: remove defaults from Waiter.wait_until
   def self.wait_until(timeout=@@default_timeout,
                       polling_interval=@@default_polling_interval)
     waiter = new(timeout, polling_interval)
