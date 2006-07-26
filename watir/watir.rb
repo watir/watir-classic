@@ -149,6 +149,7 @@ require 'watir/utils'
 require 'dl/import'
 require 'dl/struct'
 require 'Win32API'
+require 'win32/process'
 
 class String
   def matches(x)
@@ -332,7 +333,13 @@ module Watir
       load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
       ruby_code = "begin; require 'watir'; include Watir; #{command}; rescue => e; puts e; end;"
       exec_string = "rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
-      Thread.new { system(exec_string) }
+
+      Process.create(
+        :app_name       => exec_string,
+        :creation_flags => Process::CREATE_PRESERVE_CODE_AUTHZ_LEVEL,
+        :inherit?       => true
+      )
+#      Thread.new { system(exec_string) }
     end
     
     # The HTML of the current page
