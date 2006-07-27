@@ -1104,7 +1104,7 @@ module Watir
     end
     
     def set_specifier(how, what)    
-      if how.class == Hash && what.nil?
+      if how.class == Hash and what.nil?
         specifiers = how
       else
         specifiers = {how => what}
@@ -1122,13 +1122,17 @@ module Watir
 
     end
 
+    def each_element tag
+      @container.document.getElementsByTagName(tag).each do |ole_element| 
+        yield Element.new(ole_element) 
+      end
+    end    
+
     def locate
-      elements = @container.document.getElementsByTagName(@tag)
       index_target = @specifiers[:index]
 
       count = 0
-      elements.each do |object|
-        element = Element.new(object)
+      each_element(@tag) do |element|
         
         catch :next_element do
           @specifiers.each do |how, what|
@@ -1141,7 +1145,7 @@ module Watir
           unless index_target == count
             throw :next_element
           end
-          return object          
+          return element.ole_object          
         end
 
       end # elements
@@ -2914,7 +2918,7 @@ module Watir
       set_container container
       @how = how
       @what = what
-      super(nil)
+      super nil
     end
     
     # this method is used to populate the properties in the to_s method
@@ -2993,7 +2997,7 @@ module Watir
       anElement.locate if defined?(anElement.locate)
       o = anElement.ole_object.parentElement
       o = o.parentElement until o.tagName == 'TABLE'
-      Table.new(container, :ole_object, o)
+      new container, :ole_object, o 
     end
     
     # Returns an initialized instance of a table object
