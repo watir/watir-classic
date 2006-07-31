@@ -36,6 +36,26 @@
     </owners>
 
     <releases>
+        <release>
+            <version>1.4.1 (stable)</version>
+            <date>8/21/2005</date>
+            <downloads>
+                <download>
+                    <url>http://rubyforge.org/frs/download.php/5677/watir-1.4.1.exe</url>
+                    <name>Windows installer for Watir 1.4.1</name>
+                </download>
+            </downloads>           
+        </release>
+        <release>
+            <version>Development gems</version>
+            <date>recent</date>
+            <downloads>
+                <download>
+                    <url>http://wiki.openqa.org/display/WTR/Development+Builds</url>
+                    <name>Prebuilt development gems based - Watir 1.5.x</name>
+                </download>
+            </downloads>
+        </release>
     </releases>
 
 </project>
