@@ -217,6 +217,7 @@ class WinClicker
                 end
             }
             r,rs = enum_windows.call(enum_windows_proc, 0)
+            DL.remove_callback(enum_windows_proc)
             return found_hwnd
     end
 
@@ -333,6 +334,7 @@ class WinClicker
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
+         DL.remove_callback(enum_childWindows_proc)
 #         return -1
          return match_hwnd
 
@@ -385,6 +387,7 @@ class WinClicker
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
+         DL.remove_callback(enum_childWindows_proc)
          return staticText
     end
 
@@ -415,6 +418,7 @@ class WinClicker
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
+         DL.remove_callback(enum_childWindows_proc)
          controlHwnd = control_hWnd[position]
          if controlHwnd == nil then
             controlHwnd = -1
