@@ -78,14 +78,14 @@ class WinClicker
                return true
             end            
         end
-        puts 'File Requester not found'
+#        puts 'File Requester not found'
         return false
     end
 
     def setFileRequesterFileName_newProcess ( textToSet )
         myapp = "#{@path_to_clicker}/setFileDialog.rb #{textToSet}"
-        puts "Starting win setFileDialog in new process. Setting text #{textToSet}"
-        puts "Starting app: #{myapp}"
+#        puts "Starting win setFileDialog in new process. Setting text #{textToSet}"
+#        puts "Starting app: #{myapp}"
         winsystem( "start #{myapp}" )
     end
 
@@ -101,7 +101,7 @@ class WinClicker
            return getTextValueForFileNameField( hWnd ) 
 
         else
-            puts 'File Requester not found'
+#            puts 'File Requester not found'
             return nil
         end
     end
@@ -135,9 +135,9 @@ class WinClicker
     # as a thread
     def clickJSDialog_Thread(button = "OK" )
 
-           puts "clickJSDialog_Thread Starting waiting.."
+#           puts "clickJSDialog_Thread Starting waiting.."
            sleep 3
-           puts " clickJSDialog_Thread ... resuming"
+#           puts " clickJSDialog_Thread ... resuming"
            n = 0
            while n < 3
                sleep 1
@@ -159,7 +159,7 @@ class WinClicker
         # pass a hWnd into this function and it will return the parent hWnd
         getParentWindow = @User32['GetParent' , 'II' ]
 
-        puts " Finding Parent for: " + childhWnd.to_s
+#        puts " Finding Parent for: " + childhWnd.to_s
         a , b = getParentWindow.call(childhWnd )
         #puts "a = " a.to_s , b.to_s
         return a
@@ -181,14 +181,14 @@ class WinClicker
         buff = " " * len
         classMatch = false
        
-           puts("getWindowHandle - looking for: " + title.to_s )
+#           puts("getWindowHandle - looking for: " + title.to_s )
 
-            bContinueEnum = -1
-
+            bContinueEnum = -1  # Windows "true" to continue enum_windows.
+            found_hwnd = nil
             enum_windows_proc = DL.callback('ILL') {|hwnd,lparam|
               sleep 0.05
               r,rs = get_class_name.call(hwnd, buff, buff.size)
-              puts "Found window: " + rs[1].to_s
+#              puts "Found window: " + rs[1].to_s
 
                if winclass != "" then
                    if /#{winclass}/ =~ rs[1].to_s
@@ -203,11 +203,13 @@ class WinClicker
                    captionBuffer = " " * (textLength+1)
 
                     t ,  textCaption  = get_caption.call(hwnd, captionBuffer  , textLength+1)    
-                    puts "Caption =" +  textCaption[1].to_s
+#                    puts "Caption =" +  textCaption[1].to_s
 
                     if /#{title}/ =~ textCaption[1].to_s
                         puts "Found Window with correct caption (" + textCaption[1].to_s + " hwnd=" + hwnd.to_s + ")"
-                        return hwnd
+                        found_hwnd = hwnd
+                        bContinueEnum = 0 # False, discontinue enum_windows
+#                        return hwnd  # NO!  Don't do a return from the callback
                     end
                     bContinueEnum
                 else
@@ -215,7 +217,8 @@ class WinClicker
                 end
             }
             r,rs = enum_windows.call(enum_windows_proc, 0)
-            return bContinueEnum
+            DL.remove_callback(enum_windows_proc)
+            return found_hwnd
     end
 
 
@@ -232,10 +235,10 @@ class WinClicker
 
          post_message = @User32['PostMessage', 'ILILL']
          #post_message = @User32['SendMessage', 'ILILL']
-         puts "posting mesage"
+#         puts "posting mesage"
          r,rs = post_message.call(buttonhWnd, BM_CLICK, 0, 0)
 
-         puts "return #{r} #{rs} "
+#         puts "return #{r} #{rs} "
     end
 
 
@@ -244,7 +247,7 @@ class WinClicker
          makeWindowActive(hwnd)
 
          d = getChildHandle( hwnd , buttonCaption )
-         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s) 
+#         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s) 
 
          if d != -1 
              makeWindowActive(hwnd)
@@ -276,19 +279,19 @@ class WinClicker
                  makeWindowActive(hwnd)
              end
          rescue
-             puts "clickWindowsButton: Cant make window active in specified time ( " + maxWaitTime.to_s + ") - no handle"
+#             puts "clickWindowsButton: Cant make window active in specified time ( " + maxWaitTime.to_s + ") - no handle"
              return false
          end
 
-         puts ' Window handle is : ' + hwnd.to_s
+#         puts ' Window handle is : ' + hwnd.to_s
          if hwnd != -1 
-             puts "clickWindowsButton: Handle for window: " + windowCaption + " is: " + hwnd.to_s
+#             puts "clickWindowsButton: Handle for window: " + windowCaption + " is: " + hwnd.to_s
              makeWindowActive(hwnd)
          else
          end
 
          d = getChildHandle( hwnd , buttonCaption )
-         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s )
+#         puts("clickWindowsButton: handle for button: " + buttonCaption + " is " + d.to_s )
 
          if d != -1 
              makeWindowActive(hwnd)
@@ -307,28 +310,33 @@ class WinClicker
          enum_childWindows = @User32['EnumChildWindows' , 'IIPL' ]
          get_caption_length = @User32['GetWindowTextLengthA' ,'LI' ]    # format here - return value type (Long) followed by parameter types - int in this case -      see http://www.ruby-lang.org/cgi-bin/cvsweb.cgi/~checkout~/ruby/ext/dl/doc/dl.txt?
          get_caption = @User32['GetWindowTextA', 'iLsL' ] 
-        
+
+         match_hwnd = -1  # hWnd of handle matching childCaption
          buff = " " * 16
          get_class_name = @User32['GetClassName', 'ILpI']
 
          bContinueEnum = -1
          enum_childWindows_proc = DL.callback('ILL') {|chwnd,lparam|
               r,rs = get_class_name.call(chwnd, buff, buff.size)
-              puts "Found window: " + rs[1].to_s + " Handle: " + chwnd.to_s
+#              puts "Found window: " + rs[1].to_s + " Handle: " + chwnd.to_s
 
               textLength, a = get_caption_length.call(chwnd)
               captionBuffer = " " * (textLength+1)
 
               t ,  textCaption  = get_caption.call(chwnd, captionBuffer  , textLength+1)    
-              puts "Caption =" +  textCaption[1].to_s
+#              puts "Caption =" +  textCaption[1].to_s
 
               if /#{childCaption}/ =~ textCaption[1].to_s then
-                  return chwnd
+#                  return chwnd
+                   match_hwnd = chwnd
+                   bContinueEnum = 0  # Windows "false" to discontinue enum_childWindows
               end
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
-         return -1
+         DL.remove_callback(enum_childWindows_proc)
+#         return -1
+         return match_hwnd
 
     end
 
@@ -365,7 +373,7 @@ class WinClicker
          bContinueEnum = -1
          enum_childWindows_proc = DL.callback('ILL') {|hWnd,lparam|
               r,rs = get_class_name.call(hWnd, buff, buff.size)
-              puts "Found window: " + rs[1].to_s + " Handle: " + hWnd.to_s
+#              puts "Found window: " + rs[1].to_s + " Handle: " + hWnd.to_s
 
               if rs[1].to_s == "Static"  # there must be a better way of detecting this
 
@@ -379,6 +387,7 @@ class WinClicker
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
+         DL.remove_callback(enum_childWindows_proc)
          return staticText
     end
 
@@ -398,7 +407,7 @@ class WinClicker
          bContinueEnum = -1
          enum_childWindows_proc = DL.callback('ILL') {|hWnd,lparam|
               r,rs = get_class_name.call(hWnd, buff, buff.size)
-              puts "Found window: " + rs[1].to_s + " Handle: " + hWnd.to_s
+#              puts "Found window: " + rs[1].to_s + " Handle: " + hWnd.to_s
 
               if rs[1].to_s == controlClass  # there must be a better way of detecting this
 
@@ -409,6 +418,7 @@ class WinClicker
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
+         DL.remove_callback(enum_childWindows_proc)
          controlHwnd = control_hWnd[position]
          if controlHwnd == nil then
             controlHwnd = -1
@@ -422,7 +432,7 @@ class WinClicker
 
         send_message = @User32['SendMessage',  'ILISS']  
         r  ,rs  = send_message.call(hWnd , WM_SETTEXT , '' ,  textToSet   )
-        puts 'send message returned: ' + r.to_s 
+#        puts 'send message returned: ' + r.to_s 
      
     end
 
@@ -430,7 +440,7 @@ class WinClicker
 
         send_message = @User32['SendMessage',  'ILISS']  
         r  ,rs  = send_message.call(hWnd , WM_SETTEXT ,   '' ,    textToSet   )
-        puts 'setTextBoxText: send message returned: ' + r.to_s 
+#        puts 'setTextBoxText: send message returned: ' + r.to_s 
      
     end
 
@@ -439,7 +449,7 @@ class WinClicker
 
         send_message = @User32['SendMessage',  'ILIIS']  
         r  ,rs  = send_message.call(hWnd , WM_GETTEXT , 256 , buff )
-        puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
+#        puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
         return buff.to_s
     end
 
@@ -451,7 +461,7 @@ class WinClicker
          buff = " " * 256
         getWindowText = @User32['GetWindowText' , 'ILSI']
         r , rs = getWindowText.call( hWnd , buff , 256 )
-        puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
+#        puts 'send message returned: ' + r.to_s + ' text is: ' + buff.to_s
         return buff.to_s
 
     end
@@ -468,10 +478,10 @@ class WinClicker
         # get the handle of the nth control that is a combo box
         f = getHandleOfControl(parenthWnd, "ComboBox" , 1 )
 
-        puts "Handle for filename field is: " + f.to_s
+#        puts "Handle for filename field is: " + f.to_s
 
         if f == -1 then
-            puts "Unable to obtain handle for filename chooser"
+#            puts "Unable to obtain handle for filename chooser"
         else
             # we can now send it some messages
             return getWinText(f )
@@ -486,10 +496,10 @@ class WinClicker
         # get the handle of the nth control that is a combo box
         f = getHandleOfControl(parenthWnd, "Edit" , 0 )
 
-        puts "Handle for filename field is: " + f.to_s
+#        puts "Handle for filename field is: " + f.to_s
 
         if f == -1 then
-            puts "Unable to obtain handle for filename chooser"
+#            puts "Unable to obtain handle for filename chooser"
             return false
         else
             # we can now send it some messages
