@@ -1639,7 +1639,7 @@ module Watir
         intUnknown > 0
       end
 
-      raise "Unable to attach to Modal Window #{title}" unless intUnknown > 0
+      raise NoMatchingWindowFoundException.new("Unable to attach to Modal Window #{title}") unless intUnknown > 0
       
       htmlDoc = WIN32OLE.connect_unknown(intUnknown)
       ModalPage.new(htmlDoc, self)
@@ -2678,8 +2678,8 @@ module Watir
 
       case how
       when :hwnd
-        hwnd_modal = enabled_popup(10)
-        raise "No Modal Dialog found for current Watir::IE page." if !hwnd_modal
+        hwnd_modal = enabled_popup
+        raise NoMatchingWindowFoundException.new("No Modal Dialog found for current Watir::IE page.") if !hwnd_modal
         @what = hwnd_modal    # save modal's hwnd in case we need to re-attach
       when :title
         case what.class.to_s
@@ -2708,7 +2708,7 @@ module Watir
         intUnknown > 0
       end
 
-      raise "Unable to attach to Modal Window #{what.inspect}" unless intUnknown > 0
+      raise NoMatchingWindowFoundException.new("Unable to attach to Modal Window #{what.inspect}") unless intUnknown > 0
       
       WIN32OLE.connect_unknown(intUnknown)
     end

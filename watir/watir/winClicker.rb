@@ -183,8 +183,8 @@ class WinClicker
        
 #           puts("getWindowHandle - looking for: " + title.to_s )
 
-            bContinueEnum = -1
-
+            bContinueEnum = -1  # Windows "true" to continue enum_windows.
+            found_hwnd = nil
             enum_windows_proc = DL.callback('ILL') {|hwnd,lparam|
               sleep 0.05
               r,rs = get_class_name.call(hwnd, buff, buff.size)
@@ -207,7 +207,9 @@ class WinClicker
 
                     if /#{title}/ =~ textCaption[1].to_s
                         puts "Found Window with correct caption (" + textCaption[1].to_s + " hwnd=" + hwnd.to_s + ")"
-                        return hwnd
+                        found_hwnd = hwnd
+                        bContinueEnum = 0 # False, discontinue enum_windows
+#                        return hwnd  # NO!  Don't do a return from the callback
                     end
                     bContinueEnum
                 else
@@ -215,7 +217,7 @@ class WinClicker
                 end
             }
             r,rs = enum_windows.call(enum_windows_proc, 0)
-            return bContinueEnum
+            return found_hwnd
     end
 
 
@@ -307,7 +309,8 @@ class WinClicker
          enum_childWindows = @User32['EnumChildWindows' , 'IIPL' ]
          get_caption_length = @User32['GetWindowTextLengthA' ,'LI' ]    # format here - return value type (Long) followed by parameter types - int in this case -      see http://www.ruby-lang.org/cgi-bin/cvsweb.cgi/~checkout~/ruby/ext/dl/doc/dl.txt?
          get_caption = @User32['GetWindowTextA', 'iLsL' ] 
-        
+
+         match_hwnd = -1  # hWnd of handle matching childCaption
          buff = " " * 16
          get_class_name = @User32['GetClassName', 'ILpI']
 
@@ -323,12 +326,15 @@ class WinClicker
 #              puts "Caption =" +  textCaption[1].to_s
 
               if /#{childCaption}/ =~ textCaption[1].to_s then
-                  return chwnd
+#                  return chwnd
+                   match_hwnd = chwnd
+                   bContinueEnum = 0  # Windows "false" to discontinue enum_childWindows
               end
               bContinueEnum
          }
          r  = enum_childWindows.call(hWnd, enum_childWindows_proc  ,0)
-         return -1
+#         return -1
+         return match_hwnd
 
     end
 
