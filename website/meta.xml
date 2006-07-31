@@ -52,7 +52,7 @@
             <downloads>
                 <download>
                     <url>http://wiki.openqa.org/display/WTR/Development+Builds</url>
-                    <name>Prebuilt development gems based - Watir 1.5.x</name>
+                    <name>Prebuilt development gems based on Watir 1.5.x</name>
                 </download>
             </downloads>
         </release>
