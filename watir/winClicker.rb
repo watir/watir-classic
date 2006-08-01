@@ -184,7 +184,7 @@ class WinClicker
 #           puts("getWindowHandle - looking for: " + title.to_s )
 
             bContinueEnum = -1  # Windows "true" to continue enum_windows.
-            found_hwnd = nil
+            found_hwnd = -1
             enum_windows_proc = DL.callback('ILL') {|hwnd,lparam|
               sleep 0.05
               r,rs = get_class_name.call(hwnd, buff, buff.size)
