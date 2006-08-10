@@ -2435,10 +2435,11 @@ module Watir
       highlight(:clear)
     end
     
-    # causes the object to flash. Normally used in IRB when creating scripts
-    def flash
+    # Flash the element the specified number of times.
+    # Defaults to 10 flashes.
+    def flash number=10
       assert_exists
-      10.times do
+      number.times do
         highlight(:set)
         sleep 0.05
         highlight(:clear)
