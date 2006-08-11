@@ -2879,9 +2879,10 @@ module Watir
     private :highlight
     
     # causes the object to flash. Normally used in IRB when creating scripts
-    def flash
+    # Default is 10
+    def flash number=10
       @original_styles = {}
-      10.times do
+      number.times do
         count = 0
         @ole_object.elements.each do |element|
           highlight(:set, element, count)
