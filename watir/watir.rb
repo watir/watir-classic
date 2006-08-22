@@ -1592,28 +1592,20 @@ module Watir
     # Search the current page for specified text or regexp.
     # Returns the index if the specified text was found.
     # Returns matchdata object if the specified regexp was found.
-    # In either case, this method is suitable for use in an if or assert statement.
-    #  * target - string or regular expression - the string to look for
+    # 
+    # *Deprecated* 
+    # Instead use 
+    #   IE#text.index target 
+    # or
+    #   IE#text.match target
     def contains_text(target)
-      returnValue = false
-      retryCount = 0
-      begin
-        retryCount += 1
-        returnValue =
         if target.kind_of? Regexp
           self.text.match(target)
         elsif target.kind_of? String
           self.text.index(target)
         else
-          raise MissingWayOfFindingObjectException
+          raise ArgumentError, "Argument #{target} should be a string or regexp."
         end
-        # bug we should remove this...
-      rescue MissingWayOfFindingObjectException => e
-        raise e
-      rescue
-        retry if retryCount < 2
-      end
-      return returnValue
     end
     
     #
