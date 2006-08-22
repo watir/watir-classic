@@ -235,6 +235,7 @@ Time Outs
         - wait a long time if we are expecting it.
           (and wait for it to appear)
 - IDEA: wait_until: when timeout is nil, there is no timeout
+- IDEA: wait_until: remove defaults from Waiter.wait_until
 
 Completions
 - IDEA: review use of src method/attribute in links and images
@@ -263,6 +264,11 @@ Refactoring
 Other
 - IDEA: measure coverage of watir testsuite with rcov (rspec)
 - IDEA: gem server: use one for development builds. see gem FAQ 4.2.
+
+Alert Dialogs
+- TODO: Need to be able to poll for the dialog to exist (implicit or explicit?)
+- TODO: Add dialog.exist?
+- TODO: TC_Dialog_Test#teardown: remove hard-coded sleep 
 
 =end
 class ReadMe

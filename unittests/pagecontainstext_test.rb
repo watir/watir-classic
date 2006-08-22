@@ -36,10 +36,10 @@ class TC_contains_text < Test::Unit::TestCase
     assert_raises(ArgumentError) do
       $ie.contains_text
     end
-    assert_raises(MissingWayOfFindingObjectException) do
+    assert_raises(ArgumentError) do
       $ie.contains_text(nil)
     end
-    assert_raises(MissingWayOfFindingObjectException) do
+    assert_raises(ArgumentError) do
       $ie.contains_text(42)
     end
   end
