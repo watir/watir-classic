@@ -289,31 +289,31 @@ class TC_Table_Columns < Test::Unit::TestCase
   def test_get_columnvalues_single_column
     assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 1).column_values(1))
   end
-  
+
   def test_colspan
     assert_equal(2, $ie.table(:index, 3)[2][1].colspan)
     assert_equal(1, $ie.table(:index, 3)[1][1].colspan)
     assert_equal(3, $ie.table(:index, 3)[4][1].colspan)
   end
-  
+
   def test_get_columnvalues_multiple_column
     assert_equal(["R1C1", "R2C1", "R3C1"], $ie.table(:index, 2).column_values(1))
     assert_equal(["R1C3", "R2C3", "R3C3"], $ie.table(:index, 2).column_values(3))
   end
-  
+
   def test_get_columnvalues_with_colspan
     assert_equal(["R1C1", "R2C1", "R3C1", "R4C1", "R5C1", "R6C2"], $ie.table(:index, 3).column_values(1))
    (2..4).each{|x|assert_raises(UnknownCellException){$ie.table(:index, 3).column_values(x)}}
   end
-  
+
   def test_get_rowvalues_full_row
     assert_equal(["R1C1", "R1C2", "R1C3"], $ie.table(:index, 3).row_values(1))
   end
-  
+
   def test_get_rowvalues_with_colspan
     assert_equal(["R2C1", "R2C2"], $ie.table(:index, 3).row_values(2))
   end
-  
+
   def test_getrowvalues_with_rowspan
     assert_equal(["R5C1", "R5C2", "R5C3"], $ie.table(:index, 3).row_values(5))
     assert_equal(["R6C2", "R6C3"], $ie.table(:index, 3).row_values(6))
@@ -325,7 +325,7 @@ class TC_Tables_Complex < Test::Unit::TestCase
   def setup
     $ie.goto($htmlRoot + "complex_table.html")
   end
-  
+
   def test_complex_table_access
     table = $ie.table(:index,1)
     
