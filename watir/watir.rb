@@ -2552,7 +2552,7 @@ module Watir
       begin
         assert_enabled
         # :TODO: make available for checkboxes.
-#        assert_not_readonly
+        assert_not_readonly if self.class == Watir::TextField
       rescue Watir::Exception::ObjectDisabledException, Watir::Exception::ObjectReadOnlyException
         return false
       end
