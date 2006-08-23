@@ -132,14 +132,14 @@ class TC_Frame_Links < Test::Unit::TestCase
   end
   
   def test_links_in_frames
-    assert($ie.frame("buttonFrame").link(:text, "test1").exists?)   
-    assert(!$ie.frame("buttonFrame").link(:text, "missing").exists?)   
+    assert($ie.frame("linkFrame").link(:text, "test1").exists?)   
+    assert(!$ie.frame("linkFrame").link(:text, "missing").exists?)   
     
-    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { $ie.frame("buttonFrame").link(:index, 199).href }  
-    assert_match(/links2/, $ie.frame("buttonFrame").link(:index, 1).href)
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { $ie.frame("linkFrame").link(:index, 199).href }  
+    assert_match(/links2/, $ie.frame("linkFrame").link(:index, 1).href)
     
     count =0
-    $ie.frame("buttonFrame").links.each do |l|
+    $ie.frame("linkFrame").links.each do |l|
       count+=1
     end
     
