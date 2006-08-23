@@ -101,8 +101,8 @@ class TC_ModalDialog < Watir::TestCase
     modal1.button(:text, 'Another Modal').click_no_wait
     modal2 = modal1.modal_dialog
     assert_equal modal2.title, 'Pass Page'
-    modal2.close
-    modal1.close
+    modal2.button(:value, 'Close Window').click
+    modal1.button(:value, 'Close').click
   end
     
 end

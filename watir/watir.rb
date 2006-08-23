@@ -1087,6 +1087,19 @@ module Watir
     
     # returns the ole object for the specified element
     def locate_tagged_element(tag, how, what)
+#      if how == :index && document.parentElement.parentElement.tagName == 'TABLE'
+#        case tag
+#        when 'TR': document.rows
+#        when 'TD': document.cells
+#        else       document.getElementsByTagName(tag)
+#        end
+#      else
+#        elements = document.getElementsByTagName(tag)
+#      end
+#      what = what.to_i if how == :index
+#      how = :href if how == :url
+#      o = nil
+#      count = 1
       locator = TaggedElementLocator.new(self, tag)
       locator.set_specifier(how, what)
       locator.locate
@@ -1151,7 +1164,7 @@ module Watir
       end # elements
       nil
     end
-    
+
     def send_message(how, element, what)
       begin
         return element.send(how)
@@ -1166,6 +1179,7 @@ module Watir
   
   module PageContainer
     include Watir::Exception
+    include Win32
 
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
@@ -1197,19 +1211,106 @@ module Watir
     def eval_in_spawned_process(command)
       command.strip!
       load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
-      ruby_code = "require 'watir';"
+      ruby_code = "require 'watir';include Watir;"
 #      ruby_code = "$HIDE_IE = #{$HIDE_IE};" # This prevents attaching to a window from setting it visible. However modal dialogs cannot be attached to when not visible.
-      ruby_code << "ie = #{attach_command};"
+      ruby_code << 'ie = ' + self.to_identifier + ';'
       ruby_code << "ie.instance_eval(#{command.inspect})"
       exec_string = "start rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
       system(exec_string)
     end
     
+    # Generate a string which can return us to the current element.
+    # Generates a string like:
+    # "IE.attach(:hwnd, 198076).frame(:name, 'Main').frame(:name, 
+    # 'workarea').button(:id, 'btnCont')"
+    # Uses the :hwnd method for the Watir::IE object to guarantee
+    # that we are communicating to the SAME instance of Internet Explorer.
+    def to_identifier
+      case self.class.to_s
+      when "Watir::IE"
+        return "IE.attach(:hwnd, #{@ie.HWND})"
+      when "Watir::ModalDialog"
+        return "IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
+      else
+        identifier = @parent_container.to_identifier
+        identifier += ".#{method_name}(#{@how.inspect}, #{@what.inspect})"
+        return identifier
+      end
+    end
+
+    def enabled_popup(timeout=4)
+      # Use handle of our parent window to see if we have any currently
+      # enabled popup.
+      hwnd_modal = 0
+      Watir::until_with_timeout(timeout) do
+        hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP)
+        hwnd_modal > 0
+      end
+      # use hwnd() method to find the IE or Container hwnd (overriden by IE)
+      if hwnd_modal == hwnd() || 0 == hwnd_modal
+        hwnd_modal = nil
+      end
+      hwnd_modal
+    end
+
     def set_container container
       @container = container
       @page_container = self
     end
     
+    # This method is used to display the available html frames that Internet Explorer currently has loaded.
+    # This method is usually only used for debugging test scripts.
+    def show_frames
+      if allFrames = document.frames
+        count = allFrames.length
+        puts "there are #{count} frames"
+        for i in 0..count-1 do
+          begin
+            fname = allFrames[i.to_s].name.to_s
+            puts "frame  index: #{i + 1} name: #{fname}"
+          rescue => e
+            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" if e.to_s.match(/Access is denied/)
+          end
+        end
+      else
+        puts "no frames"
+      end
+    end
+    
+    # In the method_names method below we determine the class by using
+    # self.name.  If this is simply a method included with Container
+    # then "self" equals "Container" (not the class including Container).
+    # Thanks to Ezra Zygmuntowicz (ez@brainspl.at) for this method
+    # which will create a class instance method when included into
+    # a class.
+    # This code is here to support easier unit testing of the
+    # method_name method
+    def self.included(base)
+      base.extend(ClassMethods)         # Create <class>.method_names
+      base.send(:include, ClassMethods) #   and <object>.method_names
+    end
+
+    module ClassMethods
+      # Take our class name and convert from CamelCase to
+      # underscore to get our method name.  (This is overriden
+      # in some classes where the method name doesn't conform
+      # like "PopUp" -> "popup" or "TableCell" -> "cell".)
+      def method_name
+        self.methods_class_name.sub('Watir::', '').
+          gsub(/::/, '/'). 
+          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2'). 
+          gsub(/([a-z\d])([A-Z])/,'\1_\2'). 
+          tr("-", "_"). 
+          downcase
+      end
+      def methods_class_name
+        if Class == self.class
+          self.to_s
+        else
+          self.class.to_s
+        end
+      end
+    end
 
   end # module
   
@@ -1219,6 +1320,7 @@ module Watir
     include Watir::Exception
     include Container
     include PageContainer
+    include Win32
     
     @@extra = nil
     @@persist_ole_connection = nil
@@ -1693,25 +1795,6 @@ module Watir
     #
     # Show me state
     #
-    
-    # This method is used to display the available html frames that Internet Explorer currently has loaded.
-    # This method is usually only used for debugging test scripts.
-    def show_frames
-      if allFrames = document.frames
-        count = allFrames.length
-        puts "there are #{count} frames"
-        for i in 0..count-1 do
-          begin
-            fname = allFrames[i.to_s].name.to_s
-            puts "frame  index: #{i + 1} name: #{fname}"
-          rescue => e
-            puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" if e.to_s.match(/Access is denied/)
-          end
-        end
-      else
-        puts "no frames"
-      end
-    end
     
     # Show all forms displays all the forms that are on a web page.
     def show_forms
@@ -2673,7 +2756,7 @@ module Watir
       @container = container
       @page_container = container.page_container
       @length = length # defined by subclasses
-      
+
       # set up the items we want to display when the show method is used
       set_show_items
     end
@@ -3060,20 +3143,20 @@ module Watir
       r += table_string_creator
       return r.join("\n")
     end
-    
+
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
       1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :ole_object, row(i))    }
     end
-    
+
     # Returns a row in the table
     #   * index         - the index of the row
     def [](index)
       assert_exists
       return TableRow.new(@container, :ole_object, row(index))
     end
-    
+
     # This method returns the number of rows in the table.
     # Raises an UnknownObjectException if the table doesnt exist.
     def row_count
@@ -3092,6 +3175,7 @@ module Watir
     
     # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
     # Raises an UnknownObjectException if the table doesn't exist.
+    # http://www.w3.org/TR/html4/struct/tables.html
     def to_a
       assert_exists
       y = []
