@@ -2471,10 +2471,12 @@ module Watir
     # This method is responsible for setting and clearing the colored highlighting on the currently active element.
     # use :set   to set the highlight
     #   :clear  to clear the highlight
+    # TODO: Make this two methods: set_highlight & clear_highlight
+    # TODO: Remove begin/rescue blocks
     def highlight(set_or_clear)
       if set_or_clear == :set
         begin
-          @original_color = style.backgroundColor
+          @original_color ||= style.backgroundColor
           style.backgroundColor = @container.activeObjectHighLightColor
         rescue
           @original_color = nil
@@ -2496,7 +2498,6 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #   ObjectDisabledException if the object is currently disabled
     def click
-      assert_exists
       assert_enabled
       
       highlight(:set)
@@ -2506,7 +2507,6 @@ module Watir
     end
     
     def click_no_wait
-      assert_exists
       assert_enabled
       
       highlight(:set)
@@ -2517,7 +2517,6 @@ module Watir
     end
 
     def click!
-      assert_exists
       assert_enabled
       
       highlight(:set)
@@ -2543,7 +2542,6 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def fire_event(event)
-      assert_exists
       assert_enabled
       
       highlight(:set)
@@ -2556,7 +2554,6 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def focus
-      assert_exists
       assert_enabled
       ole_object.focus
     end
@@ -3874,7 +3871,6 @@ module Watir
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
     def clear
-      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -3897,7 +3893,6 @@ module Watir
     #   Raises ObjectReadOnlyException if the object is read only
     #   * setThis  - string - the text to append
     def append(setThis)
-      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -3914,7 +3909,6 @@ module Watir
     #   Raises ObjectReadOnlyException if the object is read only
     #   * setThis - string - the text to set
     def set(setThis)
-      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -4049,7 +4043,6 @@ module Watir
     #   Raises UnknownObjectException if its unable to locate an object
     #         ObjectDisabledException IF THE OBJECT IS DISABLED
     def clear
-      assert_exists
       assert_enabled
       highlight(:set)
       set_clear_item(false)
@@ -4060,7 +4053,6 @@ module Watir
     #   Raises UnknownObjectException  if it's unable to locate an object
     #         ObjectDisabledException  if the object is disabled
     def set
-      assert_exists
       assert_enabled
       highlight(:set)
       set_clear_item(true)
@@ -4087,40 +4079,27 @@ module Watir
   # This class is the watir representation of a check box.
   class CheckBox < RadioCheckCommon
     
-    # This method, with no arguments supplied, sets the check box.
-    # If the optional set_or_clear is supplied, the checkbox is set, when its true and cleared when its false
+    # With no arguments supplied, sets the check box.
+    # If the optional value is supplied, the checkbox is set, when its true and 
+    # cleared when its false
     #   Raises UnknownObjectException if it's unable to locate an object
     #         ObjectDisabledException if the object is disabled
-    def set(set_or_clear=true)
-      assert_exists
+    def set(value=true)
       assert_enabled
-      highlight(:set)
-      
-      if set_or_clear
-        if @o.checked == false
-          set_clear_item(true)
-        end
-      else
-        self.clear
+      highlight :set
+      unless @o.checked == value
+        set_clear_item value
       end
-      highlight(:clear)
+      highlight :clear
     end
     
-    # This method clears a check box.
-    # Returns true if set or false if not set.
+    # Clears a check box.
     #   Raises UnknownObjectException if its unable to locate an object
     #         ObjectDisabledException if the object is disabled
     def clear
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      if @o.checked == true
-        set_clear_item(false)
-      end
-      highlight(:clear)
+      set false
     end
-    
-    
+        
   end
   
   #--
@@ -4246,7 +4225,7 @@ module Watir
       @container.radio(:index, i + 1)
     end
   end
-  
+    
   # this class accesses the select boxes in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_lists method
   class SelectLists < ElementCollections
