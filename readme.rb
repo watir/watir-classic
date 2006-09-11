@@ -248,6 +248,7 @@ Completions
 
 Refactoring
 - TODO: new elements: make it super easy to add support for new elements
+        e.g. li, ul
 - IDEA: modules: Elemental, Inputable, Tagged
 - IDEA: classes: ElementWrapper, ElementMapper
 - IDEA: reuse wrapper element in locators
