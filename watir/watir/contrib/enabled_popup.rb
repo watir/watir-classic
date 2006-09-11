@@ -1,3 +1,5 @@
+# http://www.vbcity.com/forums/topic.asp?tid=108859
+
 module Watir
   module PageContainer
     def enabled_popup(timeout=4)
