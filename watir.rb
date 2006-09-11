@@ -1243,19 +1243,6 @@ module Watir
         puts "no frames"
       end
     end
-    
-    # In the method_names method below we determine the class by using
-    # self.name.  If this is simply a method included with Container
-    # then "self" equals "Container" (not the class including Container).
-    # Thanks to Ezra Zygmuntowicz (ez@brainspl.at) for this method
-    # which will create a class instance method when included into
-    # a class.
-    # This code is here to support easier unit testing of the
-    # method_name method
-    def self.included(base)
-      base.extend(ClassMethods)         # Create <class>.method_names
-      base.send(:include, ClassMethods) #   and <object>.method_names
-    end
 
   end # module
   
@@ -2201,7 +2188,7 @@ module Watir
     private :element_by_absolute_xpath
     
     def attach_command
-      "Watir::IE.attach(:title, '#{title}')"
+      "Watir::IE.attach(:hwnd, #{hwnd})"
     end
     
     
@@ -2581,6 +2568,10 @@ module Watir
     
     def document
       @o.document
+    end
+
+    def attach_command
+      @page_container.attach_command + "frame(#{@how}, #{@what})"
     end
     
   end
