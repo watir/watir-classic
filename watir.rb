@@ -1102,19 +1102,6 @@ module Watir
     
     # returns the ole object for the specified element
     def locate_tagged_element(tag, how, what)
-#      if how == :index && document.parentElement.parentElement.tagName == 'TABLE'
-#        case tag
-#        when 'TR': document.rows
-#        when 'TD': document.cells
-#        else       document.getElementsByTagName(tag)
-#        end
-#      else
-#        elements = document.getElementsByTagName(tag)
-#      end
-#      what = what.to_i if how == :index
-#      how = :href if how == :url
-#      o = nil
-#      count = 1
       locator = TaggedElementLocator.new(self, tag)
       locator.set_specifier(how, what)
       locator.locate
@@ -1179,7 +1166,7 @@ module Watir
       end # elements
       nil
     end
-
+    
     def send_message(how, element, what)
       begin
         return element.send(how)
@@ -1194,7 +1181,6 @@ module Watir
   
   module PageContainer
     include Watir::Exception
-    include Win32
 
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
@@ -1226,48 +1212,14 @@ module Watir
     def eval_in_spawned_process(command)
       command.strip!
       load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
-      ruby_code = "require 'watir';include Watir;"
+      ruby_code = "require 'watir';"
 #      ruby_code = "$HIDE_IE = #{$HIDE_IE};" # This prevents attaching to a window from setting it visible. However modal dialogs cannot be attached to when not visible.
-      ruby_code << 'ie = ' + self.to_identifier + ';'
+      ruby_code << "ie = #{attach_command};"
       ruby_code << "ie.instance_eval(#{command.inspect})"
       exec_string = "start rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
       system(exec_string)
     end
     
-    # Generate a string which can return us to the current element.
-    # Generates a string like:
-    # "IE.attach(:hwnd, 198076).frame(:name, 'Main').frame(:name, 
-    # 'workarea').button(:id, 'btnCont')"
-    # Uses the :hwnd method for the Watir::IE object to guarantee
-    # that we are communicating to the SAME instance of Internet Explorer.
-    def to_identifier
-      case self.class.to_s
-      when "Watir::IE"
-        return "IE.attach(:hwnd, #{@ie.HWND})"
-      when "Watir::ModalDialog"
-        return "IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
-      else
-        identifier = @parent_container.to_identifier
-        identifier += ".#{method_name}(#{@how.inspect}, #{@what.inspect})"
-        return identifier
-      end
-    end
-
-    def enabled_popup(timeout=4)
-      # Use handle of our parent window to see if we have any currently
-      # enabled popup.
-      hwnd_modal = 0
-      Watir::until_with_timeout(timeout) do
-        hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP)
-        hwnd_modal > 0
-      end
-      # use hwnd() method to find the IE or Container hwnd (overriden by IE)
-      if hwnd_modal == hwnd() || 0 == hwnd_modal
-        hwnd_modal = nil
-      end
-      hwnd_modal
-    end
-
     def set_container container
       @container = container
       @page_container = self
@@ -1305,28 +1257,6 @@ module Watir
       base.send(:include, ClassMethods) #   and <object>.method_names
     end
 
-    module ClassMethods
-      # Take our class name and convert from CamelCase to
-      # underscore to get our method name.  (This is overriden
-      # in some classes where the method name doesn't conform
-      # like "PopUp" -> "popup" or "TableCell" -> "cell".)
-      def method_name
-        self.methods_class_name.sub('Watir::', '').
-          gsub(/::/, '/'). 
-          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2'). 
-          gsub(/([a-z\d])([A-Z])/,'\1_\2'). 
-          tr("-", "_"). 
-          downcase
-      end
-      def methods_class_name
-        if Class == self.class
-          self.to_s
-        else
-          self.class.to_s
-        end
-      end
-    end
-
   end # module
   
   # This class is the main Internet Explorer Controller
@@ -1335,7 +1265,6 @@ module Watir
     include Watir::Exception
     include Container
     include PageContainer
-    include Win32
     
     @@extra = nil
     @@persist_ole_connection = nil
@@ -2768,7 +2697,7 @@ module Watir
       @container = container
       @page_container = container.page_container
       @length = length # defined by subclasses
-
+      
       # set up the items we want to display when the show method is used
       set_show_items
     end
@@ -3155,20 +3084,20 @@ module Watir
       r += table_string_creator
       return r.join("\n")
     end
-
+    
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
       1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :ole_object, row(i))    }
     end
-
+    
     # Returns a row in the table
     #   * index         - the index of the row
     def [](index)
       assert_exists
       return TableRow.new(@container, :ole_object, row(index))
     end
-
+    
     # This method returns the number of rows in the table.
     # Raises an UnknownObjectException if the table doesnt exist.
     def row_count
