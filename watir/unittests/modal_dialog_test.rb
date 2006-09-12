@@ -106,12 +106,14 @@ class TC_ModalDialog < Watir::TestCase
   end
   
   def test_modal_with_frames
-    $ie.button(:value, 'Modal Frames').click_no_wait
+    $ie.button(:value, 'Launch Dialog').click_no_wait
     modal1 = $ie.modal_dialog
-    modal1.button(:value, 'Click Me').click
-    assert(modal1.text.include?('PASS'))    
-    modal1.button(:value, 'Close Window').click
-    $ie.close
+    modal1.button(:value, 'Modal with Frames').click_no_wait
+    modal2 = $ie.modal_dialog
+    modal2.frame('buttonFrame').button(:value, 'Click Me').click
+    assert(modal2.frame('buttonFrame').text.include?('PASS'))    
+    modal2.frame('buttonFrame').button(:value, 'Close Window').click
+    modal1.close
   end
     
 end
