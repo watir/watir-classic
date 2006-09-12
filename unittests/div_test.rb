@@ -74,6 +74,8 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal( 'button1' ,   $ie.div(:id , 'text_fields1').text_field(:index,1).value)
     
     assert_equal( 3 , $ie.div(:id , 'text_fields1').text_fields.length )
+    $ie.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
+    assert_equal("drink me", $ie.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
   end
   
   #---- Span Tests ---
