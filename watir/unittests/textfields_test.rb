@@ -101,6 +101,9 @@ class TC_Fields < Test::Unit::TestCase
   def test_text_field_set
     $ie.text_field(:name, "text1").set("watir IE Controller")
     assert_equal("watir IE Controller" , $ie.text_field(:name, "text1").getContents)  
+    # adding for issue: http://jira.openqa.org/browse/WTR-89
+    $ie.text_field(:name, /reGex/i).set("pass")
+    assert_equal("pass", $ie.text_field(:name, /REgEx/i).getContents)
   end
   
   def test_text_field_properties
@@ -119,14 +122,16 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(""            , $ie.text_field(:index, 2).name)
     assert_equal("text2"       , $ie.text_field(:index, 2).id)
     
-    assert($ie.text_field(:index, 3).disabled)
+    assert($ie.text_field(:index, 4).disabled)
     
     assert_equal("This used to test :afterText", $ie.text_field(:name, "aftertest").title)
     assert_equal("", $ie.text_field(:index, 1).title)
+    # adding for issue: http://jira.openqa.org/browse/WTR-89
+    assert_equal("RegEx test", $ie.text_field(:name, /REgEx/i).value)
   end
   
   def test_text_field_iterators
-    assert_equal(12, $ie.text_fields.length)
+    assert_equal(13, $ie.text_fields.length)
     
     # watir is 1 based, so this is the first text field
     assert_equal("Hello World" , $ie.text_fields[1].value)
