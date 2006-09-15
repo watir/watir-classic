@@ -47,7 +47,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    puts "  Action: entered 'pickaxe' in the search field"
 
    puts "Step 3: click the 'Yahoo Search' button"
-   $ie.button(:value, "Yahoo! Search").click
+   $ie.button(:id, "searchsubmit").click
    puts '  Action: clicked the Search the Web button.'
 
    puts "Expected Result:" + "\n"
