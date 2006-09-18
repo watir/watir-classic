@@ -31,7 +31,7 @@ class TC_google_suite < Test::Unit::TestCase
   #
   
    #variables
-   test_site = 'http://www.google.com'
+   test_site = 'http://www.google.com/ncr'
 
    #open the IE browser
    $ie = IE.new
@@ -108,7 +108,7 @@ class TC_google_suite < Test::Unit::TestCase
    #
    
    #variables
-   test_site = 'http://www.google.ca'
+   test_site = 'http://www.google.ca/webhp?hl=en'
 
    puts '## Beginning of test: google Canada - use radio button'
    puts '  '
@@ -149,7 +149,7 @@ class TC_google_suite < Test::Unit::TestCase
    #
    
    #variables
-   test_site = 'http://www.google.com'
+   test_site = 'http://www.google.com/ncr'
 
 
    puts '## Beginning of test: google groups'
@@ -181,8 +181,7 @@ class TC_google_suite < Test::Unit::TestCase
    puts '## End of test: google groups'
 
  end # end of test_googlegroups
- 
-  
+
 
 
 end  #end of class TC_google_suite

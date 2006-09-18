@@ -31,7 +31,7 @@ class TC_google_maps < Test::Unit::TestCase
         ie.goto(testSite)
 
         puts "getting map for Durango"
-        ie.text_field(:id,"q_d").set("Durango,CO")
+        ie.text_field(:name,"q").set("Durango,CO")
         ie.button(:index, 1).click
 
         puts "showing the HTML inside the frame, where View Source does not work:"
