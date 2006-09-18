@@ -50,7 +50,7 @@ class TC_yahoo < Test::Unit::TestCase
    puts '  Action: entered pickaxe in the search field'
 
    puts 'Step 3: click the "Yahoo Search" button'
-   $ie.button(:caption, "Yahoo! Search").click
+   $ie.button(:id, "searchsubmit").click
    puts '  Action: clicked the Search the Web button.'
 
    puts 'Expected Result: '
@@ -75,86 +75,44 @@ class TC_yahoo < Test::Unit::TestCase
    #variables
    test_site = 'http://search.yahoo.com'
 
-   puts '## Beginning of test: Yahoo Edit Check Maps'
+   puts '## Beginning of test: Yahoo Advanced Search'
    puts '  '
   
    puts 'Step 1: go to the yahoo site: search.yahoo.com'
    $ie.goto(test_site)
    puts '  Action: entered ' + test_site + 'in the address bar.'
 
-   puts 'Step 2: click the Edit link on the yahoo home page'
-   $ie.link(:text, "Edit").click
-   puts '  Action: clicked the Edit link'
+   puts 'Step 2: click the Advanced Search link'
+   $ie.link(:text, "Advanced Search").click
+   puts '  Action: clicked the Advanced Search link'
    
-   $ie.checkbox(:name, "tab[]", "maps").set
-   assert($ie.checkbox(:name, "tab[]", "maps").checked?)   
-   
+   $ie.text_field(:id, 'f0va').set('derrida')
+   $ie.checkbox(:id, "f0cccb0").set
+   assert($ie.checkbox(:id, "f0cccb0").checked?)   
+   $ie.button(:value, 'Yahoo! Search').click
+   assert($ie.text.include?('Creative Commons Search'), "Creative Commons Search not found on page")
+   assert($ie.text.include?('Jacques Derrida'), "Jacques Derrida not found on page")
    puts '  '
-   puts '## End of test: yahoo simple search'
+   puts '## End of test: yahoo advanced search'
 
 
  end
 
- def test_c_SaveMapsEdit
+ def test_uncheck
     #-------------------------------------------------------------------------
-    # Test to Save Yahoo preferences after checking "Maps" above
+    # Test unchecking and additional assertions
     #
-   puts '## Beginning of test: Yahoo Save Maps Edit'
-   puts '  '
-   
-   puts 'Step 1: click the "Save" button'
-   $ie.button(:caption, "Save").click
-   puts '  Action: clicked the Save button.'
-  
-   puts 'Step 2: Check that the "Maps" link actually appears on the Yahoo Search page by using an assertion'
-   assert($ie.text.include?("Maps") )
-   
-   puts '  '
-   puts '## End of test: Yahoo Save Maps Edit'
-   
- end
-
- def test_d_UncheckMaps
-   #-------------------------------------------------------------------------
-   # Test to demo unchecking a check box
-   #
-   puts '## Beginning of test: Yahoo Uncheck Maps Edit'
-   puts '  '   
-   
-   puts 'Step 1: click the Edit link on the yahoo home page'
-   $ie.link(:text, "Edit").click
-   puts '  Action: clicked the Edit link'
-
-   $ie.checkbox(:name, "tab[]", "maps").clear
-   assert(!$ie.checkbox(:name, "tab[]", "maps").checked?) 
-
-   puts '  '
-   puts '## End of test: Yahoo Uncheck Maps Edit'
-   
- end
-
- def test_e_VerifyMapsUncheck
-   #-------------------------------------------------------------------------
-   # Test to verify that the actions are saved after unchecking the Maps check box
-   #
-   puts '## Beginning of test: Yahoo Verify Edit Actions saved'
-   puts '  '
-   
-   puts 'Step 1: click the "Save" button'
-   $ie.button(:caption, "Save").click
-   puts '  Action: clicked the Save button.'
-   
-   puts 'Step 2: Check that the "Maps" link does not appear on the Yahoo Search page by using an assertion'
-   assert(!$ie.text.include?("Maps") )
-   
-   puts '  '
-   puts '## End of test: Verify Edit Actions saved'
-   
+    puts '## Go back to the search page'
+    $ie.back
+    puts '## Verify the text field still has the same content'
+    assert_equal('derrida', $ie.text_field(:id, 'f0va').getContents)
+    assert($ie.checkbox(:id, "f0cccb0").checked?)   
+    $ie.checkbox(:id, "f0cccb0").clear
+    puts '## Make sure checkbox has been cleared'
+    assert(!$ie.checkbox(:id, "f0cccb0").checked?)   
+    $ie.button(:value, 'Yahoo! Search').click   
+    puts '## Check that the page no longer contains Creative Commons'
+    assert_no_match(/Creative Commons/, $ie.text)
  end   
-
-
- 
-  
-
 
 end  #end of class TC_yahoo
