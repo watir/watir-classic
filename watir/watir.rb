@@ -1279,7 +1279,7 @@ module Watir
     # The revision number (according to Subversion)
     REVISION_STRING = '$Revision$'
     REVISION_STRING.scan(/Revision: (\d*)/)
-    REVISION = $1
+    REVISION = $1 or 'unknown'
     
     # The Release number
     VERSION_SHORT = '1.5.1'
