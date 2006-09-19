@@ -1212,11 +1212,12 @@ module Watir
     def eval_in_spawned_process(command)
       command.strip!
       load_path_code = _code_that_copies_readonly_array($LOAD_PATH, '$LOAD_PATH')
-      ruby_code = "require 'watir';"
+      ruby_code = "require 'watir'; "
 #      ruby_code = "$HIDE_IE = #{$HIDE_IE};" # This prevents attaching to a window from setting it visible. However modal dialogs cannot be attached to when not visible.
-      ruby_code << "ie = #{attach_command};"
-      ruby_code << "ie.instance_eval(#{command.inspect})"
-      exec_string = "start rubyw -e #{(load_path_code + ';' + ruby_code).inspect}"
+      ruby_code << "pc = #{attach_command}; " # pc = page container
+      # IDEA: consider changing this to not use instance_eval (it makes the code hard to understand)
+      ruby_code << "pc.instance_eval(#{command.inspect})"
+      exec_string = "start rubyw -e #{(load_path_code + '; ' + ruby_code).inspect}"
       system(exec_string)
     end
     
@@ -2414,12 +2415,8 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #   ObjectDisabledException if the object is currently disabled
     def click
-      assert_enabled
-      
-      highlight(:set)
-      ole_object.click
+      click!
       @container.wait
-      highlight(:clear)
     end
     
     def click_no_wait
@@ -2427,7 +2424,6 @@ module Watir
       
       highlight(:set)
       object = "#{self.class}.new(self, :unique_number, #{self.unique_number})"
-      # currently only defined when @container is IE:
       @page_container.eval_in_spawned_process(object + ".click!")
       highlight(:clear)
     end
@@ -2571,7 +2567,7 @@ module Watir
     end
 
     def attach_command
-      @page_container.attach_command + "frame(#{@how}, #{@what})"
+      @container.page_container.attach_command + ".frame(#{@how.inspect}, #{@what.inspect})"
     end
     
   end
