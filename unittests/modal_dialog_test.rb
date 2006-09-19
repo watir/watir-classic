@@ -105,7 +105,7 @@ class TC_ModalDialog < Watir::TestCase
     modal1.close
   end
   
-  def test_modal_with_frames
+  def xtest_modal_with_frames
     $ie.button(:value, 'Launch Dialog').click_no_wait
     modal1 = $ie.modal_dialog
     modal1.button(:value, 'Modal with Frames').click_no_wait
