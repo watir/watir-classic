@@ -22,6 +22,7 @@ $window_tests =
      'send_keys', # visible
      'iedialog', # visible
      'close_window', # creates new window
+     'frame_links', # visible
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $non_core_tests = 
