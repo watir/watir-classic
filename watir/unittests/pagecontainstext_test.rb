@@ -46,3 +46,23 @@ class TC_contains_text < Test::Unit::TestCase
   
 end
 
+class TC_contains_text_in_new_ie < Test::Unit::TestCase
+  def setup
+    @ie = Watir::IE.new
+  end
+  def test_nothing_raised
+    assert_nothing_raised {@ie.contains_text ''}
+  end
+  def teardown
+    @ie.close
+  end
+end
+
+class TC_contains_text_in_frame < Test::Unit::TestCase
+  def setup
+    $ie.goto($htmlRoot + "frame_links.html")
+  end        
+  def test_in_frame
+    assert $ie.frame('linkFrame').contains_text('The button is really a link')
+  end
+end

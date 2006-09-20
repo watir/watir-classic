@@ -1245,6 +1245,25 @@ module Watir
       end
     end
 
+    # Search the current page for specified text or regexp.
+    # Returns the index if the specified text was found.
+    # Returns matchdata object if the specified regexp was found.
+    # 
+    # *Deprecated* 
+    # Instead use 
+    #   IE#text.include? target 
+    # or
+    #   IE#text.match target
+    def contains_text(target)
+        if target.kind_of? Regexp
+          self.text.match(target)
+        elsif target.kind_of? String
+          self.text.index(target)
+        else
+          raise ArgumentError, "Argument #{target} should be a string or regexp."
+        end
+    end
+
   end # module
   
   # This class is the main Internet Explorer Controller
@@ -1322,6 +1341,7 @@ module Watir
       unless suppress_new_window
         create_browser_window
         set_defaults
+        goto 'about:blank' # this avoids numerous problems caused by lack of a document
       end
     end
     
@@ -1622,26 +1642,7 @@ module Watir
     def url
       return @ie.LocationURL
     end
-    
-    # Search the current page for specified text or regexp.
-    # Returns the index if the specified text was found.
-    # Returns matchdata object if the specified regexp was found.
-    # 
-    # *Deprecated* 
-    # Instead use 
-    #   IE#text.index target 
-    # or
-    #   IE#text.match target
-    def contains_text(target)
-        if target.kind_of? Regexp
-          self.text.match(target)
-        elsif target.kind_of? String
-          self.text.index(target)
-        else
-          raise ArgumentError, "Argument #{target} should be a string or regexp."
-        end
-    end
-    
+        
     #
     # Synchronization
     #
