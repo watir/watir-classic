@@ -87,4 +87,6 @@ class TestIE < Watir::IE
     @ie.timeToWait = time
   end
   
+  def goto(url)
+  end
 end
