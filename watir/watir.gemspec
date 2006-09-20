@@ -26,10 +26,6 @@ spec = Gem::Specification.new do |s|
 
   s.platform = Gem::Platform::RUBY
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
-  s.requirements << <<-EOF
-    Some Watir features require that an included DLL be registered. You'll have to do this manually:
-      > regsvr32.exe watir\\AutoItX3.dll 
-  EOF
   s.require_path = '.'    
   s.autorequire = 'watir'
 
