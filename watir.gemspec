@@ -1,6 +1,9 @@
-$__watir_source_patterns = ['watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 'readme.rb',
+$__watir_source_patterns = [
+    'watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 'readme.rb',
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*', 
-    'watir/IEDialog/Release/IEDialog.dll', 'watir/win32ole/win32ole.so']
+    'unittests/other/*.rb', 'unittests/testcase/*.rb',
+    'watir/IEDialog/Release/IEDialog.dll', 'watir/win32ole/win32ole.so', 
+    'watir/contrib/*.rb']
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 require 'watir'
