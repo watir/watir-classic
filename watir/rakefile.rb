@@ -1,10 +1,10 @@
+require 'rubygems'
 require 'rake'
 require 'rake/clean'
 require 'rake/packagetask'
 require 'rake/rdoctask'
+require 'rake/gempackagetask'
 
-
-BONUS_ZIP = "bonus_files.zip"
 
 $VERBOSE = nil
 desc 'Generate Watir API Documentation'
@@ -32,14 +32,6 @@ file 'installer/watir_installer.exe' do
 end
 task :one_click => ['installer/watir_installer.exe']
 
-
-begin
-  require 'rubygems'
-  require 'rake/gempackagetask'
-rescue Exception => e
-  nil
-end
-
 if defined? Rake::GemPackageTask
 
   gemspec = eval(File.read('watir.gemspec'))
@@ -50,23 +42,35 @@ if defined? Rake::GemPackageTask
     p.need_zip = false
   end
 
-begin
-  require 'zip/zip'
-rescue LoadError
-  puts "rubyzip needs to be installed for the bonus_zip task: gem install rubyzip."
+else
+  puts 'Warning: without Rubygems packaging tasks are not available'
 end
 
 desc "Create the bonus files zip"
 task :bonus_zip => [:rdoc] do
-  if File.exist?(BONUS_ZIP)
-    File.delete(BONUS_ZIP)
+
+  begin
+    require_gem 'rubyzip'
+    require 'zip/zip'
+  rescue LoadError
+    puts "rubyzip needs to be installed: gem install rubyzip."
+    raise
   end
-  Zip::ZipFile::open(BONUS_ZIP, true) { |zf|
+  
+  require 'watir'
+  version = Watir::IE::VERSION
+  bonus_zip = "pkg/watir-bonus-#{version}.zip"
+
+  if File.exist?(bonus_zip)
+    File.delete(bonus_zip)
+  end
+  Zip::ZipFile::open(bonus_zip, true) do |zf|
     Dir['{doc,rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
-  }
+  end
+  
+  puts "  Successfully built BonusZip"
+  puts "  File: #{bonus_zip}"
+  
 end
 
 
-else
-  puts 'Warning: without Rubygems packaging tasks are not available'
-end
