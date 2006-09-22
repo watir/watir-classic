@@ -4,9 +4,7 @@ require 'rake/packagetask'
 require 'rake/rdoctask'
 
 
-BONUS_DIR = 'bonus_files'
-BONUS_DIR_FULL = File.join(File.dirname(__FILE__), BONUS_DIR)
-ZIP_DIRS = FileList["doc", "rdoc", "examples", "unittests"].exclude(/\.svn/)	
+BONUS_ZIP = "bonus_files.zip"
 
 $VERBOSE = nil
 desc 'Generate Watir API Documentation'
@@ -52,29 +50,22 @@ if defined? Rake::GemPackageTask
     p.need_zip = false
   end
 
-class Dir
-  def copy_to(dest_dir)
-    src_dir = Pathname.new(self.path)
-    dest_dir = Pathname.new(dest_dir)
-    FileList["#{src_dir}/**/*"].each do |src|
-      next if File.directory?(src)
-      dest = dest_dir + Pathname.new(src)
-      mkdir_p dest.dirname.to_s
-      cp(src, dest) unless uptodate?(dest + src, src)
-    end
-  end
+begin
+  require 'zip/zip'
+rescue LoadError
+  puts "rubyzip needs to be installed for the bonus_zip task: gem install rubyzip."
 end
 
 desc "Create the bonus files zip"
-task :bonus_zip => [ :rdoc ] do
-	rm_rf BONUS_DIR_FULL
-	mkdir BONUS_DIR_FULL
-	ZIP_DIRS.each do |d|	
-		Dir.new("#{d}").copy_to(BONUS_DIR_FULL)
-	end
-
-  system %{zip -r bonusfiles.zip #{BONUS_DIR}}
+task :bonus_zip => [:rdoc] do
+  if File.exist?(BONUS_ZIP)
+    File.delete(BONUS_ZIP)
+  end
+  Zip::ZipFile::open(BONUS_ZIP, true) { |zf|
+    Dir['{doc,rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
+  }
 end
+
 
 else
   puts 'Warning: without Rubygems packaging tasks are not available'
