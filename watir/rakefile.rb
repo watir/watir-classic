@@ -64,6 +64,9 @@ task :bonus_zip => [:rdoc] do
   if File.exist?(bonus_zip)
     File.delete(bonus_zip)
   end
+  if !File.directory?("pkg")
+    Dir.mkdir("pkg")
+  end
   Zip::ZipFile::open(bonus_zip, true) do |zf|
     Dir['{doc,rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
   end
