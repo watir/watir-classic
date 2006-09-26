@@ -44,6 +44,10 @@ learn some Ruby if you really want to get the most out of Watir</li>
     <li>Check out the <a href="http://wtr.rubyforge.org/s101/doc/Ruby-cheat-sheet.doc">Ruby
 Cheat Sheet</a> for basic Ruby information.</li>
   </ul>
+  <li>
+  	Microsoft has a toolbar for Internet Explorer which can be useful in navigating the DOM for pages that you're looking to automate.
+  	You'll find it <a href="http://www.microsoft.com/downloads/details.aspx?familyid=e59c3964-672d-4511-bb3e-2d5e1db91038&displaylang=en">here</a>
+  </li>
 </ul>
 <h1>Getting Started</h1>
 <p>Watir runs on Windows machines and works with the Internet Explorer
@@ -403,7 +407,9 @@ hitting Enter/Return on our keyboard.</p>
 <h3>Buttons:</h3>
 <p>Watir <i>clicks</i> buttons on a web page based on the <i>name</i>,
 <i>value</i> (caption) and <i>id</i> attributes provided in the <i>input
-type = button</i> HTML tag.</p>
+type = button</i> HTML tag. Some buttons are images which will show as <i>input
+type = image</i> in the HTML tag. These buttons can also be accessed by their src
+attribute.</p>
 <h4>HTML Buttons</h4>
 <p>What you see in the web browser:</p>
 <div class="browserexample"><input name="clickme" value="Click Me" type="button"> </div>
@@ -421,6 +427,21 @@ attribute:</p>
 <p>This is the tag in the HTML source with the attribute highlighted:</p>
 <div class="htmlexample">&lt;input type = "button" name = "<b>clickme</b>"
 value = "Click Me"&gt;</div>
+<h4>Image Buttons</h4>
+<p>Watir can click image buttons on a web page based on the attributes above: 
+name, id, value as well as the src
+HTML tag.</p>
+<h4><i>Src</i> Attribute for an Image button</h4>
+<p>What you see in the web browser:</p>
+<div class="browserexample">
+<img src="images/doit.gif" name="doit">
+</div>
+<p>This is the Watir code you need to click a button with an image using the <i>src</i> attribute as
+a regular expression:</p>
+<div class="testexample">ie.button(:src, /doit/).click</div>
+<p>In this case we're looking for a button with <i>doit</i> as part of the src attribute.
+<p>This is the tag in the HTML source with our partial match in the src attribute highlighted:</p>
+<div class="htmlexample">&lt;input type="image" src = "images/<b>doit</b>.gif" name = "doit"&gt;</div>
 <h3>Forms</h3>
 <p>Forms aren't visible through the browser, but are used a lot in web
 applications. To find them, look at the HTML source for
@@ -442,23 +463,6 @@ form using the <i>value</i> attribute:</p>
 method="post"&gt;&lt;input type = "submit" value = "<b>Submit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <p>We can also just submit the form as shown below in the Forms With No
 Buttons examples.</p>
-<h4>Image Buttons in Forms</h4>
-<p>Watir can <i>submit</i> image buttons on a web page contained in a
-form based on the <i>name</i> attribute provided in the <i>img src</i>
-HTML tag.</p>
-<h4><i>Name</i> Attribute</h4>
-<p>What you see in the web browser:</p>
-<div class="browserexample">
-<form action="submit" name="domitform" method="post"><img src="images/doit.gif" name="doit"></form>
-</div>
-<p>This is the Watir code you need to click a button that will submit a
-form using the <i>name</i> attribute:</p>
-<div class="testexample">ie.button(:name, "doit").click</div>
-<p>This is the tag in the HTML source with the attribute highlighted:</p>
-<div class="htmlexample">&lt;form action = "submit" name = "doitform"
-method="post"&gt;&lt;input type="image" src = "images/doit.gif" name = "<b>doit</b>"&gt;&lt;/form&gt;</div>
-<p>If the form uses an image as a button to submit, we can also treat
-it the same way as we do with a form that does not have a button.</p>
 <h4>Forms With No Buttons</h4>
 <p>There may be input fields on a web page, but no button to submit.
 Instead, they will allow you to hit Enter on your keyboard. When there
