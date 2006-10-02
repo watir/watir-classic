@@ -100,6 +100,13 @@ class TC_IFrames < Test::Unit::TestCase
     $ie.frame("senderFrame").button(:index, 1).click
     assert( $ie.frame("receiverFrame").text_field(:name , "receiverText").verify_contains("Hello World") )
   end
+
+  #VALIDATE THAT WE CAN GET THERE VIA id  
+  def test_iframes_id 
+    $ie.frame(:id, "sf").text_field(:name , "textToSend").set( "Hello World")
+    $ie.frame(:id, "sf").button(:name,'sendIt').click
+    assert( $ie.frame("receiverFrame").text_field(:name , "receiverText").verify_contains("Hello World") )  
+  end   
   
 end   
 
