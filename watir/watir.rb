@@ -194,6 +194,7 @@ command_line_flag('-s')
 module Watir
   include Watir::Exception
   
+  # Directory containing the watir.rb file
   @@dir = File.expand_path(File.dirname(__FILE__))
 
   def wait_until(*args)
