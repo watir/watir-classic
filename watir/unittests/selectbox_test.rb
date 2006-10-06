@@ -52,8 +52,21 @@ class TC_SelectList < Test::Unit::TestCase
     
   end
   
+  def test_includes
+    assert $ie.select_list(:name, 'sel1').includes?('Option 1')
+    assert ! $ie.select_list(:name, 'sel1').includes?('Option 6')
+  end  
   
+  def test_selected
+    assert ! $ie.select_list(:name, 'sel1').selected?('Option 1')
+    assert $ie.select_list(:name, 'sel1').selected?('Option 3')
+  end
   
+  def test_selected_not_found
+    selectbox = $ie.select_list(:name, 'sel1')
+    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?('Option Not Exists')}
+  end
+    
 end
 
 # Tests for the old interface
