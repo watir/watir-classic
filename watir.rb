@@ -3644,6 +3644,19 @@ module Watir
       end
       return returnArray
     end
+
+    # Does the SelectList include the specified option (text)?
+    def includes? text
+      getAllContents.include? text
+    end
+
+    # Is the specified option (text) selected? Raises exception of option does not exist.
+    def selected? text
+      unless includes? text
+        raise UnknownObjectException, "Option #{text} not found."
+      end
+      getSelectedItems.include? text
+    end
     
     def option(attribute, value)
       assert_exists
