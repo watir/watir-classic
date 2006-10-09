@@ -1,7 +1,9 @@
 # the default behavior of Test::Unit::TestCase should be to execute test 
 # methods in alphabetical order.
 # When executed, should print "A.B.C.D.E.F.G.H.I.J.K.L.F"
-# The final F is actually an expected failure
+# The final F is actually an expected failure:
+#   1) Failure:
+# default_test(TC4_No_Test_Methods)
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
 
