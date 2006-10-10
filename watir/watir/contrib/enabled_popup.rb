@@ -2,6 +2,7 @@
 
 module Watir
   module PageContainer
+    include Win32
     def enabled_popup(timeout=4)
       # Use handle of our parent window to see if we have any currently
       # enabled popup.
