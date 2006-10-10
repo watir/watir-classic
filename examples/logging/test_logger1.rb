@@ -48,20 +48,16 @@ class TC_google_logging < Test::Unit::TestCase
 
    $logger.log("Actual Result: Check that the 'Programming Ruby' link actually appears on the page by using an assertion")
 
-   #FIXME! bad example
-   begin
-        assert($ie.text.include?("Programming Ruby") )
+   if $ie.text.include?("Programming Ruby") 
         $logger.log("Passed. Found test string 'Programming Ruby' ")
         $logger.log_results("test_a_simplesearch", "pickaxe", "Programming Ruby", "TEST PASSED.") #logs to both the XML file and corelogger
-   rescue => e
-        $logger.log("*FAILED*." + e.message + "\n" + e.backtrace.join("\n"))
+   else
+        $logger.log("*FAILED*.")
         $logger.log_results("test_a_simplesearch", "pickaxe", "Programming Ruby", "TEST FAILED.")  #logs to both the XML file and corelogger    
    end
 
-
    $logger.log "## End of test: google search\n"
   
-
  end # end of test_simplesearch
  
  def test_b_googlenews
@@ -88,13 +84,11 @@ class TC_google_logging < Test::Unit::TestCase
   
    $logger.log(" Actual Result: Check that 'Canada' appears on the page by using an assertion")
    
-   #FIXME bad example
-   begin
-       assert($ie.text.include?("Canada") )
-       $logger.log("TEST PASSED. Found test string 'Canada' ")
+   if $ie.text.include?("Canada") 
+        $logger.log("TEST PASSED. Found test string 'Canada' ")
         $logger.log_results("test_b_googlenews", "Canada English", "Canada", "TEST PASSED.") #logs to both the XML file and corelogger
-   rescue => e
-        $logger.log("TEST FAILED." + e.message + "\n" + e.backtrace.join("\n"))
+   else
+        $logger.log("TEST FAILED.")
         $logger.log_results("test_b_googlenews", "Canada English", "Canada", "TEST FAILED.")  #logs to both the XML file and corelogger    
    end
    
