@@ -1,33 +1,20 @@
-$LOAD_PATH << File.join(File.dirname(__FILE__), 'lib')
-require 'watir'
-require 'watir/testcase'
-
-#module Map
-#  
-#  def map(how, what)
-#    $ie.locate_tagged_element( "MAP", how, what)
-#  end
-#  
-#  def area(how, what)
-#    $ie.locate_tagged_element( "AREA", how, what)
-#  end
-#end # module Map
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+require 'unittests/setup'
   
 class Map_Tests < Watir::TestCase
   include Watir
   
   def setup
-    $ie = Watir::IE.attach(:title, /Test page/)
-	$ie.contains_text("Test Page for Map Tests")
-  end
-    
+    $ie.goto($htmlRoot + 'map_test.html')
+  end        
+
   def test_01
-   assert_contains_text "Test Page for Map Tests"
+    assert_contains_text "Test Page for Map Tests"
   end
     
   def test_map_exists_by_name
-   assert($ie.map(:name, 'maptest01').exists?)
-   assert ! ($ie.map(:name, 'maptest02').exists?)
+    assert($ie.map(:name, 'maptest01').exists?)
+    assert ! ($ie.map(:name, 'maptest02').exists?)
   end  
   
   def test_map_exists_by_id
