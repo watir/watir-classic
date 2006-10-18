@@ -1182,7 +1182,8 @@ module Watir
     private :send_message
   end  
     
-  
+  # A PageContainer contains an HTML Document. In other words, it is a 
+  # JavaScript Window.
   module PageContainer
     include Watir::Exception
 
@@ -2541,9 +2542,11 @@ module Watir
           rescue # access denied?
           end
         when :id
-          # BUG: Won't work for IFRAMES
+          # We assume that pages contain frames or iframes, but not both.
           this_frame_tag = @container.document.getElementsByTagName("FRAME").item(i)
           return this_frame if this_frame_tag and what.matches(this_frame_tag.invoke("id"))
+          this_iframe_tag = @container.document.getElementsByTagName("IFRAME").item(i)
+          return this_frame if this_iframe_tag and what.matches(this_iframe_tag.invoke("id"))
         else
           raise ArgumentError, "Argument #{how} not supported"
         end
