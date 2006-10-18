@@ -382,8 +382,11 @@ module Watir
     #   ie.frame(:name, 'main_frame')
     #   ie.frame('main_frame')        # in this case, just a name is supplied
     public
-    def_creator_with_default :frame, :name
-    
+    def frame(how, what=nil)
+      how, what = process_default :name, how, what
+      Frame.new(self, how, what)
+    end
+        
     # this method is used to access a form.
     # available ways of accessing it are, :index, :name, :id, :method, :action, :xpath
     #  * how        - symbol - WHat mecahnism we use to find the form, one of the above. NOTE if what is not supplied this parameter is the NAME of the form
@@ -2527,33 +2530,26 @@ module Watir
       target = nil
       
       for i in 0..(frames.length - 1)
-        next unless target == nil
         this_frame = frames.item(i)
-        if how == :index
-          if i + 1 == what
-            target = this_frame
-          end
-        elsif how == :name
+        case how
+        when :index
+          index = i + 1
+          return this_frame if index == what
+        when :name
           begin
-            if what.matches(this_frame.name)
-              target = this_frame
-            end
+            return this_frame if what.matches(this_frame.name)
           rescue # access denied?
           end
-        elsif how == :id
+        when :id
           # BUG: Won't work for IFRAMES
-          if what.matches(@container.document.getElementsByTagName("FRAME").item(i).invoke("id"))
-            target = this_frame
-          end
+          this_frame_tag = @container.document.getElementsByTagName("FRAME").item(i)
+          return this_frame if this_frame_tag and what.matches(this_frame_tag.invoke("id"))
         else
           raise ArgumentError, "Argument #{how} not supported"
         end
       end
       
-      unless target
-        raise UnknownFrameException, "Unable to locate a frame with name #{ what} "
-      end
-      target
+      raise UnknownFrameException, "Unable to locate a frame with #{how.to_s} #{what}"
     end
     
     def initialize(container, how, what)
@@ -3762,7 +3758,7 @@ module Watir
     # or a regular expression match to the supplied value.
     #   Raises UnknownObjectException if the object can't be found
     #   * containsThis - string or reg exp - the text to verify
-    def verify_contains(containsThis) # BUG: Should have same name and semantics as IE#contains_text (prolly make this work for all elements)
+    def verify_contains(containsThis) # FIXME: verify_contains should have same name and semantics as IE#contains_text (prolly make this work for all elements)
       assert_exists
       if containsThis.kind_of? String
         return true if self.value == containsThis
