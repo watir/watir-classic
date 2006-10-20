@@ -3917,20 +3917,26 @@ module Watir
     
   end
   
+  # This class is the class for fields that accept file uploads
+  # Windows dialog is opened and handled in this case by autoit 
+  # launching into a new process. 
   class FileField < InputElement
     INPUT_TYPES = ["file"]
     
+    # set the file location in the Choose file dialog in a new process
+    # will raise a Watir Exception if AutoIt is not correctly installed
     def set(setPath)
       assert_exists
-      Thread.new {
-        clicker = WinClicker.new
-        clicker.setFileRequesterFileName_newProcess(setPath)
-      }
-      # may need to experiment with this value.  if it takes longer than this
-      # to open the new external Ruby process, the current thread may become
-      # blocked by the file chooser.
-      sleep(1)
-      self.click
+      require 'watir/windowhelper'
+      WindowHelper.check_autoit_installed
+      begin
+        thrd = Thread.new do
+          system("ruby -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Choose file', '', 15; if waitresult == 1\" -e \"@autoit.ControlSetText 'Choose file', '', 'Edit1', '#{setPath}'; @autoit.ControlSend 'Choose file', '', 'Button2', '{ENTER}';\" -e \"end\"")
+        end
+      thrd.join(1)
+      rescue
+        raise Watir::Exception::WatirException, "Problem accessing Choose file dialog"
+      end
     end
   end
   
