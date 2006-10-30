@@ -1358,9 +1358,13 @@ module Watir
       return ie
     end
     
-    # Attach to an existing IE window, either by url or title.
+    # Return a Watir::IE object for an existing IE window. Window can be
+    # referenced by url, title, or window handle.
+    # Second argument can be either a string or a regular expression in the 
+    # case of of :url or :title. 
     # IE.attach(:url, 'http://www.google.com')
     # IE.attach(:title, 'Google')
+    # IE.attach(:hwnd, 528140)
     def self.attach(how, what)
       ie = new(true) # don't create window
       ie.attach_init(how, what)
