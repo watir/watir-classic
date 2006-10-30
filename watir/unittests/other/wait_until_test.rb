@@ -20,7 +20,7 @@ class WaitUntilInstanceTest < Watir::TestCase
   def setup
     @waiter = Watir::Waiter.new
     @waiter.timeout = 10.0
-    @mock_checkee = Spec::Api::Mock.new "mock_checkee"
+    @mock_checkee = Spec::Mocks::Mock.new "mock_checkee"
 
     # remove this line to test with actual TimeKeeper intead of the Mock
     # (slower, but more accurate)
@@ -73,7 +73,7 @@ end
 class WaitUntilClassTest < Watir::TestCase
   
   def setup
-    @mock_checkee = Spec::Api::Mock.new "mock_checkee"
+    @mock_checkee = Spec::Mocks::Mock.new "mock_checkee"
     @mock_checkee.should_receive(:check).exactly(3).times.and_return [false, false, true]
   end
 
