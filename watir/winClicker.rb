@@ -176,7 +176,7 @@ class WinClicker
     def clearSecurityAlertBox
       clickWindowsButton("Security Alert" , "&Yes" )
     end
-
+    alias :clear_security_alert :clearSecurityAlertBox
 
     # Returns the parent handle for the given child handle
     def getParent (childhWnd )
@@ -185,6 +185,7 @@ class WinClicker
       a , b = getParentWindow.call(childhWnd )
       return a
     end
+    alias :get_parent :getParent
 
     # Enumerates open windows and
     # returns a window handle from a given title and window class
@@ -220,7 +221,6 @@ class WinClicker
           if /#{title}/ =~ textCaption[1].to_s
             found_hwnd = hwnd
             bContinueEnum = 0 # False, discontinue enum_windows
-            return hwnd  # NO!  Don't do a return from the callback
           end
             bContinueEnum
         else
@@ -231,6 +231,7 @@ class WinClicker
         DL.remove_callback(enum_windows_proc)
         return found_hwnd
     end
+    alias :get_window_handle :getWindowHandle 
 
     # Call SwitchToThisWindow win32api which will 
     # The SwitchToThisWindow function is called to switch focus to a specified window
@@ -240,12 +241,14 @@ class WinClicker
       # set it to be the one with focus
       switch_to_window.call(hWnd , 1)
     end
-
+    alias :make_window_active :makeWindowActive 
+    
     # Posts a message to the handle passed in to click 
     def clickButtonWithHandle(buttonhWnd)
       post_message = @User32['PostMessage', 'ILILL']
       r,rs = post_message.call(buttonhWnd, BM_CLICK, 0, 0)
     end
+    alias :click_button_with_handle :clickButtonWithHandle 
 
     # Based on the parent window handle passed in, 
     # click on the button with the given caption.      
@@ -260,7 +263,7 @@ class WinClicker
       end
        return true
      end
-
+    alias :click_windows_button_hwnd :clickWindowsButton_hwnd 
 
     # this clicks the button with the name in the window with the caption. It keeps looking for the button until
     # until the timeout expires
@@ -292,6 +295,7 @@ class WinClicker
       end
       return true
     end
+    alias :click_windows_button :clickWindowsButton 
 
     # Enumerate through children of the parent hwnd, pass back 
     # the handle for the control with the given caption
@@ -312,9 +316,8 @@ class WinClicker
 
         t ,  textCaption  = get_caption.call(chwnd, captionBuffer  , textLength+1)    
         if /#{childCaption}/ =~ textCaption[1].to_s then
-          return chwnd
           match_hwnd = chwnd
-          bContinueEnum = 0  # Windows "false" to discontinue enum_childWindows
+          bContinueEnum = 0  # Windows "false" to discontinue enum_childWindow
         end
         bContinueEnum
       }
@@ -322,18 +325,21 @@ class WinClicker
       DL.remove_callback(enum_childWindows_proc)
       return match_hwnd
     end
+    alias :get_chwnd :getChildHandle
 
     # Convenience method to return Static text for 
     # children of the window with the given caption
     def getStaticText(caption)
         return getStaticTextFromWindow(caption, -1)
     end
+    alias :get_static_text :getStaticText 
 
     # Convenience method to return Static text for 
     # children of the window handle
     def getStaticText_hWnd (hWnd)
         return getStaticTextFromWindow("" , hWnd)
     end
+    alias :get_static_text_hwnd :getStaticText_hWnd 
 
     # Return text as an array from child controls of the window
     # given as either a handle or with the given caption
@@ -370,7 +376,7 @@ class WinClicker
         DL.remove_callback(enum_childWindows_proc)
       return staticText
     end
-
+    alias :get_static_text_from_window :getStaticTextFromWindow 
 
     # returns the handle (or -1 if its not found) of the 
     # nth control of this class in the parent window specified 
@@ -399,17 +405,20 @@ class WinClicker
       end
       return controlHwnd 
     end
-
+    alias :get_handle_of_ctrl :getHandleOfControl 
+    
     # Call set text on the given window handle
     def setComboBoxText(hWnd , textToSet)
       set_text(hwnd, textToSet)
-   end
-
+    end
+    alias :set_combo_txt :setComboBoxText 
+    
     # Call set text on the given window handle
     def setTextBoxText(hWnd , textToSet)
       set_text(hwnd, textToSet)
     end
-
+    alias :set_textbox_txt :setTextBoxText 
+    
     # Private method to set text called by the two methods above    
     def set_text(hWnd, textToSet)
       send_message = @User32['SendMessage',  'ILISS']  
@@ -418,26 +427,28 @@ class WinClicker
     private :set_text
 
     # Get the text in the handle for the given control
-    def getControlText( hWnd)
+    def getControlText(hWnd)
       buff = " " * 256
       send_message = @User32['SendMessage',  'ILIIS']  
       r  ,rs  = send_message.call(hWnd , WM_GETTEXT , 256 , buff )
       return buff.to_s
     end
+    alias :get_ctrl_txt :getControlText 
 
     # get the title for the specified hwnd
-    def getWindowTitle(hWnd )
+    def getWindowTitle(hWnd)
       buff = " " * 256
       getWindowText = @User32['GetWindowText' , 'ILSI']
       r , rs = getWindowText.call( hWnd , buff , 256 )
       return buff.to_s
     end
-
+    alias :get_win_title :getWindowTitle
+    
     # Get the text in the first combo box 
     # file requester methods returns nil on failure to 
     # locate the 1st combobox
-    def getTextValueForFileNameField( parenthWnd  ) 
-      f = getHandleOfControl(parenthWnd, "ComboBox" , 1 )
+    def getTextValueForFileNameField(parenthWnd) 
+      f = getHandleOfControl(parenthWnd, "ComboBox", 1)
       if f == -1 then
         # unable to find the first combobox
         return nil
@@ -447,6 +458,7 @@ class WinClicker
         return getWinText(f )
       end
     end
+    alias :get_file_name :getTextValueForFileNameField 
 
     # this sets the filename field to text to set
     def setTextValueForFileNameField( parenthWnd , textToSet ) 
@@ -461,4 +473,5 @@ class WinClicker
         return true
       end
     end
+    alias :set_file_name :setTextValueForFileNameField 
 end 
