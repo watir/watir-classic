@@ -1932,6 +1932,8 @@ module Watir
         htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
+	# Angrez: Resolving Jira issue WTR-114
+	htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
         begin
           @rexmlDomobject = REXML::Document.new(htmlSource)
         rescue => e
