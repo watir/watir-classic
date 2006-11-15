@@ -11,7 +11,7 @@
     </forums>
 
     <docs>
-        <url>index.html</url>
+        <url>http://wtr.rubyforge.org/rdoc/index.html</url>
         <items>
             <item>
                 <name>User Guide</name>
