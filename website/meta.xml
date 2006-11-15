@@ -18,6 +18,10 @@
                 <url>watir_user_guide.html</url>
             </item>        
             <item>
+                <name>API Docs</name>
+                <url>http://wtr.rubyforge.org/rdoc/index.html</url>
+            </item>        
+            <item>
                 <name>FAQ</name>
                 <url>http://wiki.openqa.org/display/WTR/FAQ</url>
             </item>
