@@ -2,7 +2,7 @@
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
-require 'UnitTests/setup'
+require 'unittests/setup'
 
 class TC_Forms2_XPath < Test::Unit::TestCase
   def setup
@@ -25,7 +25,7 @@ class TC_Forms2_XPath < Test::Unit::TestCase
   end     
 end
 
-require 'UnitTests/iostring'
+require 'unittests/iostring'
 class TC_Form_Display < Test::Unit::TestCase
   include MockStdoutTestCase                
   def test_showforms
@@ -39,7 +39,7 @@ Form name:
    method: get
    action: pass.html
 Form name: test2
-       id: 
+       id: f2
    method: get
    action: pass2.html
 Form name: test3
