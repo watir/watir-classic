@@ -137,8 +137,10 @@
 
 =end
 
-# Use our modified win32ole library
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
+# Use our modified win32ole library for Ruby 1.8.2 only
+if RUBY_VERSION == '1.8.2'
+  $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'watir', 'win32ole')
+end
 require 'win32ole'
 
 require 'logger'
@@ -352,10 +354,6 @@ module Watir
       @page_container = container.page_container
     end
         
-    #
-    #           Factory Methods
-    #
-    
     private
     def self.def_creator(method_name, klass_name=nil)
       klass_name ||= method_name.to_s.capitalize
@@ -371,6 +369,10 @@ module Watir
                           #{klass_name}.new(self, how, what)
                         end"
     end
+    
+    #
+    #           Factory Methods
+    #
     
     # this method is the main way of accessing a frame
     #   *  how   - how the frame is accessed. This can also just be the name of the frame
@@ -2675,7 +2677,15 @@ module Watir
       @what = what
       @parent_container = container
       # locate our modal dialog's Document object and save it
-      locate
+      begin
+        locate
+      rescue NoMethodError => e
+        message = 
+          "IE#modal_dialog not supported with the current version of Ruby (#{RUBY_VERSION}).\n" + 
+          "See http://jira.openqa.org/browse/WTR-2 for details.\n" +
+            e.message
+        raise NoMethodError.new(message)
+      end
     end
 
     def document
