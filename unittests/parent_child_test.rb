@@ -31,13 +31,14 @@ class TC_Relative < Test::Unit::TestCase
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
   end
   
-  def xtest_before_and_after
+  def test_before_and_after
     link = $ie.link(:class => 'addtocart', :index => 2)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
-    assert(link.after? @headline)
-    assert(@headline.before? link)
+    assert(link.after?(@headline))
+    assert(@headline.before?(link))
     assert !(link.before? @headline)
     assert !(@headline.after? link)
+    assert !(link.after? link)
   end   
   
   def xtest_find_after
