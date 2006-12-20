@@ -1,0 +1,45 @@
+BODY {
+	COLOR: #333; BACKGROUND-COLOR: #fff
+}
+BODY {
+	FONT-SIZE: 13px; LINE-HEIGHT: 18px; FONT-FAMILY: verdana, arial, helvetica, sans-serif
+}
+P {
+	FONT-SIZE: 13px; LINE-HEIGHT: 18px; FONT-FAMILY: verdana, arial, helvetica, sans-serif
+}
+OL {
+	FONT-SIZE: 13px; LINE-HEIGHT: 18px; FONT-FAMILY: verdana, arial, helvetica, sans-serif
+}
+UL {
+	FONT-SIZE: 13px; LINE-HEIGHT: 18px; FONT-FAMILY: verdana, arial, helvetica, sans-serif
+}
+TD {
+	FONT-SIZE: 13px; LINE-HEIGHT: 18px; FONT-FAMILY: verdana, arial, helvetica, sans-serif
+}
+PRE {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 11px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px; BACKGROUND-COLOR: #eee
+}
+A {
+	COLOR: #000
+}
+A:visited {
+	COLOR: #666
+}
+A:hover {
+	COLOR: #fff; BACKGROUND-COLOR: #000
+}
+.fieldWithErrors {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; PADDING-BOTTOM: 2px; PADDING-TOP: 2px; BACKGROUND-COLOR: red
+}
+#ErrorExplanation {
+	BORDER-RIGHT: 2px solid; PADDING-RIGHT: 7px; BORDER-TOP: 2px solid; PADDING-LEFT: 7px; MARGIN-BOTTOM: 20px; PADDING-BOTTOM: 12px; BORDER-LEFT: 2px solid; WIDTH: 400px; PADDING-TOP: 7px; BORDER-BOTTOM: 2px solid; BACKGROUND-COLOR: #f0f0f0
+}
+#ErrorExplanation H2 {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 15px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 5px; MARGIN: -7px; COLOR: #fff; PADDING-TOP: 5px; BACKGROUND-COLOR: #c00; TEXT-ALIGN: left
+}
+#ErrorExplanation P {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; MARGIN-BOTTOM: 0px; PADDING-BOTTOM: 5px; COLOR: #333; PADDING-TOP: 5px
+}
+#ErrorExplanation UL LI {
+	FONT-SIZE: 12px; LIST-STYLE-TYPE: square
+}

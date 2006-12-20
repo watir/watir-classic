@@ -2385,7 +2385,13 @@ module Watir
       assert_exists
       return ole_object
     end
-    
+
+    # Return the element immediately containing self. 
+    def parent
+      assert_exists
+      Element.new(ole_object.parentelement)
+    end
+
     def typingspeed
       @container.typingspeed
     end

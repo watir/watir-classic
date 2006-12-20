@@ -1,0 +1,66 @@
+#banner {
+	BACKGROUND: #9c9; PADDING-BOTTOM: 10px; FONT: small-caps 40px/40px "Times New Roman", serif; COLOR: #282; PADDING-TOP: 10px; BORDER-BOTTOM: 2px solid; TEXT-ALIGN: center
+}
+#banner IMG {
+	FLOAT: left
+}
+#columns {
+	BACKGROUND: #141
+}
+#main {
+	PADDING-LEFT: 2em; BACKGROUND: white; MARGIN-LEFT: 7em; PADDING-TOP: 4ex
+}
+#side {
+	PADDING-LEFT: 1em; BACKGROUND: #141; FLOAT: left; PADDING-BOTTOM: 1em; WIDTH: 6em; PADDING-TOP: 1em
+}
+#notice {
+	BORDER-RIGHT: red 2px solid; PADDING-RIGHT: 1em; BORDER-TOP: red 2px solid; PADDING-LEFT: 1em; MARGIN-BOTTOM: 2em; PADDING-BOTTOM: 1em; FONT: bold smaller sans-serif; BORDER-LEFT: red 2px solid; PADDING-TOP: 1em; BORDER-BOTTOM: red 2px solid; BACKGROUND-COLOR: #f0f0f0
+}
+A {
+	FONT: smaller sans-serif; TEXT-DECORATION: none
+}
+A.addtocart {
+	PADDING-RIGHT: 1em; PADDING-LEFT: 1em; FONT-WEIGHT: bold; BACKGROUND: #cec; COLOR: #141
+}
+A.addtocart:hover {
+	BACKGROUND: #eec; COLOR: #000
+}
+#side A {
+	FONT: smaller sans-serif; COLOR: #ada
+}
+#side A:hover {
+	COLOR: #fff
+}
+ HTML .catalogentry {
+	HEIGHT: 1%
+}
+.catalogentry {
+	PADDING-RIGHT: 0ex; PADDING-LEFT: 0ex; PADDING-BOTTOM: 1ex; PADDING-TOP: 1ex
+}
+.catalogentry IMG {
+	FLOAT: left; MARGIN-RIGHT: 2em
+}
+.catalogentry H3 {
+	MARGIN-TOP: 0ex; MARGIN-BOTTOM: 0.5ex; FONT: larger bold; COLOR: #282
+}
+.catalogentry P {
+	MARGIN-BOTTOM: 0.5ex; FONT: smaller sans-serif
+}
+.catalogprice {
+	PADDING-RIGHT: 4em
+}
+.carttitle {
+	BACKGROUND: #282; FONT: bold smaller sans-serif; COLOR: #dfd; TEXT-ALIGN: center
+}
+.carttitle TD {
+	PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+#cartmenu {
+	FLOAT: right; BORDER-LEFT: #282 1px dotted
+}
+#totalcell {
+	BORDER-TOP: #282 1px solid; FONT-WEIGHT: bold; BORDER-BOTTOM: #282 2px solid; TEXT-ALIGN: right
+}
+.separator {
+	CLEAR: both; BORDER-BOTTOM: #282 1px dotted
+}
