@@ -2391,7 +2391,19 @@ module Watir
       assert_exists
       Element.new(ole_object.parentelement)
     end
+    
+    include Comparable
+    def <=> other
+      locate
+      other.locate
+      ole_object.sourceindex <=> other.ole_object.sourceindex
+    end
 
+    # Return true if self is contained earlier in the html than other. 
+    alias :before? :< 
+    # Return true if self is contained later in the html than other. 
+    alias :after? :> 
+      
     def typingspeed
       @container.typingspeed
     end
