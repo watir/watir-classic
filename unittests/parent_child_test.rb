@@ -29,6 +29,7 @@ class TC_Relative < Test::Unit::TestCase
     catalog_entry = @headline.parent
     link = catalog_entry.link(:class, 'addtocart')
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
+    assert_nothing_raised{link.click}
   end
   
   def test_before_and_after

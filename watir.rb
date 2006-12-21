@@ -2276,6 +2276,7 @@ module Watir
   class Element # Wrapper
     include Watir::Exception
     include Container # presumes @container is defined
+    attr_accessor :container
     
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
@@ -2398,7 +2399,9 @@ module Watir
     # Return the element immediately containing self. 
     def parent
       assert_exists
-      Element.new(ole_object.parentelement)
+      result = Element.new(ole_object.parentelement)
+      result.container = self
+      result
     end
     
     include Comparable
