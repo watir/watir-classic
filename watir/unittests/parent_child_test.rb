@@ -41,7 +41,7 @@ class TC_Relative < Test::Unit::TestCase
     assert !(link.after? link)
   end   
   
-  def xtest_find_after
+  def test_find_after
     link = $ie.link(:class => 'addtocart', :after? => @headline)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
   end
