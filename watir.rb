@@ -1177,7 +1177,7 @@ module Watir
         catch :next_element do
           @specifiers.each do |how, what|
             next if how == :index
-            unless what.matches send_message(how, element, what)
+            unless match? element, how, what
               throw :next_element
             end
           end
@@ -1192,15 +1192,24 @@ module Watir
       nil
     end
     
-    def send_message(how, element, what)
-      begin
-        return element.send(how)
-      rescue NoMethodError
+    def match?(element, how, what)
+      begin 
+        method = element.method(how)
+      rescue NameError
+        raise MissingWayOfFindingObjectException,
+              "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+      end
+      case method.arity
+      when 0
+        what.matches element.send(how)
+      when 1
+        element.send(how, what)
+      else
         raise MissingWayOfFindingObjectException,
               "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
       end
     end
-    private :send_message
+
   end  
     
   # A PageContainer contains an HTML Document. In other words, it is a 
@@ -2394,8 +2403,8 @@ module Watir
     
     include Comparable
     def <=> other
-      locate
-      other.locate
+      assert_exists
+      other.assert_exists
       ole_object.sourceindex <=> other.ole_object.sourceindex
     end
 
