@@ -1,7 +1,7 @@
 =begin
   license
   ---------------------------------------------------------------------------
-  Copyright (c) 2004-2006, Paul Rogers and Bret Pettichord
+  Copyright (c) 2004-2007, Paul Rogers and Bret Pettichord
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -204,7 +204,6 @@ module Watir
   end
 
   ATTACHER = Waiter.new
-
   # Like regular Ruby "until", except that a TimeOutException is raised
   # if the timeout is exceeded. Default timeout is IE.attach_timeout.
   def self.until_with_timeout(timeout=nil) # block
@@ -213,21 +212,6 @@ module Watir
     ATTACHER.wait_until { yield }
   end
   
-  # add an error checker for http navigation errors, such as 404, 500 etc
-  NAVIGATION_CHECKER = Proc.new do |ie|
-    if ie.document.frames.length > 1
-      1.upto ie.document.frames.length do |i|
-        begin
-          ie.frame(:index, i).check_for_http_error
-        rescue Watir::Exception::UnknownFrameException
-          # frame can be already destroyed
-        end          
-      end
-    else
-      ie.check_for_http_error
-    end
-  end
-
   class WatirLogger < Logger
     def initialize(filName, logsToKeep, maxLogSize)
       super(filName, logsToKeep, maxLogSize)
@@ -1430,10 +1414,8 @@ module Watir
       # Probably some IE method of cleaning things
       # To pass the same to REXML we need to give some name to empty tagName
       @empty_tag_name = "DUMMY"
-            
-      add_checker(NAVIGATION_CHECKER)
     end
-        
+
     def speed=(how_fast)
       case how_fast
       when :fast : set_fast_speed
@@ -1747,8 +1729,12 @@ module Watir
     
     # this method runs the predefined error checks
     def run_error_checks
-      @error_checkers.each do |e|
-        e.call(self)
+      if @error_checkers.length > 0 
+        @error_checkers.each do |e|
+          e.call(self)
+        end
+      else 
+        return
       end
     end
     

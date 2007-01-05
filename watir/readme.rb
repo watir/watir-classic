@@ -125,6 +125,7 @@ Javascript Pop Up Support
 Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
    Bret Pettichord (bret@pettichord.com)
+   Charley Baker (charley.baker@gmail.com)
    The mailing list: http://rubyforge.org/mail/?group_id=104
 
 Contributors:
@@ -158,6 +159,7 @@ Contributors:
    Konstantin Sobolev
    David Schmidt 
    Dara Lillis
+   Charley Baker
 
 Acknowledgements:
    Chris Morris
@@ -172,7 +174,7 @@ Acknowledgements:
 
 License
   ---------------------------------------------------------------------------
-  Copyright (c) 2004-2005, Paul Rogers and Bret Pettichord
+  Copyright (c) 2004-2007, Paul Rogers and Bret Pettichord
   All rights reserved.
   
   Redistribution and use in source and binary forms, with or without
