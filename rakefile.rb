@@ -16,6 +16,7 @@ Rake::RDocTask.new('rdoc') do |rdoc|
   rdoc.rdoc_files.include('watir.rb')
   rdoc.rdoc_files.include('readme.rb')
   rdoc.rdoc_files.include('watir/*.rb')
+  rdoc.rdoc_files.include('watir/contrib/*.rb')  
   rdoc.rdoc_files.exclude('watir/camel_case.rb')
   rdoc.rdoc_files.exclude('watir/testUnitAddons.rb')
 end
