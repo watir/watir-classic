@@ -1,8 +1,9 @@
 require 'watir/win32ole'
+require 'watir' # for Watir.autoit
 
 class WindowHelper
     def initialize( )
-        @autoit = WIN32OLE.new('AutoItX3.Control')
+        @autoit = Watir.autoit
     end
     
     def push_alert_button
@@ -37,7 +38,7 @@ class WindowHelper
     
     def WindowHelper.check_autoit_installed
         begin
-            WIN32OLE.new('AutoItX3.Control')
+          Watir.autoit
         rescue
             raise Watir::Exception::WatirException, "The AutoIt dll must be correctly registered for this feature to work properly"
         end
