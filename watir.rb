@@ -3984,6 +3984,7 @@ module Watir
       rescue
         raise Watir::Exception::WatirException, "Problem accessing Choose file dialog"
       end
+      click
     end
   end
   
