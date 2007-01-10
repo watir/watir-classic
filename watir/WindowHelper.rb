@@ -1,4 +1,4 @@
-require 'win32ole'
+require 'watir/win32ole'
 
 class WindowHelper
     def initialize( )
