@@ -1,8 +1,8 @@
 require 'Win32API'
-require 'win32ole'
+require 'watir/win32ole'
  
 # this will find the IEDialog.dll file in its build location
-iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../../watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
 
 # make sure we can connect to the IEDialog.dll
 fnShowString = Win32API.new(iedialog_file, 'ShowString', ['p'], 'v')
