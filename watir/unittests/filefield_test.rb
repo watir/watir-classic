@@ -11,19 +11,26 @@ class TC_FileField < Test::Unit::TestCase
     $ie.goto($htmlRoot + "fileupload.html")
   end
   
-  def test_fileField_Exists
+  def test_file_field_Exists
     goto_page
-    #test for existance of 4 file area
-    assert($ie.fileField(:name,"file1").exists?)
-    assert($ie.fileField(:id,"file2").exists?)
-    #test for missing 
-    assert(!$ie.fileField(:name, "missing").exists?)   
-    assert(!$ie.fileField(:name,"totallybogus").exists?)
-    #pop one open and put something in it.
-    $ie.fileField(:name,"file1").set($htmlRoot + "fileupload.html")	
-    #click the upload button
+
+    # test for existance of 4 file area
+    assert($ie.file_field(:name,"file1").exists?)
+    assert($ie.file_field(:id,"file2").exists?)
+
+    # test for missing 
+    assert(!$ie.file_field(:name, "missing").exists?)   
+    assert(!$ie.file_field(:name,"totallybogus").exists?)
+
+    # pop one open and put something in it.
+    file = $htmlRoot + "fileupload.html"
+    file.gsub! 'file://', ''
+    file.gsub! '/', '\\'
+    $ie.file_field(:name,"file1").set(file)	
+    assert_equal file, $ie.file_field(:name,"file1").value
+
+    # click the upload button
     $ie.button(:name,"upload").click
-    
     assert($ie.text.include?("PASS"))	
   end
   
