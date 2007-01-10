@@ -1729,12 +1729,8 @@ module Watir
     
     # this method runs the predefined error checks
     def run_error_checks
-      if @error_checkers.length > 0 
         @error_checkers.each do |e|
           e.call(self)
-        end
-      else 
-        return
       end
     end
     
