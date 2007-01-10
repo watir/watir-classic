@@ -1729,9 +1729,7 @@ module Watir
     
     # this method runs the predefined error checks
     def run_error_checks
-        @error_checkers.each do |e|
-          e.call(self)
-      end
+      @error_checkers.each { |e| e.call(self) }
     end
     
     # this method is used to add an error checker that gets executed on every page load
