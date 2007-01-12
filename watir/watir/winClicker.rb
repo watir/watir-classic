@@ -126,7 +126,9 @@ class WinClicker
     # fire off setting the file name for the Choose file dialog
     # in a new process
     def setFileRequesterFileName_newProcess ( textToSet )
-      myapp = "#{@path_to_clicker}/setFileDialog.rb #{textToSet}"
+      # Angrez: Added rubyw so that even if user has configured to open the file using some editor by default
+      #         the file will be opened using Ruby Interpreter.
+      myapp = "rubyw #{@path_to_clicker}/setFileDialog.rb #{textToSet}"
       winsystem( "start #{myapp}" )
     end
 
@@ -153,7 +155,9 @@ class WinClicker
     # Calls system to launch a new process to click on the button
     # defaults to "OK" button
     def clickJSDialog_NewProcess(button = "OK" )
-      myapp = "#{@path_to_clicker}clickJSDialog.rb #{button}"
+      # Angrez: Added rubyw so that even if user has configured to open the file using some editor by default
+      #         the file will be opened using Ruby Interpreter.
+      myapp = "rubyw #{@path_to_clicker}clickJSDialog.rb #{button}"
       log "Starting win clicker in a new process. Looking for button #{button}"
       log "Starting app: #{myapp}"
       winsystem( "start #{myapp}" )
