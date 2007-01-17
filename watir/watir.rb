@@ -1526,7 +1526,7 @@ module Watir
     def exists?
       return false if @closing
       begin
-        @ie.name == 'Microsoft Internet Explorer'
+        @ie.name =~ /Internet Explorer/
       rescue WIN32OLERuntimeError
         false
       end
