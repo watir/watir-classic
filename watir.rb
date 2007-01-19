@@ -270,6 +270,12 @@ module Watir
     GW_CHILD = 5
     GW_ENABLEDPOPUP = 6
     GW_MAX = 6
+
+    IsWindow = User32['IsWindow', 'II']
+    # Does the window with the specified window handle (hwnd) exist?
+    def self.window_exists? hwnd
+      IsWindow[hwnd] == 1
+    end
   end
   
   # This module contains the factory methods that are used to access most html objects
@@ -1373,7 +1379,8 @@ module Watir
     # Whether the spinner is on and off
     attr_accessor :enable_spinner
     
-    # The download time for the last command
+    # The time, in seconds, it took for the new page to load after executing the
+    # the last command
     attr_reader :down_load_time
     
     # Whether the speed is :fast or :slow
