@@ -409,13 +409,13 @@ class WinClicker
     
     # Call set text on the given window handle
     def setComboBoxText(hWnd , textToSet)
-      set_text(hwnd, textToSet)
+      set_text(hWnd, textToSet)
     end
     alias :set_combo_txt :setComboBoxText 
     
     # Call set text on the given window handle
     def setTextBoxText(hWnd , textToSet)
-      set_text(hwnd, textToSet)
+      set_text(hWnd, textToSet)
     end
     alias :set_textbox_txt :setTextBoxText 
     
