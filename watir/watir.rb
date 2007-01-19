@@ -776,6 +776,42 @@ module Watir
       Links.new(self)
     end
     
+    # This is the main method for accessing li tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
+    #  *  how   - symbol - how we access the li, valid values are
+    #    :index      - finds the item using its index
+    #    :id         - finds the item using its id attribute
+    #    :name       - finds the item using its name attribute
+    #
+    #  *  what  - string, integer or re, what we are looking for,
+    #
+    # returns a li object
+    #
+    # Typical Usage
+    #
+    #   ie.li(:id, /list/)                 # access the first li that matches list.
+    #   ie.li(:index,2)                    # access the second li on the page
+    #   ie.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #
+    
+    def li(how, what)
+      return Li.new(self, how, what)
+    end
+    
+    # this is the main method for accessing the lis iterator.
+    #
+    # Returns a lis object
+    #
+    # Typical usage:
+    #
+    #   ie.lis.each { |s| puts s.to_s }            # iterate through all the lis on the page
+    #   ie.lis[1].to_s                             # goto the first li on the page
+    #   ie.lis.length                              # show how many lis are on the page.
+    #
+    def lis
+      return Lis.new(self)
+    end
+    
+    
     # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
     #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
     #  *  what  - string or regexp - what we are looking for
@@ -3029,6 +3065,10 @@ module Watir
     end
   end
   
+  class Li < NonControlElement
+    TAG = 'LI'
+  end  
+  
   # This class is used for dealing with tables.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#table method
   #
@@ -4226,6 +4266,18 @@ module Watir
       @show_attributes.add("innerText", 60)
     end
   end
+  
+  class Lis  < ElementCollections
+    include Watir::CommonCollection
+    def element_class; Li; end
+    
+    def set_show_items
+      super
+      @show_attributes.delete( "name")
+      @show_attributes.add( "className" , 20)
+    end
+  end
+  
   
   # this class accesses the imnages in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
