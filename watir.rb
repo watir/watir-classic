@@ -1959,7 +1959,7 @@ module Watir
         raise "Requires REXML version of at least 3.1.4. Actual: #{REXML::Version}"
       end
       if @rexmlDomobject == nil
-        htmlSource ="<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n<HTML>\n"
+        htmlSource ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
 	# Angrez: Resolving Jira issue WTR-114
