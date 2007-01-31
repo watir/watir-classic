@@ -1736,26 +1736,20 @@ module Watir
       until suppress_ole_error {@ie.document} do
         sleep 0.2; s.spin
       end
-      
-      until @ie.document.readyState == "complete" 
-        sleep 0.2; s.spin
-      end
 
-      if @ie.document.frames.length > 0
-        begin
-          0.upto @ie.document.frames.length-1 do |i|
-            until @ie.document.frames[i.to_s].document.readyState == "complete"
-              sleep 0.2; s.spin
+         documents_to_wait_for = [@ie.document]
+         while doc = documents_to_wait_for.shift
+           until doc.readyState == "complete" 
+             sleep 0.2; s.spin
+           end
+           @url_list << doc.url unless @url_list.include?(doc.url)
+           if doc.frames.length > 0
+             doc.frames.length.times do |n|
+               documents_to_wait_for << doc.frames[n.to_s].document
             end
-            url = @ie.document.frames[i.to_s].document.url
-            @url_list << url unless url_list.include?(url)
           end
-        rescue WIN32OLERuntimeError
         end
-      else
-        url = @ie.document.url
-        @url_list << url unless @url_list.include?(url)
-      end
+
       @down_load_time = Time.now - start_load_time
       run_error_checks
       print "\b" if @enable_spinner
