@@ -1241,14 +1241,25 @@ module Watir
 
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
+
     def check_for_http_error
-      url = self.document.url
-      if /shdoclc.dll/.match(url)
-        m = /id=IEText.*?>(.*?)</i.match(self.html)
-        raise NavigationException, m[1] if m
+      # check for IE7
+      n = self.document.invoke('parentWindow').navigator.appVersion
+      m=/MSIE\s(.*?);/.match( n )
+      if m and m[1] =='7.0'
+        if m=/HTTP (\d\d\d.*)/.match( self.title )
+          raise NavigationException, m[1]
+        end
+      else
+        # assume its IE6
+        url = self.document.url
+        if /shdoclc.dll/.match(url)
+          m = /id=IEText.*?>(.*?)</i.match(self.html)
+          raise NavigationException, m[1] if m
+        end
       end
       false
-    end
+    end 
     
     # The HTML Page
     def page
