@@ -14,24 +14,27 @@ Rake::RDocTask.new('rdoc') do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.options << '-A' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R'
   rdoc.rdoc_files.include('watir.rb')
-  rdoc.rdoc_files.include('readme.rb')
-  rdoc.rdoc_files.include('watir/*.rb')
-  rdoc.rdoc_files.include('watir/contrib/*.rb')  
-  rdoc.rdoc_files.exclude('watir/camel_case.rb')
-  rdoc.rdoc_files.exclude('watir/testUnitAddons.rb')
+  rdoc.rdoc_files.include('readme.rb')  
 end
+
+desc 'Rdoc all files including watir/* and the contrib files'
+Rake::RDocTask.new('rdoc_all') do |rdoc_all| 
+  rdoc_all.title = 'Watir - All API Reference' 
+  rdoc_all.rdoc_dir = 'rdoc-all'
+  rdoc_all.options << '-A' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R'
+  rdoc_all.rdoc_files.include('watir.rb')
+  rdoc_all.rdoc_files.include('readme.rb')    
+  rdoc_all.rdoc_files.include('watir/contrib/*.rb')  
+  rdoc_all.rdoc_files.include('watir/*.rb')   
+  rdoc_all.rdoc_files.exclude('watir/camel_case.rb')
+  rdoc_all.rdoc_files.exclude('watir/testUnitAddons.rb')  
+end
+
 
 CLEAN << 'pkg' << 'html'
 
 desc 'Run all tests'
 task :default => :package
-
-desc 'Build the one-click installer'
-file 'installer/watir_installer.exe' do
-  Dir.chdir 'installer'
-  system('c:\program files\nsis\makensis watir_installer.nsi')
-end
-task :one_click => ['installer/watir_installer.exe']
 
 if defined? Rake::GemPackageTask
 
