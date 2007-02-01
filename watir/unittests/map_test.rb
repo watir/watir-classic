@@ -14,12 +14,12 @@ class Map_Tests < Watir::TestCase
     
   def test_map_exists_by_name
     assert($ie.map(:name, 'maptest01').exists?)
-    assert ! ($ie.map(:name, 'maptest02').exists?)
+    assert ! ($ie.map(:name, 'maptest03').exists?)
   end  
   
   def test_map_exists_by_id
     assert($ie.map(:id, 'maptestid01').exists?)
-    assert ! ($ie.map(:id, 'maptestid02').exists?)
+    assert ! ($ie.map(:id, 'maptestid03').exists?)
   end  
 
   def test_map_area_exists_by_href
@@ -82,6 +82,15 @@ class Map_Tests < Watir::TestCase
     $ie.back  
 	assert_contains_text "Test Page for Map Tests"
   end
+  
+  def test_maps
+    assert_equal(2, $ie.maps.length)
+  end
+  
+  def test_areas
+    assert_equal(3, $ie.map(:index, 2).areas.length)
+  end
+  
   def assert_contains_text text
     assert($ie.contains_text(text))
   end

@@ -817,6 +817,76 @@ module Watir
       return Lis.new(self)
     end
     
+
+    # This is the main method for accessing map tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
+    #  *  how   - symbol - how we access the map, valid values are
+    #    :index      - finds the item using its index
+    #    :id         - finds the item using its id attribute
+    #    :name       - finds the item using its name attribute
+    #
+    #  *  what  - string, integer or re, what we are looking for,
+    #
+    # returns a map object
+    #
+    # Typical Usage
+    #
+    #   ie.map(:id, /list/)                 # access the first map that matches list.
+    #   ie.map(:index,2)                    # access the second map on the page
+    #   ie.map(:title, "A Picture")         # access a map using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #
+    
+    def map(how, what)
+      return Map.new(self, how, what)
+    end
+    
+    # this is the main method for accessing the maps iterator.
+    #
+    # Returns a maps object
+    #
+    # Typical usage:
+    #
+    #   ie.maps.each { |s| puts s.to_s }            # iterate through all the maps on the page
+    #   ie.maps[1].to_s                             # goto the first map on the page
+    #   ie.maps.length                              # show how many maps are on the page.
+    #
+    def maps
+      return Maps.new(self)
+    end
+
+    # This is the main method for accessing area tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/area.asp?frame=true
+    #  *  how   - symbol - how we access the area, valid values are
+    #    :index      - finds the item using its index
+    #    :id         - finds the item using its id attribute
+    #    :name       - finds the item using its name attribute
+    #
+    #  *  what  - string, integer or re, what we are looking for,
+    #
+    # returns a area object
+    #
+    # Typical Usage
+    #
+    #   ie.area(:id, /list/)                 # access the first area that matches list.
+    #   ie.area(:index,2)                    # access the second area on the page
+    #   ie.area(:title, "A Picture")         # access a area using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #
+    
+    def area(how, what)
+      return Area.new(self, how, what)
+    end
+    
+    # this is the main method for accessing the areas iterator.
+    #
+    # Returns a areas object
+    #
+    # Typical usage:
+    #
+    #   ie.areas.each { |s| puts s.to_s }            # iterate through all the areas on the page
+    #   ie.areas[1].to_s                             # goto the first area on the page
+    #   ie.areas.length                              # show how many areas are on the page.
+    #
+    def areas
+      return Areas.new(self)
+    end
     
     # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
     #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
@@ -4290,6 +4360,30 @@ module Watir
     end
   end
   
+  class Map < NonControlElement
+    TAG = 'MAP'
+  end
+
+  class Area < NonControlElement
+    TAG = 'AREA'
+  end
+  
+  # this class accesses the maps in the document as a collection
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#maps method
+  class Maps < ElementCollections
+    include CommonCollection
+    def element_class; Map; end
+    def element_tag; 'MAP'; end
+  end
+
+
+  # this class accesses the areas in the document as a collection
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#areas method
+  class Areas < ElementCollections
+    include CommonCollection
+    def element_class; Area; end
+    def element_tag; 'AREA'; end
+  end
   
   # this class accesses the imnages in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
@@ -4454,4 +4548,3 @@ def _code_that_copies_readonly_array(array, name)
 end
 
 require 'watir/camel_case'
-require 'watir/map'
