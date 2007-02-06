@@ -37,10 +37,3 @@ sleep 1
 ie2.link(:url,/CS106/).flash
 ie2.link(:url,/CS106/).click
 sleep 1
-
-ie2.link(:url,/ScheduleFall06.html/).flash
-ie2.link(:url,/ScheduleFall06.html/).click
-sleep 1
-
-ie2.link(:url,/ProgrammingStandards.htm/).flash
-ie2.link(:url,/ProgrammingStandards.htm/).click
