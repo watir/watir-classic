@@ -143,11 +143,11 @@ class WinClicker
       end
     end
 
-    # Click on a dialog with title of "Microsoft Internet Explorer"
+    # Click on a dialog with title of "Internet Explorer"
     # Default button to click is "OK"
     # parenthWnd not used
     def clickJavaScriptDialog(button="OK" , parenthWnd = -1)
-       clickWindowsButton("Microsoft Internet Explorer" , button )
+       clickWindowsButton("Internet Explorer" , button )
     end
 
     # Calls system to launch a new process to click on the button
@@ -166,7 +166,7 @@ class WinClicker
       n = 0
       while n < 3
         sleep 1
-        clickWindowsButton("Microsoft Internet Explorer" , button )
+        clickWindowsButton("Internet Explorer" , button )
         n=n+1
       end
     end
