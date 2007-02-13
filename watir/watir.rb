@@ -2788,7 +2788,7 @@ module Watir
           intUnknown > 0
         end
       rescue TimeOutException => e        
-        raise "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
+        raise TimeOutException, "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
       end
       
       copy_test_config @parent_container
