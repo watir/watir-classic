@@ -274,7 +274,8 @@ module Watir
     IsWindow = User32['IsWindow', 'II']
     # Does the window with the specified window handle (hwnd) exist?
     def self.window_exists? hwnd
-      IsWindow[hwnd] == 1
+      rtn, junk = IsWindow[hwnd]
+      rtn == 1
     end
   end
   
@@ -2766,10 +2767,15 @@ module Watir
         case what.class.to_s
         # TODO: re-write like WET's so we can select on regular expressions too.
         when "String"
-          Watir::until_with_timeout do
-            title = "#{what} -- Web Page Dialog"
-            @hwnd, arr = FindWindowEx.call(0, 0, nil, title)
-            @hwnd > 0
+          begin
+            Watir::until_with_timeout do
+              title = "#{what} -- Web Page Dialog"
+              @hwnd, arr = FindWindowEx.call(0, 0, nil, title)
+              @hwnd > 0
+            end
+          rescue TimeOutException
+            raise NoMatchingWindowFoundException, 
+              "Modal Dialog with title #{what} not found. Timeout = #{Watir::IE.attach_timeout}"
           end
         else
           raise ArgumentError, "Title value must be String"
@@ -2788,7 +2794,8 @@ module Watir
           intUnknown > 0
         end
       rescue TimeOutException => e        
-        raise TimeOutException, "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
+        raise NoMatchingWindowFoundException, 
+          "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
       end
       
       copy_test_config @parent_container
@@ -2831,6 +2838,13 @@ module Watir
       
     def wait(no_sleep=false)
     end
+    
+    # Return true if the modal exists. Mostly this is useful for testing whether
+    # a modal has closed.
+    def exists?
+      Watir::Win32::window_exists? @hwnd
+    end
+    alias :exist? :exists?
   end
 
   # this class is the super class for the iterator classes (buttons, links, spans etc

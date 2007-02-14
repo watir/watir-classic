@@ -3,6 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
+require 'watir/close_all'
 
 class TC_ModalDialog < Watir::TestCase
   include Watir
@@ -11,14 +12,11 @@ class TC_ModalDialog < Watir::TestCase
     $ie.goto($htmlRoot + 'modal_dialog_launcher.html')
   end
 
-  def xteardown # XXX need to improve timeout logic
+  def teardown 
     if $ie 
-      begin
-        modal = $ie.modal_dialog
-        modal.close if modal 
-      rescue TimeOutException, NoMatchingWindowFoundException 
-      end
+      while $ie.close_modal do; end
     end
+    sleep 0.1
   end
 
   def assert_no_modals
@@ -115,5 +113,13 @@ class TC_ModalDialog < Watir::TestCase
     modal2.frame('buttonFrame').button(:value, 'Close Window').click
     modal1.close
   end
-    
+  
+  def test_modal_exists
+    $ie.button(:value, 'Launch Dialog').click_no_wait
+    modal = $ie.modal_dialog(:title, 'Modal Dialog')
+    assert(modal.exists?)
+    modal.button(:value, 'Close').click
+    assert(!modal.exists?)
+  end
+        
 end
