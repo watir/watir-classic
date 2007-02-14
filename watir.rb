@@ -1827,7 +1827,14 @@ module Watir
            @url_list << doc.url unless @url_list.include?(doc.url)
            if doc.frames.length > 0
              doc.frames.length.times do |n|
+             	begin
                documents_to_wait_for << doc.frames[n.to_s].document
+              rescue WIN32OLERuntimeError
+              	# swallow all the frame access errors for now, rethrow if it's something else 
+              	 if not $!.to_s =~ /OLE error code:80070005/im
+              		raise 
+              	end
+              end
             end
           end
         end
