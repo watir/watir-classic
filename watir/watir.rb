@@ -34,108 +34,6 @@
   (based on BSD Open Source License)
 =end
 
-=begin rdoc
-   This is Watir, Web Application Testing In Ruby
-   The home page for this project is is http://wtr.rubyforge.org
-
-   Version "$Revision$"
-
-   Typical usage:
-    # include the controller
-    require "watir"
-
-    # go to the page you want to test
-    ie = Watir::IE.start("http://myserver/mypage")
-
-    # enter "Paul" into an input field named "username"
-    ie.text_field(:name, "username").set("Paul")
-
-    # enter "Ruby Co" into input field with id "company_ID"
-    ie.text_field(:id, "company_ID").set("Ruby Co")
-
-    # click on a link that has "green" somewhere in the text that is displayed
-    # to the user, using a regular expression
-    ie.link(:text, /green/)
-
-    # click button that has a caption of "Cancel"
-    ie.button(:value, "Cancel").click
-
-   WATIR allows your script to read and interact with HTML objects--HTML tags
-   and their attributes and contents.  Types of objects that WATIR can identify
-   include:
-
-   Type         Description
-   ===========  ===============================================================
-   button       <input> tags with type=button, submit, image or reset
-   check_box    <input> tags with type=checkbox
-   div          <div> tags
-   form
-   frame
-   hidden       <input> tags with type=hidden
-   image        <img> tags
-   label
-   link         <a> (anchor) tags
-   p            <p> (paragraph) tags
-   radio        radio buttons; <input> tags with the type=radio
-   select_list  <select> tags, known informally as drop-down boxes
-   span         <span> tags
-   table        <table> tags
-   text_field   <input> tags with the type=text attribute (a single-line
-                text field), the type=textarea attribute (a multi-line
-                text field), and the type=password attribute (a
-                single-line field in which the input is replaced with asterisks)
-
-   In general, there are several ways to identify a specific object.  WATIR's
-   syntax is in the form (how, what), where "how" is a means of identifying
-   the object, and "what" is the specific string or regular expression
-   that WATIR will seek, as shown in the examples above.  Available "how"
-   options depend upon the type of object, but here are a few examples:
-
-   How           Description
-   ============  ===============================================================
-   :id           Used to find an object that has an "id=" attribute. Since each
-                 id should be unique, according to the XHTML specification,
-                 this is recommended as the most reliable method to find an
-                 object.
-   :name         Used to find an object that has a "name=" attribute.  This is
-                 useful for older versions of HTML, but "name" is deprecated
-                 in XHTML.
-   :value        Used to find a text field with a given default value, or a
-                 button with a given caption
-   :index        Used to find the nth object of the specified type on a page.
-                 For example, button(:index, 2) finds the second button.
-                 Current versions of WATIR use 1-based indexing, but future
-                 versions will use 0-based indexing.
-   :before_text  Used to find the object immediately before the specified text.
-                 Note:  This fails if the text is in a table cell.
-   :after_text   Used to find the object immediately before the specified text.
-                 Note:  This fails if the text is in a table cell.
-   :xpath        Uses xpath (see separate doc)
-
-   Note that the XHTML specification requires that tags and their attributes be
-   in lower case.  WATIR doesn't enforce this; WATIR will find tags and
-   attributes whether they're in upper, lower, or mixed case.  This is either
-   a bug or a feature.
-
-   WATIR uses Microsoft's Document Object Model (DOM) as implemented by Internet
-   Explorer.  For further information on Internet Explorer and on the DOM, go to
-   the following Web pages:
-
-   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
-   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
-
-   WATIR supports command-line options:
-
-   -b  (background)   Run Internet Explorer invisibly
-   -f  (fast)         By default, WATIR types slowly and pauses briefly between
-                      actions.  This switch removes the delays and sets WATIR
-                      to run at full speed.  The set_fast_speed method of the
-                      IE object performs the same function; set_slow_speed
-                      returns WATIR to its default behaviour.
-   -x  (spinner)      Adds a spinner that displays in the command window when
-                      pages are waiting to be loaded.
-
-=end
 
 require 'watir/win32ole'
 
@@ -1404,9 +1302,106 @@ module Watir
     end
 
   end # module
-  
-  # This class is the main Internet Explorer Controller
-  # An instance of this must be created to access Internet Explorer.
+
+=begin rdoc
+   This is Watir, Web Application Testing In Ruby
+   http://wtr.rubyforge.org
+
+   Version "$Revision$"
+   
+   Example:
+
+    # Load the Watir library.
+    require "watir"
+
+    # Go to the page you want to test.
+    ie = Watir::IE.start("http://myserver/mypage")
+
+    # Enter "Paul" in a text input field named "username".
+    ie.text_field(:name, "username").set("Paul")
+
+    # Enter "Ruby Co" in the text input field whose "id" is "company_ID".
+    ie.text_field(:id, "company_ID").set("Ruby Co")
+
+    # Click on a link that includes the word "green".
+    ie.link(:text, /green/)
+
+    # Click button that is labelled "Cancel".
+    ie.button(:value, "Cancel").click
+
+   The Watir::IE class allows your test to read and interact with HTML 
+   elements on a page, including their attributes and contents. 
+   The class includes many methods for accessing HTML elements, including the
+   following:
+   
+   #button::     <input> tags with type=button, submit, image or reset
+   #check_box::  <input> tags with type=checkbox
+   #div::        <div> tags
+   #form::       <form> tags
+   #frame::      frames, including both the <frame> elements and the 
+                corresponding pages.
+   #hidden::       <input> tags with type=hidden
+   #image::        <img> tags
+   #label::        <label> tags (including "for" attribute)
+   #link::         <a> (anchor) tags
+   #p::            <p> (paragraph) tags
+   #radio::        <input> tags with the type=radio; known as radio buttons
+   #select_list::  <select> tags, known as drop-downs or drop-down lists
+   #span::         <span> tags
+   #table::        <table> tags, including +row+ and +cell+ methods for accessing
+                nested elements.
+   #text_field   <input> tags with the type=text (single-line), type=textarea 
+                (multi-line), and type=password 
+   #map::          <map> tags
+   #area::         <area> tags
+   #li::           <li> tags
+
+   In general, there are several ways to identify a specific object.  WATIR's
+   syntax is in the form (how, what), where "how" is a means of identifying
+   the object, and "what" is the specific string or regular expression
+   that WATIR will seek, as shown in the examples above.  Available "how"
+   options depend upon the type of object, but here are a few examples:
+
+   How           Description
+   ============  ===============================================================
+   :id           Used to find an object that has an "id=" attribute. Since each
+                 id should be unique, according to the XHTML specification,
+                 this is recommended as the most reliable method to find an
+                 object.
+   :name         Used to find an object that has a "name=" attribute.  This is
+                 useful for older versions of HTML, but "name" is deprecated
+                 in XHTML.
+   :value        Used to find a text field with a given default value, or a
+                 button with a given caption
+   :index        Used to find the nth object of the specified type on a page.
+                 For example, button(:index, 2) finds the second button.
+                 Current versions of WATIR use 1-based indexing, but future
+                 versions will use 0-based indexing.
+   :xpath        Uses xpath (see separate doc)
+
+   Note that the XHTML specification requires that tags and their attributes be
+   in lower case.  WATIR doesn't enforce this; WATIR will find tags and
+   attributes whether they're in upper, lower, or mixed case.  This is either
+   a bug or a feature.
+
+   WATIR uses Microsoft's Document Object Model (DOM) as implemented by Internet
+   Explorer.  For further information on Internet Explorer and on the DOM, go to
+   the following Web pages:
+
+   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
+   http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
+
+   WATIR supports command-line options:
+
+   -b  (background)   Run Internet Explorer invisibly
+   -f  (fast)         By default, WATIR types slowly and pauses briefly between
+                      actions.  This switch removes the delays and sets WATIR
+                      to run at full speed.  The set_fast_speed method of the
+                      IE object performs the same function; set_slow_speed
+                      returns WATIR to its default behaviour.
+   -x  (spinner)      Adds a spinner that displays in the command window when
+                      pages are waiting to be loaded.
+=end
   class IE
     include Watir::Exception
     include Container
@@ -1819,25 +1814,21 @@ module Watir
         sleep 0.2; s.spin
       end
 
-         documents_to_wait_for = [@ie.document]
-         while doc = documents_to_wait_for.shift
-           until doc.readyState == "complete" 
-             sleep 0.2; s.spin
-           end
-           @url_list << doc.url unless @url_list.include?(doc.url)
-           if doc.frames.length > 0
-             doc.frames.length.times do |n|
-             	begin
-               documents_to_wait_for << doc.frames[n.to_s].document
-              rescue WIN32OLERuntimeError
-              	# swallow all the frame access errors for now, rethrow if it's something else 
-              	 if not $!.to_s =~ /OLE error code:80070005/im
-              		raise 
-              	end
-              end
-            end
+      documents_to_wait_for = [@ie.document]
+      while doc = documents_to_wait_for.shift
+        until doc.readyState == "complete" 
+          sleep 0.2; s.spin
+        end
+        @url_list << doc.url unless @url_list.include?(doc.url)
+        doc.frames.length.times do |n|
+          begin
+            documents_to_wait_for << doc.frames[n.to_s].document
+          rescue WIN32OLERuntimeError
+            # swallow all the frame access errors for now, rethrow if it's something else 
+            raise unless $!.to_s =~ /OLE error code:80070005/im
           end
         end
+      end
 
       @down_load_time = Time.now - start_load_time
       run_error_checks
