@@ -5,23 +5,21 @@ require 'rake/packagetask'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 
+require 'watir-rdoc'
 
 $VERBOSE = nil
 desc 'Generate Watir API Documentation'
 Rake::RDocTask.new('rdoc') do |rdoc| 
-  rdoc.title = 'Watir API Reference'
-  rdoc.main = 'ReadMe' 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.options << '-A' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R'
+  rdoc.options += $WATIR_RDOC_OPTIONS
   rdoc.rdoc_files.include('watir.rb')
   rdoc.rdoc_files.include('readme.rb')  
 end
 
 desc 'Rdoc all files including watir/* and the contrib files'
 Rake::RDocTask.new('rdoc_all') do |rdoc_all| 
-  rdoc_all.title = 'Watir - All API Reference' 
   rdoc_all.rdoc_dir = 'rdoc-all'
-  rdoc_all.options << '-A' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R'
+  rdoc_all.options += $WATIR_RDOC_OPTIONS
   rdoc_all.rdoc_files.include('watir.rb')
   rdoc_all.rdoc_files.include('readme.rb')    
   rdoc_all.rdoc_files.include('watir/contrib/*.rb')  
@@ -29,7 +27,6 @@ Rake::RDocTask.new('rdoc_all') do |rdoc_all|
   rdoc_all.rdoc_files.exclude('watir/camel_case.rb')
   rdoc_all.rdoc_files.exclude('watir/testUnitAddons.rb')  
 end
-
 
 CLEAN << 'pkg' << 'html'
 

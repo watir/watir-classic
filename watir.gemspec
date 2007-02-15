@@ -7,13 +7,14 @@ $__watir_source_patterns = [
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 require 'watir'
+require 'watir-rdoc'
 
 spec = Gem::Specification.new do |s|
   s.name = 'watir'
   s.version = Watir::IE::VERSION
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
-    WATIR stands for "Web Application Testing in Ruby". Watir (pronounced water) is a free, 
+    WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free, 
     open-source functional testing tool for automating browser-based tests of web applications. 
     It works with applications written in any language.
     Watir drives the Internet Explorer browser the same way an end user would. 
@@ -33,11 +34,8 @@ spec = Gem::Specification.new do |s|
   s.autorequire = 'watir'
 
   s.has_rdoc = true
-  s.rdoc_options << 
-        '--title' << 'Watir API Reference' <<
-  		'--accessor' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R' <<
-  		'--main' << 'ReadMe' << 
-  		'--exclude' << 'unittests|camel_case.rb|testUnitAddons.rb'
+
+  s.rdoc_options += $WATIR_RDOC_OPTIONS
   s.extra_rdoc_files = 'readme.rb'
 
   s.test_file  = 'unittests/core_tests.rb'
