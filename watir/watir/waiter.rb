@@ -51,8 +51,8 @@ class Waiter
   def wait_until # block
     start_time = now
     until yield do
-      if (duration = now - start_time) > timeout
-        raise Watir::Exception::TimeOutException.new(duration, timeout),
+      if (duration = now - start_time) > @timeout
+        raise Watir::Exception::TimeOutException.new(duration, @timeout),
           "Timed out after #{duration} seconds."
       end
       sleep @polling_interval
