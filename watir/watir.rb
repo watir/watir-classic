@@ -2493,7 +2493,7 @@ module Watir
     def parent
       assert_exists
       result = Element.new(ole_object.parentelement)
-      result.container = self
+      result.set_container self
       result
     end
     
