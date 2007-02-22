@@ -32,6 +32,11 @@ class TC_Relative < Test::Unit::TestCase
     assert_nothing_raised{link.click}
   end
   
+  def test_parent_page_container
+    catalog_entry = @headline.parent
+    assert_not_nil catalog_entry.page_container
+  end
+  
   def test_before_and_after
     link = $ie.link(:class => 'addtocart', :index => 2)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
