@@ -1084,7 +1084,7 @@ module Watir
       how = :value if how == :caption
       how = :class_name if how == :class
       what = what.to_i if how == :index
-      value = value.to_s if value
+      value = value.to_s if value unless value.class == String
       log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
       
       object_index = 1

@@ -29,7 +29,9 @@ class TC_CheckBox < Test::Unit::TestCase
     
     assert_equal("1" , $ie.checkbox(:name,"box4").value )
     assert_equal("3" , $ie.checkbox(:name,"box4" , 3).value )
+    assert($ie.checkbox(:name, "box6").exists?)    
     assert_equal("checkbox" , $ie.checkbox(:name,"box4" , 3).type )
+    assert_equal("checkbox" , $ie.checkbox(:name,"box6" , 'Milk').type )
     assert_equal(false , $ie.checkbox(:name,"box4" , 3).disabled )
     assert_equal("" , $ie.checkbox(:name,"box4" , 3).id )
     
@@ -77,7 +79,8 @@ class TC_CheckBox < Test::Unit::TestCase
     assert($ie.checkbox(:name, "box3").isSet?)   
     
     assert(!$ie.checkbox(:name, "box4" , 2 ).isSet?)   
-    assert($ie.checkbox(:name, "box4" , 1 ).isSet?)   
+    assert($ie.checkbox(:name, "box4" , 1 ).isSet?)  
+    assert(!$ie.checkbox(:name, 'box6', 'Milk').isSet?)     
   end
   
   def test_checkbox_clear
@@ -93,6 +96,10 @@ class TC_CheckBox < Test::Unit::TestCase
     
     $ie.checkbox(:name, "box4" , 1).clear
     assert(!$ie.checkbox(:name, "box4" , 1).isSet?)   
+
+    $ie.checkbox(:name, "box6" , 'Tea').clear
+    assert(!$ie.checkbox(:name, "box6" , 'Tea').isSet?)   
+    
   end
   
   def test_checkbox_getState
@@ -126,15 +133,18 @@ class TC_CheckBox < Test::Unit::TestCase
     
     $ie.checkbox(:name, "box1").set( true )
     assert($ie.checkbox(:name, "box1").isSet?)   
+
+    $ie.checkbox(:name, "box6", 'Tea').set( false )
+    assert(!$ie.checkbox(:name, "box6", 'Tea').isSet?)   
     
-    
-    
+    $ie.checkbox(:name, "box6", 'Tea').set( true )
+    assert($ie.checkbox(:name, "box6", 'Tea').isSet?)
     
   end
   
   def test_checkbox_iterator
     
-    assert_equal(11, $ie.checkboxes.length)
+    assert_equal(13, $ie.checkboxes.length)
     assert_equal("box1" , $ie.checkboxes[1].name )
     
     index=1

@@ -159,7 +159,7 @@ class TC_Radios < Test::Unit::TestCase
   
   def test_radio_iterators
     
-    assert_equal(11, $ie.radios.length)
+    assert_equal(13, $ie.radios.length)
     assert_equal("box5" , $ie.radios[2].id )
     assert_equal(true ,  $ie.radios[3].disabled )
     assert_equal(false ,  $ie.radios[1].disabled )
@@ -173,6 +173,21 @@ class TC_Radios < Test::Unit::TestCase
       index+=1
     end
     assert_equal(index -1, $ie.radios.length)
+  end
+  
+  # test radio buttons that have a string as a value
+  def test_value_string
+    assert($ie.radio(:name, 'box6', 'Tea').exists?)
+    assert($ie.radio(:name, 'box6', 'Milk').exists?)
+    $ie.radio(:name, "box6" , 'Milk').set
+    assert($ie.radio(:name, "box6" , 'Milk').isSet?)   
+    assert(!$ie.radio(:name, "box6" , 'Tea').isSet?)   
+
+    $ie.radio(:name, "box6" , 'Tea').set
+    assert(!$ie.radio(:name, "box6" , 'Milk').isSet?)   
+    assert($ie.radio(:name, "box6" , 'Tea').isSet?)   
+    $ie.radio(:name, "box6", 'Tea').clear
+    assert(!$ie.radio(:name, "box6" , 'Tea').isSet?)   
   end
   
   
