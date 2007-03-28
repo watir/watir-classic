@@ -85,7 +85,7 @@ class WinClicker
     def initialize
       @User32 = DL.dlopen("user32")
       # we must determine the path we are in
-      @path_to_clicker = File.expand_path(File.dirname(__FILE__))
+      @path_to_clicker = '"' + File.expand_path(File.dirname(__FILE__)) + '"'
     end
 
 
@@ -127,7 +127,8 @@ class WinClicker
     # in a new process
     def setFileRequesterFileName_newProcess ( textToSet )
       myapp = "rubyw #{@path_to_clicker}/setFileDialog.rb #{textToSet}"
-      winsystem( "start #{myapp}" )
+      # first argument to system call is a window title, in this case blank ""      
+      winsystem( "start \"\" #{myapp}" )
     end
 
     # Return the text value from the first combo box 
@@ -153,10 +154,11 @@ class WinClicker
     # Calls system to launch a new process to click on the button
     # defaults to "OK" button
     def clickJSDialog_NewProcess(button = "OK" )
-      myapp = "rubyw #{@path_to_clicker}clickJSDialog.rb #{button}"
+      myapp = "rubyw #{@path_to_clicker}/clickJSDialog.rb #{button}"
       log "Starting win clicker in a new process. Looking for button #{button}"
       log "Starting app: #{myapp}"
-      winsystem( "start #{myapp}" )
+      # first argument to system call is a window title, in this case blank ""
+      winsystem( "start \"\" #{myapp}" )
     end
 
 
