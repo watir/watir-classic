@@ -1786,54 +1786,53 @@ module Watir
     include Watir::Utils
     
     # Block execution until the page has loaded.
+    # =nodoc
+    # Note: This code needs to be prepared for the ie object to be closed at 
+    # any moment!
     def wait(no_sleep=false)
+      @rexmlDomobject = nil
       @down_load_time = 0.0
+      a_moment = 0.2 # seconds
       start_load_time = Time.now
-      s = Spinner.new(@enable_spinner)
 
       begin      
         while @ie.busy # XXX need to add time out
-          sleep 0.2; s.spin
+          sleep a_moment
         end
-        s.reverse
+        until @ie.readyState == READYSTATE_COMPLETE do
+          sleep a_moment
+        end
+        sleep a_moment
+        until @ie.document do
+          sleep a_moment
+        end
+
+        documents_to_wait_for = [@ie.document]
+
       rescue WIN32OLERuntimeError # IE window must have been closed
         @down_load_time = Time.now - start_load_time
-        print "\b" if @enable_spinner
-        @rexmlDomobject = nil
+        sleep @defaultSleepTime unless no_sleep
         return @down_load_time
       end
             
-      until @ie.readyState == READYSTATE_COMPLETE do
-        sleep 0.2; s.spin
-      end
-
-      sleep 0.2; s.spin
-
-      # at this point IE says it's ready, but still need to check each document     
-      until suppress_ole_error {@ie.document} do
-        sleep 0.2; s.spin
-      end
-
-      documents_to_wait_for = [@ie.document]
       while doc = documents_to_wait_for.shift
-        until doc.readyState == "complete" 
-          sleep 0.2; s.spin
-        end
-        @url_list << doc.url unless @url_list.include?(doc.url)
-        doc.frames.length.times do |n|
-          begin
-            documents_to_wait_for << doc.frames[n.to_s].document
-          rescue WIN32OLERuntimeError
-            # swallow all the frame access errors for now, rethrow if it's something else 
-            raise unless $!.to_s =~ /OLE error code:80070005/im
+        begin
+          until doc.readyState == "complete" do
+            sleep a_moment
           end
+          @url_list << doc.url unless @url_list.include?(doc.url)
+          doc.frames.length.times do |n|
+            begin
+              documents_to_wait_for << doc.frames[n.to_s].document
+            rescue WIN32OLERuntimeError
+            end
+          end
+        rescue WIN32OLERuntimeError
         end
       end
 
       @down_load_time = Time.now - start_load_time
       run_error_checks
-      print "\b" if @enable_spinner
-      @rexmlDomobject = nil
       sleep @defaultSleepTime unless no_sleep
       @down_load_time
     end
