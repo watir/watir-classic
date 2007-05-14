@@ -35,7 +35,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
   end
   def test_alert_button2
     check_dialog('jscriptPushButton', /Alert button!/) do
-      sleep 0.1 
+      sleep 0.2 
       WindowHelper.new.push_alert_button 
     end
   end
