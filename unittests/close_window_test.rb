@@ -17,6 +17,6 @@ class TC_CloseWindow < Watir::TestCase
     $ie.link(:text, 'New Window').click
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
-    assert_nothing_raised {ie_new.button(:value, 'Close Window').click}
+    assert_nothing_raised {ie_new.close}
   end
 end

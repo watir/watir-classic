@@ -2,22 +2,23 @@ require 'watir/win32ole'
 require 'watir' # for Watir.autoit
 
 class WindowHelper
-    def initialize( )
+    @@ie_window_name = "Windows Internet Explorer"
+    def initialize()
         @autoit = Watir.autoit
     end
     
     def push_alert_button
-        @autoit.WinWait "Microsoft Internet Explorer", ""
+        @autoit.WinWait @@ie_window_name, ""
         @autoit.Send "{ENTER}"
     end
     
     def push_confirm_button_ok
-        @autoit.WinWait "Microsoft Internet Explorer", ""
+        @autoit.WinWait @@ie_window_name, ""
         @autoit.Send "{ENTER}"
     end
     
     def push_confirm_button_cancel
-        @autoit.WinWait "Microsoft Internet Explorer", ""
+        @autoit.WinWait @@ie_window_name, ""
         @autoit.Send "{ESCAPE}"
     end
     
