@@ -362,25 +362,36 @@ module Watir
     #                  index is 1 based
     #    :name       - find the item using the name attribute
     #    :id         - find the item using the id attribute
-    #    :value      - find the item using the value attribute (in this case the button caption)
+    #    :value      - find the item using the value attribute (in this case the button caption text)
+    #    :text       - same as value 
     #    :caption    - same as value
+    #    :class      - finds the item using the class attribute
     #    :beforeText - finds the item immediately before the specified text
     #    :afterText  - finds the item immediately after the specified text
     #    :xpath      - finds the item using xpath query
     #
-    # Typical Usage
+    # Typical usage
     #
-    #    ie.button(:id,    'b_1')                       # access the button with an ID of b_1
-    #    ie.button(:name,  'verify_data')               # access the button with a name of verify_data
-    #    ie.button(:value, 'Login')                     # access the button with a value (the text displayed on the button) of Login
-    #    ie.button(:caption, 'Login')                   # same as above
-    #    ie.button(:value, /Log/)                       # access the button that has text matching /Log/
-    #    ie.button(:index, 2)                           # access the second button on the page (1 based, so the first button is accessed with :index,1)
-    #
-    # if only a single parameter is supplied, then :value is used
-    #
-    #    ie.button('Click Me')                          # access the button with a value of Click Me
+    #    ie.button(:id,    'b_1')                             # access the button with an ID of b_1
+    #    ie.button(:name,  'verify_data')                     # access the button with a name of verify_data
+    #    ie.button(:value, 'Login')                           # access the button with a value (the text displayed on the button) of Login
+    #    ie.button(:caption, 'Login')                         # same as above
+    #    ie.button(:value, /Log/)                             # access the button that has text matching /Log/
+    #    ie.button(:index, 2)                                 # access the second button on the page (1 based, so the first button is accessed with :index,1)
+    #    ie.button(:class, 'my_custom_button_class')          # access the button with a class of my_custom_button_class 
+    #    ie.button(:afterText, /Durian/)                      # access the next button after text matching /durian/
     #    ie.button(:xpath, "//input[@value='Click Me']/")     # access the button with a value of Click Me
+    #
+    # Accessing a Button by using multiple attributes
+    #
+    #    ie.button(:class => 'abc', :index => 2)              # access the 2nd button with a class of abc
+    #    ie.button(:name => 'submit', :afterText => 'Hello')  # access the button with a name of submit, which comes after the text 'Hello'. 
+    #
+    # Accessing a Button nested within another element
+    #    ie.div(:class, 'xyz').button(:index, 2)              # access a div of class xyz, and the 2nd button within that div
+    #
+    # If only a single parameter is supplied, then :value is used
+    #    ie.button('Click Me')                                # access the button with a value of Click Me
     def button(how, what=nil)
       how, what = process_default :value, how, what
       Button.new(self, how, what)
@@ -390,9 +401,9 @@ module Watir
     #
     # Typical usage:
     #
-    #   ie.buttons.each { |b| puts b.to_s }            # iterate through all the buttons on the page
-    #   ie.buttons[1].to_s                             # goto the first button on the page
-    #   ie.buttons.length                              # show how many buttons are on the page.
+    #   ie.buttons.each { |b| puts b.to_s }                   # iterate through all the buttons on the page
+    #   ie.buttons[1].to_s                                    # goto the first button on the page
+    #   ie.buttons.length                                     # show how many buttons are on the page.
     def buttons
       Buttons.new(self)
     end
@@ -449,7 +460,7 @@ module Watir
     #    ie.text_field(:id,   'user_name')                 # access the text field with an ID of user_name
     #    ie.text_field(:name, 'address')                   # access the text field with a name of address
     #    ie.text_field(:index, 2)                          # access the second text field on the page (1 based, so the first field is accessed with :index,1)
-    #    ie.text_field(:xpath, "//textarea[@id='user_name']/")    ## access the text field with an ID of user_name
+    #    ie.text_field(:xpath, "//textarea[@id='user_name']/")    # access the text field with an ID of user_name
     
     def text_field(how, what=nil)
       TextField.new(self, how, what)
@@ -490,7 +501,7 @@ module Watir
     #
     # Typical usage:
     #
-    #   ie.hiddens.each { |t| puts t.to_s }           # iterate through all the hidden fields on the page
+    #   ie.hiddens.each { |t| puts t.to_s }            # iterate through all the hidden fields on the page
     #   ie.hiddens[1].to_s                             # goto the first hidden field on the page
     #   ie.hiddens.length                              # show how many hidden fields are on the page.
     def hiddens
@@ -517,7 +528,7 @@ module Watir
     #
     #    ie.select_list(:id, 'currency')                   # access the select box with an id of currency
     #    ie.select_list(:name, 'country')                  # access the select box with a name of country
-    #    ie.select_list(:name, /n_/)                      # access the first select box whose name matches n_
+    #    ie.select_list(:name, /n_/)                       # access the first select box whose name matches n_
     #    ie.select_list(:index, 2)                         # access the second select box on the page (1 based, so the first field is accessed with :index,1)
     #    ie.select(:xpath, "//select[@id='currency']/")    # access the select box with an id of currency
     def select_list(how, what)
@@ -555,10 +566,10 @@ module Watir
     #
     # Typical usage
     #
-    #    ie.checkbox(:id, 'send_email')                   # access the check box with an id of send_mail
-    #    ie.checkbox(:name, 'send_copy')                  # access the check box with a name of send_copy
-    #    ie.checkbox(:name, /n_/)                        # access the first check box whose name matches n_
-    #    ie.checkbox(:index, 2)                           # access the second check box on the page (1 based, so the first field is accessed with :index,1)
+    #    ie.checkbox(:id, 'send_email')                    # access the check box with an id of send_mail
+    #    ie.checkbox(:name, 'send_copy')                   # access the check box with a name of send_copy
+    #    ie.checkbox(:name, /n_/)                          # access the first check box whose name matches n_
+    #    ie.checkbox(:index, 2)                            # access the second check box on the page (1 based, so the first field is accessed with :index,1)
     #
     # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
     #
@@ -569,7 +580,7 @@ module Watir
     # Watir can access these using the following:
     #
     #    ie.checkbox(:id, 'day_to_send', 'monday')         # access the check box with an id of day_to_send and a value of monday
-    #    ie.checkbox(:name,'email_frequency', 'weekly')     # access the check box with a name of email_frequency and a value of 'weekly'
+    #    ie.checkbox(:name,'email_frequency', 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
     #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
     def checkbox(how, what, value=nil)
       CheckBox.new(self, how, what, ["checkbox"], value)
@@ -579,9 +590,9 @@ module Watir
     #
     # Typical usage:
     #
-    #   ie.checkboxes.each { |c| puts c.to_s }           # iterate through all the check boxes on the page
-    #   ie.checkboxes[1].to_s                             # goto the first check box on the page
-    #   ie.checkboxes.length                              # show how many check boxes are on the page.
+    #   ie.checkboxes.each { |c| puts c.to_s }             # iterate through all the check boxes on the page
+    #   ie.checkboxes[1].to_s                              # goto the first check box on the page
+    #   ie.checkboxes.length                               # show how many check boxes are on the page.
     def checkboxes
       CheckBoxes.new(self)
     end
@@ -809,7 +820,7 @@ module Watir
     #   ie.image(:src, /myPic/)             # access the first image that matches myPic. We can use a string in place of the regular expression
     #                                       # but the complete path must be used, ie.image(:src, 'http://myserver.com/my_path/my_image.jpg')
     #   ie.image(:index,2)                  # access the second image on the page
-    #   ie.image(:alt, "A Picture")        # access an image using the alt text
+    #   ie.image(:alt, "A Picture")         # access an image using the alt text
     #   ie.image(:xpath, "//img[@alt='A Picture']/")    # access an image using the alt text
     #
     def image(how,what=nil)
@@ -849,7 +860,7 @@ module Watir
     #
     #   ie.div(:id, /list/)                 # access the first div that matches list.
     #   ie.div(:index,2)                    # access the second div on the page
-    #   ie.div(:title, "A Picture")        # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #   ie.div(:title, "A Picture")         # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #   ie.div(:xpath, "//div[@id='list']/")    # access the first div whose id is 'list'
     #
     def div(how, what=nil)
@@ -882,7 +893,7 @@ module Watir
     #
     #   ie.span(:id, /list/)                 # access the first span that matches list.
     #   ie.span(:index,2)                    # access the second span on the page
-    #   ie.span(:title, "A Picture")        # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #   ie.span(:title, "A Picture")         # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #
     def span(how, what=nil)
       Span.new(self, how, what)
@@ -915,7 +926,7 @@ module Watir
     #
     #   ie.p(:id, /list/)                 # access the first p tag  that matches list.
     #   ie.p(:index,2)                    # access the second p tag on the page
-    #   ie.p(:title, "A Picture")        # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #   ie.p(:title, "A Picture")         # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #
     def p(how, what=nil)
       P.new(self, how, what)
@@ -948,7 +959,7 @@ module Watir
     #
     #   ie.pre(:id, /list/)                 # access the first pre tag  that matches list.
     #   ie.pre(:index,2)                    # access the second pre tag on the page
-    #   ie.pre(:title, "A Picture")        # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
+    #   ie.pre(:title, "A Picture")         # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #
     def pre(how, what=nil)
       Pre.new(self, how, what)
@@ -960,7 +971,7 @@ module Watir
     #
     # Typical usage:
     #
-    #   ie.pres.each { |pre| puts pre.to_s }            # iterate through all the pre tags on the page
+    #   ie.pres.each { |pre| puts pre.to_s }        # iterate through all the pre tags on the page
     #   ie.pres[1].to_s                             # goto the first pre tag on the page
     #   ie.pres.length                              # show how many pre tags are on the page.
     #

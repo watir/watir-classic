@@ -15,58 +15,11 @@ How To Use:
    Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
    Install ruby from http://ruby-lang.org
+   Please see our User Guide for more details: http://wtr.rubyforge.org/watir_user_guide.html
 
 Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
    See the user guide if you are having problems with security blocking.
-
-Changes in 1.4
-    fix method name for accessing class name of P/Span/Div (change from style to class_name)
-    fix for bug 2152 (frame index in show_frames off by 1)
-    added alt as a property to image
-    added file_fields
-    fixed TextArea#to_s
-    moved reset button to buttons class
-    add IE#send_keys
-    frames can now be referenced using regexps and ids
-    added IE#minimize, IE#maximize, IE#restore
-    onChange and onBlur events now triggered by TextField#set
-    added default option to set for checkbox
-    added colspan method to tablecell
-    fix for bug reported by Scott P, wrong objects are sometimes found
-    fixed bug with radio/checkboxes doing multiple fireevents
-    fix for table, id and reg exp
-    wait for page load before returning from IE.attach
-    update to select_list -- new interface still in progress
-    added .show method to iterators
-    fix for flashing objects in table cells
-    added flash for forms
-    flash returns nil instead of the curious '10'
-    removed ScreenCapture module from IE class
-
-Changes in 1.3.1
-   Added P tag support
-   Bug fix for images and links in frames using each
-   Bug fixes for image#save
-
-Changes in 1.3
-   added new row_values and column_value methods to tables
-   added ability to save an image - ie.image(:index,1).save('c:\temp\mypic.gif')
-   new method, html that applies to objects, not just a page - ie.button(:index,1).html => <INPUT id=b2 title="this is button1" onclick="javascript:document.location='pass.html';" type=button value="Click Me" name=b1>
-   now throws a NavigationException on 404, 500 errors
-   iterators now mixin Enumerable
-   added support for labels
-   added support for frames by index
-   added screen_capture
-   added hidden field support, and iterator method
-   table cells, span and div now act as containers, so can do ie.div(:index,1).button(:index.2).click
-   added index to print out from show_xx methods. Link shows img src if an image is used
-   added onKeyUp and onKeyDown to text_fields#set
-   installer now installs AutoIt to deal with javascript popups, file uploads etc
-   the spinner is now off by default 
-   bug fix in text_fields iterator where it wasnt iterating through password or text ares. Added test for password fields
-   bug fix for flash for tables
-   bug fixes for images and links in cells
 
 Typical Usage
    # include the controller 
@@ -74,21 +27,36 @@ Typical Usage
    # create an instance of the controller 
    ie = Watir::IE.new  
    # go to the page you want to test 
-   ie.goto("http://myserver/mypage") 
-   # to enter text into a text field - assuming the field is name "username" 
-   ie.text_field(:name, "username").set("Paul") 
-   # if there was a text field that had an id of "company_ID", you could set it to Ruby Co: 
-   ie.text_field(:id ,"company_ID").set("Ruby Co") 
+   ie.goto('http://myserver/mypage') 
+   # to enter text into a text field - assuming the field is named 'username' 
+   ie.text_field(:name, 'username').set('Paul') 
+   # if there was a text field that had an id of 'company_ID', you could set it to 'Ruby Co': 
+   ie.text_field(:id ,'company_ID').set('Ruby Co') 
    # to click a button that has a caption of 'Cancel' 
-   ie.button(:value, "Cancel").click 
+   ie.button(:value, 'Cancel').click 
+
+  Identifying something using two or more identifying characteristics
+   # Html objects can also be identified via a combination of two of the above methods, 
+   # for example to click a span with a class name of 'Label', and whose text is 'Add new', one could say
+   ie.span(:class =>'Label', :text => 'Add new').click
+   # Or to find one object within another (for example the first text_field within a div of class 
+   # 'PasswordInput', where your password equals 'MyPassword'), one could say
+   ie.div(:class, 'PasswordInput').text_field(:index, 1).set('MyPassword')
    
   The ways that are available to identify an html object depend upon the object type, but include
-   :id           used for an object that has an ID attribute -- this is the best way!
-   :name         used for an object that has a name attribute. 
-   :value        value of text fields, captions of buttons 
+   :id           used for an object that has an ID attribute.*
+   :name         used for an object that has a name attribute.*
+   :value        value of text fields, captions of buttons. 
    :index        finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
-   :beforeText   finds the object immeditaley before the specified text. Doesnt work if the text is in a table cell
-   :afterText    finds the object immeditaley after the specified text. Doesnt work if the text is in a table cell
+   :class        used for an object that has a class attribute.
+   :text         used for links and other objects that contain text.
+   :beforeText   finds the object immeditaley before the specified text. Doesn't work if the text is in a table cell.
+   :afterText    finds the object immeditaley after the specified text. Doesn't work if the text is in a table cell.
+   :method       ?
+   :action       ?
+   :xpath        finds the item using xpath query
+
+   * :id and :name are the quickest of these to process, and so should be used when possible to speed up scripts.
 
   The objects that are currently supported include
    Button
@@ -173,107 +141,6 @@ Acknowledgements:
    Jacinda Scott (logo creator)
 
    Thanks for your ideas and support!
-
-License
-  ---------------------------------------------------------------------------
-  Copyright (c) 2004-2007, Paul Rogers and Bret Pettichord
-  All rights reserved.
-  
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions are met:
-  
-  1. Redistributions of source code must retain the above copyright notice,
-  this list of conditions and the following disclaimer.
-  
-  2. Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-  
-  3. Neither the names Paul Rogers, Bret Pettichord nor the names of contributors to
-  this software may be used to endorse or promote products derived from this
-  software without specific prior written permission.
-  
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS
-  IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  --------------------------------------------------------------------------
-  (based on BSD Open Source License)
-
-
-  (Eclipse will automatically show these and other tagged comments from the
-   source in the Tasks view.)
-
-Performance
-- TODO: backout David's commit to trunk
-        - move to watir/contrib/performance-improvement.rb
-        - get all unit tests working again
-
-Watir::TestCase
-- TODO: Watir.test_case 'name of what we are testing' do; end
-        - the body becomes a test method
-        - the name of the file becomes the name of the testsuite
-        WHY? (1) cleaner to read, (2) avoids name collisions
-        - Watir.setup defines setup method (same with teardown)
-        - We may need a new autorunner
-- TODO: measure & display how long each test takes to execute        
-        
-Documentation
-- TODO: rdoc: autocreate from "macro" methods.
-- TODO: Add rake task to create bonus file
-        includes: examples, rdoc, doc, unittests
-
-Time Outs
-- TODO: time-out settings for (1) new window (2) page loading
-        ATTACHER.wait_until, LOADER.wait_until
-- TODO: time-outs: distinguish between optomistic and pessimistic?
-        - wait a short while if we aren't expecting the window
-          (and wait for it to go away)
-        - wait a long time if we are expecting it.
-          (and wait for it to appear)
-- IDEA: wait_until: when timeout is nil, there is no timeout
-- IDEA: wait_until: remove defaults from Waiter.wait_until
-
-Completions
-- IDEA: review use of src method/attribute in links and images
-- TODO: does click_no_wait work for objects in frames?
-- IDEA: add locate method for frames
-        - support ie.frame(:name, 'foo').link(:text, 'bar').exists?
-          returns false when frame does not exist (currently raises an error).
-- IDEA: Add child_row, child_cell to Table and TableRow
-        also child_rows and child_cells
-
-Refactoring
-- TODO: new elements: make it super easy to add support for new elements
-        e.g. li, ul
-- IDEA: modules: Elemental, Inputable, Tagged
-- IDEA: classes: ElementWrapper, ElementMapper
-- IDEA: reuse wrapper element in locators
-- IDEA: continue use of strategy pattern for locator methods
-- IDEA: use publish/subscribe to handle page reloading nofications
-
- Xpath
-- IDEA: xpath: use unique_number in xpath locator (may fix bugs)
-- IDEA: xpath: remove redundancy in xpath tests
-- IDEA: xpath: remove writes to STDOUT in xpath tests
-        filefield, form, radios
-        also check links for errors
-
-Other
-- IDEA: measure coverage of watir testsuite with rcov (rspec)
-- IDEA: gem server: use one for development builds. see gem FAQ 4.2.
-
-Alert Dialogs
-- TODO: Need to be able to poll for the dialog to exist (implicit or explicit?)
-- TODO: Add dialog.exist?
-- TODO: TC_Dialog_Test#teardown: remove hard-coded sleep 
 
 =end
 class ReadMe
