@@ -20,11 +20,12 @@ class TC_New < Test::Unit::TestCase
 
   def test_new_window_does_not_create_new_process
     if @background_iexplore_process == 0
-      @background = Watir::IE.new
+      @background = Watir::IE.new_window
       assert_equal 1, ie_process_count
+      @background_iexplore_process = 1
     end
     @new = Watir::IE.new
-    assert_equal [1, @background_iexplore_processes].max, ie_process_count
+    assert_equal @background_iexplore_processes, ie_process_count
   end
 end
     

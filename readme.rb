@@ -10,7 +10,6 @@ To Install:
 How To Use:
    This only works on Windows.
    Best is to use Ruby 1.8.2-14 or later.
-   This has also been tested using Ruby 1.8.1-11, Ruby 1.8.1-12 using Windows 2000 and XP.
    It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
    Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
@@ -81,7 +80,6 @@ Typical Usage
 
   -b  (background)   Run Internet Explorer invisible
   -f  (fast)         Run tests very fast
-  -x  (spinner)      Add a spinner that displays when pages are waiting to be loaded.
   
  Note that if you also use test/unit, you will need to require 'watir' first to avoid conflicts
  with its command line switches.
