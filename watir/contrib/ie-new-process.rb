@@ -21,7 +21,6 @@ class IEProcess
     raise "Failed to start IEXPLORE." if result == 0
     
     process_id = process_info.unpack('llll')[2]
-    puts "Process ID: #{process_id}"
     self.new process_id
   end
   

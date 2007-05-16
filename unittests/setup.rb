@@ -23,7 +23,8 @@ $window_tests =
      'iedialog', # visible
      'close_window', # creates new window
      'frame_links', # visible
-    ].collect {|x| "unittests/#{x}_test.rb"}
+     'open_close',
+    ].collect {|x| "unittests/window/#{x}_test.rb"}
 
 $non_core_tests = 
     ['popups', # has problems when run in a suite (is ok when run alone); 
