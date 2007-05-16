@@ -24,7 +24,7 @@ $window_tests =
      'close_window', # creates new window
      'frame_links', # visible
      'open_close',
-    ].collect {|x| "unittests/window/#{x}_test.rb"}
+    ].collect {|x| "unittests/windows/#{x}_test.rb"}
 
 $non_core_tests = 
     ['popups', # has problems when run in a suite (is ok when run alone); 
@@ -40,21 +40,12 @@ $non_core_tests =
 
 $core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
 
-def start_ie_with_logger
-  $ie = Watir::IE.new
-#  $ie.logger = Watir::WatirLogger.new( 'debug.txt', 4, 10000 )
-  $ie.set_fast_speed
-end
+$ie = Watir::IE.new
+$ie.set_fast_speed
 
-def set_local_dir
-  $myDir = File.expand_path(File.dirname(__FILE__))
-  $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
-  # if you run the unit tests form a local file system use this line
-  $htmlRoot =  "file://#{$myDir}/html/" 
-  # if you run the unit tests from a web server use this line
-  #   $htmlRoot =  "http://localhost:8080/watir/html/"
-end
-
-start_ie_with_logger
-set_local_dir
-
+$myDir = File.expand_path(File.dirname(__FILE__))
+$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
+# if you run the unit tests form a local file system use this line
+$htmlRoot =  "file://#{$myDir}/html/" 
+# if you run the unit tests from a web server use this line
+#   $htmlRoot =  "http://localhost:8080/watir/html/"
