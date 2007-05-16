@@ -78,9 +78,6 @@ end
 # Make Internet Explorer minimize. -b stands for background
 $HIDE_IE = command_line_flag('-b')
 
-# Display a spinner when IE is waiting. This works when run on the console.
-$ENABLE_SPINNER = command_line_flag('-x')
-
 # Run fast
 $FAST_SPEED = command_line_flag('-f')
 
@@ -123,32 +120,7 @@ module Watir
       self.info "Log started"
     end
   end
-  
-  # Displays the spinner object that appears in the console when a page is being loaded
-  class Spinner
-    def initialize(enabled=true)
-      @s = ["\b/", "\b|", "\b\\", "\b-"]
-      @i = 0
-      @enabled = enabled
-    end
     
-    # reverse the direction of spinning
-    def reverse
-      @s.reverse!
-    end
-    
-    def spin
-      print self.next if @enabled
-    end
-    
-    # get the next character to display
-    def next
-      @i = @i + 1
-      @i = 0 if @i > @s.length - 1
-      return @s[@i]
-    end
-  end
-  
   module Win32
     # this will find the IEDialog.dll file in its build location
     @@iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
@@ -1410,26 +1382,13 @@ module Watir
                       to run at full speed.  The set_fast_speed method of the
                       IE object performs the same function; set_slow_speed
                       returns WATIR to its default behaviour.
-   -x  (spinner)      Adds a spinner that displays in the command window when
-                      pages are waiting to be loaded.
 =end
   class IE
     include Watir::Exception
     include Container
     include PageContainer
     
-    @@extra = nil
-    @@persist_ole_connection = nil
-    
     def self.quit
-      @@extra.quit if @@extra
-    end
-    
-    # Normally, if you often close and open IE windows for each test
-    # then you can run into OLE errors. Setting this to TRUE will 
-    # workaround this problem.        
-    def self.persist_ole_connection=(boolean)
-      @@persist_ole_connection = boolean
     end
     
     # Maximum number of seconds to wait when attaching to a window
@@ -1462,10 +1421,7 @@ module Watir
     DEFAULT_SLEEP_TIME = 0.1
     
     # The default color for highlighting objects as they are accessed.
-    DEFAULT_HIGHLIGHT_COLOR = 'yellow'
-    
-    # Whether the spinner is on and off
-    attr_accessor :enable_spinner
+    HIGHLIGHT_COLOR = 'yellow'
     
     # The time, in seconds, it took for the new page to load after executing the
     # the last command
@@ -1499,6 +1455,11 @@ module Watir
       return ie
     end
     
+    # Create a new IE window. Works just like IE.new in Watir 1.4.
+    def self.new_window
+      new
+    end
+    
     # Return a Watir::IE object for an existing IE window. Window can be
     # referenced by url, title, or window handle.
     # Second argument can be either a string or a regular expression in the 
@@ -1523,10 +1484,9 @@ module Watir
     def set_defaults
       @ole_object = nil
       @page_container = self
-      @enable_spinner = $ENABLE_SPINNER
       @error_checkers = []
       self.visible = ! $HIDE_IE
-      @activeObjectHighLightColor = DEFAULT_HIGHLIGHT_COLOR
+      @activeObjectHighLightColor = HIGHLIGHT_COLOR
 
       if $FAST_SPEED
         set_fast_speed
@@ -1572,12 +1532,6 @@ module Watir
     end
     
     def create_browser_window
-      if @@persist_ole_connection
-        unless @@extra 
-          @@extra = WIN32OLE.new('InternetExplorer.Application')
-          @@extra.visible = false
-        end
-      end
       @ie = WIN32OLE.new('InternetExplorer.Application')
     end
     private :create_browser_window
