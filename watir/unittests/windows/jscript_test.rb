@@ -4,20 +4,15 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
 require 'unittests/setup'
 require 'watir/WindowHelper'
+require 'watir/process'
 
 $mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
 
 class TC_JavaScript_Test < Test::Unit::TestCase
   @@javascript_page = $htmlRoot  + 'JavascriptClick.html'
   
-  # Returns the number of windows processes running with the specified name.
-  def count_processes name
-    mgmt = WIN32OLE.connect('winmgmts:\\\\.')
-    processes = mgmt.InstancesOf("win32_process")
-    processes.extend Enumerable
-    processes.select{|x| x.name == name}.length
-  end
-  
+  include Watir::Process  
+
   def teardown
     assert_equal @background_ruby_process_count, count_processes('rubyw.exe')
   end
