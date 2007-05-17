@@ -1474,6 +1474,22 @@ module Watir
       ie.goto url if url
       ie
     end
+
+    # Create a new IE window in a new process. Same as IE.new.
+    def self.new_process
+      iep = IEProcess.start
+      ie = IE.bind iep.window
+      ie.process_id = iep.process_id
+      ie
+    end
+    
+    # Create a new IE window in a new process, starting at the specified URL. 
+    # Same as IE.start.
+    def self.start_process(url=nil)
+      ie = new_process
+      ie.goto url if url
+      ie
+    end
     
     # Return a Watir::IE object for an existing IE window. Window can be
     # referenced by url, title, or window handle.
