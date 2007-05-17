@@ -1423,6 +1423,11 @@ module Watir
     # The default color for highlighting objects as they are accessed.
     HIGHLIGHT_COLOR = 'yellow'
     
+    # IE inserts some element whose tagName is empty and just acts as block level element
+    # Probably some IE method of cleaning things
+    # To pass the same to REXML we need to give some name to empty tagName
+    EMPTY_TAG_NAME = "DUMMY"
+    
     # The time, in seconds, it took for the new page to load after executing the
     # the last command
     attr_reader :down_load_time
@@ -1439,31 +1444,35 @@ module Watir
     # this contains the list of unique urls that have been visited
     attr_reader :url_list
     
-    def initialize(suppress_new_window=nil)
-      unless suppress_new_window
-        create_browser_window
-        set_defaults
-        goto 'about:blank' # this avoids numerous problems caused by lack of a document
-      end
+    # Create a new IE window. Works just like IE.new in Watir 1.4.
+    def self.new_window
+      ie = new true
+      ie._new_window_init
+      ie
+    end
+    
+    def initialize suppress_new_window=nil 
+      _new_window_init unless suppress_new_window 
+    end
+    
+    def _new_window_init
+      create_browser_window
+      set_defaults
+      goto 'about:blank' # this avoids numerous problems caused by lack of a document
     end
     
     # Create a new IE Window, starting at the specified url.
     # If no url is given, start empty.
-    def self.start(url=nil)
-      ie = new
-      ie.goto(url) if url
-      return ie
-    end
-    
-    # Create a new IE window. Works just like IE.new in Watir 1.4.
-    def self.new_window
-      new
+    def self.start url=nil
+      start_window url
     end
     
     # Create a new IE window, starting at the specified url.
     # If no url is given, start empty. Works like IE.start in Watir 1.4.
     def self.start_window url=nil
-      start url
+      ie = new
+      ie.goto url if url
+      ie
     end
     
     # Return a Watir::IE object for an existing IE window. Window can be
@@ -1473,19 +1482,30 @@ module Watir
     # IE.attach(:url, 'http://www.google.com')
     # IE.attach(:title, 'Google')
     # IE.attach(:hwnd, 528140)
-    def self.attach(how, what)
-      ie = new(true) # don't create window
-      ie.attach_init(how, what)
+    def self.attach how, what
+      ie = new true # don't create window
+      ie._attach_init(how, what)
       return ie
     end
     
     # this method is used internally to attach to an existing window
-    # dont make private
-    def attach_init(how, what)
-      attach_browser_window(how, what)
+    def _attach_init how, what
+      attach_browser_window how, what
       set_defaults
       wait
     end
+    
+    def self.bind ie_window
+      ie = new true
+      ie.ie = ie_window
+      ie.set_defaults
+      ie
+    end
+  
+    def create_browser_window
+      @ie = WIN32OLE.new('InternetExplorer.Application')
+    end
+    private :create_browser_window
     
     def set_defaults
       @ole_object = nil
@@ -1502,14 +1522,9 @@ module Watir
       
       @logger = DefaultLogger.new
       @url_list = []
-      
-      # IE inserts some element whose tagName is empty and just acts as block level element
-      # Probably some IE method of cleaning things
-      # To pass the same to REXML we need to give some name to empty tagName
-      @empty_tag_name = "DUMMY"
     end
 
-    def speed=(how_fast)
+    def speed= how_fast
       case how_fast
       when :fast : set_fast_speed
       when :slow : set_slow_speed
@@ -1518,12 +1533,14 @@ module Watir
       end
     end
     
+    # deprecated: use speed = :fast instead
     def set_fast_speed
       @typingspeed = 0
       @defaultSleepTime = 0.01
       @speed = :fast
     end
-    
+
+    # deprecated: use speed = :slow instead    
     def set_slow_speed
       @typingspeed = DEFAULT_TYPING_SPEED
       @defaultSleepTime = DEFAULT_SLEEP_TIME
@@ -1537,11 +1554,6 @@ module Watir
       @ie.visible = boolean if boolean != @ie.visible
     end
     
-    def create_browser_window
-      @ie = WIN32OLE.new('InternetExplorer.Application')
-    end
-    private :create_browser_window
-    
     # return internet explorer instance as specified. if none is found, 
     # return nil.
     # arguments:
@@ -1553,13 +1565,6 @@ module Watir
       IE.bind ie_ole if ie_ole
     end
 
-    def self.bind(ie_window)
-      ie = IE.new true
-      ie.ie = ie_window
-      ie.set_defaults
-      ie
-    end
-  
     def self._find(how, what)
       shell = WIN32OLE.new("Shell.Application")
       ieTemp = nil
@@ -1577,7 +1582,7 @@ module Watir
             title = window.document.title
           rescue WIN32OLERuntimeError
           end
-          ieTemp = window if (what.matches(title))
+          ieTemp = window if what.matches(title)
         when :hwnd
           begin
             ieTemp = window if what == window.HWND
@@ -1590,12 +1595,12 @@ module Watir
       return ieTemp
     end
     
-    def attach_browser_window(how, what)
+    def attach_browser_window how, what 
       log "Seeking Window with #{how}: #{what}"
       ieTemp = nil
       begin
         Watir::until_with_timeout do
-          ieTemp = IE._find(how, what)
+          ieTemp = IE._find how, what
         end
       rescue TimeOutException
         raise NoMatchingWindowFoundException,
@@ -2140,7 +2145,7 @@ module Watir
         tagName = ""
         begin
           tagName = element.tagName.downcase
-          tagName = @empty_tag_name if tagName == ""
+          tagName = EMPTY_TAG_NAME if tagName == ""
           # If tag is a mismatched tag.
           if !(tagName =~ /^(\w|_|:)(.*)$/)
             return htmlString
@@ -2156,7 +2161,7 @@ module Watir
           return htmlString
         end
         #tagLine += spaceString
-        outerHtml = all_tag_attributes(element.outerHtml) if tagName != @empty_tag_name
+        outerHtml = all_tag_attributes(element.outerHtml) if tagName != EMPTY_TAG_NAME
         tagLine += "<#{tagName} #{outerHtml}"
         
         canHaveChildren = element.canHaveChildren
@@ -2264,7 +2269,7 @@ module Watir
           gotIt = false
           begin
             curTag = child.tagName
-            curTag = @empty_tag_name if curTag == ""
+            curTag = EMPTY_TAG_NAME if curTag == ""
           rescue
             next
           end

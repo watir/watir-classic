@@ -8,7 +8,7 @@ class TC_New < Test::Unit::TestCase
   include Watir::Process
   
   def ie_process_count
-    count_processes('iexplore.exe')
+    count_processes 'iexplore.exe'
   end
   
   def setup

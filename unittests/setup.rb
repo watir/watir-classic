@@ -1,6 +1,6 @@
 # libraries used by feature tests
 require 'watir'
-END {$ie.close if $ie; Watir::IE.quit} # close ie at completion of the tests
+END {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
 
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
