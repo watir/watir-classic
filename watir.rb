@@ -1,7 +1,8 @@
 =begin
   license
   ---------------------------------------------------------------------------
-  Copyright (c) 2004-2007, Paul Rogers and Bret Pettichord
+  Copyright (c) 2004 - 2005, Paul Rogers and Bret Pettichord
+  Copyright (c) 2006 - 2007, Bret Pettichord
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -43,6 +44,7 @@ require 'watir/exceptions'
 require 'watir/utils'
 require 'watir/close_all'
 require 'watir/waiter'
+require 'watir/ie-process'
 
 require 'dl/import'
 require 'dl/struct'
@@ -1451,6 +1453,7 @@ module Watir
       ie
     end
     
+    # Create an IE browser.
     def initialize suppress_new_window=nil 
       _new_window_init unless suppress_new_window 
     end
@@ -1477,7 +1480,7 @@ module Watir
 
     # Create a new IE window in a new process. Same as IE.new.
     def self.new_process
-      iep = IEProcess.start
+      iep = Process.start
       ie = IE.bind iep.window
       ie.process_id = iep.process_id
       ie
