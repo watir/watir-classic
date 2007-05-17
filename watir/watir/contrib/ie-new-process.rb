@@ -2,25 +2,16 @@
 # and http://rubyforge.org/pipermail/wtr-general/2005-November/004108.html
 
 require 'watir'
+require 'win32-process'
 
 class IEProcess
   def self.start
-    startup_info = [68].pack('lx64')
-    process_info = [0, 0, 0, 0].pack('llll')
-    
+  
     # TODO: make this portable
     startup_command = 'C:\Program Files\Internet Explorer\IEXPLORE.EXE'
-    
-    result = Win32API.new('kernel32.dll', 'CreateProcess', 'pplllllppp', 'l').
-    call(
-         nil, 
-         startup_command, 
-         0, 0, 1, 0, 0, '.', startup_info, process_info)
-    
-    # TODO print the error code, or better yet a text message
-    raise "Failed to start IEXPLORE." if result == 0
-    
-    process_id = process_info.unpack('llll')[2]
+    process_info = Windows::Process.create('app_name' => startup_command)
+    process_id = process_info.process_id
+      
     self.new process_id
   end
   
@@ -38,13 +29,12 @@ class IEProcess
   
   def window
     shell = WIN32OLE.new 'Shell.Application'
-    while true do
+    while true do # repeat until our window appears
       shell.windows.each do |window|
         methods = window.ole_get_methods.extend Enumerable
         next if methods.select{|m| m.name == 'HWND'}.empty?
         process_id = Watir.process_id_from_hwnd window.hwnd        
         
-        # puts "Window Name: #{window.name}, Process ID: #{process_id}"
         return window if process_id == @process_id
         
       end

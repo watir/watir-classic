@@ -1460,6 +1460,12 @@ module Watir
       new
     end
     
+    # Create a new IE window, starting at the specified url.
+    # If no url is given, start empty. Works like IE.start in Watir 1.4.
+    def self.start_window url=nil
+      start url
+    end
+    
     # Return a Watir::IE object for an existing IE window. Window can be
     # referenced by url, title, or window handle.
     # Second argument can be either a string or a regular expression in the 
