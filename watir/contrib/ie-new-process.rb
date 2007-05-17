@@ -12,10 +12,10 @@ class IEProcess
     startup_command = 'C:\Program Files\Internet Explorer\IEXPLORE.EXE'
     
     result = Win32API.new('kernel32.dll', 'CreateProcess', 'pplllllppp', 'l').
-      call(
-           nil, 
-           startup_command, 
-           0, 0, 1, 0, 0, '.', startup_info, process_info)
+    call(
+         nil, 
+         startup_command, 
+         0, 0, 1, 0, 0, '.', startup_info, process_info)
     
     # TODO print the error code, or better yet a text message
     raise "Failed to start IEXPLORE." if result == 0
@@ -28,11 +28,11 @@ class IEProcess
     @process_id = process_id
   end
   attr_reader :process_id
-    
+  
   def stop
     right_to_terminate_process = 1
     handle = Win32API.new('kernel32.dll', 'OpenProcess', 'lil', 'l').
-      call(right_to_terminate_process, 0, @process_id)
+    call(right_to_terminate_process, 0, @process_id)
     Win32API.new('kernel32.dll', 'TerminateProcess', 'll', 'l').call(handle, 0)
   end
   
@@ -43,7 +43,7 @@ class IEProcess
         methods = window.ole_get_methods.extend Enumerable
         next if methods.select{|m| m.name == 'HWND'}.empty?
         process_id = Watir.process_id_from_hwnd window.hwnd        
-
+        
         # puts "Window Name: #{window.name}, Process ID: #{process_id}"
         return window if process_id == @process_id
         
@@ -55,12 +55,12 @@ end
 
 module Watir
   def self.process_id_from_hwnd hwnd
-        pid_info = ' ' * 32
-        Win32API.new("user32", "GetWindowThreadProcessId", 'ip', 'i').
-          call(hwnd, pid_info)
-        process_id =  pid_info.unpack("L")[0]
+    pid_info = ' ' * 32
+    Win32API.new("user32", "GetWindowThreadProcessId", 'ip', 'i').
+    call(hwnd, pid_info)
+    process_id =  pid_info.unpack("L")[0]
   end
-
+  
   def IE.new_process
     iep = IEProcess.start
     ie = IE.bind iep.window
