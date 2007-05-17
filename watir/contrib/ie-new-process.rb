@@ -1,17 +1,16 @@
 # based on http://svn.instiki.org/instiki/trunk/test/watir/e2e.rb
 # and http://rubyforge.org/pipermail/wtr-general/2005-November/004108.html
 
-require 'watir'
-require 'win32-process'
+require 'win32/process'
 
 class IEProcess
   def self.start
-  
+    
     # TODO: make this portable
     startup_command = 'C:\Program Files\Internet Explorer\IEXPLORE.EXE'
-    process_info = Windows::Process.create('app_name' => startup_command)
+    process_info = Process.create('app_name' => startup_command)
     process_id = process_info.process_id
-      
+    
     self.new process_id
   end
   
@@ -51,14 +50,20 @@ module Watir
     process_id =  pid_info.unpack("L")[0]
   end
   
-  def IE.new_process
-    iep = IEProcess.start
-    ie = IE.bind iep.window
-    ie.process_id = iep.process_id
-    ie
-  end
-  
   class IE
+    def self.new_process
+      iep = IEProcess.start
+      ie = IE.bind iep.window
+      ie.process_id = iep.process_id
+      ie
+    end
+    
+    def self.start_process(url=nil)
+      ie = new_process
+      ie.goto url if url
+      ie
+    end
+    
     def process_id
       @process_id ||= Watir.process_id_from_hwnd @ie.hwnd
     end

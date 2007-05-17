@@ -19,11 +19,12 @@ spec = Gem::Specification.new do |s|
     It works with applications written in any language.
     Watir drives the Internet Explorer browser the same way an end user would. 
     It clicks links, fills in forms, presses buttons. 
-    Watir also checks results, such as whether expected text appears on the page, or whether a control is enabled.
+    Watir also checks results, such as whether expected text appears on the 
+    page, or whether a control is enabled.
     Watir can test web applications written in any language. 
     Watir is a Ruby library that works with Internet Explorer on Windows.
   EOF
-  s.author = 'Paul Rogers, Bret Pettichord'
+  s.author = 'Bret Pettichord'
   s.email = 'wtr-general@rubyforge.org'
   s.rubyforge_project = 'Web Testing with Ruby'
   s.homepage = 'http://wtr.rubyforge.org/'
@@ -32,6 +33,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.require_path = '.'    
   s.autorequire = 'watir'
+  s.add_dependency 'win32-process'
 
   s.has_rdoc = true
 
