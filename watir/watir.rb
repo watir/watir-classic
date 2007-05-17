@@ -1455,7 +1455,7 @@ module Watir
     
     # Create an IE browser.
     def initialize suppress_new_window=nil 
-      _new_window_init unless suppress_new_window 
+      _new_process_init unless suppress_new_window 
     end
     
     def _new_window_init
@@ -1467,28 +1467,35 @@ module Watir
     # Create a new IE Window, starting at the specified url.
     # If no url is given, start empty.
     def self.start url=nil
-      start_window url
+      start_process url
     end
     
     # Create a new IE window, starting at the specified url.
     # If no url is given, start empty. Works like IE.start in Watir 1.4.
     def self.start_window url=nil
-      ie = new
+      ie = new_window
       ie.goto url if url
       ie
     end
 
     # Create a new IE window in a new process. Same as IE.new.
     def self.new_process
-      iep = Process.start
-      ie = IE.bind iep.window
-      ie.process_id = iep.process_id
+      ie = new true
+      ie._new_process_init
       ie
+    end
+    
+    def _new_process_init
+      iep = Process.start
+      @ie = iep.window
+      @process_id = iep.process_id
+      set_defaults
+      goto 'about:blank'      
     end
     
     # Create a new IE window in a new process, starting at the specified URL. 
     # Same as IE.start.
-    def self.start_process(url=nil)
+    def self.start_process url=nil
       ie = new_process
       ie.goto url if url
       ie
@@ -1504,7 +1511,7 @@ module Watir
     def self.attach how, what
       ie = new true # don't create window
       ie._attach_init(how, what)
-      return ie
+      ie
     end
     
     # this method is used internally to attach to an existing window

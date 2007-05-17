@@ -22,7 +22,7 @@ module Watir
           shell.windows.each do |window|
             methods = window.ole_get_methods.extend Enumerable
             next if methods.select{|m| m.name == 'HWND'}.empty?
-            process_id = IEProcess.process_id_from_hwnd window.hwnd        
+            process_id = Process.process_id_from_hwnd window.hwnd        
             
             return window if process_id == @process_id
             
