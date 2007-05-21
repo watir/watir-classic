@@ -4,8 +4,8 @@ module Watir
   class IE
     class Process
       def self.start
-        # TODO: make this portable
-        startup_command = 'C:\Program Files\Internet Explorer\IEXPLORE.EXE'
+        program_files = ENV['ProgramFiles'] || "c:\\Program Files"
+        startup_command = "#{program_files}\\Internet Explorer\\iexplore.exe"
         process_info = ::Process.create('app_name' => startup_command)
         process_id = process_info.process_id
         new process_id
