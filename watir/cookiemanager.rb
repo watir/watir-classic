@@ -39,7 +39,7 @@ module Watir
         INTERNET_CACHE = 0x0020
         
         def  WatirHelper.getSpecialFolderLocation(specFolderName)
-            shell = WIN32OLE.new("Shell.Application")
+            shell = WIN32OLE.new('Shell.Application')
             folder = shell.Namespace(specFolderName)
             folderItem = folder.Self
             folderPath = folderItem.Path
