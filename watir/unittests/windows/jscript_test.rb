@@ -11,14 +11,16 @@ $mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
 class TC_JavaScript_Test < Test::Unit::TestCase
   @@javascript_page = $htmlRoot  + 'JavascriptClick.html'
   
-  include Watir::Process  
-
+  def ruby_process_count
+    Watir::Process::count('rubyw.exe')
+  end
+  
   def teardown
-    assert_equal @background_ruby_process_count, count_processes('rubyw.exe')
+    assert_equal @background_ruby_process_count, ruby_process_count
   end
   
   def setup
-    @background_ruby_process_count = count_processes 'rubyw.exe'
+    @background_ruby_process_count = ruby_process_count
     begin
       WindowHelper.check_autoit_installed
     rescue

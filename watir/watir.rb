@@ -1592,7 +1592,7 @@ module Watir
     end
 
     def self._find(how, what)
-      shell = WIN32OLE.new("Shell.Application")
+      shell = WIN32OLE.new('Shell.Application')
       ieTemp = nil
       shell.Windows.each do |window|
       next unless (window.path =~ /Internet Explorer/ rescue false)
