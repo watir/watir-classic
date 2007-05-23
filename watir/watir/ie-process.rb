@@ -17,15 +17,10 @@ module Watir
       attr_reader :process_id
       
       def window
-        shell = WIN32OLE.new 'Shell.Application'
         while true do # repeat search until our window appears
-          shell.windows.each do |window|
-            methods = window.ole_get_methods.extend Enumerable
-            next if methods.select{|m| m.name == 'HWND'}.empty?
+          IE.each do | window |
             process_id = Process.process_id_from_hwnd window.hwnd        
-            
             return window if process_id == @process_id
-            
           end
         end
       end
