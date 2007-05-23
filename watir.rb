@@ -1580,6 +1580,15 @@ module Watir
       @ie.visible = boolean if boolean != @ie.visible
     end
     
+    # Yields successively to each IE window on the current desktop. Takes a block.
+    def self.each
+      shell = WIN32OLE.new('Shell.Application')
+      shell.Windows.each do |window|
+        next unless (window.path =~ /Internet Explorer/ rescue false)
+        yield window
+      end
+    end
+
     # return internet explorer instance as specified. if none is found, 
     # return nil.
     # arguments:
@@ -1592,10 +1601,8 @@ module Watir
     end
 
     def self._find(how, what)
-      shell = WIN32OLE.new('Shell.Application')
       ieTemp = nil
-      shell.Windows.each do |window|
-      next unless (window.path =~ /Internet Explorer/ rescue false)
+      IE.each do |window|
         
         case how
         when :url
