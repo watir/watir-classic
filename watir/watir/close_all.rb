@@ -12,8 +12,7 @@ module Watir
     end
     private
     def self.close_all_but(except=nil)
-      Watir::IE.each do |window|
-        ie = IE.bind window
+      Watir::IE.each do |ie|
         ie.close_modal
         ie.close unless except and except.hwnd == window.hwnd
       end
