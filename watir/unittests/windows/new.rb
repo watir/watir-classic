@@ -26,6 +26,11 @@ class TC_New < Test::Unit::TestCase
     assert_equal @background_iexplore_processes, Watir::IE.process_count
   end
   
+  def test_new_does_not_create_new_process
+    @new = Watir::IE.new
+    assert_equal @background_iexplore_processes, Watir::IE.process_count
+  end
+  
   def test_start_window_with_no_args_works_like_new_window
     @new = Watir::IE.start_window
     assert_equal @background_iexplore_processes, Watir::IE.process_count

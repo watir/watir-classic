@@ -1455,7 +1455,7 @@ module Watir
     
     # Create an IE browser.
     def initialize suppress_new_window=nil 
-      _new_process_init unless suppress_new_window 
+      _new_window_init unless suppress_new_window 
     end
     
     def _new_window_init
@@ -1520,10 +1520,12 @@ module Watir
       set_defaults
       wait
     end
-    
-    def self.bind ie_window
+
+    # Return an IE object that wraps the given window, typically obtained from
+    # Shell.Application.windows.
+    def self.bind window
       ie = new true
-      ie.ie = ie_window
+      ie.ie = window
       ie.set_defaults
       ie
     end
