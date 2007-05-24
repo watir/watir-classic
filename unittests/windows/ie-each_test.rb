@@ -35,6 +35,11 @@ class TC_IE_Each < Test::Unit::TestCase
     assert_equal 2, @hits
   end
   
+  def test_return_type
+    @ie << Watir::IE.new_process
+    Watir::IE.each {|ie| assert_equal(Watir::IE, ie.class)}    
+  end
+  
   include Watir
   def teardown
     @ie.each {|ie| ie.close }

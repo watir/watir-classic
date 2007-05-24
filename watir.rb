@@ -1587,7 +1587,7 @@ module Watir
       shell = WIN32OLE.new('Shell.Application')
       shell.Windows.each do |window|
         next unless (window.path =~ /Internet Explorer/ rescue false)
-        yield window
+        yield IE.bind(window)
       end
     end
 
@@ -1604,7 +1604,8 @@ module Watir
 
     def self._find(how, what)
       ieTemp = nil
-      IE.each do |window|
+      IE.each do |ie|
+        window = ie.ie
         
         case how
         when :url
