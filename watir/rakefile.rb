@@ -13,7 +13,10 @@ Rake::RDocTask.new('rdoc') do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.options += $WATIR_RDOC_OPTIONS
   rdoc.rdoc_files.include('watir.rb')
-  rdoc.rdoc_files.include('readme.rb')  
+  rdoc.rdoc_files.include('readme.rb') 
+  rdoc.rdoc_files.include('changes.rb') 
+  rdoc.rdoc_files.include('license.rb') 
+  
 end
 
 desc 'Rdoc all files including watir/* and the contrib files'
@@ -21,7 +24,9 @@ Rake::RDocTask.new('rdoc_all') do |rdoc_all|
   rdoc_all.rdoc_dir = 'rdoc-all'
   rdoc_all.options += $WATIR_RDOC_OPTIONS
   rdoc_all.rdoc_files.include('watir.rb')
-  rdoc_all.rdoc_files.include('readme.rb')    
+  rdoc_all.rdoc_files.include('readme.rb')
+  rdoc_all.rdoc_files.include('changes.rb')
+  rdoc_all.rdoc_files.include('license.rb')
   rdoc_all.rdoc_files.include('watir/contrib/*.rb')  
   rdoc_all.rdoc_files.include('watir/*.rb')   
   rdoc_all.rdoc_files.exclude('watir/camel_case.rb')

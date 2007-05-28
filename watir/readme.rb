@@ -2,19 +2,23 @@
 
 This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
-To Install:
+To Install Ruby:    http://ruby-lang.org
+   Best is to use Ruby 1.8.2-14 or later.
+   It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
+
+To Install Watir:
    Best way to install is to use the gem.
-   From your command line: "gem install watir"
-   This will download and install watir.
+   From your command line: 
+     > gem install win32-process --include-dependencies
+     > gem install watir
+   This will download and install watir, win32-process and all dependencies.
 
 How To Use:
    This only works on Windows.
-   Best is to use Ruby 1.8.2-14 or later.
-   It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
    Requires Internet Explorer 5.5 or newer.
    Check out the mail lists and the documentation for the workarounds.
-   Install ruby from http://ruby-lang.org
-   Please see our User Guide for more details: http://wtr.rubyforge.org/watir_user_guide.html
+
+User Guide:    http://wiki.openqa.org/display/WTR/User+Guide
 
 Unit Tests:
    Run the unittests in a cmd shell. Go to the dir where you installed it and then type 'ruby unittests/core_tests.rb'.
@@ -49,10 +53,6 @@ Typical Usage
    :index        finds the nth object of the specified type - eg button(:index , 2) finds the second button. This is 1 based. <br>
    :class        used for an object that has a class attribute.
    :text         used for links and other objects that contain text.
-   :beforeText   finds the object immeditaley before the specified text. Doesn't work if the text is in a table cell.
-   :afterText    finds the object immeditaley after the specified text. Doesn't work if the text is in a table cell.
-   :method       ?
-   :action       ?
    :xpath        finds the item using xpath query
 
    * :id and :name are the quickest of these to process, and so should be used when possible to speed up scripts.
@@ -128,6 +128,8 @@ Contributors:
    Charley Baker
    Prema Arya
    Xavier Noria
+   Jeff Fry
+   Zeljko Filipin
 
 Acknowledgements:
    Chris Morris
@@ -141,5 +143,3 @@ Acknowledgements:
    Thanks for your ideas and support!
 
 =end
-class ReadMe
-end
