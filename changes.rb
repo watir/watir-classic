@@ -1,46 +1,72 @@
 =begin rdoc
-
-Changes in 1.5
-    New Feature WTR-84  add the ability to parameterize the number of times an object flashes
-    New Feature WTR-62  Add ability to access a Label by it's text
-    New Feature WTR-53  Methods for visible/hidden
-    New Feature WTR-3   Provide asynchronous click method
-    Improvement WTR-141 check_for_http_error fix for IE7
-    Improvement WTR-132 Performance Improvement - remove late binding for 1.5
-    Improvement WTR-109 Support accessing IFrames by ID
-    Improvement WTR-82  rdoc update and general fixes
-    Improvement WTR-73  Request :class be provided as an alias for :class_name
-    Improvement WTR-69  clearer error message if object passed to E#contains_text is not Regexp or String
-    Improvement WTR-50  radio().checked? isn't there
-    Bug         WTR-143 Rdoc should not include contrib code
-    Bug         WTR-139 Element#ole_object often returns nil
-    Bug         WTR-125 Updates to support IE7
-    Bug         WTR-124 winClicker.rb undefined local variable
-    Bug         WTR-123 ie.exists? doesn't work with IE7
-    Bug         WTR-114 'element_by_xpath' breaks if page has &nbsp;
-    Bug         WTR-112 missing include in watir/contrib/enabled_popup.rb
-    Bug         WTR-111 Release 1.5.1.1100 breaks enabled_popup.rb
-    Bug         WTR-108 file_field.set not working
-    Bug         WTR-107 need a frame recursive wait
-    Bug         WTR-105 bonus_zip rake task silently fails when there is no zip executable available
-    Bug         WTR-102 frame.contains_text missing
-    Bug         WTR-101 Broke send_keys.rb unit test after adding field to textfields1.html
-    Bug         WTR-95  exception thrown when contains_text called for empty ie
-    Bug         WTR-89  Retrieving elements using regular expressions causes errors and IE to crash
-    Bug         WTR-86  The win32ole.so file packaged with Watir will not load with Ruby 1.8.4
-    Bug         WTR-85  Rdoc is not created for "generated" methods
-    Bug         WTR-80  Selecting element by specifying form object does not work
-    Bug         WTR-77  ie.element(:id, 'foo') actually searches by Name
-    Bug         WTR-72  Fix Google Example for non-English users
-    Bug         WTR-68  remove output for FileField#set
-    Bug         WTR-31  minimize/maximize don't work without prior browser navigation
-    Bug         WTR-30  WinClicker problems when ruby/watir installed in program files
-    Bug         WTR-24  Image.save method flaw
-    Bug         WTR-17  Click_no_wait produces an error--'method_missing': busy (WIN32OLERuntimeError)--during execution.
-    Bug         WTR-16  Error when window closes using IE.attach
-    Bug         WTR-13  example/google_maps.rb needs to be updated
-    Bug         WTR-6   click_no_wait only works with IE, not other container objects.
-    See http://jira.openqa.org/browse/WTR for more details on the changes above.   
+Major Changes in 1.5
+    Support for IE's Modal Dialogs. 
+      showModalDialog() 
+    Any method can be used to specify an element (:text, :class, etc.). 
+      ie.button(:class,'Button Menu').click
+      ie.div(:text, 'Type').text_field(:class, 'TextInput-input').set('my value')
+      ie.button(:text, 'Save').click 
+    One can now use multiple attributes to specify an element.
+      ie.span(:class =>'Label', :text => 'Add new').click
+      
+Other Changes in 1.5  
+    * Migrated IE.new_process from watir/contrib and improved its reliability. We now recommend IE.new_process over IE.new as a way to avoid numerous errors detailed in http://jira.openqa.org/browse/WTR-150.
+    * Added IE.start_process. This works like IE.start, but uses the new_process mechanism to start IE.
+    * Added IE.new_window and IE.start_window. This are synonyms for IE.new and IE.start.
+    * Added dependency on the win32-process gem.
+    * Added IE.each, which iterates through the various IE windows currently open.
+    * Updated WindowHelper and watir/dialog to work with IE7
+    * The wait method was completely rewritten. This should fix various errors seen in 1.5.1.1165 and 1.5.1.1158.
+    * Removed the "spinner".
+    * Fixed bug in Element#parent and updated unit test.
+    * HTML value attributes are checked as strings before converting, updated unit tests.
+    * Watir::wait_until clean up.
+    * Fix for winclicker when installed in directory with spaces.
+    * Rdoc changes and updates.
+    * A workaround for frame access errors in the wait command, swallowing access denied errors and rethrowing if other WIN32OLERuntimeErrors show up.
+    * Add support for "li" tag.
+    * Fix for bug in element_by_xpath. http://www.mail-archive.com/wtr-general@rubyforge.org/msg06742.html
+    * "Wait" method now is called recursively into nested frames. http://jira.openqa.org/browse/WTR-107
+    * Rdocs now only include the core Watir library (not contrib).
+    * Improve error reporting when IE#modal_dialog isn't found.
+    * Add method "ModalDialog#exists?"
+    * Add Watir::Win32.window_exists? method.
+    * Fix for winclicker setComboBoxTest and setTextBoxText http://jira.openqa.org/browse/WTR-124
+    * Improved Support for IE7
+        o Fix for IE7 on ie.exists? http://jira.openqa.org/browse/WTR-123
+        o Fix for IE7 with winclicker.
+        o Fix for check_for_http_error in IE7. http://jira.openqa.org/browse/WTR-141
+    *  Fix for IE7 on ie.exists? http://jira.openqa.org/browse/WTR-123
+    * Rubyw is now used in winclicker to bypass command line windows.
+    * Autoit is registered before being used.
+    * Watir now checks for the right version of Ruby before loading our customized Win32ole library.
+    * ie.file_field has been fixed and unit test updated.
+    * rdoc generation has been fixed.
+    * page checker has been moved from the default behavior into contrib/page_checker.rb
+    * Fix for intermittent crashes occuring when using Watir with Ruby version > 1.8.2.
+    * Fix for http://jira.openqa.org/browse/WTR-86
+        This fix prevents the Watir-modified win32ole.so library (compiled against 1.8.2) from being used.
+    * Added Element#parent
+    * Add new methods Element#after? and Element#before?
+    * Added support for relative specifiers. E.g.:
+        link = $ie.link(:class => 'addtocart', :after? => @headline)
+    * Removed NAVIGATION_CHECKER from Watir.rb, added to contrib. This fixes rdoc generation and stops the frame access exception being thrown in the default installation.
+    * Open-code calls to def_creator, for easier debugging and rdoc generation of factory methods.
+    * Winclicker fix for too many callbacks defined error.
+    * Patch for rspec API changes
+    * You can now reference an iframe using IE#frame(:id, 'whatever'). Jira 109
+    * Added 'map' and 'area' element support.
+    * Moved Watir::Assertions into new file watir/assertions.rb so they can be used outside test cases.
+    * Fix and unit test for Jira 114, related to tag in HTML source.
+    * Added SelectList#include? and SelectList#selected?
+    * Added Element#visible?
+    * Fixes all reported bugs with contains_text.
+    * New Watir::TestCase#verify method (and verify_equal and verify_match).
+    * The click_no_wait method now works in frames.
+    * Released new IE.new_process method to 'watir/contrib/ie-new-process'. This starts up a new IE process for each IE window, which is really how it should be done. To close these use IE#kill. Any one getting intermittent RPC errors when opening windows may want to use this instead.
+    * Several examples have been updated.
+    * Moved enabled_popup to a new contrib directory.
+    * Added several tests. 
 
 Changes in 1.4
    fix method name for accessing class name of P/Span/Div (change from style to class_name)
@@ -91,5 +117,3 @@ Changes in 1.3
    bug fixes for images and links in cells
    
 =end
-class Changes
-end

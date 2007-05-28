@@ -234,8 +234,12 @@ module Watir
     #
     
     # this method is the main way of accessing a frame
-    #   *  how   - how the frame is accessed. This can also just be the name of the frame
+    #   *  how   - how the frame is accessed. This can also just be the name of the frame.
     #   *  what  - what we want to access.
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
+    # returns a Frame object
     #
     # Typical usage:
     #
@@ -253,6 +257,10 @@ module Watir
     #  * how    - symbol - What mecahnism we use to find the form, one of 
     #                 the above. NOTE if what is not supplied this parameter is the NAME of the form
     #  * what   - String - the text associated with the symbol
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
+    # returns a Form object
     def form(how, what=nil)
       how, what = process_default :name, how, what
       Form.new(self, how, what)
@@ -264,11 +272,12 @@ module Watir
     # :index can be used when there are multiple tables on a page.
     # :xpath can be used to select table using XPath query.
     # The first form can be accessed with :index 1, the second :index 2, etc.
-    #   * how - symbol - the way we look for the table. Supported values are
-    #                  - :id
-    #                  - :index
-    #                  - :xpath
+    #   * how   - symbol - how we access the table, :index, :id, :xpath etc
     #   * what  - string the thing we are looking for, ex. id, index or xpath query, of the object we are looking for
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
+    # returns a Table object
     def table(how, what=nil)
       Table.new(self, how, what)
     end 
@@ -326,23 +335,12 @@ module Watir
     end
 
     # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
-    #  *  how   - symbol - how we access the button
-    #  *  what  - string, int, re or xpath query, what we are looking for,
+    #  *  how   - symbol - how we access the button, :index, :id, :name etc
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
     # Returns a Button object.
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P)
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :value      - find the item using the value attribute (in this case the button caption text)
-    #    :text       - same as value 
-    #    :caption    - same as value
-    #    :class      - finds the item using the class attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified text
-    #    :xpath      - finds the item using xpath query
     #
     # Typical usage
     #
@@ -353,13 +351,7 @@ module Watir
     #    ie.button(:value, /Log/)                             # access the button that has text matching /Log/
     #    ie.button(:index, 2)                                 # access the second button on the page (1 based, so the first button is accessed with :index,1)
     #    ie.button(:class, 'my_custom_button_class')          # access the button with a class of my_custom_button_class 
-    #    ie.button(:afterText, /Durian/)                      # access the next button after text matching /durian/
     #    ie.button(:xpath, "//input[@value='Click Me']/")     # access the button with a value of Click Me
-    #
-    # Accessing a Button by using multiple attributes
-    #
-    #    ie.button(:class => 'abc', :index => 2)              # access the 2nd button with a class of abc
-    #    ie.button(:name => 'submit', :afterText => 'Hello')  # access the button with a name of submit, which comes after the text 'Hello'. 
     #
     # Accessing a Button nested within another element
     #    ie.div(:class, 'xyz').button(:index, 2)              # access a div of class xyz, and the 2nd button within that div
@@ -388,7 +380,7 @@ module Watir
     #    :id         - find the file field using id attribute
     #    :name       - find the file field using name attribute
     #    :xpath      - find the file field using xpath query
-    #  *  what  - string, int, re or xpath query, what we are looking for,
+    #  *  what  - string, integer, regular expression, or xpath query - what we are looking for,
     #
     # returns a FileField object
     #
@@ -415,19 +407,11 @@ module Watir
     
     # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
     #  *  how   - symbol - how we access the field, :index, :id, :name etc
-    #  *  what  - string, int or re, what we are looking for,
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a TextField object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified texti
-    #    :xpath      - find the item using xpath query
     #
     # Typical Usage
     #
@@ -435,7 +419,6 @@ module Watir
     #    ie.text_field(:name, 'address')                   # access the text field with a name of address
     #    ie.text_field(:index, 2)                          # access the second text field on the page (1 based, so the first field is accessed with :index,1)
     #    ie.text_field(:xpath, "//textarea[@id='user_name']/")    # access the text field with an ID of user_name
-    
     def text_field(how, what=nil)
       TextField.new(self, how, what)
     end
@@ -452,12 +435,11 @@ module Watir
     end
     
     # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
-    #  *  how   - symbol - how we access the field, valid values are
-    #    :index      - find the item using index
-    #    :id         - find the item using id attribute
-    #    :name       - find the item using name attribute
-    #    :xpath      - find the item using xpath query etc
-    #  *  what  - string, int or re, what we are looking for,
+    #
+    #  *  how   - symbol - how we access the hidden field, :index, :id, :name etc
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a Hidden object
     #
@@ -484,19 +466,11 @@ module Watir
     
     # This is the main method for accessing a selection list. Usually a <select> HTML tag.
     #  *  how   - symbol - how we access the selection list, :index, :id, :name etc
-    #  *  what  - string, int or re, what we are looking for,
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a SelectList object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified text
-    #    :xpath      - finds the item using xpath query
     #
     # Typical usage
     #
@@ -522,21 +496,13 @@ module Watir
     
     # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
     #
-    #  *  how   - symbol - how we access the check box, :index, :id, :name etc
-    #  *  what  - string, int or re, what we are looking for,
-    #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
+    #  *  how   - symbol - how we access the check box - :index, :id, :name etc
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #  *  value - string - when there are multiple objects with different value attributes, this can be used to find the correct object
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a CheckBox object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified text
-    #    :xpath      - finds the item that matches xpath query
     #
     # Typical usage
     #
@@ -573,20 +539,12 @@ module Watir
     
     # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
     #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
-    #  *  what  - string, int or regexp, what we are looking for,
+    #  *  what  - string, integer or regular expression - what we are looking for,
     #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
     #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
     # returns a Radio object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified text
-    #    :xpath      - finds the item that matches xpath query
     #
     # Typical usage
     #
@@ -623,23 +581,12 @@ module Watir
     end
     
     # This is the main method for accessing a link.
-    #  *  how   - symbol - how we access the link, :index, :id, :name, :beforetext, :afterText, :title, :text, :url
-    #  *  what  - string, int or re, what we are looking for
+    #  *  how   - symbol - how we access the link, :index, :id, :name, :title, :text, :url
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a Link object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :beforeText - finds the item immediately before the specified text
-    #    :afterText  - finds the item immediately after the specified text
-    #    :url        - finds the link based on the url. This must be the full path to the link, so is best used with a regular expression
-    #    :text       - finds a link using the innerText of the link, ie the Text that is displayed to the user
-    #    :title      - finds the item using the tool tip text
-    #    :xpath      - finds the item that matches xpath query
     #
     # Typical Usage
     #
@@ -648,7 +595,6 @@ module Watir
     #   ie.link(:index,2)                   # access the second link on the page
     #   ie.link(:title, "Picture")         # access a link using the tool tip
     #   ie.link(:text, 'Click Me')          # access the link that has Click Me as its text
-    #   ie.link(:afterText, 'Click->')      # access the link that immediately follows the text Click->
     #   ie.link(:xpath, "//a[contains(.,'Click Me')]/")      # access the link with Click Me as its text
     def link(how, what=nil)
       Link.new(self, how, what)
@@ -667,12 +613,10 @@ module Watir
     end
     
     # This is the main method for accessing li tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
-    #  *  how   - symbol - how we access the li, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
+    #  *  how   - symbol - how we access the li, 
+    #  *  what  - string, integer or regular expression - what we are looking for,
     #
-    #  *  what  - string, integer or re, what we are looking for,
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a li object
     #
@@ -681,8 +625,7 @@ module Watir
     #   ie.li(:id, /list/)                 # access the first li that matches list.
     #   ie.li(:index,2)                    # access the second li on the page
     #   ie.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    
+    #   
     def li(how, what)
       return Li.new(self, how, what)
     end
@@ -703,12 +646,10 @@ module Watir
     
 
     # This is the main method for accessing map tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
-    #  *  how   - symbol - how we access the map, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
+    #  *  how   - symbol - how we access the map,
+    #  *  what  - string, integer or regular expression - what we are looking for,
     #
-    #  *  what  - string, integer or re, what we are looking for,
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a map object
     #
@@ -717,8 +658,7 @@ module Watir
     #   ie.map(:id, /list/)                 # access the first map that matches list.
     #   ie.map(:index,2)                    # access the second map on the page
     #   ie.map(:title, "A Picture")         # access a map using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    
+    #    
     def map(how, what)
       return Map.new(self, how, what)
     end
@@ -738,12 +678,10 @@ module Watir
     end
 
     # This is the main method for accessing area tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/area.asp?frame=true
-    #  *  how   - symbol - how we access the area, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
+    #  *  how   - symbol - how we access the area
+    #  *  what  - string, integer or regular expression - what we are looking for,
     #
-    #  *  what  - string, integer or re, what we are looking for,
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a area object
     #
@@ -752,8 +690,7 @@ module Watir
     #   ie.area(:id, /list/)                 # access the first area that matches list.
     #   ie.area(:index,2)                    # access the second area on the page
     #   ie.area(:title, "A Picture")         # access a area using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    
+    #    
     def area(how, what)
       return Area.new(self, how, what)
     end
@@ -774,20 +711,11 @@ module Watir
     
     # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
     #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
-    #  *  what  - string or regexp - what we are looking for
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns an Image object
-    #
-    # Valid values for 'how' are
-    #
-    #    :index      - find the item using the index in the container (a container can be a document, a TableCell, a Span, a Div or a P
-    #                  index is 1 based
-    #    :name       - find the item using the name attribute
-    #    :id         - find the item using the id attribute
-    #    :alt        - finds the item using the alt text (tool tip)
-    #    :src        - finds the item using the src tag. This must be the fully qualified name, so is best used with a regular expression
-    #    :xpath      - finds the item that matches xpath query
-    #    :title      - finds the item using the title (tool tip)
     #
     # Typical Usage
     #
@@ -820,13 +748,10 @@ module Watir
     end
     
     # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
-    #  *  how   - symbol - how we access the div, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using id attribute
-    #    :title      - finds the item using title attribute
-    #    :xpath      - finds the item that matches xpath query
+    #  *  how   - symbol - how we access the div
+    #  *  what  - string, integer, regular expression or xpath query - what we are looking for,
     #
-    #  *  what  - string, integer, re or xpath query, what we are looking for,
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns an Div object
     #
@@ -854,12 +779,10 @@ module Watir
     end
     
     # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/span.asp?frame=true
-    #  *  how   - symbol - how we access the span, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
+    #  *  how   - symbol - how we access the span, 
+    #  *  what  - string, integer or regular expression - what we are looking for,
     #
-    #  *  what  - string, integer or re, what we are looking for,
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a Span object
     #
@@ -888,11 +811,10 @@ module Watir
     end
     
     # This is the main method for accessing p tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
-    #  *  how   - symbol - how we access the p, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
-    #  *  what  - string, integer or re, what we are looking for,
+    #  *  how   - symbol - how we access the p, 
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a P object
     #
@@ -954,11 +876,10 @@ module Watir
     end
     
     # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
-    #  *  how   - symbol - how we access the label, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :for        - finds the item which has an object associated with it.
-    #  *  what  - string, integer or re, what we are looking for,
+    #  *  how   - symbol - how we access the label,
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
     # returns a Label object
     #

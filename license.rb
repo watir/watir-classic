@@ -35,5 +35,3 @@ License
 
 =end
 
-class License
-end
