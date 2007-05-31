@@ -204,7 +204,7 @@ class TC_Fields < Test::Unit::TestCase
   end
 
   def test_max_length_is_not_exceeded
-    $ie.text_field(:name , 'text1').set("abcdefghijklmnopqrstu")
+    $ie.text_field(:name , 'text1').set("abcdefghijklmnopqrstuv")
     assert_equal("abcdefghijklmnopqrst", $ie.text_field(:name , 'text1').value )
   end
 
