@@ -200,4 +200,14 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("Password With ID ( the text here is a label for it )" , $ie.label(:index,3).innerText)
     assert_equal("password1", $ie.label(:index,3).for)
   end
+
+  def test_max_length_is_not_exceeded
+    $ie.text_field(:name , 'text1').set("abcdefghijklmnopqrstu")
+    assert_equal("abcdefghijklmnopqrst", $ie.text_field(:name , 'text1').value )
+  end
+
+  def test_max_length
+    assert_equal(20, $ie.text_field(:name , 'text1').maxLength )
+
+  end
 end
