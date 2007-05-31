@@ -3977,18 +3977,19 @@ module Watir
         maxLength = @o.maxLength
         if value.length > maxLength
           original_value = value
-          value = original_value[0 .. maxLength ]
+          value = original_value[0 .. maxLength-1 ]
           @container.log " Supplied string is #{original_value.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
         end
-      rescue
+      rescue WIN32OLERuntimeError => e
         # probably a text area - so it doesnt have a max Length
+        raise e unless /unknown property or method .*?maxLength/.match( e.message )
         maxLength = -1
       end
       for i in 0 .. value.length-1
         sleep @container.typingspeed
         c = value[i,1]
-        #@container.log " adding c.chr " + c  #.chr.to_s
-        @o.value = @o.value.to_s + c   #c.chr
+        #@container.log " adding c.chr " + c  
+        @o.value = @o.value.to_s + c   
         @o.fireEvent("onKeyDown")
         @o.fireEvent("onKeyPress")
         @o.fireEvent("onKeyUp")
