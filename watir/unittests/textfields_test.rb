@@ -67,16 +67,18 @@ class TC_Fields < Test::Unit::TestCase
     build_to_s_regex("value", "Hello World"),
     build_to_s_regex("disabled", "false"),
     build_to_s_regex("length", "20"),
-    build_to_s_regex("max length", "2147483647"),
+    build_to_s_regex("max length", "20"),
     build_to_s_regex("read only", "false")
     ]
     items = $ie.text_field(:index, 1).to_s.split(/\n/)
-    expected.each_with_index{|regex, x| assert(regex =~ items[x]) }
+    expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
     expected[1] = build_to_s_regex("id", "text2")
     expected[2] = build_to_s_regex("name", "")
     expected[3] = build_to_s_regex("value", "goodbye all")
+    expected[6] = build_to_s_regex("max length", "2147483647")  
+      
     items = $ie.text_field(:index, 2).to_s.split(/\n/)
-    expected.each_with_index{|regex, x| assert(regex =~ items[x]) }
+    expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
     assert_raises(UnknownObjectException) { $ie.text_field(:index, 999).to_s }  
   end
   
