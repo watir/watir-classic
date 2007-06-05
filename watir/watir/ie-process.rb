@@ -6,7 +6,7 @@ module Watir
       def self.start
         program_files = ENV['ProgramFiles'] || "c:\\Program Files"
         startup_command = "#{program_files}\\Internet Explorer\\iexplore.exe"
-        process_info = ::Process.create('app_name' => startup_command)
+        process_info = ::Process.create('app_name' => "#{startup_command} about:blank")
         process_id = process_info.process_id
         new process_id
       end
