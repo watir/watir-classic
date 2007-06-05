@@ -1,13 +1,15 @@
+require 'watir-rdoc'
+
 $__watir_source_patterns = [
-    'watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 'readme.rb',
+    'watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*', 
-    'unittests/other/*.rb', 'unittests/testcase/*.rb',
+    'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
     'watir/IEDialog/Release/IEDialog.dll', 'watir/win32ole/win32ole.so', 
-    'watir/contrib/*.rb']
+    'watir/contrib/*.rb'] +  
+    $WATIR_EXTRA_RDOC_FILES
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
 require 'watir'
-require 'watir-rdoc'
 
 spec = Gem::Specification.new do |s|
   s.name = 'watir'
@@ -36,9 +38,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'win32-process'
 
   s.has_rdoc = true
-
   s.rdoc_options += $WATIR_RDOC_OPTIONS
-  s.extra_rdoc_files = 'readme.rb'
 
   s.test_file  = 'unittests/core_tests.rb'
 
