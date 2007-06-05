@@ -17,7 +17,7 @@ module Watir
       attr_reader :process_id
       
       def window
-        while true do # TODO: add a timeout
+        Watir::until_with_timeout do
           IE.each do | ie |
             window = ie.ie
             process_id = Process.process_id_from_hwnd window.hwnd        
