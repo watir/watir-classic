@@ -49,7 +49,7 @@ class TC_NewWindow< Watir::TestCase
   
   def test_attach_to_slow_window_works_with_delay
     $ie.span(:text, 'New Window Slowly').click
-    sleep 0.8
+    sleep 1.0
     ie_new = IE.attach(:title, 'Test page for buttons')
     assert(ie_new.text.include?('Blank page to fill in the frames'))
     ie_new.close

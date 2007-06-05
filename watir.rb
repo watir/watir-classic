@@ -1508,6 +1508,7 @@ module Watir
       shell = WIN32OLE.new('Shell.Application')
       shell.Windows.each do |window|
         next unless (window.path =~ /Internet Explorer/ rescue false)
+        next unless (window.hwnd rescue false)
         yield IE.bind(window)
       end
     end
