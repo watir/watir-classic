@@ -1409,9 +1409,8 @@ module Watir
     def _new_process_init
       iep = Process.start
       @ie = iep.window
-      @process_id = iep.process_id
       set_defaults
-      goto 'about:blank'      
+      @process_id = iep.process_id
     end
     
     # Create a new IE window in a new process, starting at the specified URL. 
@@ -1457,10 +1456,10 @@ module Watir
     private :create_browser_window
     
     def set_defaults
+      self.visible = ! $HIDE_IE
       @ole_object = nil
       @page_container = self
       @error_checkers = []
-      self.visible = ! $HIDE_IE
       @activeObjectHighLightColor = HIGHLIGHT_COLOR
 
       if $FAST_SPEED
