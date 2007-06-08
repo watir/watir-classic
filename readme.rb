@@ -4,7 +4,8 @@ This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
 To Install Ruby:    http://ruby-lang.org
    Best is to use Ruby 1.8.2-14 or later.
-   It will NOT work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
+   However, if you are using the Watir::IE#modal_dialog method, you must use Ruby 1.8.2-14 and not a more recent version.
+   Watir (in general) will not work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
 
 To Install Watir:
    Best way to install is to use the gem.
