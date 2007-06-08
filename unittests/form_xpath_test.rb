@@ -90,16 +90,12 @@ class TC_Forms3 < Test::Unit::TestCase
     # also verify it works under a form
     $ie.text_field(:id, "t1").set("reset test - using a form")
     assert_equal($ie.text_field(:id, 't1').value, 'reset test - using a form')
-    
-    
+        
     # also verify it works under a form, this time using the :id attribute
     $ie.text_field(:id, "t1").set("reset test - using a form")
-    assert_equal($ie.text_field(:id, 't1').value, 'reset test - using a form')
-    
+    assert_equal($ie.text_field(:id, 't1').value, 'reset test - using a form')    
   end
-  
-  
-  
+    
   def test_flash1
     $ie.form(:xpath , "//form[@name='test2']/").button(:caption , "Submit").flash
   end 

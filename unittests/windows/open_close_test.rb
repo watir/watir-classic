@@ -14,7 +14,7 @@ class ZZ_OpenClose < Test::Unit::TestCase
     define_method "test_#{i}" do
       sleep 0.05
       sleep i * 0.01
-      ie = Watir::IE.new
+      ie = Watir::IE.new_process
       ie.goto 'http://blogs.dovetailsoftware.com/blogs/gsherman/default.aspx'
       ie.close
     end

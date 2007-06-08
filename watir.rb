@@ -1503,12 +1503,15 @@ module Watir
     end
     
     # Yields successively to each IE window on the current desktop. Takes a block.
+    # Yields to the window and its hwnd.
     def self.each
       shell = WIN32OLE.new('Shell.Application')
       shell.Windows.each do |window|
         next unless (window.path =~ /Internet Explorer/ rescue false)
-        next unless (window.hwnd rescue false)
-        yield IE.bind(window)
+        next unless (hwnd = window.hwnd rescue false)
+        ie = IE.bind(window)
+        ie.hwnd = hwnd
+        yield ie
       end
     end
 
@@ -1572,6 +1575,7 @@ module Watir
       raise "Not attached to a browser" if @ie.nil? 
       @hwnd ||= @ie.hwnd
     end
+    attr_writer :hwnd
     
     include Watir::Win32
 

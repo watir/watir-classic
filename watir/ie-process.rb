@@ -20,7 +20,8 @@ module Watir
         Watir::until_with_timeout do
           IE.each do | ie |
             window = ie.ie
-            process_id = Process.process_id_from_hwnd window.hwnd        
+            hwnd = ie.hwnd
+            process_id = Process.process_id_from_hwnd hwnd        
             return window if process_id == @process_id
           end
         end
