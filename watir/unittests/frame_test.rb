@@ -68,6 +68,11 @@ class TC_Frames2 < Test::Unit::TestCase
     assert_raises(UnknownFrameException) { $ie.frame(:id , "missingFrame").button(:id, "b2").enabled?  }  
     assert($ie.frame(:id, 'first_frame').button(:id, "b2").enabled?)
   end
+  
+  def test_frame_by_src
+    assert($ie.frame(:src, /pass/).button(:value, 'Close Window').exists?)
+  end
+  
 end
 
 class TC_NestedFrames < Test::Unit::TestCase
@@ -84,6 +89,7 @@ class TC_NestedFrames < Test::Unit::TestCase
     $ie.frame("nestedFrame").frame("senderFrame").text_field(:index, "1").set("Hello")
     $ie.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").click
     assert($ie.frame("nestedFrame").frame("receiverFrame").text_field(:name, "receiverText").verify_contains("Hello"))   
+    
   end
   
 end
@@ -99,6 +105,7 @@ class TC_IFrames < Test::Unit::TestCase
     $ie.frame("senderFrame").text_field(:name , "textToSend").set( "Hello World")
     $ie.frame("senderFrame").button(:index, 1).click
     assert( $ie.frame("receiverFrame").text_field(:name , "receiverText").verify_contains("Hello World") )
+    assert_equal($ie.frame(:src, /iframeTest2/).text_field(:name, 'receiverText').value, "Hello World")    
   end
 
   #VALIDATE THAT WE CAN GET THERE VIA id  
