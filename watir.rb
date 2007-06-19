@@ -1147,6 +1147,11 @@ module Watir
       page.outerhtml
     end
     
+    # The url of the page object. 
+    def url
+      page.document.location.href
+    end
+    
     # The text of the current page
     def text
       page.innertext.strip
@@ -2633,6 +2638,11 @@ module Watir
           return this_frame if this_frame_tag and what.matches(this_frame_tag.invoke("id"))
           this_iframe_tag = @container.document.getElementsByTagName("IFRAME").item(i)
           return this_frame if this_iframe_tag and what.matches(this_iframe_tag.invoke("id"))
+        when :src
+          this_frame_tag = @container.document.getElementsByTagName("FRAME").item(i)
+          return this_frame if this_frame_tag and what.matches(this_frame_tag.src)
+          this_iframe_tag = @container.document.getElementsByTagName("IFRAME").item(i) 
+          return this_frame if this_iframe_tag and what.matches(this_iframe_tag.src)
         else
           raise ArgumentError, "Argument #{how} not supported"
         end
