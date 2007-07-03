@@ -1,0 +1,52 @@
+---
+title: Overview
+inMenu: true
+orderInfo: 0
+directoryName: Project XXX
+---
+h2. Overview
+
+WATIR stands for "Web Application Testing in Ruby". 
+Watir is a free, open-source functional testing tool for automating 
+browser-based tests of web applications. It is pronounced _water._
+
+Watir drives browsers the same way people do. 
+It clicks links, fills in forms, presses buttons. Watir also checks results, 
+such as whether expected text appears on the page.
+
+Watir is a Ruby library that works with Internet Explorer on Windows. 
+Like other general-purpose programming languages, Ruby gives you the power to 
+connect to databases, read data files, export XML and structure your 
+code into reusable libraries.
+
+h2. Quotes
+
+"Watir Rocks! Truly awesome!!" -- Shashank Date
+
+"Watir is the most compelling alternative [to Fit] for filling
+the automated acceptance testing need." -- Ward Cunningham
+
+"I have limited scripting experience and none with Ruby,
+but I was able to follow your examples and be productive in short order." -- Kevin Sheehy
+
+"I've been trying to find the Holy Grail of Automated Web UI Testing...
+And the one I'm currently enamored with is Watir. -- Scott Hanselman
+
+"I wanted to run around my office dancing and celebrating." -- Beth Ferguson 
+
+h2. Why Watir?
+
+* It's a free "Open Source":http://www.opensource.org/docs/definition.php tool. 
+  There are no costs to use the tool.
+* There's a very active and growing community behind it.
+* It uses "Ruby":http://www.ruby-lang.org, a full-featured object-oriented 
+  scripting language, rather than a "proprietary vendorscript":http://www.stickyminds.com/sitewide.asp?ObjectId=2326&ObjectType=COL&Function=edetail.
+* Watir is powerful and easy to use.
+* Don't just take our word for it, "read what our users are saying.":http://wiki.openqa.org/display/WTR/Testimonials
+
+h2. Getting Started
+
+# Install Ruby: Use the Ruby "One-Click Installer for Windows.":http://rubyforge.org/frs/?group_id=167
+# Install Watir: At a command prompt, type "gem install watir --include dependencies".
+# Read the "User's Guide,":http://wtr.rubyforge.org/watir_user_guide.html documentation, examples and tests. Figure out your test case, start typing your script, and run it!
+
