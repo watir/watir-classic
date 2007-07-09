@@ -1,0 +1,35 @@
+---
+title: Install
+inMenu: true
+orderInfo: 30
+---
+h2. Install Ruby
+
+First you need to "install Ruby":http://rubyforge.org/frs/?group_id=167 using
+the one-click installer for Windows.
+*We recommend Ruby 1.8.2-14 or later.*
+
+However, if you wish to use Watir's support for the *IE web modal dialog*
+then you "must use Ruby 1.8.2-14":http://wiki.openqa.org/display/WTR/Installation
+and not a more recent version. This dialog is
+posted with the showModalDialog() JavaScript command and is supported with Watir's
+ie.modal_dialog command.
+
+h2. Install Watir 1.4
+
+Watir is packaged as a _gem_, a Ruby library that can be installed over the internet.
+
+Watir 1.4 is a stable version. To install it, simply type this at a command prompt:
+
+<pre>
+gem install watir
+</pre>
+
+h2. Install Watir 1.5
+
+Watir 1.5 is under development. It is also pretty stable but is not 
+documented as well as Watir 1.4.
+
+* "Installing the latest development gem":http://wiki.openqa.org/display/WTR/Installation
+* "Other development gems available":http://wiki.openqa.org/display/WTR/Development+Builds
+* "Upgrading from Watir 1.4":http://wiki.openqa.org/display/WTR/Development+Builds

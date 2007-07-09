@@ -1,23 +1,38 @@
 ---
 title: Overview
 inMenu: true
-orderInfo: 0
-directoryName: Project XXX
+orderInfo: 10
 ---
-h2. Overview
+h2. Automated testing that doesn't hurt
 
-WATIR stands for "Web Application Testing in Ruby". 
-Watir is a free, open-source functional testing tool for automating 
-browser-based tests of web applications. It is pronounced _water._
+Watir is a simple open-source library for automating web browsers. It allows you to write
+tests that are easy to read and easy to maintain. It is optimized for 
+simplicity and flexibility.
 
 Watir drives browsers the same way people do. 
 It clicks links, fills in forms, presses buttons. Watir also checks results, 
 such as whether expected text appears on the page.
 
-Watir is a Ruby library that works with Internet Explorer on Windows. 
-Like other general-purpose programming languages, Ruby gives you the power to 
+Watir is a Ruby library that works with Internet Explorer on Windows. Watir is
+currently being ported to support "Firefox and Safari":platforms.html.
+
+Like other programming languages, Ruby gives you the power to 
 connect to databases, read data files, export XML and structure your 
-code into reusable libraries.
+code into reusable libraries. Unlike other programing languages, Ruby 
+is concise and often a joy to read.
+
+Watir stands for "Web Application Testing in Ruby". 
+It is pronounced _water._
+
+h2. Why Watir?
+
+* It's a free "Open Source":http://www.opensource.org/docs/definition.php tool. 
+  There are no costs to use the tool.
+* There's a very active and growing "community":community.html behind it.
+* It uses "Ruby":http://www.ruby-lang.org, a full-featured modern 
+  scripting language, rather than a "proprietary vendorscript":http://www.stickyminds.com/sitewide.asp?ObjectId=2326&ObjectType=COL&Function=edetail.
+* It is powerful and easy to use.
+* Don't just take our word for it, "read what our users are saying.":http://wiki.openqa.org/display/WTR/Testimonials
 
 h2. Quotes
 
@@ -34,19 +49,5 @@ And the one I'm currently enamored with is Watir. -- Scott Hanselman
 
 "I wanted to run around my office dancing and celebrating." -- Beth Ferguson 
 
-h2. Why Watir?
-
-* It's a free "Open Source":http://www.opensource.org/docs/definition.php tool. 
-  There are no costs to use the tool.
-* There's a very active and growing community behind it.
-* It uses "Ruby":http://www.ruby-lang.org, a full-featured object-oriented 
-  scripting language, rather than a "proprietary vendorscript":http://www.stickyminds.com/sitewide.asp?ObjectId=2326&ObjectType=COL&Function=edetail.
-* Watir is powerful and easy to use.
-* Don't just take our word for it, "read what our users are saying.":http://wiki.openqa.org/display/WTR/Testimonials
-
-h2. Getting Started
-
-# Install Ruby: Use the Ruby "One-Click Installer for Windows.":http://rubyforge.org/frs/?group_id=167
-# Install Watir: At a command prompt, type "gem install watir --include dependencies".
-# Read the "User's Guide,":http://wtr.rubyforge.org/watir_user_guide.html documentation, examples and tests. Figure out your test case, start typing your script, and run it!
+"*Install Watir Now*":install.html
 
