@@ -4,3 +4,23 @@ inMenu: true
 orderInfo: 50
 ---
 h2. Supported Platforms
+
+Watir - IE & Windows
+SafariWatir - Mac & Safari
+FireWatir - Firefox on Windows, Mac or Linux
+
+
+Firewatir
+Safari Watir
+(Selenium Spike)
+
+"Alternative Tools"
+
+Some people like the Watir interface, but prefer to write tests in Java or C# instead of Ruby (go figure).
+
+Watij - Java
+WatiN - .Net
+BrowserUnit
+
+Selenium & Watir
+Sahi and Selenium & Watir

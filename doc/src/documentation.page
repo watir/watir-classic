@@ -3,4 +3,18 @@ title: Documentation
 inMenu: true
 orderInfo: 40
 ---
-# Read the "User's Guide,":http://wtr.rubyforge.org/watir_user_guide.html documentation, examples and tests. Figure out your test case, start typing your script, and run it!
+
+1.4 API Doc (rdoc)
+1.4 Users Guide
+
+# Read the "User's Guide,":http://wtr.rubyforge.org/watir_user_guide.html 
+documentation, examples and tests. Figure out your test case, start typing your script, and run it!
+
+TODO: 1.5 API doc
+
+1.5 Users Guide
+
+Watir Articles
+FAQ
+
+1.5 Methods supported (wiki)
