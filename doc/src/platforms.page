@@ -3,24 +3,27 @@ title: Platforms
 inMenu: true
 orderInfo: 50
 ---
-h2. Supported Platforms
+h2. Internet Explorer and Windows
 
-Watir - IE & Windows
-SafariWatir - Mac & Safari
-FireWatir - Firefox on Windows, Mac or Linux
+This version of Watir works with Internet Explorer and Windows. It works with
+IE 5.5, 6 and 7 and Windows 2000, XP, 2003 Server and Vista.
 
+Support for other platforms is currently provided by separate ports. We have 
+plans to eventually roll these various versions of Watir into a single package.
 
-Firewatir
-Safari Watir
-(Selenium Spike)
+h2. Firefox
 
-"Alternative Tools"
+"FireWatir":http://wiki.openqa.org/display/WTR/FireWatir+-+WATiR+for+FireFox 
+is the Watir port for Firefox. It works on Windows, Linux and Mac
 
-Some people like the Watir interface, but prefer to write tests in Java or C# instead of Ruby (go figure).
+h2. Safari and MacOS
 
-Watij - Java
-WatiN - .Net
-BrowserUnit
+"SafariWatir":http://safariwatir.rubyforge.org/ is a Watir port for Safari on the Mac.
 
-Selenium & Watir
-Sahi and Selenium & Watir
+h2. Other Browsers
+
+Selenium is a popular open-source testing tool that supports most browsers,
+including Opera, Camino and Konqueror. The Selenium-RC library includes Ruby 
+support. We have demonstrated "a Watir interface that 
+uses Selenium":http://awta.wikispaces.com/Common+Driver+for+Selenium+and+Watir
+to drive a browser, and expect to eventually grow this into a full-blown port.
