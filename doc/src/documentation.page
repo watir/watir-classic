@@ -4,17 +4,24 @@ inMenu: true
 orderInfo: 40
 ---
 
-1.4 API Doc (rdoc)
-1.4 Users Guide
+h2. Watir 1.5
 
-# Read the "User's Guide,":http://wtr.rubyforge.org/watir_user_guide.html 
-documentation, examples and tests. Figure out your test case, start typing your script, and run it!
+The "Users Guide" provides an introduction to using Watir. The Watir Rdoc ...
+
+
+The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently asked questions.
+
+h2. Watir 1.4
+
+* The old "Users Guide":http://wtr.rubyforge.org/watir_user_guide.html still
+  has useful information in it.
+* "Technical Documentation":http://wtr.rubyforge.org/rdoc/index.html (rdoc)
+* Several "Articles":http://wiki.openqa.org/display/WTR/Articles describe other aspects of Watir.
 
 TODO: 1.5 API doc
 
 1.5 Users Guide
 
 Watir Articles
-FAQ
 
 1.5 Methods supported (wiki)
