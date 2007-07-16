@@ -6,22 +6,26 @@ orderInfo: 40
 
 h2. Watir 1.5
 
-The "Users Guide" provides an introduction to using Watir. The Watir Rdoc ...
+The "Users Guide":http://wiki.openqa.org/display/WTR/User+Guide provides an 
+introduction to using Watir. 
 
+The Watir Elements matrix provides an overview of the API.
 
-The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently asked questions.
+Like other Ruby gems, Watir's API is documented with _rdoc._ To view the *Watir rdoc:* 
+# Go to the Start menu, and select Ruby -> RubyGems -> Start RubyGems Rdoc Server. 
+# Select Ruby -> RubyGems -> View Installed Gems Rdoc. 
+# Select the Watir rdoc in the list that appears.
+
+The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently 
+asked questions.
+
+* Several "Articles":http://wiki.openqa.org/display/WTR/Articles describe other aspects of Watir.
 
 h2. Watir 1.4
 
-* The old "Users Guide":http://wtr.rubyforge.org/watir_user_guide.html still
-  has useful information in it.
-* "Technical Documentation":http://wtr.rubyforge.org/rdoc/index.html (rdoc)
-* Several "Articles":http://wiki.openqa.org/display/WTR/Articles describe other aspects of Watir.
+The old "Users Guide":http://wtr.rubyforge.org/watir_user_guide.html still has 
+useful information in it for Watir 1.5 users.
 
-TODO: 1.5 API doc
-
-1.5 Users Guide
-
-Watir Articles
+The old "Rdoc":http://wtr.rubyforge.org/rdoc/index.html is online and easy to browse.
 
 1.5 Methods supported (wiki)

@@ -5,15 +5,14 @@ orderInfo: 20
 ---
 h2. Examples
 
-The most popular request is how to automate a "search on Google":example_testcase.html. 
-This example is quite detailed.
+View this detailed example of how to automate a "search on Google":example_testcase.html. 
 
 Several simple examples are provided in the 
-"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file.
+"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file, in the
+"examples" folder. The Watir unit tests are also good examples. These are
+contained in the
+"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file, in the
+"unittests" folder.
 
-Many people also find the Watir unit tests to be helpful examples. These are
-also contained in the
-"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file.
-
-For more complex examples, see these Watir-based "test suites for open
+For more extensive examples, see these "test suites for open
 source projects":http://wiki.openqa.org/display/WTR/Example+Test+Suites.

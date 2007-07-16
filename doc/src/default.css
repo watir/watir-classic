@@ -14,7 +14,7 @@ li
 {margin:0 0 8px 25px;}
 
 a
-{color:#d85d5d; font-weight:bold; text-decoration:none;}
+{color:#215997; font-weight:bold; text-decoration:none;}
 
 a:hover
 {color:#505050; text-decoration:underline;}
@@ -23,10 +23,10 @@ img
 {float:left; margin:0 15px 15px 0; padding:1px; background:#ffffff; border:1px solid #d0d0d0;}
 
 a img
-{border-color:#d85d5d;}
+{border-color:#215997;}
 
 a img:hover
-{background:#d85d5d; border-color:#d85d5d;}
+{background:#215997; border-color:##215997;}
 
 /**************** Sidebar area styles ****************/
 
@@ -36,8 +36,11 @@ a img:hover
 body > #sidebar
 {position:fixed;}
 
+#sidebar img
+{float: right; margin:0 0 15px 0; border:0 0 2px 0;}
+
 #sidebar h1
-{margin:20px 18px 0 5px; color:#d85d5d; font-size:1.6em; letter-spacing:-2px; text-align:right;}
+{margin:20px 18px 0 5px; color:#191970; font-size:1.6em; letter-spacing:-2px; text-align:right;}
 
 #sidebar h2, #sidebar h3
 {margin:0 20px 18px 5px; color:#808080; font-size:1.1em; font-weight:bold; letter-spacing:-1px; text-align:right;}
@@ -89,4 +92,7 @@ body > #sidebar
 {margin:0; color:#808080; font-weight:normal; font-size:2.5em; letter-spacing:-2px; text-align:center;}
 
 #content h2
-{clear:both; margin:30px 0 10px 0; color:#d85d5d; font-weight:normal; font-size: 2em; letter-spacing:-2px;}
+{clear:both; margin:30px 0 10px 0; color:#215997; font-weight:normal; font-size: 2em; letter-spacing:-2px;}
+
+#content p.credits
+{font-size:0.8em; text-align:center;}
