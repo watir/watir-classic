@@ -3,26 +3,29 @@ title: Community
 inMenu: true
 orderInfo: 60
 ---
-h2. Community
+h2. Mailing Lists
 
-List of Watir Users
-Quotes
+"Watir general":http://groups.google.com/group/watir-general 
+is a Google group for anyone using Watir for testing. You also may want to read
+the "archives":http://rubyforge.org/mailman/listinfo/wtr-general of the list 
+when it was hosted at Rubyforge.
 
-h3. Core team
-  Bret Pettichord
-  Paul Rogers
-  Jonathan Kohl
-  Angrez Singh
-  Charley Baker
-  Zeljko Filipin
-  Jeff Fry
+h2. Wiki
 
-List of Contributors
-Wiki
-Mailing Lists & User Forums
-How to Contribute
-How to submit a Bug report or Request for Enhancement
-Rubyforge
-OpenQA
+The "Watir Wiki":http://wiki.openqa.org/display/WTR/Project+Home 
+hosts a growing collection of documentation and "contributions.":http://wiki.openqa.org/display/WTR/Contributions
 
-See also "WATIR COMMUNITY" on wiki home page.
+h2. Users
+
+People "all over the world":http://wiki.openqa.org/display/WTR/Watir+Users are using Watir and "loving it.":http://wiki.openqa.org/display/WTR/Testimonials
+
+h2. Core team
+
+Watir is the creation of a core team of people committed to making testing easier for others.
+
+* "Bret Pettichord":http://www.pettichord.com
+* "Paul Rogers":http://members.shaw.ca/paul_rogers/index.html
+* "Jonathan Kohl":http://www.kohl.ca/
+* "Angrez Singh":http://angrez.blogspot.com/
+* "Charley Baker":http://charleybakersblog.blogspot.com/
+* "Zeljko Filipin":http://zeljkofilipin.com/
