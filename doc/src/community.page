@@ -6,7 +6,17 @@ orderInfo: 60
 h2. Mailing Lists
 
 "Watir general":http://groups.google.com/group/watir-general 
-is a Google group for anyone using Watir for testing. You also may want to read
+is a Google group for anyone using Watir for testing. You can subscribe right here.
+<table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>
+  <form action="http://groups.google.com/group/watir-general/boxsubscribe">
+  <tr><td style="padding-left: 5px;">
+    Email: <input type=text name=email>
+           <input type=submit name="sub" value="Subscribe">
+  </td></tr>
+</form>
+</table>
+
+You also may want to search
 the "archives":http://rubyforge.org/mailman/listinfo/wtr-general of the list 
 when it was hosted at Rubyforge.
 
