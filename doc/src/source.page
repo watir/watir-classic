@@ -8,9 +8,9 @@ h2. Source
 The Watir source code is hosted in an Subversion repository on OpenQA. 
 You can "browse the code,":http://svn.openqa.org/fisheye/browse/watir/trunk/watir
 or you can check out the source from 
-<pre>
-https://svn.openqa.org/svn/watir/trunk/watir
-</pre>
+
+bq. 
+"https://svn.openqa.org/svn/watir/trunk/watir":https://svn.openqa.org/svn/watir/trunk/watir
 
 You can check out this code anonymously, or using your OpenQA username and password
 if you are a committer.
