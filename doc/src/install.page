@@ -30,6 +30,11 @@ h2. Install Watir 1.4
 
 Watir 1.4 is a stable version. To install it, simply type this at a command prompt:
 
-<pre>
-gem install watir
-</pre>
+  gem install watir
+
+h2. Install the IE Developer Toolbar
+
+We strongly recommend using the DOM Explorer, packaged with the 
+"IE Developer Toolbar.":http://www.microsoft.com/downloads/details.aspx?familyid=e59c3964-672d-4511-bb3e-2d5e1db91038&displaylang=en
+This quickly shows you the attributes and other properties of the elements you 
+need to know to automate them with Watir.
