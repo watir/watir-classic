@@ -14,7 +14,7 @@ plans to eventually roll together the following Watir ports into a single packag
 h2. Firefox
 
 "FireWatir":http://wiki.openqa.org/display/WTR/FireWatir+-+WATiR+for+FireFox 
-is the Watir port for Firefox. It works on Windows, Linux and Mac
+is the Watir port for Firefox. It works on Windows, Linux and Mac.
 
 h2. Safari and MacOS
 
