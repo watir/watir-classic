@@ -13,7 +13,7 @@
     <!--[if IE 6]>
         <link rel="stylesheet" href="{relocatable: browserfix.css}" type="text/css" />
         <![endif]-->
-    <title>{title:}</title>
+    <title>Watir - {title:}</title>
   <script language="JavaScript">
 function doSearch() {
   form = document.getElementById("search");
