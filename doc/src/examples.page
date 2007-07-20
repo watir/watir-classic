@@ -7,12 +7,13 @@ h2. Examples
 
 View this detailed example of how to automate a "search on Google":example_testcase.html. 
 
-Several simple examples are provided in the 
-"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file, in the
-"examples" folder. The Watir unit tests are also good examples. These are
-contained in the
-"bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds file, in the
-"unittests" folder.
+Here are several simple "examples":https://svn.openqa.org/svn/watir/trunk/watir/examples/. 
+Many people also find our 
+"unit tests":https://svn.openqa.org/svn/watir/trunk/watir/unittests/
+to be
+useful examples of the different Watir commands. These files are also conveniently
+packaged in a "bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds
+that you can download.
 
 For more extensive examples, see these "test suites for open
 source projects":http://wiki.openqa.org/display/WTR/Example+Test+Suites.
