@@ -16,7 +16,7 @@ h2. Firefox
 "FireWatir":http://code.google.com/p/firewatir
 is the Watir port for Firefox. It works on Windows, Linux and Mac.
 
-h2. Safari and MacOS
+h2. Safari and OSX
 
 "SafariWatir":http://safariwatir.rubyforge.org/ is a Watir port for Safari on the Mac.
 
