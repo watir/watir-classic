@@ -35,7 +35,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.require_path = '.'    
   s.autorequire = 'watir'
-  s.add_dependency 'win32-process'
+  s.add_dependency("win32-process", ">= 0.5.2")
 
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
