@@ -7,7 +7,7 @@ module Watir
       # Use handle of our parent window to see if we have any currently
       # enabled popup.
       hwnd_modal = 0
-      Watir::until_with_timeout(timeout) do
+      Waiter.wait_until(timeout) do
         hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP)
         hwnd_modal > 0
       end
