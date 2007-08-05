@@ -1395,7 +1395,7 @@ module Watir
     # Create a new IE Window, starting at the specified url.
     # If no url is given, start empty.
     def self.start url=nil
-      start_process url
+      start_window url
     end
     
     # Create a new IE window, starting at the specified url.
