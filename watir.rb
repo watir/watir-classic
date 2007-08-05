@@ -98,10 +98,9 @@ module Watir
 
   ATTACHER = Waiter.new
   # Like regular Ruby "until", except that a TimeOutException is raised
-  # if the timeout is exceeded. Default timeout is IE.attach_timeout.
-  def self.until_with_timeout(timeout=nil) # block
-    timeout ||= IE.attach_timeout
-    ATTACHER.timeout = timeout
+  # if the timeout is exceeded. Timeout is IE.attach_timeout.
+  def self.until_with_timeout # block
+    ATTACHER.timeout = IE.attach_timeout
     ATTACHER.wait_until { yield }
   end
   
@@ -1322,7 +1321,10 @@ module Watir
     end
     
     # Maximum number of seconds to wait when attaching to a window
-    @@attach_timeout = 2.0
+    def self.reset_attach_timeout
+      @@attach_timeout = 2.0
+    end
+    reset_attach_timeout
     def self.attach_timeout
       @@attach_timeout
     end

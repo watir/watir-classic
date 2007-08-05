@@ -11,7 +11,7 @@ class TC_ExistingWindow< Test::Unit::TestCase
     $ie.goto($htmlRoot + 'buttons1.html')
   end
   def teardown
-    IE.attach_timeout = 2.0
+    IE.reset_attach_timeout
   end
 
   def test_find_window

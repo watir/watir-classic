@@ -27,7 +27,7 @@ class TC_ModalDialog < Watir::TestCase
         $ie.modal_dialog
       end
     ensure
-      IE.attach_timeout = 2.0
+      IE.reset_attach_timeout
     end
   end 
      
