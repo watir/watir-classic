@@ -1,0 +1,1 @@
+exec 'irb.bat -r irb/completion -r watir/irb-history -r watir --simple-prompt'
