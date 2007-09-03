@@ -13,7 +13,7 @@ require 'watir'
 
 spec = Gem::Specification.new do |s|
   s.name = 'watir'
-  s.version = Watir::IE::VERSION
+  s.version = Watir::IE::VERSION_SHORT
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
     WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free, 
