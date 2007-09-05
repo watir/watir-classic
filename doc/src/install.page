@@ -15,22 +15,18 @@ and not a more recent version. (This dialog is the one that is
 posted with the showModalDialog() JavaScript command and is supported with Watir's
 ie.modal_dialog command.)
 
-h2. Install Watir 1.5
+h2. Install Watir
 
 Watir is packaged as a _gem_, a Ruby library that can be installed over the internet.
 
-Watir 1.5 is under development. It is pretty stable but is not 
-documented as well as Watir 1.4.
-
-* "Installing the latest development gem":http://wiki.openqa.org/display/WTR/Install+Watir
-* "Other development gems available":http://wiki.openqa.org/display/WTR/Development+Builds
-* "Upgrading from Watir 1.4":http://wiki.openqa.org/display/WTR/Development+Builds
-
-h2. Install Watir 1.4
-
-Watir 1.4 is a stable version. To install it, simply type this at a command prompt:
+Watir 1.5 was released in September 2007. To install it, type this at a command 
+prompt:
 
   gem install watir
+
+Watir 1.4 was released in August 2005. If you are upgrading from it, see these notes.
+
+* "Upgrading from Watir 1.4":http://wiki.openqa.org/display/WTR/Development+Builds
 
 h2. Install the IE Developer Toolbar
 

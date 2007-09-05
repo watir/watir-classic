@@ -12,11 +12,9 @@ provides a handy reference.
 
 View this  
 "succinct summary of the Watir API":http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-and the provided methods and attributes. For more detailed API documentionation, refer to Watir's _rdoc_ 
--- the standard format for documenting Ruby gems. To view the *Watir rdoc:* 
-# Go to the Start menu, and select Ruby -> RubyGems -> Start RubyGems Rdoc Server. 
-# Select Ruby -> RubyGems -> View Installed Gems Rdoc. 
-# Select the Watir rdoc in the list that appears.
+and the provided methods and attributes. You can also review the 
+"rdoc":http://wtr.rubyforge.org/rdoc/index.html -- 
+detailed API documentation in Ruby's standard format.
 
 The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently 
 asked questions.
@@ -27,5 +25,3 @@ h2. Watir 1.4
 
 The "old users guide":http://wtr.rubyforge.org/watir_user_guide.html
 provides a broad, comprehensive introduction, but is out of date in places.
-
-The "old rdoc":http://wtr.rubyforge.org/rdoc/index.html is online and easy to browse.
