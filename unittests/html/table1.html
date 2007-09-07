@@ -6,6 +6,33 @@ Test page for Tables
 </head>
 <body>
 
+<style type="text/css">
+table.sample {
+	border-width: 1px 1px 1px 1px;
+	border-spacing: 2px;
+	border-style: outset outset outset outset;
+	border-color: gray gray gray gray;
+	border-collapse: separate;
+	background-color: white;
+}
+table.sample th {
+	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: inset inset inset inset;
+	border-color: gray gray gray gray;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+table.sample td {
+	border-width: 1px 1px 1px 1px;
+	padding: 1px 1px 1px 1px;
+	border-style: inset inset inset inset;
+	border-color: gray gray gray gray;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+</style>
+
 <script language=javascript>
 
 function addRow() {
@@ -136,6 +163,19 @@ This text is in the THIRD TBODY.
   <td><a href = http://google.com>Google</a>
 
 
+
+<table class="sample">
+<tr>
+	<th>Header</th>
+	<td>First table with css class</td>
+</tr>
+</table>
+
+<table class="sample">
+<tr> 
+	<td>Second table with css class</td>
+</tr>
+</table>
 
 
 </body>

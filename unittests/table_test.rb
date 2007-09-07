@@ -54,7 +54,6 @@ class TC_Tables < Test::Unit::TestCase
   def test_dynamic_tables
     t = $ie.table(:id, 't1')
     assert_equal(5, t.row_count)
-    
     $ie.button(:value, 'add row').click
     assert_equal(6, t.row_count)
   end
@@ -175,6 +174,11 @@ class TC_Tables < Test::Unit::TestCase
   
   def test_table_container
     assert_nothing_raised { $ie.table(:id, 't1').html }
+  end
+  
+  def test_multiple_selector
+  require 'breakpoint';breakpoint
+    assert( $ie.table(:class => 'sample', :index => 2)[1][1].text, '')
   end
 end    
 
