@@ -41,12 +41,12 @@
 
     <releases>
         <release>
-            <version>1.4.1 (stable)</version>
-            <date>8/21/2005</date>
+            <version>1.5.2 (stable)</version>
+            <date>9/3/2007</date>
             <downloads>
                 <download>
-                    <url>http://rubyforge.org/frs/download.php/5677/watir-1.4.1.exe</url>
-                    <name>Windows installer for Watir 1.4.1</name>
+                    <url>http://wtr.rubyforge.org/install.html</url>
+                    <name>To install it, type this at a command prompt: gem install watir</name>
                 </download>
             </downloads>           
         </release>
