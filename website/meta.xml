@@ -22,10 +22,6 @@
                 <url>http://wtr.rubyforge.org/rdoc/index.html</url>
             </item>        
             <item>
-                <name>FAQ</name>
-                <url>http://wiki.openqa.org/display/WTR/FAQ</url>
-            </item>
-            <item>
                 <name>Wiki</name>
                 <url>http://wiki.openqa.org/display/WTR/Project+Home</url>
             </item>
