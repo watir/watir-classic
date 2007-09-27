@@ -4000,18 +4000,7 @@ module Watir
     # It should not be used externally.
     #   * value - string - The string to enter into the text field
     def doKeyPress(value)
-      begin
-        maxLength = @o.maxLength
-        if value.length > maxLength
-          original_value = value
-          value = original_value[0 .. maxLength-1 ]
-          @container.log " Supplied string is #{original_value.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
-        end
-      rescue WIN32OLERuntimeError => e
-        # probably a text area - so it doesnt have a max Length
-        raise e unless /unknown property or method .*?maxLength/.match( e.message )
-        maxLength = -1
-      end
+      value = ensure_max_length(value)
       for i in 0 .. value.length-1
         sleep @container.typingspeed
         c = value[i,1]
@@ -4021,9 +4010,21 @@ module Watir
         @o.fireEvent("onKeyPress")
         @o.fireEvent("onKeyUp")
       end
-      
     end
     private :doKeyPress
+    
+    # Make sure we don't go over the max length of the field, 
+    # text areas don't have a max length attribute
+    def ensure_max_length(value)
+      return value if @o.invoke('type') =~ /textarea/i
+      max_length = @o.maxLength
+      if value.length > max_length
+        value = value[0 .. max_length-1 ]
+          @container.log " Supplied string is #{value.length} chars, which exceeds the max length (#{max_length}) of the field. Using value: #{value}"
+      end
+      value
+    end
+    private :ensure_max_length
   end
   
   # this class can be used to access hidden field objects
