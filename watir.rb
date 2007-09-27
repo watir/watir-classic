@@ -1099,9 +1099,9 @@ module Watir
       end
       case method.arity
       when 0
-        what.matches element.send(how)
-      when 1
-        element.send(how, what)
+        what.matches method.call
+       when 1
+       	method.call(what)
       else
         raise MissingWayOfFindingObjectException,
               "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"

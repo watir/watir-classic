@@ -177,7 +177,6 @@ class TC_Tables < Test::Unit::TestCase
   end
   
   def test_multiple_selector
-  require 'breakpoint';breakpoint
     assert( $ie.table(:class => 'sample', :index => 2)[1][1].text, '')
   end
 end    
