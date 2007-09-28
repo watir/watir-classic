@@ -33,6 +33,6 @@ UPDATE WEBSITE
 Upload the home page and basic user documentation
    psftp -b website-upload.scr bret@rubyforge.org
 
-Upload the rdocs (assumes rdocs have been build already)
-   cd doc
+STILL WORKS (9/5/07)
+Upload the rdocs (assumes rdocs have been built already)
    pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
