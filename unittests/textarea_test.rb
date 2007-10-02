@@ -30,7 +30,13 @@ class TC_TextArea < Test::Unit::TestCase
   
   def test_textarea_to_s
     # from a bug reported by Zeljko Filipin
+    goto_page
     assert_nothing_raised { $ie.text_field(:id,"txtMultiLine3").to_s  }
+  end
+  
+  def test_textarea_maxlength
+    goto_page
+    assert_nothing_raised { $ie.text_field(:id,"txtMultiLine3").append('foo')} 
   end
   
   def test_textarea_field
