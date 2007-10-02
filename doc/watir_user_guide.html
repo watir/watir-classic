@@ -90,12 +90,12 @@ instructions:</p>
 <h3>Step 3 - Run the Watir Unit Tests</h3>
 <p>To run the unit tests:</p>
 <ol>
-	<li>Select <b>Start &gt; Run</b> and enter <i>cmd</i> in the Open
+	<li>Select <strong>Start &gt; Run</strong> and enter <i>cmd</i> in the Open
 	field to open a DOS command prompt. Click OK.</li>
-	<li>Change directories to the <b>unittests</b> directory in your
+	<li>Change directories to the <strong>unittests</strong> directory in your
 	Watir install (for example, <i>cd C:\watir\unittests</i> if you
 	installed to C:\).</li>
-	<li>To run all the tests, type <b>all_tests.rb</b> and hit Enter
+	<li>To run all the tests, type <strong>all_tests.rb</strong> and hit Enter
 	at the command prompt. The tests should all run and pass.</li>
 </ol>
 <p></p>
@@ -104,7 +104,7 @@ run the unit tests before the gem is installed. If they fail, Watir
 won't be installed.<br>
 </p>
 <h4>Having Problems?</h4>
-<p>Running on <b>Windows XP</b> and Internet Explorer prevents you
+<p>Running on <strong>Windows XP</strong> and Internet Explorer prevents you
 from running the unit tests? If you are using Windows XP with Service
 Pack 2, you may not be able to run the tests unless you enable active
 content.</p>
@@ -128,9 +128,9 @@ version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
 <h3>Step 4 - Run the Watir Examples</h3>
 <p>To run the Watir example tests:</p>
 <ol>
-	<li>Change directories to the <b>examples</b> directory in your
+	<li>Change directories to the <strong>examples</strong> directory in your
 	Watir install.</li>
-	<li>Type the name of the test at the command prompt (ex. <b>googleSearch.rb</b>),
+	<li>Type the name of the test at the command prompt (ex. <strong>googleSearch.rb</strong>),
 	and press Enter to run it.</li>
 	<li>Look at the source code of the examples and compare it to the
 	web application that it tests</li>
@@ -139,7 +139,7 @@ version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
 		view its source code in the SciTE editor.</li>
 	</ul>
 </ol>
-<p>To inspect <b>googleSearch.rb</b> with a detailed explanation,
+<p>To inspect <strong>googleSearch.rb</strong> with a detailed explanation,
 read the <a href="http://www.openqa.org/watir/example_testcase.html">WATIR
 Example Test Case</a> guide.<br>
 </p>
@@ -211,10 +211,10 @@ attributes.</p>
 <p>To start developing a test:</p>
 <ol>
 	<li>Open your text editor.</li>
-	<li>Name your test file with a <b>.rb</b> (Ruby) extension.</li>
+	<li>Name your test file with a <strong>.rb</strong> (Ruby) extension.</li>
 	<li>Provide your new test file with access to the Watir tool by
-	entering this statement at the beginning of your test script: <b>require
-	'watir'</b></li>
+	entering this statement at the beginning of your test script: <strong>require
+	'watir'</strong></li>
 	<li>Open Internet Explorer and navigate to the application you
 	wish to test</li>
 	<li>Interact with it to design your test case</li>
@@ -223,14 +223,14 @@ attributes.</p>
 	<li>Verify the results</li>
 </ol>
 <h2>Interacting With a Web Page</h2>
-<p>You will notice we've chosen to name the variable name <b>ie</b>
+<p>You will notice we've chosen to name the variable name <strong>ie</strong>
 used in Watir test scripts for the Internet Explorer browser.You could
 call it whatever you wish, but we use "ie" for ease of use. This
 variable tells the Watir library to exercise test scripts against an
 instance of the Internet Explorer web browser.</p>
 <p>In Ruby, think of programming in terms of objects and messages.
 Watir was also developed with objects and messages in mind. If you think
-of the <b>ie</b> variable as an object, you can send messages to it.
+of the <strong>ie</strong> variable as an object, you can send messages to it.
 Think of objects as nouns. When you start up Internet Explorer, the
 operating system starts the program which creates an instance of the
 Internet Explorer web browser. You refer to this Internet Explorer
@@ -238,17 +238,17 @@ browser instance as a thing. If you send a message to that object, it
 will respond to that message if it recognizes it.</p>
 <p>Think of the messages as verbs. In Ruby, you send a message to an
 object by separating the object you are calling from the message you are
-sending to it with a dot. For example, <b>dog.bark</b> would tell the
+sending to it with a dot. For example, <strong>dog.bark</strong> would tell the
 object <i>dog</i> that it must <i>bark</i>.</p>
 <p>This isn't very specific though. What dog should bark? In the
-Watir world, you could identify the test area to be our <b>yard</b>.
+Watir world, you could identify the test area to be our <strong>yard</strong>.
 Like <i>ie</i>, treat it as an object with attributes containing other
 objects with attributes. For example, in our yard, there are two dogs:
 Heidi and Megabyte. Each of these dog objects have attributes that
 identify them. They have names, breeds, shapes and sizes and colors. To
 be more specific, and interacting with them the Watir way, you could
-send the message "bark" to the dog Heidi like this: <b>yard.dog(:name,
-"Heidi").bark</b>. This says in Watir syntax: in the yard, identify the dog
+send the message "bark" to the dog Heidi like this: <strong>yard.dog(:name,
+"Heidi").bark</strong>. This says in Watir syntax: in the yard, identify the dog
 Heidi by her name attribute, and send her the "bark" message. The
 expected outcome would be Heidi responding to the message by barking.</p>
 <p>When you develop test scripts with Watir, you interact with
@@ -260,11 +260,11 @@ above, you must be very specific when you send messages to objects on a
 web page. You must also be able to identify objects on a web page by
 using a variety of different attributes due to the diversity in how tags
 are declared by different application developers. With Watir, identify
-objects and send them messages by using the dot notation. For example <b>ie.button</b>,
-narrows down the type of object to send a message to. <b>ie.button(:value,
-"Click Me").click</b> identifies the object on the page as a button within
+objects and send them messages by using the dot notation. For example <strong>ie.button</strong>,
+narrows down the type of object to send a message to. <strong>ie.button(:value,
+"Click Me").click</strong> identifies the object on the page as a button within
 the instance of Internet Explorer that has the value attribute (caption)
-"Click Me". When you send the message (the verb) <b>click</b>, Watir
+"Click Me". When you send the message (the verb) <strong>click</strong>, Watir
 interprets and tells Internet Explorer to click.</p>
 <h2>Watir Syntax</h2>
 <p>The Watir syntax is shown below with three views. One is the view
@@ -291,7 +291,7 @@ site with one statement:</p>
 <p>Watir uses the <i>start</i> method to both create a browser
 instance and navigate to a site.</p>
 <h3>Starting Options</h3>
-<p>To use the <b>ie = IE.new</b> syntax in versions 1.0.1 through
+<p>To use the <strong>ie = IE.new</strong> syntax in versions 1.0.1 through
 1.0.3, you need to include the Watir module after the <i>require
 'watir'</i> statement:</p>
 <div class="testexample">include Watir</div>
@@ -327,14 +327,14 @@ attribute:</p>
 <div class="testexample">ie.link(:text, "Pickaxe").click</div>
 <p>What you see in the HTML source (attribute highlighted):</p>
 <div class="htmlexample">&lt;a
-href="http://pragmaticprogrammer.com/titles/ruby/"&gt;<b>Pickaxe</b>&lt;/a&gt;</div>
+href="http://pragmaticprogrammer.com/titles/ruby/"&gt;<strong>Pickaxe</strong>&lt;/a&gt;</div>
 <h4><i>URL</i> Attribute</h4>
 <p>Watir code to click a link using the URL attribute:</p>
 <div class="testexample">ie.link(:url,
 "http://pragmaticprogrammer.com/titles/ruby/").click</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;a href="<b>http://pragmaticprogrammer.com/titles/ruby/</b>"&gt;Test
+<div class="htmlexample">&lt;a href="<strong>http://pragmaticprogrammer.com/titles/ruby/</strong>"&gt;Test
 Site&lt;/a&gt;</div>
 <h3>Checkboxes</h3>
 <p>Watir <i>sets</i> or <i>clears</i> checkboxes based on the <i>name</i>
@@ -351,7 +351,7 @@ attribute:</p>
 <div class="testexample">ie.checkbox(:name, "checkme").clear</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>"
+<div class="htmlexample">&lt;input type = "checkbox" name = "<strong>checkme</strong>"
 value = "1"&gt;</div>
 <h4><i>Name</i> and <i>Value</i> Attributes</h4>
 <p>We can also use both attributes:</p>
@@ -360,8 +360,8 @@ and <i>value</i> attributes:</p>
 <div class="testexample">ie.checkbox(:name, "checkme", "1").set</div>
 <p>This is the tag in the HTML source with both the attributes
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "checkbox" name = "<b>checkme</b>"
-value = "<b>1</b>"&gt;</div>
+<div class="htmlexample">&lt;input type = "checkbox" name = "<strong>checkme</strong>"
+value = "<strong>1</strong>"&gt;</div>
 <p>We can also use the <i>clear</i> method using both of these
 attributes.</p>
 <h3>Radio Buttons</h3>
@@ -380,7 +380,7 @@ attribute:</p>
 <div class="testexample">ie.radio(:name, "clickme").clear</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "radio" name = "<b>clickme</b>"
+<div class="htmlexample">&lt;input type = "radio" name = "<strong>clickme</strong>"
 id = "1"&gt;</div>
 <h4><i>Name</i> and <i>id</i> Attributes</h4>
 <p>We can also use both attributes:</p>
@@ -389,8 +389,8 @@ and <i>id</i> attributes:</p>
 <div class="testexample">ie.radio(:name, "clickme", "1").set</div>
 <p>This is the tag in the HTML source with both the attributes
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "radio" name = "<b>clickme</b>"
-id = "<b>1</b>"&gt;</div>
+<div class="htmlexample">&lt;input type = "radio" name = "<strong>clickme</strong>"
+id = "<strong>1</strong>"&gt;</div>
 <p>We can also use the <i>clear</i> method using both of these
 attributes.</p>
 <h3>Selection Boxes</h3>
@@ -411,9 +411,9 @@ attribute and the value to set:</p>
 "selectme").select("is fun")</div>
 <p>This is the tag in the HTML source with the attributes
 highlighted:</p>
-<div class="htmlexample">&lt;select name = "<b>selectme</b>" &gt;
+<div class="htmlexample">&lt;select name = "<strong>selectme</strong>" &gt;
 &lt;option name=1&gt; &lt;option name=2&gt;Web Testing &lt;option
-name=3&gt;in Ruby &lt;option name=4&gt;<b>is fun</b> &lt;/select&gt;</div>
+name=3&gt;in Ruby &lt;option name=4&gt;<strong>is fun</strong> &lt;/select&gt;</div>
 <p>Watir can also <i>clear</i> a select box:</p>
 <div class="testexample">ie.select_list( :name ,
 "selectme").clearSelection</div>
@@ -431,7 +431,7 @@ World" using the <i>name</i> attribute:</p>
 "typeinme").set("Watir World")</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "text" name = "<b>typeinme</b>"
+<div class="htmlexample">&lt;input type = "text" name = "<strong>typeinme</strong>"
 &gt;</div>
 <p>Watir can also <i>clear</i> a text field:</p>
 <div class="testexample">ie.text_field(:name, "typeinme").clear</div>
@@ -457,14 +457,14 @@ attribute:</p>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
 <div class="htmlexample">&lt;input type = "button" name =
-"clickme" value = "<b>Click Me</b>"&gt;</div>
+"clickme" value = "<strong>Click Me</strong>"&gt;</div>
 <h4><i>Name</i> Attribute</h4>
 <p>This is the Watir code you need to click a button using the <i>name</i>
 attribute:</p>
 <div class="testexample">ie.button(:name, "clickme").click</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;input type = "button" name = "<b>clickme</b>"
+<div class="htmlexample">&lt;input type = "button" name = "<strong>clickme</strong>"
 value = "Click Me"&gt;</div>
 <h4>Image Buttons</h4>
 <p>Watir can click image buttons on a web page based on the
@@ -480,7 +480,7 @@ using the <i>src</i> attribute as a regular expression:</p>
 of the src attribute.</p>
 <p>This is the tag in the HTML source with our partial match in the
 src attribute highlighted:</p>
-<div class="htmlexample">&lt;input type="image" src = "images/<b>doit</b>.gif"
+<div class="htmlexample">&lt;input type="image" src = "images/<strong>doit</strong>.gif"
 name = "doit"&gt;</div>
 <h3>Forms</h3>
 <p>Forms aren't visible through the browser, but are used a lot in
@@ -502,7 +502,7 @@ submit a form using the <i>value</i> attribute:</p>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
 <div class="htmlexample">&lt;form action = "submit" name =
-"submitform" method="post"&gt;&lt;input type = "submit" value = "<b>Submit</b>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
+"submitform" method="post"&gt;&lt;input type = "submit" value = "<strong>Submit</strong>"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <p>We can also just submit the form as shown below in the Forms With
 No Buttons examples.</p>
 <h4>Forms With No Buttons</h4>
@@ -521,7 +521,7 @@ and <i>method</i> attributes.</p>
 <div class="testexample">ie.form(:name, "loginform").submit</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;form action = "login" name = "<b>loginform</b>"
+<div class="htmlexample">&lt;form action = "login" name = "<strong>loginform</strong>"
 method="get"&gt;&lt;input name="username"
 type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h4><i>Action</i> Attribute</h4>
@@ -530,7 +530,7 @@ type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <div class="testexample">ie.form(:action, "login").submit</div>
 <p>This is the tag in the HTML source with the attribute
 highlighted:</p>
-<div class="htmlexample">&lt;form action = "<b>login</b>" name =
+<div class="htmlexample">&lt;form action = "<strong>login</strong>" name =
 "loginform" method="get"&gt;&lt;input name="username"
 type="text"&gt;&lt;/input&gt;&lt;/form&gt;</div>
 <h2>Frames</h2>
@@ -557,15 +557,15 @@ frame: <a href="">Click Menu Item</a>, we could click it like this:</p>
 <div class="testexample">ie.frame("menu").link(:text, "Click Menu
 Item").click</div>
 <h4>Nested Frames</h4>
-<p>Sometimes a web page that is referenced by the <b>frame src=</b>
-attribute is also a page that contains a <b>frameset</b> tag. This is a
+<p>Sometimes a web page that is referenced by the <strong>frame src=</strong>
+attribute is also a page that contains a <strong>frameset</strong> tag. This is a
 nested frame. To deal with this, simply access the nested frame like
 this:</p>
 <div class="testexample">ie.frame("frame1").frame(:name,
 "nested_frame")</div>
 <h2>New Windows</h2>
 <p>Some web applications will have popup windows or new windows that
-contain HTML. Watir has an <b>attach</b> method that allows you to
+contain HTML. Watir has an <strong>attach</strong> method that allows you to
 access and control the new window. If you click a button or link that
 opens a new window, you can attach to it by identifying the window by
 its URL or by the Window title:</p>
@@ -630,7 +630,7 @@ end</div>
 test results. (For a good explanation of assertions, visit this NUnit
 page which <a href="http://www.nunit.org/assertions.html">explains
 assertions</a>.)</p>
-<p>Ruby has an xUnit framework called <b>test::unit</b> that we can
+<p>Ruby has an xUnit framework called <strong>test::unit</strong> that we can
 use with Watir. The test::unit API is avaiable in the project <a
 	href="http://www.ruby-doc.org/stdlib/libdoc/test/unit/rdoc/"> RDoc</a>.</p>
 <i>Note:</i>
@@ -643,7 +643,7 @@ your test script:</p>
 </div>
 <h4>Create a Test Instance</h4>
 <p>We create a new class for our test suite which is inherited from
-the test::unit <b>TestCase</b> class.</p>
+the test::unit <strong>TestCase</strong> class.</p>
 <p></p>
 <div class="testexample">class TC_myTest &lt; Test::Unit::TestCase<br>
 &nbsp;&nbsp;<i>...fill in Test Case methods here...</i><br>
@@ -694,16 +694,16 @@ or a global variable "$ie". This allows the test script to use the same
 Internet Explorer instance for all the test cases.
 <p><i>Note: use global variables with caution.</i></p>
 <h4>Setup and Teardown</h4>
-<p>The method names <b>setup</b> and <b>teardown</b> are reserved
+<p>The method names <strong>setup</strong> and <strong>teardown</strong> are reserved
 for test::unit. If you would like to use setup and teardown
 functionality, simply use those as method names for the actions you want
 executed before and after executing <i>each</i> test case.</p>
 <div class="testexample">def setup<br>
-&nbsp;&nbsp;<i>fill in code that will run <b>before every</b> test
+&nbsp;&nbsp;<i>fill in code that will run <strong>before every</strong> test
 case here...</i><br>
 end</div>
 <div class="testexample">def teardown<br>
-&nbsp;&nbsp;<i>fill in code that will run <b>after every</b> test
+&nbsp;&nbsp;<i>fill in code that will run <strong>after every</strong> test
 case here...</i><br>
 end</div>
 <h2>Tips and Tricks</h2>
@@ -753,7 +753,7 @@ an HTML object are. They may be missing, or the tag attributes might be
 dynamically generated. Some web architectures dynamically generate tags,
 and the attributes might change each time you run a test. To work around
 this, try the following:</p>
-<p><b>Access Element Using Index</b></p>
+<p><strong>Access Element Using Index</strong></p>
 <p>Elements on a web page can be accessed by where they appear on a
 page. If an element you want to interact with always appears in the same
 place, you can access it by a one-based index. Here's an example using a
@@ -778,9 +778,9 @@ hyperlink using the <i>url</i> attribute:</p>
 for one state of the application, and another for a different state
 (such as error or success messages). Watir can check the status of the
 div to allow for tests on pages using CSS as part of the application.</p>
-<p>Check out the unit test <b>css_test.rb</b> for usage.</p>
+<p>Check out the unit test <strong>css_test.rb</strong> for usage.</p>
 <h4>Running a Test Concurrently</h4>
-<p>To run a test concurrently, check out <b>concurrent_search</b> in
+<p>To run a test concurrently, check out <strong>concurrent_search</strong> in
 the <i>examples</i> directory for an example.</p>
 <h4>Tree Views</h4>
 <p>Watir now supports JavaScript treeviews such as the <a
@@ -788,7 +788,7 @@ the <i>examples</i> directory for an example.</p>
 	href="http://wiki.openqa.org/display/WTR/FAQ">Watir FAQ</a> has an
 example you can follow.</p>
 <h4>Multiple Windows</h4>
-<p>Watir now handles multiple browser windows with the <b>attach</b>
+<p>Watir now handles multiple browser windows with the <strong>attach</strong>
 method.</p>
 <h4>File Upload</h4>
 <p>Watir now has a mechanism to support file uploads. Use the
@@ -797,27 +797,27 @@ in the unittests folder for usage.</p>
 <h4>RDoc</h4>
 <p>Watir has RDocs generated which describe the classes and methods
 in the Watir tool. To view the Watir RDoc, go to the <i>rdoc</i>
-directory and click on <b>index.html</b></p>
+directory and click on <strong>index.html</strong></p>
 <h2>Using IRB and Watir</h2>
 <p>Use Ruby's Interactive Command Interpreter to test out script
 ideas. You can try out test script ideas interactively with irb.</p>
 <p>To start IRB on Windows, select Start &gt; Run and type "irb" in
 the Open field. Click "OK", and a DOS console should open with a command
-prompt that looks like this: <b>irb(main):001:0&gt;</b></p>
+prompt that looks like this: <strong>irb(main):001:0&gt;</strong></p>
 <p>Use the Watir library and enter commands to start driving a web
 browser interactively:</p>
-<div class="testexample">irb(main):001:0&gt; <b>require
-'watir'</b><br>
+<div class="testexample">irb(main):001:0&gt; <strong>require
+'watir'</strong><br>
 =&gt; true<br>
-irb(main):002:0&gt; <b>ie = Watir::IE.start("http://<i>mytestsite.com</i>")</b><br>
+irb(main):002:0&gt; <strong>ie = Watir::IE.start("http://<i>mytestsite.com</i>")</strong><br>
 </div>
 <h3>Use IRB to Find Page Objects</h3>
 <p>To find out what objects are on a page you are writing a test
 script for, use IRB to get instant feedback.</p>
-<p>The <b>show_all_objects</b> method is a useful way to identify
+<p>The <strong>show_all_objects</strong> method is a useful way to identify
 the attributes of objects you will need to use in a test script.</p>
-<div class="testexample">irb(main):003:0&gt;<b>
-ie.show_all_objects</b><br>
+<div class="testexample">irb(main):003:0&gt;<strong>
+ie.show_all_objects</strong><br>
 -----------Objects in page -------------<br>
 text name=test_text id= 11 value= alt= src=<br>
 submit name=test_button id= 12 value=Click Me alt= click src=<br>
@@ -825,13 +825,13 @@ submit name=test_button id= 12 value=Click Me alt= click src=<br>
 <p>The objects on the page are shown with their attributes such as
 name, id, value, alt, src. You can use these attributes to uniquely
 identify the objects needed for a test script. In our example above, we
-have two objects. A text field named <b>test_text</b> and a button
-(submit) named <b>test_button</b>.</p>
-<p>The <b>flash</b> method can be used to test whether you have
+have two objects. A text field named <strong>test_text</strong> and a button
+(submit) named <strong>test_button</strong>.</p>
+<p>The <strong>flash</strong> method can be used to test whether you have
 identified the object correctly. The flash method causes an object in
 the web browser to flash yellow ten times.</p>
-<div class="testexample">irb(main):006:0&gt; <b>ie.text_field(:name,
-"test_text").flash</b><br>
+<div class="testexample">irb(main):006:0&gt; <strong>ie.text_field(:name,
+"test_text").flash</strong><br>
 =&gt; nil<br>
 </div>
 <p>This would cause the text field with the name attribute
@@ -841,15 +841,15 @@ used the right attribute. Using this in IRB is a quick way of finding
 out what objects can be used in a test script before commiting the
 script to a file.</p>
 <h2>Glossary</h2>
-<p><b>Instance</b> an object that has been created for use by a
+<p><strong>Instance</strong> an object that has been created for use by a
 program and is stored in memory</p>
-<p><b>Message</b> an action descriptor that can be sent to an
+<p><strong>Message</strong> an action descriptor that can be sent to an
 object. If the object recognizes the message, it will respond and
 display related behavior.</p>
-<p><b>Object</b> something that <i>contains</i> attributes and <i>displays</i>
+<p><strong>Object</strong> something that <i>contains</i> attributes and <i>displays</i>
 behavior according to what messages have been sent to it.</p>
-<p><b>Ruby</b> object-oriented scripting language</p>
-<p><b>Watir</b> Web Application Testing in Ruby</p>
+<p><strong>Ruby</strong> object-oriented scripting language</p>
+<p><strong>Watir</strong> Web Application Testing in Ruby</p>
 <h2>Feedback</h2>
 <p>Questions? Comments? The Watir development team like to hear your
 comments and suggestions for improvement. Email questions and
