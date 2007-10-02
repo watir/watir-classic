@@ -19,7 +19,7 @@
 <h2>Introduction</h2>
 <p>"Watir" (pronounced <em>water</em>) stands for "Web Application
 Testing in Ruby". Watir is an automated test tool which uses the <a
-	href="http://www.rubycentral.com/">Ruby</a> scripting language to drive
+	href="http://www.ruby-lang.org/en/">Ruby</a> scripting language to drive
 the Internet Explorer web browser. Watir is a toolkit for automated
 tests to be developed and run against a web browser.</p>
 <h3>What Does Watir Work With?</h3>
@@ -33,35 +33,35 @@ object can be automated using Watir.</p>
 <h3>Prerequisites</h3>
 <p>To use the tool, you should have a basic understanding of:</p>
 <ul>
-	<li><em>HTML</em>: <a
-		href="http://www.w3.org/MarkUp/Guide/">This</a> is a basic HTML
-	tutorial.</li>
+	<li><em>HTML</em>:
+	This is a basic <a href="http://www.w3.org/MarkUp/Guide/">HTML
+	tutorial</a>.</li>
 	<li><em>Programming</em>: You
 	should understand programming basics, including variables and simple
 	control structures like "for" loops and "if" statements.</li>
 	<li><em>Ruby</em>: You do not need
 	to know how to program in Ruby to get started with Watir, but you
-	should learn some Ruby if you really want to get the most out of Watir
+	should learn some Ruby if you really want to get the most out of Watir.
 	<ul>
 		<li>Check out the <a
 			href="http://wtr.rubyforge.org/s101/doc/Ruby-cheat-sheet.doc">Ruby
 		Cheat Sheet</a> for basic Ruby information.</li>
 	</ul>
 	</li>
-	<li>Microsoft has a toolbar for Internet Explorer which can be
+	<li>Microsoft has a 
+	<a href="http://www.microsoft.com/downloads/details.aspx?familyid=e59c3964-672d-4511-bb3e-2d5e1db91038&amp;displaylang=en">
+	toolbar for Internet Explorer</a> which can be
 	useful in navigating the DOM for pages that you're looking to automate.
-	You'll find it <a
-		href="http://www.microsoft.com/downloads/details.aspx?familyid=e59c3964-672d-4511-bb3e-2d5e1db91038&amp;displaylang=en">here</a>
 	</li>
 </ul>
 <h1>Getting Started</h1>
 <p>Watir runs on Windows machines and works with the Internet
 Explorer web browser. Watir has been developed and tested using Ruby
-1.8.2-15 on Windows 2000 and XP.</p>
+1.8.2-14 and later on Windows 2000 and XP.</p>
 <h2>Installation</h2>
 <h3>Step 1 - Install Ruby</h3>
 <p>On Windows, the simplest way to install Ruby is to download and
-run the <a href="http://rubyforge.org/frs/?group_id=104">One Click
+run the <a href="http://rubyforge.org/frs/?group_id=167">One Click
 Windows Installer</a>.</p>
 <p>Once Ruby is installed on your machine, you can run files with
 the ".rb" extension by clicking them or running them from the command
@@ -85,17 +85,18 @@ new machine to run Watir scripts that you've already developed.
 the Watir development team. It is on the cutting edge, so it may have
 problems that haven't been fixed yet, or partially completed new
 features. Unless you really want the latest and greatest version, it is
-recommended to use a regular Watir release. Use the following link for
-instructions:</p>
-<p>http://wiki.openqa.org/display/WTR/FAQ#FAQ-devgem</p>
+recommended to use a regular Watir release. Go to
+<a href="http://wiki.openqa.org/display/WTR/Development+Builds">
+Development Builds</a> page for instructions.</p>
 <h3>Step 3 - Run the Watir Unit Tests</h3>
 <p>To run the unit tests:</p>
 <ol>
 	<li>Select <strong>Start &gt; Run</strong> and enter <em>cmd</em> in the Open
 	field to open a DOS command prompt. Click OK.</li>
 	<li>Change directories to the <strong>unittests</strong> directory in your
-	Watir install (for example, <em>cd C:\watir\unittests</em> if you
-	installed to C:\).</li>
+	Watir install (for example,
+	<em>cd \ruby\lib\ruby\gems\1.8\gems\watir-1.5.2\unittests</em> if you
+	installed Ruby to C:\ and you have Watir 1.5.2).</li>
 	<li>To run all the tests, type <strong>all_tests.rb</strong> and hit Enter
 	at the command prompt. The tests should all run and pass.</li>
 </ol>
@@ -115,7 +116,8 @@ following:</p>
 <ol>
 	<li>From the browser, select Tools &gt; Internet Options</li>
 	<li>Select the Advanced tab</li>
-	<li>Under Security, check "Allow active content to run in files on My Computer"</li>
+	<li>Under Security, check "Allow active content to run in files</li>
+	on My Computer"
 	<li>Click OK</li>
 </ol>
 There is more information on
