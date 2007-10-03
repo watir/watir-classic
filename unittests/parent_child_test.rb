@@ -3,21 +3,6 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-# These tests are based on the rails depot application, which requires some 
-# modifications...
-
- module Watir
-   class H3 < NonControlElement
-     TAG = 'h3'
-   end
-   module Container
-     def h3(how, what)
-       return H3.new(self, how, what)
-     end
-   end
- end
-
-
 class TC_Relative < Test::Unit::TestCase
   
   def setup
