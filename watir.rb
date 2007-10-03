@@ -3864,7 +3864,16 @@ module Watir
     INPUT_TYPES = ["text", "password", "textarea"]
     
     def_wrap_guard :size
-    def_wrap_guard :maxlength
+    
+    def maxlength
+      assert_exists
+      begin
+        ole_object.invoke('maxlength').to_i
+      rescue
+        0
+      end
+    end
+    
     
     # Returns true or false if the text field is read only.
     #   Raises UnknownObjectException if the object can't be found.
@@ -4016,10 +4025,9 @@ module Watir
     # Return the value (a string), limited to the maxlength of the element.
     def limit_to_maxlength(value)
       return value if @o.invoke('type') =~ /textarea/i # text areas don't have maxlength
-      max_length = @o.maxLength
-      if value.length > max_length
-        value = value[0 .. max_length - 1]
-        @container.log " Supplied string is #{value.length} chars, which exceeds the max length (#{max_length}) of the field. Using value: #{value}"
+      if value.length > maxlength
+        value = value[0 .. maxlength - 1]
+        @container.log " Supplied string is #{value.length} chars, which exceeds the max length (#{maxlength}) of the field. Using value: #{value}"
       end
       value
     end
