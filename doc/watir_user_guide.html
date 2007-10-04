@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>WATIR User Guide</title>
+  <title>Watir User Guide</title>
   <meta name="author" content="Jonathan Kohl">
   <meta name="generator" content="By hand, with a text editor.">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -12,7 +12,7 @@
 		<tr>
 			<td><img src="images/watir.gif" alt=""></td>
 			<td>
-			<h1>WATIR User Guide</h1>
+			<h1>Watir User Guide</h1>
 			</td>
 		</tr>
 </table>
@@ -70,17 +70,15 @@ program output, including test results and error messages.<br>
 </p>
 <h3>Step 2 - Install Watir</h3>
 <h4>Watir Releases</h4>
-<br>
-<em>Official Release.</em>
-The way to install Watir is to use the gem: "gem install watir". You
+<em>Official Release</em>
+<p>The way to install Watir is to use the gem: "gem install watir". You
 don't have to download the gem first. Ruby's gem system will
 automatically find it on the web, download it and install it. (Ruby gems
 are similar to Perl's CPAN, if you know what that is.) Watir's gem
 includes libraries, the unit tests and the rdoc, but not the examples or
 the rest of the Watir documentation. It is convenient for setting up a
-new machine to run Watir scripts that you've already developed.
-<br>
-<h4>Development Versions - Gem</h4>
+new machine to run Watir scripts that you've already developed.</p>
+<em>Development Version</em>
 <p>This is the latest version that is currently being worked on by
 the Watir development team. It is on the cutting edge, so it may have
 problems that haven't been fixed yet, or partially completed new
@@ -97,14 +95,9 @@ Development Builds</a> page for instructions.</p>
 	Watir install (for example,
 	<em>cd \ruby\lib\ruby\gems\1.8\gems\watir-1.5.2\unittests</em> if you
 	installed Ruby to C:\ and you have Watir 1.5.2).</li>
-	<li>To run all the tests, type <strong>all_tests.rb</strong> and hit Enter
+	<li>To run all the tests, type <strong>core_tests.rb</strong> and hit Enter
 	at the command prompt. The tests should all run and pass.</li>
 </ol>
-<p></p>
-<p>If you installed the gem, you can use "gem install watir -t" to
-run the unit tests before the gem is installed. If they fail, Watir
-won't be installed.<br>
-</p>
 <h4>Having Problems?</h4>
 <p>Running on <strong>Windows XP</strong> and Internet Explorer prevents you
 from running the unit tests? If you are using Windows XP with Service
@@ -116,14 +109,13 @@ following:</p>
 <ol>
 	<li>From the browser, select Tools &gt; Internet Options</li>
 	<li>Select the Advanced tab</li>
-	<li>Under Security, check "Allow active content to run in files</li>
-	on My Computer"
+	<li>Under Security, check "Allow active content to run in files on My Computer"</li>
 	<li>Click OK</li>
 </ol>
-There is more information on
-<a href="http://www.winxptutor.com/lmzunlock.htm"> this page</a>
-.
-<p></p>
+There is more information on <a href="http://www.winxptutor.com/lmzunlock.htm">this page</a>.
+<p><strong>Warning!</strong> Allowing active content to run in files on your
+computer is a security risk. You only need that enabled for running unit tests.
+Do not forget to disable it after unit tests are finished.</p>
 <p>Seeing a Runtime Error running the unit tests? There have been
 problems with a package in the Ruby 1.8.1-13 release. Try either a newer
 version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
@@ -143,7 +135,7 @@ version, or an older version such as 1.8.1-11 or 1.8.1-12</p>
 	</li>
 </ol>
 <p>To inspect <strong>googleSearch.rb</strong> with a detailed explanation,
-read the <a href="http://www.openqa.org/watir/example_testcase.html">WATIR
+read the <a href="http://www.openqa.org/watir/example_testcase.html">Watir
 Example Test Case</a> guide.<br>
 </p>
 <p>These examples are not included with the gem install.<br>
