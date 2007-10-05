@@ -1,3 +1,5 @@
+# Please, when you update this file, update also example_testcase.html
+
 #-------------------------------------------------------------#
 # Demo test for the Watir controller.
 #
