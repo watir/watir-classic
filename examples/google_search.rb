@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------#
 # Demo test for the Watir controller.
 #
 # Simple Google test written by Jonathan Kohl 10/10/04.
@@ -7,7 +7,7 @@
 #   * clicking a button,
 #   * checking to see if a page contains text.
 # Test will search Google for the "pickaxe" Ruby book.
-#------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------#
 
 # the Watir controller
 require "watir"

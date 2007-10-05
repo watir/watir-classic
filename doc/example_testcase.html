@@ -1,18 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>WATIR Example Test Case</title>
+  <title>Watir Example Test Case</title>
   <meta name="author" content="Jonathan Kohl">
   <meta name="generator" content="By hand, with a text editor.">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link rel="stylesheet" type="text/css" href="example_testcase.css">
 </head>
 <body>
-<h1>WATIR Example Test Case</h1>
+<h1>Watir Example Test Case</h1>
 <h2>Google Test Search</h2>
-<p>This document walks through a very simple test case: <b>googleSearch.rb</b>.
+<p>This document walks through a very simple test case: <b>google_search.rb</b>.
 To begin, from the <b>examples</b> folder in your Watir installation
-directory, open the googleSearch.rb file in a text editor. To open it
+directory, open the google_search.rb file in a text editor. To open it
 with SciTE, simply right-click the file in Windows Explorer, and select
 <b>Edit</b> from the popup menu.</p>
 <p>The format of this example will be to show the Ruby test case
@@ -30,8 +30,8 @@ own:<br>
   <li>click the "Google Search" button</li>
 </ol>
 <b>Expected Result:</b><br>
-- a Google page with results should be shown. "Pragmatic Programmers
-LLC" should be high on the list.
+- a Google page with results should be shown. "Pragmatic Programmers"
+should be high on the list.
 <p></p>
 <p>Once you have tried the test case out manually, it's time to
 automate the test case using Watir. Return to the Google home page
@@ -44,20 +44,20 @@ the HTML tags in the Google search web application.</p>
 commented. In Ruby, any text on a single line that follows a <b>#</b>
 is a comment, and is ignored by the Ruby interpreter at run time.</p>
 <p>What you see in the text editor:</p>
-<div class="testexample"><font color="green">
-#-------------------------------------------------------------#<br>
-# demo test for the WATIR controller<br>
-# <br>
-# Simple Google test written by Jonathan Kohl 10/10/04 <br>
-# Purpose: to demonstrate the following WATIR functionality: <br>
-# * entering text into a text field <br>
-# * clicking a button<br>
-# * checking to see if a page contains text. <br>
-# Test will search Google for the "pickaxe" Ruby book<br>
-#<br>
-#-------------------------------------------------------------#<br>
-</font>
-</div>
+
+<pre class="testexample">
+#-------------------------------------------------------------#
+# Demo test for the Watir controller.
+#
+# Simple Google test written by Jonathan Kohl 10/10/04.
+# Purpose: to demonstrate the following Watir functionality:
+#   * entering text into a text field,
+#   * clicking a button,
+#   * checking to see if a page contains text.
+# Test will search Google for the "pickaxe" Ruby book.
+#-------------------------------------------------------------#
+</pre>
+
 <p>Styles differ with comments, but they can really help with test case
 maintenance. In this case, the author has provided their name, a date
 and a purpose of the test case. This is here to improve readability,
@@ -66,11 +66,12 @@ and to help others who may be using the test understand what it does.</p>
 <p>To use Watir, or any other library in our test case requires us to
 tell the program where to find the library.</p>
 <p>What you see in the text editor:</p>
-<div class="testexample"> <font color="green"> #includes:</font><br>
-require <font color="purple">'watir'</font><font color="green"> #
-the watir controller<br>
-<span style="color: black;">include Watir</span><br>
-</font></div>
+
+<pre class="testexample">
+# the Watir controller
+require "watir"
+</pre>
+
 <p>When we run our test script, the Watir library is loaded so that our
 test cases can use it.</p>
 <h2>Section 3: Declare Variables</h2>
@@ -82,10 +83,12 @@ we assign the test URL as a variable. If it changes, we only have to
 change it in one place.
 </p>
 <p>What you see in the text editor:</p>
-<div class="testexample">
-<font color="green"> #variables:</font><br>
-test_site = <font color="purple">'http://www.google.com'</font>
-</div>
+
+<pre class="testexample">
+# set a variable
+test_site = "http://www.google.com"
+</pre>
+
 <p>The test case author has chosen to assign the URL to a variable
 called <b>test_site</b>. It may not be much of an issue in this test
 case, but using variables for test URLs is often a good practice. </p>
@@ -93,9 +96,12 @@ case, but using variables for test URLs is often a good practice. </p>
 <p>To begin driving Internet Explorer, we need to tell Watir to open an
 instance for testing.</p>
 <p>What you see in the text editor:</p>
-<div class="testexample"> <font color="green">#open the IE browser</font><br>
-ie = IE.new<br>
-</div>
+
+<pre class="testexample">
+# open the IE browser
+ie = Watir::IE.new
+</pre>
+
 <p>To explain what this is doing, we can start from the right of the
 "=" operator. We send a message "new" to the "IE" (Internet Explorer)
 class, and assign it to a variable called "ie".
@@ -108,10 +114,13 @@ methods.<br>
 Watir.</p>
 <h3>Beginning the test case</h3>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">"## Beginning of
-test: google search"</font><br>
-puts <font color="purple">" "</font>
-</div>
+
+<pre class="testexample">
+# print some comments
+puts "## Beginning of test: Google search."
+puts
+</pre>
+
 <p><i>Puts</i> is a reserved word in the Ruby language that tells the
 Ruby Interpreter to print whatever comes after it contained in quotes
 to the screen.
@@ -131,12 +140,13 @@ Watir just executed. This is a style of test case development that is
 useful for tracking down test case
 failures quickly.</p>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">"Step 1: go to the
-test site: "</font> + test_site<br>
-ie.goto(test_site)<br>
-puts <font color="purple">&nbsp;&nbsp;&nbsp;"Action: entered "</font>
-+ test_site + <font color="purple">"in the address bar."</font><br>
-</div>
+
+<pre class="testexample">
+puts "Step 1: go to the test site: " + test_site
+ie.goto test_site
+puts "  Action: entered " + test_site + " in the address bar."
+</pre>
+
 <p>The first line uses a <i>puts</i> statement to print out the test
 case step we are attempting to the screen. The second line uses the
 Watir method "goto" to direct the test
@@ -152,14 +162,13 @@ home page.</p>
 <div class="browserexample">
 <input maxlength="256" size="55" name="q" value=""></div>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">"Step 2: enter
-'pickaxe' in the search text field"<br>
-</font> ie.text_field(:name, <font color="purple">"q"</font>).set(<font
- color="purple">"pickaxe"</font>)<font color="green"> # q is the name
-of the search field</font><br>
-puts <font color="purple">&nbsp;&nbsp;&nbsp;" Action: entered pickaxe
-in the search field"</font><br>
-</div>
+
+<pre class="testexample">
+puts "Step 2: enter 'pickaxe' in the search text field."
+ie.text_field(:name, "q").set "pickaxe" # "q" is the name of the search field
+puts "  Action: entered pickaxe in the search field."
+</pre>
+
 <p>The first line prints the step we are on to the screen. The second
 line enters the text "pickaxe" in the text field named <b>q</b>. The
 third line prints what Watir just executed to the screen. The comment
@@ -177,13 +186,13 @@ functionality.</p>
 <div class="browserexample">
 <input value="Google Search" name="btnG" type="submit"></div>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">"Step 3: click the
-'Google Search' button"<br>
-</font> ie.button(:name, <font color="purple">"btnG"</font>).click<font
- color="green"> # "btnG" is the name of the button</font><br>
-puts <font color="purple">&nbsp;&nbsp;&nbsp;" Action: clicked the
-Google Search button."</font><br>
-</div>
+
+<pre class="testexample">
+puts "Step 3: click the 'Google Search' button."
+ie.button(:name, "btnG").click # "btnG" is the name of the Search button
+puts "  Action: clicked the Google Search button."
+</pre>
+
 <p>The first line prints the step we are on to the screen. The second
 line clicks the Google Search button. The third line prints what Watir
 just executed to the screen.</p>
@@ -196,29 +205,29 @@ we used highlighted:</p>
 <p>This test case prints out what the Expected Result should be prior
 to the test case using Watir to evaluate the results.</p>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">"Expected Result: "</font><br>
-puts <font color="purple">" - a Google page with results should be
-shown. 'Programming Ruby' should be high on the list."</font>
-</div>
+
+<pre class="testexample">
+puts "Expected Result:"
+puts " - a Google page with results should be shown. 'Programming Ruby'
+should be high on the list."
+</pre>
+
 <p>These two statements simply print the Expected Result of the test to
 the screen.</p>
 <h3>Verify Results</h3>
 <p>Using Watir and a little Ruby, we can evaluate the results to verify
 whether the test case passed or failed.</p>
-<div class="testexample">
-puts <font color="purple">"Actual Result: Check that the 'Programming
-Ruby' link appears on the search results page"<br>
-</font><font color="darkblue">if</font> ie.text.include?("<font
- color="purple">Programming Ruby</font>")
-<br>
-&nbsp;&nbsp; puts <font color="purple">"Test Passed. Found the
-test string: Programming Ruby. Actual Results match
-Expected Results."</font><br>
-<font color="darkblue">else</font><br>
-&nbsp;&nbsp;&nbsp;puts <font color="purple">"Test Failed! Could not
-find: Programming Ruby"</font> <br>
-<font color="darkblue">end</font><br>
-</div>
+
+<pre class="testexample">
+puts "Actual Result:"
+puts " - check that the 'Programming Ruby' link appears on the results page."
+if ie.text.include? "Programming Ruby"  
+  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
+else
+  puts "Test Failed! Could not find: 'Programming Ruby'." 
+end
+</pre>
+
 <p>There is a lot more in this section, but we can break it down.</p>
 <ul>
   <li>The first line prints out the "Actual Result" heading to the
@@ -243,10 +252,14 @@ statement.</li>
 <p></p>
 <h3>End of Test Case</h3>
 <p>What you see in the text editor:</p>
-<div class="testexample"> puts <font color="purple">" "</font><br>
-puts <font color="purple">"##End of test: Google search"</font><br>
-puts <font color="green"># -end of simple Google search test</font>
-</div>
+
+<pre class="testexample">
+puts
+puts "## End of test: Google search."
+
+# end of simple Google search test
+</pre>
+
 <p>The first line prints a blank line for formatting, and a the second
 line prints message to the user that the test case has ended. The final
 line in green is a comment that shows the end of the test case. </p>
