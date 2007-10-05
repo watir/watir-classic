@@ -37,12 +37,14 @@ ie.button(:name, "btnG").click # "btnG" is the name of the Search button
 puts "  Action: clicked the Google Search button."
 
 puts "Expected Result:"
-puts " - a Google page with results should be shown. 'Programming Ruby' should be high on the list."
+puts " A Google page with results should be shown. 'Programming Ruby' should
+be high on the list."
 
 puts "Actual Result:"
-puts " - check that the 'Programming Ruby' link appears on the results page."
+puts " Check that the 'Programming Ruby' link appears on the results page."
 if ie.text.include? "Programming Ruby"  
-  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
+  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results
+match Expected Results."
 else
   puts "Test Failed! Could not find: 'Programming Ruby'." 
 end

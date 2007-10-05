@@ -11,10 +11,13 @@
 <h1>Watir Example Test Case</h1>
 <h2>Google Test Search</h2>
 <p>This document walks through a very simple test case: <b>google_search.rb</b>.
-To begin, from the <b>examples</b> folder in your Watir installation
-directory, open the google_search.rb file in a text editor. To open it
-with SciTE, simply right-click the file in Windows Explorer, and select
-<b>Edit</b> from the popup menu.</p>
+To begin, from the <b>examples</b> folder in your <b>Bonus-zip</b> folder,
+open the google_search.rb file in a text editor. If you do not have
+Bonus-zip folder, download it from
+<a href="http://wiki.openqa.org/display/WTR/Development+Builds">Development
+Builds</a> page and unzip. If you downloaded older version, the file may be
+named googleSearch.rb. To open it with SciTE, simply right-click the file in
+Windows Explorer, and select <b>Edit</b> from the popup menu.</p>
 <p>The format of this example will be to show the Ruby test case
 scripting code in a box as you would see it in a text editor, with an
 explanation after it.</p>
@@ -22,7 +25,6 @@ explanation after it.</p>
 <h2>Getting Started</h2>
 <p>Open Internet Explorer, and try out the test case manually on your
 own:<br>
-<b>Steps:</b><br>
 </p>
 <ol>
   <li>go to the Google home page - http://www.google.com </li>
@@ -104,7 +106,7 @@ ie = Watir::IE.new
 
 <p>To explain what this is doing, we can start from the right of the
 "=" operator. We send a message "new" to the "IE" (Internet Explorer)
-class, and assign it to a variable called "ie".
+class that is inside "Watir" module, and assign it to a variable called "ie".
 The "ie" variable is a local variable (like "test_site"). This means it
 can be accessed from our script, but not from other Ruby functions or
 methods.<br>
@@ -131,7 +133,7 @@ tell the user what is happening in the test case, they double as
 comments. Printing what we are doing when we automate the test case is
 useful for debugging when developing
 test cases, and for quickly repeating failures for bug reports when the
-test case doesn't pass.</p>
+test case doesn't pass. <i>puts</i> without argument will print empty line.</p>
 <h3>Step 1: Go to the Google site</h3>
 <p>This test case follows a pattern of printing out what we intend
 Watir to do on a web application, followed by the Watir scripting code
@@ -159,8 +161,11 @@ part in quotes) by using the <b>+</b> sign. </p>
 <p>We need to enter the term to search in the text field on the Google
 home page.</p>
 <p>What you see in the web browser:</p>
+
 <div class="browserexample">
-<input maxlength="256" size="55" name="q" value=""></div>
+<input maxlength=2048 name=q size=55 title="Google Search" value="">
+</div>
+
 <p>What you see in the text editor:</p>
 
 <pre class="testexample">
@@ -175,16 +180,22 @@ third line prints what Watir just executed to the screen. The comment
 telling the user that "q" is the name of the text field is optional.</p>
 <p>This is the tag in the HTML source with the <i>name</i> attribute
 we used highlighted:</p>
+
 <div class="htmlexample">
-&lt;input maxLength=256 size=55 name=<b>q</b> value=""&gt;</div>
+&lt;input maxlength=2048 name=<b>q</b> size=55 title="Google Search" value=""&gt;
+</div>
+
 <p>The text field has a <i>name</i> attribute <b>q</b>, so we use
 that to tell Watir what object to interact with.</p>
 <h3>Step 3: Click the "Google Search" button</h3>
 <p>We need to click the search button to activate the Google Search
 functionality.</p>
 <p>What you see in the web browser:</p>
+
 <div class="browserexample">
-<input value="Google Search" name="btnG" type="submit"></div>
+<input name=btnG type=submit value="Google Search">
+</div>
+
 <p>What you see in the text editor:</p>
 
 <pre class="testexample">
@@ -198,8 +209,11 @@ line clicks the Google Search button. The third line prints what Watir
 just executed to the screen.</p>
 <p>This is the tag in the HTML source with the <i>name</i> attribute
 we used highlighted:</p>
+
 <div class="htmlexample">
-&lt;input type=submit value="Google Search" name=<b>btnG</b>&gt;</div>
+&lt;input name=<b>btnG</b> type=submit value="Google Search"&gt;
+</div>
+
 <h2>Section 6: Evaluating the Results</h2>
 <h3>The Expected Result</h3>
 <p>This test case prints out what the Expected Result should be prior
@@ -208,8 +222,8 @@ to the test case using Watir to evaluate the results.</p>
 
 <pre class="testexample">
 puts "Expected Result:"
-puts " - a Google page with results should be shown. 'Programming Ruby'
-should be high on the list."
+puts " A Google page with results should be shown. 'Programming Ruby' should
+be high on the list."
 </pre>
 
 <p>These two statements simply print the Expected Result of the test to
@@ -220,9 +234,10 @@ whether the test case passed or failed.</p>
 
 <pre class="testexample">
 puts "Actual Result:"
-puts " - check that the 'Programming Ruby' link appears on the results page."
+puts " Check that the 'Programming Ruby' link appears on the results page."
 if ie.text.include? "Programming Ruby"  
-  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
+  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results
+match Expected Results."
 else
   puts "Test Failed! Could not find: 'Programming Ruby'." 
 end
