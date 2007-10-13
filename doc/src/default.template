@@ -36,7 +36,8 @@ function doSearch() {
       <div id="menu">
         {menu: {menuStyle: vertical, options: {maxLevels: 1}}}
       </div>
-
+	  
+      <script src="http://gmodules.com/ig/ifr?url=http://www.google.com/coop/api/007267089725385613265/cse/gmydx5gtw6u/gadget&amp;synd=open&amp;w=150&amp;h=150&amp;title=Watir+Search&amp;border=%23ffffff%7C0px%2C1px+solid+%23004488%7C0px%2C1px+solid+%23005599%7C0px%2C1px+solid+%230077BB%7C0px%2C1px+solid+%230088CC&amp;output=js"></script>
     </div>
 
     <div id="content">
