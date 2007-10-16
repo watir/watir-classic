@@ -5,7 +5,7 @@ orderInfo: 20
 ---
 h2. Examples
 
-View this detailed example of how to automate a "search on Google":example_testcase.html. 
+View this detailed example of how to automate a "search on Google":http://wiki.openqa.org/display/WTR/Example+Test+Case. 
 
 Here are several simple "examples":https://svn.openqa.org/svn/watir/trunk/watir/examples/. 
 Many people also find our 
