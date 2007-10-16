@@ -2,17 +2,25 @@
 
 This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
-To Install Ruby:    http://ruby-lang.org
-   Best is to use Ruby 1.8.2-14 or later.
-   However, if you are using the Watir::IE#modal_dialog method, you must use Ruby 1.8.2-14 and not a more recent version.
-   Watir (in general) will not work with Ruby 1.8.1-13. (This version of Ruby has a bad WIN32OLE library.)
+Install Ruby http://ruby-lang.org
+   First you need to install Ruby using the one-click installer for Windows. We
+   recommend Ruby 1.8.5. (Ruby 1.8.6 has problems.)
 
-To Install Watir:
-   Best way to install is to use the gem.
-   From your command line: 
-     > gem install win32-process --include-dependencies
-     > gem install watir
-   This will download and install watir, win32-process and all dependencies.
+   However, if you wish to use Watir's support for the IE showModalDialog then
+   you must use Ruby 1.8.2-15 (or 1.8.2-14) and not a more recent version. This
+   dialog is the one that is posted with the showModalDialog() JavaScript
+   command and is supported with Watir's ie.modal_dialog command.
+
+Install Watir
+   Watir is packaged as a gem, a Ruby library that can be installed over the
+   internet.
+
+   Watir 1.5 was released in September 2007. To install it, type this at a
+   command prompt:
+      gem install watir
+
+   Watir 1.4 was released in August 2005. If you are upgrading from it, see
+   these notes: http://wiki.openqa.org/display/WTR/Development+Builds
 
 How To Use:
    This only works on Windows.
@@ -93,7 +101,7 @@ Contacts:
    Paul Rogers (paul.rogers@shaw.ca)
    Bret Pettichord (bret@pettichord.com)
    Charley Baker (charley.baker@gmail.com)
-   The mailing list: http://rubyforge.org/mail/?group_id=104
+   The mailing list: http://groups.google.com/group/watir-general
 
 Contributors:
    Bret Pettichord
