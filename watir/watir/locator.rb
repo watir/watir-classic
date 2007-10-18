@@ -67,7 +67,7 @@ module Watir
       case method.arity
       when 0
         what.matches method.call
-       when 1
+      when 1
        	method.call(what)
       else
         raise MissingWayOfFindingObjectException,
