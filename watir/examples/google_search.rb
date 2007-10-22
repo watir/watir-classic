@@ -1,4 +1,4 @@
-# Please, when you update this file, update also example_testcase.html
+# Please, when you update this file, update also http://wiki.openqa.org/display/WTR/Example+Test+Case
 
 #-------------------------------------------------------------#
 # Demo test for the Watir controller.
@@ -21,35 +21,25 @@ test_site = "http://www.google.com"
 ie = Watir::IE.new
 
 # print some comments
-puts "## Beginning of test: Google search."
-puts
+puts "Beginning of test: Google search."
 
-puts "Step 1: go to the test site: " + test_site
+puts " Step 1: go to the test site: " + test_site
 ie.goto test_site
-puts "  Action: entered " + test_site + " in the address bar."
 
-puts "Step 2: enter 'pickaxe' in the search text field."
+puts " Step 2: enter 'pickaxe' in the search text field."
 ie.text_field(:name, "q").set "pickaxe" # "q" is the name of the search field
-puts "  Action: entered pickaxe in the search field."
 
-puts "Step 3: click the 'Google Search' button."
+puts " Step 3: click the 'Google Search' button."
 ie.button(:name, "btnG").click # "btnG" is the name of the Search button
-puts "  Action: clicked the Google Search button."
 
-puts "Expected Result:"
-puts " A Google page with results should be shown. 'Programming Ruby' should
-be high on the list."
+puts " Expected Result:"
+puts "  A Google page with results should be shown. 'Programming Ruby' should be high on the list."
 
-puts "Actual Result:"
-puts " Check that the 'Programming Ruby' link appears on the results page."
+puts " Actual Result:"
 if ie.text.include? "Programming Ruby"  
-  puts "Test Passed. Found the test string: 'Programming Ruby'. Actual Results
-match Expected Results."
+  puts "  Test Passed. Found the test string: 'Programming Ruby'. Actual Results match Expected Results."
 else
-  puts "Test Failed! Could not find: 'Programming Ruby'." 
+  puts "  Test Failed! Could not find: 'Programming Ruby'." 
 end
 
-puts
-puts "## End of test: Google search."
-
-# end of simple Google search test
+puts "End of test: Google search."
