@@ -58,7 +58,7 @@ class TC_Form_Display < Test::Unit::TestCase
     $stdout = @mockout
     $ie.showForms
     assert_equal(<<END_OF_MESSAGE, @mockout)
-There are 4 forms
+There are 6 forms
 Form name: 
        id: 
    method: get
@@ -72,6 +72,14 @@ Form name: test3
    method: get
    action: pass2.html
 Form name: test2
+       id: 
+   method: get
+   action: pass2.html
+Form name: div_form
+       id: 
+   method: get
+   action: pass2.html
+Form name: table_form
        id: 
    method: get
    action: pass2.html
