@@ -30,15 +30,7 @@ module Watir
     
     # Used internally to determine when IE has finished loading a page
     READYSTATE_COMPLETE = 4
-    
-    # TODO: the following constants should be able to be specified by object (not class)
-    
-    # The delay when entering text on a web page when speed = :slow.
-    DEFAULT_TYPING_SPEED = 0.08
-    
-    # The default time we wait after a page has loaded when speed = :slow.
-    DEFAULT_SLEEP_TIME = 0.1
-    
+       
     # The default color for highlighting objects as they are accessed.
     HIGHLIGHT_COLOR = 'yellow'
     
@@ -164,9 +156,9 @@ module Watir
       @activeObjectHighLightColor = HIGHLIGHT_COLOR
 
       if $FAST_SPEED
-        set_fast_speed
+        self.speed = :fast
       else
-        set_slow_speed
+        self.speed = :slow
       end
       
       @logger = DefaultLogger.new
@@ -185,14 +177,14 @@ module Watir
     # deprecated: use speed = :fast instead
     def set_fast_speed
       @typingspeed = 0
-      @defaultSleepTime = 0.01
+      @pause_after_wait = 0.01
       @speed = :fast
     end
 
     # deprecated: use speed = :slow instead    
     def set_slow_speed
-      @typingspeed = DEFAULT_TYPING_SPEED
-      @defaultSleepTime = DEFAULT_SLEEP_TIME
+      @typingspeed = 0.08
+      @pause_after_wait = 0.1
       @speed = :slow
     end
     
@@ -453,7 +445,7 @@ module Watir
 
       rescue WIN32OLERuntimeError # IE window must have been closed
         @down_load_time = Time.now - start_load_time
-        sleep @defaultSleepTime unless no_sleep
+        sleep @pause_after_wait unless no_sleep
         return @down_load_time
       end
             
@@ -475,7 +467,7 @@ module Watir
 
       @down_load_time = Time.now - start_load_time
       run_error_checks
-      sleep @defaultSleepTime unless no_sleep
+      sleep @pause_after_wait unless no_sleep
       @down_load_time
     end
     
