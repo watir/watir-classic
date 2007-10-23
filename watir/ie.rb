@@ -18,7 +18,39 @@ module Watir
     def self.attach_timeout=(timeout)
       @@attach_timeout = timeout
     end
-    
+
+		def self.defaults 	
+			{:speed => self.speed, :visible => self.visible}
+		end
+		def self.defaults= options
+			options.each do |name, value|
+				send "#{name}=", value
+			end
+		end
+		# The globals $FAST_SPEED and $HIDE_IE are checked both at initialization 
+		# and later, because they
+		# might be set after initialization. Setting them beforehand (e.g. from
+		# the command line) will affect the class, otherwise it is only a temporary
+		# effect
+		@@speed = $FAST_SPEED ? :fast : :slow
+		def self.speed
+			return :fast if $FAST_SPEED
+			@@speed
+		end
+		def self.speed= x
+			$FAST_SPEED = nil
+			@@speed = x
+		end
+		@@visible = $HIDE_IE ? false : true
+		def self.visible
+			return false if $HIDE_IE
+			@@visible
+		end
+		def self.visible= x
+			$HIDE_IE = nil
+			@@visible = x
+		end
+		    
     # The revision number (according to Subversion)
     REVISION_STRING = '$Revision: 1263 $'
     REVISION_STRING.scan(/Revision: (\d*)/)
@@ -69,7 +101,7 @@ module Watir
     
     def _new_window_init
       create_browser_window
-      set_defaults
+      initialize_options
       goto 'about:blank' # this avoids numerous problems caused by lack of a document
     end
     
@@ -100,7 +132,7 @@ module Watir
       iep = Process.start
       @ie = iep.window
       @process_id = iep.process_id
-      set_defaults
+      initialize_options
       goto 'about:blank'      
     end
     
@@ -130,7 +162,7 @@ module Watir
     # this method is used internally to attach to an existing window
     def _attach_init how, what
       attach_browser_window how, what
-      set_defaults
+      initialize_options
       wait
     end
 
@@ -139,7 +171,7 @@ module Watir
     def self.bind window
       ie = new true
       ie.ie = window
-      ie.set_defaults
+      ie.initialize_options
       ie
     end
   
@@ -148,18 +180,15 @@ module Watir
     end
     private :create_browser_window
     
-    def set_defaults
-      self.visible = ! $HIDE_IE
+    def initialize_options
+      self.visible = IE.visible
+      self.speed = IE.speed
+
       @ole_object = nil
       @page_container = self
       @error_checkers = []
       @activeObjectHighLightColor = HIGHLIGHT_COLOR
 
-      if $FAST_SPEED
-        self.speed = :fast
-      else
-        self.speed = :slow
-      end
       
       @logger = DefaultLogger.new
       @url_list = []
@@ -167,8 +196,14 @@ module Watir
 
     def speed= how_fast
       case how_fast
-      when :fast : set_fast_speed
-      when :slow : set_slow_speed
+      when :fast : 
+	      @typingspeed = 0
+	      @pause_after_wait = 0.01
+	      @speed = :fast
+      when :slow :
+	      @typingspeed = 0.08
+	      @pause_after_wait = 0.1
+	      @speed = :slow
       else
         raise ArgumentError, "Invalid speed: #{how_fast}"
       end
@@ -176,16 +211,12 @@ module Watir
     
     # deprecated: use speed = :fast instead
     def set_fast_speed
-      @typingspeed = 0
-      @pause_after_wait = 0.01
-      @speed = :fast
+    	self.speed = :fast
     end
 
     # deprecated: use speed = :slow instead    
     def set_slow_speed
-      @typingspeed = 0.08
-      @pause_after_wait = 0.1
-      @speed = :slow
+    	self.speed = :slow
     end
     
     def visible
