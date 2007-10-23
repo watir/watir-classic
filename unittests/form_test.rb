@@ -26,7 +26,11 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(!$ie.form(:id, 'missing').exists?)   
     
     assert($ie.form(:action, "pass.html").exists?)   
-    assert(!$ie.form(:action, "missing").exists?)   
+    assert(!$ie.form(:action, "missing").exists?)
+    
+    assert($ie.table(:id, 'form_table').form(:name, "table_form").exists?)
+    assert($ie.form(:name, "div_form").exists?)
+    assert($ie.div(:id, 'div1').form(:name, "div_form").exists?)    
   end
   
   def test_ButtonInForm
