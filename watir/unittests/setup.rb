@@ -41,7 +41,7 @@ $non_core_tests =
 $core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
 
 $ie = Watir::IE.new
-$ie.set_fast_speed
+$ie.speed = :fast
 
 $myDir = File.expand_path(File.dirname(__FILE__))
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
