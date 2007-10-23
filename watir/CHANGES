@@ -1,0 +1,10 @@
+== Version 1.5.3
+Bug fixes and minor cleanup.
+
+* Fix text areas bugs.
+* Fix warning messages caused by redefined constants.
+* Break out watir.rb into multiple files.
+* Fix [WTR-90] error when running tests when installing gem.
+  http://jira.openqa.org/browse/WTR-90
+* Fix tests.
+* Update documentation.
