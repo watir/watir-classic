@@ -321,15 +321,19 @@ module Watir
       
       highlight(:set)
       @o.scrollIntoView
-      @o.focus
-      @o.select
-      @o.fireEvent("onSelect")
-      @o.value = ""
-      @o.fireEvent("onKeyPress")
-      doKeyPress(setThis)
+      if type_keys
+	      @o.focus
+	      @o.select
+	      @o.fireEvent("onSelect")
+	      @o.fireEvent("onKeyPress")
+	      @o.value = ""
+	      doKeyPress(setThis)
+	      @o.fireEvent("onChange")
+	      @o.fireEvent("onBlur")
+	    else
+				@o.value = limit_to_maxlength(setThis)
+	    end
       highlight(:clear)
-      @o.fireEvent("onChange")
-      @o.fireEvent("onBlur")
     end
     
     # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
@@ -339,6 +343,14 @@ module Watir
       @o.value = v.to_s
     end
     
+    def requires_typing
+    	@type_keys = true
+    	self
+    end
+    def abhors_typing
+    	@type_keys = false
+    	self
+    end
     private
     
     # This method is used internally by setText and appendText

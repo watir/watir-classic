@@ -151,12 +151,12 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_JS_Events
-    $ie.text_field(:name, 'events_tester').set('p')
+    $ie.text_field(:name, 'events_tester').requires_typing.set('p')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
     assert_equal( "keypresskeydownkeypresskeyup" , $ie.text_field(:name , 'events_text').value.gsub("\r\n" , "")  )
     $ie.button(:value , "Clear Events Box").click
-    $ie.text_field(:name , 'events_tester').set('ab')
+    $ie.text_field(:name , 'events_tester').requires_typing.set('ab')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
     assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , $ie.text_field(:name , 'events_text').value.gsub("\r\n" , "") )

@@ -25,6 +25,7 @@ module Watir
     
     # This is used to change the typing speed when entering text on a page.
     attr_accessor :typingspeed
+    attr_accessor :type_keys
     # The color we want to use for the active object. This can be any valid web-friendly color.
     attr_accessor :activeObjectHighLightColor
     # The PageContainer object containing this element
@@ -32,6 +33,7 @@ module Watir
     
     def copy_test_config(container) # only used by form and frame
       @typingspeed = container.typingspeed
+      @type_keys = container.type_keys
       @activeObjectHighLightColor = container.activeObjectHighLightColor
     end
     private :copy_test_config

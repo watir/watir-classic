@@ -147,7 +147,10 @@ module Watir
     def typingspeed
       @container.typingspeed
     end
-    
+		def type_keys
+			return @container.type_keys if @type_keys.nil? 
+			@type_keys
+		end
     def activeObjectHighLightColor
       @container.activeObjectHighLightColor
     end
