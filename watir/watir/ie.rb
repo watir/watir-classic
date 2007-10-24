@@ -196,13 +196,20 @@ module Watir
 
     def speed= how_fast
       case how_fast
+      when :zippy :
+	      @typingspeed = 0
+	      @pause_after_wait = 0.01
+	      @type_keys = false
+	      @speed = :fast
       when :fast : 
 	      @typingspeed = 0
 	      @pause_after_wait = 0.01
+	      @type_keys = true
 	      @speed = :fast
       when :slow :
 	      @typingspeed = 0.08
 	      @pause_after_wait = 0.1
+	      @type_keys = true
 	      @speed = :slow
       else
         raise ArgumentError, "Invalid speed: #{how_fast}"
