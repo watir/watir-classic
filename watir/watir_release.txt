@@ -1,4 +1,11 @@
 Watir Release How To
+
+PS C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
+PS C:\work\watir> rubyforge add_file wtr watir 1.5.3 pkg\watir-bonus-*
+
+---------------
+What follows is very old...
+
 TODO: describe how to build the nullsoft installer and the gem.
 
 ZIP-BASED RELEASE
