@@ -1,0 +1,104 @@
+<html>
+<head>
+<title>
+ simple table buttons
+</title>
+</head>
+<body>
+ 
+<input type = text name="confirmtext">
+<table >
+    <tr>
+      <td> <input type = button value = "Click" id = "b1" onClick	= "document.all.confirmtext.value = 'CLICK1';"><td>Click1 </td>
+    </tr>  
+    <tr>
+      <td> <input type = button value = "Click" onClick	= "document.all.confirmtext.value = 'CLICK2';"><td>Click2 </td>
+    </tr>  
+    <tr>
+      <td> <input type = button value = "Click" onClick	= "document.all.confirmtext.value = 'CLICK3';">
+           <input type = button value = "Click too" onClick	= "document.all.confirmtext.value = 'CLICK TOO';">
+       <td>Click3</td>
+    </tr>  
+    <tr>
+      <td> <input type = text value = "Im a text field" ></td>
+    </tr>  
+
+
+    <tr>
+      <td>An input field and a button in the same cell<br> <input type = text name='same_cell' value = "Click ->" ><input type=button value = "Click To Change <-" onClick	= "document.all.same_cell.value = '';" </td>
+    </tr>  
+
+</table>
+
+This table has 3 images in each row. Each is a seperate cell
+<table>
+ <tr>
+     <td><img src = images/1.gif><td><img src = images/2.gif><td><img src = images/3.gif>
+<tr>
+     <td><img src = images/1.gif><td><img src = images/2.gif><td><img src = images/3.gif>
+<tr>
+     <td><img src = images/1.gif><td><img src = images/2.gif><td><img src = images/3.gif>
+</table>
+
+This table has 3 images in each row. They are all in the same cell
+<table>
+ <tr>
+     <td><img src = images/1.gif><img src = images/2.gif><img src = images/3.gif>
+<tr>
+     <td><img src = images/1.gif><img src = images/2.gif><img src = images/3.gif>
+<tr>
+     <td><img src = images/1.gif><img src = images/2.gif><img src = images/3.gif>
+</table>
+
+
+<style type="text/css">
+   div.hide { display: none; margin-left: auto; margin-right: auto; }
+   div.show { display: block; margin-left: auto; margin-right: auto; }
+
+   tr.hide { display: none; margin-left: auto; margin-right: auto; }
+   tr.show { display: block; margin-left: auto; margin-right: auto; }
+
+</style>
+
+
+<script language=javascript>
+
+function expand_or_shrink_row( row ) {
+
+    which_row = 'r' + row;
+    which_image = 'i' + row;
+    if ( document.getElementById(which_row).className=='hide' ){
+        document.getElementById(which_row).className='show';
+        document.getElementById(which_image).src='images/minus.gif';
+
+    }
+    else {
+        document.getElementById(which_row).className='hide'
+        document.getElementById(which_image).src='images/plus.gif'
+    }
+
+}
+
+</script>
+
+The table below can show or hide its rows. Click the + (or -) to show or hide the row
+<table id=show_hide>
+  <tr><td><img id=i1 width=30 height=30 src = images/plus.gif onClick='javascript:expand_or_shrink_row("1")'>
+  <tr class = hide id=r1><td>Line 1
+  <tr><td><img id=i2 width=30 height=30 src = images/plus.gif onClick='javascript:expand_or_shrink_row("2")'>
+  <tr  class = hide id=r2><td>Line 2
+  <tr><td><img id=i3 width=30 height=30 src = images/plus.gif onClick='javascript:expand_or_shrink_row("3")'>
+  <tr  class = hide id=r3><td>Line 3
+  <tr><td><img id=i4 width=30 height=30 src = images/plus.gif onClick='javascript:expand_or_shrink_row("4")'>
+  <tr  class = hide  id=r4><td>Line 4
+  <tr><td><img id=i5 width=30 height=30 src = images/plus.gif onClick='javascript:expand_or_shrink_row("5")'>
+  <tr  class = hide id=r5><td>Line 5
+</table>
+
+
+
+
+
+</body>
+
+</html>
