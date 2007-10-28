@@ -184,11 +184,13 @@ module FireWatir
         #
  
         def initialize(options = {})
+            @port = options[:port] || 9997
+          
 			if(options.kind_of?(Integer))
                 options = {:waitTime => options}
             end
 
-            if(options[:profile])
+            if(options[:profile] ||= ENV['WATIR_PROFILE'])
                 profile_opt = "-P #{options[:profile]}"
             else
                 profile_opt = ""
@@ -215,15 +217,18 @@ module FireWatir
 
                 puts "Starting Firefox using the executable : #{path_to_exe}"
                 puts "Waiting for #{waitTime} seconds for Firefox to get started."
-                @t = Thread.new { system("\"#{path_to_exe}\" -jssh #{profile_opt}") }
+                @t = Thread.new { system("\"#{path_to_exe}\" -no-remote -jssh #{@port} #{profile_opt}") }
             elsif(RUBY_PLATFORM =~ /linux/i)
                 puts RUBY_PLATFORM
                 path_to_bin = `which firefox`.strip
-                puts "#{path_to_bin} -jssh #{profile_opt}"
-                @t = Thread.new { `#{path_to_bin} -jssh #{profile_opt}` }
+                cmd = "#{path_to_bin} -no-remote -jssh #{@port} #{profile_opt}"
+                puts cmd
+                @t = Thread.new { %x{#{cmd}} }
             end     
-            
-            sleep waitTime
+          
+            # dont wait the full sleep time, continue as soon as we can connect
+            start_time = Time.now.to_f
+            sleep 0.1  while ((Time.now.to_f - start_time) < waitTime) and ! (TCPSocket.new(MACHINE_IP, @port) rescue false)
             
             set_defaults()
             get_window_number()
@@ -251,7 +256,7 @@ module FireWatir
         #   Gets the window number opened. Used internally by Firewatir.
         #
         def get_window_number()
-            $jssh_socket.send("getWindows().length;\n", 0)
+            @jssh_socket.send("getWindows().length;\n", 0)
             @@current_window = read_socket().to_i - 1
             # This will store the information about the window.
             #@@window_stack.push(@@current_window)
@@ -272,7 +277,7 @@ module FireWatir
             get_window_number()
             set_browser_document()
             # Load the given url.
-            $jssh_socket.send("#{BROWSER_VAR}.loadURI(\"#{url}\");\n" , 0)
+            @jssh_socket.send("#{BROWSER_VAR}.loadURI(\"#{url}\");\n" , 0)
             read_socket()
 
             wait()
@@ -284,7 +289,7 @@ module FireWatir
         #
         def back()
             #set_browser_document()
-            $jssh_socket.send("if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack();\n", 0)
+            @jssh_socket.send("if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack();\n", 0)
             read_socket();
             wait()
         end
@@ -295,7 +300,7 @@ module FireWatir
         #
         def forward()
             #set_browser_document()
-            $jssh_socket.send("if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward();\n", 0)
+            @jssh_socket.send("if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward();\n", 0)
             read_socket();
             wait()
         end
@@ -306,7 +311,7 @@ module FireWatir
         #
         def refresh()
             #set_browser_document()
-            $jssh_socket.send("#{BROWSER_VAR}.reload();\n", 0)
+            @jssh_socket.send("#{BROWSER_VAR}.reload();\n", 0)
             read_socket();
             wait()
         end
@@ -317,15 +322,14 @@ module FireWatir
         #   Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
         #
         def set_defaults(no_of_tries = 0)
-            # JSSH listens on port 9997. Create a new socket to connect to port 9997.
             begin
-                $jssh_socket = TCPSocket::new(MACHINE_IP, "9997")
-                $jssh_socket.sync = true
+                @jssh_socket = TCPSocket::new(MACHINE_IP, @port)
+                @jssh_socket.sync = true
                 read_socket()
             rescue
                     no_of_tries += 1
                     retry if no_of_tries < 3
-                    raise UnableToStartJSShException, "Unable to connect to machine : #{MACHINE_IP} on port 9997. Make sure that JSSh is properly installed and Firefox is running with '-jssh' option"
+                    raise UnableToStartJSShException, "Unable to connect to machine : #{MACHINE_IP} on port #{@port}. Make sure that JSSh is properly installed and Firefox is running with '-jssh' option [#{$!.inspect}]"
             end
         end
         private :set_defaults
@@ -349,13 +353,13 @@ module FireWatir
             jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
             jssh_command += "var #{BODY_VAR} = #{DOCUMENT_VAR}.body;"
 
-            $jssh_socket.send("#{jssh_command}\n", 0)
+            @jssh_socket.send("#{jssh_command}\n", 0)
             read_socket()
 
             # Get window and window's parent title and url
-            $jssh_socket.send("#{DOCUMENT_VAR}.title;\n", 0)
+            @jssh_socket.send("#{DOCUMENT_VAR}.title;\n", 0)
             @window_title = read_socket()
-            $jssh_socket.send("#{DOCUMENT_VAR}.URL;\n", 0)
+            @jssh_socket.send("#{DOCUMENT_VAR}.URL;\n", 0)
             @window_url = read_socket()
         end
         private :set_browser_document
@@ -367,7 +371,7 @@ module FireWatir
         def close()
             #puts "current window number is : #{@@current_window}"
             if @@current_window == 0
-                $jssh_socket.send(" getWindows()[0].close(); \n", 0)
+                @jssh_socket.send(" getWindows()[0].close(); \n", 0)
                 @t.join
                 #sleep 5
             else
@@ -377,7 +381,7 @@ module FireWatir
 
                 # If matching window found. Close the window.
                 if(window_number > 0)
-                    $jssh_socket.send(" getWindows()[#{window_number}].close();\n", 0)
+                    @jssh_socket.send(" getWindows()[#{window_number}].close();\n", 0)
                     read_socket();
                 end    
                 
@@ -424,7 +428,7 @@ module FireWatir
         #
         def find_window(how, what)
             jssh_command = "getWindows().length;";
-            $jssh_socket.send("#{jssh_command}\n", 0)
+            @jssh_socket.send("#{jssh_command}\n", 0)
             @@total_windows = read_socket()
             #puts "total windows are : " + @@total_windows.to_s
 
@@ -473,7 +477,7 @@ module FireWatir
                             
             jssh_command.gsub!(/\n/, "")
             #puts "jssh_command is : #{jssh_command}"
-            $jssh_socket.send("#{jssh_command}\n", 0)
+            @jssh_socket.send("#{jssh_command}\n", 0)
             window_number = read_socket()
             #puts "window number is : " + window_number.to_s
 
@@ -534,8 +538,8 @@ module FireWatir
         #   HTML shown on the page.
         #
         def html()
-            $jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
-            #$jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
+            @jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
+            #@jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
             result = read_socket()
             return "<html>" + result + "</html>"
         end
@@ -548,7 +552,7 @@ module FireWatir
         #   Text shown on the page.
         #
         def text()
-            $jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
+            @jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
             return read_socket().strip
         end
         
@@ -557,7 +561,7 @@ module FireWatir
         #   Maximize the current browser window.
         #
         def maximize()
-            $jssh_socket.send("#{WINDOW_VAR}.maximize();\n", 0)
+            @jssh_socket.send("#{WINDOW_VAR}.maximize();\n", 0)
             read_socket()
         end
 
@@ -566,7 +570,7 @@ module FireWatir
         #   Minimize the current browser window.
         #
         def minimize()
-            $jssh_socket.send("#{WINDOW_VAR}.minimize();\n", 0)
+            @jssh_socket.send("#{WINDOW_VAR}.minimize();\n", 0)
             read_socket()
         end
 
@@ -578,7 +582,7 @@ module FireWatir
             #puts "In wait function "
             isLoadingDocument = ""
             while isLoadingDocument != "false"
-                $jssh_socket.send("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;\n" , 0)
+                @jssh_socket.send("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;\n" , 0)
                 isLoadingDocument = read_socket()
                 #puts "Is browser still loading page: #{isLoadingDocument}"
             end
@@ -622,7 +626,7 @@ module FireWatir
                             wait;"
             #puts "command in wait is : #{jssh_command}"                
             jssh_command = jssh_command.gsub(/\n/, "")
-            $jssh_socket.send("#{jssh_command}; \n", 0)
+            @jssh_socket.send("#{jssh_command}; \n", 0)
             wait_time = read_socket();
             #puts "wait time is : #{wait_time}"
             begin
@@ -630,7 +634,7 @@ module FireWatir
                 if(wait_time != -1)
                     sleep(wait_time)
                     # Call wait again. In case there are multiple redirects.
-                    $jssh_socket.send("#{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser(); \n",0)
+                    @jssh_socket.send("#{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser(); \n",0)
                     read_socket()
                     wait()
                 end    
@@ -729,7 +733,7 @@ module FireWatir
             end
             jssh_command.gsub!(/\n/, "")
             #puts "jssh command sent for js pop up is : #{jssh_command}"
-            $jssh_socket.send("#{jssh_command}\n", 0)
+            @jssh_socket.send("#{jssh_command}\n", 0)
             read_socket()
         end
         
@@ -741,10 +745,10 @@ module FireWatir
         #   Text shown in javascript pop up.
         #
         def get_popup_text()
-            $jssh_socket.send("popuptext;\n", 0)
+            @jssh_socket.send("popuptext;\n", 0)
             return_value = read_socket()
             # reset the variable
-            $jssh_socket.send("popuptexti = '';\n", 0)
+            @jssh_socket.send("popuptexti = '';\n", 0)
             read_socket()
             return return_value
         end
@@ -786,7 +790,7 @@ module FireWatir
             candidate_class = jssh_type =~ /HTML(.*)Element/ ? $1 : ''
             #puts candidate_class # DEBUG
             if candidate_class == 'Input'
-                $jssh_socket.send("#{element_name}.type;\n", 0)
+                @jssh_socket.send("#{element_name}.type;\n", 0)
                 input_type = read_socket().downcase.strip
                 puts input_type # DEBUG
                 firewatir_class = input_class(input_type)
@@ -1065,7 +1069,7 @@ module FireWatir
                             elements_frames.length;"
             
             jssh_command.gsub!("\n", "")
-            $jssh_socket.send("#{jssh_command};\n", 0)
+            @jssh_socket.send("#{jssh_command};\n", 0)
             length = read_socket().to_i 
             
             puts "There are #{length} frames"

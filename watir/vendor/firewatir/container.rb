@@ -816,7 +816,11 @@ module Container
         # Test the index access. 
         # puts doc[35].to_s
 	end
-       
+    
+    def jssh_socket
+      @jssh_socket || @container.jssh_socket
+    end
+
     #
     # Description:
     #  Reads the javascript execution result from the jssh socket. 
@@ -827,7 +831,7 @@ module Container
     # Output:	
     #	The javascript execution result as string.	
     #
-    def read_socket(socket = $jssh_socket)
+    def read_socket(socket = jssh_socket)
         return_value = "" 
         data = ""
         #puts Thread.list

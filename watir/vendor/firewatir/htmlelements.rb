@@ -1108,7 +1108,7 @@ class Option < SelectList
     #   - value - Value of that attribute.
     #
     def initialize (select_list, attribute, value)
-        @select_list = select_list
+        @select_list = @container = select_list
         @how = attribute
         @what = value
         @option = nil
