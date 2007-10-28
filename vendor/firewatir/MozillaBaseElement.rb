@@ -92,7 +92,7 @@
                         #if(@element_type == 'HTMLDivElement')
                         #    ole_method_name = 'innerHTML'
                         #end
-                        $jssh_socket.send('typeof(' + element_object + '.#{ole_method_name});\n', 0)
+                        jssh_socket.send('typeof(' + element_object + '.#{ole_method_name});\n', 0)
                         return_type = read_socket()
 
                         return_value = get_attribute_value(\"#{ole_method_name}\")
@@ -114,10 +114,10 @@
         def get_attribute_value(attribute_name)
             #if the attribut name is columnLength get number of cells in first row if rows exist.
             if(attribute_name == "columnLength")
-                $jssh_socket.send("#{element_object}.columns;\n", 0)
+                jssh_socket.send("#{element_object}.columns;\n", 0)
                 rowsLength = read_socket()
                 if(rowsLength != 0 || rowsLength != "")
-                    $jssh_socket.send("#{element_object}.rows[0].cells.length;\n", 0)
+                    jssh_socket.send("#{element_object}.rows[0].cells.length;\n", 0)
                     return_value = read_socket()
                    return return_value 
                 end
@@ -126,7 +126,7 @@
                 return text()
             end
             if(attribute_name == "url" or attribute_name == "href" or attribute_name == "src" or attribute_name == "action" or attribute_name == "name")
-                $jssh_socket.send("#{element_object}.getAttribute(\"#{attribute_name}\");\n" , 0)
+                jssh_socket.send("#{element_object}.getAttribute(\"#{attribute_name}\");\n" , 0)
                 return_value = read_socket()
             else    
                 jssh_command = "var attribute = '';
@@ -136,19 +136,19 @@
                                     attribute = #{element_object}.getAttribute(\"#{attribute_name}\");
                                 attribute;"
                 jssh_command.gsub!("\n", "")                    
-                $jssh_socket.send("#{jssh_command};\n", 0)
+                jssh_socket.send("#{jssh_command};\n", 0)
                 #puts jssh_command
                 return_value = read_socket()
             end
             if(attribute_name == "value")
-                $jssh_socket.send("#{element_object}.tagName;\n", 0)
+                jssh_socket.send("#{element_object}.tagName;\n", 0)
                 tagName = read_socket().downcase
-                $jssh_socket.send("#{element_object}.type;\n", 0)
+                jssh_socket.send("#{element_object}.type;\n", 0)
                 type = read_socket().downcase
             
                 if(tagName == "button" or type == "image" or type == "submit" or type == "reset" or type == "button")
                     if(return_value == "" or return_value == "null")
-                        $jssh_socket.send("#{element_object}.innerHTML;\n",0)
+                        jssh_socket.send("#{element_object}.innerHTML;\n",0)
                         return_value = read_socket()
                     end    
                 end    
@@ -214,12 +214,12 @@
                 
                 # TODO: Need to change this so that it would work if user sets any other color.
                 #puts "color is : #{DEFAULT_HIGHLIGHT_COLOR}"
-                $jssh_socket.send("#{jssh_command}\n", 0)
+                jssh_socket.send("#{jssh_command}\n", 0)
                 @original_color = read_socket()
                 
             else # BUG: assumes is :clear, but could actually be anything
                 begin 
-                    $jssh_socket.send("#{element_object}.style.background = \"#{@original_color}\";\n", 0)
+                    jssh_socket.send("#{element_object}.style.background = \"#{@original_color}\";\n", 0)
                     read_socket()
                 rescue
                     # we could be here for a number of reasons...
@@ -241,7 +241,7 @@
         def get_rows()
             #puts "#{element_object} and #{element_type}"
             if(element_type == "HTMLTableElement")
-                $jssh_socket.send("#{element_object}.rows.length;\n", 0)
+                jssh_socket.send("#{element_object}.rows.length;\n", 0)
                 length = read_socket().to_i
                 #puts "The number of rows in the table are : #{no_of_rows}"
                 return_array = Array.new(length)
@@ -473,7 +473,7 @@
             # Remove \n that are there in the string as a result of pressing enter while formatting.                
             jssh_command.gsub!(/\n/, "")                
             #puts jssh_command 
-            $jssh_socket.send("#{jssh_command};\n", 0)
+            jssh_socket.send("#{jssh_command};\n", 0)
             element_name = read_socket();          
             #puts "element name in find control is : #{element_name}"
             @@current_level = @@current_level + 1
@@ -592,7 +592,7 @@
             jssh_command.gsub!("\n", "")
             #puts "jssh_command for finding frame is : #{jssh_command}"
             
-            $jssh_socket.send("#{jssh_command};\n", 0)
+            jssh_socket.send("#{jssh_command};\n", 0)
             element_name = read_socket()
             @@current_level = @@current_level + 1
             #puts "element_name for frame is : #{element_name}"
@@ -605,15 +605,15 @@
         end
         
         def get_frame_html
-           $jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
-           #$jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
+           jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
+           #jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
            result = read_socket()
            return "<html>" + result + "</html>"
         end
 
         def submit_form
             #puts "form name is : #{element_object}"
-            $jssh_socket.send("#{element_object}.submit();\n" , 0)
+            jssh_socket.send("#{element_object}.submit();\n" , 0)
             read_socket()
         end
 
@@ -668,7 +668,7 @@
         def elements_by_xpath(container, xpath)
             rand_no = rand(1000)
             #jssh_command = "var xpathResult = #{DOCUMENT_VAR}.evaluate(\"count(#{xpath})\", #{DOCUMENT_VAR}, null, #{NUMBER_TYPE}, null); xpathResult.numberValue;"
-            #$jssh_socket.send("#{jssh_command}\n", 0);
+            #jssh_socket.send("#{jssh_command}\n", 0);
             #node_count = read_socket()
 
             jssh_command = "var element_xpath_#{rand_no} = new Array();"
@@ -686,7 +686,7 @@
             # Remove \n that are there in the string as a result of pressing enter while formatting.                
             jssh_command.gsub!(/\n/, "")                
             #puts jssh_command
-            $jssh_socket.send("#{jssh_command};\n", 0)             
+            jssh_socket.send("#{jssh_command};\n", 0)             
             node_count = read_socket()
             #puts "value of count is : #{node_count}"
 
@@ -717,7 +717,7 @@
             rand_no = rand(1000)
             jssh_command = "var element_xpath_#{rand_no} = null; element_xpath_#{rand_no} = #{DOCUMENT_VAR}.evaluate(\"#{xpath}\", #{DOCUMENT_VAR}, null, #{FIRST_ORDERED_NODE_TYPE}, null).singleNodeValue; element_xpath_#{rand_no};"
 
-            $jssh_socket.send("#{jssh_command}\n", 0)             
+            jssh_socket.send("#{jssh_command}\n", 0)             
             result = read_socket()
             #puts "command send to jssh is : #{jssh_command}"
             #puts "result is : #{result}"
@@ -761,7 +761,7 @@
         def element_type
             #puts "in element_type object is : #{element_object}"
             # Get the type of the element.
-            $jssh_socket.send("#{element_object};\n", 0)
+            jssh_socket.send("#{element_object};\n", 0)
             temp = read_socket()
 
             if temp == ""
@@ -801,7 +801,7 @@
             event = $1 if $1
             
 			# check if we've got an old-school on-event
-			#$jssh_socket.send("typeof(#{element_object}.#{event});\n", 0)
+			#jssh_socket.send("typeof(#{element_object}.#{event});\n", 0)
             #is_defined = read_socket()
               
             # info about event types harvested from: 
@@ -840,7 +840,7 @@
             
 			#puts "JSSH COMMAND:\n#{jssh_command}\n"
 											
-			$jssh_socket.send("#{jssh_command}\n", 0)
+			jssh_socket.send("#{jssh_command}\n", 0)
 			read_socket() if wait
 			wait() if wait
             
@@ -890,7 +890,7 @@
         #
         def enabled?
             assert_exists
-            $jssh_socket.send("#{element_object}.disabled;\n", 0)
+            jssh_socket.send("#{element_object}.disabled;\n", 0)
             value = read_socket()
             @@current_level = 0
             return true if(value == "false") 
@@ -941,9 +941,9 @@
             assert_exists
        
             if(element_type == "HTMLFrameElement")
-                $jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
+                jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
             else    
-                $jssh_socket.send("#{element_object}.textContent;\n", 0)
+                jssh_socket.send("#{element_object}.textContent;\n", 0)
             end    
 
             return_value = read_socket().strip()
@@ -1038,15 +1038,15 @@
                     jssh_command += "#{element_object}.dispatchEvent(event);\n"
                    
                     #puts "jssh_command is: #{jssh_command}"
-                    $jssh_socket.send("#{jssh_command}", 0)
+                    jssh_socket.send("#{jssh_command}", 0)
                     read_socket()
                 else
-                    $jssh_socket.send("typeof(#{element_object}.click);\n", 0)
+                    jssh_socket.send("typeof(#{element_object}.click);\n", 0)
                     isDefined = read_socket()
                     if(isDefined == "undefined")
                         fire_event("onclick")
                     else
-                        $jssh_socket.send("#{element_object}.click();\n" , 0)
+                        jssh_socket.send("#{element_object}.click();\n" , 0)
                         read_socket()
                     end    
             end
@@ -1109,12 +1109,12 @@
         #                         win.confirm = function(param) {popuptext = param; return false; };"
         #    end
         #    jssh_command.gsub!(/\n/, "")
-        #    $jssh_socket.send("#{jssh_command}\n", 0)
+        #    jssh_socket.send("#{jssh_command}\n", 0)
         #    read_socket()
         #    click_js_popup_creator_button()
-        #    #$jssh_socket.send("popuptext_alert;\n", 0)
+        #    #jssh_socket.send("popuptext_alert;\n", 0)
         #    #read_socket()
-        #    $jssh_socket.send("\n", 0)
+        #    jssh_socket.send("\n", 0)
         #    read_socket()
         #end
 
@@ -1125,7 +1125,7 @@
         #
         #def click_js_popup_creator_button
         #    #puts @@current_js_object.element_name
-        #    $jssh_socket.send("#{@@current_js_object.element_name}\n;", 0)
+        #    jssh_socket.send("#{@@current_js_object.element_name}\n;", 0)
         #    temp = read_socket()
         #    temp =~ /\[object\s(.*)\]/
         #    if $1
@@ -1144,10 +1144,10 @@
         #            jssh_command += "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
         #            jssh_command += "#{@@current_js_object.element_name}.dispatchEvent(event);\n"
         #
-        #            $jssh_socket.send("#{jssh_command}", 0)
+        #            jssh_socket.send("#{jssh_command}", 0)
         #            read_socket()
         #        when "HTMLDivElement", "HTMLSpanElement"
-        #             $jssh_socket.send("typeof(#{element_object}.#{event.downcase});\n", 0)
+        #             jssh_socket.send("typeof(#{element_object}.#{event.downcase});\n", 0)
         #             isDefined = read_socket()
         #             #puts "is method there : #{isDefined}"
         #             if(isDefined != "undefined")
@@ -1156,16 +1156,16 @@
         #                                     event.initEvent(\"click\", true, true);
         #                                     #{element_object}.dispatchEvent(event);"
         #                     jssh_command.gsub!(/\n/, "")
-        #                     $jssh_socket.send("#{jssh_command}\n", 0)
+        #                     jssh_socket.send("#{jssh_command}\n", 0)
         #                     read_socket()
         #                 else
-        #                     $jssh_socket.send("#{element_object}.#{event.downcase}();\n", 0)
+        #                     jssh_socket.send("#{element_object}.#{event.downcase}();\n", 0)
         #                     read_socket()
         #                 end    
         #             end
         #        else
         #            jssh_command = "#{@@current_js_object.element_name}.click();\n";
-        #            $jssh_socket.send("#{jssh_command}", 0)
+        #            jssh_socket.send("#{jssh_command}", 0)
         #            read_socket()
         #    end
         #    @@current_level = 0
@@ -1181,7 +1181,7 @@
         #   Array of option elements.
         #
         def options
-            $jssh_socket.send("#{element_object}.options.length;\n", 0)
+            jssh_socket.send("#{element_object}.options.length;\n", 0)
             length = read_socket().to_i
             #puts "options length is : #{length}"
             arr_options = Array.new(length)
@@ -1200,7 +1200,7 @@
         #   Class name of option element.
         #
         def option_class_name
-            $jssh_socket.send("#{element_object}.className;\n", 0)
+            jssh_socket.send("#{element_object}.className;\n", 0)
             return read_socket()
         end
         private :option_class_name
@@ -1213,7 +1213,7 @@
         #   Text of option element.
         #
         def option_text
-            $jssh_socket.send("#{element_object}.text;\n", 0)
+            jssh_socket.send("#{element_object}.text;\n", 0)
             return read_socket()
         end
         private :option_text
@@ -1226,7 +1226,7 @@
         #   Value of option element.
         #
         def option_value
-            $jssh_socket.send("#{element_object}.value;\n", 0)
+            jssh_socket.send("#{element_object}.value;\n", 0)
             return read_socket()
         end
         private :option_value
@@ -1239,7 +1239,7 @@
         #   True if option is selected, false otherwise.
         #
         def option_selected
-            $jssh_socket.send("#{element_object}.selected;\n", 0)
+            jssh_socket.send("#{element_object}.selected;\n", 0)
             value = read_socket()
             return true if value == "true"
             return false if value == "false"
@@ -1257,7 +1257,7 @@
             assert_exists
             #puts "element name in cells is : #{element_object}"
             if(element_type == "HTMLTableRowElement")
-                $jssh_socket.send("#{element_object}.cells.length;\n", 0)
+                jssh_socket.send("#{element_object}.cells.length;\n", 0)
                 length = read_socket.to_i
                 return_array = Array.new(length)
                 for i in 0..length - 1 do
@@ -1291,7 +1291,7 @@
             #jssh_command += "textBox.value = \"#{setPath}\";\n";
             
             #puts jssh_command
-            $jssh_socket.send("#{element_object}.value = \"#{setPath}\";\n", 0)
+            jssh_socket.send("#{element_object}.value = \"#{setPath}\";\n", 0)
             read_socket()
             @@current_level = 0
         end
@@ -1319,7 +1319,7 @@
                     jssh_command += i;
                 end
                 #puts "#{jssh_command}"
-                $jssh_socket.send("#{jssh_command};\n", 0)
+                jssh_socket.send("#{jssh_command};\n", 0)
                 return_value = read_socket()
                 #puts "return value is : #{return_value}"
                 return return_value
@@ -1339,7 +1339,7 @@
                 end    
                 #puts "temp is : #{temp}"
                 
-                $jssh_socket.send("typeof(#{temp});\n", 0)
+                jssh_socket.send("typeof(#{temp});\n", 0)
                 method_type = read_socket()
                 #puts "method_type is : #{method_type}"
 
@@ -1353,7 +1353,7 @@
                         jssh_command = "#{element_object}.#{methodName}#{args[0]}"
                     end    
                     #puts "jssh_command is : #{jssh_command}"
-                    $jssh_socket.send("#{jssh_command};\n", 0)
+                    jssh_socket.send("#{jssh_command};\n", 0)
                     read_socket()
                     return
                 end
@@ -1391,7 +1391,7 @@
                     jssh_command = jssh_command.gsub("\"true\"", "true")
                 end
                 #puts "jssh_command is #{jssh_command}"
-                $jssh_socket.send("#{jssh_command}", 0)
+                jssh_socket.send("#{jssh_command}", 0)
                 returnValue = read_socket()
                 #puts "return value is : #{returnValue}"
                 
@@ -1467,7 +1467,7 @@
             # Remove \n that are there in the string as a result of pressing enter while formatting.                
             jssh_command.gsub!(/\n/, "")
             #puts  jssh_command
-            $jssh_socket.send("#{jssh_command};\n", 0)
+            jssh_socket.send("#{jssh_command};\n", 0)
             @length = read_socket().to_i;   
             #puts "elements length is in locate_tagged_elements is : #{@length}"
           
@@ -1526,7 +1526,7 @@
         #   Array containing Form elements
         #
         def get_forms()
-            $jssh_socket.send("var element_forms = #{DOCUMENT_VAR}.forms; element_forms.length;\n", 0)
+            jssh_socket.send("var element_forms = #{DOCUMENT_VAR}.forms; element_forms.length;\n", 0)
             length = read_socket().to_i
             forms = Array.new(length)
 
@@ -1729,7 +1729,7 @@
             # Remove \n that are there in the string as a result of pressing enter while formatting.                
             jssh_command.gsub!(/\n/, "")                
             #puts jssh_command 
-            $jssh_socket.send("#{jssh_command};\n", 0)
+            jssh_socket.send("#{jssh_command};\n", 0)
             length = read_socket().to_i;          
             #puts "elements length is in locate_tagged_elements is : #{length}"
             
