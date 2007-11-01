@@ -5,7 +5,7 @@ require 'firewatir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'firewatir/testUnitAddons'
-require 'iostring'
+require 'unittests/iostring'
 
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir do
