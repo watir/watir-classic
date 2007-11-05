@@ -10,7 +10,7 @@ module Watir
     # Whether true or false, the assertion count is incremented.
     def verify boolean, message = 'verify failed.'
       add_assertion
-      add_failure message, caller unless boolean
+      add_failure message.to_s, caller unless boolean
     end
     
     def verify_equal expected, actual, message=nil
