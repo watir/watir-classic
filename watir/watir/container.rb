@@ -815,63 +815,12 @@ module Watir
     #   * types - what object types we will look at.
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
     def locate_input_element(how, what, types, value=nil)
-      elements = nil
-      # Searching through all elements returned by ole_inner_elements
-      # is *significantly* slower than IE's getElementById() and
-      # getElementsByName() calls when how is :id or :name.  However
-      # IE doesn't match Regexps, so first we make sure what is a String.
-      # In addition, IE's getElementById() will also return an element
-      # where the :name matches, so we will only return the results of
-      # getElementById() if the matching element actually HAS a matching
-      # :id.
-      begin
-        if what.class == String   # Only use fast calls with String what.
-          if how == :id
-            element = document.getElementById(what)
-            # Return if our fast match really HAS a matching :id
-            return element if element.nil? or element.invoke('id') == what
-          elsif how == :name
-            elements = document.getElementsByName(what)
-          end
-        end
-      rescue
-      end
-      # Use slow methods if the faster methods didn't match
-      elements = ole_inner_elements if elements.nil?
-
-      how = :value if how == :caption
-      how = :class_name if how == :class
-      what = what.to_i if how == :index
-      value = value.to_s if value 
-      log "getting object - how is #{how} what is #{what} types = #{types} value = #{value}"
-      
-      object_index = 1
-      elements.each do |object|
-        element = Element.new(object)
-        if types.include?(element.type)
-          if how == :index
-            attribute = object_index
-          else
-            begin
-              attribute = element.send(how)
-            rescue NoMethodError
-              raise MissingWayOfFindingObjectException,
-                            "#{how} is an unknown way of finding an <INPUT> element (#{what})"
-            end
-          end
-          if what.matches(attribute)
-            if value
-              if element.value == value
-                return object
-              end
-            else
-              return object
-            end
-          end
-          object_index += 1
-        end
-      end
-      return nil
+      locator = InputElementLocator.new self, types
+      locator.document = document rescue true
+      return locator.element if locator.fast_locate
+      locator.elements = ole_inner_elements if locator.elements.nil?
+      locator.specifier = [how, what, value]
+      locator.locate
     end
     
     # returns the ole object for the specified element
