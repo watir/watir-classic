@@ -4,16 +4,16 @@ inMenu: true
 orderInfo: 40
 ---
 
-h2. Watir 1.5
+h2. Documentation
 
-The "new users guide":http://wiki.openqa.org/display/WTR/User+Guide provides a
+The "quick start":http://wiki.openqa.org/display/WTR/Quick+Start provides a
 quick introduction to using Watir. The "cheat sheet":http://wiki.openqa.org/display/WTR/Cheat+Sheet 
 provides a handy reference. 
 
 View this  
 "succinct summary of the Watir API":http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
 and the provided methods and attributes. You can also review the 
-"rdoc":http://wtr.rubyforge.org/rdoc/index.html -- 
+"rdoc":http://wtr.rubyforge.org/rdoc/  -- 
 detailed API documentation in Ruby's standard format.
 
 The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently 
@@ -21,7 +21,5 @@ asked questions.
 
 There are also several "articles":http://wiki.openqa.org/display/WTR/Articles about Watir.
 
-h2. Watir 1.4
-
-The "old users guide":http://wiki.openqa.org/display/WTR/Tutorial
+The "tutorial":http://wiki.openqa.org/display/WTR/Tutorial
 provides a broad, comprehensive introduction.
