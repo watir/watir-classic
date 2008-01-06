@@ -17,6 +17,10 @@ module Watir
       super(nil)
     end
   end
+
+  #
+  # Input: Select
+  #
   
   # This class is the way in which select boxes are manipulated.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
@@ -26,6 +30,7 @@ module Watir
     attr_accessor :o
     
     # This method clears the selected items in the select box
+    # TODO: fix Camel case
     def clearSelection
       assert_exists
       highlight(:set)
@@ -99,7 +104,7 @@ module Watir
     
     # Returns the selected items as an array.
     # Raises UnknownObjectException if the select box is not found.
-    def getSelectedItems
+    def getSelectedItems     # TODO: fix camel case
       assert_exists
       returnArray = []
       @container.log "There are #{@o.length} items"
@@ -185,12 +190,18 @@ module Watir
     end
   end
   
-  # This is the main class for accessing buttons.
-  # Normally a user would not need to create this object as it is
-  # returned by the Watir::Container#button method
+  # 
+  # Input: Button
+  #
+  
+  # Returned by the Watir::Container#button method
   class Button < InputElement
     INPUT_TYPES = ["button", "submit", "image", "reset"]
   end
+
+  #
+  # Input: Text
+  #
   
   # This class is the main class for Text Fields
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
@@ -203,23 +214,21 @@ module Watir
       assert_exists
       begin
         ole_object.invoke('maxlength').to_i
-      rescue
+      rescue WIN32OLERuntimeError
         0
       end
     end
-    
-    
+        
     # Returns true or false if the text field is read only.
     #   Raises UnknownObjectException if the object can't be found.
     def_wrap :readonly?, :readOnly
     
     def text_string_creator
       n = []
-      n <<   "length:".ljust(TO_S_SIZE) + self.size.to_s
-      n <<   "max length:".ljust(TO_S_SIZE) + self.maxlength.to_s
-      n <<   "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
-      
-      return n
+      n << "length:".ljust(TO_S_SIZE) + self.size.to_s
+      n << "max length:".ljust(TO_S_SIZE) + self.maxlength.to_s
+      n << "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
+      n
     end
     private :text_string_creator
     
@@ -227,28 +236,30 @@ module Watir
       assert_exists
       r = string_creator
       r += text_string_creator
-      return r.join("\n")
+      r.join("\n")
     end
     
     def assert_not_readonly
-      raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only." if self.readonly?
+      if self.readonly?
+        raise ObjectReadOnlyException, 
+          "Textfield #{@how} and #{@what} is read only."
+      end
     end
     
-    # This method returns true or false if the text field contents is either a string match
-    # or a regular expression match to the supplied value.
+    # Returns true if the text field contents is matches the specified target,
+    # which can be either a string or a regular expression.
     #   Raises UnknownObjectException if the object can't be found
-    #   * containsThis - string or reg exp - the text to verify
-    def verify_contains(containsThis) # FIXME: verify_contains should have same name and semantics as IE#contains_text (prolly make this work for all elements)
+    def verify_contains(target) # FIXME: verify_contains should have same name and semantics as IE#contains_text (prolly make this work for all elements)
       assert_exists
-      if containsThis.kind_of? String
-        return true if self.value == containsThis
-      elsif containsThis.kind_of? Regexp
-        return true if self.value.match(containsThis) != nil
+      if target.kind_of? String
+        return true if self.value == target
+      elsif target.kind_of? Regexp
+        return true if self.value.match(target) != nil
       end
       return false
     end
     
-    # this method is used to drag the entire contents of the text field to another text field
+    # Drag the entire contents of the text field to another text field
     #  19 Jan 2005 - It is added as prototype functionality, and may change
     #   * destination_how   - symbol, :id, :name how we identify the drop target
     #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
@@ -273,7 +284,7 @@ module Watir
       self.value = ""
     end
     
-    # This method clears the contents of the text box.
+    # Clears the contents of the text box.
     #   Raises UnknownObjectException if the object can't be found
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
@@ -294,28 +305,26 @@ module Watir
       highlight(:clear)
     end
     
-    # This method appens the supplied text to the contents of the text box.
+    # Appends the specified string value to the contents of the text box.
     #   Raises UnknownObjectException if the object cant be found
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
-    #   * setThis  - string - the text to append
-    def append(setThis)
+    def append(value)
       assert_enabled
       assert_not_readonly
       
       highlight(:set)
       @o.scrollIntoView
       @o.focus
-      doKeyPress(setThis)
+      type_by_character(value)
       highlight(:clear)
     end
     
-    # This method sets the contents of the text box to the supplied text
+    # Sets the contents of the text box to the specified text value
     #   Raises UnknownObjectException if the object cant be found
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
-    #   * setThis - string - the text to set
-    def set(setThis)
+    def set(value)
       assert_enabled
       assert_not_readonly
       
@@ -327,17 +336,19 @@ module Watir
 	      @o.fireEvent("onSelect")
 	      @o.fireEvent("onKeyPress")
 	      @o.value = ""
-	      doKeyPress(setThis)
+	      type_by_character(value)
 	      @o.fireEvent("onChange")
 	      @o.fireEvent("onBlur")
 	    else
-				@o.value = limit_to_maxlength(setThis)
+				@o.value = limit_to_maxlength(value)
 	    end
       highlight(:clear)
     end
     
-    # this method sets the value of the text field directly. It causes no events to be fired or exceptions to be raised, so generally shouldnt be used
-    # it is preffered to use the set method.
+    # Sets the value of the text field directly. 
+    # It causes no events to be fired or exceptions to be raised, 
+    # so generally shouldn't be used.
+    # It is preffered to use the set method.
     def value=(v)
       assert_exists
       @o.value = v.to_s
@@ -351,12 +362,13 @@ module Watir
     	@type_keys = false
     	self
     end
+
     private
     
-    # This method is used internally by setText and appendText
+    # Type the characters in the specified string (value) one by one.
     # It should not be used externally.
     #   * value - string - The string to enter into the text field
-    def doKeyPress(value)
+    def type_by_character(value)
       value = limit_to_maxlength(value)
       for i in 0 .. value.length - 1
         sleep @container.typingspeed
@@ -405,7 +417,7 @@ module Watir
     
   end
   
-  # This class is the class for fields that accept file uploads
+  # For fields that accept file uploads
   # Windows dialog is opened and handled in this case by autoit 
   # launching into a new process. 
   class FileField < InputElement
