@@ -370,14 +370,23 @@ module Watir
     #   * value - string - The string to enter into the text field
     def type_by_character(value)
       value = limit_to_maxlength(value)
-      for i in 0 .. value.length - 1
+      characters_in(value) do |c|
         sleep @container.typingspeed
-        c = value[i,1]
         @o.value = @o.value.to_s + c   
         @o.fireEvent("onKeyDown")
         @o.fireEvent("onKeyPress")
         @o.fireEvent("onKeyUp")
       end
+    end
+    
+    # Supports double-byte characters
+    def characters_in(value) 
+      index = 0
+      while index < value.length 
+        len = value[index] > 128 ? 2 : 1
+        yield value[index, len]
+        index += len
+      end 
     end
     
     # Return the value (a string), limited to the maxlength of the element.
