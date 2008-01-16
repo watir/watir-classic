@@ -3,12 +3,14 @@ Watir Release How To
 PS C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
 PS C:\work\watir> rubyforge add_file wtr watir 1.5.3 pkg\watir-bonus-*
 
----------------
+UPDATE RDOCS (Current as of 9/5/07)
+
+Upload the rdocs (assumes rdocs have been built already)
+   pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
+
 What follows is very old...
 
-TODO: describe how to build the nullsoft installer and the gem.
-
-ZIP-BASED RELEASE
+ZIP-BASED RELEASE (OBSOLETE)
 
 Check everything out of cvs.
 In watir.rb, change the VERSION constant to be the new release number.
@@ -35,11 +37,8 @@ Zip up. Note the filename is watir_v1_3_1.zip.
 
 Note: Don't forget to delete the watir_bonus directories.
 
-UPDATE WEBSITE
+UPDATE WEBSITE (OBSOLETE)
 
 Upload the home page and basic user documentation
    psftp -b website-upload.scr bret@rubyforge.org
 
-STILL WORKS (9/5/07)
-Upload the rdocs (assumes rdocs have been built already)
-   pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
