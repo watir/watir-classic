@@ -14,7 +14,7 @@ module Watir
     def self.close_all_but(except=nil)
       Watir::IE.each do |ie|
         ie.close_modal
-        ie.close unless except and except.hwnd == window.hwnd
+        ie.close unless except and except.hwnd == ie.hwnd
       end
       sleep 1.0 # replace with polling for window count to be zero?
     end
