@@ -139,6 +139,8 @@ Contributors:
    Xavier Noria
    Jeff Fry
    Zeljko Filipin
+   Paul Taylor - Bug fix 194
+   Vincent Xu - Chinese input support
 
 Acknowledgements:
    Chris Morris

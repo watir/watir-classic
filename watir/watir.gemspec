@@ -36,6 +36,7 @@ spec = Gem::Specification.new do |s|
   s.require_path = '.'    
   s.autorequire = 'watir'
   s.add_dependency("win32-process", ">= 0.5.1")
+  s.add_dependency("windows-pr", ">= 0.6.6")
 
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
