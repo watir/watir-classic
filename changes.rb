@@ -1,5 +1,16 @@
 =begin rdoc
-Major Changes in 1.5
+== Version 1.5.3
+Bug fixes and minor cleanup.
+
+* Fix text areas bugs.
+* Fix warning messages caused by redefined constants.
+* Break out watir.rb into multiple files.
+* Fix [WTR-90] error when running tests when installing gem.
+  http://jira.openqa.org/browse/WTR-90
+* Fix tests.
+* Update documentation.
+
+Major Changes in 1.5.1
     Support for IE's Modal Dialogs. 
       showModalDialog() 
     Any method can be used to specify an element (:text, :class, etc.). 
@@ -9,7 +20,7 @@ Major Changes in 1.5
     One can now use multiple attributes to specify an element.
       ie.span(:class =>'Label', :text => 'Add new').click
       
-Other Changes in 1.5  
+Other Changes in 1.5.1
     * Migrated IE.new_process from watir/contrib and improved its reliability. We now recommend IE.new_process over IE.new as a way to avoid numerous errors detailed in http://jira.openqa.org/browse/WTR-150.
     * Added IE.start_process. This works like IE.start, but uses the new_process mechanism to start IE.
     * Added IE.new_window and IE.start_window. This are synonyms for IE.new and IE.start.
