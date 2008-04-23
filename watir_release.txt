@@ -2,7 +2,7 @@ Watir Release How To
 
 Change version number in ie.rb.
 "rake gem bonus-zip" to build both the gem and the bonus zip.
-
+"rubyforge config" -- this does something important (not sure what)
 PS C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
 PS C:\work\watir> rubyforge add_file wtr watir 1.5.3 pkg\watir-bonus-*
 
