@@ -10,7 +10,7 @@ Bug fixes and minor cleanup.
 * Fix tests.
 * Update documentation.
 
-Major Changes in 1.5.1
+Major Changes in 1.5.2
     Support for IE's Modal Dialogs. 
       showModalDialog() 
     Any method can be used to specify an element (:text, :class, etc.). 
@@ -20,7 +20,7 @@ Major Changes in 1.5.1
     One can now use multiple attributes to specify an element.
       ie.span(:class =>'Label', :text => 'Add new').click
       
-Other Changes in 1.5.1
+Other Changes in 1.5.2
     * Migrated IE.new_process from watir/contrib and improved its reliability. We now recommend IE.new_process over IE.new as a way to avoid numerous errors detailed in http://jira.openqa.org/browse/WTR-150.
     * Added IE.start_process. This works like IE.start, but uses the new_process mechanism to start IE.
     * Added IE.new_window and IE.start_window. This are synonyms for IE.new and IE.start.
