@@ -6,7 +6,7 @@ require 'unittests/setup'
 require 'cgi'
 
 class TC_Links < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "links1.html")
@@ -125,7 +125,7 @@ class TC_Links < Test::Unit::TestCase
 end
 
 class TC_Frame_Links < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "frame_links.html")

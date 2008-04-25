@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Frames < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "frame_buttons.html")
@@ -54,7 +54,7 @@ class TC_Frames < Test::Unit::TestCase
 end
 
 class TC_Frames2 < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "frame_multi.html")
@@ -76,7 +76,7 @@ class TC_Frames2 < Test::Unit::TestCase
 end
 
 class TC_NestedFrames < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "nestedFrames.html")
@@ -95,7 +95,6 @@ class TC_NestedFrames < Test::Unit::TestCase
 end
 
 class TC_IFrames < Test::Unit::TestCase
-  include Watir
   
   def setup
     $ie.goto($htmlRoot + "iframeTest.html")
