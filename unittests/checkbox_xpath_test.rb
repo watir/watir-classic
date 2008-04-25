@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_CheckBox_XPath < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "checkboxes1.html")

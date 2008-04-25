@@ -5,8 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Buttons < Test::Unit::TestCase
-  include Watir
-  
+  include Watir::Exception
   def setup
     $ie.goto($htmlRoot + "buttons1.html")
   end
@@ -127,7 +126,7 @@ class TC_Buttons < Test::Unit::TestCase
     goto_frames_page
     
     assert($ie.frame("buttonFrame").button(:caption, "Click Me").enabled?)   
-    assert_raises(  UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { $ie.button(:caption, "Disabled Button").enabled?}  
+    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { $ie.button(:caption, "Disabled Button").enabled?}  
   end
   
 end

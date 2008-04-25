@@ -2,7 +2,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
   
 class Map_Tests < Watir::TestCase
-  include Watir
   
   def setup
     $ie.goto($htmlRoot + 'map_test.html')
