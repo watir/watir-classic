@@ -4,7 +4,7 @@ require 'unittests/setup'
 class TC_Fields_For_Chinese_Char < Test::Unit::TestCase
   
   def setup()
-    $ie.goto($htmlRoot + "textfields1.html")                 
+    use_page "textfields1.html"                 
   end
   
   def test_chinese_char_should_be_appended_to_text_field

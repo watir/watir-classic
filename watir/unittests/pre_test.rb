@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Pre < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "pre.html")
+    use_page "pre.html"
   end
   
   def test_Pre_Count

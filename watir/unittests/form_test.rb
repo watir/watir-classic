@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   def setup
-    $ie.goto($htmlRoot + "forms2.html")
+    use_page "forms2.html"
   end
   
   def test_Form_Exists
@@ -50,7 +50,7 @@ require 'unittests/iostring'
 class TC_Form_Display < Test::Unit::TestCase
   include MockStdoutTestCase                
   def test_showforms
-    $ie.goto($htmlRoot + "forms2.html")
+    use_page "forms2.html"
     $stdout = @mockout
     $ie.showForms
     assert_equal(<<END_OF_MESSAGE, @mockout)
@@ -77,7 +77,7 @@ end
 
 class TC_Forms3 < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "forms3.html")
+    use_page "forms3.html"
   end
   
   # The following tests from bug 2261 
@@ -181,7 +181,7 @@ end
 class TC_Forms3_Display < Test::Unit::TestCase
   include MockStdoutTestCase # BUG in test: output not verified!                
   def test_show_stuff
-    $ie.goto($htmlRoot + "forms3.html")
+    use_page "forms3.html"
     $stdout = @mockout
     $ie.showAllObjects
     puts $ie.getText
@@ -191,7 +191,7 @@ end
 
 class TC_Forms4 < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "forms4.html")
+    use_page "forms4.html"
   end
   
   def test_find_text_field_ignoring_form
@@ -221,7 +221,7 @@ end
 
 class TC_Hidden_Fields < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "forms3.html")
+    use_page "forms3.html"
   end
   
   def test_hidden

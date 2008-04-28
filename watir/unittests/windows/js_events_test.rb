@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_JSEvents < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "javascriptevents.html")
+    use_page "javascriptevents.html"
   end
   
   def test_Button_disabled

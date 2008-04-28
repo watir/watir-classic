@@ -10,7 +10,7 @@ class TC_ModalDialog < Watir::TestCase
   include Watir
   
   def setup
-    $ie.goto($htmlRoot + 'modal_dialog_launcher.html')
+    use_page 'modal_dialog_launcher.html'
   end
 
   def teardown 

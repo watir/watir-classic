@@ -8,7 +8,7 @@ class TC_ExistingWindow< Test::Unit::TestCase
   include Watir
 
   def setup
-    $ie.goto($htmlRoot + 'buttons1.html')
+    use_page 'buttons1.html'
   end
   def teardown
     IE.reset_attach_timeout

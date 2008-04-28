@@ -6,7 +6,7 @@ require 'unittests/setup'
 class TC_Relative < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "depot_store.html")
+    use_page "depot_store.html"
     @headline = $ie.h3(:text, 'Pragmatic Version Control')
   end
   

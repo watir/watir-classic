@@ -8,7 +8,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "selectboxes1.html")
+    use_page "selectboxes1.html"
   end
   
   def test_textBox_Exists

@@ -8,7 +8,7 @@ class TC_SelectList < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "selectboxes1.html")
+    use_page "selectboxes1.html"
   end
   
   def test_SelectList_exists
@@ -69,7 +69,7 @@ class TC_Selectbox < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "selectboxes1.html")
+    use_page "selectboxes1.html"
   end
   
   def test_selectBox_Exists
@@ -220,7 +220,7 @@ end
 class TC_Select_Options < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "select_tealeaf.html")
+    use_page "select_tealeaf.html"
   end
   
   def test_options_text
