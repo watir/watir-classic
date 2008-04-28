@@ -5,7 +5,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_MinMax< Test::Unit::TestCase
-  include Watir
   def setup
     $ie.goto($htmlRoot + 'pass.html')
   end        
@@ -20,7 +19,7 @@ class TC_MinMax< Test::Unit::TestCase
   end
   def test_front
     assert $ie.front?
-    ie2 = IE.start($htmlRoot + 'blankpage.html')
+    ie2 = Watir::IE.start($htmlRoot + 'blankpage.html')
     assert ie2.front?
     assert_false $ie.front?
     $ie.bring_to_front

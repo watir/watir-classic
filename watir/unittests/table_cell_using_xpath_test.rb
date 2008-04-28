@@ -5,13 +5,8 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_TableCell_XPath < Test::Unit::TestCase
-  include Watir
   
   def setup
-    gotoTableCellPage
-  end
-  
-  def gotoTableCellPage
     $ie.goto($htmlRoot + "tableCell_using_xpath.html")
   end
   

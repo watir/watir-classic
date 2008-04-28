@@ -5,8 +5,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE
 require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
-  include Watir
-  
   def setup
     $ie.goto($htmlRoot + "textfields1.html")
   end

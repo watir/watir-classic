@@ -6,7 +6,6 @@ require 'unittests/setup'
 require 'cgi'
 
 class TC_Navigate < Test::Unit::TestCase
-  include Watir
   
   def goto_page(a)
     $ie.goto($htmlRoot + a)

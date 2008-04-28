@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Tables < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "table1.html")
@@ -276,7 +276,7 @@ class TC_Tables_Buttons < Test::Unit::TestCase
   
   def test_table_from_element
     button = $ie.button(:id, "b1")
-    table = Table.create_from_element($ie, button)
+    table = Watir::Table.create_from_element($ie, button)
     
     table[2][1].button(:index, 1).click
     assert($ie.textField(:name, "confirmtext").verify_contains(/CLICK2/i))
@@ -284,7 +284,7 @@ class TC_Tables_Buttons < Test::Unit::TestCase
 end
 
 class TC_Table_Columns < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   def setup
     $ie.goto($htmlRoot + "simple_table_columns.html")
   end
@@ -324,7 +324,6 @@ class TC_Table_Columns < Test::Unit::TestCase
 end
 
 class TC_Tables_Complex < Test::Unit::TestCase
-  include Watir
   def setup
     $ie.goto($htmlRoot + "complex_table.html")
   end

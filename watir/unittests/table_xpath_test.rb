@@ -5,13 +5,9 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Tables_XPath < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
-    gotoTablePage
-  end
-  
-  def gotoTablePage
     $ie.goto($htmlRoot + "table1.html")
   end
   
@@ -51,7 +47,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
     $ie.goto($htmlRoot + "simple_table_buttons.html")
     
     button = $ie.button(:xpath , "//input[@id='b1']/")
-    table = Table.create_from_element($ie,button)
+    table = Watir::Table.create_from_element($ie,button)
     
     table[2][1].button(:index,1).click
     assert($ie.text_field(:name,"confirmtext").verify_contains(/CLICK2/i))

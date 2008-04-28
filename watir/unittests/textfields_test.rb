@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "textfields1.html")
@@ -210,6 +210,5 @@ class TC_Fields < Test::Unit::TestCase
 
   def test_max_length
     assert_equal(20, $ie.text_field(:name , 'text1').maxLength )
-
   end
 end
