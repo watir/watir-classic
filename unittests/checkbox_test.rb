@@ -8,7 +8,7 @@ class TC_CheckBox < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "checkboxes1.html")
+    use_page "checkboxes1.html"
   end
   
   def test_checkbox_properties
