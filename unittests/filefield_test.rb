@@ -8,7 +8,7 @@ class TC_FileField < Test::Unit::TestCase
   include Watir
   
   def goto_page
-    $ie.goto($htmlRoot + "fileupload.html")
+    use_page "fileupload.html"
   end
   
   def test_file_field_Exists

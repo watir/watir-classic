@@ -22,7 +22,7 @@ class TC_Defer < Test::Unit::TestCase
     assert_equal('Div Text', div.text)
   end
   def test_binding_to_refreshed_page
-    $ie.goto($htmlRoot + "textfields1.html")
+    use_page "textfields1.html"
     text_field = $ie.text_field(:name, 'text1')
     button = $ie.button(:value, 'Clear Events Box')
     div = $ie.div(:name, 'divvy')

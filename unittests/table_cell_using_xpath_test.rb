@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_TableCell_XPath < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "tableCell_using_xpath.html")
+    use_page "tableCell_using_xpath.html"
   end
   
   def testCellExists

@@ -8,7 +8,7 @@ class TC_Divs_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "div.html")
+    use_page "div.html"
   end
   
   def test_divs

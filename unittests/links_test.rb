@@ -9,7 +9,7 @@ class TC_Links < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "links1.html")
+    use_page "links1.html"
   end
   
   def test_bad_attribute
@@ -119,7 +119,7 @@ class TC_Links < Test::Unit::TestCase
   end
   
   def test_div_xml_bug
-    $ie.goto($htmlRoot + "div_xml.html")
+    use_page "div_xml.html"
     assert_nothing_raised {$ie.link(:text, 'Create').exists? }   
   end
 end
@@ -128,7 +128,7 @@ class TC_Frame_Links < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "frame_links.html")
+    use_page "frame_links.html"
   end
   
   def test_links_in_frames
@@ -152,7 +152,7 @@ class TC_showlinks < Test::Unit::TestCase
   include MockStdoutTestCase
   
   def test_showLinks
-    $ie.goto($htmlRoot + "links1.html")
+    use_page "links1.html"
     $stdout = @mockout
     $ie.showLinks
     expected = [/^index name +id +href + text\/src$/,

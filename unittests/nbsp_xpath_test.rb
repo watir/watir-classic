@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Tables < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "xpath_nbsp.html")
+    use_page "xpath_nbsp.html"
   end
   
   def test_nbsp

@@ -8,7 +8,7 @@ class TC_Frame_Links < Test::Unit::TestCase
   include Watir
   
   def setup
-    $ie.goto($htmlRoot + "frame_links.html")
+    use_page "frame_links.html"
   end
   
   def test_click_in_a_frame

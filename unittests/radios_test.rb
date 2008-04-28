@@ -8,7 +8,7 @@ class TC_Radios < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "radioButtons1.html")
+    use_page "radioButtons1.html"
   end
   
   def test_Radio_Exists

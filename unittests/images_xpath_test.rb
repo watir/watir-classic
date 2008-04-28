@@ -15,7 +15,7 @@ class TC_Images_XPath < Test::Unit::TestCase
   end
   
   def gotoImagePage
-    $ie.goto($htmlRoot + "images1.html")
+    use_page "images1.html"
   end
   
   def test_imageExists

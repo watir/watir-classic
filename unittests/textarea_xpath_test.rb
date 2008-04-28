@@ -8,7 +8,7 @@ class TC_TextArea_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def goto_page
-    $ie.goto($htmlRoot + "textArea.html")
+    use_page "textArea.html"
   end
   
   def test_textarea_field_exists

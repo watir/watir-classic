@@ -4,7 +4,7 @@ require 'unittests/setup'
 class Map_Tests < Watir::TestCase
   
   def setup
-    $ie.goto($htmlRoot + 'map_test.html')
+    use_page 'map_test.html'
   end        
 
   def test_01

@@ -8,7 +8,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "table1.html")
+    use_page "table1.html"
   end
   
   def test_Table_Exists
@@ -44,7 +44,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   end
   
   def test_table_from_element
-    $ie.goto($htmlRoot + "simple_table_buttons.html")
+    use_page "simple_table_buttons.html"
     
     button = $ie.button(:xpath , "//input[@id='b1']/")
     table = Watir::Table.create_from_element($ie,button)

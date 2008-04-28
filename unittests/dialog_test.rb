@@ -9,7 +9,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
   include Watir
   
   def setup
-    $ie.goto($htmlRoot  + 'JavascriptClick.html')
+    use_page 'JavascriptClick.html'
   end    
   def teardown
     begin 

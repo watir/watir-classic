@@ -21,14 +21,14 @@ class TC_IEDialog < Test::Unit::TestCase
   end
 
   def test_find_window   
-    $ie.goto($htmlRoot + "pass.html")
+    use_page "pass.html"
     fnFindWindow = Win32API.new('user32.dll', 'FindWindow', ['p', 'p'], 'l')
     hwnd = fnFindWindow.call(nil, "Pass Page - Microsoft Internet Explorer")
     assert(hwnd != 0)
   end
 
   def test_all    
-    $ie.goto($htmlRoot + "pass.html")
+    use_page "pass.html"
 
     fnFindWindow = Win32API.new('user32.dll', 'FindWindow', ['p', 'p'], 'l')
     hwnd = fnFindWindow.call(nil, "Pass Page - Microsoft Internet Explorer")

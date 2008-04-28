@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_GoogleForm < Test::Unit::TestCase
   
   def setup
-    $ie.goto($htmlRoot + "google_india.html")
+    use_page "google_india.html"
   end
   
   def test_it

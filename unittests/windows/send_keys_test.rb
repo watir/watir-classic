@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "textfields1.html")
+    use_page "textfields1.html"
   end
   
   def test_tabbing

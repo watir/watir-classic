@@ -8,7 +8,7 @@ class TC_Tables < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "table1.html")
+    use_page "table1.html"
   end
   
   def test_Table_Exists
@@ -185,7 +185,7 @@ class TC_Tables_Simple < Test::Unit::TestCase
   include Watir
   
   def setup
-    $ie.goto($htmlRoot + "simple_table.html")
+    use_page "simple_table.html"
   end
   
   def test_simple_table_access
@@ -201,7 +201,7 @@ class TC_Tables_Buttons < Test::Unit::TestCase
   include Watir
   
   def setup
-    $ie.goto($htmlRoot + "simple_table_buttons.html")
+    use_page "simple_table_buttons.html"
   end
   
   def test_simple_table_buttons
@@ -286,7 +286,7 @@ end
 class TC_Table_Columns < Test::Unit::TestCase
   include Watir::Exception
   def setup
-    $ie.goto($htmlRoot + "simple_table_columns.html")
+    use_page "simple_table_columns.html"
   end
   
   def test_get_columnvalues_single_column
@@ -325,7 +325,7 @@ end
 
 class TC_Tables_Complex < Test::Unit::TestCase
   def setup
-    $ie.goto($htmlRoot + "complex_table.html")
+    use_page "complex_table.html"
   end
 
   def test_complex_table_access
