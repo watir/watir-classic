@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_Radios < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "radioButtons1.html")
@@ -23,15 +23,12 @@ class TC_Radios < Test::Unit::TestCase
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").class_name }  
     assert_equal("radio_style" , $ie.radio(:name, "box1").class_name)   
     assert_equal("" , $ie.radio(:id, "box5").class_name)   
-    
-    
-    
   end
   
   def test_Radio_Enabled
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").enabled?  }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:id, "noName").enabled?  }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "box4" , 6).enabled?  }  
+    assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").enabled?  }  
+    assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:id, "noName").enabled?  }  
+    assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "box4" , 6).enabled?  }  
     
     assert(!$ie.radio(:name, "box2").enabled?)   
     assert($ie.radio(:id, "box5").enabled?)   
@@ -107,7 +104,7 @@ class TC_Radios < Test::Unit::TestCase
   end
   
   def test_radio_getState
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").getState  }  
+    assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").getState  }  
     
     assert_equal( false , $ie.radio(:name, "box1").getState )   
     assert_equal( true , $ie.radio(:name, "box3").getState)   
@@ -118,7 +115,7 @@ class TC_Radios < Test::Unit::TestCase
   end
   
   def test_radio_set
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").set  }  
+    assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:name, "noName").set  }  
     $ie.radio(:name, "box1").set
     assert($ie.radio(:name, "box1").isSet?)   
     
@@ -134,11 +131,11 @@ class TC_Radios < Test::Unit::TestCase
   
   def test_radio_properties
     
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).value}  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).name }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).id }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).disabled }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).type }  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).value}  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).name }  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).id }  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).disabled }  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   $ie.radio(:index, 199).type }  
     
     assert_equal("on"   ,    $ie.radio(:index, 1).value)  
     assert_equal("box1" ,    $ie.radio(:index, 1).name )  
@@ -189,7 +186,6 @@ class TC_Radios < Test::Unit::TestCase
     $ie.radio(:name, "box6", 'Tea').clear
     assert(!$ie.radio(:name, "box6" , 'Tea').isSet?)   
   end
-  
   
 end
 

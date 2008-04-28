@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_SelectList < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "selectboxes1.html")
@@ -29,8 +29,6 @@ class TC_SelectList < Test::Unit::TestCase
     assert_equal("" , $ie.selectBox(:name, "sel2").class_name  )
   end
   
-  
-  
   def test_Option_text_select
     assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, "missing item").select }  
     assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, /missing/).select }  
@@ -42,14 +40,11 @@ class TC_SelectList < Test::Unit::TestCase
     assert_equal( ["Option 1" ] , $ie.select_list(:name, "sel1").getSelectedItems)   
   end    
   
-  
   def xtest_option_class_name
-    
     # the option object doesnt inherit from element, so this doesnt work
     assert_raises(UnknownObjectException) { $ie.select_list(:name, "sel1").option(:text, "missing item").class_name }  
     assert_equal("list_style" , $ie.select_list(:name, "sel2").option(:value , 'o2').class_name)   
     assert_equal("" , $ie.select_list(:name, "sel2").option(:value , 'o1').class_name)   
-    
   end
   
   def test_includes
@@ -71,7 +66,7 @@ end
 
 # Tests for the old interface
 class TC_Selectbox < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def setup
     $ie.goto($htmlRoot + "selectboxes1.html")
@@ -88,13 +83,11 @@ class TC_Selectbox < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").enabled? }  
   end
   
-  
   def test_SelectList_class_name
     assert_raises(UnknownObjectException) { $ie.select_list(:name, "missing").class_name }  
     assert_equal("list_style" , $ie.select_list(:name, "sel1").class_name)   
     assert_equal("" , $ie.selectBox(:name, "sel2").class_name  )
   end
-  
   
   def test_selectBox_getAllContents
     assert_raises(UnknownObjectException) { $ie.selectBox(:name, "NoName").getAllContents }  
@@ -225,7 +218,6 @@ class TC_Selectbox < Test::Unit::TestCase
 end
 
 class TC_Select_Options < Test::Unit::TestCase
-  include Watir
   
   def setup
     $ie.goto($htmlRoot + "select_tealeaf.html")

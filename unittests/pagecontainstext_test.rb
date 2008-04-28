@@ -5,7 +5,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_contains_text < Test::Unit::TestCase
-  include Watir
   
   def setup
     $ie.goto($htmlRoot + "textsearch.html")

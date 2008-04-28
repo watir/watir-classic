@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
 class TC_TextArea < Test::Unit::TestCase
-  include Watir
+  include Watir::Exception
   
   def use_page page
     $ie.goto($htmlRoot + page)

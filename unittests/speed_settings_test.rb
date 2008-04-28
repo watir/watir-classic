@@ -5,7 +5,6 @@ require 'test/unit'
 require 'watir'
 
 class TC_instance_options < Test::Unit::TestCase
-  include Watir
   
   def test_using_default
     @ie1 = Watir::IE.new
@@ -25,7 +24,7 @@ class TC_class_options < Test::Unit::TestCase
 	include Watir
 	@@hide_ie = $HIDE_IE
 	def setup
-		@previous = Watir::IE.defaults
+		@previous = IE.defaults
 	end
 	def test_class_defaults
 		assert_equal({:speed => :slow, :visible => ! @@hide_ie}, IE.defaults)
