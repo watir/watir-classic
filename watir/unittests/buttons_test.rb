@@ -7,11 +7,11 @@ require 'unittests/setup'
 class TC_Buttons < Test::Unit::TestCase
   include Watir::Exception
   def setup
-    $ie.goto($htmlRoot + "buttons1.html")
+    use_page "buttons1.html"
   end
   
   def goto_frames_page
-    $ie.goto($htmlRoot + "frame_buttons.html")
+    use_page "frame_buttons.html"
   end
   
   def aatest_Spinner

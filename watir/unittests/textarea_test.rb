@@ -7,10 +7,6 @@ require 'unittests/setup'
 class TC_TextArea < Test::Unit::TestCase
   include Watir::Exception
   
-  def use_page page
-    $ie.goto($htmlRoot + page)
-  end
-
   def setup
     use_page 'textarea.html'
   end

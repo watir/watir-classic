@@ -8,7 +8,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    $ie.goto($htmlRoot + "buttons1.html")
+    use_page "buttons1.html"
   end
   
   def test_properties

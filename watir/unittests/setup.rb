@@ -7,6 +7,13 @@ require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
 require 'watir/testcase'
 
+# Better would be to add this to a module that was included in all the tests.
+class Test::Unit::TestCase
+  def use_page page
+    $ie.goto($htmlRoot + page)
+  end
+end
+
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
