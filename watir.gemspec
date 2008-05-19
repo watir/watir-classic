@@ -27,8 +27,8 @@ spec = Gem::Specification.new do |s|
     Watir is a Ruby library that works with Internet Explorer on Windows.
   EOF
   s.author = 'Bret Pettichord'
-  s.email = 'wtr-general@rubyforge.org'
-  s.rubyforge_project = 'Web Testing with Ruby'
+  s.email = 'watir-general@groups.google.com'
+  s.rubyforge_project = 'Watir'
   s.homepage = 'http://wtr.rubyforge.org/'
 
   s.platform = Gem::Platform::RUBY
