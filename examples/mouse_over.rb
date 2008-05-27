@@ -6,10 +6,9 @@ require 'watir'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'watir/testUnitAddons'
-include Watir
 
 testSite = 'http://www.fortlewis.edu'
-$ie = IE.new
+$ie = Watir::IE.new
 ie2 = nil
 puts "## Beginning of Example:  FortLewis.edu"
 puts "    "
@@ -26,7 +25,7 @@ sleep 1
 $ie.link(:url,"http://faculty.fortlewis.edu/").click
 sleep 1
 
-ie2 = IE.attach(:title, "Faculty Web Sites @ Fort Lewis College, Durango Colorado") 
+ie2 = Watir::IE.attach(:title, "Faculty Web Sites @ Fort Lewis College, Durango Colorado") 
 ie2.link(:url,"http://faculty.fortlewis.edu/ADAMS_E").flash
 ie2.link(:url,"http://faculty.fortlewis.edu/ADAMS_E").click
 sleep 1

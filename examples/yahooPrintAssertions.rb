@@ -10,11 +10,8 @@
 #
 #------------------------------------------------------------------------------------------------------------ #
 
-#includes
 require 'watir'   # the controller
-include Watir
 
-#test::unit includes
 require 'test/unit' 
 require 'test/unit/ui/console/testrunner'
 
@@ -33,7 +30,7 @@ class TC_yahoo_assert < Test::Unit::TestCase
    test_site = 'http://www.yahoo.com'
 
    #open the IE browser
-   $ie = IE.new
+   $ie = Watir::IE.new
 
    puts "## Beginning of test: Yahoo print assertion"
    puts "  "

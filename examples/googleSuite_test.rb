@@ -1,7 +1,6 @@
 #-------------------------------------------------------------------------------------------------------------#
 # demo test for the WATIR controller                                                              
 #                                                                                                                  
-#  Simple Google test written by Jonathan Kohl   10/14/04                                                 
 # Purpose: to demonstrate the following WATIR functionality:                                               
 #   * entering text into a text field                                                                   
 #   * clicking a button
@@ -13,13 +12,8 @@
 #
 #------------------------------------------------------------------------------------------------------------ #
 
-#includes
 require 'watir'   # the controller
-include Watir
-
-#test::unit includes
 require 'test/unit' 
-require 'test/unit/ui/console/testrunner'
 
 class TC_google_suite < Test::Unit::TestCase
 
@@ -34,7 +28,7 @@ class TC_google_suite < Test::Unit::TestCase
    test_site = 'http://www.google.com/ncr'
 
    #open the IE browser
-   $ie = IE.new
+   $ie = Watir::IE.new
 
    puts '## Beginning of test: google search'
    puts '  '
