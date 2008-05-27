@@ -1,25 +1,19 @@
-#includes
 require 'watir'
-include Watir
-
-#test::unit includes
 require 'test/unit' 
-require 'test/unit/ui/console/testrunner'
 
-#logger includes
+$LOAD_PATH << File.dirname(__FILE__)
 require 'example_logger1'
 
 class TC_google_logging < Test::Unit::TestCase
   
   def start
     #open the IE browser
-    $ie = IE.new
+    $ie = Watir::IE.new
     filePrefix = "test_logger1"
     #create a logger 
     $logger = LoggerFactory.start_xml_logger(filePrefix) 
     $ie.set_logger($logger)
   end
-  
   
   def test_a_simplesearch
     
@@ -97,7 +91,5 @@ class TC_google_logging < Test::Unit::TestCase
     $logger.end_log  #close XML log file
     
   end # end of test_googlenews
-  
-  
   
 end  #end of class TC_google_logging
