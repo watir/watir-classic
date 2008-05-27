@@ -1,6 +1,4 @@
 require 'watir' 
-include Watir 
-
 
 #we start the logger by calling these Class (static) methods
 class LoggerFactory 
@@ -22,7 +20,7 @@ end
 
 #this logs anything that Watir.rb tries to log, and everything with a "log" method to a text
 #file that can be used for debugging.
-class  CoreLogger < WatirLogger 
+class  CoreLogger < Watir::WatirLogger 
   
   def initialize(fileName, logsToKeep, maxLogSize) 
     super(fileName , logsToKeep, maxLogSize) 
