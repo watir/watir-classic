@@ -3,7 +3,6 @@
 #-------------------------------------------------------------#
 # Demo test for the Watir controller.
 #
-# Simple Google test written by Jonathan Kohl 10/10/04.
 # Purpose: to demonstrate the following Watir functionality:
 #   * entering text into a text field,
 #   * clicking a button,

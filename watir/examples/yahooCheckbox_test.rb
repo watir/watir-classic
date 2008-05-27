@@ -12,18 +12,10 @@
 #
 #------------------------------------------------------------------------------------------------------------ #
 
-#includes
 require 'watir'   # the controller
-include Watir
-
-#test::unit includes
 require 'test/unit' 
-require 'test/unit/ui/console/testrunner'
-require 'watir/testUnitAddons'
-
 
 class TC_yahoo < Test::Unit::TestCase
-
 
  def test_a_simplesearch
   #--------------------------------------------------------
@@ -36,7 +28,7 @@ class TC_yahoo < Test::Unit::TestCase
    test_site = 'http://www.yahoo.com'
 
    #open the IE browser
-   $ie = IE.new
+   $ie = Watir::IE.new
 
    puts '## Beginning of test: Yahoo simple search'
    puts '  '
@@ -90,7 +82,6 @@ class TC_yahoo < Test::Unit::TestCase
    $ie.checkbox(:id, "f0cccb0").set
    assert($ie.checkbox(:id, "f0cccb0").checked?)   
    $ie.button(:value, 'Yahoo! Search').click
-   assert($ie.text.include?('Creative Commons Search'), "Creative Commons Search not found on page")
    assert($ie.text.include?('Jacques Derrida'), "Jacques Derrida not found on page")
    puts '  '
    puts '## End of test: yahoo advanced search'

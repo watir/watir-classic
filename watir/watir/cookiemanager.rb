@@ -1,4 +1,7 @@
-    require 'find'
+# should be moved to watir/contrib
+# use of modules here is ugly
+
+require 'find'
 module Watir
   module CookieManager 
 

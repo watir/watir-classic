@@ -1,23 +1,10 @@
-#-------------------------------------------------------------------------------------------------------------#
-# access_to_invisible_contents_in_frames.rb
-#
 # Purpose: * to demonstrate that WATIR can "see" into frames where "View Source" doesn't work
 #          * to demonstrate an assertion based on HTML tag content
-# 
-#------------------------------------------------------------------------------------------------------------#
 
-
-
-#includes
 require 'watir'   # the controller
-include Watir
-
-#test::unit includes
 require 'test/unit'
 
-
 class TC_google_maps < Test::Unit::TestCase
-
 
     def test_google_maps
   
@@ -25,7 +12,7 @@ class TC_google_maps < Test::Unit::TestCase
         testSite = "http://maps.google.com"
 
         #open the IE browser
-        ie = IE.new
+        ie = Watir::IE.new
 
         puts "going to maps.google.com"
         ie.goto(testSite)
