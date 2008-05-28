@@ -511,7 +511,7 @@ module Watir
     #   ie.map(:index,2)                    # access the second map on the page
     #   ie.map(:title, "A Picture")         # access a map using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #    
-    def map(how, what)
+    def map(how, what=nil)
       return Map.new(self, how, what)
     end
     
@@ -543,7 +543,7 @@ module Watir
     #   ie.area(:index,2)                    # access the second area on the page
     #   ie.area(:title, "A Picture")         # access a area using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #    
-    def area(how, what)
+    def area(how, what=nil)
       return Area.new(self, how, what)
     end
     
@@ -577,7 +577,7 @@ module Watir
     #   ie.image(:alt, "A Picture")         # access an image using the alt text
     #   ie.image(:xpath, "//img[@alt='A Picture']/")    # access an image using the alt text
     #
-    def image(how,what=nil)
+    def image(how, what=nil)
       Image.new(self, how, what)
     end
     
