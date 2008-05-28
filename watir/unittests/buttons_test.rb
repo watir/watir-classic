@@ -4,14 +4,13 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
 
-class TC_Buttons < Test::Unit::TestCase
+class TC_Button < Test::Unit::TestCase
   include Watir::Exception
   def setup
     use_page "buttons1.html"
   end
   
-  def test_Button_to_s
-    
+  def test_to_s
     b4 = [
         'type:     *button',
         'id:       *b5',
@@ -24,11 +23,10 @@ class TC_Buttons < Test::Unit::TestCase
         'name:     *b1',
         'value:    *Click Me',
         'disabled: *false']
-    
     assert_match(Regexp.new(b4.join("\n")), browser.button(:name, "b4").to_s)
     assert_match(Regexp.new(b1.join("\n")), browser.button(:caption, "Click Me").to_s)
     assert_match(Regexp.new(b1.join("\n")), browser.button(:index, 1).to_s)
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").to_s   }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").to_s }  
   end
   
   def test_properties
@@ -60,29 +58,23 @@ class TC_Buttons < Test::Unit::TestCase
     assert_equal( "this is button1" , browser.button(:index, 1).title )
   end
   
-  def test_button_using_default
-    # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button( "Missing Caption").click   }  
+  def test_default_how
+    assert_raises(UnknownObjectException) { browser.button( "Missing Caption").click }  
     
     browser.button("Click Me").click
     assert(browser.text.include?("PASS") )
   end
   
-  def test_Button_click_only
-    browser.button(:caption, "Click Me").click
-    assert(browser.text.include?("PASS") )
-  end
-  
-  def test_button_click
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:caption, "Missing Caption").click   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:id, "missingID").click   }  
-    assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   browser.button(:caption, "Disabled Button").click   }  
+  def test_click
+    assert_raises(UnknownObjectException)  { browser.button(:caption, "Missing Caption").click }  
+    assert_raises(UnknownObjectException)  { browser.button(:id, "missingID").click }  
+    assert_raises(ObjectDisabledException) { browser.button(:caption, "Disabled Button").click }  
     
     browser.button(:caption, "Click Me").click
-    assert(browser.text.include?("PASS") )
+    assert(browser.text.include?("PASS"))
   end
   
-  def test_Button_Exists
+  def test_exists
     assert(browser.button(:caption, "Click Me").exists?)   
     assert(browser.button(:caption, "Submit").exists?)   
     assert(browser.button(:name, "b1").exists?)   
@@ -95,7 +87,7 @@ class TC_Buttons < Test::Unit::TestCase
     assert(!browser.button(:caption, /missing/i).exists?)   
   end
   
-  def test_Button_Enabled
+  def test_enabled
     assert($ie.button(:caption, "Click Me").enabled?)   
     assert(!browser.button(:caption, "Disabled Button").enabled?)   
     assert(!browser.button(:name, "b4").enabled?)   
@@ -104,10 +96,11 @@ class TC_Buttons < Test::Unit::TestCase
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").enabled?  }  
   end
   
-  def test_frame
+  def test_in_frame
     use_page "frame_buttons.html"
-    assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)   
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown ( no frame name supplied) " ) { browser.button(:caption, "Disabled Button").enabled?}  
+    assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)
+    # frame must be specified
+    assert_raises(UnknownObjectException) { browser.button(:caption, "Disabled Button").enabled?}  
   end
   
 end
