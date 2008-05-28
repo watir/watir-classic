@@ -21,7 +21,7 @@ class TC_MinMax< Test::Unit::TestCase
     assert $ie.front?
     ie2 = Watir::IE.start($htmlRoot + 'blankpage.html')
     assert ie2.front?
-    assert_false $ie.front?
+    assert ! $ie.front?
     $ie.bring_to_front
     assert $ie.front?
     ie2.close
