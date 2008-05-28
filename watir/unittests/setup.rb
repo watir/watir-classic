@@ -8,7 +8,10 @@ require 'watir/testcase'
 # Better would be to add this to a module that was included in all the tests.
 class Test::Unit::TestCase
   def use_page page
-    $ie.goto($htmlRoot + page)
+    browser.goto($htmlRoot + page)
+  end
+  def browser
+    $ie
   end
 end
 

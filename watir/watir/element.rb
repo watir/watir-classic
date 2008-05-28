@@ -41,12 +41,19 @@ module Watir
                           end
                         end"
     end
+    # return a message indicating how the element is being located
+    def located_using_message
+      result = "using #{@how.inspect}"
+      result << ", #{@what.inspect}" if @what
+      result
+    end
 
     public
     def assert_exists
       locate if defined?(locate)
       unless ole_object
-        raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
+        raise UnknownObjectException.new(
+          "Unable to locate element, #{located_using_message}")
       end
     end
     def assert_enabled
