@@ -1,3 +1,4 @@
+require 'active_support'    
 module Watir
   
   # this class contains items that are common between the span, div, and pre objects
@@ -6,8 +7,14 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class NonControlElement < Element
+    def self.inherited subclass
+      class_name = subclass.to_s.demodulize
+      method_name = class_name.underscore
+      Watir::Container.module_eval "def #{method_name}(how, what=nil)
+      return #{class_name}.new(self, how, what); end"
+    end
     include Watir::Exception
-    
+        
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
