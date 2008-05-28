@@ -599,24 +599,6 @@ module Watir
       PopUp.new(self)
     end
     
-    # This is the main method for accessing divs. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
-    #  *  how   - symbol - how we access the div
-    #  *  what  - string, integer, regular expression or xpath query - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns an Div object
-    #
-    # Typical Usage
-    #
-    #   ie.div(:id, /list/)                 # access the first div that matches list.
-    #   ie.div(:index,2)                    # access the second div on the page
-    #   ie.div(:title, "A Picture")         # access a div using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #   ie.div(:xpath, "//div[@id='list']/")    # access the first div whose id is 'list'
-    #
-    def div(how, what=nil)
-      Div.new(self, how, what)
-    end
     
     # this is the main method for accessing the divs iterator. Returns a Divs collection
     #
@@ -629,25 +611,7 @@ module Watir
     def divs
       Divs.new(self)
     end
-    
-    # This is the main method for accessing span tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/span.asp?frame=true
-    #  *  how   - symbol - how we access the span, 
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a Span object
-    #
-    # Typical Usage
-    #
-    #   ie.span(:id, /list/)                 # access the first span that matches list.
-    #   ie.span(:index,2)                    # access the second span on the page
-    #   ie.span(:title, "A Picture")         # access a span using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    def span(how, what=nil)
-      Span.new(self, how, what)
-    end
-    
+        
     # this is the main method for accessing the spans iterator.
     #
     # Returns a Spans object
@@ -662,23 +626,6 @@ module Watir
       Spans.new(self)
     end
     
-    # This is the main method for accessing p tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/p.asp?frame=true
-    #  *  how   - symbol - how we access the p, 
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a P object
-    #
-    # Typical Usage
-    #
-    #   ie.p(:id, /list/)                 # access the first p tag  that matches list.
-    #   ie.p(:index,2)                    # access the second p tag on the page
-    #   ie.p(:title, "A Picture")         # access a p tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    def p(how, what=nil)
-      P.new(self, how, what)
-    end
     
     # this is the main method for accessing the ps iterator.
     #
@@ -693,26 +640,7 @@ module Watir
     def ps
       Ps.new(self)
     end
-    
-    # This is the main method for accessing pre tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/pre.asp?frame=true
-    #  *  how   - symbol - how we access the pre, valid values are
-    #    :index      - finds the item using its index
-    #    :id         - finds the item using its id attribute
-    #    :name       - finds the item using its name attribute
-    #  *  what  - string, integer or re, what we are looking for,
-    #
-    # returns a Pre object
-    #
-    # Typical Usage
-    #
-    #   ie.pre(:id, /list/)                 # access the first pre tag  that matches list.
-    #   ie.pre(:index,2)                    # access the second pre tag on the page
-    #   ie.pre(:title, "A Picture")         # access a pre tag using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #
-    def pre(how, what=nil)
-      Pre.new(self, how, what)
-    end
-    
+        
     # this is the main method for accessing the ps iterator.
     #
     # Returns a Pres object
@@ -726,25 +654,7 @@ module Watir
     def pres
       Pres.new(self)
     end
-    
-    # This is the main method for accessing labels. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
-    #  *  how   - symbol - how we access the label,
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a Label object
-    #
-    # Typical Usage
-    #
-    #   ie.label(:id, /list/)                 # access the first span that matches list.
-    #   ie.label(:index,2)                    # access the second label on the page
-    #   ie.label(:for, "text_1")              # access a the label that is associated with the object that has an id of text_1
-    #
-    def label(how, what=nil)
-      Label.new(self, how, what)
-    end
-    
+        
     # this is the main method for accessing the labels iterator. It returns a Labels object
     #
     # Returns a Labels object
