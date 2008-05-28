@@ -154,4 +154,3 @@ def _code_that_copies_readonly_array(array, name)
 end
 
 require 'watir/camel_case'
-require 'watir/bonus-elements'

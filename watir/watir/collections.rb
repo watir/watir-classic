@@ -156,14 +156,6 @@ module Watir
     end
   end
   
-  class Map < NonControlElement
-    TAG = 'MAP'
-  end
-
-  class Area < NonControlElement
-    TAG = 'AREA'
-  end
-  
   # this class accesses the maps in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#maps method
   class Maps < ElementCollections
