@@ -16,12 +16,16 @@ class Lists_Tests < Watir::TestCase
   end
 
   def test_list_item_exists_by_name
-    assert($ie.li(:name, 'l1').exists?)
+    assert($ie.li(:name, 'x1').exists?)
     assert ! ($ie.li(:name, 'maptest02').exists?)
   end  
   
   def test_li_length
     assert_equal(6, $ie.lis.length)
+  end
+  
+  def test_multiple_attributes
+    assert_equal('Phil', $ie.li(:id => 'ordered1', :name => 'x1').text)
   end
 
 end 
