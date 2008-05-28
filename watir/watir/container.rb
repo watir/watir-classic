@@ -478,7 +478,7 @@ module Watir
     #   ie.li(:index,2)                    # access the second li on the page
     #   ie.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #   
-    def li(how, what)
+    def li(how, what=nil)
       return Li.new(self, how, what)
     end
     
