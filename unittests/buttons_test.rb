@@ -10,41 +10,41 @@ class TC_Buttons < Test::Unit::TestCase
     use_page "buttons1.html"
   end
   
-  def aaatest_Button_to_s
-    # i think the tests for to_s should be dropped. The output is not in a nice format to be tested, and the
-    # individual properties are tested in the test_properties method
+  def test_Button_to_s
     
-    b4 = ['name              b4',
-        'type              button',
-        'id                b5',
-        'value             Disabled Button',
-        'disabled          true']
-    b1 = ['name              b1',
-        'type              button',
-        'id                b2',
-        'value             Click Me',
-        'disabled          false']
+    b4 = [
+        'type:     *button',
+        'id:       *b5',
+        'name:     *b4',
+        'value:    *Disabled Button',
+        'disabled: *true']
+    b1 = [
+        'type:     *button',
+        'id:       *b2',
+        'name:     *b1',
+        'value:    *Click Me',
+        'disabled: *false']
     
-    assert_equal(b4, browser.button(:name, "b4").to_s)
-    assert_equal(b1, browser.button(:caption, "Click Me").to_s)
-    assert_equal(b1, browser.button(:index, 1).to_s)
+    assert_match(Regexp.new(b4.join("\n")), browser.button(:name, "b4").to_s)
+    assert_match(Regexp.new(b1.join("\n")), browser.button(:caption, "Click Me").to_s)
+    assert_match(Regexp.new(b1.join("\n")), browser.button(:index, 1).to_s)
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").to_s   }  
   end
   
   def test_properties
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").id   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").name   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").disabled   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").type   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").value   }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").id }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").name }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").disabled }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").type }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").value }  
     
-    assert_equal("b1"  , browser.button(:index, 1).name ) 
-    assert_equal("b2"  , browser.button(:index, 1).id ) 
-    assert_equal("button"  , browser.button(:index, 1).type  ) 
-    assert_equal("Click Me"  , browser.button(:index, 1).value  ) 
-    assert_equal(false  , browser.button(:index, 1).disabled  ) 
-    assert_equal("italic_button"  , browser.button(:name, "b1").class_name  ) 
-    assert_equal(""  , browser.button(:name , "b4").class_name  ) 
+    assert_equal("b1", browser.button(:index, 1).name) 
+    assert_equal("b2", browser.button(:index, 1).id) 
+    assert_equal("button", browser.button(:index, 1).type) 
+    assert_equal("Click Me", browser.button(:index, 1).value) 
+    assert_equal(false, browser.button(:index, 1).disabled) 
+    assert_equal("italic_button", browser.button(:name, "b1").class_name) 
+    assert_equal("", browser.button(:name , "b4").class_name) 
         
     assert_equal("b1"  , browser.button(:id, "b2").name  ) 
     assert_equal("b2"  , browser.button(:id, "b2").id  ) 
