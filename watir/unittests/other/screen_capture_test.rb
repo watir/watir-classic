@@ -1,5 +1,5 @@
 # feature tests for screen capture
-# revision: $Revision$
+# revision: $Revision:1338 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
 require 'unittests/setup'
