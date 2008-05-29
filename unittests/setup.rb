@@ -40,7 +40,7 @@ $non_core_tests =
                # will be revised to use autoit 
                # takes 15 seconds to run
      'images', # save file must must be visible
-     'screen_capture', # is always visible; takes 25 seconds
+#     'screen_capture', # is always visible; takes 25 seconds
      'filefield', # is always visible; takes 40 seconds 
      'minmax', # becomes visible
      'dialog' # visible
