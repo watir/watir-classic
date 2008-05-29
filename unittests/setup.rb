@@ -22,16 +22,19 @@ Dir.chdir topdir do
 end
 
 $window_tests =
-    ['js_events', # is always visible
-     'modal_dialog', # modal is visible
+    [
      'attach_to_existing_window', # could actually run robustly as part of the core suite!
      'attach_to_new_window', # creates new window
-     'jscript',
-     'send_keys', # visible
-     'iedialog', # visible
      'close_window', # creates new window
      'frame_links', # visible
+     'iedialog', # visible
+     #ie-each
+     'js_events', # is always visible
+     'jscript',
+     'modal_dialog', # modal is visible
+     #new (named oddly)
      'open_close',
+     'send_keys', # visible
     ].collect {|x| "unittests/windows/#{x}_test.rb"}
 
 $non_core_tests = 
