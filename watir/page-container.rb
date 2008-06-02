@@ -17,7 +17,7 @@ module Watir
         end
       else
         # assume its IE6
-        url = self.document.url
+        url = self.document.location.href
         if /shdoclc.dll/.match(url)
           m = /id=IEText.*?>(.*?)</i.match(self.html)
           raise NavigationException, m[1] if m
