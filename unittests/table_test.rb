@@ -76,7 +76,7 @@ class TC_Tables < Test::Unit::TestCase
   def test_to_a
     expected = [ ["Row 1 Col1" , "Row 1 Col2"],
                  [ "Row 2 Col1" , "Row 2 Col2"] ]
-    assert_equal(expected, browser.table(:index , 1).to_a )
+    assert_equal(expected, browser.table(:index , 1).to_a)
   end
   
   def test_links_and_images_in_table
@@ -95,7 +95,7 @@ class TC_Tables < Test::Unit::TestCase
   end
   
   def test_cell_another_way
-    assert_equal( "Row 1 Col1",  browser.table(:index,1)[1][1].to_s.strip )
+    assert_equal( "Row 1 Col1", browser.table(:index,1)[1][1].to_s.strip)
   end
   
   def test_row_directly
@@ -103,11 +103,12 @@ class TC_Tables < Test::Unit::TestCase
     assert ! browser.row(:id, 'no_exist').exists?
   end
   def test_row_another_way
-    assert_equal('Row 2 Col1' ,  browser.row(:id, 'row1')[1].to_s.strip )
+    assert_equal('Row 2 Col1',  browser.row(:id, 'row1')[1].to_s.strip)
   end
 
   def test_row_in_table
-    
+    assert_equal 'Row 2 Col1 Row 2 Col2', 
+      browser.table(:id, 't1').row(:id, 'row1').text
   end
   
   def test_row_iterator
