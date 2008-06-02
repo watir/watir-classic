@@ -88,7 +88,7 @@ module Watir
     def each
       assert_exists
       1.upto(@o.getElementsByTagName("TR").length) do |i| 
-        yield TableRow.new(@container, :ole_object, row(i))
+        yield TableRow.new(@container, :ole_object, _row(i))
       end
     end
     
@@ -96,7 +96,7 @@ module Watir
     #   * index         - the index of the row
     def [](index)
       assert_exists
-      return TableRow.new(@container, :ole_object, row(index))
+      return TableRow.new(@container, :ole_object, _row(index))
     end
     
     # This method returns the number of rows in the table.
@@ -112,7 +112,7 @@ module Watir
     #   * index         - the index of the row
     def column_count(index=1)
       assert_exists
-      row(index).cells.length
+      _row(index).cells.length
     end
     
     # This method returns the table as a 2 dimensional array. 
@@ -150,10 +150,10 @@ module Watir
     end
     
     # returns an ole object
-    def row(index)
+    def _row(index)
       return @o.invoke("rows")[(index - 1).to_s]
     end
-    private :row
+    private :_row
     
     # Returns an array containing all the text values in the specified column
     # Raises an UnknownCellException if the specified column does not exist in every
