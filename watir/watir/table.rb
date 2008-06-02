@@ -8,12 +8,12 @@ module Watir
   class Table < Element
     include Container
     
-    # Returns the table object containing anElement
+    # Returns the table object containing the element
     #   * container  - an instance of an IE object
     #   * anElement  - a Watir object (TextField, Button, etc.)
-    def Table.create_from_element(container, anElement)
-      anElement.locate if defined?(anElement.locate)
-      o = anElement.ole_object.parentElement
+    def Table.create_from_element(container, element)
+      element.locate if defined?(element.locate)
+      o = element.ole_object.parentElement
       o = o.parentElement until o.tagName == 'TABLE'
       new container, :ole_object, o 
     end
@@ -42,7 +42,6 @@ module Watir
     # override the highlight method, as if the tables rows are set to have a background color,
     # this will override the table background color, and the normal flash method won't work
     def highlight(set_or_clear)
-      
       if set_or_clear == :set
         begin
           @original_border = @o.border.to_i
@@ -70,8 +69,8 @@ module Watir
     # this method is used to populate the properties in the to_s method
     def table_string_creator
       n = []
-      n <<   "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
-      n <<   "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
+      n << "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
+      n << "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
       return n
     end
     private :table_string_creator
@@ -88,7 +87,9 @@ module Watir
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
-      1.upto(@o.getElementsByTagName("TR").length) { |i| yield TableRow.new(@container, :ole_object, row(i))    }
+      1.upto(@o.getElementsByTagName("TR").length) do |i| 
+        yield TableRow.new(@container, :ole_object, row(i))
+      end
     end
     
     # Returns a row in the table
@@ -114,7 +115,8 @@ module Watir
       row(index).cells.length
     end
     
-    # This method returns the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
+    # This method returns the table as a 2 dimensional array. 
+    # Don't expect too much if there are nested tables, colspan etc.
     # Raises an UnknownObjectException if the table doesn't exist.
     # http://www.w3.org/TR/html4/struct/tables.html
     def to_a
@@ -149,7 +151,7 @@ module Watir
     
     # returns an ole object
     def row(index)
-      return @o.invoke("rows")[(index-1).to_s]
+      return @o.invoke("rows")[(index - 1).to_s]
     end
     private :row
     
@@ -159,15 +161,14 @@ module Watir
     # row of the table
     #   * columnnumber  - column index to extract values from
     def column_values(columnnumber)
-
-      return(1..row_count).collect {|idx| self[idx][columnnumber].text}
+      return (1..row_count).collect {|i| self[i][columnnumber].text}
     end
     
     # Returns an array containing all the text values in the specified row
     # Raises an UnknownObjectException if the table doesn't exist.
     #   * rownumber  - row index to extract values from
     def row_values(rownumber)
-      return(1..column_count(rownumber)).collect {|idx| self[rownumber][idx].text}
+      return (1..column_count(rownumber)).collect {|i| self[rownumber][i].text}
     end
     
   end
@@ -201,7 +202,9 @@ module Watir
     
     # iterates through each of the TableBodies in the Table. Yields a TableBody object
     def each
-      1.upto(@o.tBodies.length) { |i| yield TableBody.new(@container, :ole_object, ole_table_body_at_index(i)) }
+      1.upto(@o.tBodies.length) do |i| 
+        yield TableBody.new(@container, :ole_object, ole_table_body_at_index(i))
+      end
     end
     
   end
@@ -248,9 +251,7 @@ module Watir
       return @rows.length
     end
   end
-  
-  
-  # this class is a table row
+    
   class TableRow < Element
     
     def locate
@@ -291,7 +292,9 @@ module Watir
     # Returns an element from the row as a TableCell object
     def [](index)
       assert_exists
-      raise UnknownCellException, "Unable to locate a cell at index #{index}" if @cells.length < index
+      if @cells.length < index
+        raise UnknownCellException, "Unable to locate a cell at index #{index}" 
+      end
       return @cells[(index - 1)]
     end
     
@@ -300,7 +303,6 @@ module Watir
     #        def method_missing(aSymbol, *args)
     #            return @o.send(aSymbol, *args)
     #        end
-    
     def column_count
       locate
       @cells.length
