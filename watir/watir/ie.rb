@@ -492,7 +492,7 @@ module Watir
           until doc.readyState == "complete" do
             sleep a_moment
           end
-          @url_list << doc.url unless @url_list.include?(doc.url)
+          @url_list << doc.location.href unless @url_list.include?(doc.location.href)
           doc.frames.length.times do |n|
             begin
               documents_to_wait_for << doc.frames[n.to_s].document

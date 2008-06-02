@@ -8,7 +8,12 @@ require 'watir/testcase'
 # Better would be to add this to a module that was included in all the tests.
 class Test::Unit::TestCase
   def use_page page
-    browser.goto($htmlRoot + page)
+    new_url = $htmlRoot + page
+    browser.goto new_url
+  end
+  def uses_page page
+    new_url = $htmlRoot + page
+    browser.goto new_url unless browser.url == new_url
   end
   def browser
     $ie
@@ -57,6 +62,6 @@ $ie.speed = :fast
 $myDir = File.expand_path(File.dirname(__FILE__))
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 # if you run the unit tests form a local file system use this line
-$htmlRoot =  "file://#{$myDir}/html/" 
+$htmlRoot =  "file:///#{$myDir}/html/" 
 # if you run the unit tests from a web server use this line
 #   $htmlRoot =  "http://localhost:8080/watir/html/"

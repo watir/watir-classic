@@ -35,11 +35,13 @@ class FakeDoc
       @links << value
     end
   end
-  
+  def location
+    self
+  end
   def url
     return "file://fake"
   end
-  
+  alias :href :url  
 end
 
 class StubExplorer
