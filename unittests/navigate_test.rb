@@ -7,7 +7,7 @@ require 'cgi'
 
 class TC_Navigate < Test::Unit::TestCase
   
-  def goto_page(a)
+  def goto_page a
     $ie.goto($htmlRoot + a)
   end
   
@@ -16,7 +16,8 @@ class TC_Navigate < Test::Unit::TestCase
     goto_page 'buttons1.html'
     url = $ie.url.downcase
     url = CGI::unescape url 
-    assert_equal(($htmlRoot + 'buttons1.html' ).downcase, url)  # sometimes we get capital drive letters 
+    assert_equal(($htmlRoot + 'buttons1.html').downcase, url)  # sometimes we get capital drive letters 
+
     assert_equal(1, $ie.url_list.length)
     assert_equal(url, $ie.url_list[0].downcase)
     
@@ -24,6 +25,7 @@ class TC_Navigate < Test::Unit::TestCase
     url = $ie.url.downcase   
     url = CGI::unescape url 
     assert_equal("Test page for Check Boxes", $ie.title) 
+
     assert_equal(2, $ie.url_list.length)
     assert_equal(url, $ie.url_list[1].downcase)
     
@@ -35,11 +37,11 @@ class TC_Navigate < Test::Unit::TestCase
     
     $ie.forward
     assert_equal("Test page for Check Boxes", $ie.title)   
-    
-    $ie.checkBox(:name, "box1").set
-    assert($ie.checkBox(:name, "box1").isSet?)   
+    $ie.checkbox(:name, "box1").set
+    assert($ie.checkbox(:name, "box1").isSet?)   
     
     $ie.refresh
     # Not sure how we test this. Text fields and checkboxes dont get reset if you click the browser refresh button
+    # -- this could be tested with the add-row page.
   end
 end
