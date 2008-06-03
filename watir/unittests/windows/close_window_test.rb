@@ -8,7 +8,7 @@ class TC_CloseWindow < Watir::TestCase
   execute :sequentially
   
   def setup
-    use_page "new_browser.html"
+    goto_page "new_browser.html"
   end
   
   # reproduces defect http://jira.openqa.org/browse/WTR-16

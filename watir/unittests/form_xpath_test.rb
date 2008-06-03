@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_Forms2_XPath < Test::Unit::TestCase
   def setup
-    use_page "forms2.html"
+    goto_page "forms2.html"
   end
   
   def test_Form_Exists
@@ -29,7 +29,7 @@ require 'unittests/iostring'
 class TC_Form_Display < Test::Unit::TestCase
   include MockStdoutTestCase                
   def test_showforms
-    use_page "forms2.html"
+    goto_page "forms2.html"
     $stdout = @mockout
     $ie.show_forms
     assert_equal(<<END_OF_MESSAGE, @mockout)
@@ -56,7 +56,7 @@ end
 
 class TC_Forms3 < Test::Unit::TestCase
   def setup
-    use_page "forms3.html"
+    goto_page "forms3.html"
   end
   
   def test_Form_Exists
@@ -149,7 +149,7 @@ end
 
 class TC_Forms4 < Test::Unit::TestCase
   def setup
-    use_page "forms4.html"
+    goto_page "forms4.html"
   end
   
   def test_find_text_field_ignoring_form
@@ -174,7 +174,7 @@ end
 
 class TC_Hidden_Fields < Test::Unit::TestCase
   def setup
-    use_page "forms3.html"
+    goto_page "forms3.html"
   end
   
   def test_hidden

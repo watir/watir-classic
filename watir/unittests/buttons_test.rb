@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Button < Test::Unit::TestCase
   include Watir::Exception
   def setup
-    use_page "buttons1.html"
+    goto_page "buttons1.html"
   end
   
   def test_to_s
@@ -97,7 +97,7 @@ class TC_Button < Test::Unit::TestCase
   end
   
   def test_in_frame
-    use_page "frame_buttons.html"
+    goto_page "frame_buttons.html"
     assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)
     # frame must be specified
     assert_raises(UnknownObjectException) { browser.button(:caption, "Disabled Button").enabled?}  

@@ -40,7 +40,7 @@ class TC_CSS < Test::Unit::TestCase
   end
   
   def test_SuccessMessage
-    use_page "cssTest.html"
+    goto_page "cssTest.html"
     $ie.button( :caption , "Success").click
     
     #isMessageDisplayed( "Success" )

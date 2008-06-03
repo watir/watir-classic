@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Nbsp_Xpath < Test::Unit::TestCase
   
   def setup
-    use_page "xpath_nbsp.html"
+    goto_page "xpath_nbsp.html"
   end
   
   def test_nbsp

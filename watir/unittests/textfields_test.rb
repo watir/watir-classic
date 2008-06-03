@@ -8,7 +8,7 @@ class TC_Fields < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "textfields1.html"
+    goto_page "textfields1.html"
   end
   
   def test_text_field_exists

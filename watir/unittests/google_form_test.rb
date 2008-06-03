@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_GoogleForm < Test::Unit::TestCase
   
   def setup
-    use_page "google_india.html"
+    goto_page "google_india.html"
   end
   
   def test_it

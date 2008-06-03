@@ -8,7 +8,7 @@ class TC_TextArea < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page 'textarea.html'
+    goto_page 'textarea.html'
   end
   
   def test_elements_exist_or_not

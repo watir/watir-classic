@@ -8,7 +8,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "buttons1.html"
+    goto_page "buttons1.html"
   end
   
   def test_properties

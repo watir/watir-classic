@@ -8,7 +8,7 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "checkboxes1.html"
+    goto_page "checkboxes1.html"
   end
   
   def test_checkbox_properties

@@ -7,7 +7,7 @@ require 'unittests/setup'
 class TC_Links_XPath < Test::Unit::TestCase
   
   def setup
-    use_page "links1.html"
+    goto_page "links1.html"
   end
   
   def test_link_exists

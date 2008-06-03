@@ -15,7 +15,7 @@ class TC_Images_XPath < Test::Unit::TestCase
   end
   
   def gotoImagePage
-    use_page "images1.html"
+    goto_page "images1.html"
   end
   
   def test_imageExists

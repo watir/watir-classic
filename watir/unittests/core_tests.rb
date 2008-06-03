@@ -7,7 +7,7 @@ require 'watir'
 
 $HIDE_IE = true
 
-require 'unittests/setup.rb'
+require 'unittests/setup'
 
 Dir.chdir TOPDIR
 $core_tests.each {|x| require x}

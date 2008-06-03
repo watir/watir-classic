@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_Divs_XPath2 < Test::Unit::TestCase
   def setup
-    use_page "list_matters.html"
+    goto_page "list_matters.html"
   end
   def test_div_with_text
     # Note: this test fails, probably because of bad html to xml translation.

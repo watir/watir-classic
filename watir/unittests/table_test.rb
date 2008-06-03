@@ -197,7 +197,7 @@ class TC_Tables_Simple < Test::Unit::TestCase
   include Watir
   
   def setup
-    use_page "simple_table.html"
+    goto_page "simple_table.html"
   end
   
   def test_simple_table_access
