@@ -4,7 +4,7 @@ require 'unittests/setup'
 class Map_Tests < Watir::TestCase
   
   def setup
-    use_page 'map_test.html'
+    goto_page 'map_test.html'
   end        
 
   def test_01

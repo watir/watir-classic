@@ -4,7 +4,7 @@ require 'unittests/setup'
 class Lists_Tests < Watir::TestCase
   
   def setup
-    use_page 'lists.html'
+    goto_page 'lists.html'
   end        
 
   def test_list_items_exist

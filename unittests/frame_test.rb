@@ -8,7 +8,7 @@ class TC_Frames < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "frame_buttons.html"
+    goto_page "frame_buttons.html"
   end
   
   def test_frame_no_what
@@ -57,7 +57,7 @@ class TC_Frames2 < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "frame_multi.html"
+    goto_page "frame_multi.html"
   end
   
   def test_frame_with_no_name
@@ -79,7 +79,7 @@ class TC_NestedFrames < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "nestedFrames.html"
+    goto_page "nestedFrames.html"
   end
   
   def test_frame
@@ -97,7 +97,7 @@ end
 class TC_IFrames < Test::Unit::TestCase
   
   def setup
-    use_page "iframeTest.html"
+    goto_page "iframeTest.html"
   end
   
   def test_Iframe

@@ -7,10 +7,6 @@ require 'cgi'
 
 class TC_Navigate < Test::Unit::TestCase
   
-  def goto_page a
-    $ie.goto($htmlRoot + a)
-  end
-  
   def test_navigation
     $ie.clear_url_list
     goto_page 'buttons1.html'

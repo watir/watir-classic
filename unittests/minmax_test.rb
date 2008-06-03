@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_MinMax< Test::Unit::TestCase
   def setup
-    use_page 'pass.html'
+    goto_page 'pass.html'
   end        
   def teardown
     $ie.restore

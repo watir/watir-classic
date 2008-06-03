@@ -11,7 +11,7 @@ class TC_Images < Test::Unit::TestCase
   include Watir
   
   def setup
-    use_page "images1.html"
+    goto_page "images1.html"
     @saved_img_path = build_path("sample.img.dat");
     clean_saved_image
   end

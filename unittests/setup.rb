@@ -5,12 +5,16 @@ END {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion o
 require 'test/unit'
 require 'watir/testcase'
 
+# rename goto_page to be goto_page
+
 # Better would be to add this to a module that was included in all the tests.
 class Test::Unit::TestCase
-  def use_page page
+  # navigate the browser to the specified page in unittests/html
+  def goto_page page
     new_url = $htmlRoot + page
     browser.goto new_url
   end
+  # navigate the browser to the specified page in unittests/html IF the browser is not already on that page.
   def uses_page page
     new_url = $htmlRoot + page
     browser.goto new_url unless browser.url == new_url
@@ -61,7 +65,7 @@ $ie.speed = :fast
 
 $myDir = File.expand_path(File.dirname(__FILE__))
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
-# if you run the unit tests form a local file system use this line
+# if you run the unit tests from a local file system use this line
 $htmlRoot =  "file:///#{$myDir}/html/" 
 # if you run the unit tests from a web server use this line
 #   $htmlRoot =  "http://localhost:8080/watir/html/"

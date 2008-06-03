@@ -8,7 +8,7 @@ class TC_Divs < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
-    use_page "div.html"
+    goto_page "div.html"
   end
   
   def test_divs

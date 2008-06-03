@@ -9,7 +9,7 @@ class TC_NewWindow< Watir::TestCase
   include Watir
   
   def setup
-    use_page "new_browser.html"
+    goto_page "new_browser.html"
   end
   def teardown
     IE.reset_attach_timeout

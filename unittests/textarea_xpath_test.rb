@@ -7,12 +7,11 @@ require 'unittests/setup'
 class TC_TextArea_XPath < Test::Unit::TestCase
   include Watir::Exception
   
-  def goto_page
-    use_page "textArea.html"
+  def setup
+    goto_page "textArea.html"
   end
   
   def test_textarea_field_exists
-    goto_page
     #test for existance of 4 text area
     assert($ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").exists?)
     assert($ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").exists?)
@@ -28,15 +27,13 @@ class TC_TextArea_XPath < Test::Unit::TestCase
     assert(!$ie.text_field(:xpath , "//textarea[@name='txtMultiLine4']/").exists?)
   end
   
-  def test_textarea_to_s
+  def xtest_textarea_to_s
     # bug reported by Zeljko Filipin
     # assert_nothing_raised { $ie.text_field(:xpath , "//textarea[@id='txtMultiLine3']/").to_s  }
     # The above assertion fails. No property or method called maxlength
   end
   
   def test_textarea_field
-    goto_page
-    
     # test for read only method
     assert(!$ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").readonly? )  
     assert($ie.text_field(:xpath , "//textarea[@name='txtReadOnly']/").readonly?)
@@ -76,7 +73,6 @@ class TC_TextArea_XPath < Test::Unit::TestCase
     
     $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").clear
     assert_equal(  "" , $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/").value )  
-    
   end
   
 end
