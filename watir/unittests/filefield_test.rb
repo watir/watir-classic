@@ -22,7 +22,7 @@ class TC_FileField < Test::Unit::TestCase
 
     # pop one open and put something in it.
     file = $htmlRoot + "fileupload.html"
-    file.gsub! 'file://', ''
+    file.gsub! 'file:///', ''
     file.gsub! '/', '\\'
     $ie.file_field(:name,"file1").set(file)	
     assert_equal file, $ie.file_field(:name,"file1").value
