@@ -34,10 +34,17 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.require_path = '.'    
-  s.autorequire = 'watir'
-  s.add_dependency("win32-process", ">= 0.5.1")
-  s.add_dependency("windows-pr", ">= 0.6.6")
 
+  # We specify a specific version for win32-process and windows-pr because 
+  # win32-process >= 0.5.5 and windows-pr >= 0.7.0 both introduce a dependency 
+  # on win32-api that is not 
+  # resolved correctly unless you also have rubygems 1.1.1 installed. 
+  # Yet rubygems 0.9.2 is what is installed with Ruby 1.8.5-24.
+  # See http://jira.openqa.org/browse/WTR-209 for further discussion and analysis.
+  s.add_dependency 'win32-process', '= 0.5.1'
+  s.add_dependency 'windows-pr', '= 0.6.6' 
+  s.add_dependency 'activesupport'
+  
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
   s.executables << 'watir-console'  

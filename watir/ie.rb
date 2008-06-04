@@ -57,7 +57,7 @@ module Watir
     REVISION = $1 or 'unknown'
     
     # The Release number
-    VERSION_SHORT = '1.5.4'
+    VERSION_SHORT = '1.5.5'
     VERSION = VERSION_SHORT + '.' + REVISION
     
     # Used internally to determine when IE has finished loading a page

@@ -71,20 +71,15 @@ end
 # ARGV needs to be deleted to enable the Test::Unit functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
 # Note: this means that watir must be require'd BEFORE test/unit.
-def command_line_flag(switch)
-  setting = ARGV.include?(switch)
-  ARGV.delete(switch)
-  return setting
-end
 
-# Make Internet Explorer minimize. -b stands for background
-$HIDE_IE = command_line_flag('-b')
+# Make Internet Explorer invisible. -b stands for background
+$HIDE_IE = ARGV.delete('-b')
 
 # Run fast
-$FAST_SPEED = command_line_flag('-f')
+$FAST_SPEED = ARGV.delete('-f')
 
 # Eat the -s command line switch (deprecated)
-command_line_flag('-s')
+ARGV.delete('-s')
 
 require 'watir/logger'
 require 'watir/win32'
@@ -122,10 +117,7 @@ module Watir
     ATTACHER.timeout = IE.attach_timeout
     ATTACHER.wait_until { yield }
   end
-
             
-  # Move to Watir::Utils
-  
   @@autoit = nil  
 
   def self.autoit
