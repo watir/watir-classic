@@ -45,7 +45,7 @@ desc "Create the bonus files zip"
 task :bonus_zip => [:rdoc] do
 
   begin
-    require_gem 'rubyzip'
+    gem 'rubyzip'
     require 'zip/zip'
   rescue LoadError
     puts "rubyzip needs to be installed: gem install rubyzip."
