@@ -12,78 +12,76 @@ class TC_Divs < Test::Unit::TestCase
   end
   
   def test_divs
-    assert_raises(UnknownObjectException) {$ie.div(:id , "div77").click }
-    assert_raises(UnknownObjectException) {$ie.div(:title , "div77").click }
+    assert_raises(UnknownObjectException) { $ie.div(:id, "div77").click }
+    assert_raises(UnknownObjectException) { $ie.div(:title, "div77").click }
     
-    assert($ie.text_field(:name, "text1").verify_contains("0") )  
-    $ie.div(:id , "div3").click
-    assert($ie.text_field(:name, "text1").verify_contains("1") )  
-    $ie.div(:id , "div4").click
-    assert($ie.text_field(:name, "text1").verify_contains("0") )  
+    assert $ie.text_field(:name, "text1").verify_contains("0")  
+    $ie.div(:id, "div3").click
+    assert $ie.text_field(:name, "text1").verify_contains("1")  
+    $ie.div(:id, "div4").click
+    assert $ie.text_field(:name, "text1").verify_contains("0") 
   end
   
   def test_div_properties
-    assert_raises(UnknownObjectException) {$ie.div(:id , "div77").text }
-    assert_raises(UnknownObjectException) {$ie.div(:title , "div77").text }
+    assert_raises(UnknownObjectException) { $ie.div(:id, "div77").text }
+    assert_raises(UnknownObjectException) { $ie.div(:title, "div77").text }
     
     assert_equal("This div has an onClick that increments text1", 
-    $ie.div(:id , "div3").text.strip )
+      $ie.div(:id , "div3").text.strip )
     assert_equal("This text is in a div with an id of div1 and title of test1",   
-    $ie.div(:title , "Test1").text.strip )
+      $ie.div(:title , "Test1").text.strip )
     
-    assert_raises(UnknownObjectException) {$ie.div(:id , "div77").class_name }
-    assert_equal("blueText" ,   $ie.div(:id , "div2").class_name )
-    assert_equal("" ,   $ie.div(:id , "div1").class_name )
+    assert_raises(UnknownObjectException) { $ie.div(:id , "div77").class_name }
+    assert_equal("blueText", $ie.div(:id, "div2").class_name)
+    assert_equal("", $ie.div(:id, "div1").class_name)
     
-    assert_raises(UnknownObjectException) {$ie.div(:index , 44).class_name }
-    assert_equal("div1" ,      $ie.div(:index , 1).id )
-    assert_equal("" ,          $ie.div(:index , 1).class_name )
-    assert_equal("blueText" ,  $ie.div(:index , 2).class_name )
-    assert_equal(""    ,       $ie.div(:index , 2).value)
-    assert_equal(false ,       $ie.div(:index , 2).disabled)
-    assert_equal(""    ,       $ie.div(:index , 2).name)
-    assert_equal("div2",       $ie.div(:index , 2).id)
+    assert_raises(UnknownObjectException) { $ie.div(:index, 44).class_name }
+    assert_equal("div1" ,      $ie.div(:index, 1).id)
+    assert_equal("" ,          $ie.div(:index, 1).class_name)
+    assert_equal("blueText" ,  $ie.div(:index, 2).class_name)
+    assert_equal(""    ,       $ie.div(:index, 2).value)
+    assert_equal(false ,       $ie.div(:index, 2).disabled)
+    assert_equal(""    ,       $ie.div(:index, 2).name)
+    assert_equal("div2",       $ie.div(:index, 2).id)
   end
   
   def test_div_iterator
-    assert_equal( 8 , $ie.divs.length)
-    assert_equal( "div1" , $ie.divs[1].id )
+    assert_equal(8, $ie.divs.length)
+    assert_equal("div1", $ie.divs[1].id)
     
-    index =1
+    index = 1
     $ie.divs.each do |s|
-      # puts "each - div= " + s.to_s
-      assert_equal($ie.div(:index, index ).name , s.name )
-      assert_equal($ie.div(:index, index ).id , s.id )
-      assert_equal($ie.div(:index, index ).class_name , s.class_name )
-      index +=1
+      assert_equal($ie.div(:index,index).name, s.name)
+      assert_equal($ie.div(:index,index).id, s.id)
+      assert_equal($ie.div(:index,index).class_name , s.class_name)
+      index += 1
     end
-    assert_equal(index-1, $ie.divs.length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index - 1, $ie.divs.length)   # -1 as we add 1 at the end of the loop
   end
   
   def test_objects_in_div
-    assert($ie.div(:id, 'buttons1').button(:index,1).exists? )
-    assert(!$ie.div(:id, 'buttons1').button(:index,3).exists? )
-    assert($ie.div(:id, 'buttons1').button(:name,'b1').exists? )
+    assert $ie.div(:id, 'buttons1').button(:index,1).exists? 
+    assert !$ie.div(:id, 'buttons1').button(:index,3).exists? 
+    assert $ie.div(:id, 'buttons1').button(:name,'b1').exists? 
     
-    assert($ie.div(:id, 'buttons2').button(:index,1).exists? )
-    assert($ie.div(:id, 'buttons2').button(:index,2).exists? )
-    assert(!$ie.div(:id, 'buttons1').button(:index,3).exists? )
+    assert $ie.div(:id, 'buttons2').button(:index,1).exists? 
+    assert $ie.div(:id, 'buttons2').button(:index,2).exists? 
+    assert !$ie.div(:id, 'buttons1').button(:index,3).exists? 
     
-    $ie.div(:id, 'buttons1').button(:index,1).click
+    $ie.div(:id, 'buttons1').button(:index, 1).click
+    assert_equal('button1', $ie.div(:id, 'text_fields1').text_field(:index,1).value)
     
-    assert_equal( 'button1' ,   $ie.div(:id , 'text_fields1').text_field(:index,1).value)
-    
-    assert_equal( 3 , $ie.div(:id , 'text_fields1').text_fields.length )
+    assert_equal(3, $ie.div(:id, 'text_fields1').text_fields.length )
     $ie.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
     assert_equal("drink me", $ie.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
   end
   
   def test_images_inside_a_div
-      assert_equal( 3 , $ie.div(:id , 'hasImages').images.length )
-      assert_match( /triangle/ , $ie.div(:id , 'hasImages').images[1].src )
-      assert_match( /circle/ , $ie.div(:id , 'hasImages').image(:id , 'circle' ).src )
+    assert_equal(3, $ie.div(:id, 'hasImages').images.length)
+    assert_match(/triangle/, $ie.div(:id, 'hasImages').images[1].src)
+    assert_match(/circle/, $ie.div(:id, 'hasImages').image(:id , 'circle').src)
   end
-
+  
   #---- Span Tests ---
   def test_spans
     assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
@@ -95,7 +93,6 @@ class TC_Divs < Test::Unit::TestCase
     
     $ie.span(:id , "span4").click
     assert($ie.text_field(:name, "text2").verify_contains("0") )  
-    
   end
   
   def test_span_properties
