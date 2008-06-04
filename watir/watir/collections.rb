@@ -173,15 +173,15 @@ module Watir
     def element_tag; 'AREA'; end
   end
   
-  # this class accesses the imnages in the document as a collection
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#images method
+  # this class collects the images in the container
+  # An instance is returned by Watir::Container#images
   class Images < ElementCollections
     def element_class; Image; end
     def length
-       all = @container.document.all
-       imgs = []
-       all.each{|n| imgs << n if n.nodeName == "IMG"}
-       imgs.length
+      all = @container.document.all
+      imgs = []
+      all.each{|n| imgs << n if n.nodeName == "IMG"}
+      imgs.length
     end
     
     private
