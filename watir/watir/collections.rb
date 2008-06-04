@@ -178,7 +178,10 @@ module Watir
   class Images < ElementCollections
     def element_class; Image; end
     def length
-      @container.document.images.length
+       all = @container.document.all
+       imgs = []
+       all.each{|n| imgs << n if n.nodeName == "IMG"}
+       imgs.length
     end
     
     private

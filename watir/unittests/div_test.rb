@@ -46,7 +46,7 @@ class TC_Divs < Test::Unit::TestCase
   end
   
   def test_div_iterator
-    assert_equal( 7 , $ie.divs.length)
+    assert_equal( 8 , $ie.divs.length)
     assert_equal( "div1" , $ie.divs[1].id )
     
     index =1
@@ -78,6 +78,12 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("drink me", $ie.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
   end
   
+  def test_images_inside_a_div
+      assert_equal( 3 , $ie.div(:id , 'hasImages').images.length )
+      assert_match( /triangle/ , $ie.div(:id , 'hasImages').images[1].src )
+      assert_match( /circle/ , $ie.div(:id , 'hasImages').image(:id , 'circle' ).src )
+  end
+
   #---- Span Tests ---
   def test_spans
     assert_raises(UnknownObjectException) {$ie.span(:id , "span77").click }
