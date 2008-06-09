@@ -66,21 +66,6 @@ Typical Usage
 
    * :id and :name are the quickest of these to process, and so should be used when possible to speed up scripts.
 
-  The objects that are currently supported include
-   Button
-   Radio
-   CheckBox
-   TextField (Including TextArea and Password)
-   Hidden
-   SelectList
-   Label
-   Span
-   Div
-   P
-   Link
-   Table 
-   Image
-
  These 2 web sites provide info on Internet Explorer and on the DOM as implemented by Internet Explorer
  http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/webbrowser/webbrowser.asp
  http://msdn.microsoft.com/library/default.asp?url=/workshop/browser/overview/overview.asp
@@ -98,9 +83,9 @@ Javascript Pop Up Support
    This is the prefered method for dealing wth pop ups, file requesters etc. Support for Winclickers will be removed.
 
 Contacts:
-   Paul Rogers (paul.rogers@shaw.ca)
    Bret Pettichord (bret@pettichord.com)
    Charley Baker (charley.baker@gmail.com)
+   Paul Rogers (paul.rogers@shaw.ca)
    The mailing list: http://groups.google.com/group/watir-general
 
 Contributors:
@@ -141,6 +126,7 @@ Contributors:
    Zeljko Filipin
    Paul Taylor - Bug fix 194
    Vincent Xu - Chinese input support
+   Tomislav Car - Filefield fix (210)
 
 Acknowledgements:
    Chris Morris

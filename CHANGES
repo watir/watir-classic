@@ -19,10 +19,11 @@ Bug Fixes
   http://jira.openqa.org/browse/WTR-209
 * Improved error message when element is not found using multiple attributes.
   http://jira.openqa.org/browse/WTR-181
-* Made examples and unit tests somewhat better examples (removed unnecessary
-  "include Watir" statements). http://jira.openqa.org/browse/WTR-159
-* Moved brittle unit test that was causing cascading failures.  
+* Made examples and unit tests somewhat better examples: removed unnecessary
+  "include Watir" statements; started using "browser" instead of "$ie"; use
+  new methods 'goto_page' and 'uses_page' (this last improves performance of 
+  unit tests). 
+  http://jira.openqa.org/browse/WTR-159
+* Moved brittle unit test that was causing cascading failures; renamed another
+  that was causing a namespace collision.  
   http://jira.openqa.org/browse/WTR-92
-  
-
--- Add individual credits, make sure they are listed as contributors.
