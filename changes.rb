@@ -1,4 +1,18 @@
 =begin rdoc
+== Version 1.5.4
+New Features
+* Add new speed, :zippy. This is like fast, but, in effect, it does a TextField#value= instead of a TextField#set. If you have specific text fields that you never want this to happen to, use ie.text_field(:how, what).requires_typing.set instead.
+  http://svn.openqa.org/fisheye/changelog/watir/?cs=1295
+* Add support for Chinese input as supplied by Vincent Xu. 
+  http://jira.openqa.org/browse/WTR-71.
+
+Bug Fixes
+* Add dependency on windows-pr 0.6.6, which seems to be necessary on Vista.
+* Fix for bug in IE.close_others provided by Paul Taylor.
+  http://jira.openqa.org/browse/WTR-194
+* Fix for error when using verify_equal with ci_reporter, provided by Marcog.
+  http://svn.openqa.org/fisheye/changelog/watir/?cs=1301
+
 == Version 1.5.3
 Bug fixes and minor cleanup.
 
