@@ -2,11 +2,14 @@
 
 New Features
 * Multiple attributes can now be specified for these elements:
-  li, ul, map, area, h1, h2, h3, h4, h5, h6.
+  li, ul, map, area, h1, h2, h3, h4, h5, h6. (This was claimed to work earlier, 
+  but never did.)
   http://jira.openqa.org/browse/WTR-196
 
 Bug Fixes
 
+* Statements such at ie.table().row() now work (no longer private). 
+  http://jira.openqa.org/browse/WTR-117
 * Fixed bug with images method when used with anything but ie. 
   E.g. ie.div().images. http://jira.openqa.org/browse/WTR-211
 * Fixed intermittent bug with ie.file_field().set.
@@ -14,6 +17,12 @@ Bug Fixes
 * When installing Watir 1.5.4 you could get extra, confusing
   questions. This shouldn't happen anymore.
   http://jira.openqa.org/browse/WTR-209
-* 
+* Improved error message when element is not found using multiple attributes.
+  http://jira.openqa.org/browse/WTR-181
+* Made examples and unit tests somewhat better examples (removed unnecessary
+  "include Watir" statements). http://jira.openqa.org/browse/WTR-159
+* Moved brittle unit test that was causing cascading failures.  
+  http://jira.openqa.org/browse/WTR-92
+  
 
 -- Add individual credits, make sure they are listed as contributors.
