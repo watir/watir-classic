@@ -10,9 +10,9 @@ Bug Fixes
 
 * Statements such at ie.table().row() now work (no longer private). 
   http://jira.openqa.org/browse/WTR-117
-* Fixed bug with images method when used with anything but ie. 
+* Fixed bug with images method when used with anything but ie. (Paul Rogers)
   E.g. ie.div().images. http://jira.openqa.org/browse/WTR-211
-* Fixed intermittent bug with ie.file_field().set.
+* Fixed intermittent bug with ie.file_field().set. (Tomislav Car)
   http://jira.openqa.org/browse/WTR-210
 * When installing Watir 1.5.4 you could get extra, confusing
   questions. This shouldn't happen anymore.
