@@ -1,29 +1,11 @@
-== Watir 1.5.5.
+== Watir 1.5.6
 
-New Features
-* Multiple attributes can now be specified for these elements:
-  li, ul, map, area, h1, h2, h3, h4, h5, h6. (This was claimed to work earlier, 
-  but never did.)
-  http://jira.openqa.org/browse/WTR-196
+To install this:
 
-Bug Fixes
+	"gem update --system"
+	"gem install watir"
 
-* Statements such at ie.table().row() now work (no longer private). 
-  http://jira.openqa.org/browse/WTR-117
-* Fixed bug with images method when used with anything but ie. (Paul Rogers)
-  E.g. ie.div().images. http://jira.openqa.org/browse/WTR-211
-* Fixed intermittent bug with ie.file_field().set. (Tomislav Car)
-  http://jira.openqa.org/browse/WTR-210
-* When installing Watir 1.5.4 you could get extra, confusing
-  questions. This shouldn't happen anymore.
-  http://jira.openqa.org/browse/WTR-209
-* Improved error message when element is not found using multiple attributes.
-  http://jira.openqa.org/browse/WTR-181
-* Made examples and unit tests somewhat better examples: removed unnecessary
-  "include Watir" statements; started using "browser" instead of "$ie"; use
-  new methods 'goto_page' and 'uses_page' (this last improves performance of 
-  unit tests). 
-  http://jira.openqa.org/browse/WTR-159
-* Moved brittle unit test that was causing cascading failures; renamed another
-  that was causing a namespace collision.  
-  http://jira.openqa.org/browse/WTR-92
+Installer Fix
+
+This update fixes a problem that lead to installation errors for some users. 
+If you successfully installed 1.5.5, there is no reason to get this update.

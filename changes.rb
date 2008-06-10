@@ -1,12 +1,46 @@
 =begin rdoc
-== Version 1.5.4
+== Watir 1.5.5.
+
 New Features
+
+* Multiple attributes can now be specified for these elements:
+  li, ul, map, area, h1, h2, h3, h4, h5, h6. (This was claimed to work earlier, 
+  but never did.)
+  http://jira.openqa.org/browse/WTR-196
+
+Bug Fixes
+
+* Statements such at ie.table().row() now work (no longer private). 
+  http://jira.openqa.org/browse/WTR-117
+* Fixed bug with images method when used with anything but ie. (Paul Rogers)
+  E.g. ie.div().images. http://jira.openqa.org/browse/WTR-211
+* Fixed intermittent bug with ie.file_field().set. (Tomislav Car)
+  http://jira.openqa.org/browse/WTR-210
+* When installing Watir 1.5.4 you could get extra, confusing
+  questions. This shouldn't happen anymore.
+  http://jira.openqa.org/browse/WTR-209
+* Improved error message when element is not found using multiple attributes.
+  http://jira.openqa.org/browse/WTR-181
+* Made examples and unit tests somewhat better examples: removed unnecessary
+  "include Watir" statements; started using "browser" instead of "$ie"; use
+  new methods 'goto_page' and 'uses_page' (this last improves performance of 
+  unit tests). 
+  http://jira.openqa.org/browse/WTR-159
+* Moved brittle unit test that was causing cascading failures; renamed another
+  that was causing a namespace collision.  
+  http://jira.openqa.org/browse/WTR-92
+
+== Version 1.5.4
+
+New Features
+
 * Add new speed, :zippy. This is like fast, but, in effect, it does a TextField#value= instead of a TextField#set. If you have specific text fields that you never want this to happen to, use ie.text_field(:how, what).requires_typing.set instead.
   http://svn.openqa.org/fisheye/changelog/watir/?cs=1295
 * Add support for Chinese input as supplied by Vincent Xu. 
   http://jira.openqa.org/browse/WTR-71.
 
 Bug Fixes
+
 * Add dependency on windows-pr 0.6.6, which seems to be necessary on Vista.
 * Fix for bug in IE.close_others provided by Paul Taylor.
   http://jira.openqa.org/browse/WTR-194
@@ -14,6 +48,7 @@ Bug Fixes
   http://svn.openqa.org/fisheye/changelog/watir/?cs=1301
 
 == Version 1.5.3
+
 Bug fixes and minor cleanup.
 
 * Fix text areas bugs.
