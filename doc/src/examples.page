@@ -11,8 +11,8 @@ Here are several simple "examples":https://svn.openqa.org/svn/watir/trunk/watir/
 Many people also find our 
 "unit tests":https://svn.openqa.org/svn/watir/trunk/watir/unittests/
 to be
-useful examples of the different Watir commands. These files are also conveniently
-packaged in a "bonus-zip":http://wiki.openqa.org/display/WTR/Development+Builds
+useful examples of the different Watir commands. All of these examples and unit tests are also conveniently
+packaged in a "bonus-zip":http://rubyforge.org/frs/?group_id=104
 that you can download.
 
 For more extensive examples, see these "test suites for open

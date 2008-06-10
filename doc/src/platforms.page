@@ -8,8 +8,7 @@ h2. Internet Explorer and Windows
 This version of Watir works with Internet Explorer and Windows. It works with
 IE 5.5, 6 and 7 and Windows 2000, XP, 2003 Server and Vista.
 
-Support for other platforms is currently provided by separate ports. We have 
-plans to eventually roll together the following Watir ports into a single package.
+Support for other platforms is currently provided by separate ports. We are in the process of rolling together these ports into a single package.
 
 h2. Firefox
 

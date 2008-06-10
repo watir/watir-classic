@@ -16,10 +16,11 @@ and the provided methods and attributes. You can also review the
 "rdoc":http://wtr.rubyforge.org/rdoc/  -- 
 detailed API documentation in Ruby's standard format.
 
-The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to frequently 
-asked questions.
+The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to
+frequently asked questions.
 
-There are also several "articles":http://wiki.openqa.org/display/WTR/Articles about Watir.
+There are also several
+"articles":http://wiki.openqa.org/display/WTR/Articles about Watir.
 
-The "tutorial":http://wiki.openqa.org/display/WTR/Tutorial
-provides a broad, comprehensive introduction.
+The "tutorial":http://bpettichord.backpackit.com/pub/1139340
+provides a detailed, hands-on introduction.

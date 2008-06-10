@@ -5,7 +5,7 @@ orderInfo: 60
 ---
 h2. Mailing Lists
 
-"Watir general":http://groups.google.com/group/watir-general 
+"Watir General":http://groups.google.com/group/watir-general 
 is a Google group for anyone using Watir for testing. You can subscribe right here.
 <table border=0 style="background-color: #fff; padding: 5px;" cellspacing=0>
   <form action="http://groups.google.com/group/watir-general/boxsubscribe">
@@ -16,6 +16,14 @@ is a Google group for anyone using Watir for testing. You can subscribe right he
 </form>
 </table>
 
+Please read these "guidelines":http://wiki.openqa.org/display/WTR/Support before posting to the list.
+
+"Watir
+Development":http://rubyforge.org/mailman/listinfo/wtr-development is
+a mailing list for all Watir contributors, including developers of the
+FireWatir and SafariWatir ports. Any one interested in Watir
+development is welcome to join.
+
 h2. Wiki
 
 The "Watir Wiki":http://wiki.openqa.org/display/WTR/Project+Home 
@@ -24,6 +32,10 @@ hosts a growing collection of documentation and "contributions.":http://wiki.ope
 h2. Users
 
 People "all over the world":http://wiki.openqa.org/display/WTR/Watir+Users are using Watir and "loving it.":http://wiki.openqa.org/display/WTR/Testimonials
+
+h2. Report Bugs and Requests
+
+If you have found a bug in Watir, you can post it to the Watir General list mentioned above, especially if you aren't sure. If you are sure, you can "post it directly in our bug tracking system, Jira.":http://wiki.openqa.org/display/WTR/FAQ#FAQ-HowtocreateaJiraTicket%3F
 
 h2. Core team
 
