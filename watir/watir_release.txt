@@ -21,3 +21,8 @@ Announce the Release
 - Watir Confluence News
   http://wiki.openqa.org/pages/viewrecentblogposts.action?key=WTR  
 
+----
+
+How to update website
+c:\work\watir-doc>webgen
+C:\work\watir-doc\output>pscp -v -r *.* bret@rubyforge.org:/var/www/gforge-projects/wtr
