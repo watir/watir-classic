@@ -40,10 +40,10 @@ class TC_Fields < Test::Unit::TestCase
         assert($ff.text_field(:name, "text1").verify_contains(/Hello\sW/))  
         assert_false($ff.text_field(:name, "text1").verify_contains("Ruby"))  
         assert_false($ff.text_field(:name, "text1").verify_contains(/R/))  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:name, "NoName").verify_contains("No field to get a value of") } 
+        assert_raises(UnknownObjectException) { $ff.text_field(:name, "NoName").verify_contains("No field to get a value of") } 
         
         assert($ff.text_field(:id, "text2").verify_contains("goodbye all") )  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:id, "noID").verify_contains("No field to get a value of") }          
+        assert_raises(UnknownObjectException) { $ff.text_field(:id, "noID").verify_contains("No field to get a value of") }          
     end
     
     def test_text_field_enabled
@@ -59,7 +59,7 @@ class TC_Fields < Test::Unit::TestCase
     end
     
     def test_text_field_get_contents
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:name, "missing_field").append("Some Text") }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:name, "missing_field").append("Some Text") }  
         assert_equal("Hello World", $ff.text_field(:name, "text1").value)  
     end
     
@@ -81,7 +81,7 @@ class TC_Fields < Test::Unit::TestCase
         expected[2] = "id:           text2"
         expected[3] = "value:        goodbye all"
         assert_equal(expected, $ff.text_field(:index, 2).to_s)
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 999).to_s }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 999).to_s }  
         #puts $ff.text_field(:name, "text1").to_s
         #puts $ff.text_field(:name, "readOnly").to_s
     end
@@ -89,7 +89,7 @@ class TC_Fields < Test::Unit::TestCase
     def test_text_field_append
         assert_raises(ObjectReadOnlyException) { $ff.text_field(:id, "readOnly2").append("Some Text") }  
         assert_raises(ObjectDisabledException) { $ff.text_field(:name, "disabled").append("Some Text") }  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:name, "missing_field").append("Some Text") }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:name, "missing_field").append("Some Text") }  
         
         $ff.text_field(:name, "text1").append(" Some Text")
         assert_equal("Hello World Some Text", $ff.text_field(:name, "text1").value)  
@@ -106,11 +106,11 @@ class TC_Fields < Test::Unit::TestCase
     end
     
     def test_text_field_properties
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 199).value }  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 199).name }  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 199).id }  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 199).disabled }  
-        assert_raises(Watir::UnknownObjectException) { $ff.text_field(:index, 199).type }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 199).value }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 199).name }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 199).id }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 199).disabled }  
+        assert_raises(UnknownObjectException) { $ff.text_field(:index, 199).type }  
         
         assert_equal("Hello World" , $ff.text_field(:index, 1).value) 
         assert_equal("text"        , $ff.text_field(:index, 1).type)
@@ -182,11 +182,11 @@ class TC_Fields < Test::Unit::TestCase
     end
     
     def test_label_properties
-        assert_raises(Watir::UnknownObjectException) { $ff.label(:index,20).innerText } 
-        assert_raises(Watir::UnknownObjectException) { $ff.label(:index,20).for } 
-        assert_raises(Watir::UnknownObjectException) { $ff.label(:index,20).name } 
-        assert_raises(Watir::UnknownObjectException) { $ff.label(:index,20).type } 
-        assert_raises(Watir::UnknownObjectException) { $ff.label(:index,20).id } 
+        assert_raises(UnknownObjectException) { $ff.label(:index,20).innerText } 
+        assert_raises(UnknownObjectException) { $ff.label(:index,20).for } 
+        assert_raises(UnknownObjectException) { $ff.label(:index,20).name } 
+        assert_raises(UnknownObjectException) { $ff.label(:index,20).type } 
+        assert_raises(UnknownObjectException) { $ff.label(:index,20).id } 
         
         assert_false($ff.label(:index,10).exists?) 
         assert_false($ff.label(:id,'missing').exists?) 
