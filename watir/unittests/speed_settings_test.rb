@@ -8,10 +8,14 @@ class TC_instance_options < Test::Unit::TestCase
   
   def test_using_default
     @ie1 = Watir::IE.new
+
     @ie1.speed = :fast
     assert_equal(:fast, @ie1.speed)
     @ie1.speed = :slow
     assert_equal(:slow, @ie1.speed)
+    @ie1.speed = :zippy
+    assert_equal(:zippy, @ie1.speed)
+   
     assert_raise(ArgumentError){@ie1.speed = :fubar}
   end
 
@@ -46,10 +50,14 @@ class TC_class_options < Test::Unit::TestCase
 		IE.defaults = {:speed => :slow}
 		@ie2 = IE.new
 		assert_equal(:slow, @ie2.speed)
+    IE.defaults = {:speed => :zippy}
+    @ie3 = IE.new
+    assert_equal(:zippy, @ie3.speed)
 	end
 	def teardown
 		IE.defaults = @previous
 		@ie1.close if @ie1
 		@ie2.close if @ie2
+    @ie3.close if @ie3
 	end
 end

@@ -75,9 +75,6 @@ module Watir
     # the last command
     attr_reader :down_load_time
     
-    # Whether the speed is :fast or :slow
-    attr_reader :speed
-    
     # the OLE Internet Explorer object
     attr_accessor :ie
     
@@ -214,6 +211,11 @@ module Watir
       else
         raise ArgumentError, "Invalid speed: #{how_fast}"
       end
+    end
+    
+    def speed
+      return @speed if @speed == :slow
+      return @type_keys? :fast : :zippy
     end
     
     # deprecated: use speed = :fast instead
