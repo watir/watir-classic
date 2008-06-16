@@ -484,27 +484,6 @@ module Watir
     alias getState isSet?
     alias checked? isSet?
     
-    # This method clears a radio button or check box. Note, with radio buttons one of them will almost always be set.
-    # Returns true if set or false if not set.
-    #   Raises UnknownObjectException if its unable to locate an object
-    #         ObjectDisabledException IF THE OBJECT IS DISABLED
-    def clear
-      assert_enabled
-      highlight(:set)
-      set_clear_item(false)
-      highlight(:clear)
-    end
-    
-    # This method sets the radio list item or check box.
-    #   Raises UnknownObjectException  if it's unable to locate an object
-    #         ObjectDisabledException  if the object is disabled
-    def set
-      assert_enabled
-      highlight(:set)
-      set_clear_item(true)
-      highlight(:clear)
-    end
-    
     # This method is the common code for setting or clearing checkboxes and radio.
     def set_clear_item(set)
       @o.checked = set
@@ -520,6 +499,27 @@ module Watir
   #++
   # This class is the watir representation of a radio button.
   class Radio < RadioCheckCommon
+    # This method clears a radio button. One of them will almost always be set.
+    # Returns true if set or false if not set.
+    #   Raises UnknownObjectException if its unable to locate an object
+    #         ObjectDisabledException IF THE OBJECT IS DISABLED
+    def clear
+      assert_enabled
+      highlight(:set)
+      set_clear_item(false)
+      highlight(:clear)
+    end
+    
+    # This method sets the radio list item.
+    #   Raises UnknownObjectException  if it's unable to locate an object
+    #         ObjectDisabledException  if the object is disabled
+    def set
+      assert_enabled
+      highlight(:set)
+      set_clear_item(true)
+      highlight(:clear)
+    end
+    
   end
   
   # This class is the watir representation of a check box.
