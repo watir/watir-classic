@@ -516,6 +516,7 @@ module Watir
     def set
       assert_enabled
       highlight(:set)
+      @o.scrollIntoView
       set_clear_item(true)
       highlight(:clear)
     end
