@@ -1,4 +1,16 @@
 =begin rdoc
+== Watir 1.5.6
+
+To install this:
+
+  "gem update --system"
+  "gem install watir"
+
+Installer Fix
+
+This update fixes an installer problem in Watir 1.5.5 that affected some users. 
+If you installed 1.5.5 without error, there is no reason to get this update.
+
 == Watir 1.5.5.
 
 New Features
