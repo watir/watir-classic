@@ -191,6 +191,12 @@ module Watir
       @url_list = []
     end
 
+    # Specifies the speed that commands will be executed at. Choices are:
+    # * :slow (default)
+    # * :fast 
+    # * :zippy
+    # With IE#speed=  :zippy, text fields will be entered at once, instead of
+    # character by character (default).
     def speed= how_fast
       case how_fast
       when :zippy :
