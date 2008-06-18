@@ -80,7 +80,7 @@ module Watir
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.
     def submit # XXX use assert_exists
       raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
-      @ole_object.submit
+      @ole_object.invoke('submit')
       @container.wait
     end
     
