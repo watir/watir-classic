@@ -24,7 +24,6 @@ end
 
 CLEAN << 'pkg' << 'rdoc'
 
-desc 'Run all tests'
 task :default => :package
 
 if defined? Rake::GemPackageTask
@@ -71,4 +70,9 @@ task :bonus_zip => [:rdoc] do
   
 end
 
+desc 'Run unit tests'
+task :test do
+  load 'unittests/core_tests.rb'
+end
 
+task :cruise => :test
