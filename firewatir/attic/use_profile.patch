@@ -1,0 +1,68 @@
+Index: FireWatir/firewatir.rb
+===================================================================
+--- FireWatir/firewatir.rb	(revision 115)
++++ FireWatir/firewatir.rb	(working copy)
+@@ -163,6 +163,7 @@
+         @window_title = nil 
+         @window_url = nil 
+ 
++        
+         #
+         # Description: 
+         #   Starts the firefox browser. Currently this only works for Windows Platform.
+@@ -170,14 +171,33 @@
+         #   On windows this starts the first version listed in the registry.
+         # 
+         # Input:
+-        #   waitTime - Time to wait for Firefox to start. By default it waits for 2 seconds.
+-        #              This is done because if Firefox is not started and we try to connect
+-        #              to jssh on port 9997 an exception is thrown.
++       	#   options  - Hash of any of the following options:
++	      #     :waitTime - Time to wait for Firefox to start. By default it waits for 2 seconds.
++        #                 This is done because if Firefox is not started and we try to connect
++        #                 to jssh on port 9997 an exception is thrown.
++        #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
++        #                 the last used profile. Note that the :profile option only works if
++        #                 no other instances of Firefox are already running.
+ 
+         # TODO: Start the firefox version given by user. For example 
+         #       ff = FireWatir::Firefox.new("1.5.0.4")
+         #
+-        def initialize(waitTime = 2)
++ 
++        def initialize(options = {})
++						if(options.kind_of?(Integer))
++                options = {:waitTime => options}
++            end
++
++            if(options[:profile])
++                profile_opt = "-P #{options[:profile]}"
++            else
++                profile_opt = ""
++            end
++
++            puts "PROFILE: #{profile_opt}"
++
++            waitTime = options[:waitTime] || 2
++
+             if(RUBY_PLATFORM =~ /.*mswin.*/)
+                 #puts "plaftorm is windows"
+                 # Get the path to Firefox.exe using Registry.
+@@ -195,13 +215,13 @@
+ 
+                 puts "Starting Firefox using the executable : #{path_to_exe}"
+                 puts "Waiting for #{waitTime} seconds for Firefox to get started."
+-                @t = Thread.new { system("\"#{path_to_exe}\" -jssh") }
++                @t = Thread.new { system("\"#{path_to_exe}\" -jssh #{profile_opt}") }
+             elsif(RUBY_PLATFORM =~ /linux/i)
+                 puts RUBY_PLATFORM
+                 path_to_bin = `which firefox`.strip
+-                puts "#{path_to_bin} -jssh"
+-                @t = Thread.new { `#{path_to_bin} -jssh` }
+-            end      
++                puts "#{path_to_bin} -jssh #{profile_opt}"
++                @t = Thread.new { `#{path_to_bin} -jssh #{profile_opt}` }
++            end     
+             
+             sleep waitTime
+             
