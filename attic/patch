@@ -1,0 +1,185 @@
+Index: FireWatir/unittests/checkbox_test.rb
+===================================================================
+--- FireWatir/unittests/checkbox_test.rb	(revisão 110)
++++ FireWatir/unittests/checkbox_test.rb	(cópia de trabalho)
+@@ -19,6 +19,7 @@
+        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").value   }  
+ 
+        assert_equal("box1"  , $ff.checkbox(:index, 1).name  ) 
++       assert_instance_of(CheckBox,$ff.checkbox(:index,1))
+        assert_equal(""  , $ff.checkbox(:index, 1).id  ) 
+        assert_equal("checkbox"  , $ff.checkbox(:index, 1).type  ) 
+        assert_equal("on"  , $ff.checkbox(:index, 1).value  ) 
+Index: FireWatir/unittests/buttons_test.rb
+===================================================================
+--- FireWatir/unittests/buttons_test.rb	(revisão 110)
++++ FireWatir/unittests/buttons_test.rb	(cópia de trabalho)
+@@ -124,10 +124,10 @@
+      end
+ 
+      def test_button2
+-        assert($ff.button(:caption, "Click Me2").exists?)   
++        assert($ff.button(:caption, "Click Me2").exists?, 'Can\'t find Button with caption "Click Me2"')   
+        
+-        assert($ff.button(:caption, "Disabled Button2").exists?) 
+-        assert($ff.button(:caption, "Sign In").exists?)
++        assert($ff.button(:caption, "Disabled Button2").exists?, 'Can\'t find Button with caption "Disabled Button2"') 
++        assert($ff.button(:caption, "Sign In").exists?, 'Can\'t find Button with caption "Sign In"')
+         
+         assert_equal("b6"  , $ff.button(:id, "b7").name ) 
+         assert_equal("b7"  , $ff.button(:name, "b6").id ) 
+@@ -142,15 +142,15 @@
+         assert_equal(""  , $ff.button(:name, "b8").class_name  ) 
+         assert_equal("Sign In", $ff.button(:caption, "Sign In").value)
+         
+-        assert($ff.button(:caption, "Click Me").enabled?)   
++        assert($ff.button(:caption, "Click Me").enabled?, 'Button wih caption "Click Me" should be enabled')   
+       
+-        assert_false($ff.button(:caption, "Disabled Button2").enabled?)   
++        assert_false($ff.button(:caption, "Disabled Button2").enabled?, 'Button wih caption "Disabled Button2" should be disabled')   
+         
+         
+         assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ff.button(:caption, "Disabled Button2").click   }  
+         
+         $ff.button(:caption, "Click Me2").click
+-        assert($ff.text.include?("PASS")) 
++        assert($ff.text.include?("PASS"), 'Clicking on "Click Me2" button should\'ve taken to the "PASS" page') 
+ 
+      end
+     
+@@ -176,5 +176,39 @@
+         assert_equal("Sign In",arrButtons[7].value)
+    end
+     
++    def test_class_buttons
++      arr_buttons = $ff.buttons
++      arr_buttons.each do |b|
++        assert(b.instance_of?(Button),"element class should be #{Button}; got #{b.class}")
+ end
++      # test properties
++      assert_equal("b2", arr_buttons[1].id)
++      assert_equal("b1", arr_buttons[1].name) 
++      assert_equal("button", arr_buttons[1].type) 
++      assert_equal("Click Me", arr_buttons[1].value) 
++      assert_equal(false, arr_buttons[1].disabled) 
++      assert_equal("italic_button", arr_buttons[1].class_name) 
++      assert_equal( "this is button1", arr_buttons[1].title)
+ 
++      assert_equal("b5", arr_buttons[2].id)
++      assert_equal("b4", arr_buttons[2].name) 
++      assert_equal("button", arr_buttons[2].type) 
++      assert_equal("Disabled Button", arr_buttons[2].value) 
++      assert_equal(true, arr_buttons[2].disabled) 
++      assert_equal( "", arr_buttons[2].title)
++      assert_equal("", arr_buttons[2].class_name) 
++
++      assert_equal("Submit", arr_buttons[3].value)
++      assert_equal("sub3", arr_buttons[4].name)
++      assert_equal("b7", arr_buttons[5].id)
++      assert_equal("b9", arr_buttons[6].id)
++      assert_equal("Sign In", arr_buttons[7].value)
++
++
++
++
++    end
++
++
++end
++
+Index: FireWatir/unittests/html/buttons1.html
+===================================================================
+--- FireWatir/unittests/html/buttons1.html	(revisão 110)
++++ FireWatir/unittests/html/buttons1.html	(cópia de trabalho)
+@@ -17,8 +17,8 @@
+ <input type = button class="italic_button"  name = b1 id = b2 value = "Click Me" onClick="javascript:document.location='pass.html';" title = "this is button1">
+ <br><input type = button name = b4 id=b5 value = "Disabled Button" onClick="javascript:document.location='fail.html';" disabled>
+ <input type=text id="text_id" value="OldValue" size="20"/>
++</form>
+ </td>
+-</form>
+ <td> The top button is for testing buttons with names
+ <br> The second button is used for testing disabled buttons
+ </td>
+@@ -29,6 +29,7 @@
+ <form name = test2 method = get action = pass2.html>
+ <br><input type = submit value=Submit>
+ </form>
++</td>
+ <td> This button is a submit ( the others are buttons)
+ </td>
+ </tr>
+@@ -36,6 +37,7 @@
+ <td>
+ <form name = test3 method = get action = pass3.html>
+ <br><input type = image src=images/button.jpg name =sub3>
++</form>
+ </td>
+ <td> This button is an image. It should behave the same as a submit
+ 
+@@ -43,7 +45,6 @@
+ </tr>
+ <tr>
+ <td>
+-</form>
+ <form name = test1 method = get action = pass.html>
+ 
+ <button class="italic_button"  name=b6 id = b7 value="Click Me2" onClick="javascript:document.location='pass.html';" title="this is button2">Click Me2</button>
+@@ -56,4 +57,5 @@
+ </td>
+ </tr>
+ </table>
++</body>
+ </html>
+Index: FireWatir/unittests/bug_fixes_test.rb
+===================================================================
+--- FireWatir/unittests/bug_fixes_test.rb	(revisão 110)
++++ FireWatir/unittests/bug_fixes_test.rb	(cópia de trabalho)
+@@ -24,6 +24,22 @@
+         assert_equal("test_link", link.name)
+     end
+     
++
++    # element_by_xpath should return an element that's instance of the
++    # appropriate class, not the generic Element class. So if it's a div,
++    # it should return an instance of Div, if it's a checkbox, CheckBox,
++    # and so on. TODO write tests for all classes
++    def test_element_by_xpath_bug01
++      $ff.goto($htmlRoot + "div.html")
++      element = $ff.element_by_xpath("//div[@id='div1']")
++      assert_not_nil(element) # helder
++      # next assert always breaks, dunno why (error, not failure)
++      #assert_instance_of(Div, element, "wrong constructor was used")
++      # using this hack instead
++      assert(element.instance_of?(Div),
++               "element class should be: #{Div}; got: #{element.class}.")
++    end
++    
+     def test_elements_by_xpath_bug10
+         $ff.goto($htmlRoot + "links1.html")
+         elements = $ff.elements_by_xpath("//a")
+@@ -125,6 +141,6 @@
+         $ff.file_field(:name, "file3").set("c:\\results.txt")
+         $ff.button(:name, "upload").click()
+         url = $ff.url
+-        assert(url =~ /.*results.txt&upload=upload$/)
++        assert_match(/.*results.txt&upload=upload$/,url)
+     end
+ end 
+Index: FireWatir/firewatir.rb
+===================================================================
+--- FireWatir/firewatir.rb	(revisão 110)
++++ FireWatir/firewatir.rb	(cópia de trabalho)
+@@ -201,6 +201,12 @@
+                     sleep waitTime
+                 #    @@firefox_started = true
+                 #end
++            elsif(RUBY_PLATFORM =~ /linux/i)
++                puts RUBY_PLATFORM
++                path_to_bin = `which firefox`.strip
++                puts "#{path_to_bin} -jssh"
++                @t = Thread.new { `#{path_to_bin} -jssh` }
++                sleep waitTime
+             end       
+             
+             set_defaults()
