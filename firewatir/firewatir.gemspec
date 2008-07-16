@@ -8,7 +8,7 @@ require 'firewatir'
 
 spec = Gem::Specification.new do |s|
   s.name = 'firewatir'
-  s.version = "1.1.1"
+  s.version = "1.2.0"
   s.summary = 'Automated testing tool for web applications using Firefox browser.'
   s.description = <<-EOF
     FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free, 
@@ -22,19 +22,17 @@ spec = Gem::Specification.new do |s|
   EOF
   s.author = 'Angrez Singh'
   s.homepage = 'http://code.google.com/p/firewatir'
+  s.email = 'firewatir@groups.google.com' # may change this shortly
+  s.rubyforge_project = 'Watir'
 
-  #s.platform = Gem::Platform::WIN32
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
   s.require_path = '.'    
-  s.autorequire = 'firewatir'
 
   s.has_rdoc = true
     s.rdoc_options << 
-         '--title' << 'FireWatir API Reference' <<
+      '--title' << 'FireWatir API Reference' <<
   		'--accessor' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R' <<
-  #		'--main' << 'ReadMe' << 
   		'--exclude' << 'unittests|camel_case.rb|testUnitAddons.rb'
-  #s.extra_rdoc_files = 'readme.rb'
 
   s.test_file  = 'unittests/mozilla_all_tests.rb'
 
