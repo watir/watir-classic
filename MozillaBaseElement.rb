@@ -929,6 +929,7 @@
                 return true
             end
         end
+        alias exist? exists?
 
         #
         # Description:
