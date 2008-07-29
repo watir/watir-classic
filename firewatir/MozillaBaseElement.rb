@@ -505,6 +505,7 @@
             #puts "how is #{how} and what is #{what}"
             jssh_command = ""
             if(@container.class == FireWatir::Firefox)
+                # In firefox 3 if you write Frame Name then it will not show anything. So we add .toString function to every element.
                 jssh_command = "var frameset = #{WINDOW_VAR}.frames;
                                 var elements_frames = new Array();
                                 for(var i = 0; i < frameset.length; i++)
@@ -512,7 +513,9 @@
                                     var frames = frameset[i].frames;
                                     for(var j = 0; j < frames.length; j++)
                                     {
+                                        frames[j].frameElement.toString = function() { return '[object HTMLFrameElement]'; };
                                         elements_frames.push(frames[j].frameElement);
+
                                     }
                                 }"
             else
@@ -937,6 +940,7 @@
         def text()
             assert_exists
 
+            #puts "element_type is #{element_type}"
             if(element_type == "HTMLFrameElement")
                 jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
             else
