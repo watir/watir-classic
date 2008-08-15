@@ -1,0 +1,53 @@
+== Version 1.1.1 ==
+
+ * Contains couple of bug fixes and improved code related to "click()" events and page load.
+
+== Version 1.1.0 ==
+
+ * Re-factored the code for better understanding and ease of maintainability
+ * Added new exception and remove exit() call if we are unable to start firefox or connect to jssh
+ * Changed code so that only correct type of element is returned back to the user. 
+ * Changed code in iterators also so that it returns element of correct type.
+ * Added code to get text of javascript pop up.
+ * Fixed bugs: 11 (duplicate 16), 13 (duplicates 14, 15), 18, 19, 20, 21, 22, 23, 25, 26 (duplicate 27), 28, 29
+ * Added patch escaping_fix.patch for escaping quotes (") and backslash (\).
+ * Changed code to open and close Firefox more gracefully.
+ * Added code to show all objects in document or inside any element.
+ * Add methods like show_forms, show_images, show_frames, show_links etc
+ * Improved handling for Javascript pop ups. Currently only alert and confirm javascript pop up can be handled.
+ * Added support to get correct type of element like (Checkbox, Radiobutton) using XPath.
+ * Added code to start Firefox on Linux automatically
+ * Added new XPI for windows for showing up JSSh extension in Add-On’s/Extensions list
+
+== Version 1.0.2 ==
+
+This version addresses issues discovered in the prior release and is more compatible to Watir scripts, thanks to all the users for sharing their experiences with !FireWatir.
+
+ * Implemented to_s for all the elements which returns element specific attributes along with attributes that apply to all the elements.
+ * Implemented iterators for all the elements.
+ * Implemented show_all_objects.
+ * Added support to access 'button' elements. Thanks to patch send by Todd Fisher.
+ * Fixed bugs
+   * !FireWatir::Firefox.html doesn't exists, by cdc@cyphers.dns2go.com
+   * Cannot access button using value when the html is "<button type="submit">Sign In</button>" by Vikash Kumar.
+   * Firewatir fails finding link by text when html is "<a href="http://www.test.com"><span class="a">Go Test</span></a>" by Kevin Alsteens.
+   * elements_by_xpath bug by Dan Zwell. 
+   * !JavaScript redirection bug by Phil
+ * Made it more compatible with scripts written for watir.
+ * Code documentation.
+
+== Version 1.0.1==
+
+Along with the main endeavor of !FireWatir i.e the scripts written for IE on windows platform can be used with minimal changes on Firefox browser, !FireWatir comes with following additional features
+
+ * Platform independent, as there is nothing being used that is platform dependent. This enable !FireWatir to work on any platform with Firefox browser and the JSSh extension installed. It's been tested on Windows Server 2003 Enterprise Edition, Windows XP Professional SP2. It has not yet been tested on Linux and Mac, but it should work. The gems will be released after the testing.
+ * Script can be run on any remote machine, which means any machine connected to your network.
+ * !FireWatir is tested with ruby version 1.8.2 and 1.8.4.
+ * Tested on Firefox version 1.5, 1.5.0.4, 1.5.0.7 , 2.0 and 2.0.0.1.
+ * For handling !JavaScript popups no third party tool or dll is used, and the window need not to be a active window. Popups are handled in such a way that the action of clicking the popup buttons remains the same. But, the user experience differs in way that the popups are not visible to the users.
+ * Firefox has built in support for XPath, so it's faster to get an element by XPath on Firefox.
+ * Firefox browser is more compliant with w3c standards. [http://www.xulplanet.com/references/elemref/ Click here] for information on elements their methods and properties.
+ * It’s visibly faster when compared to Watir.
+ * Firefox will be started automatically for Windows when test script is exceuted. Currently it works only on Windows.
+ * Has support for Frames and IFrames.
+ * Added documentation, check  gems/docs.
