@@ -1,3 +1,24 @@
+== Version 1.2.1 ==
+
+ * Fixed bug with frames in Firefox 3.
+ * Add Element#exist? (same as Element#exists?).
+
+== Version 1.2.0 ==
+
+User visible changes
+
+ * Add Button#locate from support-button.patch.
+ * Apply patch from Derek with support for winclicker.
+ * Fixed bug related to read_socket() error and changed HTML file textfields1.html so that it adheres to Firefox3 standards for firing the events.
+ 
+Internal changes
+
+ * Rename test for accuracy.
+ * Allow unit tests to be run from Eclipse.
+ * Fix internal spelling error.
+ * Move patch files to the attic.
+ * Added rake file. Updated gemspec.
+
 == Version 1.1.1 ==
 
  * Contains couple of bug fixes and improved code related to "click()" events and page load.
@@ -36,7 +57,7 @@ This version addresses issues discovered in the prior release and is more compat
  * Made it more compatible with scripts written for watir.
  * Code documentation.
 
-== Version 1.0.1==
+== Version 1.0.1 ==
 
 Along with the main endeavor of !FireWatir i.e the scripts written for IE on windows platform can be used with minimal changes on Firefox browser, !FireWatir comes with following additional features
 
