@@ -7,7 +7,7 @@ class TC_Relative < Test::Unit::TestCase
   
   def setup
     goto_page "depot_store.html"
-    @headline = $ie.h3(:text, 'Pragmatic Version Control')
+    @headline = browser.h3(:text, 'Pragmatic Version Control')
   end
   
   def test_parent
@@ -23,7 +23,7 @@ class TC_Relative < Test::Unit::TestCase
   end
   
   def test_before_and_after
-    link = $ie.link(:class => 'addtocart', :index => 2)
+    link = browser.link(:class => 'addtocart', :index => 2)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
     assert(link.after?(@headline))
     assert(@headline.before?(link))
@@ -33,7 +33,7 @@ class TC_Relative < Test::Unit::TestCase
   end   
   
   def test_find_after
-    link = $ie.link(:class => 'addtocart', :after? => @headline)
+    link = browser.link(:class => 'addtocart', :after? => @headline)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
   end
     

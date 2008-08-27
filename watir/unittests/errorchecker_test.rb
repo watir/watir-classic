@@ -7,18 +7,16 @@ require 'unittests/setup'
 class TC_error_checker < Test::Unit::TestCase
     
   def test_simple_checker
-    button_checker = Proc.new{
-      |ie|  raise RuntimeError, "text 'buttons' was missing"  if !ie.pageContainsText(/buttons/)
-    }
+    button_checker = Proc.new do |ie|  
+      raise RuntimeError, "text 'buttons' is missing"  if ! ie.pageContainsText(/buttons/)
+    end
     
-    $ie.add_checker(button_checker )
+    browser.add_checker button_checker
     assert_raises( RuntimeError ) { goto_page('forms3.html') }
     assert_nothing_raised { goto_page('buttons1.html') }
     
-    $ie.disable_checker( button_checker )
+    browser.disable_checker button_checker
     assert_nothing_raised { goto_page('forms3.html') }
-    
   end
-  
   
 end

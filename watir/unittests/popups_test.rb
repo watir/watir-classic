@@ -8,37 +8,37 @@ class TC_PopUps < Test::Unit::TestCase
   include Watir
   
   def setup
-    $ie.goto("file://#{$myDir}/html/popups1.html")
+    browser.goto("file://#{$myDir}/html/popups1.html")
   end
   
   def startClicker( button , waitTime = 0.5)
     w = WinClicker.new
-    longName = $ie.dir.gsub("/" , "\\" )
+    longName = browser.dir.gsub("/" , "\\" )
     shortName = w.getShortFileName(longName)
     c = "start rubyw #{shortName }\\watir\\clickJSDialog.rb #{button } #{ waitTime} "
     puts "Starting #{c}"
     w.winsystem(c )   
-    w=nil
+    w = nil
   end
   
   def test_simple
     startClicker("OK")
-    $ie.button("Alert").click
+    browser.button("Alert").click
   end
   
   def test_confirm
     startClicker("OK")
-    $ie.button("Confirm").click
-    assert( $ie.text_field(:name , "confirmtext").verify_contains("OK") )
+    browser.button("Confirm").click
+    assert( browser.text_field(:name , "confirmtext").verify_contains("OK") )
     
     startClicker("Cancel")
-    $ie.button("Confirm").click
-    assert( $ie.text_field(:name , "confirmtext").verify_contains("Cancel") )
+    browser.button("Confirm").click
+    assert( browser.text_field(:name , "confirmtext").verify_contains("Cancel") )
   end
   
   def xtest_Prompt
     startClicker("OK")
-    $ie.button("Prompt").click
+    browser.button("Prompt").click
   end
 end
 

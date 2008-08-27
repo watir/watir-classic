@@ -11,6 +11,6 @@ class TC_GoogleForm < Test::Unit::TestCase
   end
   
   def test_it
-    $ie.form( :name, "f").text_field( :name, "q").set("ruby")
+    browser.form(:name, "f").text_field(:name, "q").set("ruby")
   end
 end

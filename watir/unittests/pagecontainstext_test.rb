@@ -11,35 +11,35 @@ class TC_contains_text < Test::Unit::TestCase
   end        
   
   def test_text_found
-    assert($ie.contains_text('slings and arrows of outrageous fortune'))
+    assert(browser.contains_text('slings and arrows of outrageous fortune'))
   end
   
   def test_text_not_found
-    assert(!$ie.contains_text('So are they all, all honourable men'))
+    assert(!browser.contains_text('So are they all, all honourable men'))
   end
   
   def test_regexp_found
-    assert($ie.contains_text(/bodkin.*fardels/))
+    assert(browser.contains_text(/bodkin.*fardels/))
   end
   
   def test_regexp_not_found
-    assert(!$ie.contains_text(/winding.*watch.*wit/))
+    assert(!browser.contains_text(/winding.*watch.*wit/))
   end
   
   def test_match_regexp_found
-    $~ = $ie.contains_text(/Messages ([0-9]+)/)
+    $~ = browser.contains_text(/Messages ([0-9]+)/)
     assert_equal('42', $1)
   end
   
   def test_bad_search_argument
     assert_raises(ArgumentError) do
-      $ie.contains_text
+      browser.contains_text
     end
     assert_raises(ArgumentError) do
-      $ie.contains_text(nil)
+      browser.contains_text(nil)
     end
     assert_raises(ArgumentError) do
-      $ie.contains_text(42)
+      browser.contains_text(42)
     end
   end
   
@@ -62,6 +62,6 @@ class TC_contains_text_in_frame < Test::Unit::TestCase
     goto_page "frame_links.html"
   end        
   def test_in_frame
-    assert $ie.frame('linkFrame').contains_text('The button is really a link')
+    assert browser.frame('linkFrame').contains_text('The button is really a link')
   end
 end

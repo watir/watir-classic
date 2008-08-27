@@ -84,27 +84,29 @@ class TC_Divs < Test::Unit::TestCase
   
   #---- Span Tests ---
   def test_spans
-    assert_raises(UnknownObjectException) {browser.span(:id , "span77").click }
-    assert_raises(UnknownObjectException) {browser.span(:title , "span77").click }
+    assert_raises(UnknownObjectException) {browser.span(:id, "span77").click }
+    assert_raises(UnknownObjectException) {browser.span(:title, "span77").click }
     
     assert(browser.text_field(:name, "text2").verify_contains("0") )  
-    browser.span(:id , "span3").click
+    browser.span(:id, "span3").click
     assert(browser.text_field(:name, "text2").verify_contains("1") )  
     
-    browser.span(:id , "span4").click
+    browser.span(:id, "span4").click
     assert(browser.text_field(:name, "text2").verify_contains("0") )  
   end
   
   def test_span_properties
-    assert_raises(UnknownObjectException) {browser.span(:id , "span77").text }
-    assert_raises(UnknownObjectException) {browser.span(:title , "span77").text }
+    assert_raises(UnknownObjectException) {browser.span(:id, "span77").text }
+    assert_raises(UnknownObjectException) {browser.span(:title, "span77").text }
     
-    assert_equal("This span has an onClick that increments text2" ,   browser.span(:id , "span3").text.strip )
-    assert_equal("This text is in a span with an id of span1 and title of test2" ,   browser.span(:title , "Test2").text.strip )
+    assert_equal("This span has an onClick that increments text2",   
+      browser.span(:id , "span3").text.strip )
+    assert_equal("This text is in a span with an id of span1 and title of test2",   
+      browser.span(:title , "Test2").text.strip)
     
-    assert_raises(UnknownObjectException) {browser.span(:id , "span77").class_name }
-    assert_equal("blueText" ,   browser.span(:id , "span2").class_name )
-    assert_equal("" ,   browser.span(:id , "span1").class_name )
+    assert_raises(UnknownObjectException) {browser.span(:id, "span77").class_name}
+    assert_equal("blueText", browser.span(:id, "span2").class_name)
+    assert_equal("", browser.span(:id, "span1").class_name)
     
     assert_raises(UnknownObjectException) {browser.span(:index , 44).class_name }
     assert_equal("span1" ,     browser.span(:index , 1).id )

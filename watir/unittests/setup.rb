@@ -7,8 +7,7 @@ require 'watir/testcase'
 
 # rename goto_page to be goto_page
 
-# Better would be to add this to a module that was included in all the tests.
-class Test::Unit::TestCase
+module Watir::UnitTest
   # navigate the browser to the specified page in unittests/html
   def goto_page page
     new_url = $htmlRoot + page
@@ -23,6 +22,19 @@ class Test::Unit::TestCase
     $ie
   end
 end
+
+class Test::Unit::TestCase
+  include Watir::UnitTest
+end
+
+=begin
+Test Suites
+* all_tests -- all the tests in the unittests directory (omits "other")
+* window_tests -- window intensive tests
+* non_core_tests -- problem tests
+* xpath_tests -- xpath (some problems)
+* core_tests -- all others, well behaved
+=end
 
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir do

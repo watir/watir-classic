@@ -88,7 +88,7 @@ class TC_Button < Test::Unit::TestCase
   end
   
   def test_enabled
-    assert($ie.button(:caption, "Click Me").enabled?)   
+    assert(browser.button(:caption, "Click Me").enabled?)   
     assert(!browser.button(:caption, "Disabled Button").enabled?)   
     assert(!browser.button(:name, "b4").enabled?)   
     assert(!browser.button(:id, "b5").enabled?)   

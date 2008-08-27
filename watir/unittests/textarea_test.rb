@@ -12,82 +12,82 @@ class TC_TextArea < Test::Unit::TestCase
   end
   
   def test_elements_exist_or_not
-    assert($ie.text_field(:name,"txtMultiLine1").exists?)
-    assert($ie.text_field(:name,"txtMultiLine2").exists?)
-    assert($ie.text_field(:name,"txtMultiLine3").exists?)
-    assert($ie.text_field(:name,"txtReadOnly").exists?)
+    assert(browser.text_field(:name,"txtMultiLine1").exists?)
+    assert(browser.text_field(:name,"txtMultiLine2").exists?)
+    assert(browser.text_field(:name,"txtMultiLine3").exists?)
+    assert(browser.text_field(:name,"txtReadOnly").exists?)
     
-    assert($ie.text_field(:id,"txtMultiLine1").exists?)
-    assert($ie.text_field(:id,"txtMultiLine2").exists?)
-    assert($ie.text_field(:id,"txtMultiLine3").exists?)
-    assert($ie.text_field(:id,"txtReadOnly").exists?)
+    assert(browser.text_field(:id,"txtMultiLine1").exists?)
+    assert(browser.text_field(:id,"txtMultiLine2").exists?)
+    assert(browser.text_field(:id,"txtMultiLine3").exists?)
+    assert(browser.text_field(:id,"txtReadOnly").exists?)
 
-    assert(!$ie.text_field(:name, "missing").exists?)   
-    assert(!$ie.text_field(:name,"txtMultiLine4").exists?)
+    assert(!browser.text_field(:name, "missing").exists?)   
+    assert(!browser.text_field(:name,"txtMultiLine4").exists?)
   end
   
   def test_to_s_bug
     # from a bug reported by Zeljko Filipin
-    assert_nothing_raised { $ie.text_field(:id,"txtMultiLine3").to_s  }
+    assert_nothing_raised { browser.text_field(:id,"txtMultiLine3").to_s  }
   end
   
   def test_maxlength_bug
     # from another bug
-    assert_nothing_raised { $ie.text_field(:id,"txtMultiLine3").append('foo')} 
+    assert_nothing_raised { browser.text_field(:id,"txtMultiLine3").append('foo')} 
   end
   
   def test_readonly_and_enabled
-    assert(!$ie.text_field(:name, "txtMultiLine1").readonly? )  
-    assert($ie.text_field(:name,"txtReadOnly").readonly?)
+    assert(!browser.text_field(:name, "txtMultiLine1").readonly? )  
+    assert(browser.text_field(:name,"txtReadOnly").readonly?)
     
-    assert(!$ie.text_field(:name, "txtDisabled").enabled? )  
-    assert($ie.text_field(:id, "txtMultiLine1").enabled? )  
+    assert(!browser.text_field(:name, "txtDisabled").enabled? )  
+    assert(browser.text_field(:id, "txtMultiLine1").enabled? )  
   end
   
   def test_verify_contains
-    t1 = $ie.text_field(:name, "txtMultiLine1")
+    t1 = browser.text_field(:name, "txtMultiLine1")
     assert(t1.verify_contains("Hello World") )  
     assert(t1.verify_contains(/el/) )  
-    assert($ie.text_field(:name, "txtMultiLine2").verify_contains(/IE/))
+    assert(browser.text_field(:name, "txtMultiLine2").verify_contains(/IE/))
   end
   
   def test_no_such_element
     assert_raises(UnknownObjectException) do
-      $ie.text_field(:name, "NoName").verify_contains("de nada")
+      browser.text_field(:name, "NoName").verify_contains("de nada")
     end  
     assert_raises(UnknownObjectException) do
-      $ie.text_field(:id, "noID").verify_contains("de nada")
+      browser.text_field(:id, "noID").verify_contains("de nada")
     end
     assert_raises(UnknownObjectException) do
-      $ie.text_field(:name, "txtNone").append("de nada")
+      browser.text_field(:name, "txtNone").append("de nada")
     end  
   end
   def test_readonly_and_disabled_errors
     assert_raises(ObjectReadOnlyException) do
-      $ie.text_field(:id, "txtReadOnly").append("de nada")
+      browser.text_field(:id, "txtReadOnly").append("de nada")
     end  
     assert_raises(ObjectDisabledException) do
-      $ie.text_field(:name, "txtDisabled").append("de nada")
+      browser.text_field(:name, "txtDisabled").append("de nada")
     end
     assert_raises(ObjectReadOnlyException) do
-      $ie.text_field(:id, "txtReadOnly").append("Some Text")
+      browser.text_field(:id, "txtReadOnly").append("Some Text")
     end
     assert_raises(ObjectDisabledException) do
-      $ie.text_field(:name, "txtDisabled").append("Some Text")
+      browser.text_field(:name, "txtDisabled").append("Some Text")
     end
   end
 
   def test_append_set_and_clear
-    $ie.text_field(:name, "txtMultiLine1").append(" Some Text")
+    browser.text_field(:name, "txtMultiLine1").append(" Some Text")
     assert_equal("Hello World Some Text", 
-      $ie.text_field(:name, "txtMultiLine1").getContents )  
+      browser.text_field(:name, "txtMultiLine1").getContents )  
     
-    $ie.text_field(:name, "txtMultiLine1").set("watir IE Controller")
+    browser.text_field(:name, "txtMultiLine1").set("watir IE Controller")
     assert_equal("watir IE Controller", 
-      $ie.text_field(:name, "txtMultiLine1").getContents )  
+      browser.text_field(:name, "txtMultiLine1").getContents )  
     
-    $ie.text_field(:name, "txtMultiLine2").clear
-    assert_equal("" , $ie.text_field(:name, "txtMultiLine2").getContents )  
+    browser.text_field(:name, "txtMultiLine2").clear
+    assert_equal("" , browser.text_field(:name, "txtMultiLine2").getContents )  
   end
   
 end

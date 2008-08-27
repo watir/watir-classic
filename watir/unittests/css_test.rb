@@ -6,9 +6,8 @@ require 'unittests/setup'
 
 class TC_CSS < Test::Unit::TestCase
   
-  def divTester( message )
-    
-    divs = $ie.getIE.document.getElementsByTagName("DIV")
+  def divTester(message)
+    divs = browser.getIE.document.getElementsByTagName("DIV")
     puts "Found #{divs.length} div tags"
     divs.each do |d|
       puts "Checking div #{d.id}"
@@ -17,9 +16,8 @@ class TC_CSS < Test::Unit::TestCase
   end
   
   def isMessageDisplayed(message)
-    
     s = false
-    divs = $ie.getIE.document.getElementsByTagName("DIV")
+    divs = browser.getIE.document.getElementsByTagName("DIV")
     #puts "Found #{divs.length} div tags"
     divs.each do |d|
       #puts "----Checking div #{d.id} innertext is ( #{d.innerText}  )"
@@ -41,13 +39,13 @@ class TC_CSS < Test::Unit::TestCase
   
   def test_SuccessMessage
     goto_page "cssTest.html"
-    $ie.button( :caption , "Success").click
+    browser.button( :caption , "Success").click
     
     #isMessageDisplayed( "Success" )
     #divTester( "Success" )
     assert( isMessageDisplayed("Success") )
     
-    $ie.button( :caption , "Failure").click
+    browser.button( :caption , "Failure").click
     
     assert(!isMessageDisplayed("Success") )
   end

@@ -9,7 +9,7 @@ require 'unittests/buttons_test.rb'
 class TC_Defer < Test::Unit::TestCase
   def teardown
     @ie_new.close if defined?(@ie_new)
-    $ie.goto('about:blank')
+    browser.goto('about:blank')
   end
   def test_binding_to_newly_loaded_page
     @ie_new = Watir::IE.new
@@ -23,10 +23,10 @@ class TC_Defer < Test::Unit::TestCase
   end
   def test_binding_to_refreshed_page
     goto_page "textfields1.html"
-    text_field = $ie.text_field(:name, 'text1')
-    button = $ie.button(:value, 'Clear Events Box')
-    div = $ie.div(:name, 'divvy')
-    $ie.refresh
+    text_field = browser.text_field(:name, 'text1')
+    button = browser.button(:value, 'Clear Events Box')
+    div = browser.div(:name, 'divvy')
+    browser.refresh
     assert_equal('Hello World', text_field.value)
     assert(text_field.enabled?)
     assert_equal('Clear Events Box', button.value)
