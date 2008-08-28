@@ -55,8 +55,8 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(browser.checkbox(:name, "box1").exists?)   
     assert(!browser.checkbox(:name, "missing").exists?)   
     
-    assert(browser.checkbox(:name, "box4" , 1).exists?)   
-    assert(!browser.checkbox(:name, "box4" , 22).exists?)   
+    assert(browser.checkbox(:name, "box4", 1).exists?)   
+    assert(!browser.checkbox(:name, "box4", 22).exists?)   
   end
   
   def test_checkbox_Enabled
@@ -68,7 +68,7 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(!browser.checkbox(:name, "box2").enabled?)   
     
     assert(browser.checkbox(:name, "box4", 4).enabled?)   
-    assert(!browser.checkbox(:name, "box4" , 5 ).enabled?)   
+    assert(!browser.checkbox(:name, "box4", 5 ).enabled?)   
   end
   
   def test_checkbox_isSet
@@ -78,8 +78,8 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(!browser.checkbox(:name, "box2").isSet?)   
     assert(browser.checkbox(:name, "box3").isSet?)   
     
-    assert(!browser.checkbox(:name, "box4" , 2 ).isSet?)   
-    assert(browser.checkbox(:name, "box4" , 1 ).isSet?)  
+    assert(!browser.checkbox(:name, "box4", 2 ).isSet?)   
+    assert(browser.checkbox(:name, "box4", 1 ).isSet?)  
     assert(!browser.checkbox(:name, 'box6', 'Milk').isSet?)     
   end
   
@@ -95,21 +95,20 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(!browser.checkbox(:name, "box3").isSet?)   
     
     browser.checkbox(:name, "box4" , 1).clear
-    assert(!browser.checkbox(:name, "box4" , 1).isSet?)   
+    assert(!browser.checkbox(:name, "box4", 1).isSet?)   
 
     browser.checkbox(:name, "box6" , 'Tea').clear
-    assert(!browser.checkbox(:name, "box6" , 'Tea').isSet?)   
-    
+    assert(!browser.checkbox(:name, "box6", 'Tea').isSet?)   
   end
   
   def test_checkbox_getState
     assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").getState }  
-    assert_equal( false , browser.checkbox(:name, "box1").getState )   
-    assert_equal( true , browser.checkbox(:name, "box3").getState)   
+    assert_equal( false, browser.checkbox(:name, "box1").getState )   
+    assert_equal( true, browser.checkbox(:name, "box3").getState)   
     
     # checkboxes that have the same name but different values
-    assert_equal( false , browser.checkbox(:name, "box4" , 2).getState )   
-    assert_equal( true , browser.checkbox(:name, "box4" , 1).getState)   
+    assert_equal( false, browser.checkbox(:name, "box4", 2).getState )   
+    assert_equal( true, browser.checkbox(:name, "box4", 1).getState)   
   end
   
   def test_checkbox_set
@@ -123,8 +122,8 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(browser.checkbox(:name, "box3").isSet?)   
     
     # checkboxes that have the same name but different values
-    browser.checkbox(:name, "box4" , 3).set
-    assert(browser.checkbox(:name, "box4" , 3).isSet?)   
+    browser.checkbox(:name, "box4", 3).set
+    assert(browser.checkbox(:name, "box4", 3).isSet?)   
     
     # test set using the optinal true/false
     # assumes the checkbox is already checked
@@ -139,7 +138,6 @@ class TC_CheckBox < Test::Unit::TestCase
     
     browser.checkbox(:name, "box6", 'Tea').set( true )
     assert(browser.checkbox(:name, "box6", 'Tea').isSet?)
-    
   end
   
   def test_checkbox_iterator
