@@ -196,12 +196,9 @@ module FireWatir
                 profile_opt = ""
             end
 
-            puts "PROFILE: #{profile_opt}"
-
             waitTime = options[:waitTime] || 2
 
             if(RUBY_PLATFORM =~ /.*mswin.*/)
-                #puts "plaftorm is windows"
                 # Get the path to Firefox.exe using Registry.
                 require 'win32/registry.rb'
                 path_to_exe = ""
@@ -215,13 +212,9 @@ module FireWatir
                     end
                 end
 
-                puts "Starting Firefox using the executable : #{path_to_exe}"
-                puts "Waiting for #{waitTime} seconds for Firefox to get started."
-                @t = Thread.new { system("\"#{path_to_exe}\" -jssh #{profile_opt}") }
+            @t = Thread.new { system("\"#{path_to_exe}\" -jssh #{profile_opt}") }
             elsif(RUBY_PLATFORM =~ /linux/i)
-                puts RUBY_PLATFORM
                 path_to_bin = `which firefox`.strip
-                puts "#{path_to_bin} -jssh #{profile_opt}"
                 @t = Thread.new { `#{path_to_bin} -jssh #{profile_opt}` }
             end     
             
