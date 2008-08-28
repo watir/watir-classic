@@ -25,8 +25,19 @@ end
 # libraries used by feature tests
 require 'watir'
 
-# this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
-END {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
+options = Watir::UnitTestOptions.new.execute
+case options[:browser]
+when 'ie'
+  # this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
+  at_exit {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
+  $ie = Watir::IE.new
+  $ie.speed = options[:speed].to_sym
+  $browser = $ie
+when 'firefox'
+  require 'firewatir'
+  at_exit {$browser.close if $browser}
+  $browser = FireWatir::Firefox.new
+end
 
 require 'test/unit'
 require 'watir/testcase'
@@ -96,17 +107,6 @@ $non_core_tests =
     ].collect {|x| "unittests/#{x}_test.rb"}
 
 $core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
-
-options = Watir::UnitTestOptions.new.execute
-case options[:browser]
-when 'ie'
-  $ie = Watir::IE.new
-  $ie.speed = :fast    
-  $browser = $ie
-when 'firefox'
-  require 'firewatir'
-  $browser = FireWatir::Firefox.new
-end
 
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 # if you run the unit tests from a local file system use this line
