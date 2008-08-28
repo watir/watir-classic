@@ -1,6 +1,7 @@
 $__firewatir_source_patterns = [
-    'container.rb', 'firewatir.rb', 'htmlelements.rb',
-    'MozillaBaseElement.rb','firewatir/*.rb','unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*' 
+    'lib/container.rb', 'lib/firewatir.rb', 'lib/htmlelements.rb',
+    'lib/MozillaBaseElement.rb','lib/firewatir/*.rb','unittests/*.rb', 
+    'unittests/html/*.html', 'unittests/html/images/*.*' 
     ]
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
@@ -26,7 +27,7 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = 'Watir'
 
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
-  s.require_path = '.'    
+  s.require_path = 'lib'    
 
   s.has_rdoc = true
     s.rdoc_options << 
