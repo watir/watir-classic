@@ -1,11 +1,35 @@
+$myDir = File.expand_path(File.dirname(__FILE__))
+
+require 'user-choices'
+
+module Watir
+  class UnitTestOptions < UserChoices::Command
+    include UserChoices
+    def add_sources builder
+      builder.add_source EnvironmentSource, :with_prefix, 'watir_'
+      builder.add_source YamlConfigFileSource, :from_complete_path, 
+        $myDir + '/options.yml' 
+    end
+    def add_choices builder
+      builder.add_choice :browser, :type => ['firefox', 'ie'], :default => 'ie'
+      builder.add_choice :speed, :type => ['slow', 'fast', 'zippy'], :default => 'fast'
+    end
+    def execute 
+      speed = @user_choices[:speed].to_sym
+      Watir::IE.defaults[:speed] = speed
+      @user_choices
+    end
+  end
+end
+
 # libraries used by feature tests
 require 'watir'
+
+# this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
 END {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
 
 require 'test/unit'
 require 'watir/testcase'
-
-# rename goto_page to be goto_page
 
 module Watir::UnitTest
   # navigate the browser to the specified page in unittests/html
@@ -19,10 +43,11 @@ module Watir::UnitTest
     browser.goto new_url unless browser.url == new_url
   end
   def browser
-    $ie
+    $browser
   end
 end
 
+# a hack
 class Test::Unit::TestCase
   include Watir::UnitTest
 end
@@ -72,10 +97,17 @@ $non_core_tests =
 
 $core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
 
-$ie = Watir::IE.new
-$ie.speed = :fast
+options = Watir::UnitTestOptions.new.execute
+case options[:browser]
+when 'ie'
+  $ie = Watir::IE.new
+  $ie.speed = :fast    
+  $browser = $ie
+when 'firefox'
+  require 'firewatir'
+  $browser = FireWatir::Firefox.new
+end
 
-$myDir = File.expand_path(File.dirname(__FILE__))
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 # if you run the unit tests from a local file system use this line
 $htmlRoot =  "file:///#{$myDir}/html/" 

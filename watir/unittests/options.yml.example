@@ -1,0 +1,10 @@
+# This file specifies options affecting the unit tests.
+# You will need to first copy this file to "options.yml" for it to work.
+
+# These options can also be set using environment variables prefixed with 'watir_'.
+
+# 'ie' (Watir::IE) or 'firefox' (FireWatir::Firefox)
+browser: ie
+
+# only affects ie. options are fast, slow, and zippy
+speed: fast
