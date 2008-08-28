@@ -60,6 +60,4 @@ Build Plan for Watir 1.5
 * Bonus. This is the stuff that had been included in the old installers: the
   doc, the rdoc, the examples and the unit tests. This can be delivered as a
   zip file. This plus the gem gives the users everything they got before, 
-  except for the nifty menu/desktop links.  
- 
- 
+  except for the nifty menu/desktop links. 
