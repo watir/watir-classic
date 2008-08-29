@@ -22,6 +22,13 @@ module Watir
   end
 end
 
+# use local development versions of firewatir, watir-common if available
+topdir = File.join(File.dirname(__FILE__), '..')
+firewatir_lib = File.join(topdir, '..', 'firewatir')
+watir_common_lib = File.join(topdir, '..', 'watir-common', 'lib')
+#$LOAD_PATH.unshift firewatir_lib
+#$LOAD_PATH.unshift watir_common_lib
+
 # libraries used by feature tests
 require 'watir'
 

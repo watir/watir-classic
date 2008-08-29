@@ -1,11 +1,12 @@
 require 'watir-rdoc'
 
 $__watir_source_patterns = [
-    'watir.rb', 'watir/*.rb', 'watir/AutoItX3.dll', 
+    'CHANGES',
+    'lib/watir.rb', 'lib/watir/*.rb', 'lib/watir/AutoItX3.dll', 
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*', 
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
-    'watir/IEDialog/Release/IEDialog.dll', 'watir/win32ole/win32ole.so', 
-    'watir/contrib/*.rb'] +  
+    'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/win32ole.so', 
+    'lib/watir/contrib/*.rb'] +  
     $WATIR_EXTRA_RDOC_FILES
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
@@ -33,7 +34,7 @@ spec = Gem::Specification.new do |s|
 
   s.platform = Gem::Platform::RUBY
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
-  s.require_path = '.'    
+  s.require_path = 'lib'    
 
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6' 
