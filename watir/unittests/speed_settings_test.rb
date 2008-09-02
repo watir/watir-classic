@@ -1,26 +1,27 @@
 # tests for ability to set defaults for Watir
 # revision: $Revision$
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
-require 'test/unit'
-require 'watir'
+require 'unittests/setup'
 
 class TC_instance_options < Test::Unit::TestCase
   
+  def setup
+    @ie4 = Watir::IE.new    
+  end
+  
   def test_using_default
-    @ie1 = Watir::IE.new
-
-    @ie1.speed = :fast
-    assert_equal(:fast, @ie1.speed)
-    @ie1.speed = :slow
-    assert_equal(:slow, @ie1.speed)
-    @ie1.speed = :zippy
-    assert_equal(:zippy, @ie1.speed)
+    @ie4.speed = :fast
+    assert_equal(:fast, @ie4.speed)
+    @ie4.speed = :slow
+    assert_equal(:slow, @ie4.speed)
+    @ie4.speed = :zippy
+    assert_equal(:zippy, @ie4.speed)
    
-    assert_raise(ArgumentError){@ie1.speed = :fubar}
+    assert_raise(ArgumentError){@ie4.speed = :fubar}
   end
 
   def teardown
-    @ie1.close if @ie1
+    @ie4.close if @ie4.exists?
   end
 end
 
@@ -31,7 +32,7 @@ class TC_class_options < Test::Unit::TestCase
 		@previous = IE.defaults
 	end
 	def test_class_defaults
-		assert_equal({:speed => :slow, :visible => ! @@hide_ie}, IE.defaults)
+		assert_equal({:speed => IE.speed, :visible => IE.visible}, IE.defaults)
 	end
 	def test_change_defaults
 		IE.defaults = {:speed => :fast}

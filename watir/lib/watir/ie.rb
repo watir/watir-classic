@@ -19,9 +19,11 @@ module Watir
       @@attach_timeout = timeout
     end
 
+    # BUG: this interface invites misunderstanding/misuse such as IE.defaults[:speed] = :zippy]
 		def self.defaults 	
 			{:speed => self.speed, :visible => self.visible}
-		end
+	  end
+    # Not a great interface either, since IE.defaults = {} does not erase.
 		def self.defaults= options
 			options.each do |name, value|
 				send "#{name}=", value
@@ -221,7 +223,7 @@ module Watir
     
     def speed
       return @speed if @speed == :slow
-      return @type_keys? :fast : :zippy
+      return @type_keys ? :fast : :zippy
     end
     
     # deprecated: use speed = :fast instead

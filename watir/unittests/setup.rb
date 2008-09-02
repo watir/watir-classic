@@ -16,7 +16,7 @@ module Watir
     end
     def execute 
       speed = @user_choices[:speed].to_sym
-      Watir::IE.defaults[:speed] = speed
+      Watir::IE.speed = speed
       @user_choices
     end
   end
@@ -24,8 +24,10 @@ end
 
 # use local development versions of firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
-firewatir_lib = File.join(topdir, '..', 'firewatir')
+watir_lib = File.join(topdir, 'lib')
+firewatir_lib = File.join(topdir, '..', 'firewatir', 'lib')
 watir_common_lib = File.join(topdir, '..', 'watir-common', 'lib')
+$LOAD_PATH.unshift watir_lib
 #$LOAD_PATH.unshift firewatir_lib
 #$LOAD_PATH.unshift watir_common_lib
 

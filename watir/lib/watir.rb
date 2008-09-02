@@ -73,7 +73,7 @@ end
 # Note: this means that watir must be require'd BEFORE test/unit.
 
 # Make Internet Explorer invisible. -b stands for background
-$HIDE_IE = ARGV.delete('-b')
+$HIDE_IE ||= ARGV.delete('-b')
 
 # Run fast
 $FAST_SPEED = ARGV.delete('-f')
