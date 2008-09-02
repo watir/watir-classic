@@ -1,0 +1,8 @@
+require 'rubygems'
+require 'hoe'
+require './lib/watir-common.rb'
+
+Hoe.new('watir-common', Watir-common::VERSION) do |p|
+  p.rubyforge_name = 'wtr'
+  p.developer('Bret Pettichord', 'bret@watircraft.com')
+end
