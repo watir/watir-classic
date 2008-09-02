@@ -9,7 +9,7 @@ class TC_Navigate < Test::Unit::TestCase
   def test_navigation
     browser.clear_url_list
     goto_page 'buttons1.html'
-    assert_equal(($htmlRoot + 'buttons1.html').gsub(" ","%20"), browser.url)  
+    assert_equal(($htmlRoot + 'buttons1.html').gsub(" ","%20").downcase, browser.url.downcase)  
 
     assert_equal(1, browser.url_list.length)
     assert_equal(browser.url, browser.url_list[0])
