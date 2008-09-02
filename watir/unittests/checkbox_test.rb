@@ -18,11 +18,11 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").type   }  
     assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").value   }  
     
-    assert_equal("box1"  , browser.checkbox(:index, 1).name  ) 
-    assert_equal(""  , browser.checkbox(:index, 1).id  ) 
-    assert_equal("checkbox"  , browser.checkbox(:index, 1).type  ) 
-    assert_equal("on"  , browser.checkbox(:index, 1).value  ) 
-    assert_equal(false  , browser.checkbox(:index, 1).disabled  ) 
+    assert_equal("box1"  , browser.checkbox(:index, 1).name ) 
+    assert_equal(""  , browser.checkbox(:index, 1).id ) 
+    assert_equal("checkbox"  , browser.checkbox(:index, 1).type ) 
+    assert_equal("on"  , browser.checkbox(:index, 1).value ) 
+    assert_equal(false  , browser.checkbox(:index, 1).disabled ) 
     
     assert_equal("check_box_style" , browser.checkbox(:name, "box1").class_name) 
     assert_equal("" , browser.checkbox(:name, "box2").class_name) 
