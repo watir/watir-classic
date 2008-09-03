@@ -64,113 +64,13 @@ class TC_SelectList < Test::Unit::TestCase
     
 end
 
-# Tests for the old interface
 class TC_Selectbox < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
     goto_page "selectboxes1.html"
   end
-  
-  def test_selectBox_Exists
-    assert(browser.selectBox(:name, "sel1").exists?)   
-    assert(!browser.selectBox(:name, "missing").exists?)   
-    assert(!browser.selectBox(:id, "missing").exists?)   
-  end
-  
-  def test_selectBox_enabled
-    assert(browser.selectBox(:name, "sel1").enabled?)   
-    assert_raises(UnknownObjectException) { browser.selectBox(:name, "NoName").enabled? }  
-  end
-  
-  def test_SelectList_class_name
-    assert_raises(UnknownObjectException) { browser.select_list(:name, "missing").class_name }  
-    assert_equal("list_style" , browser.select_list(:name, "sel1").class_name)   
-    assert_equal("" , browser.selectBox(:name, "sel2").class_name  )
-  end
-  
-  def test_selectBox_getAllContents
-    assert_raises(UnknownObjectException) { browser.selectBox(:name, "NoName").getAllContents }  
-    assert_equal( ["Option 1" ,"Option 2" , "Option 3" , "Option 4"] , 
-    browser.selectBox(:name, "sel1").getAllContents)   
-  end
-  
-  def test_selectBox_getSelectedItems
-    assert_raises(UnknownObjectException) { browser.selectBox(:name, "NoName").getSelectedItems }  
-    assert_equal( ["Option 3" ] , 
-    browser.selectBox(:name, "sel1").getSelectedItems)   
-    assert_equal( ["Option 3" , "Option 6" ] , 
-    browser.selectBox(:name, "sel2").getSelectedItems)   
-  end
-  
-  def test_clearSelection
-    assert_raises(UnknownObjectException) { browser.selectBox(:name, "NoName").clearSelection }  
-    browser.selectBox( :name , "sel1").clearSelection
     
-    # the box sel1 has no ability to have a de-selected item
-    assert_equal( ["Option 3" ] , browser.selectBox(:name, "sel1").getSelectedItems)   
-    
-    browser.selectBox( :name , "sel2").clearSelection
-    assert_equal( [ ] , browser.selectBox(:name, "sel2").getSelectedItems)   
-  end
-  
-  def test_selectBox_select
-    assert_raises(NoValueFoundException) { browser.selectBox(:name, "sel1").select("missing item") }  
-    assert_raises(NoValueFoundException) { browser.selectBox(:name, "sel1").select(/missing/) }  
-    
-    # the select method keeps any currently selected items - use the clear selectcion method first
-    browser.selectBox( :name , "sel1").clearSelection
-    browser.selectBox( :name , "sel1").select("Option 1")
-    assert_equal( ["Option 1" ] , browser.selectBox(:name, "sel1").getSelectedItems)   
-    
-    browser.selectBox( :name , "sel1").clearSelection
-    browser.selectBox( :name , "sel1").select(/2/)
-    assert_equal( ["Option 2" ] , browser.selectBox(:name, "sel1").getSelectedItems)   
-    
-    browser.selectBox( :name , "sel2").clearSelection
-    browser.selectBox( :name , "sel2").select(/2/)
-    browser.selectBox( :name , "sel2").select(/4/)
-    assert_equal( ["Option 2" , "Option 4" ] , 
-    browser.selectBox(:name, "sel2").getSelectedItems)   
-    
-    # these are to test the onchange event
-    # the event shouldnt get fired, as this is the selected item
-    browser.selectBox( :name , "sel3").select( /3/ )
-    assert(!browser.text.include?("Pass") )
-  end
-  
-  def test_selectBox_select2
-    # the event should get fired
-    browser.selectBox( :name , "sel3").select( /2/ )
-    assert(browser.text.include?("PASS") )
-  end
-  
-  def test_selectBox_select_using_value
-    assert_raises(UnknownObjectException) { browser.select_list(:name, "NoName").getSelectedItems }  
-    assert_raises(NoValueFoundException) { browser.select_list(:name, "sel1").select_value("missing item") }  
-    assert_raises(NoValueFoundException) { browser.select_list(:name, "sel1").select_value(/missing/) }  
-    
-    # the select method keeps any currently selected items - use the clear selectcion method first
-    browser.select_list( :name , "sel1").clearSelection
-    browser.select_list( :name , "sel1").select_value("o1")
-    assert_equal( ["Option 1" ] , browser.select_list(:name, "sel1").getSelectedItems)   
-    
-    browser.select_list( :name , "sel1").clearSelection
-    browser.select_list( :name , "sel1").select_value(/2/)
-    assert_equal( ["Option 2" ] , browser.select_list(:name, "sel1").getSelectedItems)   
-    
-    browser.select_list( :name , "sel2").clearSelection
-    browser.select_list( :name , "sel2").select_value(/4/)
-    browser.select_list( :name , "sel2").select_value(/2/)
-    assert_equal( ["Option 2" , "Option 4" ] , 
-    browser.select_list(:name, "sel2").getSelectedItems)   
-    
-    # these are to test the onchange event
-    # the event shouldnt get fired, as this is the selected item
-    browser.select_list( :name , "sel3").select_value( /3/ )
-    assert(!browser.text.include?("Pass") )
-  end
-  
   def test_select_list_select_using_value2
     # the event should get fired
     browser.select_list( :name , "sel3").select_value( /2/ )
