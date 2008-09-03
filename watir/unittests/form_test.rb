@@ -183,9 +183,9 @@ class TC_Forms3_Display < Test::Unit::TestCase
   def test_show_stuff
     goto_page "forms3.html"
     $stdout = @mockout
-    browser.showAllObjects
-    puts browser.getText
-    puts browser.getHTML
+    browser.show_all_objects
+    puts browser.text
+    puts browser.html
   end
 end
 
