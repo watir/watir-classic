@@ -12,11 +12,11 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
   end
   
   def test_checkbox_properties
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:xpath , "//input[@name='noName']/").id   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:xpath , "//input[@name='noName']/").name   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:xpath , "//input[@name='noName']/").disabled   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:xpath , "//input[@name='noName']/").type   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.checkbox(:xpath , "//input[@name='noName']/").value   }  
+    assert_raises(UnknownObjectException) {   $ie.checkbox(:xpath , "//input[@name='noName']/").id   }  
+    assert_raises(UnknownObjectException) {   $ie.checkbox(:xpath , "//input[@name='noName']/").name   }  
+    assert_raises(UnknownObjectException) {   $ie.checkbox(:xpath , "//input[@name='noName']/").disabled   }  
+    assert_raises(UnknownObjectException) {   $ie.checkbox(:xpath , "//input[@name='noName']/").type   }  
+    assert_raises(UnknownObjectException) {   $ie.checkbox(:xpath , "//input[@name='noName']/").value   }  
     
     assert_equal("1" , $ie.checkbox(:xpath , "//input[@name='box4']/").value )
     assert_equal("3" , $ie.checkbox(:xpath , "//input[@name='box4' and @value='3']/").value )

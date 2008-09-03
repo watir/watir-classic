@@ -12,11 +12,11 @@ class TC_Buttons_XPath < Test::Unit::TestCase
   end
   
   def test_properties
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").id   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").name   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").disabled   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").type   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").value   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").id   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").name   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").disabled   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").type   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").value   }  
     
     assert_equal("b1"  , $ie.button(:xpath, "//input[@id='b2']/").name  ) 
     assert_equal("b2"  , $ie.button(:xpath, "//input[@id='b2']/").id  ) 
@@ -25,7 +25,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
   
   def test_button_using_default
     # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@value='Missing Caption']/").click   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@value='Missing Caption']/").click   }  
     
     $ie.button(:xpath, "//input[@value='Click Me']/").click
     assert($ie.text.include?("PASS") )
@@ -37,8 +37,8 @@ class TC_Buttons_XPath < Test::Unit::TestCase
   end
   
   def test_button_click
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@value='Missing Caption']/").click   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@id='MissingId']/").click   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@value='Missing Caption']/").click   }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@id='MissingId']/").click   }  
     
     assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@value='Disabled Button']/").click   }  
     
@@ -63,7 +63,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
     assert(!$ie.button(:xpath, "//input[@name='b4']/").enabled?)   
     assert(!$ie.button(:xpath, "//input[@id='b5']/").enabled?)   
     
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.button(:xpath, "//input[@name='noName']/").enabled?  }  
+    assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").enabled?  }  
   end
 end
 

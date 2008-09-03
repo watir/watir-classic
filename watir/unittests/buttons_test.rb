@@ -93,7 +93,7 @@ class TC_Button < Test::Unit::TestCase
     assert(!browser.button(:name, "b4").enabled?)   
     assert(!browser.button(:id, "b5").enabled?)   
     
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.button(:name, "noName").enabled?  }  
+    assert_raises(UnknownObjectException) {   browser.button(:name, "noName").enabled?  }  
   end
   
   def test_in_frame

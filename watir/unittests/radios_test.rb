@@ -20,7 +20,7 @@ class TC_Radios < Test::Unit::TestCase
   end
   
   def test_radio_class
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.radio(:name, "noName").class_name }  
+    assert_raises(UnknownObjectException) {   browser.radio(:name, "noName").class_name }  
     assert_equal("radio_style" , browser.radio(:name, "box1").class_name)   
     assert_equal("" , browser.radio(:id, "box5").class_name)   
   end
@@ -72,7 +72,7 @@ class TC_Radios < Test::Unit::TestCase
   end
   
   def test_Radio_isSet
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.radio(:name, "noName").isSet?  }  
+    assert_raises(UnknownObjectException) {   browser.radio(:name, "noName").isSet?  }  
     
     assert(!browser.radio(:name, "box1").isSet?)   
     assert( browser.radio(:name, "box3").isSet?)   
@@ -88,7 +88,7 @@ class TC_Radios < Test::Unit::TestCase
   end
   
   def test_radio_clear
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.radio(:name, "noName").clear  }  
+    assert_raises(UnknownObjectException) {   browser.radio(:name, "noName").clear  }  
     
     browser.radio(:name, "box1").clear
     assert(!browser.radio(:name, "box1").isSet?)   

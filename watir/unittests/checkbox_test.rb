@@ -12,11 +12,11 @@ class TC_CheckBox < Test::Unit::TestCase
   end
   
   def test_checkbox_properties
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").id   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").name   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").disabled   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").type   }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   browser.checkbox(:name, "noName").value   }  
+    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").id   }  
+    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").name   }  
+    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").disabled   }  
+    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").type   }  
+    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").value   }  
     
     assert_equal("box1"  , browser.checkbox(:index, 1).name ) 
     assert_equal(""  , browser.checkbox(:index, 1).id ) 

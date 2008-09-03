@@ -48,8 +48,8 @@ class TC_TextArea_XPath < Test::Unit::TestCase
     assert(t1.verify_contains(/el/) )  
     t2 = $ie.text_field(:xpath , "//textarea[@name='txtMultiLine2']/")
     assert(t2.verify_contains(/IE/))
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.text_field(:xpath , "//textarea[@name='NoName']/").verify_contains("No field to get a value of") }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.text_field(:xpath , "//textarea[@id='noID']/").verify_contains("No field to get a value of") }  
+    assert_raises(UnknownObjectException) {   $ie.text_field(:xpath , "//textarea[@name='NoName']/").verify_contains("No field to get a value of") }  
+    assert_raises(UnknownObjectException) {   $ie.text_field(:xpath , "//textarea[@id='noID']/").verify_contains("No field to get a value of") }  
     
     assert_raises(UnknownObjectException  , "ObjectReadOnlyException   was supposed to be thrown" ) {   $ie.text_field(:xpath , "//textarea[@name='txtNone']/").append("Some Text") }  
     

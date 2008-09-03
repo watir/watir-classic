@@ -20,9 +20,9 @@ class TC_Radios_XPath < Test::Unit::TestCase
   end
   
   def test_Radio_Enabled
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='noName']/").enabled?  }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@id='noName']/").enabled?  }  
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='box4' and @value='6']/").enabled?  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='noName']/").enabled?  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@id='noName']/").enabled?  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='box4' and @value='6']/").enabled?  }  
     
     assert(!$ie.radio(:xpath, "//input[@name='box2']/").enabled?)   
     assert($ie.radio(:xpath, "//input[@id='box5']/").enabled?)   
@@ -43,7 +43,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
   end
   
   def test_Radio_isSet
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='noName']/").isSet?  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='noName']/").isSet?  }  
     
     puts "radio 1 is set : #{ $ie.radio(:xpath, "//input[@name='box1']/").isSet? } "
     assert(!$ie.radio(:xpath, "//input[@name='box1']/").isSet?)   
@@ -56,7 +56,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
   end
   
   def test_radio_clear
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='noName']/").clear  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='noName']/").clear  }  
     
     $ie.radio(:xpath, "//input[@name='box1']/").clear
     assert(!$ie.radio(:xpath, "//input[@name='box1']/").isSet?)   
@@ -72,7 +72,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
   end
   
   def test_radio_getState
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='noName']/").getState  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='noName']/").getState  }  
     
     assert_equal( false , $ie.radio(:xpath, "//input[@name='box1']/").getState )   
     assert_equal( true , $ie.radio(:xpath, "//input[@name='box3']/").getState)   
@@ -83,7 +83,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
   end
   
   def test_radio_set
-    assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ie.radio(:xpath, "//input[@name='noName']/").set  }  
+    assert_raises(UnknownObjectException) {   $ie.radio(:xpath, "//input[@name='noName']/").set  }  
     $ie.radio(:xpath, "//input[@name='box1']/").set
     assert($ie.radio(:xpath, "//input[@name='box1']/").isSet?)   
     
