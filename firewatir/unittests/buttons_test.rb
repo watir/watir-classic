@@ -1,7 +1,7 @@
 # feature tests for Buttons of type <input type = "button">
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Buttons < Test::Unit::TestCase
@@ -44,15 +44,15 @@ class TC_Buttons < Test::Unit::TestCase
         assert_equal(b4, $ff.button(:name, "b4").to_s)
         assert_equal(b1, $ff.button(:caption, "Click Me").to_s)
         assert_equal(b1, $ff.button(:index, 1).to_s)
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").to_s   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").to_s   }  
     end
    
     def test_properties
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").id   }  
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").name   }  
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").disabled   }  
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").type   }  
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").value   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").id   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").name   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").disabled   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").type   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").value   }  
         
         assert_equal("b1"  , $ff.button(:index, 1).name ) 
         assert_equal("b2"  , $ff.button(:index, 1).id ) 
@@ -80,7 +80,7 @@ class TC_Buttons < Test::Unit::TestCase
     
     def test_button_using_default
         # since most of the time, a button will be accessed based on its caption, there is a default way of accessing it....
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button( "Missing Caption").click   }  
+        assert_raises(UnknownObjectException) {   $ff.button( "Missing Caption").click   }  
         
         $ff.button("Click Me").click
         assert($ff.text.include?("PASS") )
@@ -92,8 +92,8 @@ class TC_Buttons < Test::Unit::TestCase
     end
     
     def test_button_click
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:caption, "Missing Caption").click   }  
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:id, "missingID").click   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:caption, "Missing Caption").click   }  
+        assert_raises(UnknownObjectException) {   $ff.button(:id, "missingID").click   }  
         
         assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   $ff.button(:caption, "Disabled Button").click   }  
         
@@ -120,7 +120,7 @@ class TC_Buttons < Test::Unit::TestCase
         assert_false($ff.button(:name, "b4").enabled?)   
         assert_false($ff.button(:id, "b5").enabled?)   
         
-        assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.button(:name, "noName").enabled?  }  
+        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").enabled?  }  
      end
 
      def test_button2

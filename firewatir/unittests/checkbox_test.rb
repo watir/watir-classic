@@ -1,7 +1,7 @@
 # feature tests for Check Boxes
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_CheckBox < Test::Unit::TestCase
@@ -12,11 +12,11 @@ class TC_CheckBox < Test::Unit::TestCase
     end
     
     def test_checkbox_properties
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").id   }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").name   }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").disabled   }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").type   }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.checkbox(:name, "noName").value   }  
+       assert_raises(UnknownObjectException) {   $ff.checkbox(:name, "noName").id   }  
+       assert_raises(UnknownObjectException) {   $ff.checkbox(:name, "noName").name   }  
+       assert_raises(UnknownObjectException) {   $ff.checkbox(:name, "noName").disabled   }  
+       assert_raises(UnknownObjectException) {   $ff.checkbox(:name, "noName").type   }  
+       assert_raises(UnknownObjectException) {   $ff.checkbox(:name, "noName").value   }  
 
        assert_equal("box1"  , $ff.checkbox(:index, 1).name  ) 
        assert_instance_of(CheckBox,$ff.checkbox(:index,1))

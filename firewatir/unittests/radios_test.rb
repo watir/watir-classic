@@ -1,7 +1,7 @@
 # feature tests for Radio Buttons
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Radios < Test::Unit::TestCase
@@ -20,15 +20,15 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_radio_class
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").class_name }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").class_name }  
        assert_equal("radio_style" , $ff.radio(:name, "box1").class_name)   
        assert_equal("" , $ff.radio(:id, "box5").class_name)   
     end
 
     def test_Radio_Enabled
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").enabled?  }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:id, "noName").enabled?  }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "box4" , 6).enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:id, "noName").enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "box4" , 6).enabled?  }  
 
        assert_false($ff.radio(:name, "box2").enabled?)   
        assert($ff.radio(:id, "box5").enabled?)   
@@ -67,7 +67,7 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_Radio_isSet
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").isSet?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").isSet?  }  
 
        assert_false($ff.radio(:name, "box1").isSet?)   
        assert( $ff.radio(:name, "box3").isSet?)   
@@ -77,7 +77,7 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_radio_clear
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").clear  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").clear  }  
 
        $ff.radio(:name, "box1").clear
        assert_false($ff.radio(:name, "box1").isSet?)   
@@ -93,7 +93,7 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_radio_getState
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").getState  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").getState  }  
 
        assert_equal( false , $ff.radio(:name, "box1").getState )   
        assert_equal( true , $ff.radio(:name, "box3").getState)   
@@ -104,7 +104,7 @@ class TC_Radios < Test::Unit::TestCase
     end
 
     def test_radio_set
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:name, "noName").set  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:name, "noName").set  }  
        $ff.radio(:name, "box1").set
        assert($ff.radio(:name, "box1").isSet?)   
 

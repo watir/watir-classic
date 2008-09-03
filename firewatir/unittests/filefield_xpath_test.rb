@@ -1,7 +1,7 @@
 # feature tests for TextArea Fields
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_FileField_XPath < Test::Unit::TestCase

@@ -39,6 +39,7 @@
 
 require 'firewatir/exceptions'
     
+# BUG: this module should be inside FireWatir (or Watir)
 module Container 
     include FireWatir::Exception
 

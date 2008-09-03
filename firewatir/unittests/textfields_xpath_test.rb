@@ -1,7 +1,7 @@
 # feature tests for Text Fields
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Fields_XPath < Test::Unit::TestCase
@@ -34,10 +34,10 @@ class TC_Fields_XPath < Test::Unit::TestCase
        assert($ff.text_field(:xpath , "//input[@name='text1']").verify_contains(/Hello\sW/ ) )  
        assert_false($ff.text_field(:xpath , "//input[@name='text1']").verify_contains("Ruby") )  
        assert_false($ff.text_field(:xpath , "//input[@name='text1']").verify_contains(/R/) )  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.text_field(:xpath , "//input[@name='NoName']").verify_contains("No field to get a value of") }  
+       assert_raises(UnknownObjectException) {   $ff.text_field(:xpath , "//input[@name='NoName']").verify_contains("No field to get a value of") }  
 
        assert($ff.text_field(:xpath , "//input[@id='text2']").verify_contains("goodbye all") )  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.text_field(:xpath , "//input[@id='noID']").verify_contains("No field to get a value of") }  
+       assert_raises(UnknownObjectException) {   $ff.text_field(:xpath , "//input[@id='noID']").verify_contains("No field to get a value of") }  
     end
 
     def test_text_field_enabled

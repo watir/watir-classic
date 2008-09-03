@@ -1,7 +1,7 @@
 # feature tests for Radio Buttons
 # revision: $Revision: 1.0 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Radios_XPath < Test::Unit::TestCase
@@ -20,9 +20,9 @@ class TC_Radios_XPath < Test::Unit::TestCase
     end
 
     def test_Radio_Enabled
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='noName']").enabled?  }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@id='noName']").enabled?  }  
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='box4' and @value='6']").enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='noName']").enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@id='noName']").enabled?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='box4' and @value='6']").enabled?  }  
 
        assert_false($ff.radio(:xpath, "//input[@name='box2']").enabled?)   
        assert($ff.radio(:xpath, "//input[@id='box5']").enabled?)   
@@ -43,7 +43,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
     end
 
     def test_Radio_isSet
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='noName']").isSet?  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='noName']").isSet?  }  
 
        puts "radio 1 is set : #{ $ff.radio(:xpath, "//input[@name='box1']").isSet? } "
        assert_false($ff.radio(:xpath, "//input[@name='box1']").isSet?)   
@@ -56,7 +56,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
     end
 
     def test_radio_clear
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='noName']").clear  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='noName']").clear  }  
 
        $ff.radio(:xpath, "//input[@name='box1']").clear
        assert_false($ff.radio(:xpath, "//input[@name='box1']").isSet?)   
@@ -72,7 +72,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
     end
 
     def test_radio_getState
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='noName']").getState  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='noName']").getState  }  
 
        assert_equal( false , $ff.radio(:xpath, "//input[@name='box1']").getState )   
        assert_equal( true , $ff.radio(:xpath, "//input[@name='box3']").getState)   
@@ -83,7 +83,7 @@ class TC_Radios_XPath < Test::Unit::TestCase
     end
 
     def test_radio_set
-       assert_raises(UnknownObjectException , "UnknownObjectException was supposed to be thrown" ) {   $ff.radio(:xpath, "//input[@name='noName']").set  }  
+       assert_raises(UnknownObjectException) {   $ff.radio(:xpath, "//input[@name='noName']").set  }  
        $ff.radio(:xpath, "//input[@name='box1']").set
        assert($ff.radio(:xpath, "//input[@name='box1']").isSet?)   
 
