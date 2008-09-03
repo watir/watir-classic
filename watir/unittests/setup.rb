@@ -29,7 +29,7 @@ firewatir_lib = File.join(topdir, '..', 'firewatir', 'lib')
 watir_common_lib = File.join(topdir, '..', 'watir-common', 'lib')
 $LOAD_PATH.unshift watir_lib
 #$LOAD_PATH.unshift firewatir_lib
-#$LOAD_PATH.unshift watir_common_lib
+$LOAD_PATH.unshift watir_common_lib
 
 # libraries used by feature tests
 require 'watir'

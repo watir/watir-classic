@@ -40,6 +40,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'windows-pr', '>= 0.6.6' 
   s.add_dependency 'activesupport'
   s.add_dependency 'user-choices' # for the unit tests
+  s.add_dependency 'watir-common'
   
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
