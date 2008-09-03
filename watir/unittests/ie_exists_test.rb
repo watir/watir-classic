@@ -1,7 +1,7 @@
 # test IE#exists?
 # revision: $Revision: 962 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_IE_Exists < Test::Unit::TestCase 

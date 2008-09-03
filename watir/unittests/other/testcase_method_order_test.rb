@@ -5,7 +5,7 @@
 #   1) Failure:
 # default_test(TC4_No_Test_Methods)
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 
 require 'watir/testcase'
 

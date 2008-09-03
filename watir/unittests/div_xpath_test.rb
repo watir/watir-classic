@@ -1,7 +1,7 @@
 # feature tests for Divs, Spans and P's
 # revision: $Revision$
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Divs_XPath < Test::Unit::TestCase

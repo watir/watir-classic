@@ -1,7 +1,7 @@
 # feature tests for screen capture
 # revision: $Revision:1338 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 require 'watir/screen_capture'
 

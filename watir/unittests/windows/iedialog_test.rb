@@ -1,7 +1,7 @@
 # unit tests for iedialog.dll and customized win32ole.so
 # revision: $Revision$
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
 require 'Win32API'
 

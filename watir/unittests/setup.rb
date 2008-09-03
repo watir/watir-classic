@@ -1,3 +1,4 @@
+$SETUP_LOADED = true
 $myDir = File.expand_path(File.dirname(__FILE__))
 
 require 'user-choices'
@@ -28,7 +29,7 @@ watir_lib = File.join(topdir, 'lib')
 firewatir_lib = File.join(topdir, '..', 'firewatir', 'lib')
 watir_common_lib = File.join(topdir, '..', 'watir-common', 'lib')
 $LOAD_PATH.unshift watir_lib
-#$LOAD_PATH.unshift firewatir_lib
+$LOAD_PATH.unshift firewatir_lib
 $LOAD_PATH.unshift watir_common_lib
 
 # libraries used by feature tests

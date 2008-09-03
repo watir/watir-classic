@@ -1,7 +1,7 @@
 # defect reproduction
 # revision: $Revision: 958 $
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Divs_XPath2 < Test::Unit::TestCase

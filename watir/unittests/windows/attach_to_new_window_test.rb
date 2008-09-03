@@ -1,7 +1,7 @@
 # feature tests for attaching to new IE windows
 # revision: $Revision$
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
 require 'watir/testcase'
 

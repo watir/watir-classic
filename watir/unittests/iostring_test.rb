@@ -1,6 +1,6 @@
 # unit tests for IOString in iostring.rb
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/iostring'
 require 'test/unit'
 
