@@ -19,14 +19,14 @@ class TC_SelectList < Test::Unit::TestCase
   
   def test_SelectList_enabled
     assert(browser.select_list(:name, "sel1").enabled?)   
-    assert_raises(UnknownObjectException) { browser.selectBox(:name, "NoName").enabled? }  
+    assert_raises(UnknownObjectException) { browser.select_list(:name, "NoName").enabled? }  
     assert(!browser.select_list(:id, 'selectbox_4').enabled?)
   end
   
   def test_SelectList_class_name
     assert_raises(UnknownObjectException) { browser.select_list(:name, "missing").class_name }  
     assert_equal("list_style" , browser.select_list(:name, "sel1").class_name)   
-    assert_equal("" , browser.selectBox(:name, "sel2").class_name  )
+    assert_equal("" , browser.select_list(:name, "sel2").class_name  )
   end
   
   def test_Option_text_select

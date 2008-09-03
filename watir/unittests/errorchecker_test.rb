@@ -8,7 +8,7 @@ class TC_error_checker < Test::Unit::TestCase
     
   def test_simple_checker
     button_checker = Proc.new do |ie|  
-      raise RuntimeError, "text 'buttons' is missing"  if ! ie.pageContainsText(/buttons/)
+      raise RuntimeError, "text 'buttons' is missing"  if ! ie.contains_text(/buttons/)
     end
     
     browser.add_checker button_checker
