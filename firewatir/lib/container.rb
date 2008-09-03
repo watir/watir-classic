@@ -41,7 +41,7 @@ require 'firewatir/exceptions'
     
 # BUG: this module should be inside FireWatir (or Watir)
 module Container 
-    include FireWatir::Exception
+    include Watir::Exception
 
     # IP Address of the machine where the script is to be executed. Default to localhost.
     MACHINE_IP = "127.0.0.1"

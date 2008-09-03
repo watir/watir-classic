@@ -141,7 +141,7 @@ class Integer
 end
 
 module FireWatir
-    include FireWatir::Exception
+    include Watir::Exception
     
     class Firefox
        
