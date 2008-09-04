@@ -13,27 +13,27 @@ class TC_FileField < Test::Unit::TestCase
   
   def test_file_field_Exists
     # test for existance of 4 file area
-    assert($ie.file_field(:name,"file1").exists?)
-    assert($ie.file_field(:id,"file2").exists?)
+    assert(browser.file_field(:name,"file1").exists?)
+    assert(browser.file_field(:id,"file2").exists?)
 
     # test for missing 
-    assert(!$ie.file_field(:name, "missing").exists?)   
-    assert(!$ie.file_field(:name,"totallybogus").exists?)
+    assert(!browser.file_field(:name, "missing").exists?)   
+    assert(!browser.file_field(:name,"totallybogus").exists?)
 
     # pop one open and put something in it.
     file = $htmlRoot + "fileupload.html"
     file.gsub! 'file:///', ''
     file.gsub! '/', '\\'
-    $ie.file_field(:name,"file1").set(file)	
-    assert_equal file, $ie.file_field(:name,"file1").value
+    browser.file_field(:name,"file1").set(file)	
+    assert_equal file, browser.file_field(:name,"file1").value
 
     # click the upload button
-    $ie.button(:name,"upload").click
-    assert($ie.text.include?("PASS"))	
+    browser.button(:name,"upload").click
+    assert(browser.text.include?("PASS"))	
   end
   
   def test_iterator
-    assert_equal(6, $ie.file_fields.length)
+    assert_equal(6, browser.file_fields.length)
   end
   
 end
