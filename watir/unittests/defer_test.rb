@@ -1,5 +1,4 @@
 # tests of deferring when a Watir object is bound to a com object (lazy evaluation)
-
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED

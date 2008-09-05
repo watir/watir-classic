@@ -9,21 +9,21 @@ class TC_MinMax< Test::Unit::TestCase
     goto_page 'pass.html'
   end        
   def teardown
-    $ie.restore
+    browser.restore
   end
   def test_minimimum
-    $ie.minimize
+    browser.minimize
   end
   def test_maximum
-    $ie.maximize
+    browser.maximize
   end
   def test_front
-    assert $ie.front?
+    assert browser.front?
     ie2 = Watir::IE.start($htmlRoot + 'blankpage.html')
     assert ie2.front?
-    assert ! $ie.front?
-    $ie.bring_to_front
-    assert $ie.front?
+    assert ! browser.front?
+    browser.bring_to_front
+    assert browser.front?
     ie2.close
   end
 end
