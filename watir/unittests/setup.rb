@@ -12,10 +12,12 @@ module Watir
         $myDir + '/options.yml' 
     end
     def add_choices builder
-      builder.add_choice :browser, :type => ['firefox', 'ie'], :default => 'ie'
+      builder.add_choice :browser, :type => ['firefox', 'ie', 'Firefox', 'IE'], 
+      :default => 'ie'
       builder.add_choice :speed, :type => ['slow', 'fast', 'zippy'], :default => 'fast'
     end
     def execute 
+      @user_choices[:browser].downcase!
       speed = @user_choices[:speed].to_sym
       Watir::IE.speed = speed
       @user_choices
