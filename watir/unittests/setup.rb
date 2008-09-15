@@ -4,23 +4,25 @@ $myDir = File.expand_path(File.dirname(__FILE__))
 require 'user-choices'
 
 module Watir
-  class UnitTestOptions < UserChoices::Command
-    include UserChoices
-    def add_sources builder
-      builder.add_source EnvironmentSource, :with_prefix, 'watir_'
-      builder.add_source YamlConfigFileSource, :from_complete_path, 
-        $myDir + '/options.yml' 
-    end
-    def add_choices builder
-      builder.add_choice :browser, :type => ['firefox', 'ie', 'Firefox', 'IE'], 
-      :default => 'ie'
-      builder.add_choice :speed, :type => ['slow', 'fast', 'zippy'], :default => 'fast'
-    end
-    def execute 
-      @user_choices[:browser].downcase!
-      speed = @user_choices[:speed].to_sym
-      Watir::IE.speed = speed
-      @user_choices
+  module UnitTest
+    class Options < UserChoices::Command
+      include UserChoices
+      def add_sources builder
+        builder.add_source EnvironmentSource, :with_prefix, 'watir_'
+        builder.add_source YamlConfigFileSource, :from_complete_path, 
+          $myDir + '/options.yml' 
+      end
+      def add_choices builder
+        builder.add_choice :browser, :type => ['firefox', 'ie', 'Firefox', 'IE'], 
+        :default => 'ie'
+        builder.add_choice :speed, :type => ['slow', 'fast', 'zippy'], :default => 'fast'
+      end
+      def execute 
+        @user_choices[:browser].downcase!
+        speed = @user_choices[:speed].to_sym
+        Watir::IE.speed = speed
+        @user_choices
+      end 
     end
   end
 end
@@ -37,7 +39,7 @@ $LOAD_PATH.unshift watir_common_lib
 # libraries used by feature tests
 require 'watir'
 
-options = Watir::UnitTestOptions.new.execute
+options = Watir::UnitTest::Options.new.execute
 case options[:browser]
 when 'ie'
   # this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
@@ -53,6 +55,7 @@ end
 
 require 'test/unit'
 require 'watir/testcase'
+require 'unittests/setup/filter'
 
 module Watir::UnitTest
   # navigate the browser to the specified page in unittests/html
@@ -68,11 +71,26 @@ module Watir::UnitTest
   def browser
     $browser
   end
+
+  @@filter = []
+  def self.filter
+    @@filter
+  end
+  def self.filter= proc
+    @@filter = proc
+  end
+  def self.filter_tag= tag
+    @@filter = proc{|t| t.class.tags.include? tag}
+  end
 end
 
-# a hack
 class Test::Unit::TestCase
   include Watir::UnitTest
+  def self.tags *names
+    @tags ||= []
+    names.each {|n| @tags << n}
+    @tags
+  end
 end
 
 =begin
