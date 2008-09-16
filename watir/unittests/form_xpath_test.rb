@@ -26,7 +26,7 @@ class TC_Forms2_XPath < Test::Unit::TestCase
 end
 
 require 'unittests/iostring'
-class TC_Form_Display < Test::Unit::TestCase
+class TC_Form_Display_XPath < Test::Unit::TestCase
   include MockStdoutTestCase                
   def test_showforms
     goto_page "forms2.html"
@@ -54,7 +54,7 @@ END_OF_MESSAGE
   end
 end
 
-class TC_Forms3 < Test::Unit::TestCase
+class TC_Forms3_XPath < Test::Unit::TestCase
   def setup
     goto_page "forms3.html"
   end
@@ -147,7 +147,7 @@ class TC_Forms3 < Test::Unit::TestCase
   end
 end
 
-class TC_Forms4 < Test::Unit::TestCase
+class TC_Forms4_XPath < Test::Unit::TestCase
   def setup
     goto_page "forms4.html"
   end
@@ -172,7 +172,7 @@ class TC_Forms4 < Test::Unit::TestCase
   end
 end
 
-class TC_Hidden_Fields < Test::Unit::TestCase
+class TC_Hidden_Fields_XPath < Test::Unit::TestCase
   def setup
     goto_page "forms3.html"
   end

@@ -8,6 +8,7 @@ require 'webrick'
 require 'watir/cookiemanager'
 
 class TC_Images < Test::Unit::TestCase
+  tags :must_be_visible, :creates_windows
   include Watir
   
   def setup

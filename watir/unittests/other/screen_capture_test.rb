@@ -6,6 +6,7 @@ require 'unittests/setup'
 require 'watir/screen_capture'
 
 class TC_Capture< Test::Unit::TestCase
+  tags :must_be_visible
   include Watir
   include Watir::ScreenCapture
   

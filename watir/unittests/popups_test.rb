@@ -1,12 +1,11 @@
-
 # revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_PopUps < Test::Unit::TestCase
-  include Watir
-  
+  tags :must_be_visible, :creates_windows, :unreliable
+
   def setup
     browser.goto("file://#{$myDir}/html/popups1.html")
   end

@@ -6,6 +6,7 @@ require 'unittests/setup'
 require 'watir/dialog'
 
 class TC_Dialog_Test < Test::Unit::TestCase
+  tags :must_be_visible
   include Watir
   
   def setup

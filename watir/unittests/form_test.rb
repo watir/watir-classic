@@ -190,8 +190,9 @@ class TC_Forms3_Display < Test::Unit::TestCase
 end
 
 class TC_Forms4 < Test::Unit::TestCase
+  tags :ie
   def setup
-    goto_page "forms4.html"
+    uses_page "forms4.html"
   end
   
   def test_find_text_field_ignoring_form

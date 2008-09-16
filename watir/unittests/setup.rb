@@ -29,12 +29,11 @@ end
 
 # use local development versions of firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
-watir_lib = File.join(topdir, 'lib')
-firewatir_lib = File.join(topdir, '..', 'firewatir', 'lib')
-watir_common_lib = File.join(topdir, '..', 'watir-common', 'lib')
-$LOAD_PATH.unshift watir_lib
-$LOAD_PATH.unshift firewatir_lib
-$LOAD_PATH.unshift watir_common_lib
+libs = []
+libs << File.join(topdir, 'lib')
+libs << File.join(topdir, '..', 'firewatir', 'lib')
+libs << File.join(topdir, '..', 'watir-common', 'lib')
+libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
 # libraries used by feature tests
 require 'watir'
@@ -93,21 +92,23 @@ class Test::Unit::TestCase
   end
 end
 
+# Standard Tags
+# :must_be_visible
+# :creates_windows
+# :unreliable (test fails intermittently)
+
 =begin
 Test Suites
 * all_tests -- all the tests in the unittests directory (omits "other")
 * window_tests -- window intensive tests
-* non_core_tests -- problem tests
-* xpath_tests -- xpath (some problems)
-* core_tests -- all others, well behaved
 =end
 
 topdir = File.join(File.dirname(__FILE__), '..')
 Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
-  $xpath_tests = Dir["unittests/*_xpath_test.rb"]
 end
 
+# not in all tests!
 $window_tests =
     [
      'attach_to_existing_window', # could actually run robustly as part of the core suite!
@@ -119,24 +120,10 @@ $window_tests =
      'js_events', # is always visible
      'jscript',
      'modal_dialog', # modal is visible
-     #new (named oddly)
+     #new 
      'open_close',
      'send_keys', # visible
     ].collect {|x| "unittests/windows/#{x}_test.rb"}
-
-$non_core_tests = 
-    ['popups', # has problems when run in a suite (is ok when run alone); 
-               # must be visible
-               # will be revised to use autoit 
-               # takes 15 seconds to run
-     'images', # save file must must be visible
-#     'screen_capture', # is always visible; takes 25 seconds
-     'filefield', # is always visible; takes 40 seconds 
-     'minmax', # becomes visible
-     'dialog' # visible
-    ].collect {|x| "unittests/#{x}_test.rb"}
-
-$core_tests = $all_tests - $non_core_tests - $window_tests - $xpath_tests
 
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 # if you run the unit tests from a local file system use this line

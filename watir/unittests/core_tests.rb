@@ -1,4 +1,4 @@
-# these are the tests that run reliably and invisibly
+# these are the non-xpath tests that do not need to be visible
 
 $HIDE_IE = true
 
@@ -8,4 +8,10 @@ $LOAD_PATH.unshift TOPDIR
 require 'unittests/setup'
 
 Dir.chdir TOPDIR
-$core_tests.each {|x| require x}
+$all_tests.each {|x| require x}
+
+Watir::UnitTest.filter = proc do |test| 
+  test.class.to_s !~ /xpath/i &&
+  ! test.class.tags.include?(:must_be_visible)
+end
+

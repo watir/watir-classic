@@ -5,6 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_FileField < Test::Unit::TestCase
+  tags :must_be_visible, :creates_windows
   include Watir
   
   def setup
