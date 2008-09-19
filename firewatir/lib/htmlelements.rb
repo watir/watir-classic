@@ -159,7 +159,6 @@ end
 #
 class Pre < NonControlElement
     TAG = 'PRE'
-    def self.tag; TAG; end
 end
 
 #
@@ -168,7 +167,6 @@ end
 #
 class P < NonControlElement 
     TAG = 'P'
-    def self.tag; TAG; end
 end
 
 #
@@ -177,7 +175,6 @@ end
 #
 class Div < NonControlElement 
     TAG = 'DIV'
-    def self.tag; TAG; end
 end
 
 #
@@ -186,7 +183,6 @@ end
 #
 class Span < NonControlElement 
     TAG = 'SPAN'
-    def self.tag; TAG; end
 end
 
 #
