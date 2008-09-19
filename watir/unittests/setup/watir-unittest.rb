@@ -21,17 +21,8 @@ module Watir::UnitTest
   def self.filter= proc
     @@filter = proc
   end
-  def self.filter_tag= tag
-    @@filter = proc{|t| t.class.tags.include? tag}
-  end
   def self.filter_for tag
-    @@filter = 
-    Proc.new do |test| 
-      puts "method: #{test.method_name} method tags: #{test.class.method_tags.inspect}"
-      puts "tag: #{test.class.method_tags[test.method_name]}"
-      test.class.tags.include?(tag) ||
-      test.class.method_tags[test.method_name].include?(tag)      
-    end
+    @@filter = Proc.new {|test| test.tagged? tag}
   end
 end
 
@@ -48,5 +39,9 @@ class Test::Unit::TestCase
   end
   def self.method_tags
     @method_tags ||= Hash.new []
+  end
+  def tagged? tag
+    self.class.tags.include?(tag) ||
+    self.class.method_tags[@method_name].include?(tag)
   end
 end
