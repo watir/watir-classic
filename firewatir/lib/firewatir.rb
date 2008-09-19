@@ -1,7 +1,9 @@
 =begin
   license
   ---------------------------------------------------------------------------
-  Copyright (c) 2006-2007, Angrez Singh
+  Copyright (c) 2004 - 2005, Paul Rogers and Bret Pettichord
+  Copyright (c) 2006 - 2007, Angrez Singh
+  Copyright (c) 2008, Bret Pettichord
   
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
@@ -122,23 +124,7 @@ require 'MozillaBaseElement.rb'
 require 'htmlelements.rb'
 require 'socket'
 
-class String
-    def matches (x)
-        return self == x
-    end
-end
-
-class Regexp
-    def matches (x)
-        return self.match(x) 
-    end
-end
-
-class Integer
-    def matches (x)
-        return self == x
-    end
-end
+require 'watir/matches'
 
 module FireWatir
     include Watir::Exception

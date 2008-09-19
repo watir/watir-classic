@@ -2,7 +2,7 @@
   license
   ---------------------------------------------------------------------------
   Copyright (c) 2004 - 2005, Paul Rogers and Bret Pettichord
-  Copyright (c) 2006 - 2007, Bret Pettichord
+  Copyright (c) 2006 - 2008, Bret Pettichord
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -50,23 +50,7 @@ require 'dl/import'
 require 'dl/struct'
 require 'Win32API'
 
-class String
-  def matches(x)
-    return self == x
-  end
-end
-
-class Regexp
-  def matches(x)
-    return self.match(x)
-  end
-end
-
-class Integer
-  def matches(x)
-    return self == x
-  end
-end
+require 'watir/matches'
 
 # ARGV needs to be deleted to enable the Test::Unit functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
