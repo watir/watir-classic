@@ -7,30 +7,8 @@ require 'unittests/setup'
 class TC_Button < Test::Unit::TestCase
   include Watir::Exception
   def setup
-    goto_page "buttons1.html"
-  end
-  
-  # Fails on firefox
-  # XXX Decide the point of this test (and all to_s tests)
-  tag_method :test_to_s, :cosmetic
-  def test_to_s
-    b4 = [
-        'type:     *button',
-        'id:       *b5',
-        'name:     *b4',
-        'value:    *Disabled Button',
-        'disabled: *true']
-    b1 = [
-        'type:     *button',
-        'id:       *b2',
-        'name:     *b1',
-        'value:    *Click Me',
-        'disabled: *false']
-    assert_match(Regexp.new(b4.join("\n")), browser.button(:name, "b4").to_s)
-    assert_match(Regexp.new(b1.join("\n")), browser.button(:caption, "Click Me").to_s)
-    assert_match(Regexp.new(b1.join("\n")), browser.button(:index, 1).to_s)
-    assert_raises(UnknownObjectException) { browser.button(:name, "noName").to_s }  
-  end
+    uses_page "buttons1.html"
+  end 
   
   def test_properties
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").id }  
@@ -98,10 +76,19 @@ class TC_Button < Test::Unit::TestCase
     
     assert_raises(UnknownObjectException) {   browser.button(:name, "noName").enabled?  }  
   end
+end
+
+class TC_Button_Frame < Test::Unit::TestCase
+  include Watir::Exception  
   
   def test_in_frame
     goto_page "frame_buttons.html"
     assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)
+  end
+  
+  tag_method :test_error_in_frame, :firewatir_bug
+  def test_error_in_frame
+    goto_page "frame_buttons.html"
     # frame must be specified
     assert_raises(UnknownObjectException) { browser.button(:caption, "Disabled Button").enabled?}  
   end

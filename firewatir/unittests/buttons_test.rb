@@ -15,37 +15,6 @@ class TC_Buttons < Test::Unit::TestCase
         $ff.goto($htmlRoot + "frame_buttons.html")
     end
     
-    #def test_Spinner
-    #   s = Spinner.new
-    #   i = 0
-    #   while(i < 100)
-    #       sleep 0.05
-    #       print s.next
-    #        i+=1
-    #    end
-    #    s = nil
-    #end
-    
-    def test_Button_to_s
-        # i think the tests for to_s should be dropped. The output is not in a nice format to be tested, and the
-        # individual properties are tested in the test_properties method
-        
-        b4 = ['name:         b4',
-        'type:         button',
-        'id:           b5',
-        'value:        Disabled Button',
-        'disabled:     true']
-        b1 = ['name:         b1',
-        'type:         button',
-        'id:           b2',
-        'value:        Click Me',
-        'disabled:     false']
-        
-        assert_equal(b4, $ff.button(:name, "b4").to_s)
-        assert_equal(b1, $ff.button(:caption, "Click Me").to_s)
-        assert_equal(b1, $ff.button(:index, 1).to_s)
-        assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").to_s   }  
-    end
    
     def test_properties
         assert_raises(UnknownObjectException) {   $ff.button(:name, "noName").id   }  

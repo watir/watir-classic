@@ -24,18 +24,20 @@ module Watir::UnitTest
   def self.filter_for tag
     @@filter = Proc.new {|test| test.tagged? tag}
   end
+  def self.filter_out tag
+    @@filter = Proc.new {|test| ! test.tagged? tag}    
+  end
+
 end
 
 class Test::Unit::TestCase
   include Watir::UnitTest
   def self.tags *names
     @tags ||= []
-    names.each {|n| @tags << n}
-    @tags
+    @tags += names
   end
   def self.tag_method method_name, *tags
-    self.method_tags
-    @method_tags[method_name.to_s] = tags    
+    self.method_tags[method_name.to_s] = tags    
   end
   def self.method_tags
     @method_tags ||= Hash.new []

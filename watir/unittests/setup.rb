@@ -14,15 +14,17 @@ libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 # libraries used by feature tests
 require 'watir'
 
-options = Watir::UnitTest::Options.new.execute
+
+
+Watir::UnitTest.options = Watir::UnitTest::Options.new.execute
 
 # move this to execute?
-case options[:browser]
+case Watir::UnitTest.options[:browser]
 when 'ie'
   # this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
   at_exit {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
   $ie = Watir::IE.new
-  $ie.speed = options[:speed].to_sym
+  $ie.speed = Watir::UnitTest.options[:speed].to_sym
   $browser = $ie
 when 'firefox'
   require 'firewatir'

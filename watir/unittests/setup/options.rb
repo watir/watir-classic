@@ -21,5 +21,11 @@ module Watir
         @user_choices
       end 
     end
+    def self.options= x
+      @@options = x
+    end
+    def self.options
+      @@options
+    end
   end
 end
