@@ -10,6 +10,9 @@ class TC_Button < Test::Unit::TestCase
     goto_page "buttons1.html"
   end
   
+  # Fails on firefox
+  # XXX Decide the point of this test (and all to_s tests)
+  tag_method :test_to_s, :cosmetic
   def test_to_s
     b4 = [
         'type:     *button',
