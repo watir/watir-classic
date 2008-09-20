@@ -35,7 +35,7 @@
 # Base class for html elements.
 # This is not a class that users would normally access.
     class Element
-        include Container
+        include FireWatir::Container
         # Number of spaces that separate the property from the value in the to_s method
         TO_S_SIZE = 14
 
@@ -1416,7 +1416,7 @@
     #   Class for returning the document element.
     #
     class Document
-        include Container
+        include FireWatir::Container
         @@current_level = 0
 
         #
@@ -1628,7 +1628,7 @@
     #   Class for iterating over elements of common type like links, images, divs etc.
     #
     class ElementCollections
-        include Container
+        include FireWatir::Container # XXX not sure if this is right
         @@current_level = 0
         #
         # Description:

@@ -120,8 +120,8 @@
 
 require 'firewatir/exceptions'
 require 'container'
-require 'MozillaBaseElement.rb'
-require 'htmlelements.rb'
+require 'MozillaBaseElement'
+require 'htmlelements'
 require 'socket'
 
 require 'watir/matches'
@@ -131,7 +131,7 @@ module FireWatir
     
     class Firefox
        
-        include Container
+        include FireWatir::Container
         
         # XPath Result type. Return only first node that matches the xpath expression.
         # More details: "http://developer.mozilla.org/en/docs/DOM:document.evaluate"
