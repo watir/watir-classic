@@ -29,10 +29,10 @@ class Watir::Element
     object = document
     while object
       begin
-        if object.style.invoke('visibility') =~ /^hidden$/i
+        if object.currentstyle.invoke('visibility') =~ /^hidden$/i
           return false
         end
-        if object.style.invoke('display') =~ /^none$/i
+        if object.currentstyle.invoke('display') =~ /^none$/i
           return false
         end
         if object.invoke('isDisabled')

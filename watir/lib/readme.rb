@@ -128,6 +128,7 @@ Contributors:
    Vincent Xu - Chinese input support
    Tomislav Car - Filefield fix (210)
    Michael Hwee & Aidy Lewis - Multiple attribute support for FireWatir (233)
+   Alan Baird - Fix for visible? method (253)
 
 Acknowledgements:
    Chris Morris
