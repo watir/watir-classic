@@ -2275,3 +2275,135 @@ class Divs < ElementCollections
 #    end
 
 end
+
+  class Ul < NonControlElement  
+    TAG = 'UL'
+  end
+  module Container
+    def ul(how, what=nil)
+      return Ul.new(self, how, what)
+    end
+  end
+  
+  class Li < NonControlElement
+    TAG = 'LI'
+  end
+  module Container
+    def li(how, what=nil)
+      return Li.new(self, how, what)
+    end
+  end
+  
+  class H1 < NonControlElement
+    TAG = 'H1'
+  end
+  module Container
+    def h1(how, what=nil)
+      return H1.new(self, how, what)
+    end
+  end
+  
+  class H2 < NonControlElement
+    TAG = 'H2'
+  end
+  module Container
+    def h2(how, what=nil)
+      return H2.new(self, how, what)
+    end
+  end
+
+  class H3 < NonControlElement
+    TAG = 'H3'
+  end
+  module Container
+    def h3(how, what=nil)
+      return H3.new(self, how, what)
+    end
+  end
+
+  class H4 < NonControlElement
+    TAG = 'H4'
+  end
+  module Container
+    def h4(how, what=nil)
+      return H4.new(self, how, what)
+    end
+  end
+
+  class H5 < NonControlElement
+    TAG = 'H5'
+  end
+  module Container
+    def h5(how, what=nil)
+      return H5.new(self, how, what)
+    end
+  end
+  class H6 < NonControlElement
+    TAG = 'H6'
+  end
+
+  module Container
+    def h6(how, what=nil)
+      return H6.new(self, how, what)
+    end
+  end
+  
+  module Container
+    def map(how, what=nil)
+      return Map.new(self, how, what)
+    end
+  end
+  class Map < NonControlElement
+    TAG = 'MAP'
+  end
+
+  module Container
+    def area(how, what=nil)
+      return Area.new(self, how, what)
+    end
+  end
+  class Area < NonControlElement
+    TAG = 'AREA'
+  end
+  
+  module Container
+    def maps
+        locate if defined?(locate)
+        return Maps.new(self)
+    end
+  end
+  class Maps < ElementCollections
+    def initialize(container)
+        @container = container
+        elements = locate_tagged_elements("map")
+        length = elements.length
+        @element_objects = Array.new(length)
+        for i in 0..length - 1 do
+            @element_objects[i] = Map.new(container, :jssh_name, elements[i])
+        end
+    end
+    def element_class; Map; end
+    def element_tag; 'MAP'; end
+  end
+
+  module Container
+    def areas
+        locate if defined?(locate)
+        return Areas.new(self)
+    end
+  end
+  class Areas < ElementCollections
+    def initialize(container)
+        @container = container
+        elements = locate_tagged_elements("area")
+        length = elements.length
+        @element_objects = Array.new(length)
+        for i in 0..length - 1 do
+            @element_objects[i] = Map.new(container, :jssh_name, elements[i])
+        end
+    end
+    def element_class; Area; end
+    def element_tag; 'AREA'; end
+  end
+
+

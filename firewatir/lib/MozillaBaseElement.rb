@@ -256,6 +256,24 @@
         end
         private :get_rows
 
+        def set_specifier(how, what)    
+      		if how.class == Hash and what.nil?
+        		specifiers = how
+      		else
+        		specifiers = {how => what}
+      		end
+        
+      		@specifiers = {:index => 1} # default if not specified
+
+      		specifiers.each do |how, what|  
+        		what = what.to_i if how == :index
+        		how = :href if how == :url
+        		how = :value if how == :caption
+        
+        		@specifiers[how] = what
+      		end
+    	end
+    	
         #
         # Description:
         #   Locates the element on the page depending upon the parameters passed. Logic for locating the element is written
@@ -277,9 +295,10 @@
         #
         def locate_tagged_element(tag, how, what, types = nil, value = nil)
             #puts caller(0)
-            how = :value if how == :caption
-            how = :href if how == :url
-            #puts "current element is : #{@container.class} and tag is #{tag}"
+#             how = :value if how == :caption
+#             how = :href if how == :url
+			set_specifier(how, what)
+            #puts "(locate_tagged_element)current element is : #{@container.class} and tag is #{tag}"
             # If there is no current element i.e. element in current context we are searching the whole DOM tree.
             # So get all the elements.
 
@@ -327,13 +346,54 @@
                 jssh_command += "var types = null;"
             end
             #jssh_command += "var elements = #{element_object}.getElementsByTagName('*');"
-            jssh_command += "var object_index = 1; var o = null; var element_name = '';"
+            jssh_command += "var object_index = 1; var o = null; var element_name = \"\";"
 
             if(value == nil)
                 jssh_command += "var value = null;"
             else
                 jssh_command += "var value = \"#{value}\";"
             end
+            
+            
+            #add hash arrays
+            sKey = "var hashKeys = new Array("
+            sVal = "var hashValues = new Array("
+            @specifiers.each do |k,v|
+              sKey += "\"#{k}\","
+              if v.class == Regexp
+              	oldRegExp = v.to_s
+                newRegExp = v.inspect
+                flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
+
+                for i in 0..flags.length do
+                    flag = flags[i, 1]
+                    if(flag == '-')
+                        break;
+                    else
+                        newRegExp << flag
+                    end
+                end
+                sVal += "#{newRegExp},"
+              else
+              	sVal += "\"#{v}\","
+              end
+            end
+            sKey = sKey[0..sKey.length-2]
+            sVal = sVal[0..sVal.length-2]
+            jssh_command += sKey + ");"
+            jssh_command += sVal + ");"
+            
+            #index
+            jssh_command += "var target_index = 1;
+                             for(var k=0; k<hashKeys.length; k++)
+                             {
+                               if(hashKeys[k] == \"index\")
+                               {
+                                 target_index = parseInt(hashValues[k]);
+                                 break;
+                               }
+                             }"
+            
             #jssh_command += "elements.length;"
             if(@container.class == FireWatir::Firefox || @container.class == Frame)
 
@@ -352,7 +412,7 @@
             # is not supplied. For e.g.: <button>Sign In</button>, in this case value of "value" attribute is "Sign In"
             # though value attribute is not supplied. But for Firefox value of "value" attribute is null. So to make sure
             # script runs on both IE and Watir we are also considering innerHTML if element is of button type.
-            jssh_command += "   var attribute = '';
+            jssh_command += "   var attribute = \"\";
                                 var same_type = false;
                                 if(types)
                                 {
@@ -371,62 +431,82 @@
                                 }
                                 if(same_type == true)
                                 {
-                                    if(\"index\" == \"#{how}\")
+                                    var how = \"\";
+                                    var what = null;
+                                    attribute = \"\";
+                                    for(var k=0; k<hashKeys.length; k++)
                                     {
-                                        attribute = object_index; object_index += 1;
-                                    }
-                                    else
-                                    {
-                                        if(\"text\" == \"#{how}\")
-                                        {
-                                            attribute = element.textContent;
-                                        }
-                                        else
-                                        {
-                                            if(\"#{how}\" == \"href\" || \"#{how}\" == \"src\" || \"#{how}\" == \"action\" || \"#{how}\" == \"name\")
-                                            {
-                                                attribute = element.getAttribute(\"#{how}\");
-                                            }
-                                            else
-                                            {
-                                                if(element.#{how} != undefined)
-                                                    attribute = element.#{how};
+                                       how = hashKeys[k];
+                                       what = hashValues[k];
+                                       
+                                       if(how == \"index\")
+                                       {
+                                          attribute = parseInt(what);
+                                          what = parseInt(what);
+                                       }
+                                       else
+                                       {
+                                          if(how == \"text\")
+                                          {
+                                             attribute = element.textContent;
+                                          }
+                                          else
+                                          {
+                                             if(how == \"href\" || how == \"src\" || how == \"action\" || how == \"name\")
+                                             {
+                                                attribute = element.getAttribute(how);
+                                             }
+                                             else
+                                             {
+                                                if(eval(\"element.\"+how) != undefined)
+                                                    attribute = eval(\"element.\"+how);
                                                 else
-                                                    attribute = element.getAttribute(\"#{how}\");
-                                            }
-                                        }
-                                        if(\"value\" == \"#{how}\" && isButtonElement && (attribute == null || attribute == ''))
-                                        {
-                                            attribute = element.innerHTML;
-                                        }
-                                    }
-                                    if(attribute == \"\") o = 'NoMethodError';
-                                    var found = false;"
+                                                    attribute = element.getAttribute(how);
+                                             }
+                                          }
+                                          if(\"value\" == how && isButtonElement && (attribute == null || attribute == \"\"))
+                                          {
+                                             attribute = element.innerHTML;
+                                          }
+                                       }
+                                       if(attribute == \"\") o = 'NoMethodError';
+                                       var found = false;
+                                       if (typeof what == \"object\" || typeof what == \"function\") 
+			                           {
+                                          var regExp = new RegExp(what);
+                                          found = regExp.test(attribute);
+                                       }
+                                       else
+                                       {
+                                          found = (attribute == what);
+                                       }"
 
-            if(what.class == Regexp)
-                # Construct the regular expression because we can't use it directly by converting it to string.
-                # If reg ex is /Google/i then its string conversion will be (?i-mx:Google) so we can't use it.
-                # Construct the regular expression again from the string conversion.
-                oldRegExp = what.to_s
-                newRegExp = what.inspect
-                flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
+#             if(what.class == Regexp)
+#                 # Construct the regular expression because we can't use it directly by converting it to string.
+#                 # If reg ex is /Google/i then its string conversion will be (?i-mx:Google) so we can't use it.
+#                 # Construct the regular expression again from the string conversion.
+#                 oldRegExp = what.to_s
+#                 newRegExp = what.inspect
+#                 flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
 
-                for i in 0..flags.length do
-                    flag = flags[i, 1]
-                    if(flag == '-')
-                        break;
-                    else
-                        newRegExp << flag
-                    end
-                end
-                #puts "old reg ex is #{what} new reg ex is #{newRegExp}"
-                jssh_command += "   var regExp = new RegExp(#{newRegExp});
-                                    found = regExp.test(attribute);"
-            elsif(how == :index)
-                jssh_command += "   found = (attribute == #{what});"
-            else
-                jssh_command += "   found = (attribute == \"#{what}\");"
-            end
+#                 for i in 0..flags.length do
+#                     flag = flags[i, 1]
+#                     if(flag == '-')
+#                         break;
+#                     else
+#                         newRegExp << flag
+#                     end
+#                 end
+#                 #puts "old reg ex is #{what} new reg ex is #{newRegExp}"
+#                 jssh_command += "   var regExp = new RegExp(#{newRegExp});
+#                                     found = regExp.test(attribute);"
+#             elsif(how == :index)
+#                 jssh_command += "   found = (attribute == #{what});"
+#             else
+#                 jssh_command += "   found = (attribute == \"#{what}\");"
+#             end
+			
+   
             #jssh_command += "    found;"
             if(@container.class == FireWatir::Firefox || @container.class == Frame)
                 jssh_command += "   if(found)
@@ -437,14 +517,14 @@
                                             {
                                                 o = element;
                                                 element_name = \"elements_#{tag}[\" + i + \"]\";
-                                                break;
                                             }
+                                            else
+                                              break;
                                         }
                                         else
                                         {
                                             o = element;
                                             element_name = \"elements_#{tag}[\" + i + \"]\";
-                                            break;
                                         }
                                     }"
             else
@@ -456,23 +536,54 @@
                                             {
                                                 o = element;
                                                 element_name = \"elements_#{@@current_level}_#{tag}[\" + i + \"]\";
-                                                break;
                                             }
+                                            else
+                                              break;
                                         }
                                         else
                                         {
                                             o = element;
                                             element_name = \"elements_#{@@current_level}_#{tag}[\" + i + \"]\";
-                                            break;
                                         }
                                     }"
             end
-            jssh_command +="     }
+            
+            jssh_command += "
+                                    else {
+                                        o = null;
+                                        element_name = \"\";
+                                        break;
+                                    }
+                                 }
+                                 if(element_name != \"\")
+                                 {
+                                   if(target_index == object_index)
+                                   {
+                                     break;
+                                   }
+                                   else if(target_index < object_index)
+                                   {
+                                     element_name = \"\";
+                                     o = null;
+                                     break;
+                                   }
+                                   else
+                                   {
+                                     object_index += 1;
+                                     element_name = \"\";
+                                     o = null;
+                                   }
+                                 }
+                               }
                              }
                             element_name;"
+                            
             # Remove \n that are there in the string as a result of pressing enter while formatting.
             jssh_command.gsub!(/\n/, "")
             #puts jssh_command
+            #out = File.new("c:\\result.log", "w")
+            #out << jssh_command
+            #out.close
             jssh_socket.send("#{jssh_command};\n", 0)
             element_name = read_socket();
             #puts "element name in find control is : #{element_name}"
@@ -907,8 +1018,10 @@
         #
         def exists?
             #puts "element is : #{element_object}"
+            #puts caller(0)
             # If elements array has changed locate the element again. So that the element name points to correct element.
             if(element_object == nil || element_object == "")
+                @@current_level = 0
                 #puts "locating element"
                 locate if defined?(locate)
                 if(@element_name == nil || @element_name == "")
@@ -922,12 +1035,12 @@
                 #puts "not locating the element again"
                 return true
             end
-            @@current_level = 0
-            if(element_object == nil || element_object == "")
-                return false
-            else
-                return true
-            end
+            #@@current_level = 0
+            #if(element_object == nil || element_object == "")
+            #    return false
+            #else
+            #    return true
+            #end
         end
         alias exist? exists?
 
