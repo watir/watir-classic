@@ -127,6 +127,7 @@ Contributors:
    Paul Taylor - Bug fix 194
    Vincent Xu - Chinese input support
    Tomislav Car - Filefield fix (210)
+   Michael Hwee & Aidy Lewis - Multiple attribute support for FireWatir (233)
 
 Acknowledgements:
    Chris Morris
