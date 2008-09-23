@@ -10,6 +10,8 @@
 #
 =end
 
+module FireWatir
+
 #
 # Description:
 #   Class for Frame element.
@@ -2407,3 +2409,4 @@ end
   end
 
 
+end

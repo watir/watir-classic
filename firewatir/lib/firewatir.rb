@@ -826,7 +826,7 @@ module FireWatir
             end
             
             #puts firewatir_class # DEBUG
-            klass = Kernel.const_get(firewatir_class)
+            klass = FireWatir.const_get(firewatir_class)
 
             if klass == Element
                 klass.new(element_name,self)
