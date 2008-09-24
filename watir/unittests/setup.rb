@@ -1,9 +1,12 @@
 $SETUP_LOADED = true
+
 $myDir = File.expand_path(File.dirname(__FILE__))
+$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
+$htmlRoot =  "file:///#{$myDir}/html/" 
 
 require 'unittests/setup/options'
 
-# use local development versions of firewatir, watir-common if available
+# use local development versions of watir, firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
 libs = []
 libs << File.join(topdir, 'lib')
@@ -11,33 +14,10 @@ libs << File.join(topdir, '..', 'firewatir', 'lib')
 libs << File.join(topdir, '..', 'watir-common', 'lib')
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
-# libraries used by feature tests
-require 'watir'
-
-
-
-Watir::UnitTest.options = Watir::UnitTest::Options.new.execute
-
-# move this to execute?
-case Watir::UnitTest.options[:browser]
-when 'ie'
-  # this line must execute before loading test/unit, otherwise IE will close *before* the tests run.
-  at_exit {$ie.close if $ie && $ie.exists?; Watir::IE.quit} # close ie at completion of the tests
-  $ie = Watir::IE.new
-  $ie.speed = Watir::UnitTest.options[:speed].to_sym
-  $browser = $ie
-when 'firefox'
-  require 'firewatir'
-  at_exit {$browser.close if $browser}
-  $browser = FireWatir::Firefox.new
-end
-
-require 'test/unit'
+require 'unittests/setup/browser'
 require 'watir/testcase'
 require 'unittests/setup/filter'
 require 'unittests/setup/watir-unittest'
-
-
 
 # Standard Tags
 # :must_be_visible
@@ -72,8 +52,3 @@ $window_tests =
      'send_keys', # visible
     ].collect {|x| "unittests/windows/#{x}_test.rb"}
 
-$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
-# if you run the unit tests from a local file system use this line
-$htmlRoot =  "file:///#{$myDir}/html/" 
-# if you run the unit tests from a web server use this line
-#   $htmlRoot =  "http://localhost:8080/watir/html/"

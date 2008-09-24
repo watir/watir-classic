@@ -16,8 +16,6 @@ module Watir
       end
       def execute 
         @user_choices[:browser].downcase!
-        speed = @user_choices[:speed].to_sym
-        Watir::IE.speed = speed
         @user_choices
       end 
     end

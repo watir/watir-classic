@@ -3,7 +3,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'unittests/buttons_test.rb'
+#require 'unittests/buttons_test.rb'
 
 class TC_Defer < Test::Unit::TestCase
   def teardown
