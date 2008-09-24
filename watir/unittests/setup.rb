@@ -25,7 +25,6 @@ Test Suites
 * window_tests -- window intensive tests
 =end
 
-topdir = File.join(File.dirname(__FILE__), '..')
 commondir = File.join(topdir, '..', 'watir-common')
 Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
