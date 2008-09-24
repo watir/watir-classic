@@ -12,6 +12,8 @@ libs = []
 libs << File.join(topdir, 'lib')
 libs << File.join(topdir, '..', 'firewatir', 'lib')
 libs << File.join(topdir, '..', 'watir-common', 'lib')
+libs << File.join(topdir, '..', 'watir-common') # for the unit tests
+
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
 require 'unittests/setup/browser'
@@ -31,8 +33,12 @@ Test Suites
 =end
 
 topdir = File.join(File.dirname(__FILE__), '..')
+commondir = File.join(topdir, '..', 'watir-common')
 Dir.chdir topdir do
   $all_tests = Dir["unittests/*_test.rb"]
+end
+Dir.chdir commondir do
+  $all_tests += Dir["unittests/*_test.rb"]
 end
 
 # not in all tests!
