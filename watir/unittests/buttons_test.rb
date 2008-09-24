@@ -85,8 +85,7 @@ class TC_Button_Frame < Test::Unit::TestCase
     goto_page "frame_buttons.html"
     assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)
   end
-  
-  tag_method :test_error_in_frame, :firewatir_bug
+
   def test_error_in_frame
     goto_page "frame_buttons.html"
     # frame must be specified
