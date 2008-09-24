@@ -1,6 +1,7 @@
 $SETUP_LOADED = true
 
 $myDir = File.expand_path(File.dirname(__FILE__))
+$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 
 topdir = File.join(File.dirname(__FILE__), '..')
 libs = []
@@ -13,12 +14,8 @@ libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 require 'firewatir'
 END {$ff.close if $ff} # close ff at completion of the tests
 
-require 'test/unit'
-require 'test/unit/ui/console/testrunner'
 require 'firewatir/testUnitAddons'
 require 'unittests/iostring'
-
-$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 
 require 'unittests/setup/options'
 require 'unittests/setup/filter'
