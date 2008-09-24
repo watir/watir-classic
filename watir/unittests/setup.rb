@@ -1,8 +1,6 @@
 $SETUP_LOADED = true
 
 $myDir = File.expand_path(File.dirname(__FILE__))
-$myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
-$htmlRoot =  "file:///#{$myDir}/html/" 
 
 # use local development versions of watir, firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
@@ -14,12 +12,7 @@ libs << File.join(topdir, '..', 'watir-common') # for the unit tests
 
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
-require 'unittests/setup/options'
-
-require 'unittests/setup/browser'
-require 'watir/testcase'
-require 'unittests/setup/filter'
-require 'unittests/setup/watir-unittest'
+require 'unittests/setup/lib'
 
 # Standard Tags
 # :must_be_visible

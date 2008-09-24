@@ -1,3 +1,4 @@
+$htmlRoot =  "file:///#{$myDir}/html/" 
 
 module Watir::UnitTest
   # navigate the browser to the specified page in unittests/html
