@@ -138,7 +138,7 @@ module FireWatir
     # Output:
     #   Table object.
     #
-    def table(how, what)
+    def table(how, what=nil)
         locate if defined?(locate)
         Table.new(self, how, what)
     end
@@ -336,7 +336,7 @@ module FireWatir
     # Output:
     #   Hidden object.
     #
-    def hidden(how, what)
+    def hidden(how, what=nil)
         locate if defined?(locate)
         return Hidden.new(self, how, what)
     end
@@ -375,7 +375,7 @@ module FireWatir
     # Output:
     #   Select List object.
     #
-    def select_list(how, what) 
+    def select_list(how, what=nil) 
         locate if defined?(locate)
         return SelectList.new(self, how, what)
     end
@@ -512,7 +512,7 @@ module FireWatir
     # Output:
     #   Link object.
     #
-    def link(how, what) 
+    def link(how, what=nil) 
         locate if defined?(locate)
         return Link.new(self, how, what)
     end
@@ -596,7 +596,7 @@ module FireWatir
     # Output:
     #   Div object.
     #
-    def div(how, what)
+    def div(how, what=nil)
         locate if defined?(locate)
         return Div.new(self, how, what)
     end
@@ -636,7 +636,7 @@ module FireWatir
     # Output:
     #    Span Object
     #   
-    def span(how, what)
+    def span(how, what=nil)
         locate if defined?(locate)
         return Span.new(self, how, what)
     end
@@ -678,7 +678,7 @@ module FireWatir
     # Output:
     # 	Paragraph object.
     #
-    def p(how, what)
+    def p(how, what=nil)
         locate if defined?(locate)
         return P.new(self, how, what)
     end
@@ -718,7 +718,7 @@ module FireWatir
     # Output:
     # 	Pre object.
     #
-    def pre(how, what)
+    def pre(how, what=nil)
         locate if defined?(locate)
         return Pre.new(self, how, what)
     end
@@ -758,7 +758,7 @@ module FireWatir
     # Output:
     #	Label object
     #
-    def label(how, what)
+    def label(how, what=nil)
         locate if defined?(locate)
         return Label.new(self, how, what)
     end
