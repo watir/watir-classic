@@ -149,3 +149,18 @@ module Watir
   end # class Form
   
 end
+
+module Watir
+  class Forms < ElementCollections
+    def element_class; Form; end
+    def element_tag; 'FORM'; end
+    def length;
+@container.document.getElementsByTagName("FORM").length; end
+  end
+
+  module Container
+    def forms
+      Forms.new(self)
+    end
+  end
+end
