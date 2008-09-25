@@ -3,4 +3,5 @@ Manifest.txt
 README.txt
 Rakefile
 lib/watir-common.rb
-test/test_watir-common.rb
+lib/watir/exceptions.rb
+lib/watir/matches.rb
