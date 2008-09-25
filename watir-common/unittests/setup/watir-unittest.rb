@@ -3,12 +3,12 @@ $htmlRoot =  "file:///#{$myDir}/html/"
 module Watir::UnitTest
   # navigate the browser to the specified page in unittests/html
   def goto_page page
-    new_url = $htmlRoot + page
+    new_url = self.class.html_root + page
     browser.goto new_url
   end
   # navigate the browser to the specified page in unittests/html IF the browser is not already on that page.
   def uses_page page
-    new_url = $htmlRoot + page
+    new_url = self.class.html_root + page
     browser.goto new_url unless browser.url == new_url
   end
   def browser
@@ -47,4 +47,10 @@ class Test::Unit::TestCase
     self.class.tags.include?(tag) ||
     self.class.method_tags[@method_name].include?(tag)
   end
+
+  def self.html_root
+    return "file:///#{File.expand_path @html_dir}/" if @html_dir
+    $htmlRoot
+  end
+
 end

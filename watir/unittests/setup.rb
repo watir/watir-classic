@@ -26,8 +26,9 @@ Test Suites
 =end
 
 commondir = File.join(topdir, '..', 'watir-common')
+$all_tests = []
 Dir.chdir topdir do
-  $all_tests = Dir["unittests/*_test.rb"]
+  $all_tests += Dir["unittests/*_test.rb"]
 end
 Dir.chdir commondir do
   $all_tests += Dir["unittests/*_test.rb"]
