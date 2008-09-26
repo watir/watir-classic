@@ -8,7 +8,7 @@ class TC_CheckBox < Test::Unit::TestCase
     include FireWatir
 
     def setup()
-        $ff.goto($htmlRoot + "checkboxes1.html")
+        goto_page("checkboxes1.html")
     end
     
     def test_checkbox_properties

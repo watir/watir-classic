@@ -8,11 +8,11 @@ class TC_Redirect < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "redirect.html")
+    goto_page("redirect.html")
   end
   
   def goto_multiple_redirect
-    $ff.goto($htmlRoot + "redirect1.html")
+    goto_page("redirect1.html")
   end
 
   def test_single_redirect

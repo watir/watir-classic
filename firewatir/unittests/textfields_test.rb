@@ -8,7 +8,7 @@ class TC_Fields < Test::Unit::TestCase
     include FireWatir
     
     def setup
-        $ff.goto($htmlRoot + "textfields1.html")
+        goto_page("textfields1.html")
     end
     
     def test_text_field_exists
@@ -208,7 +208,7 @@ class TC_Labels_Display < Test::Unit::TestCase
   include MockStdoutTestCase
 
   def test_showLabels
-    $ff.goto($htmlRoot + "textfields1.html")
+    goto_page("textfields1.html")
     $stdout = @mockout
     $ff.showLabels
     assert_equal(<<END_OF_MESSAGE, @mockout)

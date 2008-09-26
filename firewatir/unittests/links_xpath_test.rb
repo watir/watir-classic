@@ -8,7 +8,7 @@ class TC_Links_XPath < Test::Unit::TestCase
     include FireWatir
 
     def setup()
-        $ff.goto($htmlRoot + "links1.html")
+        goto_page("links1.html")
     end
     
     def xtest_new_link_exists

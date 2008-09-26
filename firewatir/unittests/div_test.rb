@@ -8,7 +8,7 @@ class TC_Divs < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "div.html")
+    goto_page("div.html")
   end
   
   def test_divs
@@ -194,7 +194,7 @@ class TC_Divs_Display < Test::Unit::TestCase
   include MockStdoutTestCase
 
   def test_showDivs
-    $ff.goto($htmlRoot + "div.html")
+    goto_page("div.html")
     $stdout = @mockout
     $ff.showDivs
     assert_equal(<<END_OF_MESSAGE, @mockout)
@@ -236,7 +236,7 @@ class TC_Spans_Display < Test::Unit::TestCase
   include MockStdoutTestCase
 
   def test_showSpans
-    $ff.goto($htmlRoot + "div.html")
+    goto_page("div.html")
     $stdout = @mockout
     $ff.showSpans
     assert_equal(<<END_OF_MESSAGE, @mockout)

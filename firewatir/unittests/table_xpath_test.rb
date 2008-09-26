@@ -8,7 +8,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "table1.html")
+    goto_page("table1.html")
   end
   
   def test_Table_Exists

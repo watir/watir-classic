@@ -8,7 +8,7 @@ class TC_FileField < Test::Unit::TestCase
     include FireWatir
 
   def gotoPage()
-	$ff.goto($htmlRoot + "fileupload.html")
+	goto_page("fileupload.html")
   end
 
   def test_fileField_Exists

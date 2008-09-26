@@ -8,7 +8,7 @@ class TC_SelectList < Test::Unit::TestCase
     include FireWatir
     
     def setup()
-        $ff.goto($htmlRoot + "selectboxes1.html")
+        goto_page("selectboxes1.html")
     end
     
     def test_textBox_Exists
@@ -127,7 +127,7 @@ class TC_Select_Options < Test::Unit::TestCase
     include FireWatir
    
     def setup()
-        $ff.goto($htmlRoot + "select_tealeaf.html")
+        goto_page("select_tealeaf.html")
     end
    
     def test_options_text

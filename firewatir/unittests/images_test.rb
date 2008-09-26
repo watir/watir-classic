@@ -10,7 +10,7 @@ class TC_Images < Test::Unit::TestCase
     include FireWatir
     
     def setup
-        $ff.goto($htmlRoot + "images1.html")
+        goto_page("images1.html")
         @saved_img_path = build_path("sample.img.dat");
         clean_saved_image
     end
@@ -169,7 +169,7 @@ class TC_Images_Display < Test::Unit::TestCase
   include MockStdoutTestCase
 
   def test_showImages
-    $ff.goto($htmlRoot + "images1.html")
+    goto_page("images1.html")
     $stdout = @mockout
     $ff.showImages
     assert_equal(<<END_OF_MESSAGE, @mockout)

@@ -8,7 +8,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
     include FireWatir
 
     def setup()
-        $ff.goto($htmlRoot + "selectboxes1.html")
+        goto_page("selectboxes1.html")
     end
 
     def test_textBox_Exists

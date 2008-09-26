@@ -8,7 +8,7 @@ class TC_Pre < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "pre.html")
+    goto_page("pre.html")
   end
   
   def test_Pre_Count
@@ -55,7 +55,7 @@ class TC_Pres_Display < Test::Unit::TestCase
   include MockStdoutTestCase
 
   def test_showPres
-    $ff.goto($htmlRoot + "pre.html")
+    goto_page("pre.html")
     $stdout = @mockout
     $ff.showPres
     assert_equal(<<END_OF_MESSAGE, @mockout)

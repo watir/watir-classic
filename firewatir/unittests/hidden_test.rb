@@ -6,7 +6,7 @@ require 'unittests/setup'
 
 class TC_Hidden_Fields < Test::Unit::TestCase
     def setup
-        $ff.goto($htmlRoot + "forms3.html")
+        goto_page("forms3.html")
     end
     
     def test_hidden

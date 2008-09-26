@@ -8,7 +8,7 @@ class TC_NewWindow < Test::Unit::TestCase
     include FireWatir
 
     def setup
-      $ff.goto($htmlRoot + "new_browser.html")
+      goto_page("new_browser.html")
     end
 
     def test_simply_attach_to_new_window_using_title

@@ -61,7 +61,7 @@ class TC_JavaScript_Test < Test::Unit::TestCase
     end
 
     def test_ok_selectbox
-        $ff.goto($htmlRoot + "selectboxes1.html")
+        goto_page("selectboxes1.html")
         $ff.startClicker("ok")
         $ff.select_list(:id , "selectbox_5").select_value(/2/)
 

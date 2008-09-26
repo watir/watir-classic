@@ -8,7 +8,7 @@ class TC_Fields_XPath < Test::Unit::TestCase
     include FireWatir
 
     def setup()
-        $ff.goto($htmlRoot + "textfields1.html")
+        goto_page("textfields1.html")
     end
 
     def test_text_field_exists

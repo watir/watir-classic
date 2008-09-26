@@ -8,7 +8,7 @@ class TC_Frames < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "frame_buttons.html")
+    goto_page("frame_buttons.html")
   end
   
   def test_frame_no_what
@@ -57,7 +57,7 @@ class TC_Frames2 < Test::Unit::TestCase
   include FireWatir
  
   def setup
-    $ff.goto($htmlRoot + "frame_multi.html")
+    goto_page("frame_multi.html")
   end
   
   def test_frame_with_no_name
@@ -75,7 +75,7 @@ class TC_NestedFrames < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "nestedFrames.html")
+    goto_page("nestedFrames.html")
   end
   
   def test_frame
@@ -93,7 +93,7 @@ class TC_IFrames < Test::Unit::TestCase
   include FireWatir
   
   def setup
-    $ff.goto($htmlRoot + "iframeTest.html")
+    goto_page("iframeTest.html")
   end
   
   def test_Iframe
@@ -111,7 +111,7 @@ class TC_show_frames < Test::Unit::TestCase
   include MockStdoutTestCase                
  
   def capture_and_compare(page, expected)
-    $ff.goto($htmlRoot + page)
+    goto_page(page)
     $stdout = @mockout
     $ff.showFrames
     assert_equal(expected, @mockout)

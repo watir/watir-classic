@@ -8,7 +8,7 @@ class TC_Radios < Test::Unit::TestCase
     include FireWatir
 
     def setup()
-        $ff.goto($htmlRoot + "radioButtons1.html")
+        goto_page("radioButtons1.html")
     end
     
     def test_Radio_Exists
