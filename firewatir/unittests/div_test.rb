@@ -12,180 +12,180 @@ class TC_Divs < Test::Unit::TestCase
   end
   
   def test_divs
-    assert_raises(UnknownObjectException) {$ff.div(:id , "div77").click }
-    assert_raises(UnknownObjectException) {$ff.div(:title , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:id , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:title , "div77").click }
     
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
-    $ff.div(:id , "div3").click
-    assert($ff.text_field(:name, "text1").verify_contains("1") )  
-    $ff.div(:id , "div4").click
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
+    browser.div(:id , "div3").click
+    assert(browser.text_field(:name, "text1").verify_contains("1") )  
+    browser.div(:id , "div4").click
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
   end
   
   def test_show_all_objects
-    assert_equal(36, $ff.show_all_objects.length)
-    assert_equal(3,$ff.div(:id,"text_fields1").show_all_objects.length)
+    assert_equal(36, browser.show_all_objects.length)
+    assert_equal(3,browser.div(:id,"text_fields1").show_all_objects.length)
    
-    assert_equal(8,$ff.text_fields.length)
-    assert_equal(3,$ff.div(:id,"text_fields1").text_fields.length)
+    assert_equal(8,browser.text_fields.length)
+    assert_equal(3,browser.div(:id,"text_fields1").text_fields.length)
   end
   
   def test_div_properties
-    assert_raises(UnknownObjectException) {$ff.div(:id , "div77").text }
-    assert_raises(UnknownObjectException) {$ff.div(:title , "div77").text }
+    assert_raises(UnknownObjectException) {browser.div(:id , "div77").text }
+    assert_raises(UnknownObjectException) {browser.div(:title , "div77").text }
     
-    assert_equal("This div has an onClick that increments text1", $ff.div(:id , "div3").text.strip )
-    assert_equal("This text is in a div with an id of div1 and title of test1",$ff.div(:title , "Test1").text.strip )
+    assert_equal("This div has an onClick that increments text1", browser.div(:id , "div3").text.strip )
+    assert_equal("This text is in a div with an id of div1 and title of test1",browser.div(:title , "Test1").text.strip )
     
-    assert_raises(UnknownObjectException) {$ff.div(:id , "div77").class_name }
-    assert_equal("blueText" ,   $ff.div(:id , "div2").class_name )
-    assert_equal("" ,   $ff.div(:id , "div1").class_name )
+    assert_raises(UnknownObjectException) {browser.div(:id , "div77").class_name }
+    assert_equal("blueText" ,   browser.div(:id , "div2").class_name )
+    assert_equal("" ,   browser.div(:id , "div1").class_name )
     
-    assert_raises(UnknownObjectException) {$ff.div(:index , 44).class_name }
-    assert_equal("div1" ,      $ff.div(:index , 1).id )
-    assert_equal("" ,          $ff.div(:index , 1).class_name )
-    assert_equal("blueText" ,  $ff.div(:index , 2).class_name )
-    assert_equal(""    ,       $ff.div(:index , 2).value)
-    #assert_equal(false ,       $ff.div(:index , 2).disabled)
-    assert_equal(""    ,       $ff.div(:index , 2).name)
-    assert_equal("div2",       $ff.div(:index , 2).id)
-    #puts  $ff.div(:id,"text_fields1").to_s
+    assert_raises(UnknownObjectException) {browser.div(:index , 44).class_name }
+    assert_equal("div1" ,      browser.div(:index , 1).id )
+    assert_equal("" ,          browser.div(:index , 1).class_name )
+    assert_equal("blueText" ,  browser.div(:index , 2).class_name )
+    assert_equal(""    ,       browser.div(:index , 2).value)
+    #assert_equal(false ,       browser.div(:index , 2).disabled)
+    assert_equal(""    ,       browser.div(:index , 2).name)
+    assert_equal("div2",       browser.div(:index , 2).id)
+    #puts  browser.div(:id,"text_fields1").to_s
   end
   
   def test_div_iterator
-    assert_equal( 7 , $ff.divs.length)
-    assert_equal( "div1" , $ff.divs[1].id )
+    assert_equal( 7 , browser.divs.length)
+    assert_equal( "div1" , browser.divs[1].id )
     
     index =1
-    $ff.divs.each do |s|
+    browser.divs.each do |s|
       # puts "each - div= " + s.to_s
-      assert_equal($ff.div(:index, index ).name , s.name )
-      assert_equal($ff.div(:index, index ).id , s.id )
-      assert_equal($ff.div(:index, index ).class_name , s.class_name )
+      assert_equal(browser.div(:index, index ).name , s.name )
+      assert_equal(browser.div(:index, index ).id , s.id )
+      assert_equal(browser.div(:index, index ).class_name , s.class_name )
       index +=1
     end
-    assert_equal(index-1, $ff.divs.length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index-1, browser.divs.length)   # -1 as we add 1 at the end of the loop
   end
   
   def test_objects_in_div
-    assert($ff.div(:id, 'buttons1').button(:index,1).exists? )
-    assert(!$ff.div(:id, 'buttons1').button(:index,3).exists? )
-    assert($ff.div(:id, 'buttons1').button(:name,'b1').exists? )
-    $ff.div(:id, 'buttons1').button(:name,'b1').click
+    assert(browser.div(:id, 'buttons1').button(:index,1).exists? )
+    assert(!browser.div(:id, 'buttons1').button(:index,3).exists? )
+    assert(browser.div(:id, 'buttons1').button(:name,'b1').exists? )
+    browser.div(:id, 'buttons1').button(:name,'b1').click
     
-    assert($ff.div(:id, 'buttons2').button(:index,1).exists? )
-    assert($ff.div(:id, 'buttons2').button(:index,2).exists? )
-    assert(!$ff.div(:id, 'buttons1').button(:index,3).exists? )
+    assert(browser.div(:id, 'buttons2').button(:index,1).exists? )
+    assert(browser.div(:id, 'buttons2').button(:index,2).exists? )
+    assert(!browser.div(:id, 'buttons1').button(:index,3).exists? )
     
-    $ff.div(:id, 'buttons1').button(:index,1).click
+    browser.div(:id, 'buttons1').button(:index,1).click
     
-    assert_equal( 'button1' ,   $ff.div(:id , 'text_fields1').text_field(:index,1).value)
+    assert_equal( 'button1' ,   browser.div(:id , 'text_fields1').text_field(:index,1).value)
     
-    #assert_equal( 3 , $ff.div(:id , 'text_fields1').text_fields.length )
-   $ff.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
-   assert_equal("drink me", $ff.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
+    #assert_equal( 3 , browser.div(:id , 'text_fields1').text_fields.length )
+   browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
+   assert_equal("drink me", browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
  end
   
   #---- Span Tests ---
   def test_spans
-    assert_raises(UnknownObjectException) {$ff.span(:id , "span77").click }
-    assert_raises(UnknownObjectException) {$ff.span(:title , "span77").click }
+    assert_raises(UnknownObjectException) {browser.span(:id , "span77").click }
+    assert_raises(UnknownObjectException) {browser.span(:title , "span77").click }
     
-    assert($ff.text_field(:name, "text2").verify_contains("0") )  
-    $ff.span(:id , "span3").click
-    assert($ff.text_field(:name, "text2").verify_contains("1") )  
+    assert(browser.text_field(:name, "text2").verify_contains("0") )  
+    browser.span(:id , "span3").click
+    assert(browser.text_field(:name, "text2").verify_contains("1") )  
     
-    $ff.span(:id , "span4").click
-    assert($ff.text_field(:name, "text2").verify_contains("0") )  
+    browser.span(:id , "span4").click
+    assert(browser.text_field(:name, "text2").verify_contains("0") )  
     
-    #puts $ff.span(:id,"text_fields1").to_s
+    #puts browser.span(:id,"text_fields1").to_s
   end
   
   def test_span_properties
-    assert_raises(UnknownObjectException) {$ff.span(:id , "span77").text }
-    assert_raises(UnknownObjectException) {$ff.span(:title , "span77").text }
+    assert_raises(UnknownObjectException) {browser.span(:id , "span77").text }
+    assert_raises(UnknownObjectException) {browser.span(:title , "span77").text }
     
-    assert_equal("This span has an onClick that increments text2" ,   $ff.span(:id , "span3").text.strip )
-    assert_equal("This text is in a span with an id of span1 and title of test2" ,   $ff.span(:title , "Test2").text.strip )
+    assert_equal("This span has an onClick that increments text2" ,   browser.span(:id , "span3").text.strip )
+    assert_equal("This text is in a span with an id of span1 and title of test2" ,   browser.span(:title , "Test2").text.strip )
     
-    assert_raises(UnknownObjectException) {$ff.span(:id , "span77").class_name }
-    assert_equal("blueText" ,   $ff.span(:id , "span2").class_name )
-    assert_equal("" ,   $ff.span(:id , "span1").class_name )
+    assert_raises(UnknownObjectException) {browser.span(:id , "span77").class_name }
+    assert_equal("blueText" ,   browser.span(:id , "span2").class_name )
+    assert_equal("" ,   browser.span(:id , "span1").class_name )
     
-    assert_raises(UnknownObjectException) {$ff.span(:index , 44).class_name }
-    assert_equal("span1" ,     $ff.span(:index , 1).id )
-    assert_equal("" ,          $ff.span(:index , 1).class_name )
-    assert_equal("blueText" ,  $ff.span(:index , 2).class_name )
-    assert_equal(""    ,       $ff.span(:index , 2).value)
-    #assert_equal(false ,       $ff.span(:index , 2).disabled)
-    assert_equal(""    ,       $ff.span(:index , 2).name)
-    assert_equal("span2",      $ff.span(:index , 2).id)
+    assert_raises(UnknownObjectException) {browser.span(:index , 44).class_name }
+    assert_equal("span1" ,     browser.span(:index , 1).id )
+    assert_equal("" ,          browser.span(:index , 1).class_name )
+    assert_equal("blueText" ,  browser.span(:index , 2).class_name )
+    assert_equal(""    ,       browser.span(:index , 2).value)
+    #assert_equal(false ,       browser.span(:index , 2).disabled)
+    assert_equal(""    ,       browser.span(:index , 2).name)
+    assert_equal("span2",      browser.span(:index , 2).id)
   end
   
   def test_span_iterator
-    assert_equal(7, $ff.spans.length)
-    assert_equal("span1", $ff.spans[1].id)
+    assert_equal(7, browser.spans.length)
+    assert_equal("span1", browser.spans[1].id)
     
     index = 1
-    $ff.spans.each do |s|
+    browser.spans.each do |s|
       # puts "each - span = " + s.to_s
-      assert_equal($ff.span(:index, index ).name , s.name )
-      assert_equal($ff.span(:index, index ).id , s.id )
-      assert_equal($ff.span(:index, index ).class_name , s.class_name )
+      assert_equal(browser.span(:index, index ).name , s.name )
+      assert_equal(browser.span(:index, index ).id , s.id )
+      assert_equal(browser.span(:index, index ).class_name , s.class_name )
       index += 1
     end
-    assert_equal(index - 1, $ff.spans.length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index - 1, browser.spans.length)   # -1 as we add 1 at the end of the loop
   end
   
   def test_objects_in_span
-    assert($ff.span(:id, 'buttons1').button(:index,1).exists? )
-    assert(!$ff.span(:id, 'buttons1').button(:index,3).exists? )
-    assert($ff.span(:id, 'buttons1').button(:name,'b1').exists? )
+    assert(browser.span(:id, 'buttons1').button(:index,1).exists? )
+    assert(!browser.span(:id, 'buttons1').button(:index,3).exists? )
+    assert(browser.span(:id, 'buttons1').button(:name,'b1').exists? )
     
-    assert($ff.span(:id, 'buttons2').button(:index,1).exists? )
-    assert($ff.span(:id, 'buttons2').button(:index,2).exists? )
-    assert(!$ff.span(:id, 'buttons1').button(:index,3).exists? )
+    assert(browser.span(:id, 'buttons2').button(:index,1).exists? )
+    assert(browser.span(:id, 'buttons2').button(:index,2).exists? )
+    assert(!browser.span(:id, 'buttons1').button(:index,3).exists? )
     
-    $ff.span(:id, 'buttons1').button(:index,1).click
+    browser.span(:id, 'buttons1').button(:index,1).click
     
-    assert_equal( 'button1' ,   $ff.span(:id , 'text_fields1').text_field(:index,1).value)
-    $ff.span(:id , 'text_fields1').text_field(:index,1).set('text box inside span')
-    assert_equal( 'text box inside span' ,   $ff.span(:id , 'text_fields1').text_field(:index,1).value)
+    assert_equal( 'button1' ,   browser.span(:id , 'text_fields1').text_field(:index,1).value)
+    browser.span(:id , 'text_fields1').text_field(:index,1).set('text box inside span')
+    assert_equal( 'text box inside span' ,   browser.span(:id , 'text_fields1').text_field(:index,1).value)
    
-    #assert_equal( 3 , $ff.span(:id , 'text_fields1').text_fields.length )
+    #assert_equal( 3 , browser.span(:id , 'text_fields1').text_fields.length )
   end
   
   def test_p
-    assert($ff.p(:id, 'number1').exists?)
-    assert($ff.p(:index, 3).exists?)
-    assert($ff.p(:title, 'test_3').exists?)
+    assert(browser.p(:id, 'number1').exists?)
+    assert(browser.p(:index, 3).exists?)
+    assert(browser.p(:title, 'test_3').exists?)
     
-    assert(!$ff.p(:id, 'missing').exists?)
-    assert(!$ff.p(:index, 8).exists?)
-    assert(!$ff.p(:title, 'test_55').exists?)
+    assert(!browser.p(:id, 'missing').exists?)
+    assert(!browser.p(:index, 8).exists?)
+    assert(!browser.p(:title, 'test_55').exists?)
     
-    assert_raises( UnknownObjectException) {$ff.p(:id , 'missing').class_name }
-    assert_raises( UnknownObjectException) {$ff.p(:id , 'missing').text }
-    assert_raises( UnknownObjectException) {$ff.p(:id , 'missing').title }
-    assert_raises( UnknownObjectException) {$ff.p(:id , 'missing').to_s }
-    assert_raises( UnknownObjectException) {$ff.p(:id , 'missing').disabled }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').class_name }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').text }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').title }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').to_s }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').disabled }
     
-    assert_equal(  'redText' , $ff.p(:index,1).class_name)
-    assert_equal(  'P_tag_1' , $ff.p(:index,1).title)
-    assert_equal(  'This text is in a p with an id of number2' , $ff.p(:index,2).text)
+    assert_equal(  'redText' , browser.p(:index,1).class_name)
+    assert_equal(  'P_tag_1' , browser.p(:index,1).title)
+    assert_equal(  'This text is in a p with an id of number2' , browser.p(:index,2).text)
   end
   
   def test_p_iterator
-    assert_equal( 3, $ff.ps.length)
-    assert_equal( 'italicText', $ff.ps[2].class_name)
-    assert_equal( 'number3', $ff.ps[3].id)
+    assert_equal( 3, browser.ps.length)
+    assert_equal( 'italicText', browser.ps[2].class_name)
+    assert_equal( 'number3', browser.ps[3].id)
     
     count=1
-    $ff.ps.each do |p|
+    browser.ps.each do |p|
       assert_equal('number'+count.to_s , p.id)
       count+=1
     end
-    assert_equal( count-1 ,  $ff.ps.length)
+    assert_equal( count-1 ,  browser.ps.length)
   end
 end
 
@@ -196,7 +196,7 @@ class TC_Divs_Display < Test::Unit::TestCase
   def test_showDivs
     goto_page("div.html")
     $stdout = @mockout
-    $ff.showDivs
+    browser.showDivs
     assert_equal(<<END_OF_MESSAGE, @mockout)
 There are 7 divs
 div:   name: 
@@ -238,7 +238,7 @@ class TC_Spans_Display < Test::Unit::TestCase
   def test_showSpans
     goto_page("div.html")
     $stdout = @mockout
-    $ff.showSpans
+    browser.showSpans
     assert_equal(<<END_OF_MESSAGE, @mockout)
 There are 7 spans
 span:  name: 

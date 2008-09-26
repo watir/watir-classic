@@ -16,25 +16,25 @@ class TC_Redirect < Test::Unit::TestCase
   end
 
   def test_single_redirect
-    assert_raises(UnknownObjectException) {$ff.div(:id , "div77").click }
-    assert_raises(UnknownObjectException) {$ff.div(:title , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:id , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:title , "div77").click }
     
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
-    $ff.div(:id , "div3").click
-    assert($ff.text_field(:name, "text1").verify_contains("1") )  
-    $ff.div(:id , "div4").click
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
+    browser.div(:id , "div3").click
+    assert(browser.text_field(:name, "text1").verify_contains("1") )  
+    browser.div(:id , "div4").click
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
   end
   
   def test_multiple_redirect
     goto_multiple_redirect()
-    assert_raises(UnknownObjectException) {$ff.div(:id , "div77").click }
-    assert_raises(UnknownObjectException) {$ff.div(:title , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:id , "div77").click }
+    assert_raises(UnknownObjectException) {browser.div(:title , "div77").click }
     
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
-    $ff.div(:id , "div3").click
-    assert($ff.text_field(:name, "text1").verify_contains("1") )  
-    $ff.div(:id , "div4").click
-    assert($ff.text_field(:name, "text1").verify_contains("0") )  
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
+    browser.div(:id , "div3").click
+    assert(browser.text_field(:name, "text1").verify_contains("1") )  
+    browser.div(:id , "div4").click
+    assert(browser.text_field(:name, "text1").verify_contains("0") )  
   end
 end

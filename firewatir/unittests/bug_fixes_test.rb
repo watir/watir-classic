@@ -9,7 +9,7 @@ class TC_Bugs< Test::Unit::TestCase
     end
   
     def test_frame_objects_bug3
-        frame = $ff.frame("buttonFrame")
+        frame = browser.frame("buttonFrame")
         button = frame.button(:name, "b1")
         assert_equal("buttonFrame", frame.name)
         assert_equal("b2", button.id)
@@ -20,7 +20,7 @@ class TC_Bugs< Test::Unit::TestCase
         
     def test_link_object_bug9
         goto_page("links1.html")
-        link =  $ff.link(:text, "nameDelet")
+        link =  browser.link(:text, "nameDelet")
         assert_equal("test_link", link.name)
     end
 
@@ -31,7 +31,7 @@ class TC_Bugs< Test::Unit::TestCase
     # and so on. TODO write tests for all classes
     def test_element_by_xpath_bug01
       goto_page("div.html")
-      element = $ff.element_by_xpath("//div[@id='div1']")
+      element = browser.element_by_xpath("//div[@id='div1']")
       assert_not_nil(element) # helder
       # next assert always breaks, dunno why (error, not failure)
       #assert_instance_of(Div, element, "wrong constructor was used")
@@ -42,7 +42,7 @@ class TC_Bugs< Test::Unit::TestCase
     
     def test_elements_by_xpath_bug10
         goto_page("links1.html")
-        elements = $ff.elements_by_xpath("//a")
+        elements = browser.elements_by_xpath("//a")
         assert_equal(11, elements.length)
         assert_equal("links2.html", elements[0].href)
         assert_equal("link_class_1", elements[1].className)
@@ -52,90 +52,90 @@ class TC_Bugs< Test::Unit::TestCase
 
     def test_button_by_value_bug8
         goto_page("buttons1.html")
-        assert_equal("Sign In", $ff.button(:value,"Sign In").value)
+        assert_equal("Sign In", browser.button(:value,"Sign In").value)
     end
        
     def test_html_bug7
         goto_page("links1.html")
-        html = $ff.html
+        html = browser.html
         assert_match(/.*<a id="linktos" *>*/,html)
     end
 
     def test_span_onclick_bug14
         goto_page("div.html")
-        $ff.span(:id, "span1").fireEvent("onclick")
-        assert($ff.text.include?("PASS") )
+        browser.span(:id, "span1").fireEvent("onclick")
+        assert(browser.text.include?("PASS") )
     end
 
     def test_file_field_value_bug20
         actual_file_name = "c:\\Program Files\\TestFile.html"
         goto_page("fileupload.html")
-        $ff.file_field(:name, "file3").set(actual_file_name)
-        set_file_name = $ff.file_field(:name, "file3").value
+        browser.file_field(:name, "file3").set(actual_file_name)
+        set_file_name = browser.file_field(:name, "file3").value
         # make sure correct value for upload file is posted.
         assert(actual_file_name, set_file_name)
     end    
 
     def test_attribute_value_bug22
         goto_page("div.html")
-        assert("Test1", $ff.element_by_xpath("//div[@id='div1']").attribute_value("title"))
+        assert("Test1", browser.element_by_xpath("//div[@id='div1']").attribute_value("title"))
     end
     
     def test_url_value_bug23
         goto_page("buttons1.html")
-        $ff.button(:id, "b2").click
-        assert($htmlRoot + "pass.html", $ff.url)
+        browser.button(:id, "b2").click
+        assert($htmlRoot + "pass.html", browser.url)
     end
 
     def test_contains_text_bug28
         goto_page("buttons1.html")
-        $ff.button(:id, "b2").click
-        assert_false($ff.contains_text("passed"))
-        assert($ff.contains_text("PASS"))
-        assert($ff.contains_text("PAS"))
-        assert($ff.contains_text(/PAS/))
-        assert($ff.contains_text(/pass/i))
-        assert_false($ff.contains_text(/pass/))
+        browser.button(:id, "b2").click
+        assert_false(browser.contains_text("passed"))
+        assert(browser.contains_text("PASS"))
+        assert(browser.contains_text("PAS"))
+        assert(browser.contains_text(/PAS/))
+        assert(browser.contains_text(/pass/i))
+        assert_false(browser.contains_text(/pass/))
     end
 
     def test_frame_bug_21
         goto_page("frame_buttons.html")
-        frame1 = $ff.frame(:name, "buttonFrame")
-        frame2 = $ff.frame(:name, "buttonFrame2")
+        frame1 = browser.frame(:name, "buttonFrame")
+        frame2 = browser.frame(:name, "buttonFrame2")
         assert_equal("buttons1.html", frame1.src)
         assert_equal("blankpage.html", frame2.src)
     end
     
     def test_quotes_bug_11
         goto_page("textfields1.html")
-        $ff.text_field(:name, "text1").set("value with quote (\")")
-        assert_equal("value with quote (\")", $ff.text_field(:name, "text1").value)
-        $ff.text_field(:name, "text1").set("value with backslash (\\)")
-        assert_equal("value with backslash (\\)", $ff.text_field(:name, "text1").value)
+        browser.text_field(:name, "text1").set("value with quote (\")")
+        assert_equal("value with quote (\")", browser.text_field(:name, "text1").value)
+        browser.text_field(:name, "text1").set("value with backslash (\\)")
+        assert_equal("value with backslash (\\)", browser.text_field(:name, "text1").value)
     end
 
     def test_close_bug_26
         if ! (RUBY_PLATFORM =~ /darwin/i)
-            $ff.close()
-            $ff = Firefox.new
+            browser.close()
+            browser = Firefox.new
         end    
     end
 
     def test_class_bug_29
         goto_page("div.html")
-        div = $ff.div(:class, "blueText")
+        div = browser.div(:class, "blueText")
         assert_equal("div2", div.id)
     end
 
     def test_element_using_any_attribute
         goto_page("div.html")
-        div = $ff.div(:title, "Test1")
+        div = browser.div(:title, "Test1")
         assert_equal("div1", div.id)
     end
     
     def test_element_using_any_attribute2
         goto_page("div.html")
-        div = $ff.div(:attribute, "attribute")
+        div = browser.div(:attribute, "attribute")
         assert_equal("div1", div.id)
     end
 
@@ -143,24 +143,24 @@ class TC_Bugs< Test::Unit::TestCase
         goto_page("fileupload.html")
         # Enter dummy path.
         if(RUBY_PLATFORM =~ /.*mswin.*/)
-            $ff.file_field(:name, "file3").set("c:\\results.txt")
+            browser.file_field(:name, "file3").set("c:\\results.txt")
         else    
-            $ff.file_field(:name, "file3").set("/user/lib/results.txt")
+            browser.file_field(:name, "file3").set("/user/lib/results.txt")
         end    
-        $ff.button(:name, "upload").click()
-        url = $ff.url
+        browser.button(:name, "upload").click()
+        url = browser.url
         assert_match(/.*results.txt&upload=upload$/,url)
     end
     
     def test_button_bug2
         goto_page("buttons1.html")
-        btn = $ff.button(:id, "b7")
+        btn = browser.button(:id, "b7")
         assert_equal("b7", btn.id)
     end
     
     def test_getAllContents_bug25
         goto_page("select_tealeaf.html")
-        $ff.select_lists.each do |select|
+        browser.select_lists.each do |select|
             contents =  select.getAllContents().to_s
             puts contents
             assert_equal("=<>>=<=", contents)
@@ -170,18 +170,18 @@ class TC_Bugs< Test::Unit::TestCase
 
     def test_fire_event_bug31
         goto_page("div.html")
-        div = $ff.div(:attribute, "attribute")
+        div = browser.div(:attribute, "attribute")
         div.fire_event("ondblclick")
-        assert("PASS", $ff.text)
+        assert("PASS", browser.text)
         goto_page("div.html")
-        div = $ff.div(:id, "div1")
+        div = browser.div(:id, "div1")
         div.fireEvent("ondblclick")
-        assert("PASS", $ff.text)
+        assert("PASS", browser.text)
     end
 
     def test_contains_text_bug37
         goto_page("frame_buttons.html")
-        frame = $ff.frame(:name, "buttonFrame")
+        frame = browser.frame(:name, "buttonFrame")
         assert(frame.contains_text("second button"))
         assert_false(frame.contains_text("second button second"))
     end

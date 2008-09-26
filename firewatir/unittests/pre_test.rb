@@ -12,36 +12,36 @@ class TC_Pre < Test::Unit::TestCase
   end
   
   def test_Pre_Count
-    assert( $ff.pres.length == 3 )
+    assert( browser.pres.length == 3 )
   end
   
   def test_Pre_Exists
-    assert(! $ff.pre( :id, 'missingPre' ).exists? )
-    assert(! $ff.pre( :index, 33 ).exists? )
+    assert(! browser.pre( :id, 'missingPre' ).exists? )
+    assert(! browser.pre( :index, 33 ).exists? )
     
-    assert( $ff.pre( :id, '1' ).exists? )
-    assert( $ff.pre( :id, /[3-9]/ ).exists? )
+    assert( browser.pre( :id, '1' ).exists? )
+    assert( browser.pre( :id, /[3-9]/ ).exists? )
     
-    assert(! $ff.pre( :id, /missing_pre/ ).exists? )
+    assert(! browser.pre( :id, /missing_pre/ ).exists? )
     
-    assert( $ff.pre( :index, 1 ).exists? )
-    assert( $ff.pre( :index, 2 ).exists? )
-    assert( $ff.pre( :index, 3 ).exists? )
+    assert( browser.pre( :index, 1 ).exists? )
+    assert( browser.pre( :index, 2 ).exists? )
+    assert( browser.pre( :index, 3 ).exists? )
     
-    assert( $ff.pre( :name, '3' ).exists? )
-    assert(! $ff.pre( :name, "name_missing" ).exists? )
+    assert( browser.pre( :name, '3' ).exists? )
+    assert(! browser.pre( :name, "name_missing" ).exists? )
   end
   
   def test_simple_access
-    pre = $ff.pre( :index, 1 )
+    pre = browser.pre( :index, 1 )
     assert( pre.text.include?( "simple pre space" ) )
     assert(! pre.text.include?( "A second block" ) )
     
-    pre = $ff.pre( :index, 2 )
+    pre = browser.pre( :index, 2 )
     assert( pre.text.include?( "A second block" ) )
     assert(! pre.text.include?( "this is the last block" ) )
     
-    pre = $ff.pre( :index, 3 )
+    pre = browser.pre( :index, 3 )
     assert( pre.text.include?( "continue    to work" ) )
     assert(! pre.text.include?( "Pre Tag Test" ) )
     
@@ -57,7 +57,7 @@ class TC_Pres_Display < Test::Unit::TestCase
   def test_showPres
     goto_page("pre.html")
     $stdout = @mockout
-    $ff.showPres
+    browser.showPres
     assert_equal(<<END_OF_MESSAGE, @mockout)
 There are 3 pres
 pre:     id: 1

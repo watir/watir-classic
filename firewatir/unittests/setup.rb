@@ -12,7 +12,7 @@ libs << File.join(topdir, '..', 'watir-common') # for the unit tests
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
 require 'firewatir'
-END {$ff.close if $ff} # close ff at completion of the tests
+END {$browser.close if $browser} # close ff at completion of the tests
 
 require 'firewatir/testUnitAddons'
 require 'unittests/iostring'
@@ -34,4 +34,4 @@ Dir.chdir commondir do
   $all_tests += Dir["unittests/*_test.rb"]
 end
 
-$browser = $ff = FireWatir::Firefox.new()
+$browser = FireWatir::Firefox.new()

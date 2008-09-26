@@ -12,49 +12,49 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
     def test_hidden
         
         # test using name and ID
-        assert( $ff.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").exists? )
-        assert( $ff.hidden(:xpath,"//input[@type='hidden' and @id='hidden_1']").exists? )
-        assert_false( $ff.hidden(:xpath,"//input[@type='hidden' and @name='hidden_44']").exists? )
-        assert_false( $ff.hidden(:xpath,"//input[@type='hidden' and @id='hidden_55']").exists? )
+        assert( browser.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").exists? )
+        assert( browser.hidden(:xpath,"//input[@type='hidden' and @id='hidden_1']").exists? )
+        assert_false( browser.hidden(:xpath,"//input[@type='hidden' and @name='hidden_44']").exists? )
+        assert_false( browser.hidden(:xpath,"//input[@type='hidden' and @id='hidden_55']").exists? )
         
-        $ff.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").value = 444
-        $ff.hidden(:xpath,"//input[@type='hidden' and @id='hidden_1']").value = 555
+        browser.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").value = 444
+        browser.hidden(:xpath,"//input[@type='hidden' and @id='hidden_1']").value = 555
         
-        $ff.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
+        browser.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
         
-        assert_equal("444"  , $ff.text_field(:xpath , "//input[@name='vis1']").value ) 
-        assert_equal("555"  , $ff.text_field(:xpath ,"//input[@name='vis2']").value )
+        assert_equal("444"  , browser.text_field(:xpath , "//input[@name='vis1']").value ) 
+        assert_equal("555"  , browser.text_field(:xpath ,"//input[@name='vis2']").value )
                 
         #  test the over-ridden append method
-        $ff.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").append("a")
-        $ff.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
-        assert_equal("444a"  , $ff.text_field(:xpath , "//input[@name='vis1']").value ) 
-        assert_equal("555"  , $ff.text_field(:xpath ,"//input[@name='vis2']").value )
+        browser.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").append("a")
+        browser.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
+        assert_equal("444a"  , browser.text_field(:xpath , "//input[@name='vis1']").value ) 
+        assert_equal("555"  , browser.text_field(:xpath ,"//input[@name='vis2']").value )
         
         #  test the over-ridden clear method
-        $ff.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").clear
-        $ff.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
-        assert_equal(""  , $ff.text_field(:xpath , "//input[@name='vis1']").value ) 
-        assert_equal("555"  , $ff.text_field(:xpath ,"//input[@name='vis2']").value )
+        browser.hidden(:xpath,"//input[@type='hidden' and @name='hid1']").clear
+        browser.button(:xpath , "//input[@type='button' and @value='Show Hidden']").click
+        assert_equal(""  , browser.text_field(:xpath , "//input[@name='vis1']").value ) 
+        assert_equal("555"  , browser.text_field(:xpath ,"//input[@name='vis2']").value )
         
         # test using a form
-        #assert( $ff.form(:name , "has_a_hidden").hidden(:name ,"hid1").exists? )
-        #assert( $ff.form(:name , "has_a_hidden").hidden(:id,"hidden_1").exists? )
-        #assert_false( $ff.form(:name , "has_a_hidden").hidden(:name,"hidden_44").exists? )
-        #assert_false( $ff.form(:name , "has_a_hidden").hidden(:id,"hidden_55").exists? )
+        #assert( browser.form(:name , "has_a_hidden").hidden(:name ,"hid1").exists? )
+        #assert( browser.form(:name , "has_a_hidden").hidden(:id,"hidden_1").exists? )
+        #assert_false( browser.form(:name , "has_a_hidden").hidden(:name,"hidden_44").exists? )
+        #assert_false( browser.form(:name , "has_a_hidden").hidden(:id,"hidden_55").exists? )
         
-        #$ff.form(:name , "has_a_hidden").hidden(:name ,"hid1").value = 222
-        #$ff.form(:name , "has_a_hidden").hidden(:id,"hidden_1").value = 333
+        #browser.form(:name , "has_a_hidden").hidden(:name ,"hid1").value = 222
+        #browser.form(:name , "has_a_hidden").hidden(:id,"hidden_1").value = 333
         
-        #$ff.button(:value , "Show Hidden").click
+        #browser.button(:value , "Show Hidden").click
         
-        #assert_equal("222"  , $ff.text_field(:name , "vis1").value ) 
-        #assert_equal("333"  , $ff.text_field(:name ,"vis2").value )
+        #assert_equal("222"  , browser.text_field(:name , "vis1").value ) 
+        #assert_equal("333"  , browser.text_field(:name ,"vis2").value )
         
         # iterators
-        #assert_equal(2, $ff.hiddens.length)
+        #assert_equal(2, browser.hiddens.length)
         #count =1
-        #$ff.hiddens.each do |h|
+        #browser.hiddens.each do |h|
         #    case count
         #    when 1
         #        assert_equal( "", h.id)
@@ -66,7 +66,7 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
         #    count+=1
         #end
         
-        #assert_equal("hid1" , $ff.hiddens[1].name )
-        #assert_equal("hidden_1" , $ff.hiddens[2].id )
+        #assert_equal("hid1" , browser.hiddens[1].name )
+        #assert_equal("hidden_1" , browser.hiddens[2].id )
     end
 end
