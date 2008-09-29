@@ -11,7 +11,7 @@ module Watir
       end
       def add_choices builder
         builder.add_choice :browser, :type => ['firefox', 'ie', 'Firefox', 'IE'], 
-        :default => 'ie'
+        :default => $default_browser
         builder.add_choice :speed, :type => ['slow', 'fast', 'zippy'], :default => 'fast'
       end
       def execute 

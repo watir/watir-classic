@@ -4,15 +4,16 @@ $myDir = File.expand_path(File.dirname(__FILE__))
 
 # use local development versions of watir, firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
+$firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
+$watir_dev_lib = File.join(topdir, 'lib')
 libs = []
-libs << File.join(topdir, 'lib')
-libs << File.join(topdir, '..', 'firewatir', 'lib')
 libs << File.join(topdir, '..', 'watir-common', 'lib')
 libs << File.join(topdir, '..', 'watir-common') # for the unit tests
-
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
+$default_browser = 'ie'
 require 'unittests/setup/lib'
+require 'watir/testcase'
 
 # Standard Tags
 # :must_be_visible

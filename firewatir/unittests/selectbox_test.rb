@@ -124,8 +124,7 @@ class TC_SelectList < Test::Unit::TestCase
 end
 
 class TC_Select_Options < Test::Unit::TestCase
-    
-   
+       
     def setup()
         goto_page("select_tealeaf.html")
     end
