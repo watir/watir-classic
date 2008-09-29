@@ -120,7 +120,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert(browser.text.include?("PASS"), 'Clicking on "Click Me2" button should\'ve taken to the "PASS" page') 
   end
 
-  tag_method :test_buttons_length, :fails_with_ie
+  tag_method :test_buttons_length, :fails_on_ie
   def test_buttons_length
     arrButtons = browser.buttons
     assert_equal(7, arrButtons.length)

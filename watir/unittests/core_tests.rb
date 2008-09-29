@@ -10,9 +10,8 @@ require 'unittests/setup'
 Dir.chdir TOPDIR
 $all_tests.each {|x| require x}
 
-Watir::UnitTest.filter = [proc do |test| 
-  test.class.to_s !~ /xpath/i &&
-  ! test.tagged?(:must_be_visible) &&
-  ! test.tagged?(:fails_with_ie)
-end ]
-
+Watir::UnitTest.filter_out do |test|
+  test.class.to_s =~ /xpath/i
+end
+Watir::UnitTest.filter_out_tests_tagged :must_be_visible 
+Watir::UnitTest.filter_out_tests_tagged :fails_on_ie

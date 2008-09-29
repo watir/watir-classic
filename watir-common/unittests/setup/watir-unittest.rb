@@ -27,11 +27,16 @@ module Watir::UnitTest
     def filter= proc
       @@filter = proc
     end
-    def filter_for tag
-      @@filter = Proc.new {|test| test.tagged? tag}
+    # Add a filter that excludes tests matching the provided block
+    def filter_out &block
+      @@filter << Proc.new do |test| 
+        block.call(test) ? false : nil
+      end
     end
-    def filter_out tag
-      @@filter = Proc.new {|test| ! test.tagged? tag}    
+    def filter_out_tests_tagged tag
+      filter_out do |test|
+        test.tagged? tag
+      end
     end
   end
 end
