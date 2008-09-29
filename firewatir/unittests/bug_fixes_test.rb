@@ -113,6 +113,7 @@ class TC_Bugs< Test::Unit::TestCase
         assert_equal("value with backslash (\\)", browser.text_field(:name, "text1").value)
     end
 
+    tag_method :test_close_bug_26, :fails_on_ie
     def test_close_bug_26
         if ! (RUBY_PLATFORM =~ /darwin/i)
             browser.close()

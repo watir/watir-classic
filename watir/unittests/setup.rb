@@ -1,3 +1,4 @@
+# watir/unittests/setup.rb
 $SETUP_LOADED = true
 
 $myDir = File.expand_path(File.dirname(__FILE__))
@@ -34,6 +35,18 @@ end
 Dir.chdir commondir do
   $all_tests += Dir["unittests/*_test.rb"]
 end
+
+# These tests won't load unless Watir is in the path
+$watir_only_tests = [
+  "unittests/images_xpath_test.rb",
+  "unittests/images_test.rb",
+  "unittests/dialog_test.rb",
+  "unittests/ie_test.rb"
+]
+if Watir::UnitTest.options[:browser] != 'ie'
+  $all_tests -= $watir_only_tests
+end
+
 
 # not in all tests!
 $window_tests =

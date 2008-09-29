@@ -11,6 +11,7 @@ class TC_CheckBox < Test::Unit::TestCase
     goto_page "checkboxes1.html"
   end
   
+  tag_method :test_checkbox_properties, :fails_on_firefox
   def test_checkbox_properties
     assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").id   }  
     assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").name   }  
@@ -140,6 +141,7 @@ class TC_CheckBox < Test::Unit::TestCase
     assert(browser.checkbox(:name, "box6", 'Tea').isSet?)
   end
   
+  tag_method :test_checkbox_iterator, :fails_on_firefox
   def test_checkbox_iterator
     
     assert_equal(13, browser.checkboxes.length)

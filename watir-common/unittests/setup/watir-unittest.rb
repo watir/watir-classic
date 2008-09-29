@@ -7,7 +7,7 @@ module Watir::UnitTest
     browser.goto new_url
   end
   # navigate the browser to the specified page in unittests/html IF the browser is not already on that page.
-  def uses_page page
+  def uses_page page # only works with IE
     new_url = self.class.html_root + page
     browser.goto new_url unless browser.url == new_url
   end
