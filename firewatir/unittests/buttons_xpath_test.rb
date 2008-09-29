@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Buttons_XPath < Test::Unit::TestCase
-    include FireWatir
+    
     
     def setup
         goto_page("buttons1.html")
@@ -59,13 +59,13 @@ class TC_Buttons_XPath < Test::Unit::TestCase
 
     def test_element_by_xpath_class
       element = browser.element_by_xpath("//input[@value='Click Me']")
-      assert(element.instance_of?(Button),"element class should be #{Button}; got #{element.class}")
+      assert_class element, 'Button'
       element = browser.element_by_xpath("//input[@value='Submit']")
-      assert(element.instance_of?(Button),"element class should be #{Button}; got #{element.class}")
+      assert_class element, 'Button'
       element = browser.element_by_xpath("//input[@name='b1']")
-      assert(element.instance_of?(Button),"element class should be #{Button}; got #{element.class}")
+      assert_class element, 'Button'
       element = browser.element_by_xpath("//input[@id='b2']")
-      assert(element.instance_of?(Button),"element class should be #{Button}; got #{element.class}")
+      assert_class element, 'Button'
       # TODO: If object is not there this should return null
       #element = browser.element_by_xpath("//input[@value='Missing Caption']")
       #assert(element.instance_of?(Button),"element class should be #{Button}; got #{element.class}")

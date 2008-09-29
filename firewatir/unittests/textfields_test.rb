@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Fields < Test::Unit::TestCase
-    include FireWatir
+    
     
     def setup
         goto_page("textfields1.html")
@@ -204,7 +204,7 @@ class TC_Fields < Test::Unit::TestCase
 end
 
 class TC_Labels_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showLabels

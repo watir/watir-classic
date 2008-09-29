@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Selectbox_XPath < Test::Unit::TestCase
-    include FireWatir
+    
 
     def setup()
         goto_page("selectboxes1.html")
@@ -19,7 +19,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
 
     def test_element_by_xpath_class
       element = browser.element_by_xpath("//select[@name='sel1']")
-      assert(element.instance_of?(SelectList),"element class should be #{SelectList}; got #{element.class}")
+      assert_class(element, 'SelectList')
       # FIXME got HTMLAnchorElement, should've gotten HTMLSelectElement
       # TODO: If element is not present, this should return null
       #element = browser.element_by_xpath("//select[@name='missing']")

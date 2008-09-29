@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Links < Test::Unit::TestCase
-    include FireWatir
+    
     
     def setup()
         goto_page("links1.html")
@@ -141,7 +141,7 @@ class TC_Links < Test::Unit::TestCase
 end
 
 class TC_Frame_Links < Test::Unit::TestCase
-    include FireWatir
+    
     
     def setup()
         goto_page("frame_links.html")
@@ -172,7 +172,7 @@ class TC_Frame_Links < Test::Unit::TestCase
 end
 
 class TC_Links_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showLinks

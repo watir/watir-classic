@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Frames < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("frame_buttons.html")
@@ -54,7 +54,7 @@ class TC_Frames < Test::Unit::TestCase
 end
 
 class TC_Frames2 < Test::Unit::TestCase
-  include FireWatir
+  
  
   def setup
     goto_page("frame_multi.html")
@@ -72,7 +72,7 @@ class TC_Frames2 < Test::Unit::TestCase
 end
 
 class TC_NestedFrames < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("nestedFrames.html")
@@ -90,7 +90,7 @@ class TC_NestedFrames < Test::Unit::TestCase
 end
 
 class TC_IFrames < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("iframeTest.html")

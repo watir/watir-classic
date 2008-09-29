@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms
-  include FireWatir
+  
   
   def setup
     goto_page("forms2.html")
@@ -49,7 +49,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms
 end
 
 class TC_Form_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showforms
@@ -79,7 +79,7 @@ END_OF_MESSAGE
 end
 
 class TC_Forms3 < Test::Unit::TestCase
-  include FireWatir
+  
   def setup
     goto_page("forms3.html")
   end
@@ -183,7 +183,7 @@ class TC_Forms3 < Test::Unit::TestCase
 end
 
 #class TC_Forms3_Display < Test::Unit::TestCase
-#  include FireWatir
+#  
 #  include MockStdoutTestCase # BUG in test: output not verified!                
 #  def test_show_stuff
 #    goto_page("forms3.html")
@@ -195,7 +195,7 @@ end
 #end
 
 class TC_Forms4 < Test::Unit::TestCase
-  include FireWatir
+  
   def setup
     goto_page("forms4.html")
   end
@@ -226,7 +226,7 @@ class TC_Forms4 < Test::Unit::TestCase
 end
 
 class TC_Hidden_Fields2 < Test::Unit::TestCase
-  include FireWatir
+  
   def setup
     goto_page("forms3.html")
   end

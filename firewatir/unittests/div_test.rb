@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Divs < Test::Unit::TestCase
-  include FireWatir
+
   
   def setup
     goto_page("div.html")
@@ -190,7 +190,7 @@ class TC_Divs < Test::Unit::TestCase
 end
 
 class TC_Divs_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showDivs
@@ -232,7 +232,7 @@ END_OF_MESSAGE
 end
 
 class TC_Spans_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showSpans

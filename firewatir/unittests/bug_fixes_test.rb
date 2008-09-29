@@ -2,7 +2,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Bugs< Test::Unit::TestCase
-  include FireWatir
+  
   
     def setup
         goto_page("frame_buttons.html")
@@ -36,8 +36,7 @@ class TC_Bugs< Test::Unit::TestCase
       # next assert always breaks, dunno why (error, not failure)
       #assert_instance_of(Div, element, "wrong constructor was used")
       # using this hack instead
-      assert(element.instance_of?(Div),
-               "element class should be: #{Div}; got: #{element.class}.")
+      assert_class element, 'Div'
     end
     
     def test_elements_by_xpath_bug10
@@ -117,7 +116,7 @@ class TC_Bugs< Test::Unit::TestCase
     def test_close_bug_26
         if ! (RUBY_PLATFORM =~ /darwin/i)
             browser.close()
-            browser = Firefox.new
+            browser = FireWatir::Firefox.new
         end    
     end
 

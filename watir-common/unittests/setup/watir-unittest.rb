@@ -15,6 +15,10 @@ module Watir::UnitTest
     $browser
   end
 
+  def assert_class element, klass
+    assert_match(Regexp.new(klass, Regexp::IGNORECASE), element.class.to_s, "element class should be #{klass}; got #{element.class}")
+  end
+
   @@filter = []
   class << self
     def filter

@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_CheckBox < Test::Unit::TestCase
-    include FireWatir
+    
 
     def setup()
         goto_page("checkboxes1.html")
@@ -19,7 +19,8 @@ class TC_CheckBox < Test::Unit::TestCase
        assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").value   }  
 
        assert_equal("box1"  , browser.checkbox(:index, 1).name  ) 
-       assert_instance_of(CheckBox,browser.checkbox(:index,1))
+       assert_class(browser.checkbox(:index,1), 'Checkbox')
+       
        assert_equal(""  , browser.checkbox(:index, 1).id  ) 
        assert_equal("checkbox"  , browser.checkbox(:index, 1).type  ) 
        assert_equal("on"  , browser.checkbox(:index, 1).value  ) 

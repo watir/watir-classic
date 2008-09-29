@@ -141,7 +141,7 @@ class TC_Button2 < Test::Unit::TestCase
   def test_class_buttons
     arr_buttons = browser.buttons
     arr_buttons.each do |b|
-      assert_match(/Button/, b.class.to_s, "element class should be Button; got #{b.class}")
+      assert_class b, 'Button' 
     end
     # test properties
     assert_equal("b2", arr_buttons[1].id)

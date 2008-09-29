@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_FileField_XPath < Test::Unit::TestCase
-    include FireWatir
+    
 
   def gotoPage
  	goto_page("fileupload.html")

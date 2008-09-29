@@ -2,7 +2,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_JavaScript_Test < Test::Unit::TestCase
-    include FireWatir
+    
 #    include FireWatir::Dialog
     
     def setup

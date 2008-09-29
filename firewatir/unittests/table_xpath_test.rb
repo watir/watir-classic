@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Tables_XPath < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("table1.html")
@@ -18,7 +18,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
 
   def test_element_by_xpath_class
     element = browser.element_by_xpath("//table[@id = 't1']")
-    assert(element.instance_of?(Table),"element class should be #{Table}; got #{element.class}")
+    assert_class(element, 'Table')
     # FIXME really bizarre: this one should be a Table, but 
     # Firefox.element_factory gets HTMLAnchorElement as input
     # TODO: If element is not present, this should return null or raises exception

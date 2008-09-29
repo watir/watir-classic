@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Tables < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("table1.html")
@@ -172,7 +172,7 @@ class TC_Tables < Test::Unit::TestCase
 end    
 
 class TC_Tables_Simple < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("simple_table.html")
@@ -189,7 +189,7 @@ class TC_Tables_Simple < Test::Unit::TestCase
 end
 
 class TC_Tables_Buttons < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("simple_table_buttons.html")
@@ -275,7 +275,7 @@ class TC_Tables_Buttons < Test::Unit::TestCase
 end
 
 class TC_Table_Columns < Test::Unit::TestCase
-  include FireWatir
+  
   def setup
     goto_page("simple_table_columns.html")
   end
@@ -314,7 +314,7 @@ class TC_Table_Columns < Test::Unit::TestCase
 end
 
 class TC_Tables_Complex < Test::Unit::TestCase
-  include FireWatir
+  
   def setup
     goto_page("complex_table.html")
   end
@@ -330,7 +330,7 @@ class TC_Tables_Complex < Test::Unit::TestCase
 end
 
 class TC_Tables_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showTables

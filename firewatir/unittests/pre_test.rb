@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Pre < Test::Unit::TestCase
-  include FireWatir
+  
   
   def setup
     goto_page("pre.html")
@@ -51,7 +51,7 @@ end
 
 
 class TC_Pres_Display < Test::Unit::TestCase
-  include FireWatir
+  
   include MockStdoutTestCase
 
   def test_showPres

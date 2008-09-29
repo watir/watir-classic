@@ -5,7 +5,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_Links_XPath < Test::Unit::TestCase
-    include FireWatir
+    
 
     def setup()
         goto_page("links1.html")
@@ -25,9 +25,9 @@ class TC_Links_XPath < Test::Unit::TestCase
         #element = browser.element_by_xpath("//a[contains(.,'missing')]")
         #assert(element.instance_of?(Link),"element class should be #{Link}; got #{element.class}")
         element = browser.element_by_xpath("//a[contains(., /TEST/i)]")
-        assert(element.instance_of?(Link),"element class should be #{Link}; got #{element.class}")
+        assert_class(element, 'Link')
         element = browser.element_by_xpath("//a[contains(.,'test1')]")
-        assert(element.instance_of?(Link),"element class should be #{Link}; got #{element.class}")
+        assert_class(element, 'Link')
     end
 
     def test_element_by_xpath_behavior
