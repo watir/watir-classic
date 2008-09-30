@@ -1,6 +1,0 @@
-line 1 from alternate-in - this one gets read.
-line 2 from alternate-in - this one SHOULD NOT get read, but does.
-alternate-in: just padding in case buffering gets off in a different way
-alternate-in: just padding in case buffering gets off in a different way
-alternate-in: just padding in case buffering gets off in a different way
-
