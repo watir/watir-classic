@@ -11,6 +11,7 @@ class TC_Fields < Test::Unit::TestCase
     goto_page "textfields1.html"
   end
   
+  tag_method :test_text_field_exists, :fails_on_firefox
   def test_text_field_exists
     assert(browser.text_field(:name, "text1").exists?)   
     assert(!browser.text_field(:name, "missing").exists?)   
@@ -25,6 +26,7 @@ class TC_Fields < Test::Unit::TestCase
     assert(browser.text_field(:afterText, /before/i).exists? )
   end
   
+  tag_method :test_text_field_dragContentsTo, :fails_on_firefox
   def test_text_field_dragContentsTo
     browser.text_field(:name, "text1").dragContentsTo(:id, "text2")
     assert_equal(browser.text_field(:name, "text1").getContents, "") 
@@ -59,6 +61,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("Hello World", browser.text_field(:name, "text1").getContents)  
   end
   
+  tag_method :test_text_field_to_s, :fails_on_firefox
   def test_text_field_to_s
     expected = [
     build_to_s_regex("type", "text"),
@@ -86,6 +89,7 @@ class TC_Fields < Test::Unit::TestCase
     Regexp.new("^#{lhs}: +#{rhs}$")
   end
   
+  tag_method :test_text_field_append, :fails_on_firefox
   def test_text_field_append
     assert_raises(ObjectReadOnlyException) { browser.text_field(:id, "readOnly2").append("Some Text") }  
     assert_raises(ObjectDisabledException) { browser.text_field(:name, "disabled").append("Some Text") }  
@@ -150,6 +154,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(index - 1, browser.text_fields.length)         
   end
   
+  tag_method :test_JS_Events, :fails_on_firefox
   def test_JS_Events
     browser.text_field(:name, 'events_tester').requires_typing.set('p')
     
@@ -182,6 +187,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(count, browser.labels.length)
   end
   
+  tag_method :test_label_properties, :fails_on_firefox
   def test_label_properties
     assert_raises(UnknownObjectException) { browser.label(:index,20).innerText } 
     assert_raises(UnknownObjectException) { browser.label(:index,20).for } 
@@ -208,6 +214,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("abcdefghijklmnopqrst", browser.text_field(:name , 'text1').value )
   end
 
+  tag_method :test_max_length, :fails_on_firefox
   def test_max_length
     assert_equal(20, browser.text_field(:name , 'text1').maxLength )
   end

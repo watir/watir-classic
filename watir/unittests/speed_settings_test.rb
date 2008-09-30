@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
 class TC_instance_options < Test::Unit::TestCase
+  tags :fails_on_firefox
   
   def setup
     @ie4 = Watir::IE.new    
@@ -26,6 +27,7 @@ class TC_instance_options < Test::Unit::TestCase
 end
 
 class TC_class_options < Test::Unit::TestCase
+  tags :fails_on_firefox
 	include Watir
 	@@hide_ie = $HIDE_IE
 	def setup

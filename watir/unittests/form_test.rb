@@ -33,7 +33,9 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:name, "test2").button(:caption , "Submit").exists?)
   end     
   
+
   # The following tests from bug 2261 
+  tag_method :test_form_html, :fails_on_firefox
   def test_form_html 
     assert_equal("\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
     browser.form(:name, 'test2').html)
@@ -107,6 +109,7 @@ class TC_Forms3 < Test::Unit::TestCase
     assert_equal("check1" , browser.checkbox(:index,1).name )
   end
   
+  tag_method :test_reset, :fails_on_firefox
   def test_reset
     browser.text_field(:id, "t1").set("Hello, reset test!")
     assert_equal(browser.text_field(:id, 't1').getContents, 'Hello, reset test!')
@@ -157,7 +160,7 @@ class TC_Forms3 < Test::Unit::TestCase
   
   def test_flash2
     browser.button(:value, 'Click Me').flash
-    assert_raises( Watir::UnknownObjectException ) { browser.text_field( :name , 'g177').flash }
+    assert_raises(UnknownObjectException) { browser.text_field( :name , 'g177').flash }
   end
   
   def test_submitWithImage

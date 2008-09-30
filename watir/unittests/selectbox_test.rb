@@ -46,17 +46,20 @@ class TC_SelectList < Test::Unit::TestCase
     assert_equal("list_style" , browser.select_list(:name, "sel2").option(:value , 'o2').class_name)   
     assert_equal("" , browser.select_list(:name, "sel2").option(:value , 'o1').class_name)   
   end
-  
+    
+  tag_method :test_includes, :fails_on_firefox
   def test_includes
     assert browser.select_list(:name, 'sel1').includes?('Option 1')
     assert ! browser.select_list(:name, 'sel1').includes?('Option 6')
   end  
   
+  tag_method :test_selected, :fails_on_firefox
   def test_selected
     assert ! browser.select_list(:name, 'sel1').selected?('Option 1')
     assert browser.select_list(:name, 'sel1').selected?('Option 3')
   end
   
+  tag_method :test_selected_not_found, :fails_on_firefox
   def test_selected_not_found
     selectbox = browser.select_list(:name, 'sel1')
     assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?('Option Not Exists')}

@@ -37,6 +37,7 @@ class TC_CSS < Test::Unit::TestCase
     return s
   end
   
+  tag_method :test_SuccessMessage, :fails_on_firefox
   def test_SuccessMessage
     goto_page "cssTest.html"
     browser.button( :caption , "Success").click

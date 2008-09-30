@@ -46,6 +46,7 @@ class TC_contains_text < Test::Unit::TestCase
 end
 
 class TC_contains_text_in_new_ie < Test::Unit::TestCase
+  tags :fails_on_firefox
   def setup
     @ie = Watir::IE.new
   end

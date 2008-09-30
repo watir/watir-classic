@@ -26,7 +26,8 @@ class TC_Pre < Test::Unit::TestCase
     assert( browser.pre( :name, '3' ).exists? )
     assert(! browser.pre( :name, "name_missing" ).exists? )
   end
-  
+    
+  tag_method :test_simple_access, :fails_on_firefox
   def test_simple_access
     pre = browser.pre( :index, 1 )
     assert( pre.text.include?( "simple pre space" ) )

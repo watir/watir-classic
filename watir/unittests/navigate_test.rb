@@ -6,6 +6,7 @@ require 'unittests/setup'
 require 'cgi'
 
 class TC_Navigate < Test::Unit::TestCase
+  tags :fails_on_firefox
   def test_navigation
     browser.clear_url_list
     goto_page 'buttons1.html'

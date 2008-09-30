@@ -12,6 +12,7 @@ class TC_Links < Test::Unit::TestCase
     goto_page "links1.html"
   end
   
+  tag_method :test_bad_attribute, :fails_on_firefox
   def test_bad_attribute
     assert_raises(MissingWayOfFindingObjectException) { browser.link(:bad_attribute, 199).click }  
     begin
@@ -77,6 +78,7 @@ class TC_Links < Test::Unit::TestCase
     assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).click }  
   end
   
+  tag_method :test_link_properties, :fails_on_firefox
   def test_link_properties
     assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).href }  
     assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).value}  
@@ -149,6 +151,7 @@ end
 
 require 'unittests/iostring'
 class TC_showlinks < Test::Unit::TestCase
+  tags :fails_on_firefox
   include MockStdoutTestCase
   
   def test_showLinks

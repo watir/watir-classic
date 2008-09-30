@@ -39,6 +39,7 @@ class Map_Tests < Watir::TestCase
     assert(browser.map(:id, 'maptestid01').area(:alt, 'Table Buttons').exists?)
   end
   
+  tag_method :test_map_area_click, :fails_on_firefox
   def test_map_area_click
     browser.area(:alt, 'Table Buttons').click
     assert_contains_text "This table has 3 images"

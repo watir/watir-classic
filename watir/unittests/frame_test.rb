@@ -37,6 +37,7 @@ class TC_Frames < Test::Unit::TestCase
     assert(!browser.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
   end
   
+  tag_method :test_frame_with_invalid_attribute, :fails_on_firefox
   def test_frame_with_invalid_attribute
     assert_raises(ArgumentError) { browser.frame(:blah, 'no_such_thing').button(:id, "b2").enabled?  }  
   end
@@ -76,8 +77,7 @@ class TC_Frames2 < Test::Unit::TestCase
 end
 
 class TC_NestedFrames < Test::Unit::TestCase
-  include Watir::Exception
-  
+  tags :fails_on_firefox  
   def setup
     goto_page "nestedFrames.html"
   end
@@ -94,7 +94,8 @@ class TC_NestedFrames < Test::Unit::TestCase
 end
 
 class TC_IFrames < Test::Unit::TestCase
-  
+  tags :fails_on_firefox
+
   def setup
     goto_page "iframeTest.html"
   end
@@ -124,7 +125,8 @@ class TC_show_frames < Test::Unit::TestCase
     browser.showFrames
     assert_equal(expected, @mockout)
   end
-  
+
+  tag_method :test_show_nested_frames, :fails_on_firefox
   def test_show_nested_frames
     capture_and_compare("nestedFrames.html", <<END_OF_MESSAGE)
 there are 2 frames
@@ -133,6 +135,7 @@ frame  index: 2 name: nestedFrame2
 END_OF_MESSAGE
   end
   
+  tag_method :test_button_frames, :fails_on_firefox
   def test_button_frames
     capture_and_compare("frame_buttons.html", <<END_OF_MESSAGE)
 there are 2 frames
@@ -141,6 +144,7 @@ frame  index: 2 name: buttonFrame2
 END_OF_MESSAGE
   end
   
+  tag_method :test_iframes, :fails_on_firefox
   def test_iframes
     capture_and_compare("iframeTest.html", <<END_OF_MESSAGE)
 there are 2 frames

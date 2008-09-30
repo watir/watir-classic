@@ -27,6 +27,7 @@ class TC_Tables < Test::Unit::TestCase
     assert !browser.table(:index, 33).exists?
   end
   
+  tag_method :test_row_count_exceptions, :fails_on_firefox
   def test_row_count_exceptions
     assert_raises UnknownObjectException do
       browser.table(:id, 'missingTable').row_count
@@ -56,6 +57,7 @@ class TC_Tables < Test::Unit::TestCase
     assert_equal(2, row.column_count)        
   end
 
+  tag_method :test_dynamic_tables, :fails_on_firefox
   def test_dynamic_tables
     @reload_page = true
     t = browser.table(:id, 't1')
@@ -108,6 +110,7 @@ class TC_Tables < Test::Unit::TestCase
     assert_equal('Row 2 Col1',  browser.row(:id, 'row1')[1].to_s.strip)
   end
 
+  tag_method :test_row_in_table, :fails_on_firefox
   def test_row_in_table
     assert_equal 'Row 2 Col1 Row 2 Col2', 
       browser.table(:id, 't1').row(:id, 'row1').text
@@ -143,12 +146,14 @@ class TC_Tables < Test::Unit::TestCase
     end
   end 
   
+  tag_method :test_cell_collection, :fails_on_firefox
   def test_cell_collection
     t = browser.table(:index,1)
     contents = t.cells.collect {|c| c.text}
     assert_equal(["Row 1 Col1","Row 1 Col2","Row 2 Col1","Row 2 Col2"], contents)
   end    
-  
+   
+  tag_method :test_table_body, :fails_on_firefox
   def test_table_body
     assert_equal(1, browser.table(:index, 1).bodies.length)
     assert_equal(3, browser.table(:id, 'body_test').bodies.length)
@@ -284,6 +289,7 @@ class TC_Tables_Buttons < Test::Unit::TestCase
     end
   end
   
+  tag_method :test_table_from_element, :fails_on_firefox
   def test_table_from_element
     button = browser.button(:id, "b1")
     table = Watir::Table.create_from_element(browser, button)
@@ -314,6 +320,7 @@ class TC_Table_Columns < Test::Unit::TestCase
     assert_equal(["R1C3", "R2C3", "R3C3"], browser.table(:index, 2).column_values(3))
   end
   
+  tag_method :test_get_columnvalues_with_colspan, :fails_on_firefox
   def test_get_columnvalues_with_colspan
     assert_equal(["R1C1", "R2C1", "R3C1", "R4C1", "R5C1", "R6C2"], browser.table(:index, 3).column_values(1))
      (2..4).each{|x|assert_raises(UnknownCellException){browser.table(:index, 3).column_values(x)}}

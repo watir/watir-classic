@@ -22,6 +22,7 @@ class TC_Divs < Test::Unit::TestCase
     assert browser.text_field(:name, "text1").verify_contains("0") 
   end
   
+  tag_method :test_div_properties, :fails_on_firefox
   def test_div_properties
     assert_raises(UnknownObjectException) { browser.div(:id, "div77").text }
     assert_raises(UnknownObjectException) { browser.div(:title, "div77").text }
@@ -95,6 +96,7 @@ class TC_Divs < Test::Unit::TestCase
     assert(browser.text_field(:name, "text2").verify_contains("0") )  
   end
   
+  tag_method :test_span_properties, :fails_on_firefox
   def test_span_properties
     assert_raises(UnknownObjectException) {browser.span(:id, "span77").text }
     assert_raises(UnknownObjectException) {browser.span(:title, "span77").text }

@@ -39,6 +39,7 @@ class TC_Radios < Test::Unit::TestCase
     assert(!browser.button(:value , "foo").enabled?)
   end
   
+  tag_method :test_onClick, :fails_on_firefox
   def test_onClick
     
     assert(!browser.radio(:name, "box5").isSet?)
@@ -71,6 +72,7 @@ class TC_Radios < Test::Unit::TestCase
     assert(!browser.button(:value , "foo").enabled?)
   end
   
+  tag_method :test_Radio_isSet, :fails_on_firefox
   def test_Radio_isSet
     assert_raises(UnknownObjectException) {   browser.radio(:name, "noName").isSet?  }  
     

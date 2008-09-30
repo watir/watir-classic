@@ -10,6 +10,7 @@ class TC_Defer < Test::Unit::TestCase
     @ie_new.close if defined?(@ie_new)
     browser.goto('about:blank')
   end
+  tag_method :test_binding_to_newly_loaded_page, :fails_on_firefox
   def test_binding_to_newly_loaded_page
     @ie_new = Watir::IE.new
     text_field = @ie_new.text_field(:name, 'text1')
@@ -31,6 +32,7 @@ class TC_Defer < Test::Unit::TestCase
     assert_equal('Clear Events Box', button.value)
     assert_equal('Div Text', div.text)
   end
+  tag_method :test_exists, :fails_on_firefox
   def test_exists
     @ie_new = Watir::IE.new
     text_field = @ie_new.text_field(:name, 'text1')
