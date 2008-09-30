@@ -5,4 +5,5 @@ require './lib/watir-common.rb'
 Hoe.new('watir-common', WatirCommon::VERSION) do |p|
   p.rubyforge_name = 'wtr'
   p.developer('Bret Pettichord', 'bret@watircraft.com')
+  p.extra_deps << 'user-choices'
 end

@@ -574,32 +574,6 @@ module FireWatir
         return Images.new(self)
     end
 
-    # This is the main method for accessing JavaScript popups.
-    # returns a PopUp object
-    #def popup         # BUG this should not be on the container object!        
-    #    return PopUp.new(self)
-    #end
-
-    #
-    # Description:
-    #   Used to access div element. Usually an <div> HTML tag.
-    #
-    # Input:
-    #   - how - Attribute used to identify the dive element.
-    #   - what - Value of that attribute. 
-    #
-    # Typical Usage:
-    #
-    #    ff.div(:id,   'user_name')                 # access the div element with an ID of user_name
-    #    ff.div(:name, 'address')                   # access the div element with a name of address
-    #
-    # Output:
-    #   Div object.
-    #
-    def div(how, what=nil)
-        locate if defined?(locate)
-        return Div.new(self, how, what)
-    end
 
     # 
     # Description:
@@ -619,29 +593,6 @@ module FireWatir
         return Divs.new(self)
     end
 
-    
-    #
-    # Description:
-    #   Used to access a span. Usually an <span> HTML tag. 
-    #
-    # Input:
-    #   - how - The attribute used to identify the span.
-    #   - what - The value of that attribute. 
-    # 
-    # Typical usage:
-    #   ff.span(:id, /list/)                 # access the first span that matches list.
-    #   ff.span(:index,2)                    # access the second span on the page
-    #   ff.span(:title , "A Picture")        # access a span using the tooltip text.
-    #
-    # Output:
-    #    Span Object
-    #   
-    def span(how, what=nil)
-        locate if defined?(locate)
-        return Span.new(self, how, what)
-    end
-
-    # 
     # Description:
     #   Used for accessing all the Span elements on the page. Returns a Spans object
     #
@@ -657,30 +608,6 @@ module FireWatir
     def spans
         locate if defined?(locate)
         return Spans.new(self)
-    end
-
-    
-    #
-    # Description:
-    #   Used to access a paragraph. Usually an <p> HTML tag. For more details on this visit 
-    # 	See http://www.xulplanet.com/references/objref/HTMLParagraphElement.html.
-    #
-    # Input:
-    #   - how - The attribute used to identify the paragraph.
-    #   - what - The value of that attribute. 
-    # 
-    # Typical Usage
-    # 
-    #   ff.p(:id, /list/)                 # access the first p tag  that matches list.
-    #   ff.p(:index,2)                    # access the second p tag on the page
-    #   ff.p(:title , "A Picture")        # access a p tag using the tooltip text.
-    #
-    # Output:
-    # 	Paragraph object.
-    #
-    def p(how, what=nil)
-        locate if defined?(locate)
-        return P.new(self, how, what)
     end
 
     # 
@@ -701,28 +628,6 @@ module FireWatir
         return Ps.new(self)
     end
 
-    #
-    # Description:
-    #   Used to access a pre element. Usually a <pre> HTML tag. For more details on this element 
-    #   visit http://www.xulplanet.com/references/objref/HTMLPreElement.html.
-    #
-    # Input:
-    #   - how - The attribute used to identify the pre tag.
-    #   - what - The value of that attribute. 
-    # 
-    # Typical Usage
-    # 
-    #   ff.pre(:id, /list/)                 # access the first pre tag  that matches list.
-    #   ff.pre(:index,2)                    # access the second pre tag on the page
-    #
-    # Output:
-    # 	Pre object.
-    #
-    def pre(how, what=nil)
-        locate if defined?(locate)
-        return Pre.new(self, how, what)
-    end
-
     # 
     # Description:
     #   Used for accessing all the Pre elements on the page. Returns a Pres object
@@ -741,28 +646,6 @@ module FireWatir
         return Pres.new(self)
     end
 	
-    #
-    # Description:
-    # 	Used to access label. Usually a <label> HTML tag. For more information on this 
-    # 	tag visit http://www.xulplanet.com/references/objref/HTMLLabelElement.html.
-    #
-    # Inputs:	
-    #   - how - The attribute used to identify the label.
-    #   - what - The value of that attribute. 
-    # 
-    # Typical Usage:
-    #   ff.label(:id, /list/)                # access the first label that matches list.
-    #   ff.label(:index,2)                   # access the second label on the page
-    #   ff.label(:for, "txt_1")              # access a the label that is associated with the object that has an id of txt_1
-    #
-    # Output:
-    #	Label object
-    #
-    def label(how, what=nil)
-        locate if defined?(locate)
-        return Label.new(self, how, what)
-    end
-
     # 
     # Description:
     #   Used for accessing all the Label elements on the page. Returns a Labels object
