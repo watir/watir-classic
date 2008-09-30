@@ -39,6 +39,7 @@ class TC_Images_XPath < Test::Unit::TestCase
         assert_false(  browser.image(:xpath , "//img[contains(@alt , 'tri')]" ).exists?  )
     end
 
+    tag_method :test_element_by_xpath_class, :fails_on_ie
     def test_element_by_xpath_class
       # FIXME getting HTMLAnchorElement instead of HTMLImageElement
       # TODO: This should return null if object is not there.

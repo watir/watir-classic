@@ -23,6 +23,7 @@ class TC_Tables < Test::Unit::TestCase
     assert(browser.table(:index, 2).exists?)
   end
   
+  tag_method :test_rows, :fails_on_ie
   def test_rows
     assert_raises(UnknownObjectException ){ browser.table(:id, 'missingTable').row_count }
     assert_raises(UnknownObjectException ){ browser.table(:index, 66).row_count }
@@ -330,9 +331,9 @@ class TC_Tables_Complex < Test::Unit::TestCase
 end
 
 class TC_Tables_Display < Test::Unit::TestCase
-  
   include MockStdoutTestCase
 
+  tag_method :test_showTables, :fails_on_ie
   def test_showTables
     goto_page("table1.html")
     $stdout = @mockout

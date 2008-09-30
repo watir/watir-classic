@@ -51,9 +51,9 @@ end
 
 
 class TC_Pres_Display < Test::Unit::TestCase
-  
   include MockStdoutTestCase
 
+  tag_method :test_showPres, :fails_on_ie
   def test_showPres
     goto_page("pre.html")
     $stdout = @mockout

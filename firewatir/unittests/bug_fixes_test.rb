@@ -8,6 +8,7 @@ class TC_Bugs< Test::Unit::TestCase
         goto_page("frame_buttons.html")
     end
   
+    tag_method :test_frame_objects_bug3, :fails_on_ie
     def test_frame_objects_bug3
         frame = browser.frame("buttonFrame")
         button = frame.button(:name, "b1")
@@ -29,6 +30,7 @@ class TC_Bugs< Test::Unit::TestCase
     # appropriate class, not the generic Element class. So if it's a div,
     # it should return an instance of Div, if it's a checkbox, CheckBox,
     # and so on. TODO write tests for all classes
+    tag_method :test_element_by_xpath_bug01, :fails_on_ie
     def test_element_by_xpath_bug01
       goto_page("div.html")
       element = browser.element_by_xpath("//div[@id='div1']")
@@ -39,6 +41,7 @@ class TC_Bugs< Test::Unit::TestCase
       assert_class element, 'Div'
     end
     
+    tag_method :test_elements_by_xpath_bug10, :fails_on_ie
     def test_elements_by_xpath_bug10
         goto_page("links1.html")
         elements = browser.elements_by_xpath("//a")
@@ -54,6 +57,7 @@ class TC_Bugs< Test::Unit::TestCase
         assert_equal("Sign In", browser.button(:value,"Sign In").value)
     end
        
+    tag_method :test_html_bug7, :fails_on_ie
     def test_html_bug7
         goto_page("links1.html")
         html = browser.html
@@ -66,6 +70,7 @@ class TC_Bugs< Test::Unit::TestCase
         assert(browser.text.include?("PASS") )
     end
 
+    tag_method :test_file_field_value_bug20, :fails_on_ie # hangs, actually
     def test_file_field_value_bug20
         actual_file_name = "c:\\Program Files\\TestFile.html"
         goto_page("fileupload.html")
@@ -75,6 +80,7 @@ class TC_Bugs< Test::Unit::TestCase
         assert(actual_file_name, set_file_name)
     end    
 
+    tag_method :test_attribute_value_bug22, :fails_on_ie
     def test_attribute_value_bug22
         goto_page("div.html")
         assert("Test1", browser.element_by_xpath("//div[@id='div1']").attribute_value("title"))
@@ -97,6 +103,7 @@ class TC_Bugs< Test::Unit::TestCase
         assert_false(browser.contains_text(/pass/))
     end
 
+    tag_method :test_frame_bug_21, :fails_on_ie
     def test_frame_bug_21
         goto_page("frame_buttons.html")
         frame1 = browser.frame(:name, "buttonFrame")
@@ -132,13 +139,15 @@ class TC_Bugs< Test::Unit::TestCase
         div = browser.div(:title, "Test1")
         assert_equal("div1", div.id)
     end
-    
+        
+    tag_method :test_element_using_any_attribute2, :fails_on_ie
     def test_element_using_any_attribute2
         goto_page("div.html")
         div = browser.div(:attribute, "attribute")
         assert_equal("div1", div.id)
     end
 
+    tag_method :test_file_field_bug_20, :fails_on_ie
     def test_file_field_bug_20
         goto_page("fileupload.html")
         # Enter dummy path.
@@ -168,6 +177,7 @@ class TC_Bugs< Test::Unit::TestCase
         end
     end
 
+    tag_method :test_fire_event_bug31, :fails_on_ie
     def test_fire_event_bug31
         goto_page("div.html")
         div = browser.div(:attribute, "attribute")

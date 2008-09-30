@@ -57,6 +57,7 @@ class TC_Buttons_XPath < Test::Unit::TestCase
         assert_false(browser.button(:xpath, "//input[@id='missingid']").exists?)   
     end
 
+    tag_method :test_element_by_xpath_class, :fails_on_ie
     def test_element_by_xpath_class
       element = browser.element_by_xpath("//input[@value='Click Me']")
       assert_class element, 'Button'

@@ -16,6 +16,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
     assert(browser.table(:xpath, "//table[@id = 't1']").exists?)
   end
 
+  tag_method :test_element_by_xpath_class, :fails_on_ie
   def test_element_by_xpath_class
     element = browser.element_by_xpath("//table[@id = 't1']")
     assert_class(element, 'Table')

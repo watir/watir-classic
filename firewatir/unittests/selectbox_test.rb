@@ -40,6 +40,7 @@ class TC_SelectList < Test::Unit::TestCase
     end    
 
 
+    tag_method :test_option_class_name, :fails_on_ie
     def test_option_class_name
 
         # the option object doesnt inherit from element, so this doesnt work
@@ -124,6 +125,7 @@ class TC_SelectList < Test::Unit::TestCase
 end
 
 class TC_Select_Options < Test::Unit::TestCase
+    tags :fails_on_ie
        
     def setup()
         goto_page("select_tealeaf.html")

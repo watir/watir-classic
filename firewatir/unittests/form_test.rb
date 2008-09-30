@@ -36,6 +36,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms
   end     
   
   # The following tests from bug 2261 
+  tag_method :test_form_html, :fails_on_ie
   def test_form_html 
     assert_equal("\n<BR><INPUT value=\"Submit\" type=\"submit\">\n".downcase(), 
     browser.form(:name, 'test2').html.downcase())

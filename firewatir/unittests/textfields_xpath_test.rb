@@ -89,6 +89,7 @@ class TC_Fields_XPath < Test::Unit::TestCase
          assert_equal(  "FireWatir Firefox Controller" , browser.text_field(:xpath , "//input[@name='text1']").value )  
     end
 
+    tag_method :test_JS_Events, :fails_on_ie
     def test_JS_Events
         browser.text_field(:xpath , "//input[@name='events_tester']").set('p')
 

@@ -18,6 +18,7 @@ class TC_Links < Test::Unit::TestCase
     
     # In current implementation, method_missing catches all the methods that are not defined
     # for the element. So there is no way to find out about missinwayoffindingobject exp.
+    tag_method :test_bad_attribute, :fails_on_ie
     def test_bad_attribute
         assert_raises(UnknownObjectException) { browser.link(:bad_attribute, 199).click }  
         begin
@@ -175,6 +176,7 @@ class TC_Links_Display < Test::Unit::TestCase
   
   include MockStdoutTestCase
 
+  tag_method :test_showLinks, :fails_on_ie
   def test_showLinks
     goto_page("links1.html")
     $stdout = @mockout

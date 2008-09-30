@@ -168,6 +168,7 @@ class TC_Images_Display < Test::Unit::TestCase
   
   include MockStdoutTestCase
 
+  tag_method :test_showImages, :fails_on_ie
   def test_showImages
     goto_page("images1.html")
     $stdout = @mockout

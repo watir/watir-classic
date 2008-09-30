@@ -17,6 +17,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
        assert_false(browser.select_list(:xpath, "//select[@id='missing']").exists?)   
     end
 
+    tag_method :test_element_by_xpath_class, :fails_on_ie
     def test_element_by_xpath_class
       element = browser.element_by_xpath("//select[@name='sel1']")
       assert_class(element, 'SelectList')
@@ -49,6 +50,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
            browser.select_list(:xpath, "//select[@name='sel2']").getSelectedItems)   
     end
 
+    tag_method :test_clearSelection, :fails_on_ie
     def test_clearSelection
        assert_raises(UnknownObjectException) { browser.select_list(:xpath, "//select[@name='NoName']").clearSelection }  
        browser.select_list(:xpath, "//select[@name='sel1']").clearSelection

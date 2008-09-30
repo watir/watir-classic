@@ -109,6 +109,7 @@ end
 require 'unittests/iostring'
 class TC_show_frames < Test::Unit::TestCase
   include MockStdoutTestCase                
+  tags :fails_on_ie
  
   def capture_and_compare(page, expected)
     goto_page(page)

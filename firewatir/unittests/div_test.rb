@@ -22,6 +22,7 @@ class TC_Divs < Test::Unit::TestCase
     assert(browser.text_field(:name, "text1").verify_contains("0") )  
   end
   
+  tag_method :test_show_all_objects, :fails_on_ie
   def test_show_all_objects
     assert_equal(36, browser.show_all_objects.length)
     assert_equal(3,browser.div(:id,"text_fields1").show_all_objects.length)
@@ -193,6 +194,7 @@ class TC_Divs_Display < Test::Unit::TestCase
   
   include MockStdoutTestCase
 
+  tag_method :test_showDivs, :fails_on_ie
   def test_showDivs
     goto_page("div.html")
     $stdout = @mockout
@@ -232,9 +234,9 @@ END_OF_MESSAGE
 end
 
 class TC_Spans_Display < Test::Unit::TestCase
-  
   include MockStdoutTestCase
 
+  tag_method :test_showSpans, :fails_on_ie
   def test_showSpans
     goto_page("div.html")
     $stdout = @mockout

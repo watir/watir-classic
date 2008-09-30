@@ -6,7 +6,6 @@ require 'unittests/setup'
 
 class TC_Links_XPath < Test::Unit::TestCase
     
-
     def setup()
         goto_page("links1.html")
     end
@@ -18,6 +17,7 @@ class TC_Links_XPath < Test::Unit::TestCase
         assert_false(exists?{browser.link(:xpath, "//a[contains(., /miss/)]")})   
     end
         
+    tag_method :test_element_by_xpath_class, :fails_on_ie
     def test_element_by_xpath_class
         # TODO: If element is not present this should return null
         #element = browser.element_by_xpath("//a[contains(., /miss/)]")
