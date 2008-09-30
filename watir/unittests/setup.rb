@@ -3,6 +3,10 @@ $SETUP_LOADED = true
 
 $myDir = File.expand_path(File.dirname(__FILE__))
 
+def append_to_load_path path
+  $LOAD_PATH.unshift File.expand_path(path)
+end
+
 # use local development versions of watir, firewatir, watir-common if available
 topdir = File.join(File.dirname(__FILE__), '..')
 $firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
@@ -10,7 +14,7 @@ $watir_dev_lib = File.join(topdir, 'lib')
 libs = []
 libs << File.join(topdir, '..', 'watir-common', 'lib')
 libs << File.join(topdir, '..', 'watir-common') # for the unit tests
-libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
+libs.each { |lib| append_to_load_path(lib) }
 
 $default_browser = 'ie'
 require 'unittests/setup/lib'
@@ -27,22 +31,25 @@ Test Suites
 * window_tests -- window intensive tests
 =end
 
-commondir = File.join(topdir, '..', 'watir-common')
+tiptopdir = File.join topdir, '..'
+commondir = File.join topdir, '..', 'watir-common'
+append_to_load_path tiptopdir
 $all_tests = []
-Dir.chdir topdir do
-  $all_tests += Dir["unittests/*_test.rb"]
+Dir.chdir tiptopdir do
+  $all_tests += Dir["watir/unittests/*_test.rb"]
 end
-Dir.chdir commondir do
-  $all_tests += Dir["unittests/*_test.rb"]
+Dir.chdir tiptopdir do
+  $all_tests += Dir["watir-common/unittests/*_test.rb"]
 end
 
 # These tests won't load unless Watir is in the path
 $watir_only_tests = [
-  "unittests/images_xpath_test.rb",
-  "unittests/images_test.rb",
-  "unittests/dialog_test.rb",
-  "unittests/ie_test.rb"
-]
+  "images_xpath_test.rb",
+  "images_test.rb",
+  "dialog_test.rb",
+  "ie_test.rb"
+].map {|file| "watir/unittests/#{file}"}
+
 if Watir::UnitTest.options[:browser] != 'ie'
   $all_tests -= $watir_only_tests
 end
