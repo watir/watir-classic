@@ -17,7 +17,7 @@ module Watir
         :type => ['slow', 'fast', 'zippy'], 
         :default => 'fast'
         builder.add_choice :coverage,
-        :type => ['regression', 'all'],
+        :type => ['regression', 'all', 'tagged-failures'],
         :default => 'regression'
       end
       def execute 
