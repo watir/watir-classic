@@ -1,3 +1,6 @@
+# this file needs to be loaded before 'test/unit' to ensure that our
+# test runner is used instead (defined in the at_exit block below).
+
 require 'test/unit/collector/objectspace'
 
 # Modify the Test::Unit runner in Eclipse, so it only runs our tests

@@ -1,5 +1,3 @@
-Watir::UnitTest.options = Watir::UnitTest::Options.new.execute
-
 case Watir::UnitTest.options[:browser]
 when 'ie'
   $LOAD_PATH.unshift File.expand_path($watir_dev_lib)

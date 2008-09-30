@@ -14,4 +14,3 @@ Watir::UnitTest.filter_out do |test|
   test.class.to_s =~ /xpath/i
 end
 Watir::UnitTest.filter_out_tests_tagged :must_be_visible 
-Watir::UnitTest.filter_out_tests_tagged :fails_on_ie
