@@ -8,11 +8,10 @@ class TC_CSS < Test::Unit::TestCase
   
   def isMessageDisplayed(message)
     s = false
-    divs = browser.getIE.document.getElementsByTagName("DIV")
+    divs = browser.divs
     divs.each do |d|
-      
-      if d.innerText.to_s.downcase.match( /#{message}/i )
-        if d.invoke("className").to_s.downcase.match(/show/i)
+      if d.text.downcase.match( /#{message}/i )
+        if d.class_name.downcase.match(/show/i)
           s = true
         end
       end
@@ -25,7 +24,6 @@ class TC_CSS < Test::Unit::TestCase
     goto_page "cssTest.html"
   end
   
-  tag_method :test_SuccessMessage, :fails_on_firefox
   def test_SuccessMessage
     browser.button( :caption , "Success").click
     assert( isMessageDisplayed("Success") )
