@@ -1764,6 +1764,12 @@ require 'activesupport'
             @element_objects[i] = element_class.new(container, :jssh_name, elements[i])
           end
         end
+
+        # default implementation. overridden by some subclasses.
+        def locate_elements
+          locate_tagged_elements(element_class::TAG)
+        end
+      
       
         # Description:
         #   Locate all the elements of give tag and type.

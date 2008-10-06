@@ -116,7 +116,7 @@ module FireWatir
       end
       @o = self
     end            
-    
+
     #   - how - Attribute to identify the element.
     #   - what - Value of that attribute.
     def initialize(container, how, what)
@@ -184,6 +184,7 @@ module FireWatir
   
   class Table < Element
     attr_accessor :element_name
+    TAG = 'TABLE'
     
     #   - how - Attribute to identify the table element.
     #   - what - Value of that attribute.
@@ -646,6 +647,7 @@ module FireWatir
   #
   class Image < Element
     attr_accessor :element_name
+    TAG = 'IMG'
     #
     # Description:
     #   Initializes the instance of image object.
@@ -779,6 +781,7 @@ module FireWatir
   #
   class Link < Element
     attr_accessor :element_name
+    TAG = 'A'
     #
     # Description:
     #   Initializes the instance of link element.
@@ -1875,12 +1878,7 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#links method
   #
   class Links < ElementCollections
-    def locate_elements
-      locate_tagged_elements("a")
-    end
     def element_class; Link; end    
-    
-    #    def element_tag; 'A'; end
     
     #    private 
     #    def set_show_items
@@ -1897,9 +1895,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#images method
   #
   class Images < ElementCollections
-    def locate_elements
-      locate_tagged_elements("img")
-    end
     def element_class; Image; end 
 
     #    def length
@@ -1955,9 +1950,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#tables method
   #
   class Tables < ElementCollections
-    def locate_elements
-      locate_tagged_elements("table")
-    end
     def element_class; Table; end
 
     #    def element_tag; 'TABLE'; end
@@ -1975,9 +1967,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#labels method
   #
   class Labels < ElementCollections
-    def locate_elements
-      locate_tagged_elements("label")
-    end
     def element_class; Label; end
       
     #    def element_tag; 'LABEL'; end
@@ -1995,9 +1984,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#pres method
   #
   class Pres < ElementCollections
-    def locate_elements
-      locate_tagged_elements("pre")
-    end
     def element_class; Pre; end
     
     #	def set_show_items
@@ -2013,9 +1999,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#ps method
   #
   class Ps < ElementCollections
-    def locate_elements
-      locate_tagged_elements("p")
-    end
     def element_class; P; end
     
     #    private
@@ -2033,9 +2016,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#spans method
   #
   class Spans < ElementCollections
-    def locate_elements
-      locate_tagged_elements("span")
-    end
     def element_class; Span; end
     
     #    private
@@ -2053,9 +2033,6 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#divs method
   #
   class Divs < ElementCollections
-    def locate_elements
-      locate_tagged_elements("div")
-    end
     def element_class; Div; end
     
     #    private 
@@ -2107,21 +2084,12 @@ module FireWatir
     TAG = 'AREA'
   end
   
-
   class Maps < ElementCollections
-    def locate_elements
-      locate_tagged_elements("map")
-    end
     def element_class; Map; end
-    def element_tag; 'MAP'; end
   end
   
   class Areas < ElementCollections
-    def locate_elements
-      locate_tagged_elements("area")
-    end
     def element_class; Area; end
-    def element_tag; 'AREA'; end
   end
     
 end
