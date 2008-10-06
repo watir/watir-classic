@@ -2108,12 +2108,6 @@ module FireWatir
   end
   
 
-  module Container
-    def maps
-      locate if defined?(locate)
-      return Maps.new(self)
-    end
-  end
   class Maps < ElementCollections
     def locate_elements
       locate_tagged_elements("map")
@@ -2122,12 +2116,6 @@ module FireWatir
     def element_tag; 'MAP'; end
   end
   
-  module Container
-    def areas
-      locate if defined?(locate)
-      return Areas.new(self)
-    end
-  end
   class Areas < ElementCollections
     def locate_elements
       locate_tagged_elements("area")

@@ -142,21 +142,6 @@ module FireWatir
         locate if defined?(locate)
         Table.new(self, how, what)
     end
-
-    #
-    # Description:
-    #   Gets the tables iterator. It returns a Tables object 
-    #
-    # Typical usage:
-    #
-    #   ff.tables.each { |t| puts t.to_s }            # iterate through all the tables on the page
-    #   ff.tables[1].to_s                             # goto the first table on the page                                   
-    #   ff.tables.length                              # show how many tables are on the page. Tables that are nested will be included in this
-    #
-    def tables
-        locate if defined?(locate)
-        return Tables.new(self)
-    end
     
     #
     # Description:
@@ -228,23 +213,6 @@ module FireWatir
 
     # 
     # Description:
-    #   Used for accessing all the buttons on the page. Returns a Buttons object
-    #
-    # Typical usage:
-    #
-    #   ff.buttons.each { |b| puts b.to_s }            # iterate through all the buttons on the page
-    #   ff.buttons.length                              # show how many buttons are on the page. 
-    # 
-    # Output:
-    #   Buttons object.
-    #
-    def buttons
-        locate if defined?(locate)
-        return Buttons.new(self)
-    end
-
-    # 
-    # Description:
     #   Used for accessing a file field. Usually an <input type = file> HTML tag.  
     #  
     # Input:
@@ -262,24 +230,6 @@ module FireWatir
         locate if defined?(locate)
         FileField.new(self, how, what)
     end    
-    
-    # 
-    # Description:
-    #   Used for accessing all the file field elements on the page. Returns a FileFields object
-    #
-    # Typical usage:
-    #
-    #   ff.file_fields.each { |f| puts f.to_s }            # iterate through all the file fields on the page
-    #   ff.file_fields[1].to_s                             # goto the first file field on the page                                   
-    #   ff.file_fields.length                              # show how many file fields are on the page. 
-    # 
-    # Output:
-    #   FileFields object
-    #
-    def file_fields
-        locate if defined?(locate)
-        return FileFields.new(self)
-    end
 
     #
     # Description:
@@ -304,24 +254,6 @@ module FireWatir
 
     # 
     # Description:
-    #   Used for accessing all the text fields on the page. Returns a TextFields object
-    #
-    # Typical usage:
-    #
-    #   ff.text_fields.each { |t| puts t.to_s }            # iterate through all the text fields on the page
-    #   ff.text_fields[1].to_s                             # goto the first text fields on the page                                   
-    #   ff.text_fields.length                              # show how many text fields are on the page.
-    #
-    # Output:
-    #   TextFields object.
-    #
-    def text_fields
-        locate if defined?(locate)
-        return TextFields.new(self)
-    end
-
-    # 
-    # Description:
     #   Used to access hidden field element. Usually an <input type = hidden> HTML tag
     #
     # Input:
@@ -339,24 +271,6 @@ module FireWatir
     def hidden(how, what=nil)
         locate if defined?(locate)
         return Hidden.new(self, how, what)
-    end
-
-    # 
-    # Description:
-    #   Used for accessing all the hidden fields on the page. Returns a Hiddens object
-    #
-    # Typical usage:
-    #
-    #   ff.hiddens.each { |t|  puts t.to_s }           # iterate through all the hidden fields on the page
-    #   ff.hiddens[1].to_s                             # goto the first hidden fields on the page                                   
-    #   ff.hiddens.length                              # show how many hidden fields are on the page.
-    # 
-    # Output:
-    #   Hiddens object.
-    #
-    def hiddens
-        locate if defined?(locate)
-        return Hiddens.new(self)
     end
 
     #
@@ -378,24 +292,6 @@ module FireWatir
     def select_list(how, what=nil) 
         locate if defined?(locate)
         return SelectList.new(self, how, what)
-    end
-
-    # 
-    # Description:
-    #   Used for accessing all the Listbox or dropdown elements on the page. Returns a SelectLists object
-    #
-    # Typical usage:
-    #
-    #   ff.select_lists.each { |s| puts s.to_s }            # iterate through all the select boxes on the page
-    #   ff.select_lists[1].to_s                             # goto the first select boxes on the page                                   
-    #   ff.select_lists.length                              # show how many select boxes are on the page.
-    # 
-    # Output:
-    #   SelectLists object.
-    #
-    def select_lists
-        locate if defined?(locate)
-        return SelectLists.new(self)
     end
     
     #
@@ -428,24 +324,6 @@ module FireWatir
         locate if defined?(locate)
         return CheckBox.new(self, how, what, value) 
     end
-
-    # 
-    # Description:
-    #   Used for accessing all the Checkbox elements on the page. Returns a CheckBoxes object
-    #
-    # Typical usage:
-    #
-    #   ff.checkboxes.each { |c| puts c.to_s }           # iterate through all the check boxes on the page
-    #   ff.checkboxes[1].to_s                             # goto the first check box on the page                                   
-    #   ff.checkboxes.length                              # show how many check boxes are on the page.
-    # 
-    # Output:
-    #   CheckBoxes object.
-    def checkboxes
-        locate if defined?(locate)
-        return CheckBoxes.new(self)
-    end
-
     
     #
     # Description:
@@ -477,24 +355,6 @@ module FireWatir
         locate if defined?(locate)
         return Radio.new(self, how, what, value) 
     end
-
-    # 
-    # Description:
-    #   Used for accessing all the Radiobutton elements on the page. Returns a Radios object
-    #
-    # Typical usage:
-    #
-    #   ff.radios.each { |r| puts r.to_s }            # iterate through all the radio buttons on the page
-    #   ff.radios[1].to_s                             # goto the first radio button on the page                                   
-    #   ff.radios.length                              # show how many radio buttons are on the page.
-    # 
-    # Output:
-    #   Radios object.
-    #
-    def radios
-        locate if defined?(locate)
-        return Radios.new(self)
-    end
     
     #
     # Description:
@@ -517,24 +377,6 @@ module FireWatir
         return Link.new(self, how, what)
     end
 
-    # 
-    # Description:
-    #   Used for accessing all the Link elements on the page. Returns a Links object
-    #
-    # Typical usage:
-    #
-    #   ff.links.each { |l| puts l.to_s }            # iterate through all the links on the page
-    #   ff.links[1].to_s                             # goto the first link on the page                                   
-    #   ff.links.length                              # show how many links are on the page.
-    #
-    # Output:
-    #   Links Object
-    #
-    def links
-        locate if defined?(locate)
-        return Links.new(self)
-    end
-
     #
     # Description:
     #   Used to access image element. Usually an <img> HTML tag.
@@ -555,114 +397,8 @@ module FireWatir
         locate if defined?(locate)
         Image.new(self, how, what)
     end    
-    
-    # 
-    # Description:
-    #   Used for accessing all the Image elements on the page. Returns a Images object
-    #
-    # Typical usage:
-    #
-    #   ff.images.each { |i| puts i.to_s }            # iterate through all the images on the page
-    #   ff.images[1].to_s                             # goto the first image on the page                                   
-    #   ff.images.length                              # show how many images are on the page.
-    #
-    # Output:
-    #   Images object.
-    #
-    def images
-        locate if defined?(locate)
-        return Images.new(self)
-    end
 
 
-    # 
-    # Description:
-    #   Used for accessing all the Div elements on the page. Returns a Divs object
-    #
-    # Typical usage:
-    #
-    #   ff.divs.each { |d| puts d.to_s }            # iterate through all the divs on the page
-    #   ff.divs[1].to_s                             # goto the first div on the page                                   
-    #   ff.divs.length                              # show how many divs are on the page.
-    #
-    # Output:
-    #   Divs object.
-    #
-    def divs
-        locate if defined?(locate)
-        return Divs.new(self)
-    end
-
-    # Description:
-    #   Used for accessing all the Span elements on the page. Returns a Spans object
-    #
-    # Typical usage:
-    #
-    #   ff.spans.each { |s| puts s.to_s }            # iterate through all the spans on the page
-    #   ff.spans[1].to_s                             # goto the first span on the page                                   
-    #   ff.spans.length                              # show how many spans are on the page.
-    #
-    # Output:
-    #   Spans object.
-    #
-    def spans
-        locate if defined?(locate)
-        return Spans.new(self)
-    end
-
-    # 
-    # Description:
-    #   Used for accessing all the Paragraph <p> elements on the page. Returns a Ps object
-    #
-    # Typical usage:
-    #
-    #   ff.ps.each { |p| puts p.to_s }            # iterate through all the p tags on the page
-    #   ff.ps[1].to_s                             # goto the first p tag on the page                                   
-    #   ff.ps.length                              # show how many p tags are on the page.
-    #
-    # Output:
-    #   Ps object
-    #
-    def ps
-        locate if defined?(locate)
-        return Ps.new(self)
-    end
-
-    # 
-    # Description:
-    #   Used for accessing all the Pre elements on the page. Returns a Pres object
-    #
-    # Typical usage:
-    #
-    #   ff.pres.each { |pre| puts pre.to_s }        # iterate through all the pre tags on the page
-    #   ff.pres[1].to_s                             # goto the first pre tag on the page                                   
-    #   ff.pres.length                              # show how many pre tags are on the page.
-    #  
-    # Output:
-    #   Pres object
-    #
-    def pres
-        locate if defined?(locate)
-        return Pres.new(self)
-    end
-	
-    # 
-    # Description:
-    #   Used for accessing all the Label elements on the page. Returns a Labels object
-    #
-    # Typical usage:
-    #
-    #   ff.labels.each { |l| puts l.to_s }            # iterate through all the labels on the page
-    #   ff.labels[1].to_s                             # goto the first label on the page                                   
-    #   ff.labels.length                              # show how many labels are on the page.
-    #
-    # Output:
-    #   Labels object
-    #
-    def labels
-        locate if defined?(locate)
-        return Labels.new(self)
-    end
 
     # Description:
     #	Searching for Page Elements. Not for external consumption.

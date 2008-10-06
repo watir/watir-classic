@@ -1,3 +1,5 @@
+require 'activesupport'
+
 =begin
   license
   ---------------------------------------------------------------------------
@@ -1741,6 +1743,14 @@
     #   Class for iterating over elements of common type like links, images, divs etc.
     #
     class ElementCollections
+        def self.inherited subclass
+          class_name = subclass.to_s.demodulize
+          method_name = class_name.underscore
+          FireWatir::Container.module_eval "def #{method_name}
+          locate if defined?(locate)
+          return #{class_name}.new(self); end"
+        end
+        
         include FireWatir::Container # XXX not sure if this is right
         @@current_level = 0
         
