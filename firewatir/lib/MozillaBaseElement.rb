@@ -1743,6 +1743,18 @@
     class ElementCollections
         include FireWatir::Container # XXX not sure if this is right
         @@current_level = 0
+        
+        def initialize(container)
+          @container = container
+          elements = locate_elements
+          length = elements.length
+          #puts "length is : #{length}"
+          @element_objects = Array.new(length)
+          for i in 0..length - 1 do
+            @element_objects[i] = element_class.new(container, :jssh_name, elements[i])
+          end
+        end
+      
         #
         # Description:
         #   Initializes new instance of this class.
@@ -1865,7 +1877,6 @@
         #   Count of elements found on the page.
         #
         def length
-            #puts @element_objects.length
             return @element_objects.length
         end
 

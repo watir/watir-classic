@@ -146,7 +146,7 @@ module Watir
   end
   
   class Lis  < ElementCollections
-    include Watir::CommonCollection
+    include CommonCollection
     def element_class; Li; end
     
     def set_show_items

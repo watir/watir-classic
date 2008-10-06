@@ -11,7 +11,7 @@ failure_tag = "fails_on_#{options[:browser]}".to_sym
 case options[:coverage]
   when 'regression'
   Watir::UnitTest.filter_out_tests_tagged failure_tag
-  when 'tagged-failures'
+  when 'known failures'
   Watir::UnitTest.filter_out do |test|
     !(test.tagged? failure_tag)
   end

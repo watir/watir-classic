@@ -1764,21 +1764,12 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#buttons method
   #
   class Buttons < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Buttons class.
-    #
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("input", ["button", "image", "submit", "reset"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Button.new(container, :jssh_name, elements[i])
-      end
+    
+    def locate_elements
+      locate_tagged_elements("input", ["button", "image", "submit", "reset"])      
     end
-    #def element_class; Button; end
+    
+    def element_class; Button; end
     #def length
     # get_length_of_input_objects(["button", "submit", "image"])
     #end
