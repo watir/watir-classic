@@ -12,13 +12,9 @@
 
 require 'activesupport'
 module FireWatir
-
-#
-# Description:
-#   Class for Frame element.
-#
-class Frame < Element 
-
+  
+  class Frame < Element 
+    
     attr_accessor :element_name
     #
     # Description:
@@ -29,37 +25,33 @@ class Frame < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
+      @how = how
+      @what = what
+      @container = container
     end
-
+    
     def locate
-        if(@how == :jssh_name)
-            @element_name = @what
-        else    
-            @element_name = locate_frame(@how, @what)
-        end    
-        #puts @element_name
-        @o = self
-            
-        unless @element_name
-            raise UnknownFrameException, "Unable to locate a frame using #{@how} and #{@what}. "
-        end    
+      if(@how == :jssh_name)
+        @element_name = @what
+      else    
+        @element_name = locate_frame(@how, @what)
+      end    
+      #puts @element_name
+      @o = self
+      
+      unless @element_name
+        raise UnknownFrameException, "Unable to locate a frame using #{@how} and #{@what}. "
+      end    
     end
-
+    
     def html
-        assert_exists
-        get_frame_html
+      assert_exists
+      get_frame_html
     end
-end
-
-#
-# Description:
-#   Class for Form element.
-#
-class Form < Element
-
+  end
+  
+  class Form < Element
+    
     attr_accessor :element_name
     #
     # Description:
@@ -70,40 +62,34 @@ class Form < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
+      @how = how
+      @what = what
+      @container = container
     end
-
-    def locate
-        # Get form using xpath.
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath    
-            @element_name = element_by_xpath(container, @what)
-        else
-            @element_name = locate_tagged_element("form",@how, @what)
-        end
-        @o = self
-    end
-
-    #
-    # Description:
-    #   Submit the form. Equivalent to pressing Enter or Return to submit a form. 
-    #
-    def submit
-        assert_exists
-        submit_form 
-        @o.wait
-    end   
-
-end # class Form
     
-#
-# Description:    
-#   Base class containing items that are common between the span, div, label, p and pre classes.
-#
-class NonControlElement < Element
+    def locate
+      # Get form using xpath.
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath    
+        @element_name = element_by_xpath(container, @what)
+      else
+        @element_name = locate_tagged_element("form",@how, @what)
+      end
+      @o = self
+    end
+    
+    # Submit the form. Equivalent to pressing Enter or Return to submit a form. 
+    def submit
+      assert_exists
+      submit_form 
+      @o.wait
+    end   
+    
+  end # class Form
+  
+  # Base class containing items that are common between the span, div, label, p and pre classes.
+  class NonControlElement < Element
     def self.inherited subclass
       class_name = subclass.to_s.demodulize
       method_name = class_name.underscore
@@ -111,7 +97,7 @@ class NonControlElement < Element
       locate if defined?(locate)
       return #{class_name}.new(self, how, what); end"
     end
-
+    
     attr_accessor :element_name
     #def get_element_name
     #    return @element_name
@@ -121,87 +107,58 @@ class NonControlElement < Element
     #   Locate the element on the page. Element can be a span, div, label, p or pre HTML tag.
     #
     def locate
-        if(@how == :jssh_name)
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element(self.class::TAG, @how, @what)
-        end
-            @o = self
+      if(@how == :jssh_name)
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element(self.class::TAG, @how, @what)
+      end
+      @o = self
     end            
     
-    #
-    # Description:
-    #   Initializes the instance of element object. Element can be a span, div, label, p or pre HTML element.
-    #
-    # Input:
     #   - how - Attribute to identify the element.
     #   - what - Value of that attribute.
-    #
     def initialize(container, how, what)
-        #@element = Element.new(nil)
-        @how = how
-        @what = what
-        @container = container
-        @o = nil
+      #@element = Element.new(nil)
+      @how = how
+      @what = what
+      @container = container
+      @o = nil
     end
-       
-    # 
-    # Description:
-    #   Creates string of properties of the object.
-    #
+    
+    # Returns a string of properties of the object.
     def to_s(attributes = nil)
-        assert_exists
-        hash_properties = {"text"=>"innerHTML"}
-        hash_properties.update(attributes) if attributes != nil
-        r = super(hash_properties)
-        #r = string_creator
-        #r += span_div_string_creator
-        return r.join("\n")
+      assert_exists
+      hash_properties = {"text"=>"innerHTML"}
+      hash_properties.update(attributes) if attributes != nil
+      r = super(hash_properties)
+      #r = string_creator
+      #r += span_div_string_creator
+      return r.join("\n")
     end
-     
-end
-
-#
-# Description:
-#   Class for Pre element.
-#
-class Pre < NonControlElement
+    
+  end
+  
+  class Pre < NonControlElement
     TAG = 'PRE'
-end
-
-#
-# Description:
-#   Class for P element.
-#
-class P < NonControlElement 
+  end
+  
+  class P < NonControlElement 
     TAG = 'P'
-end
-
-#
-# Description:
-#   Class for Div element.
-#
-class Div < NonControlElement 
+  end
+  
+  class Div < NonControlElement 
     TAG = 'DIV'
-end
-
-#
-# Description:
-#   Class for Span element.
-#
-class Span < NonControlElement 
+  end
+  
+  class Span < NonControlElement 
     TAG = 'SPAN'
-end
-
-#
-# Description:
-#   Class for Label element.
-#
-class Label < NonControlElement
+  end
+  
+  class Label < NonControlElement
     TAG = 'LABEL'
-
+    
     #
     # Description:
     #   Used to populate the properties in the to_s method.
@@ -213,87 +170,77 @@ class Label < NonControlElement
     #    return n
     #end
     #private :label_string_creator
-
+    
     #
     # Description:
     #   Creates string of properties of the object.
     #
     def to_s
-        assert_exists
-        super({"for" => "htmlFor","text" => "innerHTML"})
-    #   r=r + label_string_creator
+      assert_exists
+      super({"for" => "htmlFor","text" => "innerHTML"})
+      #   r=r + label_string_creator
     end
-end
-
-#
-# Description:
-#   Class for table element.
-#
-class Table < Element
+  end
+  
+  class Table < Element
     attr_accessor :element_name
-      
-    #
-    # Description:
-    #   Initializes the instance of table object.
-    #
-    # Input:
+    
     #   - how - Attribute to identify the table element.
     #   - what - Value of that attribute.
-    #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
-        @o = nil
-        #super nil
+      @how = how
+      @what = what
+      @container = container
+      @o = nil
+      #super nil
     end
-
+    
     #
     # Description:
     #   Locate the table element.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element('TABLE', @how, @what)
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element('TABLE', @how, @what)
+      end
+      @o = self
     end
-     
+    
     #
     # Description:
     #   Override the highlight method, as if the tables rows are set to have a background color, 
     #   this will override the table background color,  and the normal flash method wont work
     #
     def highlight(set_or_clear )
-
-        if set_or_clear == :set
-            begin
-                @original_border = @o.border.to_i
-                if @o.border.to_i==1
-                    @o.border = 2
-                else
-                    @o.border=1
-                end
-            rescue
-                @original_border = nil
-            end
-        else
-            begin 
-                @o.border= @original_border unless @original_border == nil
-                @original_border = nil
-            rescue
-                # we could be here for a number of reasons...
-            ensure
-                @original_border = nil
-            end
+      
+      if set_or_clear == :set
+        begin
+          @original_border = @o.border.to_i
+          if @o.border.to_i==1
+            @o.border = 2
+          else
+            @o.border=1
+          end
+        rescue
+          @original_border = nil
         end
-        super    
+      else
+        begin 
+          @o.border= @original_border unless @original_border == nil
+          @original_border = nil
+        rescue
+          # we could be here for a number of reasons...
+        ensure
+          @original_border = nil
+        end
+      end
+      super    
     end
-
+    
     #
     # Description:
     #   Used to populate the properties in the to_s method.
@@ -305,17 +252,17 @@ class Table < Element
     #    return n
     #end
     #private :table_string_creator
-
+    
     # returns the properties of the object in a string
     # raises an ObjectNotFound exception if the object cannot be found
     # TODO: Implement to_s method for this class.
     
     def to_s
-        assert_exists
-        r = super({"rows" => "rows.length","columns" => "columnLength", "cellspacing" => "cellspacing", "cellpadding" => "cellpadding", "border" => "border"})
-       # r += self.column_count.to_s
+      assert_exists
+      r = super({"rows" => "rows.length","columns" => "columnLength", "cellspacing" => "cellspacing", "cellpadding" => "cellpadding", "border" => "border"})
+      # r += self.column_count.to_s
     end
-
+    
     #
     # Description:
     #   Gets the number of rows in the table.
@@ -324,10 +271,10 @@ class Table < Element
     #   Number of rows.
     #
     def row_count 
-        assert_exists
-        return rows.length
+      assert_exists
+      return rows.length
     end
-
+    
     #
     # Description:
     #   Gets the table as a 2 dimensional array. Dont expect too much if there are nested tables, colspan etc.
@@ -336,19 +283,19 @@ class Table < Element
     #   2D array with rows and column text of the table.
     #
     def to_a
-        assert_exists
-        y = []
-        table_rows = rows
-        for row in table_rows
-            x = []
-            row.each do |td|
-                x << td.to_s.strip
-            end
-            y << x
+      assert_exists
+      y = []
+      table_rows = rows
+      for row in table_rows
+        x = []
+        row.each do |td|
+          x << td.to_s.strip
         end
-        return y
+        y << x
+      end
+      return y
     end
-
+    
     #
     # Description:
     #   Gets the array of rows in the table.
@@ -357,15 +304,15 @@ class Table < Element
     #   Array of rows.
     #
     def rows
-        assert_exists
-        arr_rows = get_rows
-        table_rows = Array.new(arr_rows.length)
-        for i in 0..arr_rows.length - 1 do
-            table_rows[i] = TableRow.new(@container, :jssh_name, arr_rows[i])
-        end
-        return table_rows
+      assert_exists
+      arr_rows = get_rows
+      table_rows = Array.new(arr_rows.length)
+      for i in 0..arr_rows.length - 1 do
+        table_rows[i] = TableRow.new(@container, :jssh_name, arr_rows[i])
+      end
+      return table_rows
     end
-
+    
     #
     # Description:
     #   Get row at particular index in table.
@@ -377,23 +324,23 @@ class Table < Element
     #   Table Row element
     #
     def [](key)
-        assert_exists
-        arr_rows = rows
-        return arr_rows[key - 1]
+      assert_exists
+      arr_rows = rows
+      return arr_rows[key - 1]
     end
-
+    
     #
     # Desription:
     #   Iterate over each table row element.
     #
     def each
-        assert_exists
-        arr_rows = rows
-        for i in 0..arr_rows.length - 1 do
-            yield arr_rows[i]
-        end
+      assert_exists
+      arr_rows = rows
+      for i in 0..arr_rows.length - 1 do
+        yield arr_rows[i]
+      end
     end
-
+    
     #
     # Description:
     #   Get column count of first row in the table.
@@ -402,11 +349,11 @@ class Table < Element
     #   Number of columns in first row.
     #
     def column_count
-        assert_exists
-        arr_rows = rows
-        return arr_rows[0].column_count
+      assert_exists
+      arr_rows = rows
+      return arr_rows[0].column_count
     end
-
+    
     #
     # Description:
     #   Get values of specified column in each row.
@@ -418,15 +365,15 @@ class Table < Element
     #   Values of column (specified as input) in each row
     #
     def column_values(column)
-        assert_exists
-        arr_rows = rows
-        values = Array.new(arr_rows.length)
-        for i in 0..arr_rows.length - 1 do
-            values[i] = arr_rows[i][column].to_s 
-        end
-        return values
+      assert_exists
+      arr_rows = rows
+      values = Array.new(arr_rows.length)
+      for i in 0..arr_rows.length - 1 do
+        values[i] = arr_rows[i][column].to_s 
+      end
+      return values
     end
-
+    
     #
     # Description:
     #   Get values of all the column in specified row.
@@ -438,135 +385,135 @@ class Table < Element
     #   Value of all columns present in the row.
     #
     def row_values(row)
-        assert_exists
-        arr_rows = rows
-        cells = arr_rows[row - 1].cells
-        values = Array.new(cells.length)
-        for i in 0..cells.length - 1 do
-            values[i] = cells[i].to_s
-        end
-        return values
+      assert_exists
+      arr_rows = rows
+      cells = arr_rows[row - 1].cells
+      values = Array.new(cells.length)
+      for i in 0..cells.length - 1 do
+        values[i] = cells[i].to_s
+      end
+      return values
     end
-end
-
-# this class is a collection of the table body objects that exist in the table
-# it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
-# many of the methods available to this object are inherited from the Element class
-# TODO: Implement TableBodies class.
-#class TableBodies < Element 
-    #
-    # Description:
-    #   Initializes the form element.
-    #
-    # Input:
-    #   - how - Attribute to identify the form element.
-    #   - what - Value of that attribute.
-    #
-    #def initialize( parent_table)
-    #    element = container
-    #    @o = parent_table     # in this case, @o is the parent table
-    #end
-
-    # returns the number of TableBodies that exist in the table
-    #def length
-    #    assert_exists
-    #    return @o.tBodies.length
-    #end
-
-    # returns the n'th Body as a FireWatir TableBody object
-    #def []n
-    #    assert_exists
-    #    return TableBody.new(element, :direct, ole_table_body_at_index(n))
-    #end
-
-    # returns an ole table body
-    #def ole_table_body_at_index(n)
-    #    return @o.tBodies[(n-1).to_s]
-    #end
-
-    # iterates through each of the TableBodies in the Table. Yields a TableBody object
-    #def each
-    #    1.upto( @o.tBodies.length ) { |i| yield TableBody.new(element, :direct, ole_table_body_at_index(i)) }
-    #end
-
-#end
-
-# this class is a table body
-# TODO: Implement TableBody class
-#class TableBody < Element
-    #def locate
-    #    @o = nil
-    #    if @how == :direct
-    #        @o = @what     # in this case, @o is the table body
-    #    elsif @how == :index
-    #        @o = @parent_table.bodies.ole_table_body_at_index(@what)
-    #    end
-    #    @rows = []
-    #    if @o
-    #        @o.rows.each do |oo|
-    #            @rows << TableRow.new(element, :direct, oo)
-    #        end
-    #    end
-    #end            
-
-    #
-    # Description:
-    #   Initializes the form element.
-    #
-    # Input:
-    #   - how - Attribute to identify the form element.
-    #   - what - Value of that attribute.
-    #
-    #def initialize( how, what, parent_table = nil)
-    #    element = container
-    #    @how = how
-    #    @what = what
-    #    @parent_table = parent_table
-    #    super nil
-    #end
-
-    # returns the specified row as a TableRow object
-    #def [](n)
-    #    assert_exists
-    #    return @rows[n - 1]
-    #end
-
-    # iterates through all the rows in the table body
-    #def each
-    #    locate
-    #    0.upto(@rows.length - 1) { |i| yield @rows[i] }
-    #end
-
-    # returns the number of rows in this table body.
-    #def length
-    #    return @rows.length
-    #end
-#end
-
-
-#
-# Description:
-# Class for Table row element.
-#
-class TableRow < Element
+  end
+  
+  # this class is a collection of the table body objects that exist in the table
+  # it wouldnt normally be created by a user, but gets returned by the bodies method of the Table object
+  # many of the methods available to this object are inherited from the Element class
+  # TODO: Implement TableBodies class.
+  #class TableBodies < Element 
+  #
+  # Description:
+  #   Initializes the form element.
+  #
+  # Input:
+  #   - how - Attribute to identify the form element.
+  #   - what - Value of that attribute.
+  #
+  #def initialize( parent_table)
+  #    element = container
+  #    @o = parent_table     # in this case, @o is the parent table
+  #end
+  
+  # returns the number of TableBodies that exist in the table
+  #def length
+  #    assert_exists
+  #    return @o.tBodies.length
+  #end
+  
+  # returns the n'th Body as a FireWatir TableBody object
+  #def []n
+  #    assert_exists
+  #    return TableBody.new(element, :direct, ole_table_body_at_index(n))
+  #end
+  
+  # returns an ole table body
+  #def ole_table_body_at_index(n)
+  #    return @o.tBodies[(n-1).to_s]
+  #end
+  
+  # iterates through each of the TableBodies in the Table. Yields a TableBody object
+  #def each
+  #    1.upto( @o.tBodies.length ) { |i| yield TableBody.new(element, :direct, ole_table_body_at_index(i)) }
+  #end
+  
+  #end
+  
+  # this class is a table body
+  # TODO: Implement TableBody class
+  #class TableBody < Element
+  #def locate
+  #    @o = nil
+  #    if @how == :direct
+  #        @o = @what     # in this case, @o is the table body
+  #    elsif @how == :index
+  #        @o = @parent_table.bodies.ole_table_body_at_index(@what)
+  #    end
+  #    @rows = []
+  #    if @o
+  #        @o.rows.each do |oo|
+  #            @rows << TableRow.new(element, :direct, oo)
+  #        end
+  #    end
+  #end            
+  
+  #
+  # Description:
+  #   Initializes the form element.
+  #
+  # Input:
+  #   - how - Attribute to identify the form element.
+  #   - what - Value of that attribute.
+  #
+  #def initialize( how, what, parent_table = nil)
+  #    element = container
+  #    @how = how
+  #    @what = what
+  #    @parent_table = parent_table
+  #    super nil
+  #end
+  
+  # returns the specified row as a TableRow object
+  #def [](n)
+  #    assert_exists
+  #    return @rows[n - 1]
+  #end
+  
+  # iterates through all the rows in the table body
+  #def each
+  #    locate
+  #    0.upto(@rows.length - 1) { |i| yield @rows[i] }
+  #end
+  
+  # returns the number of rows in this table body.
+  #def length
+  #    return @rows.length
+  #end
+  #end
+  
+  
+  #
+  # Description:
+  # Class for Table row element.
+  #
+  class TableRow < Element
     attr_accessor :element_name
-
+    
     #
     # Description:
     #   Locate the table row element on the page.
     #
     def locate
-        @o = nil
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element("TR", @how, @what)   
-        end
-        @o = self
+      @o = nil
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element("TR", @how, @what)   
+      end
+      @o = self
     end
-
+    
     #
     # Description:
     #   Initializes the instance of table row object.
@@ -576,12 +523,12 @@ class TableRow < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how   
-        @what = what   
-        @container = container
-        #super nil
+      @how = how   
+      @what = what   
+      @container = container
+      #super nil
     end
-
+    
     #
     # Description:
     #   Gets the length of columns in table row.
@@ -590,11 +537,11 @@ class TableRow < Element
     #   Length of columns in table row.
     #
     def column_count
-        assert_exists
-        arr_cells = cells
-        return arr_cells.length
+      assert_exists
+      arr_cells = cells
+      return arr_cells.length
     end
-
+    
     #
     # Description:
     #   Get cell at specified index in a row.
@@ -606,23 +553,23 @@ class TableRow < Element
     #   Table cell element at specified index.
     #
     def [] (key)
-        assert_exists
-        arr_cells = cells
-        return arr_cells[key - 1]
+      assert_exists
+      arr_cells = cells
+      return arr_cells[key - 1]
     end
-
+    
     #
     # Description:
     #   Iterate over each cell in a row.
     #
     def each
-        assert_exists
-        arr_cells = cells
-        for i in 0..arr_cells.length - 1 do
-            yield arr_cells[i]
-        end
+      assert_exists
+      arr_cells = cells
+      for i in 0..arr_cells.length - 1 do
+        yield arr_cells[i]
+      end
     end    
-
+    
     #
     # Description:
     #   Get array of all cells in Table Row
@@ -631,37 +578,37 @@ class TableRow < Element
     #   Array containing Table Cell elements.
     #
     def cells
-        assert_exists        
-        arr_cells = get_cells
-        row_cells = Array.new(arr_cells.length)
-        for i in 0..arr_cells.length - 1 do
-            row_cells[i] = TableCell.new(@container, :jssh_name, arr_cells[i])
-        end
-        return row_cells
+      assert_exists        
+      arr_cells = get_cells
+      row_cells = Array.new(arr_cells.length)
+      for i in 0..arr_cells.length - 1 do
+        row_cells[i] = TableCell.new(@container, :jssh_name, arr_cells[i])
+      end
+      return row_cells
     end
-end
-
-#
-# Description:
-# Class for Table Cell.
-#
-class TableCell < Element
+  end
+  
+  #
+  # Description:
+  # Class for Table Cell.
+  #
+  class TableCell < Element
     attr_accessor :element_name
-
+    
     # Description:
     #   Locate the table cell element on the page.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element("TD", @how, @what)   
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element("TD", @how, @what)   
+      end
+      @o = self
     end
-
+    
     #
     # Description:
     #   Initializes the instance of table cell object.
@@ -671,14 +618,14 @@ class TableCell < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)   
-        @how = how   
-        @what = what   
-        @container = container
-        #super nil   
+      @how = how   
+      @what = what   
+      @container = container
+      #super nil   
     end 
-
+    
     alias to_s text
-
+    
     #
     # Description:
     #   Gets the col span of table cell.
@@ -687,17 +634,17 @@ class TableCell < Element
     #   Colspan of table cell.
     #
     def colspan
-        assert_exists
-        @o.colSpan
+      assert_exists
+      @o.colSpan
     end
-
-end
-
-#
-# Description:
-#   Class for Image element.
-#
-class Image < Element
+    
+  end
+  
+  #
+  # Description:
+  #   Class for Image element.
+  #
+  class Image < Element
     attr_accessor :element_name
     #
     # Description:
@@ -708,59 +655,59 @@ class Image < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
+      @how = how
+      @what = what
+      @container = container
     end
     
     # Description:
     #   Locate the image element on the page.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element('IMG', @how, @what)
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element('IMG', @how, @what)
+      end
+      @o = self
     end            
-
+    
     #
     # Description:
     #   Used to populate the properties in to_s method. Not used anymore
     #
     def image_string_creator
-        n = []
-        n <<   "src:".ljust(TO_S_SIZE) + self.src.to_s
-        n <<   "file date:".ljust(TO_S_SIZE) + self.fileCreatedDate.to_s
-        n <<   "file size:".ljust(TO_S_SIZE) + self.fileSize.to_s
-        n <<   "width:".ljust(TO_S_SIZE) + self.width.to_s
-        n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
-        n <<   "alt:".ljust(TO_S_SIZE) + self.alt.to_s
-        return n
+      n = []
+      n <<   "src:".ljust(TO_S_SIZE) + self.src.to_s
+      n <<   "file date:".ljust(TO_S_SIZE) + self.fileCreatedDate.to_s
+      n <<   "file size:".ljust(TO_S_SIZE) + self.fileSize.to_s
+      n <<   "width:".ljust(TO_S_SIZE) + self.width.to_s
+      n <<   "height:".ljust(TO_S_SIZE) + self.height.to_s
+      n <<   "alt:".ljust(TO_S_SIZE) + self.alt.to_s
+      return n
     end
     private :image_string_creator
-
+    
     # returns a string representation of the object
     def to_s
-        assert_exists
-        super({"src" => "src","width" => "width","height" => "height","alt" => "alt"})
+      assert_exists
+      super({"src" => "src","width" => "width","height" => "height","alt" => "alt"})
     end
-
+    
     # this method returns the file created date of the image
     #def fileCreatedDate
     #    assert_exists
     #    return @o.invoke("fileCreatedDate")
     #end
-
+    
     # this method returns the filesize of the image
     #def fileSize
     #    assert_exists
     #    return @o.invoke("fileSize").to_s
     #end
-
+    
     #
     # Description:
     #   Gets the width of the image in pixels, as a string.
@@ -769,10 +716,10 @@ class Image < Element
     #   Width of image (in pixels).
     #
     def width
-        assert_exists
-        return @o.invoke("width").to_s
+      assert_exists
+      return @o.invoke("width").to_s
     end
-
+    
     #
     # Description:
     #   Gets the height of the image in pixels, as a string.
@@ -781,10 +728,10 @@ class Image < Element
     #   Height of image (in pixels).
     #
     def height
-        assert_exists
-        return @o.invoke("height").to_s
+      assert_exists
+      return @o.invoke("height").to_s
     end
-
+    
     # This method attempts to find out if the image was actually loaded by the web browser. 
     # If the image was not loaded, the browser is unable to determine some of the properties. 
     # We look for these missing properties to see if the image is really there or not. 
@@ -795,7 +742,7 @@ class Image < Element
     #    return false if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
     #    return true
     #end
-
+    
     #
     # Description:
     #   Highlights the image ( in fact it adds or removes a border around the image)
@@ -804,33 +751,33 @@ class Image < Element
     #   - set_or_clear - :set to set the border, :clear to remove it
     #
     def highlight( set_or_clear )
-        if set_or_clear == :set
-            begin
-                @original_border = @o.border
-                @o.border = 1
-            rescue
-                @original_border = nil
-            end
-        else
-            begin 
-                @o.border = @original_border 
-                @original_border = nil
-            rescue
-                # we could be here for a number of reasons...
-            ensure
-                @original_border = nil
-            end
+      if set_or_clear == :set
+        begin
+          @original_border = @o.border
+          @o.border = 1
+        rescue
+          @original_border = nil
         end
+      else
+        begin 
+          @o.border = @original_border 
+          @original_border = nil
+        rescue
+          # we could be here for a number of reasons...
+        ensure
+          @original_border = nil
+        end
+      end
     end
     private :highlight
-end                                                      
-
-
-#
-# Description:
-#   Class for Link element.
-#
-class Link < Element
+  end                                                      
+  
+  
+  #
+  # Description:
+  #   Class for Link element.
+  #
+  class Link < Element
     attr_accessor :element_name
     #
     # Description:
@@ -841,33 +788,33 @@ class Link < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
+      @how = how
+      @what = what
+      @container = container
     end
-   
+    
     #
     # Description:
     #   Locate the link element on the page.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element('A', @how, @what)
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element('A', @how, @what)
+      end
+      @o = self
     end
-
+    
     #TODO: if an image is used as part of the link, this will return true      
     #def link_has_image
     #    assert_exists
     #    return true  if @o.getElementsByTagName("IMG").length > 0
     #    return false
     #end
-
+    
     #TODO: this method returns the src of an image, if an image is used as part of the link
     #def src # BUG?
     #    assert_exists
@@ -877,7 +824,7 @@ class Link < Element
     #        return ""
     #    end
     #end
-
+    
     #
     # Description:
     #   Used to populate the properties in to_s method.
@@ -889,38 +836,38 @@ class Link < Element
     #    n <<   "img src:".ljust(TO_S_SIZE) + self.src if self.link_has_image
     #    return n
     #    end
-
+    
     # returns a textual description of the link
     
     def to_s
-       assert_exists
-       super({"href" => "href","inner text" => "text"})
+      assert_exists
+      super({"href" => "href","inner text" => "text"})
     end
-end
-
-#
-# Description:    
-#   Base class containing items that are common between select list, text field, button, hidden, file field classes.
-#
-class InputElement < Element
+  end
+  
+  #
+  # Description:    
+  #   Base class containing items that are common between select list, text field, button, hidden, file field classes.
+  #
+  class InputElement < Element
     attr_accessor :element_name
     #
     # Description:
     #   Locate the element on the page. Element can be a select list, text field, button, hidden, file field.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            if(self.class::INPUT_TYPES.include?("select-one"))
-                @element_name = locate_tagged_element("select", @how, @what, self.class::INPUT_TYPES)
-            else    
-                @element_name = locate_tagged_element("input", @how, @what, self.class::INPUT_TYPES)
-            end    
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        if(self.class::INPUT_TYPES.include?("select-one"))
+          @element_name = locate_tagged_element("select", @how, @what, self.class::INPUT_TYPES)
+        else    
+          @element_name = locate_tagged_element("input", @how, @what, self.class::INPUT_TYPES)
+        end    
+      end
+      @o = self
     end
     #
     # Description:
@@ -931,19 +878,19 @@ class InputElement < Element
     #   - what - Value of that attribute.
     #
     def initialize(container, how, what)
-        @how = how
-        @what = what
-        @container = container
-        @element_name = ""
-        #super(nil)
+      @how = how
+      @what = what
+      @container = container
+      @element_name = ""
+      #super(nil)
     end
-end
-
-#
-# Description:
-#   Class for SelectList element.
-#
-class SelectList < InputElement
+  end
+  
+  #
+  # Description:
+  #   Class for SelectList element.
+  #
+  class SelectList < InputElement
     INPUT_TYPES = ["select-one", "select-multiple"]
     
     attr_accessor :o
@@ -953,28 +900,28 @@ class SelectList < InputElement
     #   Clears the selected items in the select box.
     #
     def clearSelection
-        assert_exists
-        #highlight( :set)
-        wait = false
-        @o.each do |selectBoxItem|
-            if selectBoxItem.selected
-                selectBoxItem.selected = false
-                wait = true
-            end
+      assert_exists
+      #highlight( :set)
+      wait = false
+      @o.each do |selectBoxItem|
+        if selectBoxItem.selected
+          selectBoxItem.selected = false
+          wait = true
         end
-        @o.wait if wait
-        #highlight( :clear)
+      end
+      @o.wait if wait
+      #highlight( :clear)
     end
-   
+    
     def each
-        assert_exists
-        arr_options = options 
-        #puts arr_options[0]#.length
-        for i in 0..arr_options.length - 1 do
-            yield Option.new(self, :jssh_name, arr_options[i])
-        end
+      assert_exists
+      arr_options = options 
+      #puts arr_options[0]#.length
+      for i in 0..arr_options.length - 1 do
+        yield Option.new(self, :jssh_name, arr_options[i])
+      end
     end
-
+    
     #
     # Description:
     #   Get option element at specified index in select list.
@@ -986,9 +933,9 @@ class SelectList < InputElement
     #   Option element at specified index
     #
     def [] (key)
-        assert_exists
-        arr_options = options
-        return Option.new(self, :jssh_name, arr_options[key - 1])
+      assert_exists
+      arr_options = options
+      return Option.new(self, :jssh_name, arr_options[key - 1])
     end
     
     #
@@ -999,9 +946,9 @@ class SelectList < InputElement
     #   - item - Text of item to be selected.
     #
     def select( item )
-        select_item_in_select_list(:text, item)
+      select_item_in_select_list(:text, item)
     end
-
+    
     #
     # Description:
     #   Selects an item by value. If you need to select multiple items you need to call this function for each item.
@@ -1010,9 +957,9 @@ class SelectList < InputElement
     # - item - Value of the item to be selected.
     #
     def select_value( item )
-        select_item_in_select_list( :value , item )
+      select_item_in_select_list( :value , item )
     end
-
+    
     # Description:
     #   Selects item from the select box.
     #
@@ -1021,29 +968,29 @@ class SelectList < InputElement
     #   - item  - value of either item text or item value.
     #
     def select_item_in_select_list(attribute, value)
-        assert_exists
-        highlight( :set )
-        doBreak = false
-        #element.log "Setting box #{@o.name} to #{attribute} #{value} "
-        @o.each do |option| # items in the list
-            if value.matches( option.invoke(attribute.to_s))
-                if option.selected
-                    doBreak = true
-                    break
-                else
-                    option.selected = true
-                    @o.fireEvent("onChange")
-                    @o.wait
-                    doBreak = true
-                    break
-                end
-            end
+      assert_exists
+      highlight( :set )
+      doBreak = false
+      #element.log "Setting box #{@o.name} to #{attribute} #{value} "
+      @o.each do |option| # items in the list
+        if value.matches( option.invoke(attribute.to_s))
+          if option.selected
+            doBreak = true
+            break
+          else
+            option.selected = true
+            @o.fireEvent("onChange")
+            @o.wait
+            doBreak = true
+            break
+          end
         end
-        unless doBreak
-            raise NoValueFoundException, 
+      end
+      unless doBreak
+        raise NoValueFoundException, 
                     "No option with #{attribute.to_s} of #{value} in this select element"  
-        end
-        highlight( :clear )
+      end
+      highlight( :clear )
     end
     private :select_item_in_select_list
     
@@ -1056,11 +1003,11 @@ class SelectList < InputElement
     #   Array containing the items of the select list.
     #
     def getAllContents() # BUG: camel_case.rb
-        assert_exists
-        #element.log "There are #{@o.length} items"
-        returnArray = []
-        @o.each { |thisItem| returnArray << thisItem.text }
-        return returnArray 
+      assert_exists
+      #element.log "There are #{@o.length} items"
+      returnArray = []
+      @o.each { |thisItem| returnArray << thisItem.text }
+      return returnArray 
     end
     
     #
@@ -1072,17 +1019,17 @@ class SelectList < InputElement
     #   Array containing the selected items of the select list.
     #
     def getSelectedItems
-        assert_exists
-        returnArray = []
-        #element.log "There are #{@o.length} items"
-        @o.each do |thisItem|
-            #puts "#{thisItem.selected}"
-            if thisItem.selected
-                #element.log "Item ( #{thisItem.text} ) is selected"
-                returnArray << thisItem.text 
-            end
+      assert_exists
+      returnArray = []
+      #element.log "There are #{@o.length} items"
+      @o.each do |thisItem|
+        #puts "#{thisItem.selected}"
+        if thisItem.selected
+          #element.log "Item ( #{thisItem.text} ) is selected"
+          returnArray << thisItem.text 
         end
-        return returnArray 
+      end
+      return returnArray 
     end
     
     #
@@ -1094,16 +1041,16 @@ class SelectList < InputElement
     #   - value - value of that attribute.
     #
     def option (attribute, value)
-        assert_exists
-        Option.new(self, attribute, value)
+      assert_exists
+      Option.new(self, attribute, value)
     end
-end
-
-#
-# Description:
-#   Class for Option element.
-#
-class Option < SelectList
+  end
+  
+  #
+  # Description:
+  #   Class for Option element.
+  #
+  class Option < SelectList
     #
     # Description:
     #   Initializes the instance of option object.
@@ -1114,64 +1061,64 @@ class Option < SelectList
     #   - value - Value of that attribute.
     #
     def initialize (select_list, attribute, value)
-        @select_list = @container = select_list
-        @how = attribute
-        @what = value
-        @option = nil
-        @element_name = ""
-        
-        unless [:text, :value, :jssh_name].include? attribute 
-            raise MissingWayOfFindingObjectException,
+      @select_list = @container = select_list
+      @how = attribute
+      @what = value
+      @option = nil
+      @element_name = ""
+      
+      unless [:text, :value, :jssh_name].include? attribute 
+        raise MissingWayOfFindingObjectException,
                 "Option does not support attribute #{@how}"
+      end
+      #puts @select_list.o.length
+      #puts "what is : #{@what}, how is #{@how}, list name is : #{@select_list.element_name}"
+      if(attribute == :jssh_name)
+        @element_name = @what
+        @option = self
+      else    
+        @select_list.o.each do |option| # items in the list
+          #puts "option is : #{option}"
+          if(attribute == :value)
+            match_value = option.value
+          else    
+            match_value = option.text
+          end    
+          #puts "value is #{match_value}"
+          if value.matches( match_value) #option.invoke(attribute))
+            @option = option
+            @element_name = option.element_name
+            break
+          end
         end
-        #puts @select_list.o.length
-        #puts "what is : #{@what}, how is #{@how}, list name is : #{@select_list.element_name}"
-        if(attribute == :jssh_name)
-            @element_name = @what
-            @option = self
-        else    
-            @select_list.o.each do |option| # items in the list
-                #puts "option is : #{option}"
-                if(attribute == :value)
-                    match_value = option.value
-                else    
-                    match_value = option.text
-                end    
-                #puts "value is #{match_value}"
-                if value.matches( match_value) #option.invoke(attribute))
-                    @option = option
-                    @element_name = option.element_name
-                    break
-                end
-            end
-        end    
+      end    
     end
-
+    
     #
     # Description:
     #   Checks if option exists or not.
     #
     def assert_exists
-        unless @option
-            raise UnknownObjectException,  
+      unless @option
+        raise UnknownObjectException,  
                 "Unable to locate an option using #{@how} and #{@what}"
-        end
+      end
     end
     private :assert_exists
-
+    
     #
     # Description:
     #   Selects the option.
     #
     def select
-        assert_exists
-        if(@how == :text)
-            @select_list.select(@what)
-        elsif(@how == :value)
-            @select_list.select_value(@what)
-        end    
+      assert_exists
+      if(@how == :text)
+        @select_list.select(@what)
+      elsif(@how == :value)
+        @select_list.select_value(@what)
+      end    
     end
-
+    
     #
     # Description:
     #   Gets the class name of the option.
@@ -1180,8 +1127,8 @@ class Option < SelectList
     #   Class name of the option.
     #
     def class_name
-        assert_exists
-        option_class_name
+      assert_exists
+      option_class_name
     end
     
     #
@@ -1192,8 +1139,8 @@ class Option < SelectList
     #   Text of the option.
     #
     def text
-        assert_exists
-        option_text
+      assert_exists
+      option_text
     end
     
     #
@@ -1204,8 +1151,8 @@ class Option < SelectList
     #   Value of the option.
     #
     def value
-        assert_exists
-        option_value
+      assert_exists
+      option_value
     end
     
     #
@@ -1216,38 +1163,38 @@ class Option < SelectList
     #   True if option is selected, false otherwise.
     #
     def selected
-        assert_exists
-        #@option.selected
-        option_selected
+      assert_exists
+      #@option.selected
+      option_selected
     end
-end    
-
-#
-# Description:
-#   Class for Button element.
-#
-class Button < InputElement
+  end    
+  
+  #
+  # Description:
+  #   Class for Button element.
+  #
+  class Button < InputElement
     INPUT_TYPES = ["button", "submit", "image", "reset"] 
     def locate
-			super
-			@o = @element.locate_tagged_element("button", @how, @what, self.class::INPUT_TYPES) unless @o
-		end
-end
-
-#
-# Description:
-# Class for Text Field element.
-#
-class TextField < InputElement
+      super
+      @o = @element.locate_tagged_element("button", @how, @what, self.class::INPUT_TYPES) unless @o
+    end
+  end
+  
+  #
+  # Description:
+  # Class for Text Field element.
+  #
+  class TextField < InputElement
     INPUT_TYPES = ["text", "password", "textarea"] 
-
+    
     # Gets the size of the text field element.
     def_wrap :size
     # Gets max length of the text field element.
     def_wrap :maxlength
     # Returns true if the text field is read only, false otherwise.
     def_wrap :readonly?, :readOnly
-
+    
     #
     # Description:
     #   Used to populate the properties in to_s method
@@ -1261,11 +1208,11 @@ class TextField < InputElement
     #    return n
     #end
     #private :text_string_creator
-
+    
     # TODO: Impelement the to_s method.
     def to_s
-       assert_exists
-       super({"length" => "size","max length" => "maxLength","read only" => "readOnly" })
+      assert_exists
+      super({"length" => "size","max length" => "maxLength","read only" => "readOnly" })
     end
     
     #
@@ -1273,9 +1220,9 @@ class TextField < InputElement
     #   Checks if object is read-only or not.
     #
     def assert_not_readonly
-        raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only." if self.readonly?
+      raise ObjectReadOnlyException, "Textfield #{@how} and #{@what} is read only." if self.readonly?
     end                
-
+    
     #
     # Description:
     #   Checks if the provided text matches with the contents of text field. Text can be a string or regular expression.
@@ -1287,15 +1234,15 @@ class TextField < InputElement
     #   True if provided text matches with the contents of text field, false otherwise.
     #
     def verify_contains( containsThis )
-        assert_exists            
-        if containsThis.kind_of? String
-            return true if self.value == containsThis
-        elsif containsThis.kind_of? Regexp
-            return true if self.value.match(containsThis) != nil
-        end
-        return false
+      assert_exists            
+      if containsThis.kind_of? String
+        return true if self.value == containsThis
+      elsif containsThis.kind_of? Regexp
+        return true if self.value.match(containsThis) != nil
+      end
+      return false
     end
-
+    
     # this method is used to drag the entire contents of the text field to another text field
     #  19 Jan 2005 - It is added as prototype functionality, and may change
     #   * destination_how   - symbol, :id, :name how we identify the drop target 
@@ -1305,23 +1252,23 @@ class TextField < InputElement
     #    assert_exists
     #    destination = element.text_field(destination_how, destination_what)
     #    raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
-
+    
     #    @o.focus
     #    @o.select()
     #    value = self.value
-
+    
     #   @o.fireEvent("onSelect")
     #    @o.fireEvent("ondragstart")
     #    @o.fireEvent("ondrag")
     #    destination.fireEvent("onDragEnter")
     #    destination.fireEvent("onDragOver")
     #    destination.fireEvent("ondrop")
-
+    
     #    @o.fireEvent("ondragend")
     #    destination.value= ( destination.value + value.to_s  )
     #    self.value = ""
     #end
-
+    
     #
     # Description:
     #   Clears the contents of the text field.
@@ -1329,21 +1276,21 @@ class TextField < InputElement
     #   Raises ObjectReadOnlyException if text field is read only.
     #
     def clear
-        assert_exists
-        assert_enabled
-        assert_not_readonly
-        
-        highlight(:set)
-        
-        @o.scrollIntoView
-        @o.focus
-        @o.select()
-        @o.fireEvent("onSelect")
-        @o.value = ""
-        @o.fireEvent("onKeyPress")
-        @o.fireEvent("onChange")
-        @container.wait()
-        highlight(:clear)
+      assert_exists
+      assert_enabled
+      assert_not_readonly
+      
+      highlight(:set)
+      
+      @o.scrollIntoView
+      @o.focus
+      @o.select()
+      @o.fireEvent("onSelect")
+      @o.value = ""
+      @o.fireEvent("onKeyPress")
+      @o.fireEvent("onChange")
+      @container.wait()
+      highlight(:clear)
     end
     
     #
@@ -1356,15 +1303,15 @@ class TextField < InputElement
     #   - setThis - Text to be appended.
     #
     def append( setThis)
-        assert_exists
-        assert_enabled
-        assert_not_readonly
-        
-        highlight(:set)
-        @o.scrollIntoView
-        @o.focus
-        doKeyPress( setThis )
-        highlight(:clear)
+      assert_exists
+      assert_enabled
+      assert_not_readonly
+      
+      highlight(:set)
+      @o.scrollIntoView
+      @o.focus
+      doKeyPress( setThis )
+      highlight(:clear)
     end
     
     #
@@ -1377,21 +1324,21 @@ class TextField < InputElement
     #   - setThis - Text to be set.
     #
     def set( setThis )
-        assert_exists
-        assert_enabled
-        assert_not_readonly
-        
-        highlight(:set)
-        @o.scrollIntoView
-        @o.focus
-        @o.select()
-        @o.fireEvent("onSelect")
-        @o.value = ""
-        @o.fireEvent("onKeyPress")
-        doKeyPress( setThis )
-        highlight(:clear)
-        @o.fireEvent("onChange")
-        @o.fireEvent("onBlur")
+      assert_exists
+      assert_enabled
+      assert_not_readonly
+      
+      highlight(:set)
+      @o.scrollIntoView
+      @o.focus
+      @o.select()
+      @o.fireEvent("onSelect")
+      @o.value = ""
+      @o.fireEvent("onKeyPress")
+      doKeyPress( setThis )
+      highlight(:clear)
+      @o.fireEvent("onChange")
+      @o.fireEvent("onBlur")
     end
     
     #
@@ -1407,7 +1354,7 @@ class TextField < InputElement
     #    assert_exists
     #    @o.value = v.to_s
     #end
-
+    
     # 
     # Description:
     #   Used to set the value of text box and fires the event onKeyPress, onKeyDown, onKeyUp after each character.
@@ -1417,43 +1364,43 @@ class TextField < InputElement
     #   - value - The string to enter into the text field
     #
     def doKeyPress( value )
-        begin
-            maxLength = @o.maxLength
-            if (maxLength != -1 && value.length > maxLength)
-                original_value = value
-                value = original_value[0..maxLength]
-                element.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
-            end
-        rescue
-            # probably a text area - so it doesnt have a max Length
-            maxLength = -1
+      begin
+        maxLength = @o.maxLength
+        if (maxLength != -1 && value.length > maxLength)
+          original_value = value
+          value = original_value[0..maxLength]
+          element.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{maxLength}) of the field. Using value: #{value}"
         end
-        for i in 0..value.length-1   
-            #sleep element.typingspeed   # typing speed
-            c = value[i,1]
-            #element.log  " adding c.chr " + c  #.chr.to_s
-            @o.value = "#{(@o.value.to_s + c)}"   #c.chr
-            @o.fireEvent("onKeyDown")
-            @o.fireEvent("onKeyPress")
-            @o.fireEvent("onKeyUp")
-        end
-        
+      rescue
+        # probably a text area - so it doesnt have a max Length
+        maxLength = -1
+      end
+      for i in 0..value.length-1   
+        #sleep element.typingspeed   # typing speed
+        c = value[i,1]
+        #element.log  " adding c.chr " + c  #.chr.to_s
+        @o.value = "#{(@o.value.to_s + c)}"   #c.chr
+        @o.fireEvent("onKeyDown")
+        @o.fireEvent("onKeyPress")
+        @o.fireEvent("onKeyUp")
+      end
+      
     end
     private :doKeyPress
-
-	alias readOnly? :readonly?
+    
+    alias readOnly? :readonly?
     alias getContents value
     alias maxLength maxlength
-	
-end
-
-#
-# Description:
-#   Class for Hidden Field element.
-#
-class Hidden < TextField 
+    
+  end
+  
+  #
+  # Description:
+  #   Class for Hidden Field element.
+  #
+  class Hidden < TextField 
     INPUT_TYPES =  ["hidden"]
-   
+    
     #
     # Description:
     #   Sets the value of the hidden field. Overriden in this class, as there is no way to set focus to a hidden field
@@ -1462,9 +1409,9 @@ class Hidden < TextField
     #   n - Value to be set.
     #
     def set(n)
-        self.value=n
+      self.value=n
     end
-
+    
     #
     # Description:
     #   Appends the value to the value of the hidden field. Overriden in this class, as there is no way to set focus to a hidden field
@@ -1473,33 +1420,33 @@ class Hidden < TextField
     #   n - Value to be appended.
     #
     def append(n)
-        self.value = self.value.to_s + n.to_s
+      self.value = self.value.to_s + n.to_s
     end
-
+    
     #
     # Description:
     #   Clears the value of the hidden field. Overriden in this class, as there is no way to set focus to a hidden field
     #
     def clear
-        self.value = ""
+      self.value = ""
     end
-
+    
     #
     # Description:
     #   Does nothing, as you cant set focus to a hidden field. Overridden here so that exception doesn't occurs.
     #
     def focus
     end
-
-end
-
-#
-# Description:
-#   Class for FileField element.
-#
-class FileField < InputElement
+    
+  end
+  
+  #
+  # Description:
+  #   Class for FileField element.
+  #
+  class FileField < InputElement
     INPUT_TYPES = ["file"]
-
+    
     #
     # Description:
     #   Sets the path of the file in the textbox.
@@ -1508,31 +1455,31 @@ class FileField < InputElement
     #   setPath - Path of the file.
     #
     def set(setPath)
-        assert_exists
-        
-        setFileFieldValue(setPath)
+      assert_exists
+      
+      setFileFieldValue(setPath)
     end
-end
-
-#
-# Description:
-#   Base class for checkbox and radio button elements.
-#
-class RadioCheckCommon < Element
+  end
+  
+  #
+  # Description:
+  #   Base class for checkbox and radio button elements.
+  #
+  class RadioCheckCommon < Element
     attr_accessor :element_name
     #
     # Description:
     #   Locate the element on the page. Element can be a checkbox or radio button.
     #
     def locate
-        if @how == :jssh_name
-            @element_name = @what
-        elsif @how == :xpath
-            @element_name = element_by_xpath(@container, @what)
-        else
-            @element_name = locate_tagged_element("input", @how, @what, @type, @value)
-        end
-        @o = self
+      if @how == :jssh_name
+        @element_name = @what
+      elsif @how == :xpath
+        @element_name = element_by_xpath(@container, @what)
+      else
+        @element_name = locate_tagged_element("input", @how, @what, @type, @value)
+      end
+      @o = self
     end
     
     #
@@ -1546,13 +1493,13 @@ class RadioCheckCommon < Element
     #   - value - value of the element.
     #
     def initialize(container, how, what, type, value = nil)
-        @how = how
-        @what = what
-        @type = type
-        @value = value
-        @container = container
+      @how = how
+      @what = what
+      @type = type
+      @value = value
+      @container = container
     end
-
+    
     #
     # Description:
     #   Checks if element i.e. radio button or check box is checked or not.
@@ -1561,8 +1508,8 @@ class RadioCheckCommon < Element
     #   True if element is checked, false otherwise.
     #
     def isSet?
-        assert_exists
-        return @o.checked
+      assert_exists
+      return @o.checked
     end
     alias getState isSet?
     
@@ -1572,11 +1519,11 @@ class RadioCheckCommon < Element
     #   Raises ObjectDisabledException exception if element is disabled.
     #
     def clear
-        assert_exists
-        assert_enabled
-        #highlight(:set)
-        set_clear_item(false)
-        #highlight(:clear)
+      assert_exists
+      assert_enabled
+      #highlight(:set)
+      set_clear_item(false)
+      #highlight(:clear)
     end
     
     #
@@ -1585,47 +1532,47 @@ class RadioCheckCommon < Element
     #   Raises ObjectDisabledException exception if element is disabled.
     #
     def set
-        assert_exists
-        assert_enabled
-        #highlight(:set)
-        set_clear_item(true)
-        #highlight(:clear)
+      assert_exists
+      assert_enabled
+      #highlight(:set)
+      set_clear_item(true)
+      #highlight(:clear)
     end
-
+    
     #
     # Description:
     #   Used by clear and set method to uncheck and check radio button and checkbox element respectively.
     #
     def set_clear_item(set)
-        if set != @o.isSet?
-          @o.fire_event("onclick") 
-          @container.wait
-        end
+      if set != @o.isSet?
+        @o.fire_event("onclick") 
+        @container.wait
+      end
     end
     private :set_clear_item
-
-end
-
-#
-# Description:
-#   Class for RadioButton element.
-#
-class Radio < RadioCheckCommon 
+    
+  end
+  
+  #
+  # Description:
+  #   Class for RadioButton element.
+  #
+  class Radio < RadioCheckCommon 
     def clear
-        assert_exists
-        assert_enabled
-        #higlight(:set)
-        @o.checked = false
-        #highlight(:clear)
+      assert_exists
+      assert_enabled
+      #higlight(:set)
+      @o.checked = false
+      #highlight(:clear)
     end
-end
-
-#
-# Description:
-# Class for Checkbox element.
-#
-class CheckBox < RadioCheckCommon 
-
+  end
+  
+  #
+  # Description:
+  # Class for Checkbox element.
+  #
+  class CheckBox < RadioCheckCommon 
+    
     #
     # Description:
     #   Checks or unchecks the checkbox. If no value is supplied it will check the checkbox.
@@ -1636,18 +1583,18 @@ class CheckBox < RadioCheckCommon
     #                    True to check the check box, false for unchecking the checkbox.
     #
     def set( set_or_clear=true )
-        assert_exists
-        assert_enabled
-        highlight(:set)
-
-        if set_or_clear == true
-            if @o.checked == false
-                set_clear_item( true )
-            end
-        else
-            self.clear
+      assert_exists
+      assert_enabled
+      highlight(:set)
+      
+      if set_or_clear == true
+        if @o.checked == false
+          set_clear_item( true )
         end
-        highlight(:clear )
+      else
+        self.clear
+      end
+      highlight(:clear )
     end
     
     #
@@ -1656,636 +1603,636 @@ class CheckBox < RadioCheckCommon
     #   Raises ObjectDisabledException exception if the object is disabled 
     #
     def clear
-        assert_exists
-        assert_enabled
-        highlight( :set)
-        if @o.checked == true
-            set_clear_item( false )
-        end
-        highlight( :clear)
+      assert_exists
+      assert_enabled
+      highlight( :set)
+      if @o.checked == true
+        set_clear_item( false )
+      end
+      highlight( :clear)
     end
-end
-
-# this class is the super class for the iterator classes ( buttons, links, spans etc
-# it would normally only be accessed by the iterator methods ( spans , links etc) of IE
-
-#class ElementCollections
-#    include Enumerable
-#    include Container
-    # Super class for all the iteractor classes
-    #   * container  - an instance of an IE object
-#    def initialize( container)
-#        element = container
-#        @length = length() # defined by subclasses
-
-        # set up the items we want to display when the show method s used
-#        set_show_items
-#    end
-
-#    private 
-#    def set_show_items
-#        @show_attributes = AttributeLengthPairs.new( "id" , 20)
-#        @show_attributes.add( "name" , 20)
-#    end
-
-#    public
-#    def get_length_of_input_objects(object_type) 
-#        object_types = 
-#            if object_type.kind_of? Array 
-#                object_type  
-#            else
-#                [ object_type ]
-#            end
-
-#        length = 0
-#        objects = element.document.getElementsByTagName("INPUT")
-#        if  objects.length > 0 
-#            objects.each do |o|
-#                length += 1 if object_types.include?(o.invoke("type").downcase )
-#            end
-#        end    
-#        return length
-#    end
-
-    # iterate through each of the elements in the collection in turn
-#    def each
-#        0.upto( @length-1 ) { |i | yield iterator_object(i) }
-#    end
-
-    # allows access to a specific item in the collection
-#    def [](n)
-#        return iterator_object(n-1)
-#    end
-
-    # this method is the way to show the objects, normally used from irb
-#   def show
-#       s="index".ljust(6)
-#       @show_attributes.each do |attribute_length_pair| 
-#           s=s + attribute_length_pair.attribute.ljust(attribute_length_pair.length)
-#       end
-
-#        index = 1
-#        self.each do |o|
-#            s= s+"\n"
-#            s=s + index.to_s.ljust(6)
-#            @show_attributes.each do |attribute_length_pair| 
-#                begin
-#                    s=s  + eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
-#                rescue=>e
-#                    s=s+ " ".ljust( attribute_length_pair.length )
-#                end
-#            end
-#            index+=1
-#        end
-#        puts s 
-#    end
-
-    # this method creates an object of the correct type that the iterators use
-#    private
-#    def iterator_object(i)
-#        element_class.new(element, :index, i+1)
-#    end
-#end
-
-#--
-#   These classes are not for public consumption, so we switch off rdoc
-
-# presumes element_class or element_tag is defined
-# for subclasses of ElementCollections
-# module CommonCollection
-#    def element_tag
-#        element_class.tag
-#    end
-#    def length
-#        element.document.getElementsByTagName(element_tag).length
-#    end
-# end        
-
-# This class is used as part of the .show method of the iterators class
-# it would not normally be used by a user
-#class AttributeLengthPairs
-    
-    # This class is used as part of the .show method of the iterators class
-    # it would not normally be used by a user
-#    class AttributeLengthHolder
-#        attr_accessor :attribute
-#        attr_accessor :length
-        
-#        def initialize( attrib, length)
-#            @attribute = attrib
-#            @length = length
-#        end
-#    end
-    
-#    def initialize( attrib=nil , length=nil)
-#        @attr=[]
-#        add( attrib , length ) if attrib
-#        @index_counter=0
-#    end
-
-#    # BUG: Untested. (Null implementation passes all tests.)
-#    def add( attrib , length)
-#        @attr <<  AttributeLengthHolder.new( attrib , length )
-#    end
-
-#    def delete(attrib)
-#        item_to_delete=nil
-#        @attr.each_with_index do |e,i|
-#            item_to_delete = i if e.attribute==attrib
-#        end
-#        @attr.delete_at(item_to_delete ) unless item_to_delete == nil
-#    end
-
-#    def next
-#        temp = @attr[@index_counter]
-#        @index_counter +=1
-#        return temp
-#    end
-
-#    def each
-#            0.upto( @attr.length-1 ) { |i | yield @attr[i]   }
-#    end
-#end
-
-#    resume rdoc
-#   
-
-
-#
-# Description:
-#   Class for accessing all the button elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#buttons method
-#
-class Buttons < ElementCollections
+  end
+  
+  # this class is the super class for the iterator classes ( buttons, links, spans etc
+  # it would normally only be accessed by the iterator methods ( spans , links etc) of IE
+  
+  #class ElementCollections
+  #    include Enumerable
+  #    include Container
+  # Super class for all the iteractor classes
+  #   * container  - an instance of an IE object
+  #    def initialize( container)
+  #        element = container
+  #        @length = length() # defined by subclasses
+  
+  # set up the items we want to display when the show method s used
+  #        set_show_items
+  #    end
+  
+  #    private 
+  #    def set_show_items
+  #        @show_attributes = AttributeLengthPairs.new( "id" , 20)
+  #        @show_attributes.add( "name" , 20)
+  #    end
+  
+  #    public
+  #    def get_length_of_input_objects(object_type) 
+  #        object_types = 
+  #            if object_type.kind_of? Array 
+  #                object_type  
+  #            else
+  #                [ object_type ]
+  #            end
+  
+  #        length = 0
+  #        objects = element.document.getElementsByTagName("INPUT")
+  #        if  objects.length > 0 
+  #            objects.each do |o|
+  #                length += 1 if object_types.include?(o.invoke("type").downcase )
+  #            end
+  #        end    
+  #        return length
+  #    end
+  
+  # iterate through each of the elements in the collection in turn
+  #    def each
+  #        0.upto( @length-1 ) { |i | yield iterator_object(i) }
+  #    end
+  
+  # allows access to a specific item in the collection
+  #    def [](n)
+  #        return iterator_object(n-1)
+  #    end
+  
+  # this method is the way to show the objects, normally used from irb
+  #   def show
+  #       s="index".ljust(6)
+  #       @show_attributes.each do |attribute_length_pair| 
+  #           s=s + attribute_length_pair.attribute.ljust(attribute_length_pair.length)
+  #       end
+  
+  #        index = 1
+  #        self.each do |o|
+  #            s= s+"\n"
+  #            s=s + index.to_s.ljust(6)
+  #            @show_attributes.each do |attribute_length_pair| 
+  #                begin
+  #                    s=s  + eval( 'o.getOLEObject.invoke("#{attribute_length_pair.attribute}")').to_s.ljust( attribute_length_pair.length  )
+  #                rescue=>e
+  #                    s=s+ " ".ljust( attribute_length_pair.length )
+  #                end
+  #            end
+  #            index+=1
+  #        end
+  #        puts s 
+  #    end
+  
+  # this method creates an object of the correct type that the iterators use
+  #    private
+  #    def iterator_object(i)
+  #        element_class.new(element, :index, i+1)
+  #    end
+  #end
+  
+  #--
+  #   These classes are not for public consumption, so we switch off rdoc
+  
+  # presumes element_class or element_tag is defined
+  # for subclasses of ElementCollections
+  # module CommonCollection
+  #    def element_tag
+  #        element_class.tag
+  #    end
+  #    def length
+  #        element.document.getElementsByTagName(element_tag).length
+  #    end
+  # end        
+  
+  # This class is used as part of the .show method of the iterators class
+  # it would not normally be used by a user
+  #class AttributeLengthPairs
+  
+  # This class is used as part of the .show method of the iterators class
+  # it would not normally be used by a user
+  #    class AttributeLengthHolder
+  #        attr_accessor :attribute
+  #        attr_accessor :length
+  
+  #        def initialize( attrib, length)
+  #            @attribute = attrib
+  #            @length = length
+  #        end
+  #    end
+  
+  #    def initialize( attrib=nil , length=nil)
+  #        @attr=[]
+  #        add( attrib , length ) if attrib
+  #        @index_counter=0
+  #    end
+  
+  #    # BUG: Untested. (Null implementation passes all tests.)
+  #    def add( attrib , length)
+  #        @attr <<  AttributeLengthHolder.new( attrib , length )
+  #    end
+  
+  #    def delete(attrib)
+  #        item_to_delete=nil
+  #        @attr.each_with_index do |e,i|
+  #            item_to_delete = i if e.attribute==attrib
+  #        end
+  #        @attr.delete_at(item_to_delete ) unless item_to_delete == nil
+  #    end
+  
+  #    def next
+  #        temp = @attr[@index_counter]
+  #        @index_counter +=1
+  #        return temp
+  #    end
+  
+  #    def each
+  #            0.upto( @attr.length-1 ) { |i | yield @attr[i]   }
+  #    end
+  #end
+  
+  #    resume rdoc
+  #   
+  
+  
+  #
+  # Description:
+  #   Class for accessing all the button elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#buttons method
+  #
+  class Buttons < ElementCollections
     #
     # Description:
     #   Initializes the instance of Buttons class.
     #
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("input", ["button", "image", "submit", "reset"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Button.new(container, :jssh_name, elements[i])
-        end
+      @container = container
+      elements = locate_tagged_elements("input", ["button", "image", "submit", "reset"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Button.new(container, :jssh_name, elements[i])
+      end
     end
     #def element_class; Button; end
     #def length
-       # get_length_of_input_objects(["button", "submit", "image"])
+    # get_length_of_input_objects(["button", "submit", "image"])
     #end
-
+    
     #private
     #def set_show_items
     #    super
     #    @show_attributes.add( "disabled" , 9)
     #    @show_attributes.add( "value" , 20)
     #end
-end
-
-
-#
-# Description:
-#   Class for accessing all the File Field elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#file_fields method
-#
-class FileFields< ElementCollections
+  end
+  
+  
+  #
+  # Description:
+  #   Class for accessing all the File Field elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#file_fields method
+  #
+  class FileFields< ElementCollections
     #
     # Description:
     #   Initializes the instance of FileFields class.
     #
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("input", ["file"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = FileField.new(container, :jssh_name, elements[i])
-        end
+      @container = container
+      elements = locate_tagged_elements("input", ["file"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = FileField.new(container, :jssh_name, elements[i])
+      end
     end
-#    def element_class; FileField; end
-#    def length
-#        get_length_of_input_objects(["file"])
-#    end
-
-#    private
-#    def set_show_items
-#        super
-#        @show_attributes.add( "disabled" , 9)
-#        @show_attributes.add( "value" , 20)
-#    end
-end
-
-
-#
-# Description:
-#   Class for accessing all the CheckBox elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#checkboxes method
-#
-class CheckBoxes < ElementCollections
+    #    def element_class; FileField; end
+    #    def length
+    #        get_length_of_input_objects(["file"])
+    #    end
+    
+    #    private
+    #    def set_show_items
+    #        super
+    #        @show_attributes.add( "disabled" , 9)
+    #        @show_attributes.add( "value" , 20)
+    #    end
+  end
+  
+  
+  #
+  # Description:
+  #   Class for accessing all the CheckBox elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#checkboxes method
+  #
+  class CheckBoxes < ElementCollections
     #
     # Description:
     #   Initializes the instance of CheckBoxes class.
     #
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("input", ["checkbox"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = CheckBox.new(container, :jssh_name, elements[i], ["checkbox"])
-        end
+      @container = container
+      elements = locate_tagged_elements("input", ["checkbox"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = CheckBox.new(container, :jssh_name, elements[i], ["checkbox"])
+      end
     end
-#    def element_class; CheckBox; end  
-#    def length
-#        get_length_of_input_objects("checkbox")
-#    end
-#    # this method creates an object of the correct type that the iterators use
-#    private
-#    def iterator_object(i)
-#        element.checkbox(:index, i+1)
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the Radio button elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#radios method
-#
-class Radios < ElementCollections
+    #    def element_class; CheckBox; end  
+    #    def length
+    #        get_length_of_input_objects("checkbox")
+    #    end
+    #    # this method creates an object of the correct type that the iterators use
+    #    private
+    #    def iterator_object(i)
+    #        element.checkbox(:index, i+1)
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the Radio button elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#radios method
+  #
+  class Radios < ElementCollections
     #
     # Description:
     #   Initializes the instance of Radios class.
     #
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("input", ["radio"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Radio.new(container, :jssh_name, elements[i], ["radio"])
-        end
+      @container = container
+      elements = locate_tagged_elements("input", ["radio"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Radio.new(container, :jssh_name, elements[i], ["radio"])
+      end
     end
-#    def element_class; Radio; end
-#    def length
-#        get_length_of_input_objects("radio")
-#    end
+    #    def element_class; Radio; end
+    #    def length
+    #        get_length_of_input_objects("radio")
+    #    end
     # this method creates an object of the correct type that the iterators use
-#    private
-#    def iterator_object(i)
-#        element.radio(:index, i+1)
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the select list elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#select_lists method
-#
-class SelectLists < ElementCollections
+    #    private
+    #    def iterator_object(i)
+    #        element.radio(:index, i+1)
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the select list elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#select_lists method
+  #
+  class SelectLists < ElementCollections
     #
     # Description:
     #   Initializes the instance of SelectLists class.
     #
     def initialize(container)
-        #super(container, "select",["select-one","select-multiple"])
-        @container = container
-        elements = locate_tagged_elements("select", ["select-one", "select-multiple"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = SelectList.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "select",["select-one","select-multiple"])
+      @container = container
+      elements = locate_tagged_elements("select", ["select-one", "select-multiple"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = SelectList.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; SelectList; end
-#    def element_tag; 'SELECT'; end
-end
-
-#
-# Description:
-#   Class for accessing all the link elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#links method
-#
-class Links < ElementCollections
+    #    include CommonCollection
+    #    def element_class; SelectList; end
+    #    def element_tag; 'SELECT'; end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the link elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#links method
+  #
+  class Links < ElementCollections
     #
     # Description:
     #   Initializes the instance of Links class.
     #
     def initialize(container)
-        #super(container, "a")
-        @container = container
-        elements = locate_tagged_elements("a")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Link.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "a")
+      @container = container
+      elements = locate_tagged_elements("a")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Link.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; Link; end    
-#    def element_tag; 'A'; end
-
-#    private 
-#    def set_show_items
-#        super
-#        @show_attributes.add("href", 60)
-#        @show_attributes.add("innerText" , 60)
-#    end
-
-end
-
-#
-# Description:
-#   Class for accessing all the image elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#images method
-#
-class Images < ElementCollections
+    #    include CommonCollection
+    #    def element_class; Link; end    
+    #    def element_tag; 'A'; end
+    
+    #    private 
+    #    def set_show_items
+    #        super
+    #        @show_attributes.add("href", 60)
+    #        @show_attributes.add("innerText" , 60)
+    #    end
+    
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the image elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#images method
+  #
+  class Images < ElementCollections
     #
     # Description:
     #   Initializes the instance of Images class.
     #
     def initialize(container)
-        #super(container, "img")
-        @container = container
-        elements = locate_tagged_elements("img")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Image.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "img")
+      @container = container
+      elements = locate_tagged_elements("img")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Image.new(container, :jssh_name, elements[i])
+      end
     end
-#    def element_class; Image; end 
-#    def length
-#        element.document.images.length
-#    end
-
-#    private 
-#    def set_show_items
-#        super
-#        @show_attributes.add("src", 60)
-#        @show_attributes.add("alt", 30)
-#    end 
-
-end
-
-#
-# Description:
-#   Class for accessing all the text field elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#text_fields method
-#
-class TextFields < ElementCollections
+    #    def element_class; Image; end 
+    #    def length
+    #        element.document.images.length
+    #    end
+    
+    #    private 
+    #    def set_show_items
+    #        super
+    #        @show_attributes.add("src", 60)
+    #        @show_attributes.add("alt", 30)
+    #    end 
+    
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the text field elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#text_fields method
+  #
+  class TextFields < ElementCollections
     #
     # Description:
     #   Initializes the instance of TextFields class.
     #
     def initialize(container)
-        #super(container, "input",["text","textarea","password"])
-        @container = container
-        elements = locate_tagged_elements("input", ["text", "textarea", "password"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = TextField.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "input",["text","textarea","password"])
+      @container = container
+      elements = locate_tagged_elements("input", ["text", "textarea", "password"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = TextField.new(container, :jssh_name, elements[i])
+      end
     end
-#    def element_class; TextField; end
-#    def length
-#        # text areas are also included in the TextFields, but we need to get them seperately
-#        get_length_of_input_objects( ["text" , "password"] ) +
-#            element.document.getElementsByTagName("textarea").length
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the hidden elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#hiddens method
-#
-class Hiddens < ElementCollections
+    #    def element_class; TextField; end
+    #    def length
+    #        # text areas are also included in the TextFields, but we need to get them seperately
+    #        get_length_of_input_objects( ["text" , "password"] ) +
+    #            element.document.getElementsByTagName("textarea").length
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the hidden elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#hiddens method
+  #
+  class Hiddens < ElementCollections
     #
     # Description:
     #   Initializes the instance of Hiddens class.
     #
     def initialize(container)
-        #super(container, "input",["hidden"])
-        @container = container
-        elements = locate_tagged_elements("input", ["hidden"])
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Hidden.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "input",["hidden"])
+      @container = container
+      elements = locate_tagged_elements("input", ["hidden"])
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Hidden.new(container, :jssh_name, elements[i])
+      end
     end
-#    def element_class; Hidden; end
-#    def length
-#        get_length_of_input_objects("hidden")
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the table elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#tables method
-#
-class Tables < ElementCollections
+    #    def element_class; Hidden; end
+    #    def length
+    #        get_length_of_input_objects("hidden")
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the table elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#tables method
+  #
+  class Tables < ElementCollections
     #
     # Description:
     #   Initializes the instance of Tables class.
     #
-	def initialize(container)
-		#super(container, "table")
-        @container = container
-        elements = locate_tagged_elements("table")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Table.new(container, :jssh_name, elements[i])
-        end
-	end
-#    include CommonCollection
-#    def element_class; Table; end
-#    def element_tag; 'TABLE'; end
-
-#    private 
-#    def set_show_items
-#        super
-#        @show_attributes.delete( "name")
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the label elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#labels method
-#
-class Labels < ElementCollections
+    def initialize(container)
+      #super(container, "table")
+      @container = container
+      elements = locate_tagged_elements("table")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Table.new(container, :jssh_name, elements[i])
+      end
+    end
+    #    include CommonCollection
+    #    def element_class; Table; end
+    #    def element_tag; 'TABLE'; end
+    
+    #    private 
+    #    def set_show_items
+    #        super
+    #        @show_attributes.delete( "name")
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the label elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#labels method
+  #
+  class Labels < ElementCollections
     #
     # Description:
     #   Initializes the instance of Labels class.
     #
     def initialize(container)
-        #super(container, "label")
-        @container = container
-        elements = locate_tagged_elements("label")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Label.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "label")
+      @container = container
+      elements = locate_tagged_elements("label")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Label.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; Label; end
-#    def element_tag; 'LABEL'; end
-
-#    private 
-#    def set_show_items
-#        super
-#        @show_attributes.add("htmlFor", 20)
-#    end
-end
-
-#
-# Description:
-#   Class for accessing all the pre element in the document.
-#   It would normally only be accessed by the FireWatir::Container#pres method
-#
-class Pres < ElementCollections
+    #    include CommonCollection
+    #    def element_class; Label; end
+    #    def element_tag; 'LABEL'; end
+    
+    #    private 
+    #    def set_show_items
+    #        super
+    #        @show_attributes.add("htmlFor", 20)
+    #    end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the pre element in the document.
+  #   It would normally only be accessed by the FireWatir::Container#pres method
+  #
+  class Pres < ElementCollections
     #
     # Description:
     #   Initializes the instance of Pres class.
     #
     def initialize(container)
-        #super(container, "pre")
-        @container = container
-        elements = locate_tagged_elements("pre")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Pre.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "pre")
+      @container = container
+      elements = locate_tagged_elements("pre")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Pre.new(container, :jssh_name, elements[i])
+      end
     end
-#	include CommonCollection
-#	def element_class; Pre; end
-	
-#	def set_show_items
-#		super
-#		@show_attributes.delete( "name" )
-#		@show_attributes.add( "className", 20 )
-#	end
-end
-
-#
-# Description:
-#   Class for accessing all the paragraph elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#ps method
-#
-class Ps < ElementCollections
+    #	include CommonCollection
+    #	def element_class; Pre; end
+    
+    #	def set_show_items
+    #		super
+    #		@show_attributes.delete( "name" )
+    #		@show_attributes.add( "className", 20 )
+    #	end
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the paragraph elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#ps method
+  #
+  class Ps < ElementCollections
     #
     # Description:
     #   Initializes the instance of Ps class.
     #
     def initialize(container)
-        #super(container, "p")
-        @container = container
-        elements = locate_tagged_elements("p")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = P.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "p")
+      @container = container
+      elements = locate_tagged_elements("p")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = P.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; P; end
-
-#    private
-#    def set_show_items
-#        super
-#        @show_attributes.delete( "name")
-#        @show_attributes.add( "className" , 20)
-#    end
-
-end
-
-#
-# Description:
-#   Class for accessing all the span elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#spans method
-#
-class Spans < ElementCollections
+    #    include CommonCollection
+    #    def element_class; P; end
+    
+    #    private
+    #    def set_show_items
+    #        super
+    #        @show_attributes.delete( "name")
+    #        @show_attributes.add( "className" , 20)
+    #    end
+    
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the span elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#spans method
+  #
+  class Spans < ElementCollections
     #
     # Description:
     #   Initializes the instance of Spans class.
     #
     def initialize(container)
-        #super(container, "span")
-        @container = container
-        elements = locate_tagged_elements("span")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Span.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "span")
+      @container = container
+      elements = locate_tagged_elements("span")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Span.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; Span; end
-
-#    private
-#    def set_show_items
-#        super
-#        @show_attributes.delete( "name")
-#        @show_attributes.add( "className" , 20)
-#    end
-
-end
-
-#
-# Description:
-#   Class for accessing all the div elements in the document.
-#   It would normally only be accessed by the FireWatir::Container#divs method
-#
-class Divs < ElementCollections
+    #    include CommonCollection
+    #    def element_class; Span; end
+    
+    #    private
+    #    def set_show_items
+    #        super
+    #        @show_attributes.delete( "name")
+    #        @show_attributes.add( "className" , 20)
+    #    end
+    
+  end
+  
+  #
+  # Description:
+  #   Class for accessing all the div elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#divs method
+  #
+  class Divs < ElementCollections
     #
     # Description:
     #   Initializes the instance of Divs class.
     #
     def initialize(container)
-        #super(container, "div")
-        @container = container
-        elements = locate_tagged_elements("div")
-        length = elements.length
-        #puts "length is : #{length}"
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Div.new(container, :jssh_name, elements[i])
-        end
+      #super(container, "div")
+      @container = container
+      elements = locate_tagged_elements("div")
+      length = elements.length
+      #puts "length is : #{length}"
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Div.new(container, :jssh_name, elements[i])
+      end
     end
-#    include CommonCollection
-#    def element_class; Div; end
-
-#    private 
-#    def set_show_items
-#        super
-#        @show_attributes.delete( "name")
-#        @show_attributes.add( "className" , 20)
-#    end
-
-end
-
+    #    include CommonCollection
+    #    def element_class; Div; end
+    
+    #    private 
+    #    def set_show_items
+    #        super
+    #        @show_attributes.delete( "name")
+    #        @show_attributes.add( "className" , 20)
+    #    end
+    
+  end
+  
   class Ul < NonControlElement  
     TAG = 'UL'
   end
@@ -2301,19 +2248,19 @@ end
   class H2 < NonControlElement
     TAG = 'H2'
   end
-
+  
   class H3 < NonControlElement
     TAG = 'H3'
   end
-
+  
   class H4 < NonControlElement
     TAG = 'H4'
   end
-
+  
   class H5 < NonControlElement
     TAG = 'H5'
   end
-
+  
   class H6 < NonControlElement
     TAG = 'H6'
   end
@@ -2321,50 +2268,51 @@ end
   class Map < NonControlElement
     TAG = 'MAP'
   end
-
+  
   class Area < NonControlElement
     TAG = 'AREA'
   end
   
+  
   module Container
     def maps
-        locate if defined?(locate)
-        return Maps.new(self)
+      locate if defined?(locate)
+      return Maps.new(self)
     end
   end
   class Maps < ElementCollections
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("map")
-        length = elements.length
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Map.new(container, :jssh_name, elements[i])
-        end
+      @container = container
+      elements = locate_tagged_elements("map")
+      length = elements.length
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Map.new(container, :jssh_name, elements[i])
+      end
     end
     def element_class; Map; end
     def element_tag; 'MAP'; end
   end
-
+  
   module Container
     def areas
-        locate if defined?(locate)
-        return Areas.new(self)
+      locate if defined?(locate)
+      return Areas.new(self)
     end
   end
   class Areas < ElementCollections
     def initialize(container)
-        @container = container
-        elements = locate_tagged_elements("area")
-        length = elements.length
-        @element_objects = Array.new(length)
-        for i in 0..length - 1 do
-            @element_objects[i] = Map.new(container, :jssh_name, elements[i])
-        end
+      @container = container
+      elements = locate_tagged_elements("area")
+      length = elements.length
+      @element_objects = Array.new(length)
+      for i in 0..length - 1 do
+        @element_objects[i] = Area.new(container, :jssh_name, elements[i])
+      end
     end
     def element_class; Area; end
     def element_tag; 'AREA'; end
   end
-
-
+  
+  
 end
