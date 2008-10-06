@@ -1768,280 +1768,100 @@ module FireWatir
   #    resume rdoc
   #   
   
-  
-  #
-  # Description:
   #   Class for accessing all the button elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#buttons method
-  #
   class Buttons < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["button", "image", "submit", "reset"])      
     end
-    def element_class; Button; end
-
-    #def length
-    # get_length_of_input_objects(["button", "submit", "image"])
-    #end
-    
-    #private
-    #def set_show_items
-    #    super
-    #    @show_attributes.add( "disabled" , 9)
-    #    @show_attributes.add( "value" , 20)
-    #end
   end
-  
-  
-  #
-  # Description:
+    
   #   Class for accessing all the File Field elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#file_fields method
-  #
   class FileFields < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["file"])
     end
-    def element_class; FileField; end
-
-    #    def length
-    #        get_length_of_input_objects(["file"])
-    #    end
-    
-    #    private
-    #    def set_show_items
-    #        super
-    #        @show_attributes.add( "disabled" , 9)
-    #        @show_attributes.add( "value" , 20)
-    #    end
   end
-  
-  
-  #
-  # Description:
+    
   #   Class for accessing all the CheckBox elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#checkboxes method
-  #
   class CheckBoxes < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["checkbox"])
     end
-    def element_class; CheckBox; end  
-
-    #    def length
-    #        get_length_of_input_objects("checkbox")
-    #    end
-    #    # this method creates an object of the correct type that the iterators use
-    #    private
-    #    def iterator_object(i)
-    #        element.checkbox(:index, i+1)
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the Radio button elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#radios method
-  #
   class Radios < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["radio"])
     end
-    def element_class; Radio; end
-      
-    #    def length
-    #        get_length_of_input_objects("radio")
-    #    end
-    # this method creates an object of the correct type that the iterators use
-    #    private
-    #    def iterator_object(i)
-    #        element.radio(:index, i+1)
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the select list elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#select_lists method
-  #
   class SelectLists < ElementCollections
     def locate_elements
       locate_tagged_elements("select", ["select-one", "select-multiple"])      
     end
-    def element_class; SelectList; end
-    #    def element_tag; 'SELECT'; end
   end
   
-  #
-  # Description:
   #   Class for accessing all the link elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#links method
-  #
   class Links < ElementCollections
-    def element_class; Link; end    
-    
-    #    private 
-    #    def set_show_items
-    #        super
-    #        @show_attributes.add("href", 60)
-    #        @show_attributes.add("innerText" , 60)
-    #    end
-    
   end
   
-  #
-  # Description:
   #   Class for accessing all the image elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#images method
-  #
   class Images < ElementCollections
-    def element_class; Image; end 
-
-    #    def length
-    #        element.document.images.length
-    #    end
-    
-    #    private 
-    #    def set_show_items
-    #        super
-    #        @show_attributes.add("src", 60)
-    #        @show_attributes.add("alt", 30)
-    #    end 
-    
   end
   
-  #
-  # Description:
   #   Class for accessing all the text field elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#text_fields method
-  #
   class TextFields < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["text", "textarea", "password"])
     end
-    def element_class; TextField; end
-      
-    #    def length
-    #        # text areas are also included in the TextFields, but we need to get them seperately
-    #        get_length_of_input_objects( ["text" , "password"] ) +
-    #            element.document.getElementsByTagName("textarea").length
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the hidden elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#hiddens method
-  #
   class Hiddens < ElementCollections
     def locate_elements
       locate_tagged_elements("input", ["hidden"])
     end
-    def element_class; Hidden; end
-      
-    #    def length
-    #        get_length_of_input_objects("hidden")
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the table elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#tables method
-  #
   class Tables < ElementCollections
-    def element_class; Table; end
-
-    #    def element_tag; 'TABLE'; end
-    
-    #    private 
-    #    def set_show_items
-    #        super
-    #        @show_attributes.delete( "name")
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the label elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#labels method
-  #
   class Labels < ElementCollections
-    def element_class; Label; end
-      
-    #    def element_tag; 'LABEL'; end
-    
-    #    private 
-    #    def set_show_items
-    #        super
-    #        @show_attributes.add("htmlFor", 20)
-    #    end
   end
   
-  #
-  # Description:
   #   Class for accessing all the pre element in the document.
   #   It would normally only be accessed by the FireWatir::Container#pres method
-  #
   class Pres < ElementCollections
-    def element_class; Pre; end
-    
-    #	def set_show_items
-    #		super
-    #		@show_attributes.delete( "name" )
-    #		@show_attributes.add( "className", 20 )
-    #	end
   end
   
-  #
-  # Description:
   #   Class for accessing all the paragraph elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#ps method
-  #
   class Ps < ElementCollections
-    def element_class; P; end
-    
-    #    private
-    #    def set_show_items
-    #        super
-    #        @show_attributes.delete( "name")
-    #        @show_attributes.add( "className" , 20)
-    #    end
-    
   end
   
-  #
-  # Description:
   #   Class for accessing all the span elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#spans method
-  #
   class Spans < ElementCollections
-    def element_class; Span; end
-    
-    #    private
-    #    def set_show_items
-    #        super
-    #        @show_attributes.delete( "name")
-    #        @show_attributes.add( "className" , 20)
-    #    end
-    
   end
   
-  #
-  # Description:
   #   Class for accessing all the div elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#divs method
-  #
   class Divs < ElementCollections
-    def element_class; Div; end
-    
-    #    private 
-    #    def set_show_items
-    #        super
-    #        @show_attributes.delete( "name")
-    #        @show_attributes.add( "className" , 20)
-    #    end
-    
   end
   
   class Ul < NonControlElement  
@@ -2085,11 +1905,9 @@ module FireWatir
   end
   
   class Maps < ElementCollections
-    def element_class; Map; end
   end
   
   class Areas < ElementCollections
-    def element_class; Area; end
   end
     
 end

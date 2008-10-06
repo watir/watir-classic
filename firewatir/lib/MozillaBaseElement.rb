@@ -1746,9 +1746,13 @@ require 'activesupport'
         def self.inherited subclass
           class_name = subclass.to_s.demodulize
           method_name = class_name.underscore
+          element_class_name = class_name.singularize
+
           FireWatir::Container.module_eval "def #{method_name}
           locate if defined?(locate)
           return #{class_name}.new(self); end"
+
+          subclass.class_eval "def element_class; #{element_class_name}; end"
         end
         
         include FireWatir::Container # XXX not sure if this is right
