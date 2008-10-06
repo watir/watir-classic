@@ -1755,25 +1755,6 @@
           end
         end
       
-        #
-        # Description:
-        #   Initializes new instance of this class.
-        #
-        # Input:
-        #   tag - tag name of the element for which you want the iterator.
-        #   types - element type. used in case where same element tag has different types like input has type image, button etc.
-        #
-        #def initialize(container, tag , types=nil)
-        #    @@current_level += 1
-        #    @@current_element_object = Element.get_current_element
-        #    #puts " the current object #{@@current_element_object}"
-        #    @length = 0
-        #    @arr_name = ""
-        #    @container = container
-        #    @elements = locate_tagged_elements(tag , types)
-        #end
-
-        #
         # Description:
         #   Locate all the elements of give tag and type.
         #

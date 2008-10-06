@@ -1469,6 +1469,22 @@ module FireWatir
     attr_accessor :element_name
     #
     # Description:
+    #   Initializes the instance of element object. Element can be checkbox or radio button.
+    #
+    # Input:
+    #   - how - Attribute to identify the element.
+    #   - what - Value of that attribute.
+    #   - value - value of the element.
+    #
+    def initialize(container, how, what, value = nil)
+      @how = how
+      @what = what
+      @value = value
+      @container = container
+    end
+
+    #
+    # Description:
     #   Locate the element on the page. Element can be a checkbox or radio button.
     #
     def locate
@@ -1480,24 +1496,6 @@ module FireWatir
         @element_name = locate_tagged_element("input", @how, @what, @type, @value)
       end
       @o = self
-    end
-    
-    #
-    # Description:
-    #   Initializes the instance of element object. Element can be checkbox or radio button.
-    #
-    # Input:
-    #   - how - Attribute to identify the element.
-    #   - what - Value of that attribute.
-    #   - type - Type of element i.e. radio or checkbox
-    #   - value - value of the element.
-    #
-    def initialize(container, how, what, type, value = nil)
-      @how = how
-      @what = what
-      @type = type
-      @value = value
-      @container = container
     end
     
     #
@@ -1558,6 +1556,11 @@ module FireWatir
   #   Class for RadioButton element.
   #
   class Radio < RadioCheckCommon 
+    def initialize *args
+      super
+      @type = ["radio"]
+    end
+    
     def clear
       assert_exists
       assert_enabled
@@ -1572,6 +1575,11 @@ module FireWatir
   # Class for Checkbox element.
   #
   class CheckBox < RadioCheckCommon 
+    def initialize *args
+      super
+      @type = ["checkbox"]
+    end
+    
     
     #
     # Description:
@@ -1764,12 +1772,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#buttons method
   #
   class Buttons < ElementCollections
-    
     def locate_elements
       locate_tagged_elements("input", ["button", "image", "submit", "reset"])      
     end
-    
     def element_class; Button; end
+
     #def length
     # get_length_of_input_objects(["button", "submit", "image"])
     #end
@@ -1788,22 +1795,12 @@ module FireWatir
   #   Class for accessing all the File Field elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#file_fields method
   #
-  class FileFields< ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of FileFields class.
-    #
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("input", ["file"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = FileField.new(container, :jssh_name, elements[i])
-      end
+  class FileFields < ElementCollections
+    def locate_elements
+      locate_tagged_elements("input", ["file"])
     end
-    #    def element_class; FileField; end
+    def element_class; FileField; end
+
     #    def length
     #        get_length_of_input_objects(["file"])
     #    end
@@ -1823,21 +1820,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#checkboxes method
   #
   class CheckBoxes < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of CheckBoxes class.
-    #
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("input", ["checkbox"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = CheckBox.new(container, :jssh_name, elements[i], ["checkbox"])
-      end
+    def locate_elements
+      locate_tagged_elements("input", ["checkbox"])
     end
-    #    def element_class; CheckBox; end  
+    def element_class; CheckBox; end  
+
     #    def length
     #        get_length_of_input_objects("checkbox")
     #    end
@@ -1854,21 +1841,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#radios method
   #
   class Radios < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Radios class.
-    #
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("input", ["radio"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Radio.new(container, :jssh_name, elements[i], ["radio"])
-      end
+    def locate_elements
+      locate_tagged_elements("input", ["radio"])
     end
-    #    def element_class; Radio; end
+    def element_class; Radio; end
+      
     #    def length
     #        get_length_of_input_objects("radio")
     #    end
@@ -1885,23 +1862,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#select_lists method
   #
   class SelectLists < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of SelectLists class.
-    #
-    def initialize(container)
-      #super(container, "select",["select-one","select-multiple"])
-      @container = container
-      elements = locate_tagged_elements("select", ["select-one", "select-multiple"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = SelectList.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("select", ["select-one", "select-multiple"])      
     end
-    #    include CommonCollection
-    #    def element_class; SelectList; end
+    def element_class; SelectList; end
     #    def element_tag; 'SELECT'; end
   end
   
@@ -1911,23 +1875,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#links method
   #
   class Links < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Links class.
-    #
-    def initialize(container)
-      #super(container, "a")
-      @container = container
-      elements = locate_tagged_elements("a")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Link.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("a")
     end
-    #    include CommonCollection
-    #    def element_class; Link; end    
+    def element_class; Link; end    
+    
     #    def element_tag; 'A'; end
     
     #    private 
@@ -1945,22 +1897,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#images method
   #
   class Images < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Images class.
-    #
-    def initialize(container)
-      #super(container, "img")
-      @container = container
-      elements = locate_tagged_elements("img")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Image.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("img")
     end
-    #    def element_class; Image; end 
+    def element_class; Image; end 
+
     #    def length
     #        element.document.images.length
     #    end
@@ -1980,22 +1921,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#text_fields method
   #
   class TextFields < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of TextFields class.
-    #
-    def initialize(container)
-      #super(container, "input",["text","textarea","password"])
-      @container = container
-      elements = locate_tagged_elements("input", ["text", "textarea", "password"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = TextField.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("input", ["text", "textarea", "password"])
     end
-    #    def element_class; TextField; end
+    def element_class; TextField; end
+      
     #    def length
     #        # text areas are also included in the TextFields, but we need to get them seperately
     #        get_length_of_input_objects( ["text" , "password"] ) +
@@ -2009,22 +1939,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#hiddens method
   #
   class Hiddens < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Hiddens class.
-    #
-    def initialize(container)
-      #super(container, "input",["hidden"])
-      @container = container
-      elements = locate_tagged_elements("input", ["hidden"])
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Hidden.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("input", ["hidden"])
     end
-    #    def element_class; Hidden; end
+    def element_class; Hidden; end
+      
     #    def length
     #        get_length_of_input_objects("hidden")
     #    end
@@ -2036,23 +1955,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#tables method
   #
   class Tables < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Tables class.
-    #
-    def initialize(container)
-      #super(container, "table")
-      @container = container
-      elements = locate_tagged_elements("table")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Table.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("table")
     end
-    #    include CommonCollection
-    #    def element_class; Table; end
+    def element_class; Table; end
+
     #    def element_tag; 'TABLE'; end
     
     #    private 
@@ -2068,23 +1975,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#labels method
   #
   class Labels < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Labels class.
-    #
-    def initialize(container)
-      #super(container, "label")
-      @container = container
-      elements = locate_tagged_elements("label")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Label.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("label")
     end
-    #    include CommonCollection
-    #    def element_class; Label; end
+    def element_class; Label; end
+      
     #    def element_tag; 'LABEL'; end
     
     #    private 
@@ -2100,23 +1995,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#pres method
   #
   class Pres < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Pres class.
-    #
-    def initialize(container)
-      #super(container, "pre")
-      @container = container
-      elements = locate_tagged_elements("pre")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Pre.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("pre")
     end
-    #	include CommonCollection
-    #	def element_class; Pre; end
+    def element_class; Pre; end
     
     #	def set_show_items
     #		super
@@ -2131,23 +2013,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#ps method
   #
   class Ps < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Ps class.
-    #
-    def initialize(container)
-      #super(container, "p")
-      @container = container
-      elements = locate_tagged_elements("p")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = P.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("p")
     end
-    #    include CommonCollection
-    #    def element_class; P; end
+    def element_class; P; end
     
     #    private
     #    def set_show_items
@@ -2164,23 +2033,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#spans method
   #
   class Spans < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Spans class.
-    #
-    def initialize(container)
-      #super(container, "span")
-      @container = container
-      elements = locate_tagged_elements("span")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Span.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("span")
     end
-    #    include CommonCollection
-    #    def element_class; Span; end
+    def element_class; Span; end
     
     #    private
     #    def set_show_items
@@ -2197,23 +2053,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#divs method
   #
   class Divs < ElementCollections
-    #
-    # Description:
-    #   Initializes the instance of Divs class.
-    #
-    def initialize(container)
-      #super(container, "div")
-      @container = container
-      elements = locate_tagged_elements("div")
-      length = elements.length
-      #puts "length is : #{length}"
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Div.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("div")
     end
-    #    include CommonCollection
-    #    def element_class; Div; end
+    def element_class; Div; end
     
     #    private 
     #    def set_show_items
@@ -2264,7 +2107,7 @@ module FireWatir
     TAG = 'AREA'
   end
   
-  
+
   module Container
     def maps
       locate if defined?(locate)
@@ -2272,14 +2115,8 @@ module FireWatir
     end
   end
   class Maps < ElementCollections
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("map")
-      length = elements.length
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Map.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("map")
     end
     def element_class; Map; end
     def element_tag; 'MAP'; end
@@ -2292,18 +2129,11 @@ module FireWatir
     end
   end
   class Areas < ElementCollections
-    def initialize(container)
-      @container = container
-      elements = locate_tagged_elements("area")
-      length = elements.length
-      @element_objects = Array.new(length)
-      for i in 0..length - 1 do
-        @element_objects[i] = Area.new(container, :jssh_name, elements[i])
-      end
+    def locate_elements
+      locate_tagged_elements("area")
     end
     def element_class; Area; end
     def element_tag; 'AREA'; end
   end
-  
-  
+    
 end

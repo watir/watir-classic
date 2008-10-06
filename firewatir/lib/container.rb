@@ -426,7 +426,7 @@ module FireWatir
     #
     def checkbox(how, what, value = nil) 
         locate if defined?(locate)
-        return CheckBox.new(self, how, what, ["checkbox"], value) 
+        return CheckBox.new(self, how, what, value) 
     end
 
     # 
@@ -475,7 +475,7 @@ module FireWatir
     #
     def radio(how, what, value = nil) 
         locate if defined?(locate)
-        return Radio.new(self, how, what, ["radio"], value) 
+        return Radio.new(self, how, what, value) 
     end
 
     # 
