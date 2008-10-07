@@ -1785,7 +1785,7 @@ require 'activesupport'
         # Output:
         #   Elements array containing all the elements found on the page.
         #
-        def locate_tagged_elements(tag , types = nil)
+        def locate_tagged_elements(tag, types = nil)
             jssh_command = "var arr_coll_#{tag}_#{@@current_level}=new Array();"
             @arr_name = "arr_coll_#{tag}_#{@@current_level}"
 
@@ -1868,7 +1868,7 @@ require 'activesupport'
             @@current_level = @@current_level + 1
             return elements
         end
-        private:locate_tagged_elements
+        private :locate_tagged_elements
 
         #
         # Description:
