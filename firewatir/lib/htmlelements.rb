@@ -74,7 +74,7 @@ module FireWatir
       elsif @how == :xpath    
         @element_name = element_by_xpath(container, @what)
       else
-        @element_name = locate_tagged_element("form",@how, @what)
+        @element_name = locate_tagged_element("form", @how, @what)
       end
       @o = self
     end
@@ -1790,6 +1790,9 @@ module FireWatir
     def locate_elements
       locate_tagged_elements("input", ["checkbox"])
     end
+  end
+  module Container
+    alias checkboxes check_boxes
   end
   
   #   Class for accessing all the Radio button elements in the document.
