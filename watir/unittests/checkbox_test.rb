@@ -10,14 +10,17 @@ class TC_CheckBox < Test::Unit::TestCase
   def setup
     goto_page "checkboxes1.html"
   end
+
+  def test_checkbox_exceptions
+    assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").id }  
+    assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").name }  
+    assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").disabled }  
+    assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").type }  
+    assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").value }  
+  end
   
   tag_method :test_checkbox_properties, :fails_on_firefox
   def test_checkbox_properties
-    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").id   }  
-    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").name   }  
-    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").disabled   }  
-    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").type   }  
-    assert_raises(UnknownObjectException) {   browser.checkbox(:name, "noName").value   }  
     
     assert_equal("box1"  , browser.checkbox(:index, 1).name ) 
     assert_equal(""  , browser.checkbox(:index, 1).id ) 
@@ -43,13 +46,13 @@ class TC_CheckBox < Test::Unit::TestCase
   def test_onClick
     assert(!browser.button(:value , "foo").enabled?)
     browser.checkbox(:name, "box5").set
-    assert(browser.button(:value , "foo").enabled?)
+    assert(browser.button(:value, "foo").enabled?)
     
     browser.checkbox(:name, "box5").clear
-    assert(!browser.button(:value , "foo").enabled?)
+    assert(!browser.button(:value, "foo").enabled?)
     
     browser.checkbox(:name, "box5").clear
-    assert(!browser.button(:value , "foo").enabled?)
+    assert(!browser.button(:value, "foo").enabled?)
   end
   
   def test_CheckBox_Exists
@@ -140,22 +143,23 @@ class TC_CheckBox < Test::Unit::TestCase
     browser.checkbox(:name, "box6", 'Tea').set( true )
     assert(browser.checkbox(:name, "box6", 'Tea').isSet?)
   end
-  
-  tag_method :test_checkbox_iterator, :fails_on_firefox
-  def test_checkbox_iterator
-    
-    assert_equal(13, browser.checkboxes.length)
+
+  tag_method :test_checkboxes_access, :fails_on_firefox
+  def test_checkboxes_access
     assert_equal("box1" , browser.checkboxes[1].name )
-    
-    index=1
+  end
+  
+  def test_checkbox_iterator
+    assert_equal(13, browser.checkboxes.length)
+    index = 1
     browser.checkboxes.each do |c|
+      puts "#{index}: #{c.name}"
       assert_equal( browser.checkbox(:index, index).name , c.name )
       assert_equal( browser.checkbox(:index, index).id, c.id )
       assert_equal( browser.checkbox(:index, index).value, c.value )
-      index+=1
+      index += 1
     end
-    assert_equal(index-1, browser.checkboxes.length)
-    
+    assert_equal(index - 1, browser.checkboxes.length)
   end
   
   

@@ -1583,7 +1583,6 @@ module FireWatir
       @type = ["checkbox"]
     end
     
-    
     #
     # Description:
     #   Checks or unchecks the checkbox. If no value is supplied it will check the checkbox.
