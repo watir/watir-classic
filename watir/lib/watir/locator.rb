@@ -131,17 +131,19 @@ module Watir
       # where the :name matches, so we will only return the results of
       # getElementById() if the matching element actually HAS a matching
       # :id.
+      return unless @what.class == String # Only use fast calls with String what.
       begin
-        if @what.class == String   # Only use fast calls with String what.
-          if @how == :id
-            @element = @document.getElementById(what)
+        case @how
+          when :id
+            @element = @document.getElementById(@what)
             # Return if our fast match really HAS a matching :id
-            return @element if @element.nil? or @element.invoke('id') == what
-          elsif how == :name
-            @elements = @document.getElementsByName(what)
-          end
+            return true if @element && @element.invoke('id') == what
+          when :name
+            @elements = @document.getElementsByName(@what)
         end
+        false
       rescue
+        false
       end      
     end
   end

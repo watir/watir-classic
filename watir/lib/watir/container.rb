@@ -726,10 +726,10 @@ module Watir
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
     def locate_input_element(how, what, types, value=nil)
       locator = InputElementLocator.new self, types
-      locator.document = document rescue true
+      locator.specifier = [how, what, value]
+      locator.document = document
       return locator.element if locator.fast_locate
       locator.elements = ole_inner_elements if locator.elements.nil?
-      locator.specifier = [how, what, value]
       locator.locate
     end
     
