@@ -1810,13 +1810,11 @@ module FireWatir
   
   #   Class for accessing all the link elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#links method
-  class Links < ElementCollections
-  end
+  class Links < ElementCollections; end
   
   #   Class for accessing all the image elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#images method
-  class Images < ElementCollections
-  end
+  class Images < ElementCollections; end
   
   #   Class for accessing all the text field elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#text_fields method
@@ -1836,41 +1834,37 @@ module FireWatir
   
   #   Class for accessing all the table elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#tables method
-  class Tables < ElementCollections
-  end
+  class Tables < ElementCollections; end
   
   #   Class for accessing all the label elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#labels method
-  class Labels < ElementCollections
-  end
+  class Labels < ElementCollections; end
   
   #   Class for accessing all the pre element in the document.
   #   It would normally only be accessed by the FireWatir::Container#pres method
-  class Pres < ElementCollections
-  end
+  class Pres < ElementCollections; end
   
   #   Class for accessing all the paragraph elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#ps method
-  class Ps < ElementCollections
-  end
+  class Ps < ElementCollections; end
   
   #   Class for accessing all the span elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#spans method
-  class Spans < ElementCollections
-  end
+  class Spans < ElementCollections; end
   
   #   Class for accessing all the div elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#divs method
-  class Divs < ElementCollections
-  end
+  class Divs < ElementCollections; end
   
   class Ul < NonControlElement  
     TAG = 'UL'
   end
-  
+  class Uls < ElementCollections; end
+    
   class Li < NonControlElement
     TAG = 'LI'
   end
+  class Lis < ElementCollections; end
   
   class H1 < NonControlElement
     TAG = 'H1'
@@ -1899,15 +1893,11 @@ module FireWatir
   class Map < NonControlElement
     TAG = 'MAP'
   end
+  class Maps < ElementCollections; end
   
   class Area < NonControlElement
     TAG = 'AREA'
   end
-  
-  class Maps < ElementCollections
-  end
-  
-  class Areas < ElementCollections
-  end
+  class Areas < ElementCollections; end
     
 end

@@ -20,7 +20,6 @@ class Lists_Tests < Watir::TestCase
     assert ! (browser.li(:name, 'maptest02').exists?)
   end  
   
-  tag_method :test_li_length, :fails_on_firefox
   def test_li_length
     assert_equal(6, browser.lis.length)
   end
