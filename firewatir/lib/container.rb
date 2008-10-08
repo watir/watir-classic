@@ -320,7 +320,7 @@ module FireWatir
     # Output:
     #   Checkbox object.
     #
-    def checkbox(how, what, value = nil) 
+    def checkbox(how, what=nil, value = nil) 
         locate if defined?(locate)
         return CheckBox.new(self, how, what, value) 
     end
@@ -351,7 +351,7 @@ module FireWatir
     # Output:
     #   Radio button object.
     #
-    def radio(how, what, value = nil) 
+    def radio(how, what=nil, value = nil) 
         locate if defined?(locate)
         return Radio.new(self, how, what, value) 
     end
