@@ -202,11 +202,11 @@ module FireWatir
     # Output:
     #   Button element.
     #
-    def button(how, what = nil)
+    def button(how, what=nil)
         locate if defined?(locate)
-        if(what == nil)
-            what = how
-            how = :value
+        if what.nil? && how.class == String
+          what = how
+          how = :value
         end    
         Button.new(self, how, what)
     end    

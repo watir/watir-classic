@@ -32,8 +32,6 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_match(/papa.html/, browser.link(:class => 'Papa', :index => 2).href)
   end  
 
-  # minor difference in error message
-  tag_method :test_not_found_single, :fails_on_firefox
   def test_not_found_single
     exception = assert_raise(UnknownObjectException) do
       browser.link(:id, 'Missing').href
@@ -41,8 +39,6 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_equal('Unable to locate element, using :id, "Missing"', exception.message)
   end
   
-  # minor difference in error message
-  tag_method :test_not_found_with_multi, :fails_on_firefox
   def test_not_found_with_multi
     exception = assert_raise(UnknownObjectException) do
       browser.link(:class => 'Missing', :index => 2).href

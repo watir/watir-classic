@@ -980,7 +980,8 @@ require 'activesupport'
         #
         def assert_exists
             unless exists?
-                raise UnknownObjectException.new("Unable to locate object, using #{@how} and #{@what}")
+              raise UnknownObjectException.new(
+                Watir::Exception.message_for_unable_to_locate(@how, @what))
             end
         end
 

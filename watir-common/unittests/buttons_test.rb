@@ -96,6 +96,7 @@ class TC_Button < Test::Unit::TestCase
     assert(!browser.button(:name, "b4").enabled?)   
     assert(!browser.button(:id, "b5").enabled?)   
   end
+
 end
   
 class TC_Button2 < Test::Unit::TestCase
@@ -180,6 +181,10 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b7", arr_buttons[5].id)
     assert_equal("b9", arr_buttons[6].id)
     assert_equal("Sign In", arr_buttons[7].value)
+  end
+
+  def test_hash_syntax
+    assert_equal('Click Me2', browser.button(:id => 'b7').value)
   end
 end
 
