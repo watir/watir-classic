@@ -186,6 +186,17 @@ class TC_Button2 < Test::Unit::TestCase
   def test_hash_syntax
     assert_equal('Click Me2', browser.button(:id => 'b7').value)
   end
+
+  def test_class_and_index
+    assert_equal('Click Me2', 
+      browser.button(:class => 'italic_button', :index => 2).value)
+  end
+
+  def test_name_and_id #sick, but what the hell
+    assert_equal('Disabled Button2',
+      browser.button(:name => 'b8', :id => 'b9').value)
+  end
+
 end
 
 class TC_Button_Frame < Test::Unit::TestCase
