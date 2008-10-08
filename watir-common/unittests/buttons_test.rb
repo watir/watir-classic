@@ -69,6 +69,14 @@ class TC_Button < Test::Unit::TestCase
     assert(browser.text.include?("PASS") )
   end
   
+  def test_access_by_class
+    assert_equal('b1', browser.button(:class, 'italic_button').name)
+  end
+
+  def test_access_by_class_name
+    assert_equal('b1', browser.button(:class_name, 'italic_button').name)
+  end
+  
   def test_exists
     assert(browser.button(:caption, "Click Me").exists?)   
     assert(browser.button(:caption, "Submit").exists?)   
