@@ -10,14 +10,33 @@ class TC_Button < Test::Unit::TestCase
   def setup
     uses_page "buttons1.html"
   end 
-  
-  def test_properties
+
+  def test_exceptions_on_methods
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").id }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").name }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").disabled }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").type }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").value }  
-    
+  end
+  
+  def test_exception_when_one_argument
+    assert_raises(UnknownObjectException) { browser.button( "Missing Caption").click }  
+  end    
+  
+  def test_exceptions_with_click
+    assert_raises(UnknownObjectException)  { browser.button(:caption, "Missing Caption").click }  
+    assert_raises(UnknownObjectException)  { browser.button(:id, "missingID").click }  
+  end
+
+  def test_disabled_exception
+    assert_raises(ObjectDisabledException) { browser.button(:caption, "Disabled Button").click }  
+  end
+  
+  def test_exception_with_enabled
+    assert_raises(UnknownObjectException) {   browser.button(:name, "noName").enabled?  }  
+  end
+
+  def test_properties
     assert_equal("b1", browser.button(:index, 1).name) 
     assert_equal("b2", browser.button(:index, 1).id) 
     assert_equal("button", browser.button(:index, 1).type) 
@@ -26,39 +45,28 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("italic_button", browser.button(:name, "b1").class_name) 
     assert_equal("", browser.button(:name , "b4").class_name) 
     
-    assert_equal("b1"  , browser.button(:id, "b2").name  ) 
-    assert_equal("b2"  , browser.button(:id, "b2").id  ) 
-    assert_equal("button"  , browser.button(:id, "b2").type  ) 
+    assert_equal("b1", browser.button(:id, "b2").name) 
+    assert_equal("b2", browser.button(:id, "b2").id) 
+    assert_equal("button", browser.button(:id, "b2").type) 
     
-    assert_equal("b4"  , browser.button(:index, 2).name  ) 
-    assert_equal("b5"  , browser.button(:index, 2).id  ) 
-    assert_equal("button"  , browser.button(:index, 2).type  ) 
-    assert_equal("Disabled Button"  , browser.button(:index, 2).value  ) 
-    assert_equal(true  , browser.button(:index, 2).disabled  ) 
+    assert_equal("b4", browser.button(:index, 2).name) 
+    assert_equal("b5", browser.button(:index, 2).id) 
+    assert_equal("button", browser.button(:index, 2).type) 
+    assert_equal("Disabled Button", browser.button(:index, 2).value) 
+    assert_equal(true, browser.button(:index, 2).disabled) 
     
-    assert_equal( "" , browser.button(:index, 2).title )
-    assert_equal( "this is button1" , browser.button(:index, 1).title )
+    assert_equal( "" , browser.button(:index, 2).title)
+    assert_equal( "this is button1" , browser.button(:index, 1).title)
   end
   
   def test_default_how
-    assert_raises(UnknownObjectException) { browser.button( "Missing Caption").click }  
-    
     browser.button("Click Me").click
-    assert(browser.text.include?("PASS") )
-  end
-  
-  def test_click_only
-    browser.button(:caption, "Click Me").click
-    assert(browser.text.include?("PASS") )
-  end
-  
-  def test_click
-    assert_raises(UnknownObjectException)  { browser.button(:caption, "Missing Caption").click }  
-    assert_raises(UnknownObjectException)  { browser.button(:id, "missingID").click }  
-    assert_raises(ObjectDisabledException) { browser.button(:caption, "Disabled Button").click }  
-    
-    browser.button(:caption, "Click Me").click
     assert(browser.text.include?("PASS"))
+  end
+  
+  def test_click_and_caption
+    browser.button(:caption, "Click Me").click
+    assert(browser.text.include?("PASS") )
   end
   
   def test_exists
@@ -79,8 +87,6 @@ class TC_Button < Test::Unit::TestCase
     assert(!browser.button(:caption, "Disabled Button").enabled?)   
     assert(!browser.button(:name, "b4").enabled?)   
     assert(!browser.button(:id, "b5").enabled?)   
-    
-    assert_raises(UnknownObjectException) {   browser.button(:name, "noName").enabled?  }  
   end
 end
   
@@ -91,33 +97,34 @@ class TC_Button2 < Test::Unit::TestCase
     uses_page "buttons2.html"
   end 
 
+  def test_exists
+    assert(browser.button(:caption, "Click Me2").exists?)   
+    assert(browser.button(:caption, "Disabled Button2").exists?) 
+    assert(browser.button(:caption, "Sign In").exists?)
+  end
+
   def test_button2
-    assert(browser.button(:caption, "Click Me2").exists?, 'Can\'t find Button with caption "Click Me2"')   
+    assert_equal("b6", browser.button(:id, "b7").name ) 
+    assert_equal("b7", browser.button(:name, "b6").id ) 
+    assert_equal("Click Me2", browser.button(:id, "b7").value  ) 
+    assert_equal(false, browser.button(:id, "b7").disabled  ) 
+    assert_equal("italic_button", browser.button(:name, "b6").class_name  ) 
     
-    assert(browser.button(:caption, "Disabled Button2").exists?, 'Can\'t find Button with caption "Disabled Button2"') 
-    assert(browser.button(:caption, "Sign In").exists?, 'Can\'t find Button with caption "Sign In"')
-    
-    assert_equal("b6"  , browser.button(:id, "b7").name ) 
-    assert_equal("b7"  , browser.button(:name, "b6").id ) 
-    assert_equal("Click Me2"  , browser.button(:id, "b7").value  ) 
-    assert_equal(false  , browser.button(:id, "b7").disabled  ) 
-    assert_equal("italic_button"  , browser.button(:name, "b6").class_name  ) 
-    
-    assert_equal("b8"  , browser.button(:id, "b9").name ) 
-    assert_equal("b9"  , browser.button(:name, "b8").id ) 
-    assert_equal("Disabled Button2"  , browser.button(:id, "b9").value  ) 
-    assert_equal(false  , browser.button(:id, "b9").enabled?) 
-    assert_equal(""  , browser.button(:name, "b8").class_name  ) 
+    assert_equal("b8", browser.button(:id, "b9").name ) 
+    assert_equal("b9", browser.button(:name, "b8").id ) 
+    assert_equal("Disabled Button2", browser.button(:id, "b9").value  ) 
+    assert_equal(false, browser.button(:id, "b9").enabled?) 
+    assert_equal("", browser.button(:name, "b8").class_name  ) 
     assert_equal("Sign In", browser.button(:caption, "Sign In").value)
     
-    assert(browser.button(:caption, "Click Me").enabled?, 'Button wih caption "Click Me" should be enabled')   
+    assert(browser.button(:caption, "Click Me").enabled?)   
     
-    assert_false(browser.button(:caption, "Disabled Button2").enabled?, 'Button wih caption "Disabled Button2" should be disabled')   
+    assert_false(browser.button(:caption, "Disabled Button2").enabled?)   
     
-    assert_raises(ObjectDisabledException , "ObjectDisabledException was supposed to be thrown" ) {   browser.button(:caption, "Disabled Button2").click   }  
+    assert_raises(ObjectDisabledException) { browser.button(:caption, "Disabled Button2").click }  
     
     browser.button(:caption, "Click Me2").click
-    assert(browser.text.include?("PASS"), 'Clicking on "Click Me2" button should\'ve taken to the "PASS" page') 
+    assert(browser.text.include?("PASS")) 
   end
 
   tag_method :test_buttons_length, :fails_on_ie
