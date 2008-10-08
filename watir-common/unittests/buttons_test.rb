@@ -55,8 +55,8 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("Disabled Button", browser.button(:index, 2).value) 
     assert_equal(true, browser.button(:index, 2).disabled) 
     
-    assert_equal( "" , browser.button(:index, 2).title)
-    assert_equal( "this is button1" , browser.button(:index, 1).title)
+    assert_equal("", browser.button(:index, 2).title)
+    assert_equal("this is button1", browser.button(:index, 1).title)
   end
   
   def test_default_how
@@ -112,17 +112,17 @@ class TC_Button2 < Test::Unit::TestCase
   end
 
   def test_button2
-    assert_equal("b6", browser.button(:id, "b7").name ) 
-    assert_equal("b7", browser.button(:name, "b6").id ) 
-    assert_equal("Click Me2", browser.button(:id, "b7").value  ) 
-    assert_equal(false, browser.button(:id, "b7").disabled  ) 
+    assert_equal("b6", browser.button(:id, "b7").name) 
+    assert_equal("b7", browser.button(:name, "b6").id) 
+    assert_equal("Click Me2", browser.button(:id, "b7").value) 
+    assert_equal(false, browser.button(:id, "b7").disabled) 
     assert_equal("italic_button", browser.button(:name, "b6").class_name  ) 
     
-    assert_equal("b8", browser.button(:id, "b9").name ) 
-    assert_equal("b9", browser.button(:name, "b8").id ) 
-    assert_equal("Disabled Button2", browser.button(:id, "b9").value  ) 
+    assert_equal("b8", browser.button(:id, "b9").name) 
+    assert_equal("b9", browser.button(:name, "b8").id) 
+    assert_equal("Disabled Button2", browser.button(:id, "b9").value) 
     assert_equal(false, browser.button(:id, "b9").enabled?) 
-    assert_equal("", browser.button(:name, "b8").class_name  ) 
+    assert_equal("", browser.button(:name, "b8").class_name) 
     assert_equal("Sign In", browser.button(:caption, "Sign In").value)
     
     assert(browser.button(:caption, "Click Me").enabled?)   
