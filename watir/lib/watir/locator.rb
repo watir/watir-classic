@@ -34,8 +34,6 @@ module Watir
     end    
 
     def locate
-      index_target = @specifiers[:index]
-
       count = 0
       each_element(@tag) do |element|
         
@@ -47,7 +45,7 @@ module Watir
             end
           end
           count += 1
-          unless index_target == count
+          unless count == @specifiers[:index]
             throw :next_element
           end
           return element.ole_object          
@@ -89,39 +87,53 @@ module Watir
       how = :class_name if how == :class
       what = what.to_i if how == :index
       value = value.to_s if value 
-      @how = how
-      @what = what
       @value = value
+      
+      @specifiers = {:index => 1} # default if not specified
+      @specifiers[how] = what
     end
     def locate
-      object_index = 1
+      count = 0
       @elements.each do |object|
         element = Element.new(object)
-        if @types.include?(element.type)
-          if @how == :index
-            attribute = object_index
-          else
-            begin
-              attribute = element.send(@how)
-            rescue NoMethodError
-              raise MissingWayOfFindingObjectException,
-                "#{@how} is an unknown way of finding an <INPUT> element (#{@what})"
+
+        catch :next_element do
+          throw :next_element unless @types.include?(element.type)
+          @specifiers.each do |how, what|
+            next if how == :index
+            unless match? element, how, what, @value
+              throw :next_element
             end
           end
-          if @what.matches(attribute)
-            if @value
-              if element.value == @value
-                return object
-              end
-            else
-              return object
-            end
+          count += 1
+          throw :next_element unless count == @specifiers[:index]
+          return object
+        end
+
+      end
+      nil
+    end
+    # return true if the element matches the provided how and what
+    def match? element, how, what, value
+      begin
+        attribute = element.send(how)
+      rescue NoMethodError
+        raise MissingWayOfFindingObjectException,
+          "#{how} is an unknown way of finding an <INPUT> element (#{what})"
+      end
+
+      if what.matches(attribute)
+        if value
+          if element.value == value
+            return true
           end
-          object_index += 1
+        else
+          return true
         end
       end
-      return nil
+      false
     end
+    
     def fast_locate
       # Searching through all elements returned by ole_inner_elements
       # is *significantly* slower than IE's getElementById() and
