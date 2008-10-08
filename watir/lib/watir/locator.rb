@@ -83,15 +83,23 @@ module Watir
     end
     def specifier= arg
       how, what, value = arg
-      how = :value if how == :caption
-      how = :class_name if how == :class
-      what = what.to_i if how == :index
-      value = value.to_s if value 
-      @value = value
-      
+
+      if how.class == Hash and what.nil?
+        specifiers = how
+      else
+        specifiers = {how => what}
+      end
+
       @specifiers = {:index => 1} # default if not specified
-      @specifiers[how] = what
+      @specifiers[:value] = value.to_s if value
+      specifiers.each do | how, what |
+        how = :value if how == :caption
+        how = :class_name if how == :class
+        what = what.to_i if how == :index
+        @specifiers[how] = what
+      end
     end
+
     def locate
       count = 0
       @elements.each do |object|
@@ -101,7 +109,7 @@ module Watir
           throw :next_element unless @types.include?(element.type)
           @specifiers.each do |how, what|
             next if how == :index
-            unless match? element, how, what, @value
+            unless match? element, how, what
               throw :next_element
             end
           end
@@ -114,7 +122,7 @@ module Watir
       nil
     end
     # return true if the element matches the provided how and what
-    def match? element, how, what, value
+    def match? element, how, what
       begin
         attribute = element.send(how)
       rescue NoMethodError
@@ -122,16 +130,7 @@ module Watir
           "#{how} is an unknown way of finding an <INPUT> element (#{what})"
       end
 
-      if what.matches(attribute)
-        if value
-          if element.value == value
-            return true
-          end
-        else
-          return true
-        end
-      end
-      false
+      what.matches(attribute)
     end
     
     def fast_locate
@@ -143,20 +142,20 @@ module Watir
       # where the :name matches, so we will only return the results of
       # getElementById() if the matching element actually HAS a matching
       # :id.
-      return unless @what.class == String # Only use fast calls with String what.
-      begin
-        case @how
-          when :id
-            @element = @document.getElementById(@what)
-            # Return if our fast match really HAS a matching :id
-            return true if @element && @element.invoke('id') == what
-          when :name
-            @elements = @document.getElementsByName(@what)
-        end
-        false
-      rescue
-        false
-      end      
+
+      the_id = @specifiers[:id]
+      if the_id && the_id.class == String && 
+        @specifiers[:index] == 1 && @specifiers.length == 2
+        @element = @document.getElementById(the_id) rescue nil
+        # Return if our fast match really HAS a matching :id
+        return true if @element && @element.invoke('id') == the_id
+      end
+
+      the_name = @specifiers[:name]
+      if the_name && the_name.class == String
+        @elements = @document.getElementsByName(the_name) rescue nil
+      end
+      false
     end
   end
 end    
