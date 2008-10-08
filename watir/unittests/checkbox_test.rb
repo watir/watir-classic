@@ -84,6 +84,7 @@ class TC_CheckBox < Test::Unit::TestCase
     
     assert(!browser.checkbox(:name, "box4", 2 ).isSet?)   
     assert(browser.checkbox(:name, "box4", 1 ).isSet?)  
+
     assert(!browser.checkbox(:name, 'box6', 'Milk').isSet?)     
   end
   
@@ -142,6 +143,11 @@ class TC_CheckBox < Test::Unit::TestCase
     
     browser.checkbox(:name, "box6", 'Tea').set( true )
     assert(browser.checkbox(:name, "box6", 'Tea').isSet?)
+  end
+  
+  def test_checkbox_specifying_value
+    browser.checkbox(:name => "box6", :value => 'Tea').set( false )
+    assert(!browser.checkbox(:name => "box6", :value => 'Tea').isSet?)
   end
 
   tag_method :test_checkboxes_access, :fails_on_firefox
