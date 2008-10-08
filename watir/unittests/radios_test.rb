@@ -176,18 +176,43 @@ class TC_Radios < Test::Unit::TestCase
   
   # test radio buttons that have a string as a value
   def test_value_string
-    assert(browser.radio(:name, 'box6', 'Tea').exists?)
-    assert(browser.radio(:name, 'box6', 'Milk').exists?)
-    browser.radio(:name, "box6" , 'Milk').set
-    assert(browser.radio(:name, "box6" , 'Milk').isSet?)   
-    assert(!browser.radio(:name, "box6" , 'Tea').isSet?)   
+    tea = browser.radio(:name, 'box6', 'Tea')
+    milk = browser.radio(:name, 'box6', 'Milk')
+    
+    assert(tea.exists?)
+    assert(milk.exists?)
 
-    browser.radio(:name, "box6" , 'Tea').set
-    assert(!browser.radio(:name, "box6" , 'Milk').isSet?)   
-    assert(browser.radio(:name, "box6" , 'Tea').isSet?)   
-    browser.radio(:name, "box6", 'Tea').clear
-    assert(!browser.radio(:name, "box6" , 'Tea').isSet?)   
+    milk.set
+    assert(milk.isSet?)   
+    assert(!tea.isSet?)   
+
+    tea.set
+    assert(!milk.isSet?)   
+    assert(tea.isSet?)   
+
+    tea.clear
+    assert(!tea.isSet?)
   end
+
+  def test_value_specified
+    tea = browser.radio(:name => 'box6', :value => 'Tea')
+    milk = browser.radio(:name => 'box6', :value => 'Milk')
+    
+    assert(tea.exists?)
+    assert(milk.exists?)
+
+    milk.set
+    assert(milk.isSet?)   
+    assert(!tea.isSet?)   
+
+    tea.set
+    assert(!milk.isSet?)   
+    assert(tea.isSet?)   
+
+    tea.clear
+    assert(!tea.isSet?)
+  end
+
   
 end
 
