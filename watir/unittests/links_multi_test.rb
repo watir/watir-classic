@@ -10,19 +10,18 @@ class TC_Links_Multi < Test::Unit::TestCase
     goto_page 'links_multi.html'
   end
   
-  tag_method :test_existing, :fails_on_firefox
   def test_existing
-    assert_match(/not.html/, browser.link(:class_name, 'Papa').href)
+    assert_match(/not.html/, browser.link(:class, 'Papa').href)
     assert_match(/mama.html/, browser.link(:text, 'click').href)
   end
-  
+
+  tag_method :test_class_alias, :fails_on_firefox
   def test_class_alias
-    assert_match(/not.html/, browser.link(:class, 'Papa').href)
+    assert_match(/not.html/, browser.link(:class_name, 'Papa').href)
   end
   
-  tag_method :test_hash_syntax, :fails_on_firefox
   def test_hash_syntax
-    assert_match(/not.html/, browser.link(:class_name => 'Papa').href)
+    assert_match(/not.html/, browser.link(:class => 'Papa').href)
     assert_match(/mama.html/, browser.link(:text => 'click').href)
   end
   
@@ -34,6 +33,7 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_match(/papa.html/, browser.link(:class => 'Papa', :index => 2).href)
   end  
 
+  # minor difference in error message
   tag_method :test_not_found_single, :fails_on_firefox
   def test_not_found_single
     exception = assert_raise(UnknownObjectException) do
@@ -42,6 +42,7 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_equal('Unable to locate element, using :id, "Missing"', exception.message)
   end
   
+  # minor difference in error message
   tag_method :test_not_found_with_multi, :fails_on_firefox
   def test_not_found_with_multi
     exception = assert_raise(UnknownObjectException) do
