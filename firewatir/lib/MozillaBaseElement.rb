@@ -271,6 +271,7 @@ require 'activesupport'
         		what = what.to_i if how == :index
         		how = :href if how == :url
         		how = :value if how == :caption
+            how = :class if how == :class_name
         
         		@specifiers[how] = what
       		end

@@ -15,7 +15,6 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_match(/mama.html/, browser.link(:text, 'click').href)
   end
 
-  tag_method :test_class_alias, :fails_on_firefox
   def test_class_alias
     assert_match(/not.html/, browser.link(:class_name, 'Papa').href)
   end
