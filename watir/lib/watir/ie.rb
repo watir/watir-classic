@@ -506,7 +506,7 @@ module Watir
           doc.frames.length.times do |n|
             begin
               documents_to_wait_for << doc.frames[n.to_s].document
-            rescue WIN32OLERuntimeError
+            rescue WIN32OLERuntimeError, NoMethodError
             end
           end
         rescue WIN32OLERuntimeError
