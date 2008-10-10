@@ -27,13 +27,10 @@ class TC_Pre < Test::Unit::TestCase
     assert(! browser.pre( :name, "name_missing" ).exists? )
   end
     
-  tag_method :test_simple_access, :fails_on_firefox
   def test_simple_access
     pre = browser.pre( :index, 1 )
     assert( pre.text.include?( "simple pre space" ) )
     assert(! pre.text.include?( "A second block" ) )
-    
-    assert( pre.html.include?( "id=1 name=\"1\"" ) )
     
     pre = browser.pre( :index, 2 )
     assert( pre.text.include?( "A second block" ) )
@@ -42,6 +39,12 @@ class TC_Pre < Test::Unit::TestCase
     pre = browser.pre( :index, 3 )
     assert( pre.text.include?( "continue    to work" ) )
     assert(! pre.text.include?( "Pre Tag Test" ) )
+  end
+
+  tag_method :test_html, :fails_on_firefox # http://jira.openqa.org/browse/WTR-260
+  def test_html
+    pre = browser.pre(:index, 1)
+    assert( pre.html.include?( "id=1 name=\"1\"" ) )
   end
   
 end
