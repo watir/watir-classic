@@ -120,7 +120,7 @@ class TC_show_frames < Test::Unit::TestCase
   include MockStdoutTestCase                
   
   def capture_and_compare(page, expected)
-    browser.goto($htmlRoot + page)
+    goto_page page
     $stdout = @mockout
     browser.showFrames
     assert_equal(expected, @mockout)
