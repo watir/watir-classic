@@ -489,11 +489,12 @@ module FireWatir
         def contains_text(target)
             #puts "Text to match is : #{match_text}"
             #puts "Html is : #{self.text}"
-            if target.kind_of? Regexp
+            case target
+              when Regexp
                 self.text.match(target)
-            elsif target.kind_of? String
+              when String
                 self.text.index(target)
-            else
+              else
                 raise ArgumentError, "Argument #{target} should be a string or regexp."
             end
         end

@@ -204,7 +204,7 @@ module FireWatir
     #
     def button(how, what=nil)
         locate if defined?(locate)
-        if what.nil? && how.class == String
+        if what.nil? && String === how
           what = how
           how = :value
         end    

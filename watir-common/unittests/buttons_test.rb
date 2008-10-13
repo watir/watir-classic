@@ -33,7 +33,7 @@ class TC_Button < Test::Unit::TestCase
   end
   
   def test_exception_with_enabled
-    assert_raises(UnknownObjectException) {   browser.button(:name, "noName").enabled?  }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").enabled?  }  
   end
 
   def test_properties
