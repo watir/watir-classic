@@ -74,7 +74,7 @@ class TC_Divs < Test::Unit::TestCase
     
     assert_equal(3, browser.div(:id, 'text_fields1').text_fields.length )
     browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
-    assert_equal("drink me", browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').getContents)
+    assert_equal("drink me", browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').value)
   end
   
   def test_images_inside_a_div

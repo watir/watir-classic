@@ -159,7 +159,7 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_equal(13, browser.checkboxes.length)
     index = 1
     browser.checkboxes.each do |c|
-      puts "#{index}: #{c.name}"
+      # puts "#{index}: #{c.name}"
       assert_equal( browser.checkbox(:index, index).name , c.name )
       assert_equal( browser.checkbox(:index, index).id, c.id )
       assert_equal( browser.checkbox(:index, index).value, c.value )

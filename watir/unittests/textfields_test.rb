@@ -29,8 +29,8 @@ class TC_Fields < Test::Unit::TestCase
   tag_method :test_text_field_dragContentsTo, :fails_on_firefox
   def test_text_field_dragContentsTo
     browser.text_field(:name, "text1").dragContentsTo(:id, "text2")
-    assert_equal(browser.text_field(:name, "text1").getContents, "") 
-    assert_equal(browser.text_field(:id, "text2").getContents, "goodbye allHello World") 
+    assert_equal(browser.text_field(:name, "text1").value, "") 
+    assert_equal(browser.text_field(:id, "text2").value, "goodbye allHello World") 
   end
   
   def test_text_field_verify_contains
@@ -58,7 +58,7 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_text_field_get_contents
     assert_raises(UnknownObjectException) { browser.text_field(:name, "missing_field").append("Some Text") }  
-    assert_equal("Hello World", browser.text_field(:name, "text1").getContents)  
+    assert_equal("Hello World", browser.text_field(:name, "text1").value)  
   end
   
   tag_method :test_text_field_to_s, :fails_on_firefox
@@ -96,20 +96,20 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.text_field(:name, "missing_field").append("Some Text") }  
     
     browser.text_field(:name, "text1").append(" Some Text")
-    assert_equal("Hello World Some Text", browser.text_field(:name, "text1").getContents)  
+    assert_equal("Hello World Some Text", browser.text_field(:name, "text1").value)  
   end
   
   def test_text_field_clear
     browser.text_field(:name, "text1").clear
-    assert_equal("", browser.text_field(:name, "text1").getContents)  
+    assert_equal("", browser.text_field(:name, "text1").value)  
   end
   
   def test_text_field_set
     browser.text_field(:name, "text1").set("watir IE Controller")
-    assert_equal("watir IE Controller" , browser.text_field(:name, "text1").getContents)  
+    assert_equal("watir IE Controller" , browser.text_field(:name, "text1").value)  
     # adding for issue: http://jira.openqa.org/browse/WTR-89
     browser.text_field(:name, /reGex/i).set("pass")
-    assert_equal("pass", browser.text_field(:name, /REgEx/i).getContents)
+    assert_equal("pass", browser.text_field(:name, /REgEx/i).value)
   end
   
   def test_text_field_properties

@@ -80,14 +80,14 @@ class TC_TextArea < Test::Unit::TestCase
   def test_append_set_and_clear
     browser.text_field(:name, "txtMultiLine1").append(" Some Text")
     assert_equal("Hello World Some Text", 
-      browser.text_field(:name, "txtMultiLine1").getContents )  
+      browser.text_field(:name, "txtMultiLine1").value )  
     
     browser.text_field(:name, "txtMultiLine1").set("watir IE Controller")
     assert_equal("watir IE Controller", 
-      browser.text_field(:name, "txtMultiLine1").getContents )  
+      browser.text_field(:name, "txtMultiLine1").value )  
     
     browser.text_field(:name, "txtMultiLine2").clear
-    assert_equal("" , browser.text_field(:name, "txtMultiLine2").getContents )  
+    assert_equal("" , browser.text_field(:name, "txtMultiLine2").value )  
   end
   
 end

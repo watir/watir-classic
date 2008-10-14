@@ -114,24 +114,24 @@ class TC_Forms3 < Test::Unit::TestCase
   
   def test_reset
     browser.text_field(:id, "t1").set("Hello, reset test!")
-    assert_equal(browser.text_field(:id, 't1').getContents, 'Hello, reset test!')
+    assert_equal(browser.text_field(:id, 't1').value, 'Hello, reset test!')
     
     browser.button(:id, "reset_button").click
-    assert_equal("" , browser.text_field(:id, 't1').getContents )
+    assert_equal("" , browser.text_field(:id, 't1').value )
     
     # also verify it works under a form
     browser.text_field(:id, "t1").set("reset test - using a form")
-    assert_equal(browser.text_field(:id, 't1').getContents, 'reset test - using a form')
+    assert_equal(browser.text_field(:id, 't1').value, 'reset test - using a form')
     
     browser.form(:index,2).button(:index,2).click
-    assert_equal("" , browser.text_field(:id, 't1').getContents )
+    assert_equal("" , browser.text_field(:id, 't1').value )
     
     # also verify it works under a form, this time using the :id attribute
     browser.text_field(:id, "t1").set("reset test - using a form")
-    assert_equal(browser.text_field(:id, 't1').getContents, 'reset test - using a form')
+    assert_equal(browser.text_field(:id, 't1').value, 'reset test - using a form')
     
     browser.form(:index,2).button(:id,'reset_button').click
-    assert_equal("" , browser.text_field(:id, 't1').getContents )
+    assert_equal("" , browser.text_field(:id, 't1').value )
   end
   
 ##  def test_flash1
@@ -202,22 +202,22 @@ class TC_Forms4 < Test::Unit::TestCase
   end
   
   def test_find_text_field_ignoring_form
-    assert_equal(browser.text_field(:name, 'name').getContents, 'apple') # should it raise a not-unique error instead?
+    assert_equal(browser.text_field(:name, 'name').value, 'apple') # should it raise a not-unique error instead?
   end
   
   def test_correct_form_field_is_found_using_form_name
-    assert_equal(browser.form(:name, 'apple_form').text_field(:name, 'name').getContents, 'apple')
-    assert_equal(browser.form(:name, 'banana_form').text_field(:name, 'name').getContents, 'banana')
+    assert_equal(browser.form(:name, 'apple_form').text_field(:name, 'name').value, 'apple')
+    assert_equal(browser.form(:name, 'banana_form').text_field(:name, 'name').value, 'banana')
   end
   
   def test_correct_form_field_is_found_using_form_index
-    assert_equal(browser.form(:index, 1).text_field(:name, 'name').getContents, 'apple')
-    assert_equal(browser.form(:index, 2).text_field(:name, 'name').getContents, 'banana')
+    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'apple')
+    assert_equal(browser.form(:index, 2).text_field(:name, 'name').value, 'banana')
   end
   
   def test_using_text_on_form
     browser.form(:name, 'apple_form').text_field(:name, 'name').set('strudel')
-    assert_equal(browser.form(:index, 1).text_field(:name, 'name').getContents, 'strudel')
+    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'strudel')
   end 
   
   def test_submit
