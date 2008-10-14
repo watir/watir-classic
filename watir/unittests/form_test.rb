@@ -35,12 +35,17 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   def test_form_sub_element
     assert_equal('Click Me', browser.form(:index, 1).button(:name, 'b1').value)
   end
-  
+
   # The following tests form bug 2261 
-  tag_method :test_form_html, :fails_on_firefox
-  def test_form_html 
-    assert_equal("\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>", 
-    browser.form(:name, 'test2').html)
+  tag_method :test_form_outer_html, :fails_on_firefox
+  def test_form_outer_html 
+    expected = "\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>"
+    assert_equal(expected, browser.form(:name, 'test2').html)
+  end
+  tag_method :test_form_inner_html, :fails_on_ie
+  def test_form_inner_html
+    expected = "\n<br><input value=\"Submit\" type=\"submit\">\n"
+    assert_equal(expected, browser.form(:name, 'test2').html)
   end
   def test_form_flash
     assert_nothing_raised{ browser.form(:name, 'test2').flash }
@@ -83,7 +88,7 @@ class TC_Forms3 < Test::Unit::TestCase
   
   # The following tests form bug 2261 
   def test_p_in_form
-    assert_equal "This form is has a submit button that is an image", 
+    assert_equal "This form has a submit button that is an image", 
       browser.form(:name, 'buttonsubmit').p(:index, 1).text
   end
   
