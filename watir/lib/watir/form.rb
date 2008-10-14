@@ -30,7 +30,7 @@ module Watir
     include FormAccess
     include Container
     
-    attr_accessor :form
+    attr_accessor :form, :ole_object
     
     #   * container   - the containing object, normally an instance of IE
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
@@ -74,19 +74,22 @@ module Watir
     end
     alias :exist? :exists?
     
-    # Submit the data -- equivalent to pressing Enter or Return to submit a form.
-    def submit # XXX use assert_exists
-      if @ole_object.nil?
-        raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " 
+    def assert_exists
+      unless exists?
+        raise UnknownFormException, 
+          "Unable to locate a form using #{@how} and #{@what}" 
       end
+    end
+    
+    # Submit the data -- equivalent to pressing Enter or Return to submit a form.
+    def submit 
+      assert_exists
       @ole_object.invoke('submit')
       @container.wait
     end
     
-    def ole_inner_elements # XXX use assert_exists
-      if @ole_object.nil?
-        raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " 
-      end
+    def ole_inner_elements
+      assert_exists
       @ole_object.elements
     end
     private :ole_inner_elements

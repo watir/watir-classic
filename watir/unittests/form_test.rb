@@ -183,7 +183,6 @@ class TC_Forms3_Display < Test::Unit::TestCase
 end
 
 class TC_Forms4 < Test::Unit::TestCase
-  tags :ie
   def setup
     uses_page "forms4.html"
   end

@@ -729,6 +729,7 @@ module Watir
       locator.specifier = [how, what, value]
       locator.document = document
       return locator.element if locator.fast_locate
+      # todo: restrict search to elements.getElementsByTag('INPUT'); faster
       locator.elements = ole_inner_elements if locator.elements.nil?
       locator.locate
     end
