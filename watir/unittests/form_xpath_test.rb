@@ -11,13 +11,13 @@ class TC_Forms2_XPath < Test::Unit::TestCase
   
   def test_Form_Exists
     assert($ie.form(:xpath , "//form[@name='test2']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@name='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@name='missing']/").exists?)   
     
     assert($ie.form(:xpath , "//form[@method='get']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@method='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@method='missing']/").exists?)   
     
     assert($ie.form(:xpath , "//form[@action='pass.html']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@action='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@action='missing']/").exists?)   
   end
   
   def test_ButtonInForm
@@ -61,13 +61,13 @@ class TC_Forms3_XPath < Test::Unit::TestCase
   
   def test_Form_Exists
     assert($ie.form(:xpath , "//form[@name='test2']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@name='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@name='missing']/").exists?)   
     
     assert($ie.form(:xpath , "//form[@method='get']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@method='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@method='missing']/").exists?)   
     
     assert($ie.form(:xpath , "//form[@action='pass.html']/").exists?)   
-    assert(!$ie.form(:xpath , "//form[@action='missing']/").exists?)   
+    assert_false($ie.form(:xpath , "//form[@action='missing']/").exists?)   
   end
   
   def test_getObject_when_non_watir_object_before_it
@@ -133,14 +133,14 @@ class TC_Forms3_XPath < Test::Unit::TestCase
     assert( $ie.button(:alt , "submit").exists? )
     assert( $ie.button(:alt , /sub/).exists? )
     
-    assert(! $ie.button(:alt , "missing").exists? )
-    assert(! $ie.button(:alt , /missing/).exists? )
+    assert_false( $ie.button(:alt , "missing").exists? )
+    assert_false( $ie.button(:alt , /missing/).exists? )
     
     #assert( $ie.button(:src , "file:///#{$myDir}/html/images/button.jpg").exists? )    # this doesnt work for everybody
     assert( $ie.button(:src , /button/).exists? )
     
-    assert(! $ie.button(:src , "missing").exists? )
-    assert(! $ie.button(:src , /missing/).exists? )
+    assert_false( $ie.button(:src , "missing").exists? )
+    assert_false( $ie.button(:src , /missing/).exists? )
     assert_nothing_raised("raised an exception when it shouldnt have") { $ie.button(:src , /button/).click }
     
     assert( $ie.contains_text("PASS") )
@@ -182,7 +182,7 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
     # test using index
     assert( $ie.hidden(:index,1).exists? )
     assert( $ie.hidden(:index,2).exists? )
-    assert(! $ie.hidden(:index,3).exists? )
+    assert_false( $ie.hidden(:index,3).exists? )
     
     $ie.hidden(:index,1).value = 44
     $ie.hidden(:index,2).value = 55
@@ -195,8 +195,8 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
     # test using name and ID
     assert( $ie.hidden(:name ,"hid1").exists? )
     assert( $ie.hidden(:id,"hidden_1").exists? )
-    assert(! $ie.hidden(:name,"hidden_44").exists? )
-    assert(! $ie.hidden(:id,"hidden_55").exists? )
+    assert_false( $ie.hidden(:name,"hidden_44").exists? )
+    assert_false( $ie.hidden(:id,"hidden_55").exists? )
     
     $ie.hidden(:name ,"hid1").value = 444
     $ie.hidden(:id,"hidden_1").value = 555
@@ -221,8 +221,8 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
     # test using a form
     assert( $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:name ,"hid1").exists? )
     assert( $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:id,"hidden_1").exists? )
-    assert(! $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:name,"hidden_44").exists? )
-    assert(! $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:id,"hidden_55").exists? )
+    assert_false( $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:name,"hidden_44").exists? )
+    assert_false( $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:id,"hidden_55").exists? )
     
     $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:name ,"hid1").value = 222
     $ie.form(:xpath , "//form[@name='has_a_hidden']/").hidden(:id,"hidden_1").value = 333

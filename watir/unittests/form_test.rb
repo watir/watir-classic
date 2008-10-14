@@ -11,22 +11,22 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   
   def test_Form_Exists
     assert(browser.form(:name, "test2").exists?)   
-    assert(!browser.form(:name, "missing").exists?)   
+    assert_false(browser.form(:name, "missing").exists?)   
     
     assert(browser.form("test2").exists?)   
-    assert(!browser.form( "missing").exists?)   
+    assert_false(browser.form( "missing").exists?)   
 
     assert(browser.form(:index,  1).exists?)   
-    assert(!browser.form(:index, 88).exists?)   
+    assert_false(browser.form(:index, 88).exists?)   
     
     assert(browser.form(:method, "get").exists?)   
-    assert(!browser.form(:method, "missing").exists?)   
+    assert_false(browser.form(:method, "missing").exists?)   
     
     assert(browser.form(:id, 'f2').exists?)   
-    assert(!browser.form(:id, 'missing').exists?)   
+    assert_false(browser.form(:id, 'missing').exists?)   
     
     assert(browser.form(:action, "pass.html").exists?)   
-    assert(!browser.form(:action, "missing").exists?)   
+    assert_false(browser.form(:action, "missing").exists?)   
   end
   
   def test_ButtonInForm
@@ -89,19 +89,19 @@ class TC_Forms3 < Test::Unit::TestCase
   
   def test_Form_Exists
     assert(browser.form(:name, "test2").exists?)   
-    assert(!browser.form(:name, "missing").exists?)   
+    assert_false(browser.form(:name, "missing").exists?)   
     
     assert(browser.form("test2").exists?)   
-    assert(!browser.form( "missing").exists?)   
+    assert_false(browser.form( "missing").exists?)   
     
     assert(browser.form(:index,  1).exists?)   
-    assert(!browser.form(:index, 88).exists?)   
+    assert_false(browser.form(:index, 88).exists?)   
     
     assert(browser.form(:method, "get").exists?)   
-    assert(!browser.form(:method, "missing").exists?)   
+    assert_false(browser.form(:method, "missing").exists?)   
     
     assert(browser.form(:action, "pass.html").exists?)   
-    assert(!browser.form(:action, "missing").exists?)   
+    assert_false(browser.form(:action, "missing").exists?)   
   end
   
   def test_index_other_element_before_it
@@ -167,14 +167,14 @@ class TC_Forms3 < Test::Unit::TestCase
     assert( browser.button(:alt , "submit").exists? )
     assert( browser.button(:alt , /sub/).exists? )
     
-    assert(! browser.button(:alt , "missing").exists? )
-    assert(! browser.button(:alt , /missing/).exists? )
+    assert_false( browser.button(:alt , "missing").exists? )
+    assert_false( browser.button(:alt , /missing/).exists? )
     
     #assert( browser.button(:src , "file:///#{$myDir}/html/images/button.jpg").exists? )    # this doesnt work for everybody
     assert( browser.button(:src , /button/).exists? )
     
-    assert(! browser.button(:src , "missing").exists? )
-    assert(! browser.button(:src , /missing/).exists? )
+    assert_false( browser.button(:src , "missing").exists? )
+    assert_false( browser.button(:src , /missing/).exists? )
     assert_nothing_raised("raised an exception when it shouldnt have") { browser.button(:src , /button/).click }
     
     assert( browser.text.include?("PASS") )
@@ -233,7 +233,7 @@ class TC_Hidden_Fields < Test::Unit::TestCase
     # test using index
     assert( browser.hidden(:index,1).exists? )
     assert( browser.hidden(:index,2).exists? )
-    assert(! browser.hidden(:index,3).exists? )
+    assert_false( browser.hidden(:index,3).exists? )
     
     browser.hidden(:index,1).value = 44
     browser.hidden(:index,2).value = 55
@@ -246,8 +246,8 @@ class TC_Hidden_Fields < Test::Unit::TestCase
     # test using name and ID
     assert( browser.hidden(:name ,"hid1").exists? )
     assert( browser.hidden(:id,"hidden_1").exists? )
-    assert(! browser.hidden(:name,"hidden_44").exists? )
-    assert(! browser.hidden(:id,"hidden_55").exists? )
+    assert_false( browser.hidden(:name,"hidden_44").exists? )
+    assert_false( browser.hidden(:id,"hidden_55").exists? )
     
     browser.hidden(:name ,"hid1").value = 444
     browser.hidden(:id,"hidden_1").value = 555
@@ -272,8 +272,8 @@ class TC_Hidden_Fields < Test::Unit::TestCase
     # test using a form
     assert( browser.form(:name, "has_a_hidden").hidden(:name ,"hid1").exists? )
     assert( browser.form(:name, "has_a_hidden").hidden(:id,"hidden_1").exists? )
-    assert(! browser.form(:name, "has_a_hidden").hidden(:name,"hidden_44").exists? )
-    assert(! browser.form(:name, "has_a_hidden").hidden(:id,"hidden_55").exists? )
+    assert_false( browser.form(:name, "has_a_hidden").hidden(:name,"hidden_44").exists? )
+    assert_false( browser.form(:name, "has_a_hidden").hidden(:id,"hidden_55").exists? )
     
     browser.form(:name, "has_a_hidden").hidden(:name ,"hid1").value = 222
     browser.form(:name, "has_a_hidden").hidden(:id,"hidden_1").value = 333

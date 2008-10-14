@@ -16,34 +16,34 @@ class TC_Pre < Test::Unit::TestCase
   end
   
   def test_Pre_Exists
-    assert(! browser.pre( :id, 'missingPre' ).exists? )
-    assert(! browser.pre( :index, 33 ).exists? )
+    assert_false( browser.pre( :id, 'missingPre' ).exists? )
+    assert_false( browser.pre( :index, 33 ).exists? )
     
     assert( browser.pre( :id, '1' ).exists? )
     assert( browser.pre( :id, /[3-9]/ ).exists? )
     
-    assert(! browser.pre( :id, /missing_pre/ ).exists? )
+    assert_false( browser.pre( :id, /missing_pre/ ).exists? )
     
     assert( browser.pre( :index, 1 ).exists? )
     assert( browser.pre( :index, 2 ).exists? )
     assert( browser.pre( :index, 3 ).exists? )
     
     assert( browser.pre( :name, '3' ).exists? )
-    assert(! browser.pre( :name, "name_missing" ).exists? )
+    assert_false( browser.pre( :name, "name_missing" ).exists? )
   end
   
   def test_simple_access
     pre = browser.pre( :index, 1 )
     assert( pre.text.include?( "simple pre space" ) )
-    assert(! pre.text.include?( "A second block" ) )
+    assert_false( pre.text.include?( "A second block" ) )
     
     pre = browser.pre( :index, 2 )
     assert( pre.text.include?( "A second block" ) )
-    assert(! pre.text.include?( "this is the last block" ) )
+    assert_false( pre.text.include?( "this is the last block" ) )
     
     pre = browser.pre( :index, 3 )
     assert( pre.text.include?( "continue    to work" ) )
-    assert(! pre.text.include?( "Pre Tag Test" ) )
+    assert_false( pre.text.include?( "Pre Tag Test" ) )
     
   end
   

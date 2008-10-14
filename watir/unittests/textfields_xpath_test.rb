@@ -13,10 +13,10 @@ class TC_Fields_XPath < Test::Unit::TestCase
   
   def test_text_field_exists
     assert($ie.text_field(:xpath , "//input[@name='text1']/").exists?)   
-    assert(!$ie.text_field(:xpath , "//input[@name='missing']/").exists?)   
+    assert_false($ie.text_field(:xpath , "//input[@name='missing']/").exists?)   
     
     assert($ie.text_field(:xpath , "//input[@id='text2']/").exists?)   
-    assert(!$ie.text_field(:xpath , "//input[@id='alsomissing']/").exists?)   
+    assert_false($ie.text_field(:xpath , "//input[@id='alsomissing']/").exists?)   
     
     #assert($ie.text_field(:xpath , "//input[@beforeText='This Text After']/").exists? )
     #assert($ie.text_field(:xpath , "//input[@afterText='This Text Before']/").exists? )
@@ -31,8 +31,8 @@ class TC_Fields_XPath < Test::Unit::TestCase
   def test_text_field_VerifyContents
     assert($ie.text_field(:xpath , "//input[@name='text1']/").verify_contains("Hello World") )  
     assert($ie.text_field(:xpath , "//input[@name='text1']/").verify_contains(/Hello\sW/ ) )  
-    assert(!$ie.text_field(:xpath , "//input[@name='text1']/").verify_contains("Ruby") )  
-    assert(!$ie.text_field(:xpath , "//input[@name='text1']/").verify_contains(/R/) )  
+    assert_false($ie.text_field(:xpath , "//input[@name='text1']/").verify_contains("Ruby") )  
+    assert_false($ie.text_field(:xpath , "//input[@name='text1']/").verify_contains(/R/) )  
     assert_raises(UnknownObjectException) {   $ie.text_field(:xpath , "//input[@name='NoName']/").verify_contains("No field to get a value of") }  
     
     assert($ie.text_field(:xpath , "//input[@id='text2']/").verify_contains("goodbye all") )  
@@ -40,13 +40,13 @@ class TC_Fields_XPath < Test::Unit::TestCase
   end
   
   def test_text_field_enabled
-    assert(!$ie.text_field(:xpath , "//input[@name='disabled']/").enabled? )  
+    assert_false($ie.text_field(:xpath , "//input[@name='disabled']/").enabled? )  
     assert($ie.text_field(:xpath , "//input[@name='text1']/").enabled? )  
     assert($ie.text_field(:xpath , "//input[@id='text2']/").enabled? )  
   end
   
   def test_text_field_readOnly
-    assert(!$ie.text_field(:xpath , "//input[@name='disabled']/").readonly? )  
+    assert_false($ie.text_field(:xpath , "//input[@name='disabled']/").readonly? )  
     assert($ie.text_field(:xpath , "//input[@name='readOnly']/").readonly? )  
     assert($ie.text_field(:xpath , "//input[@id='readOnly2']/").readonly? )  
   end

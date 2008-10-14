@@ -16,8 +16,8 @@ class TC_FileField_XPath < Test::Unit::TestCase
     assert($ie.file_field(:xpath, "//input[@name='file1']/").exists?)
     assert($ie.file_field(:xpath, "//input[@id='file2']/").exists?)
     #test for missing 
-    assert(!$ie.file_field(:xpath, "//input[@name='missing']/").exists?)   
-    assert(!$ie.file_field(:xpath, "//input[@name='totallybogus']/").exists?)
+    assert_false($ie.file_field(:xpath, "//input[@name='missing']/").exists?)   
+    assert_false($ie.file_field(:xpath, "//input[@name='totallybogus']/").exists?)
     #pop one open and put something in it.
     $ie.file_field(:xpath, "//input[@name='file1']/").set($htmlRoot + "fileupload.html")	
     #click the upload button

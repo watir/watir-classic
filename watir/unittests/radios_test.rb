@@ -15,8 +15,8 @@ class TC_Radios < Test::Unit::TestCase
     assert(browser.radio(:name, "box1").exists?)   
     assert(browser.radio(:id, "box5").exists?)   
     
-    assert(!browser.radio(:name, "missingname").exists?)   
-    assert(!browser.radio(:id, "missingid").exists?)   
+    assert_false(browser.radio(:name, "missingname").exists?)   
+    assert_false(browser.radio(:id, "missingid").exists?)   
   end
   
   def test_radio_class
@@ -30,19 +30,19 @@ class TC_Radios < Test::Unit::TestCase
     assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   browser.radio(:id, "noName").enabled?  }  
     assert_raises(UnknownObjectException, "UnknownObjectException was supposed to be thrown" ) {   browser.radio(:name, "box4" , 6).enabled?  }  
     
-    assert(!browser.radio(:name, "box2").enabled?)   
+    assert_false(browser.radio(:name, "box2").enabled?)   
     assert(browser.radio(:id, "box5").enabled?)   
     assert(browser.radio(:name, "box1").enabled?)   
   end
   
   def test_little
-    assert(!browser.button(:value, "foo").enabled?)
+    assert_false(browser.button(:value, "foo").enabled?)
   end
   
   def test_onClick
     
-    assert(!browser.radio(:name, "box5").isSet?)
-    assert(!browser.button(:value , "foo").enabled?)
+    assert_false(browser.radio(:name, "box5").isSet?)
+    assert_false(browser.button(:value , "foo").enabled?)
     
     # first click the button is enabled and the radio is set
     browser.radio(:name, "box5", 1).set
@@ -54,7 +54,7 @@ class TC_Radios < Test::Unit::TestCase
     browser.radio(:name, "box5", 1).set
     assert(browser.radio(:name, "box5",1).isSet?)
     assert(browser.radio(:name, "box5",1).checked?)    
-    assert(!browser.button(:value, "foo").enabled?)
+    assert_false(browser.button(:value, "foo").enabled?)
     
     # third click the button is enabled and the radio is still set
     browser.radio(:name, "box5", 1).set
@@ -64,43 +64,43 @@ class TC_Radios < Test::Unit::TestCase
     
     # click the radio with a value of 2 , button is disabled and the radio is still set
     browser.radio(:name, "box5", 2).set
-    assert(!browser.radio(:name, "box5", 1).isSet?)
-    assert(!browser.radio(:name, "box5", 1).checked?)    
+    assert_false(browser.radio(:name, "box5", 1).isSet?)
+    assert_false(browser.radio(:name, "box5", 1).checked?)    
     assert(browser.radio(:name, "box5", 2).isSet?)
     assert(browser.radio(:name, "box5", 2).checked?)    
-    assert(!browser.button(:value, "foo").enabled?)
+    assert_false(browser.button(:value, "foo").enabled?)
   end
   
   def test_Radio_isSet
     assert_raises(UnknownObjectException) { browser.radio(:name, "noName").isSet?  }  
     
-    assert(!browser.radio(:name, "box1").isSet?)   
+    assert_false(browser.radio(:name, "box1").isSet?)   
     assert( browser.radio(:name, "box3").isSet?)   
-    assert(!browser.radio(:name, "box2").isSet?)   
+    assert_false(browser.radio(:name, "box2").isSet?)   
     assert( browser.radio(:name, "box4", 1).isSet?)   
-    assert(!browser.radio(:name, "box4", 2).isSet?)  
+    assert_false(browser.radio(:name, "box4", 2).isSet?)  
 
-    assert(!browser.radio(:name, "box1").checked?)   
+    assert_false(browser.radio(:name, "box1").checked?)   
     assert( browser.radio(:name, "box3").checked?)   
-    assert(!browser.radio(:name, "box2").checked?)   
+    assert_false(browser.radio(:name, "box2").checked?)   
     assert( browser.radio(:name, "box4", 1).checked?)   
-    assert(!browser.radio(:name, "box4", 2).checked?)   
+    assert_false(browser.radio(:name, "box4", 2).checked?)   
   end
   
   def test_radio_clear
     assert_raises(UnknownObjectException) {   browser.radio(:name, "noName").clear  }  
     
     browser.radio(:name, "box1").clear
-    assert(!browser.radio(:name, "box1").isSet?)   
+    assert_false(browser.radio(:name, "box1").isSet?)   
     
     assert_raises(ObjectDisabledException, "ObjectDisabledException was supposed to be thrown" ) {   browser.radio(:name, "box2").clear  } 
-    assert(!browser.radio(:name, "box2").isSet?)   
+    assert_false(browser.radio(:name, "box2").isSet?)   
     
     browser.radio(:name, "box3").clear
-    assert(!browser.radio(:name, "box3").isSet?)   
+    assert_false(browser.radio(:name, "box3").isSet?)   
     
     browser.radio(:name, "box4" , 1).clear
-    assert(!browser.radio(:name, "box4" , 1).isSet?)   
+    assert_false(browser.radio(:name, "box4" , 1).isSet?)   
   end
   
   def test_radio_getState
@@ -179,14 +179,14 @@ class TC_Radios < Test::Unit::TestCase
 
     milk.set
     assert(milk.isSet?)   
-    assert(!tea.isSet?)   
+    assert_false(tea.isSet?)   
 
     tea.set
-    assert(!milk.isSet?)   
+    assert_false(milk.isSet?)   
     assert(tea.isSet?)   
 
     tea.clear
-    assert(!tea.isSet?)
+    assert_false(tea.isSet?)
   end
 
   def test_value_specified
@@ -198,14 +198,14 @@ class TC_Radios < Test::Unit::TestCase
 
     milk.set
     assert(milk.isSet?)   
-    assert(!tea.isSet?)   
+    assert_false(tea.isSet?)   
 
     tea.set
-    assert(!milk.isSet?)   
+    assert_false(milk.isSet?)   
     assert(tea.isSet?)   
 
     tea.clear
-    assert(!tea.isSet?)
+    assert_false(tea.isSet?)
   end
   
 end

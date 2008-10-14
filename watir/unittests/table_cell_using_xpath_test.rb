@@ -12,7 +12,7 @@ class TC_TableCell_XPath < Test::Unit::TestCase
   
   def testCellExists
     # There is no <image> with @src='rectangle.jpg'. So image will not be there.
-    assert(! $ie.cell(:xpath , "//img[@src='images\/rectangle.jpg']/../").exists?  )
+    assert_false( $ie.cell(:xpath , "//img[@src='images\/rectangle.jpg']/../").exists?  )
     # Select the parent element of image with src='square.jpg' which is a tablecell.
     assert(       $ie.cell(:xpath , "//img[@src='images\/square.jpg']/../").exists?  )
     assert(       $ie.cell(:xpath , "//img[@src='images\/triangle.jpg']/../").exists?  )

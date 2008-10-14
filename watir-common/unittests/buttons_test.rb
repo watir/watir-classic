@@ -84,17 +84,17 @@ class TC_Button < Test::Unit::TestCase
     assert(browser.button(:id, "b2").exists?)   
     assert(browser.button(:caption, /sub/i).exists?)   
     
-    assert(!browser.button(:caption, "missingcaption").exists?)   
-    assert(!browser.button(:name, "missingname").exists?)   
-    assert(!browser.button(:id, "missingid").exists?)   
-    assert(!browser.button(:caption, /missing/i).exists?)   
+    assert_false(browser.button(:caption, "missingcaption").exists?)   
+    assert_false(browser.button(:name, "missingname").exists?)   
+    assert_false(browser.button(:id, "missingid").exists?)   
+    assert_false(browser.button(:caption, /missing/i).exists?)   
   end
   
   def test_enabled
     assert(browser.button(:caption, "Click Me").enabled?)   
-    assert(!browser.button(:caption, "Disabled Button").enabled?)   
-    assert(!browser.button(:name, "b4").enabled?)   
-    assert(!browser.button(:id, "b5").enabled?)   
+    assert_false(browser.button(:caption, "Disabled Button").enabled?)   
+    assert_false(browser.button(:name, "b4").enabled?)   
+    assert_false(browser.button(:id, "b5").enabled?)   
   end
 
 end

@@ -22,8 +22,8 @@ class TC_TextArea < Test::Unit::TestCase
     assert(browser.text_field(:id,"txtMultiLine3").exists?)
     assert(browser.text_field(:id,"txtReadOnly").exists?)
 
-    assert(!browser.text_field(:name, "missing").exists?)   
-    assert(!browser.text_field(:name,"txtMultiLine4").exists?)
+    assert_false(browser.text_field(:name, "missing").exists?)   
+    assert_false(browser.text_field(:name,"txtMultiLine4").exists?)
   end
   
   def test_to_s_bug
@@ -37,10 +37,10 @@ class TC_TextArea < Test::Unit::TestCase
   end
   
   def test_readonly_and_enabled
-    assert(!browser.text_field(:name, "txtMultiLine1").readonly? )  
+    assert_false(browser.text_field(:name, "txtMultiLine1").readonly? )  
     assert(browser.text_field(:name,"txtReadOnly").readonly?)
     
-    assert(!browser.text_field(:name, "txtDisabled").enabled? )  
+    assert_false(browser.text_field(:name, "txtDisabled").enabled? )  
     assert(browser.text_field(:id, "txtMultiLine1").enabled? )  
   end
   

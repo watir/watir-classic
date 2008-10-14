@@ -52,16 +52,16 @@ class TC_Buttons_XPath < Test::Unit::TestCase
     assert($ie.button(:xpath, "//input[@name='b1']/").exists?)   
     assert($ie.button(:xpath, "//input[@id='b2']/").exists?)   
     
-    assert(!$ie.button(:xpath, "//input[@value='Missing Caption']/").exists?)   
-    assert(!$ie.button(:xpath, "//input[@name='missingname']/").exists?)   
-    assert(!$ie.button(:xpath, "//input[@id='missingid']/").exists?)   
+    assert_false($ie.button(:xpath, "//input[@value='Missing Caption']/").exists?)   
+    assert_false($ie.button(:xpath, "//input[@name='missingname']/").exists?)   
+    assert_false($ie.button(:xpath, "//input[@id='missingid']/").exists?)   
   end
   
   def test_Button_Enabled
     assert($ie.button(:xpath, "//input[@value='Click Me']/").enabled?)   
-    assert(!$ie.button(:xpath, "//input[@value='Disabled Button']/").enabled?)   
-    assert(!$ie.button(:xpath, "//input[@name='b4']/").enabled?)   
-    assert(!$ie.button(:xpath, "//input[@id='b5']/").enabled?)   
+    assert_false($ie.button(:xpath, "//input[@value='Disabled Button']/").enabled?)   
+    assert_false($ie.button(:xpath, "//input[@name='b4']/").enabled?)   
+    assert_false($ie.button(:xpath, "//input[@id='b5']/").enabled?)   
     
     assert_raises(UnknownObjectException) {   $ie.button(:xpath, "//input[@name='noName']/").enabled?  }  
   end

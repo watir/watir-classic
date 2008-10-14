@@ -137,12 +137,12 @@ class TC_Divs < Test::Unit::TestCase
   
   def test_objects_in_span
     assert(browser.span(:id, 'buttons1').button(:index,1).exists? )
-    assert(!browser.span(:id, 'buttons1').button(:index,3).exists? )
+    assert_false(browser.span(:id, 'buttons1').button(:index,3).exists? )
     assert(browser.span(:id, 'buttons1').button(:name,'b1').exists? )
     
     assert(browser.span(:id, 'buttons2').button(:index,1).exists? )
     assert(browser.span(:id, 'buttons2').button(:index,2).exists? )
-    assert(!browser.span(:id, 'buttons1').button(:index,3).exists? )
+    assert_false(browser.span(:id, 'buttons1').button(:index,3).exists? )
     
     browser.span(:id, 'buttons1').button(:index,1).click
     assert_equal( 'button1' ,   browser.span(:id , 'text_fields1').text_field(:index,1).value)
@@ -154,9 +154,9 @@ class TC_Divs < Test::Unit::TestCase
     assert(browser.p(:index, 3).exists?)
     assert(browser.p(:title, 'test_3').exists?)
     
-    assert(!browser.p(:id, 'missing').exists?)
-    assert(!browser.p(:index, 8).exists?)
-    assert(!browser.p(:title, 'test_55').exists?)
+    assert_false(browser.p(:id, 'missing').exists?)
+    assert_false(browser.p(:index, 8).exists?)
+    assert_false(browser.p(:title, 'test_55').exists?)
     
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').class_name }
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').text }

@@ -120,7 +120,7 @@ class TC_ModalDialog < Watir::TestCase
     modal = $ie.modal_dialog(:title, 'Modal Dialog')
     assert(modal.exists?)
     modal.button(:value, 'Close').click
-    assert(!modal.exists?)
+    assert_false(modal.exists?)
   end
         
 end

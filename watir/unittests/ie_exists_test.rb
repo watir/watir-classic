@@ -24,11 +24,11 @@ class TC_IENotExists < Test::Unit::TestCase
   end
   def test_we_closed_it
     @ie.close
-    assert(!@ie.exists?)
+    assert_false(@ie.exists?)
   end
   def test_some_one_else_closed_it
     @ie.ie.quit
     sleep 0.3 # give it some time to close
-    assert(!@ie.exists?)
+    assert_false(@ie.exists?)
   end    
 end

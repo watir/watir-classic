@@ -30,7 +30,7 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
   
   def test_CheckBox_Exists
     assert($ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").exists?)   
-    assert(!$ie.checkbox(:xpath , "//input[@name='box4' and @value='22']/").exists?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box4' and @value='22']/").exists?)   
   end
   
   def test_checkbox_Enabled
@@ -39,36 +39,36 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { $ie.checkbox(:xpath , "//input[@name='box4' and @value='6']/").enabled? }  
     
     assert($ie.checkbox(:xpath , "//input[@name='box1']/").enabled?)   
-    assert(!$ie.checkbox(:xpath , "//input[@name='box2']/").enabled?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box2']/").enabled?)   
     
     assert($ie.checkbox(:xpath , "//input[@name='box4' and @value='4']/").enabled?)   
-    assert(!$ie.checkbox(:xpath , "//input[@name='box4' and @value='5']/").enabled?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box4' and @value='5']/").enabled?)   
   end
   
   def test_checkbox_isSet
     assert_raises(UnknownObjectException ) { $ie.checkbox(:xpath , "//input[@name='noName']/").isSet? }  
     
-    assert(!$ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
-    assert(!$ie.checkbox(:xpath , "//input[@name='box2']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box2']/").isSet?)   
     assert($ie.checkbox(:xpath , "//input[@name='box3']/").isSet?)   
     
-    assert(!$ie.checkbox(:xpath , "//input[@name='box4' and @value='2']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box4' and @value='2']/").isSet?)   
     assert($ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").isSet?)   
   end
   
   def test_checkbox_clear
     assert_raises(UnknownObjectException) { $ie.checkbox(:xpath , "//input[@name='noName']/").clear }  
     $ie.checkbox(:xpath , "//input[@name='box1']/").clear
-    assert(!$ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
     
     assert_raises(ObjectDisabledException) { $ie.checkbox(:xpath , "//input[@name='box2']/").clear } 
-    assert(!$ie.checkbox(:xpath , "//input[@name='box2']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box2']/").isSet?)   
     
     $ie.checkbox(:xpath , "//input[@name='box3']/").clear
-    assert(!$ie.checkbox(:xpath , "//input[@name='box3']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box3']/").isSet?)   
     
     $ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").clear
-    assert(!$ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box4' and @value='1']/").isSet?)   
   end
   
   def test_checkbox_getState
@@ -98,7 +98,7 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
     # test set using the optinal true/false
     # assumes the checkbox is already checked
     $ie.checkbox(:xpath , "//input[@name='box1']/").set( false )
-    assert(!$ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
+    assert_false($ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   
     
     $ie.checkbox(:xpath , "//input[@name='box1']/").set( true )
     assert($ie.checkbox(:xpath , "//input[@name='box1']/").isSet?)   

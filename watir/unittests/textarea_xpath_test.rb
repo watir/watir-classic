@@ -23,8 +23,8 @@ class TC_TextArea_XPath < Test::Unit::TestCase
     assert($ie.text_field(:xpath , "//textarea[@id='txtMultiLine3']/").exists?)
     assert($ie.text_field(:xpath , "//textarea[@id='txtReadOnly']/").exists?)
     #test for missing 
-    assert(!$ie.text_field(:xpath , "//textarea[@name='missing']/").exists?)   
-    assert(!$ie.text_field(:xpath , "//textarea[@name='txtMultiLine4']/").exists?)
+    assert_false($ie.text_field(:xpath , "//textarea[@name='missing']/").exists?)   
+    assert_false($ie.text_field(:xpath , "//textarea[@name='txtMultiLine4']/").exists?)
   end
   
   def xtest_textarea_to_s
@@ -35,11 +35,11 @@ class TC_TextArea_XPath < Test::Unit::TestCase
   
   def test_textarea_field
     # test for read only method
-    assert(!$ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").readonly? )  
+    assert_false($ie.text_field(:xpath , "//textarea[@name='txtMultiLine1']/").readonly? )  
     assert($ie.text_field(:xpath , "//textarea[@name='txtReadOnly']/").readonly?)
     
     # test for enabled? method
-    assert(!$ie.text_field(:xpath , "//textarea[@name='txtDisabled']/").enabled? )  
+    assert_false($ie.text_field(:xpath , "//textarea[@name='txtDisabled']/").enabled? )  
     assert($ie.text_field(:xpath , "//textarea[@id='txtMultiLine1']/").enabled? )  
     
     

@@ -10,7 +10,7 @@ class TC_JSEvents < Test::Unit::TestCase
   end
   
   def test_Button_disabled
-    assert(! $ie.button(:caption, "Button 1").enabled?) 
+    assert_false( $ie.button(:caption, "Button 1").enabled?) 
   end
   
   def test_Button_Enabled

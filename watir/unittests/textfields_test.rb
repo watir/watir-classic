@@ -14,10 +14,10 @@ class TC_Fields < Test::Unit::TestCase
   tag_method :test_text_field_exists, :fails_on_firefox
   def test_text_field_exists
     assert(browser.text_field(:name, "text1").exists?)   
-    assert(!browser.text_field(:name, "missing").exists?)   
+    assert_false(browser.text_field(:name, "missing").exists?)   
     
     assert(browser.text_field(:id, "text2").exists?)   
-    assert(!browser.text_field(:id, "alsomissing").exists?)   
+    assert_false(browser.text_field(:id, "alsomissing").exists?)   
     
     assert(browser.text_field(:beforeText, "This Text After").exists? )
     assert(browser.text_field(:afterText, "This Text Before").exists? )
@@ -36,8 +36,8 @@ class TC_Fields < Test::Unit::TestCase
   def test_text_field_verify_contains
     assert(browser.text_field(:name, "text1").verify_contains("Hello World"))  
     assert(browser.text_field(:name, "text1").verify_contains(/Hello\sW/))  
-    assert(!browser.text_field(:name, "text1").verify_contains("Ruby"))  
-    assert(!browser.text_field(:name, "text1").verify_contains(/R/))  
+    assert_false(browser.text_field(:name, "text1").verify_contains("Ruby"))  
+    assert_false(browser.text_field(:name, "text1").verify_contains(/R/))  
     assert_raises(UnknownObjectException) { browser.text_field(:name, "NoName").verify_contains("No field to get a value of") } 
     
     assert(browser.text_field(:id, "text2").verify_contains("goodbye all") )  
@@ -45,13 +45,13 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_text_field_enabled
-    assert(!browser.text_field(:name, "disabled").enabled? )  
+    assert_false(browser.text_field(:name, "disabled").enabled? )  
     assert(browser.text_field(:name, "text1").enabled? )  
     assert(browser.text_field(:id, "text2").enabled? )  
   end
   
   def test_text_field_readonly
-    assert(!browser.text_field(:name, "disabled").readonly? )  
+    assert_false(browser.text_field(:name, "disabled").readonly? )  
     assert(browser.text_field(:name, "readOnly").readonly? )  
     assert(browser.text_field(:id, "readOnly2").readonly? )  
   end
@@ -195,12 +195,12 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.label(:index,20).type } 
     assert_raises(UnknownObjectException) { browser.label(:index,20).id } 
     
-    assert(!browser.label(:index,10).exists?) 
-    assert(!browser.label(:id,'missing').exists?) 
+    assert_false(browser.label(:index,10).exists?) 
+    assert_false(browser.label(:id,'missing').exists?) 
     assert(browser.label(:index,1).exists?) 
     
     assert_equal("", browser.label(:index,1).id)
-    assert(!browser.label(:index,1).disabled?) 
+    assert_false(browser.label(:index,1).disabled?) 
     assert(browser.label(:index,1).enabled?)
     
     assert_equal("label2", browser.label(:index,2).id )

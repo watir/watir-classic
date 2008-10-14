@@ -29,7 +29,7 @@ class TC_CSS < Test::Unit::TestCase
     assert( isMessageDisplayed("Success") )
     
     browser.button(:caption, "Failure").click
-    assert(!isMessageDisplayed("Success") )
+    assert_false(isMessageDisplayed("Success") )
   end
 end
 

@@ -36,7 +36,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
   
   def xtest_exists
     autoit = WIN32OLE.new('AutoItX3.Control')
-    assert(! dialog.exists?) # known bug: finds main window instead of dialog!
+    assert_false( dialog.exists?) # known bug: finds main window instead of dialog!
     $ie.button(:id, 'btnAlert').click_no_wait
     sleep 0.4 # FIXME: need to add polling
     assert dialog.exists?

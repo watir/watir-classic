@@ -12,7 +12,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   end
   
   def test_Table_Exists
-    assert(!browser.table(:xpath , "//table[@id = 'missingTable']").exists?)
+    assert_false(browser.table(:xpath , "//table[@id = 'missingTable']").exists?)
     assert(browser.table(:xpath, "//table[@id = 't1']").exists?)
   end
 
@@ -78,7 +78,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   
   #def test_cell_directly
   #  assert( browser.cell(:id, 'cell1').exists? )
-  #  assert(! browser.cell(:id, 'no_exist').exists? )
+  #  assert_false( browser.cell(:id, 'no_exist').exists? )
   #  assert_equal( "Row 1 Col1",  browser.cell(:id, 'cell1').to_s.strip )
   #  
   #  # not really cell directly, but just to show another way of geting the cell
@@ -87,7 +87,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   
   #def test_row_directly
   #  assert( browser.row(:id, 'row1').exists? )  
-  #  assert(! browser.row(:id, 'no_exist').exists? )
+  #  assert_false( browser.row(:id, 'no_exist').exists? )
   #  
   #  assert_equal('Row 2 Col1' ,  browser.row(:id, 'row1')[1].to_s.strip )
   #end

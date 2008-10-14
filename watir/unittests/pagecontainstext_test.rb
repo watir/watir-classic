@@ -15,7 +15,7 @@ class TC_contains_text < Test::Unit::TestCase
   end
   
   def test_text_not_found
-    assert(!browser.contains_text('So are they all, all honourable men'))
+    assert_false(browser.contains_text('So are they all, all honourable men'))
   end
   
   def test_regexp_found
@@ -23,7 +23,7 @@ class TC_contains_text < Test::Unit::TestCase
   end
   
   def test_regexp_not_found
-    assert(!browser.contains_text(/winding.*watch.*wit/))
+    assert_false(browser.contains_text(/winding.*watch.*wit/))
   end
   
   def test_match_regexp_found

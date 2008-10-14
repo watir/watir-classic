@@ -23,15 +23,15 @@ class TC_Links < Test::Unit::TestCase
   end
   
   def xtest_missing_links_dont_exist
-    assert(!exists?{browser.link(:text, "missing")})   
-    assert(!exists?{browser.link(:text, /miss/)})   
+    assert_false(exists?{browser.link(:text, "missing")})   
+    assert_false(exists?{browser.link(:text, /miss/)})   
   end
   
   def test_link_Exists
     assert(browser.link(:text, "test1").exists?)   
     assert(browser.link(:text, /TEST/i).exists?)   
-    assert(!browser.link(:text, "missing").exists?)   
-    assert(!browser.link(:text, /miss/).exists?)   
+    assert_false(browser.link(:text, "missing").exists?)   
+    assert_false(browser.link(:text, /miss/).exists?)   
     
     # this assert we have to build up the path
     #  this is what it looks like if you do a to_s on the link  file:///C:/watir_bonus/unitTests/html/links1.HTML
@@ -39,27 +39,27 @@ class TC_Links < Test::Unit::TestCase
     # assert(browser.link(:url,'file:///C:/watir_bonus/unitTests/html/links1.HTML' ).exists?)   
     
     assert(browser.link(:url, /link_pass.html/).exists?)   
-    assert(!browser.link(:url, "alsomissing.html").exists?)   
+    assert_false(browser.link(:url, "alsomissing.html").exists?)   
     
     assert(browser.link(:id, "link_id").exists?)   
-    assert(!browser.link(:id, "alsomissing").exists?)   
+    assert_false(browser.link(:id, "alsomissing").exists?)   
     
     assert(browser.link(:id, /_id/).exists?)   
-    assert(!browser.link(:id, /alsomissing/).exists?)   
+    assert_false(browser.link(:id, /alsomissing/).exists?)   
     
     assert(browser.link(:name, "link_name").exists?)   
-    assert(!browser.link(:name, "alsomissing").exists?)   
+    assert_false(browser.link(:name, "alsomissing").exists?)   
     
     assert(browser.link(:name, /_n/).exists?)   
-    assert(!browser.link(:name, /missing/).exists?)   
+    assert_false(browser.link(:name, /missing/).exists?)   
     
     assert(browser.link(:title, /ti/).exists?)   
     assert(browser.link(:title, "link_title").exists?)   
     
-    assert(!browser.link(:title, /missing/).exists?)   
+    assert_false(browser.link(:title, /missing/).exists?)   
     
     assert(browser.link(:url, /_pass/).exists?)   
-    assert(!browser.link(:url, /dont_exist/).exists?)   
+    assert_false(browser.link(:url, /dont_exist/).exists?)   
   end
   
   def test_link_click
@@ -135,7 +135,7 @@ class TC_Frame_Links < Test::Unit::TestCase
   
   def test_links_in_frames
     assert(browser.frame("linkFrame").link(:text, "test1").exists?)   
-    assert(!browser.frame("linkFrame").link(:text, "missing").exists?)   
+    assert_false(browser.frame("linkFrame").link(:text, "missing").exists?)   
     
     assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { browser.frame("linkFrame").link(:index, 199).href }  
     assert_match(/links2/, browser.frame("linkFrame").link(:index, 1).href)

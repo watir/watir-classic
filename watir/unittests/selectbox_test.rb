@@ -13,14 +13,14 @@ class TC_SelectList < Test::Unit::TestCase
   
   def test_SelectList_exists
     assert(browser.select_list(:name, "sel1").exists?)   
-    assert(!browser.select_list(:name, "missing").exists?)   
-    assert(!browser.select_list(:id, "missing").exists?)   
+    assert_false(browser.select_list(:name, "missing").exists?)   
+    assert_false(browser.select_list(:id, "missing").exists?)   
   end
   
   def test_SelectList_enabled
     assert(browser.select_list(:name, "sel1").enabled?)   
     assert_raises(UnknownObjectException) { browser.select_list(:name, "NoName").enabled? }  
-    assert(!browser.select_list(:id, 'selectbox_4').enabled?)
+    assert_false(browser.select_list(:id, 'selectbox_4').enabled?)
   end
   
   def test_SelectList_class_name
@@ -96,7 +96,7 @@ class TC_Selectbox < Test::Unit::TestCase
     browser.select_list(:index,1).select(/1/)
     assert_equal("o1"   ,    browser.select_list(:index, 1).value)  
     
-    assert(! browser.select_list(:index, 1).disabled )
+    assert_false( browser.select_list(:index, 1).disabled )
     assert( browser.select_list(:index, 4).disabled )
     assert( browser.select_list(:id, 'selectbox_4').disabled )
   end

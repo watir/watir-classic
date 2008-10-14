@@ -13,8 +13,8 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
   
   def test_textBox_Exists
     assert($ie.select_list(:xpath, "//select[@name='sel1']/").exists?)   
-    assert(!$ie.select_list(:xpath, "//select[@name='missing']/").exists?)   
-    assert(!$ie.select_list(:xpath, "//select[@id='missing']/").exists?)   
+    assert_false($ie.select_list(:xpath, "//select[@name='missing']/").exists?)   
+    assert_false($ie.select_list(:xpath, "//select[@id='missing']/").exists?)   
   end
   
   def test_select_list_enabled
@@ -70,7 +70,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
     # these are to test the onchange event
     # the event shouldnt get fired, as this is the selected item
     $ie.select_list(:xpath, "//select[@name='sel3']/").select( /3/ )
-    assert(!$ie.text.include?("Pass") )
+    assert_false($ie.text.include?("Pass") )
   end
   
   def test_select_list_select2
@@ -101,7 +101,7 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
     # these are to test the onchange event
     # the event shouldnt get fired, as this is the selected item
     $ie.select_list(:xpath, "//select[@name='sel3']/").select_value( /3/ )
-    assert(!$ie.text.include?("Pass") )
+    assert_false($ie.text.include?("Pass") )
   end
   
   def test_select_list_select_using_value2

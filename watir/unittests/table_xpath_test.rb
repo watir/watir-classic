@@ -12,7 +12,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
   end
   
   def test_Table_Exists
-    assert(!$ie.table(:xpath , "//table[@id='missingTable']/").exists? )
+    assert_false($ie.table(:xpath , "//table[@id='missingTable']/").exists? )
     assert($ie.table(:xpath , "//table[@id='t1']/").exists? )
   end
   
@@ -56,13 +56,13 @@ class TC_Tables_XPath < Test::Unit::TestCase
   def test_cell_directly
     
     assert( $ie.cell(:xpath , "//td[@id='cell1']/").exists? )
-    assert(! $ie.cell(:xpath , "//td[@id='no_exist']/").exists? )
+    assert_false( $ie.cell(:xpath , "//td[@id='no_exist']/").exists? )
     assert_equal( "Row 1 Col1",  $ie.cell(:xpath , "//td[@id='cell1']/").to_s.strip )
   end
   
   def test_row_directly
     assert( $ie.row(:xpath , "//tr[@id='row1']/").exists? )  
-    assert(! $ie.row(:xpath , "//tr[@id='no_exist']/").exists? )
+    assert_false( $ie.row(:xpath , "//tr[@id='no_exist']/").exists? )
     
     assert_equal('Row 2 Col1' ,  $ie.row(:xpath , "//tr[@id='row1']/")[1].to_s.strip )
   end
