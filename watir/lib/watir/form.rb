@@ -20,7 +20,7 @@ module Watir
   # wraps around a form OLE object
   class FormWrapper
     include FormAccess
-    def initialize(ole_object)
+    def initialize ole_object
       @ole_object = ole_object
     end
   end
@@ -52,9 +52,6 @@ module Watir
           next unless @ole_object == nil
           
           wrapped = FormWrapper.new(thisForm)
-          
-          log "form on page, name is " + wrapped.name
-          
           @ole_object =
           case @how
           when :name, :id, :method, :action
@@ -64,7 +61,7 @@ module Watir
           else
             raise MissingWayOfFindingObjectException, "#{how} is an unknown way of finding a form (#{what})"
           end
-          count = count +1
+          count += 1
         end
       end
       super(@ole_object)
@@ -79,13 +76,17 @@ module Watir
     
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.
     def submit # XXX use assert_exists
-      raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+      if @ole_object.nil?
+        raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " 
+      end
       @ole_object.invoke('submit')
       @container.wait
     end
     
     def ole_inner_elements # XXX use assert_exists
-      raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " if @ole_object == nil
+      if @ole_object.nil?
+        raise UnknownFormException, "Unable to locate a form using #{@how} and #{@what} " 
+      end
       @ole_object.elements
     end
     private :ole_inner_elements
@@ -154,8 +155,9 @@ module Watir
   class Forms < ElementCollections
     def element_class; Form; end
     def element_tag; 'FORM'; end
-    def length;
-@container.document.getElementsByTagName("FORM").length; end
+    def length
+      @container.document.getElementsByTagName("FORM").length
+    end
   end
 
   module Container
