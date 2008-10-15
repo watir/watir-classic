@@ -1787,8 +1787,8 @@ end
 def locate_tagged_elements(tag, types = [])
 
   # generate array to hold results
-  @arr_name = "arr_coll_#{tag}_#{@@current_level}"
-  jssh_command = "var #{@arr_name}=new Array();"
+  result_name = "arr_coll_#{tag}_#{@@current_level}"
+  jssh_command = "var #{result_name}=new Array();"
 
   # generate array of elements matching the tag
   case @container
@@ -1807,47 +1807,41 @@ def locate_tagged_elements(tag, types = [])
   jssh_command += "var #{elements_tag} = null; "
   jssh_command += "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
 
-  # generate types array
+    
+  # generate array containing results
   if types.empty?
-    jssh_command += "var types = null;"
+    jssh_command += "#{result_name} = #{elements_tag};"
   else
+    # generate types array
     jssh_command += "var types = new Array("
     types.each_with_index do |type, count|
       jssh_command += "," unless count == 0
       jssh_command += "\"#{type}\""
     end
     jssh_command += ");"
-  end
-  
-  # generate array containing results
-  jssh_command += "for(var i=0; i<#{elements_tag}.length; i++)
-                     {
-                        var element = #{elements_tag}[i];"
-  
-  jssh_command += "     var same_type = false;
-  
-                            if(types)
-                            {
-                                for(var j=0; j<types.length; j++)
-                                {
-                                    if(types[j] == element.type || types[j] == element.tagName)
-                                    {
-                                        same_type = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                same_type = true;
-                            }
 
-                            if(same_type)
-                            {
-                                #{@arr_name}.push(element);
-                            }
-                        }
-                        #{@arr_name}.length;"
+    # check the type of each element
+    jssh_command += "for(var i=0; i<#{elements_tag}.length; i++)
+                       {
+                          var element = #{elements_tag}[i];
+                          var same_type = false;
+    
+                          for(var j=0; j<types.length; j++)
+                          {
+                              if(types[j] == element.type || types[j] == element.tagName)
+                              {
+                                  same_type = true;
+                                  break;
+                              }
+                          }
+  
+                          if(same_type)
+                          {
+                              #{result_name}.push(element);
+                          }
+                      }"
+  end
+  jssh_command += "#{result_name}.length;"
   
   # Remove \n that are there in the string as a result of pressing enter while formatting.
   jssh_command.gsub!(/\n/, "")
@@ -1856,7 +1850,7 @@ def locate_tagged_elements(tag, types = [])
   length = read_socket().to_i;
   #puts "elements length is in locate_tagged_elements is : #{length}"
   
-  elements = (0...length).collect {|i| "#{@arr_name}[#{i}]"}
+  elements = (0...length).collect {|i| "#{result_name}[#{i}]"}
 
   @@current_level = @@current_level + 1
   return elements
