@@ -1819,6 +1819,7 @@ def locate_tagged_elements(tag, types = [])
     jssh_command += ");"
   end
   
+  # generate array containing results
   jssh_command += "for(var i=0; i<#{elements_tag}.length; i++)
                      {
                         var element = #{elements_tag}[i];"
@@ -1841,12 +1842,12 @@ def locate_tagged_elements(tag, types = [])
                                 same_type = true;
                             }
 
-                            if(same_type == true)
+                            if(same_type)
                             {
-                                arr_coll_#{tag}_#{@@current_level}.push(element);
+                                #{@arr_name}.push(element);
                             }
                         }
-                        arr_coll_#{tag}_#{@@current_level}.length;"
+                        #{@arr_name}.length;"
   
   # Remove \n that are there in the string as a result of pressing enter while formatting.
   jssh_command.gsub!(/\n/, "")
@@ -1855,10 +1856,8 @@ def locate_tagged_elements(tag, types = [])
   length = read_socket().to_i;
   #puts "elements length is in locate_tagged_elements is : #{length}"
   
-  elements = Array.new(length)
-  for i in 0..length - 1 do
-    elements[i] = "arr_coll_#{tag}_#{@@current_level}[#{i}]"
-  end
+  elements = (0...length).collect {|i| "#{@arr_name}[#{i}]"}
+
   @@current_level = @@current_level + 1
   return elements
 end
