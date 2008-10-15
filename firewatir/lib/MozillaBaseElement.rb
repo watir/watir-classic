@@ -1777,84 +1777,76 @@ def locate_elements
 end
 
 
-# Description:
-#   Locate all the elements of give tag and type.
+# Return all the elements of give tag and type inside the container.
 #
 # Input:
-#   tag - tag name of the element for which you want the iterator.
-#   types - element type. used in case where same element tag has different types like input has type image, button etc.
+#   tag - tag name of the elements
+#   types - array of element type names. used in case where same 
+#   element tag has different types like input has type image, button etc.
 #
-# Output:
-#   Elements array containing all the elements found on the page.
-#
-def locate_tagged_elements(tag, types = nil)
-  jssh_command = "var arr_coll_#{tag}_#{@@current_level}=new Array();"
+def locate_tagged_elements(tag, types = [])
+
+  # generate array to hold results
   @arr_name = "arr_coll_#{tag}_#{@@current_level}"
-  
-  if(@container.class == FireWatir::Firefox || @container.class == FireWatir::Frame)
-    jssh_command += "var elements_#{tag} = null; elements_#{tag} = #{DOCUMENT_VAR}.getElementsByTagName(\"#{tag}\");"
-    if(types != nil and (types.include?("textarea") or types.include?("button")) )
-      jssh_command += "elements_#{tag} = #{DOCUMENT_VAR}.body.getElementsByTagName(\"*\");"
+  jssh_command = "var #{@arr_name}=new Array();"
+
+  # generate array of elements matching the tag
+  case @container
+    when FireWatir::Firefox, FireWatir::Frame
+      elements_tag = "elements_#{tag}"
+      container_name = DOCUMENT_VAR
+    else
+      elements_tag = "elements_#{@@current_level}_#{tag}"
+      container_name = @container.element_name
     end
+  if types.include?("textarea") || types.include?("button")
+    search_tag = '*'
   else
-    jssh_command += "var elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"#{tag}\");"
-    if(types != nil and (types.include?("textarea") or types.include?("button")) )
-      jssh_command += "elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"*\");"
-    end
+    search_tag = tag
   end
-  
-  if(types != nil)
+  jssh_command += "var #{elements_tag} = null; "
+  jssh_command += "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
+
+  # generate types array
+  if types.empty?
+    jssh_command += "var types = null;"
+  else
     jssh_command += "var types = new Array("
-    count = 0
-    types.each do |type|
-      if count == 0
-        jssh_command += "\"#{type}\""
-        count += 1
-      else
-        jssh_command += ",\"#{type}\""
-      end
+    types.each_with_index do |type, count|
+      jssh_command += "," unless count == 0
+      jssh_command += "\"#{type}\""
     end
     jssh_command += ");"
-  else
-    jssh_command += "var types = null;"
   end
   
-  if(@container.class == FireWatir::Firefox || @container.class == FireWatir::Frame)
-    
-    jssh_command += "for(var i=0; i<elements_#{tag}.length; i++)
-                                 {
-
-                                    var element = elements_#{tag}[i];"
-  else
-    jssh_command += "for(var i=0; i<elements_#{@@current_level}_#{tag}.length; i++)
-                                 {
-
-                                    var element = elements_#{@@current_level}_#{tag}[i];"
-  end
+  jssh_command += "for(var i=0; i<#{elements_tag}.length; i++)
+                     {
+                        var element = #{elements_tag}[i];"
   
-  jssh_command += "
-                                    var same_type = false;
-                                    if(types)
-                                    {
-                                        for(var j=0; j<types.length; j++)
-                                        {
-                                            if(types[j] == element.type || types[j] == element.tagName)
-                                            {
-                                                same_type = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    else
+  jssh_command += "     var same_type = false;
+  
+                            if(types)
+                            {
+                                for(var j=0; j<types.length; j++)
+                                {
+                                    if(types[j] == element.type || types[j] == element.tagName)
                                     {
                                         same_type = true;
-                                    }
-                                    if(same_type == true)
-                                    {
-                                        arr_coll_#{tag}_#{@@current_level}.push(element);
+                                        break;
                                     }
                                 }
-                                arr_coll_#{tag}_#{@@current_level}.length;"
+                            }
+                            else
+                            {
+                                same_type = true;
+                            }
+
+                            if(same_type == true)
+                            {
+                                arr_coll_#{tag}_#{@@current_level}.push(element);
+                            }
+                        }
+                        arr_coll_#{tag}_#{@@current_level}.length;"
   
   # Remove \n that are there in the string as a result of pressing enter while formatting.
   jssh_command.gsub!(/\n/, "")
