@@ -1839,7 +1839,7 @@ def locate_tagged_elements(tag, types = [])
                           {
                               #{result_name}.push(element);
                           }
-                      }"
+                      };"
   end
   jssh_command += "#{result_name}.length;"
   
