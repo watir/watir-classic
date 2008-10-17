@@ -8,10 +8,13 @@ Test page for Check Boxes
 
 function setButtonState( )
 {
-    if (document.all.foo.disabled )
-       document.all.foo.disabled = false
-    else
-        document.all.foo.disabled = true
+	var button = document.getElementById('foo');
+    if (button.disabled ){
+	 
+       button.disabled = false
+    } else {
+        button.disabled = true
+    }
 }
 </script>
 
@@ -39,43 +42,43 @@ Disabled<input type = checkbox name = box2 disabled>
 Set<input type = checkbox name = box3 checked>
 </td>
 </tr>
-<tr>
+<tr><td>
 These 2 have ids
 <br>
-id= box4 value=1  <input type = checkbox id = box4 name= verify1 value = 1 checked>
+id= box4 value=1  <input type ='checkbox' id='box4' name='verify1' value='1' checked>
 <br>
-id = box4 value=2  <input type = checkbox id = box4 name= verify2 value = 2 checked>
+id = box4a value=2  <input type = 'checkbox' id = 'box4a' name= 'verify2' value = '2' checked>
 </tr>
 <br>
 <tr>
 These boxes have the same name, but different values
 </tr>
 
-<tr>
+<tr><td>
 Name = box4 value=1  <input type = checkbox name = box4 value = 1 checked>
 </tr>
-<tr>
+<tr><td>
 Name = box4 value=2  <input type = checkbox name = box4 value = 2>
 </tr>
-<tr>
+<tr><td>
 Name = box4 value=3  <input type = checkbox name = box4 value = 3>
 </tr>
-<tr>
+<tr><td>
 Name = box4 value=4  <input type = checkbox name = box4 value = 4>
 </tr>
-<tr>
+<tr><td>
 Name = box4 value=5  <input type = checkbox name = box4 value = 5 disabled title="box4-value5">
 </tr>
 
-<tr>
+<tr><td>
 Name = box5 value=1  <input type = checkbox name = box5 value = 1 onClick='javascript:setButtonState( )'>
 </tr>
 
-<tr>
-<input type = button name = foo value = foo disabled ><td> This button is used with checkbox box5. This button is enabled if the checkbox is enabled
+<tr><td>
+<input type = button id = foo value = foo disabled=disabled ><td> This button is used with checkbox box5. This button is enabled if the checkbox is enabled
 </tr>
 
-<tr>
+<tr><td>
 Milk<input type = checkbox name = "box6" value ="Milk">
 <br>
 Tea<input type = checkbox name = "box6" value ="Tea">
