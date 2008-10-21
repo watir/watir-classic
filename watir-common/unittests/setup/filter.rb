@@ -16,6 +16,7 @@ end
 at_exit do
   unless $! || Test::Unit.run?
     runner = Test::Unit::AutoRunner.new false
+    runner.process_args ARGV
     runner.filters = Watir::UnitTest.filter 
     exit runner.run
   end

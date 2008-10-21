@@ -19,32 +19,32 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").value }  
   end
   
-  tag_method :test_checkbox_properties, :fails_on_firefox
+  tag_method :test_checkbox_properties_with_index, :fails_on_firefox
+  def test_checkbox_properties_with_index
+    assert_equal("box1", browser.checkbox(:index, 1).name ) 
+    assert_equal("", browser.checkbox(:index, 1).id ) 
+    assert_equal("checkbox", browser.checkbox(:index, 1).type ) 
+    assert_equal("on", browser.checkbox(:index, 1).value ) 
+    assert_equal(false, browser.checkbox(:index, 1).disabled ) 
+  end
   def test_checkbox_properties
+    assert_equal("check_box_style", browser.checkbox(:name, "box1").class_name) 
+    assert_equal("", browser.checkbox(:name, "box2").class_name) 
     
-    assert_equal("box1"  , browser.checkbox(:index, 1).name ) 
-    assert_equal(""  , browser.checkbox(:index, 1).id ) 
-    assert_equal("checkbox"  , browser.checkbox(:index, 1).type ) 
-    assert_equal("on"  , browser.checkbox(:index, 1).value ) 
-    assert_equal(false  , browser.checkbox(:index, 1).disabled ) 
-    
-    assert_equal("check_box_style" , browser.checkbox(:name, "box1").class_name) 
-    assert_equal("" , browser.checkbox(:name, "box2").class_name) 
-    
-    assert_equal("1" , browser.checkbox(:name,"box4").value )
-    assert_equal("3" , browser.checkbox(:name,"box4" , 3).value )
+    assert_equal("1", browser.checkbox(:name, "box4").value )
+    assert_equal("3", browser.checkbox(:name, "box4", 3).value )
     assert(browser.checkbox(:name, "box6").exists?)    
-    assert_equal("checkbox" , browser.checkbox(:name,"box4" , 3).type )
-    assert_equal("checkbox" , browser.checkbox(:name,"box6" , 'Milk').type )
-    assert_equal(false , browser.checkbox(:name,"box4" , 3).disabled )
-    assert_equal("" , browser.checkbox(:name,"box4" , 3).id )
+    assert_equal("checkbox", browser.checkbox(:name, "box4", 3).type )
+    assert_equal("checkbox", browser.checkbox(:name, "box6", 'Milk').type )
+    assert_equal(false, browser.checkbox(:name, "box4", 3).disabled )
+    assert_equal("", browser.checkbox(:name, "box4", 3).id )
     
-    assert_equal("box4-value5" , browser.checkbox(:name,"box4" , 5).title)
-    assert_equal("" , browser.checkbox(:name,"box4" , 4).title)
+    assert_equal("box4-value5", browser.checkbox(:name, "box4", 5).title)
+    assert_equal("", browser.checkbox(:name,"box4", 4).title)
   end
   
   def test_onClick
-    assert_false(browser.button(:value , "foo").enabled?)
+    assert_false(browser.button(:value, "foo").enabled?)
     browser.checkbox(:name, "box5").set
     assert(browser.button(:value, "foo").enabled?)
     
