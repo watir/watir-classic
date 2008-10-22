@@ -19,7 +19,6 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.checkbox(:name, "noName").value }  
   end
   
-  tag_method :test_checkbox_properties_with_index, :fails_on_firefox
   def test_checkbox_properties_with_index
     assert_equal("box1", browser.checkbox(:index, 1).name ) 
     assert_equal("", browser.checkbox(:index, 1).id ) 
@@ -150,7 +149,6 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_false(browser.checkbox(:name => "box6", :value => 'Tea').isSet?)
   end
 
-  tag_method :test_checkboxes_access, :fails_on_firefox
   def test_checkboxes_access
     assert_equal("box1" , browser.checkboxes[1].name )
   end
