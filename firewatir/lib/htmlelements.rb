@@ -1374,7 +1374,7 @@ module FireWatir
         max = maxlength
         if (max > 0 && value.length > max)
           original_value = value
-          value = original_value[0..max - 1]
+          value = original_value[0...max]
           element.log " Supplied string is #{suppliedValue.length} chars, which exceeds the max length (#{max}) of the field. Using value: #{value}"
         end
       rescue 
