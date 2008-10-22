@@ -50,19 +50,24 @@ class TC_SelectList < Test::Unit::TestCase
   tag_method :test_includes, :fails_on_firefox
   def test_includes
     assert browser.select_list(:name, 'sel1').includes?('Option 1')
+    assert browser.select_list(:name, 'sel1').includes?(/option/i)
     assert ! browser.select_list(:name, 'sel1').includes?('Option 6')
+    assert ! browser.select_list(:name, 'sel1').includes?(/foobar/)
   end  
   
   tag_method :test_selected, :fails_on_firefox
   def test_selected
-    assert ! browser.select_list(:name, 'sel1').selected?('Option 1')
     assert browser.select_list(:name, 'sel1').selected?('Option 3')
+    assert browser.select_list(:name, 'sel1').selected?(/option/i)
+    assert ! browser.select_list(:name, 'sel1').selected?('Option 1')
+    assert ! browser.select_list(:name, 'sel1').selected?(/option 1/i)
   end
   
   tag_method :test_selected_not_found, :fails_on_firefox
   def test_selected_not_found
     selectbox = browser.select_list(:name, 'sel1')
-    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?('Option Not Exists')}
+    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?("option doesn't exist")}
+    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?(/option doesn't exist/)}
   end
     
 end

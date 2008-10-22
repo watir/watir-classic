@@ -118,18 +118,19 @@ module Watir
     end
 
     # Does the SelectList include the specified option (text)?
-    def includes? text
-      getAllContents.include? text
+    def includes? text_or_regexp
+      getAllContents.grep(text_or_regexp).size > 0
     end
 
     # Is the specified option (text) selected? Raises exception of option does not exist.
-    def selected? text
-      unless includes? text
-        raise UnknownObjectException, "Option #{text} not found."
+    def selected? text_or_regexp
+      unless includes? text_or_regexp
+        raise UnknownObjectException, "Option #{text_or_regexp.inspect} not found."
       end
-      getSelectedItems.include? text
+
+      getSelectedItems.grep(text_or_regexp).size > 0
     end
-    
+
     def option(attribute, value)
       assert_exists
       Option.new(self, attribute, value)
