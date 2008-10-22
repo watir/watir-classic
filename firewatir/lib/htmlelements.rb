@@ -1218,7 +1218,7 @@ module FireWatir
     # TODO: Impelement the to_s method.
     def to_s
       assert_exists
-      super({"length" => "size","max length" => "maxLength","read only" => "readOnly" })
+      super({"length" => "size","max length" => "maxlength","read only" => "readOnly" })
     end
     
     #
