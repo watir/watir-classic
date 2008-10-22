@@ -1194,7 +1194,10 @@ module FireWatir
     # Gets the size of the text field element.
     def_wrap :size
     # Gets max length of the text field element.
-    def_wrap :maxlength
+    def_wrap :maxlength_string, :maxlength
+    def maxlength
+      maxlength_string.to_i
+    end
     # Returns true if the text field is read only, false otherwise.
     def_wrap :readonly?, :readOnly
     
