@@ -1,2 +1,8 @@
 #!/usr/bin/env ruby
-exec 'irb.bat -r irb/completion -r watir/irb-history -r watir --simple-prompt --readline'
+$root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
+$watir_lib = File.join($root, 'watir', 'lib')
+$watir_common_lib = File.join($root, 'watir-common', 'lib')
+$firewatir_lib = File.join($root, 'firewatir', 'lib')
+$libs = "-I #{$watir_lib} -I #{$watir_common_lib} -I #{$firewatir_lib}"
+puts $libs
+exec "irb.bat #{$libs} -r irb/completion -r watir/irb-history -r watir --simple-prompt --readline"
