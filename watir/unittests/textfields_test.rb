@@ -106,7 +106,7 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_text_field_set
     browser.text_field(:name, "text1").set("watir IE Controller")
-    assert_equal("watir IE Controller" , browser.text_field(:name, "text1").value)  
+    assert_equal("watir IE Controller", browser.text_field(:name, "text1").value)  
     # adding for issue: http://jira.openqa.org/browse/WTR-89
     browser.text_field(:name, /reGex/i).set("pass")
     assert_equal("pass", browser.text_field(:name, /REgEx/i).value)
@@ -214,8 +214,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("abcdefghijklmnopqrst", browser.text_field(:name, 'text1').value )
   end
 
-  tag_method :test_max_length, :fails_on_firefox
   def test_max_length
-    assert_equal(20, browser.text_field(:name , 'text1').maxLength )
+    assert_equal(20, browser.text_field(:name, 'text1').maxlength)
   end
 end

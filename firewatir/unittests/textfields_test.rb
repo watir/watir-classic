@@ -103,7 +103,7 @@ class TC_Fields < Test::Unit::TestCase
     
     def test_text_field_set
         browser.text_field(:name, "text1").set("FireWatir Firefox Controller")
-        assert_equal("FireWatir Firefox Controller" , browser.text_field(:name, "text1").value)  
+        assert_equal("FireWatir Firefox Controller", browser.text_field(:name, "text1").value)  
     end
     
     def test_text_field_properties
