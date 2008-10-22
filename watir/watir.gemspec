@@ -9,7 +9,8 @@ $__watir_source_patterns = [
     'lib/watir/contrib/*.rb'] +  
     $WATIR_EXTRA_RDOC_FILES
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'watir-common', 'lib')
 require 'watir'
 
 spec = Gem::Specification.new do |s|
