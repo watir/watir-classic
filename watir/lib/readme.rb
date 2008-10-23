@@ -129,6 +129,7 @@ Contributors:
    Tomislav Car - Filefield fix (210)
    Michael Hwee & Aidy Lewis - Multiple attribute support for FireWatir (233)
    Alan Baird - Fix for visible? method (253)
+   Jari Bakken - Regexp support for includes? and selected? methods for select lists (261)
 
 Acknowledgements:
    Chris Morris
