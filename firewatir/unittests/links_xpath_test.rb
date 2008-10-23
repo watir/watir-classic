@@ -64,7 +64,7 @@ class TC_Links_XPath < Test::Unit::TestCase
         assert_equal( "test1" , browser.link(:xpath , "//a[contains(.,'test1')]").text )
         assert_equal( ""      , browser.link(:xpath , "//a[contains(.,'test1')]").name )
         assert_equal( ""      , browser.link(:xpath , "//a[contains(.,'test1')]").id )
-        #assert_equal( false   , browser.link(:xpath , "//a[contains(.,'test1')]").disabled )  
+        assert_equal( false   , browser.link(:xpath , "//a[contains(.,'test1')]").disabled )  
         assert_equal( ""      , browser.link(:xpath , "//a[contains(.,'test1')]").class_name)
         assert_equal( "link_class_1"      , browser.link(:xpath , "//a[@class='link_class_1']").class_name)
         

@@ -195,7 +195,7 @@ class TC_Fields < Test::Unit::TestCase
         assert(browser.label(:index,1).exists?) 
        
         assert_equal("", browser.label(:index,1).id)
-        #assert_false(    browser.label(:index,1).disabled?) 
+        assert_false(    browser.label(:index,1).disabled?) 
         assert(          browser.label(:index,1).enabled?)
         
         assert_equal("label2", browser.label(:index,2).id )

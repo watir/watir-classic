@@ -99,7 +99,7 @@ class TC_Links < Test::Unit::TestCase
         assert_equal( "test1" , browser.link(:index, 1).text )
         assert_equal( ""      , browser.link(:index, 1).name )
         assert_equal( ""      , browser.link(:index, 1).id )
-        #assert_equal( false   , browser.link(:index, 1).disabled )  
+        assert_equal( false   , browser.link(:index, 1).disabled )  
         assert_equal( ""      , browser.link(:index, 1).class_name)
         assert_equal( "link_class_1"      , browser.link(:index, 2).class_name)
         

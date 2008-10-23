@@ -47,7 +47,7 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("" ,          browser.div(:index , 1).class_name )
     assert_equal("blueText" ,  browser.div(:index , 2).class_name )
     assert_equal(""    ,       browser.div(:index , 2).value)
-    #assert_equal(false ,       browser.div(:index , 2).disabled)
+    assert_equal(false ,       browser.div(:index , 2).disabled)
     assert_equal(""    ,       browser.div(:index , 2).name)
     assert_equal("div2",       browser.div(:index , 2).id)
     #puts  browser.div(:id,"text_fields1").to_s
@@ -118,7 +118,7 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("" ,          browser.span(:index , 1).class_name )
     assert_equal("blueText" ,  browser.span(:index , 2).class_name )
     assert_equal(""    ,       browser.span(:index , 2).value)
-    #assert_equal(false ,       browser.span(:index , 2).disabled)
+    assert_equal(false ,       browser.span(:index , 2).disabled)
     assert_equal(""    ,       browser.span(:index , 2).name)
     assert_equal("span2",      browser.span(:index , 2).id)
   end
