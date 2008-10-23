@@ -988,8 +988,7 @@ class Element
   #
   def enabled?
     assert_exists
-    jssh_socket.send("#{element_object}.disabled;\n", 0)
-    value = read_socket()
+    value = js_eval_method "disabled"
     @@current_level = 0
     return true if(value == "false")
     return false if(value == "true")
@@ -1065,7 +1064,9 @@ class Element
   # Returns the id of the element
   def_wrap :id
   # Returns whether the element is disabled
-  def_wrap :disabled
+  def disabled
+    ! enabled?
+  end
   alias disabled? disabled
   # Returns the state of the element
   def_wrap :checked
