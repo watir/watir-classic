@@ -75,35 +75,34 @@ class TC_Links < Test::Unit::TestCase
     assert( browser.text.include?("Links2-Pass") ) 
   end
   def test_link4_click        
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).click }  
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).click }  
   end
   
-  tag_method :test_link_properties, :fails_on_firefox
   def test_link_properties
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).href }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).value}  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).innerText }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).name }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).id }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).disabled }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).type }  
-    assert_raises(UnknownObjectException  , "UnknownObjectException  was supposed to be thrown" ) {   browser.link(:index, 199).class_name }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).href }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).value}  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).innerText }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).name }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).id }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).disabled }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).type }  
+    assert_raises(UnknownObjectException) { browser.link(:index, 199).class_name }  
     
-    assert_match( /links2/ ,browser.link(:index, 1).href )
-    assert_equal( ""      , browser.link(:index, 1).value)
-    assert_equal( "test1" , browser.link(:index, 1).innerText )
-    assert_equal( ""      , browser.link(:index, 1).name )
-    assert_equal( ""      , browser.link(:index, 1).id )
-    assert_equal( false   , browser.link(:index, 1).disabled )  
-    assert_equal( ""      , browser.link(:index, 1).class_name)
-    assert_equal( "link_class_1"      , browser.link(:index, 2).class_name)
+    assert_match(/links2/ ,browser.link(:index, 1).href )
+    assert_equal(""      , browser.link(:index, 1).value)
+    assert_equal("test1" , browser.link(:index, 1).innerText )
+    assert_equal(""      , browser.link(:index, 1).name )
+    assert_equal(""      , browser.link(:index, 1).id )
+    assert_equal(false   , browser.link(:index, 1).disabled )  
+    assert_equal(""      , browser.link(:index, 1).class_name)
+    assert_equal("link_class_1"      , browser.link(:index, 2).class_name)
     
-    assert_equal( "link_id"   , browser.link(:index, 6).id )
-    assert_equal( "link_name" , browser.link(:index, 7).name )
+    assert_equal("link_id"   , browser.link(:index, 6).id )
+    assert_equal("link_name" , browser.link(:index, 7).name )
     
-    assert_equal( "" , browser.link(:index, 7).title)
+    assert_equal("" , browser.link(:index, 7).title)
     
-    assert_equal( "link_title" , browser.link(:index, 8).title)
+    assert_equal("link_title" , browser.link(:index, 8).title)
   end
   
   def test_link_iterator
@@ -112,10 +111,10 @@ class TC_Links < Test::Unit::TestCase
     
     index = 1
     browser.links.each do |link|
-      assert_equal( browser.link(:index, index).href      , link.href )
-      assert_equal( browser.link(:index, index).id        , link.id )
-      assert_equal( browser.link(:index, index).name      , link.name )
-      assert_equal( browser.link(:index, index).innerText , link.innerText )
+      assert_equal(browser.link(:index, index).href      , link.href )
+      assert_equal(browser.link(:index, index).id        , link.id )
+      assert_equal(browser.link(:index, index).name      , link.name )
+      assert_equal(browser.link(:index, index).innerText , link.innerText )
       index+=1
     end
   end

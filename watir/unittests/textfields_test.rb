@@ -140,9 +140,9 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(13, browser.text_fields.length)
     
     # watir is 1 based, so this is the first text field
-    assert_equal("Hello World" , browser.text_fields[1].value)
-    assert_equal("text1" , browser.text_fields[1].name)
-    assert_equal("password" , browser.text_fields[browser.text_fields.length].type)
+    assert_equal("Hello World", browser.text_fields[1].value)
+    assert_equal("text1", browser.text_fields[1].name)
+    assert_equal("password", browser.text_fields[browser.text_fields.length].type)
     
     index = 1
     browser.text_fields.each do |t|
@@ -159,20 +159,20 @@ class TC_Fields < Test::Unit::TestCase
     browser.text_field(:name, 'events_tester').requires_typing.set('p')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:name , 'events_text').value.gsub("\r\n" , "")  )
-    browser.button(:value , "Clear Events Box").click
-    browser.text_field(:name , 'events_tester').requires_typing.set('ab')
+    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:name, 'events_text').value.gsub("\r\n" , "")  )
+    browser.button(:value, "Clear Events Box").click
+    browser.text_field(:name, 'events_tester').requires_typing.set('ab')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , browser.text_field(:name , 'events_text').value.gsub("\r\n" , "") )
+    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup", browser.text_field(:name , 'events_text').value.gsub("\r\n" , "") )
   end
   
   def test_password
-    browser.text_field(:name , "password1").set("secret")
-    assert( 'secret' , browser.text_field(:name , "password1").value )
+    browser.text_field(:name, "password1").set("secret")
+    assert( 'secret' , browser.text_field(:name, "password1").value )
     
-    browser.text_field(:id , "password1").set("top_secret")
-    assert( 'top_secret' , browser.text_field(:id, "password1").value )
+    browser.text_field(:id, "password1").set("top_secret")
+    assert('top_secret', browser.text_field(:id, "password1").value )
   end
   
   def test_labels_iterator
@@ -187,7 +187,6 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(count, browser.labels.length)
   end
   
-  tag_method :test_label_properties, :fails_on_firefox
   def test_label_properties
     assert_raises(UnknownObjectException) { browser.label(:index,20).innerText } 
     assert_raises(UnknownObjectException) { browser.label(:index,20).for } 
