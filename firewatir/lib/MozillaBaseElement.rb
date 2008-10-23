@@ -115,7 +115,8 @@ class Element
   
   def get_attribute_value(attribute_name)
     #if the attribut name is columnLength get number of cells in first row if rows exist.
-    if(attribute_name == "columnLength")
+    case attribute_name
+    when "columnLength"
       jssh_socket.send("#{element_object}.columns;\n", 0)
       rowsLength = read_socket()
       if(rowsLength != 0 || rowsLength != "")
@@ -123,11 +124,9 @@ class Element
         return_value = read_socket()
         return return_value
       end
-    end
-    if(attribute_name == "text")
-      return text()
-    end
-    if(attribute_name == "url" or attribute_name == "href" or attribute_name == "src" or attribute_name == "action" or attribute_name == "name")
+    when "text"
+      return text
+    when "url", "href", "src", "action", "name"
       jssh_socket.send("#{element_object}.getAttribute(\"#{attribute_name}\");\n" , 0)
       return_value = read_socket()
     else
@@ -142,7 +141,7 @@ class Element
       #puts jssh_command
       return_value = read_socket()
     end
-    if(attribute_name == "value")
+    if attribute_name == "value"
       jssh_socket.send("#{element_object}.tagName;\n", 0)
       tagName = read_socket().downcase
       jssh_socket.send("#{element_object}.type;\n", 0)
@@ -155,6 +154,7 @@ class Element
         end
       end
     end
+
     #puts "return value of attribute \"{attribute_name}\" is : #{return_value}"
     if(return_value == "null" or return_value == "")
       return_value = ""
