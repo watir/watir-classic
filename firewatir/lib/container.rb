@@ -437,6 +437,19 @@ module FireWatir
         # Test the index access. 
         # puts doc[35].to_s
 	end
+
+    # evaluate javascript and return the result.
+    def js_eval javascript
+      javascript.gsub!("\n", "")
+      jssh_socket.send("#{javascript};\n", 0)
+      read_socket
+    end
+    
+    # evaluate the provides javascript method on the current object and return
+    # the result
+    def js_eval_method method_name
+      js_eval("#{element_object}.#{method_name}")
+    end
     
     def jssh_socket
       $jssh_socket || @container.jssh_socket

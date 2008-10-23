@@ -117,55 +117,38 @@ class Element
     #if the attribut name is columnLength get number of cells in first row if rows exist.
     case attribute_name
     when "columnLength"
-      jssh_socket.send("#{element_object}.columns;\n", 0)
-      rowsLength = read_socket()
-      if(rowsLength != 0 || rowsLength != "")
-        jssh_socket.send("#{element_object}.rows[0].cells.length;\n", 0)
-        return_value = read_socket()
-        return return_value
+      rowsLength = js_eval_method "columns"
+      if (rowsLength != 0 || rowsLength != "")
+        return js_eval_method("rows[0].cells.length")
       end
     when "text"
       return text
     when "url", "href", "src", "action", "name"
-      jssh_socket.send("#{element_object}.getAttribute(\"#{attribute_name}\");\n" , 0)
-      return_value = read_socket()
+      return_value = js_eval_method("getAttribute(\"#{attribute_name}\")")
     else
       jssh_command = "var attribute = '';
-                                if(#{element_object}.#{attribute_name} != undefined)
-                                    attribute = #{element_object}.#{attribute_name};
-                                else
-                                    attribute = #{element_object}.getAttribute(\"#{attribute_name}\");
-                                attribute;"
-      jssh_command.gsub!("\n", "")
-      jssh_socket.send("#{jssh_command};\n", 0)
-      #puts jssh_command
-      return_value = read_socket()
+        if(#{element_object}.#{attribute_name} != undefined)
+            attribute = #{element_object}.#{attribute_name};
+        else
+            attribute = #{element_object}.getAttribute(\"#{attribute_name}\");
+        attribute;"
+      return_value = js_eval(jssh_command)
     end
     if attribute_name == "value"
-      jssh_socket.send("#{element_object}.tagName;\n", 0)
-      tagName = read_socket().downcase
-      jssh_socket.send("#{element_object}.type;\n", 0)
-      type = read_socket().downcase
+      tagName = js_eval_method("tagName").downcase
+      type = js_eval_method("type").downcase
       
-      if(tagName == "button" or type == "image" or type == "submit" or type == "reset" or type == "button")
-        if(return_value == "" or return_value == "null")
-          jssh_socket.send("#{element_object}.innerHTML;\n",0)
-          return_value = read_socket()
+      if tagName == "button" || ["image", "submit", "reset", "button"].include?(type)
+        if return_value == "" || return_value == "null"
+          return_value = js_eval_method "innerHTML"
         end
       end
     end
 
-    #puts "return value of attribute \"{attribute_name}\" is : #{return_value}"
-    if(return_value == "null" or return_value == "")
+    if return_value == "null" || return_value =~ /\[object\s.*\]/
       return_value = ""
     end
-    
-    if(return_value =~ /\[object\s.*\]/)
-      return ""
-    else
-      return return_value
-    end
-    
+    return return_value
   end
   private:get_attribute_value
   
