@@ -5,12 +5,12 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_L
 require 'unittests/setup'
 require 'watir/close_all'
 
-if VERSION == '1.8.2'
 class TC_ModalDialog < Watir::TestCase
   include Watir
   
   def setup
     goto_page 'modal_dialog_launcher.html'
+    Watir::IE.attach_timeout = 5.0
   end
 
   def teardown 
@@ -123,5 +123,4 @@ class TC_ModalDialog < Watir::TestCase
     assert_false(modal.exists?)
   end
         
-end
 end

@@ -4,12 +4,7 @@ This is Watir - Web Application Testing In Ruby    http://wtr.rubyforge.org
 
 Install Ruby http://ruby-lang.org
    First you need to install Ruby using the one-click installer for Windows. We
-   recommend Ruby 1.8.6.
-
-   However, if you wish to use Watir's support for the IE showModalDialog then
-   you must use Ruby 1.8.2-15 (or 1.8.2-14) and not a more recent version. This
-   dialog is the one that is posted with the showModalDialog() JavaScript
-   command and is supported with Watir's ie.modal_dialog command.
+   recommend Ruby 1.8.6. (Even if you are using modal dialogs.)
 
 Install Watir
    Watir is packaged as a gem, a Ruby library that can be installed over the
