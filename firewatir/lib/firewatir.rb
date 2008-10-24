@@ -154,56 +154,57 @@ module FireWatir
         
         #
         # Description: 
-        #   Starts the firefox browser. Currently this only works for Windows Platform.
-        #   For others, you need to start Firefox manually using -jssh option.
+        #   Starts the firefox browser. 
         #   On windows this starts the first version listed in the registry.
         # 
         # Input:
-       	#   options  - Hash of any of the following options:
-	    #     :waitTime - Time to wait for Firefox to start. By default it waits for 2 seconds.
+        #   options  - Hash of any of the following options:
+        #     :waitTime - Time to wait for Firefox to start. By default it waits for 2 seconds.
         #                 This is done because if Firefox is not started and we try to connect
         #                 to jssh on port 9997 an exception is thrown.
         #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
-        #                 the last used profile. Note that the :profile option only works if
-        #                 no other instances of Firefox are already running.
+        #                 the last used profile. 
 
         # TODO: Start the firefox version given by user. For example 
         #       ff = FireWatir::Firefox.new("1.5.0.4")
         #
- 
+
         def initialize(options = {})
-			if(options.kind_of?(Integer))
-                options = {:waitTime => options}
-            end
+          if(options.kind_of?(Integer))
+            options = {:waitTime => options}
+          end
 
             if(options[:profile])
-                profile_opt = "-P #{options[:profile]}"
+                profile_opt = "-no-remote -P #{options[:profile]}"
             else
                 profile_opt = ""
             end
 
             waitTime = options[:waitTime] || 2
 
-            if(RUBY_PLATFORM =~ /.*mswin.*/)
-                # Get the path to Firefox.exe using Registry.
-                require 'win32/registry.rb'
-                path_to_exe = ""
-                Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
-                    keys = reg.keys
-                    reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
-                    reg1.each do |subkey, type, data|
-                        if(subkey =~ /pathtoexe/i)
-                            path_to_exe = data
-                        end
-                    end
+            case RUBY_PLATFORM 
+            when /mswin/
+              # Get the path to Firefox.exe using Registry.
+              require 'win32/registry.rb'
+              path_to_bin = ""
+              Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
+                keys = reg.keys
+                reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
+                reg1.each do |subkey, type, data|
+                  if(subkey =~ /pathtoexe/i)
+                    path_to_bin = data
+                  end
                 end
+              end
 
-            @t = Thread.new { system("\"#{path_to_exe}\" -jssh #{profile_opt}") }
-            elsif(RUBY_PLATFORM =~ /linux/i)
+              when /linux/i
                 path_to_bin = `which firefox`.strip
-                @t = Thread.new { `#{path_to_bin} -jssh #{profile_opt}` }
+              when /darwin/i
+                path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
+              when /java/
+                raise "Not implemented: Create a browser finder in JRuby"
             end     
-            
+            @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
             sleep waitTime
             
             set_defaults()
