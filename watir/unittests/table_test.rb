@@ -57,6 +57,13 @@ class TC_Tables < Test::Unit::TestCase
     assert_equal(2, row.column_count)        
   end
 
+  tag_method :test_row_counts, :fails_on_firefox
+  def test_row_counts
+    table = browser.table(:id => 't2')
+    assert_equal(3, table.row_count)
+    assert_equal(2, table.row_count_excluding_nested_tables)
+  end
+
   tag_method :test_dynamic_tables, :fails_on_firefox
   def test_dynamic_tables
     @reload_page = true

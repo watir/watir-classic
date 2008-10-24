@@ -99,13 +99,18 @@ module Watir
       return TableRow.new(@container, :ole_object, _row(index))
     end
     
-    # This method returns the number of rows in the table.
-    # Raises an UnknownObjectException if the table doesnt exist.
+    # Returns the number of rows inside the table, including rows in nested tables.
     def row_count
       assert_exists
       #return table_body.children.length
       return @o.getElementsByTagName("TR").length
     end
+
+    # Returns the number of rows in the table, not including rows in nested tables.    
+    def row_count_excluding_nested_tables
+      assert_exists
+      return @o.rows.length
+    end    
     
     # This method returns the number of columns in a row of the table.
     # Raises an UnknownObjectException if the table doesn't exist.
