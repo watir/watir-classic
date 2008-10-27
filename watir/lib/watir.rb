@@ -84,6 +84,9 @@ require 'watir/image'
 require 'watir/link'
 require 'watir/collections'
 
+require 'watir/browser'
+Watir::Browser.module_eval "@@klass = Watir::IE"
+
 module Watir
   include Watir::Exception
   

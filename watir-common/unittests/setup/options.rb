@@ -22,14 +22,14 @@ module Watir
       end
       def execute 
         @user_choices[:browser].downcase!
-        @user_choices
+        Watir::UnitTest.options = @user_choices
       end 
-    end
-    def self.options= x
-      @@options = x
     end
     def self.options
       @@options
+    end
+    def self.options= x
+      @@options = x
     end
   end
 end

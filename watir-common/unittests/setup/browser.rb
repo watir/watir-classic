@@ -3,7 +3,6 @@ case Watir::UnitTest.options[:browser]
 when 'ie'
   $LOAD_PATH.unshift File.expand_path($watir_dev_lib)
   require 'watir'
-  Watir::Browser.module_eval "@@klass = Watir::IE"
 
   at_exit {Watir::IE.quit}
 
@@ -14,7 +13,6 @@ when 'ie'
 when 'firefox'
   $LOAD_PATH.unshift File.expand_path($firewatir_dev_lib)
   require 'firewatir'
-  Watir::Browser.module_eval "@@klass = FireWatir::Firefox"  
   
   $browser = Watir::Browser.new
 end
