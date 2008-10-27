@@ -399,6 +399,7 @@ module Watir
     
     # Closes the Browser
     def close
+      return unless exists?
       @closing = true
       @ie.quit
     end

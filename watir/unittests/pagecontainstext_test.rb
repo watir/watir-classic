@@ -48,13 +48,13 @@ end
 class TC_contains_text_in_new_ie < Test::Unit::TestCase
   tags :fails_on_firefox
   def setup
-    @ie = Watir::IE.new
+    @browser = Watir::Browser.new
   end
   def test_nothing_raised
-    assert_nothing_raised {@ie.contains_text ''}
+    assert_nothing_raised {@browser.text.include? ''}
   end
   def teardown
-    @ie.close
+    @browser.close
   end
 end
 
