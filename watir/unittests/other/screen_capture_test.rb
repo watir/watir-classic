@@ -12,7 +12,7 @@ class TC_Capture< Test::Unit::TestCase
   
   def setup
     delete_captured_files( [ 'jpeg1.jpg' , 'jpeg2.jpg' , 'bmp1.bmp', 'bmp2.bmp' ] )
-    $ie.goto($htmlRoot + 'buttons1.html' )
+    browser.goto($htmlRoot + 'buttons1.html' )
     @file_list = []       
   end
   

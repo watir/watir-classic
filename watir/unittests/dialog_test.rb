@@ -21,14 +21,14 @@ class TC_Dialog_Test < Test::Unit::TestCase
   end
   
   def test_alert_without_bonus_script
-    $ie.button(:id, 'btnAlert').click_no_wait
+    browser.button(:id, 'btnAlert').click_no_wait
     sleep 0.4 # FIXME: need to be able to poll for window to exist
     dialog.button("OK").click
-    assert_match(/Alert button!/, $ie.text_field(:id, "testResult").value)  
+    assert_match(/Alert button!/, browser.text_field(:id, "testResult").value)  
   end
   
   def test_button_name_not_found
-    $ie.button(:id, 'btnAlert').click_no_wait
+    browser.button(:id, 'btnAlert').click_no_wait
     sleep 0.4 # FIXME replace with dialog.exists?
     assert_raises(UnknownObjectException) { dialog.button("Yes").click }
     dialog.button("OK").click
@@ -37,7 +37,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
   def xtest_exists
     autoit = WIN32OLE.new('AutoItX3.Control')
     assert_false( dialog.exists?) # known bug: finds main window instead of dialog!
-    $ie.button(:id, 'btnAlert').click_no_wait
+    browser.button(:id, 'btnAlert').click_no_wait
     sleep 0.4 # FIXME: need to add polling
     assert dialog.exists?
     dialog.button('OK').click
@@ -45,7 +45,7 @@ class TC_Dialog_Test < Test::Unit::TestCase
   
   def test_leaves_dialog_open
     # should be closed in teardown
-    $ie.button(:id, 'btnAlert').click_no_wait
+    browser.button(:id, 'btnAlert').click_no_wait
   end
   
   def test_copy_array_elements
@@ -58,17 +58,17 @@ class TC_Dialog_Test < Test::Unit::TestCase
   end
   
   def test_confirm_ok
-    $ie.button(:value, 'confirm').click_no_wait
+    browser.button(:value, 'confirm').click_no_wait
     assert dialog.exists?
     dialog.button('OK').click
-    assert_equal "You pressed the Confirm and OK button!", $ie.text_field(:id, 'testResult').value
+    assert_equal "You pressed the Confirm and OK button!", browser.text_field(:id, 'testResult').value
   end
   
   def xtest_confirm_cancel
-    $ie.button(:value, 'confirm').click_no_wait
+    browser.button(:value, 'confirm').click_no_wait
     assert dialog.exists?
     dialog.button('Cancel').click
-    assert_equal "You pressed the Confirm and Cancel button!", $ie.text_field(:id, 'testResult').value
+    assert_equal "You pressed the Confirm and Cancel button!", browser.text_field(:id, 'testResult').value
   end
   
   def test_dialog_close

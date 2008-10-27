@@ -6,7 +6,7 @@ class TC_Logon_Test < Test::Unit::TestCase
   include Watir
   
   def goto_windows_login_page
-    $ie.goto('http://clio.lyris.com/')
+    browser.goto('http://clio.lyris.com/')
   end
   
   

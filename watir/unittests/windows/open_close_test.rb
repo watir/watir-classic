@@ -5,9 +5,9 @@ require 'watir/contrib/ie-new-process'
 
 class ZZ_OpenClose < Test::Unit::TestCase
   def setup
-    if $ie
-      $ie.close 
-      $ie = nil 
+    if browser
+      browser.close 
+      browser = nil 
     end
   end
   20.times do | i |

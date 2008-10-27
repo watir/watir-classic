@@ -29,17 +29,17 @@ class TC_JavaScript_Test < Test::Unit::TestCase
   end
   
   def check_dialog(extra_file, expected_result, &block)
-    $ie.goto(@@javascript_page)
+    browser.goto(@@javascript_page)
     Thread.new { system("rubyw \"#{$mydir}\\#{extra_file}.rb\"") }
     
     block.call
-    testResult = $ie.text_field(:id, "testResult").value
+    testResult = browser.text_field(:id, "testResult").value
     assert_match( expected_result, testResult )  
   end
   
   def test_alert_button
     check_dialog('jscriptExtraAlert', /Alert button!/) do
-      $ie.button(:id, 'btnAlert').click
+      browser.button(:id, 'btnAlert').click
     end
     
   end
@@ -52,12 +52,12 @@ class TC_JavaScript_Test < Test::Unit::TestCase
   end
   def test_confirm_button_ok
     check_dialog('jscriptExtraConfirmOk', /Confirm and OK button!/) do 
-      $ie.button(:id, 'btnConfirm').click
+      browser.button(:id, 'btnConfirm').click
     end
   end
   def test_confirm_button_Cancel
     check_dialog('jscriptExtraConfirmCancel', /Confirm and Cancel button!/) do
-      $ie.button(:id, 'btnConfirm').click
+      browser.button(:id, 'btnConfirm').click
     end
   end
   

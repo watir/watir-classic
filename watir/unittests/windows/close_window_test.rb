@@ -13,7 +13,7 @@ class TC_CloseWindow < Watir::TestCase
   
   # reproduces defect http://jira.openqa.org/browse/WTR-16
   def test_close_window_with_button
-    $ie.link(:text, 'New Window').click
+    browser.link(:text, 'New Window').click
     ie_new = Watir::IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))
     assert_nothing_raised {ie_new.close}

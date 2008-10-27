@@ -9,9 +9,8 @@ when 'ie'
 
   speed = Watir::UnitTest.options[:speed].to_sym
   Watir::IE.speed = speed
-  $ie = Watir::Browser.new
-  $ie.speed = speed
-  $browser = $ie
+  $browser = Watir::Browser.new
+  $browser.speed = speed
 when 'firefox'
   $LOAD_PATH.unshift File.expand_path($firewatir_dev_lib)
   require 'firewatir'
@@ -21,6 +20,6 @@ when 'firefox'
 end
 
 # close browser at completion of the tests
-# these lines must execute before loading test/unit, otherwise IE will close *before* the tests run.
+# the at_exit execute before loading test/unit, otherwise IE will close *before* the tests run.
 at_exit {$browser.close if $browser}
 
