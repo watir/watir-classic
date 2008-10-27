@@ -375,7 +375,7 @@ module Watir
     #    ie.checkbox(:name,'email_frequency', 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
     #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
     def checkbox(how, what=nil, value=nil)
-      CheckBox.new(self, how, what, ["checkbox"], value)
+      CheckBox.new(self, how, what, value)
     end
     
     # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -417,7 +417,7 @@ module Watir
     #    ie.radio(:name,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
     #    ie.radio(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the radio button with a name of email_frequency and a value of 'daily'
     def radio(how, what=nil, value=nil)
-      Radio.new(self, how, what, ["radio"], value)
+      Radio.new(self, how, what, value)
     end
     
     # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -725,6 +725,14 @@ module Watir
     #   * types - what object types we will look at.
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
     def locate_input_element(how, what, types, value=nil)
+      case how
+      when :xpath
+        return element_by_xpath(what)
+      when :ole_object
+        return what
+      end
+      # else:
+      
       locator = InputElementLocator.new self, types
       locator.specifier = [how, what, value]
       locator.document = document

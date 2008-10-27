@@ -228,25 +228,25 @@ class TC_Tables_Buttons < Test::Unit::TestCase
   end
   
   def test_simple_table_buttons
-    table = browser.table(:index,1)
+    table = browser.table(:index, 1)
     
-    table[1][1].button(:index,1).click
+    table[1][1].button(:index, 1).click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/CLICK1/i))
-    table[2][1].button(:index,1).click
+    table[2][1].button(:index, 1).click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/CLICK2/i))
     
-    table[1][1].button(:id,'b1').click
+    table[1][1].button(:id, 'b1').click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/CLICK1/i))
     
     assert_raises(UnknownObjectException   ) { table[1][1].button(:id,'b_missing').click }
     
-    table[3][1].button(:index,2).click
+    table[3][1].button(:index, 2).click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/TOO/i))
     
-    table[3][1].button(:value ,"Click too").click
+    table[3][1].button(:value, "Click too").click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/TOO/i))
     
-    browser.table(:index,1)[4][1].text_field(:index,1).set("123")
+    browser.table(:index, 1)[4][1].text_field(:index,1).set("123")
     assert(browser.text_field(:index,2).verify_contains("123"))
     
     # check when a cell contains 2 objects

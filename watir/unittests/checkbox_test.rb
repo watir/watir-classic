@@ -165,6 +165,12 @@ class TC_CheckBox < Test::Unit::TestCase
     end
     assert_equal(index - 1, browser.checkboxes.length)
   end
-  
+
+  # bug 217
+  tag_method :test_checkbox_access_by_ole_object, :fails_on_firefox
+  def test_checkbox_access_by_ole_object
+    ole = browser.checkboxes[1].locate
+    browser.checkbox(:ole_object, ole).flash
+  end
   
 end

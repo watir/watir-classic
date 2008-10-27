@@ -2,4 +2,6 @@
 <loadpath>
 	<pathentry path="" type="src"/>
 	<pathentry path="org.rubypeople.rdt.launching.RUBY_CONTAINER" type="con"/>
+	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
+	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
 </loadpath>

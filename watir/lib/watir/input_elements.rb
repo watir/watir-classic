@@ -2,13 +2,7 @@ module Watir
   
   class InputElement < Element
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :ole_object
-        @o = @what
-      else
-        @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
-      end
+      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
     end
     def initialize(container, how, what)
       set_container container
@@ -457,21 +451,13 @@ module Watir
   #
   # most of the methods available to this element are inherited from the Element class
   #
-  class RadioCheckCommon < Element
+  class RadioCheckCommon < InputElement
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      else
-        @o = @container.locate_input_element(@how, @what, @type, @value)
-      end
+      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value)
     end
-    def initialize(container, how, what, type, value=nil)
-      set_container container
-      @how = how
-      @what = what
-      @type = type
+    def initialize(container, how, what, value=nil)
+      super container, how, what
       @value = value
-      super(nil)
     end
     
     # BUG: rename me
@@ -500,6 +486,7 @@ module Watir
   #++
   # This class is the watir representation of a radio button.
   class Radio < RadioCheckCommon
+    INPUT_TYPES = ["radio"]
     # This method clears a radio button. One of them will almost always be set.
     # Returns true if set or false if not set.
     #   Raises UnknownObjectException if its unable to locate an object
@@ -526,7 +513,7 @@ module Watir
   
   # This class is the watir representation of a check box.
   class CheckBox < RadioCheckCommon
-    
+    INPUT_TYPES = ["checkbox"]
     # With no arguments supplied, sets the check box.
     # If the optional value is supplied, the checkbox is set, when its true and 
     # cleared when its false
