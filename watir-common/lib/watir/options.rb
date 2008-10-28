@@ -5,6 +5,7 @@ require 'user-choices'
 module Watir
   @@options_file = nil
   @@options = nil
+  @@default_browser = 'ie'
   class << self
     def options_file= file
       @@options_file = file
