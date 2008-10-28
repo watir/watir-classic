@@ -19,12 +19,13 @@ module Watir
       @@attach_timeout = timeout
     end
 
-    # BUG: this interface invites misunderstanding/misuse such as IE.defaults[:speed] = :zippy]
-		def self.defaults 	
+    # Return the options used when creating new instances of IE.
+    # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
+		def self.options 	
 			{:speed => self.speed, :visible => self.visible}
 	  end
-    # Not a great interface either, since IE.defaults = {} does not erase.
-		def self.defaults= options
+    # set values for options used when creating new instances of IE.
+		def self.set_options options
 			options.each do |name, value|
 				send "#{name}=", value
 			end

@@ -31,34 +31,34 @@ class TC_class_options < Test::Unit::TestCase
 	include Watir
 	@@hide_ie = $HIDE_IE
 	def setup
-		@previous = IE.defaults
+		@previous = IE.options
 	end
 	def test_class_defaults
-		assert_equal({:speed => IE.speed, :visible => IE.visible}, IE.defaults)
+		assert_equal({:speed => IE.speed, :visible => IE.visible}, IE.options)
 	end
 	def test_change_defaults
-		IE.defaults = {:speed => :fast}
+		IE.set_options(:speed => :fast)
 		assert_equal(:fast, IE.speed)
-		IE.defaults = {:visible => false}
+		IE.set_options(:visible => false)
 		assert_equal(false, IE.visible)
-		IE.defaults = {:speed => :slow}
+		IE.set_options(:speed => :slow)
 		assert_equal(:slow, IE.speed)
-		IE.defaults = {:visible => true}
+		IE.set_options(:visible => true)
 		assert_equal(true, IE.visible)
 	end
 	def test_defaults_affect_on_instance
-		IE.defaults = {:speed => :fast}
+		IE.set_options(:speed => :fast)
 		@ie1 = IE.new
 		assert_equal(:fast, @ie1.speed)
-		IE.defaults = {:speed => :slow}
+		IE.set_options(:speed => :slow)
 		@ie2 = IE.new
 		assert_equal(:slow, @ie2.speed)
-    IE.defaults = {:speed => :zippy}
+    IE.set_options(:speed => :zippy)
     @ie3 = IE.new
     assert_equal(:zippy, @ie3.speed)
 	end
 	def teardown
-		IE.defaults = @previous
+		IE.set_options @previous
 		@ie1.close if @ie1
 		@ie2.close if @ie2
     @ie3.close if @ie3
