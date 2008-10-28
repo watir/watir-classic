@@ -40,6 +40,8 @@ module Watir
       builder.add_choice :speed, 
       :type => ['slow', 'fast', 'zippy'], 
       :default => 'fast'
+      builder.add_choice :visible,
+      :type => :boolean
     end
     def execute 
       @user_choices[:speed] = @user_choices[:speed].to_sym

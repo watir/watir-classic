@@ -20,7 +20,9 @@ module Watir
       end
       # Add support for the browser option, using the specified class, 
       # provided as a string. Optionally, additional options supported by
-      # the class can be specified
+      # the class can be specified as an array of symbols. Options specified
+      # by the user and included in this list will be passed (as a hash) to 
+      # the set_options class method (if defined) before creating an instance.
       def support option, class_string, additional_options=[]
         @@browser_classes[option] = class_string        
         @@sub_options[option] = additional_options
