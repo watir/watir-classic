@@ -38,12 +38,12 @@
 =end
 
 require 'firewatir/exceptions'
-    
+
 module FireWatir
   module Container 
     include FireWatir
     include Watir::Exception
-
+    
     # IP Address of the machine where the script is to be executed. Default to localhost.
     MACHINE_IP = "127.0.0.1"
     # Name of the variable with which window is identified in JSSh.
@@ -54,17 +54,17 @@ module FireWatir
     DOCUMENT_VAR = "document"
     # Name of the variable with which body is identified in JSSh.
     BODY_VAR    = "body"
-
-        
+    
+    
     # The delay when entering text on a web page when speed = :slow.
     DEFAULT_TYPING_SPEED = 0.01
-
+    
     # The default time we wait after a page has loaded when speed = :slow.
     DEFAULT_SLEEP_TIME = 0.1
-
+    
     # The default color for highlighting objects as they are accessed.
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
-                    
+    
     public
     #
     # Description:
@@ -86,14 +86,14 @@ module FireWatir
     #   Frame object.
     #
     def frame(how, what = nil)
-        locate if defined?(locate)
-        if(what == nil)
-            what = how
-            how = :name
-        end
-        Frame.new(self, how, what)
+      locate if defined?(locate)
+      if(what == nil)
+        what = how
+        how = :name
+      end
+      Frame.new(self, how, what)
     end
-
+    
     #
     # Description:
     #   Used to access a form element. Usually an <form> HTML tag.
@@ -114,12 +114,12 @@ module FireWatir
     #   Form object.
     #
     def form(how, what=nil)   
-        locate if defined?(locate)
-       if(what == nil)
-            what = how
-            how = :name
-        end    
-        Form.new(self, how, what)
+      locate if defined?(locate)
+      if(what == nil)
+        what = how
+        how = :name
+      end    
+      Form.new(self, how, what)
     end
     
     #
@@ -139,8 +139,8 @@ module FireWatir
     #   Table object.
     #
     def table(how, what=nil)
-        locate if defined?(locate)
-        Table.new(self, how, what)
+      locate if defined?(locate)
+      Table.new(self, how, what)
     end
     
     #
@@ -159,10 +159,10 @@ module FireWatir
     #    TableCell Object
     #
     def cell(how, what=nil)
-        locate if defined?(locate)
-        TableCell.new(self, how, what)
+      locate if defined?(locate)
+      TableCell.new(self, how, what)
     end
-
+    
     # 
     # Description:
     #   Used to access a table row. Usually an <tr> HTML tag. 
@@ -179,8 +179,8 @@ module FireWatir
     #   TableRow object
     #
     def row(how, what=nil)
-        locate if defined?(locate)
-        TableRow.new(self, how, what)
+      locate if defined?(locate)
+      TableRow.new(self, how, what)
     end
     
     # 
@@ -203,14 +203,14 @@ module FireWatir
     #   Button element.
     #
     def button(how, what=nil)
-        locate if defined?(locate)
-        if what.nil? && String === how
-          what = how
-          how = :value
-        end    
-        Button.new(self, how, what)
+      locate if defined?(locate)
+      if what.nil? && String === how
+        what = how
+        how = :value
+      end    
+      Button.new(self, how, what)
     end    
-
+    
     # 
     # Description:
     #   Used for accessing a file field. Usually an <input type = file> HTML tag.  
@@ -227,10 +227,10 @@ module FireWatir
     #   FileField object
     #
     def file_field(how, what = nil)
-        locate if defined?(locate)
-        FileField.new(self, how, what)
+      locate if defined?(locate)
+      FileField.new(self, how, what)
     end    
-
+    
     #
     # Description:
     #   Used for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
@@ -248,10 +248,10 @@ module FireWatir
     #   TextField object.
     #
     def text_field(how, what = nil)
-        locate if defined?(locate)
-        TextField.new(self, how, what)
+      locate if defined?(locate)
+      TextField.new(self, how, what)
     end    
-
+    
     # 
     # Description:
     #   Used to access hidden field element. Usually an <input type = hidden> HTML tag
@@ -269,10 +269,10 @@ module FireWatir
     #   Hidden object.
     #
     def hidden(how, what=nil)
-        locate if defined?(locate)
-        return Hidden.new(self, how, what)
+      locate if defined?(locate)
+      return Hidden.new(self, how, what)
     end
-
+    
     #
     # Description:
     #   Used to access select list element. Usually an <select> HTML tag.
@@ -290,8 +290,8 @@ module FireWatir
     #   Select List object.
     #
     def select_list(how, what=nil) 
-        locate if defined?(locate)
-        return SelectList.new(self, how, what)
+      locate if defined?(locate)
+      return SelectList.new(self, how, what)
     end
     
     #
@@ -321,8 +321,8 @@ module FireWatir
     #   Checkbox object.
     #
     def checkbox(how, what=nil, value = nil) 
-        locate if defined?(locate)
-        return CheckBox.new(self, how, what, value) 
+      locate if defined?(locate)
+      return CheckBox.new(self, how, what, value) 
     end
     
     #
@@ -352,8 +352,8 @@ module FireWatir
     #   Radio button object.
     #
     def radio(how, what=nil, value = nil) 
-        locate if defined?(locate)
-        return Radio.new(self, how, what, value) 
+      locate if defined?(locate)
+      return Radio.new(self, how, what, value) 
     end
     
     #
@@ -373,10 +373,10 @@ module FireWatir
     #   Link object.
     #
     def link(how, what=nil) 
-        locate if defined?(locate)
-        return Link.new(self, how, what)
+      locate if defined?(locate)
+      return Link.new(self, how, what)
     end
-
+    
     #
     # Description:
     #   Used to access image element. Usually an <img> HTML tag.
@@ -394,26 +394,26 @@ module FireWatir
     #   Image object.
     #
     def image(how, what = nil)
-        locate if defined?(locate)
-        Image.new(self, how, what)
+      locate if defined?(locate)
+      Image.new(self, how, what)
     end    
-
-
-
+    
+    
+    
     # Description:
     #	Searching for Page Elements. Not for external consumption.
     #        
     # def ole_inner_elements
-        # return document.body.all 
+    # return document.body.all 
     # end
     # private :ole_inner_elements
     
-	
-	# 
-	# Description:
-	#   This method shows the available objects on the current page.
-	#   This is usually only used for debugging or writing new test scripts.
-	#   This is a nice feature to help find out what HTML objects are on a page
+    
+    # 
+    # Description:
+    #   This method shows the available objects on the current page.
+    #   This is usually only used for debugging or writing new test scripts.
+    #   This is a nice feature to help find out what HTML objects are on a page
     #   when developing a test case using FireWatir.
     #
     # Typical Usage:
@@ -422,22 +422,22 @@ module FireWatir
     # Output:
     #   Prints all the available elements on the page.
     #
-	def show_all_objects
-        puts "-----------Objects in the current context-------------" 
-        locate if defined?(locate)
-        elements = Document.new(self).all
-        puts elements.length
-        elements.each  do |n|
-            puts n.tagName
-            puts n.to_s
-            puts "------------------------------------------" 
-        end
-        puts "Total number of objects in the current context :	#{elements.length}"
-        return elements
-        # Test the index access. 
-        # puts doc[35].to_s
-	end
-
+    def show_all_objects
+      puts "-----------Objects in the current context-------------" 
+      locate if defined?(locate)
+      elements = Document.new(self).all
+      puts elements.length
+      elements.each  do |n|
+        puts n.tagName
+        puts n.to_s
+        puts "------------------------------------------" 
+      end
+      puts "Total number of objects in the current context :	#{elements.length}"
+      return elements
+      # Test the index access. 
+      # puts doc[35].to_s
+    end
+    
     # evaluate javascript and return the result.
     def js_eval javascript
       javascript.gsub!("\n", "")
@@ -454,7 +454,7 @@ module FireWatir
     def jssh_socket
       $jssh_socket || @container.jssh_socket
     end
-
+    
     #
     # Description:
     #  Reads the javascript execution result from the jssh socket. 
@@ -466,69 +466,69 @@ module FireWatir
     #	The javascript execution result as string.	
     #
     def read_socket(socket = jssh_socket)
-        return_value = "" 
-        data = ""
-        receive = true
-        #puts Thread.list
-        s = nil
-        while(s == nil) do
-            s = Kernel.select([socket] , nil , nil, 1)
-        end
-        #if(s != nil)
-        for stream in s[0]
+      return_value = "" 
+      data = ""
+      receive = true
+      #puts Thread.list
+      s = nil
+      while(s == nil) do
+        s = Kernel.select([socket] , nil , nil, 1)
+      end
+      #if(s != nil)
+      for stream in s[0]
+        data = stream.recv(1024)
+        #puts "data is : #{data}"
+        while(receive)
+          #while(data.length == 1024)
+          return_value += data
+          if(return_value.include?("\n> "))
+            receive = false
+          else    
             data = stream.recv(1024)
-            #puts "data is : #{data}"
-            while(receive)
-            #while(data.length == 1024)
-                return_value += data
-                if(return_value.include?("\n> "))
-                    receive = false
-                else    
-                    data = stream.recv(1024)
-                end    
-                #puts "return_value is : #{return_value}"
-                #puts "data length is : #{data.length}"
-            end
+          end    
+          #puts "return_value is : #{return_value}"
+          #puts "data length is : #{data.length}"
         end
-        
-        # If received data is less than 1024 characters or for last data 
-        # we read in the above loop 
-        #return_value += data
-
-        # Get the command prompt inserted by JSSH
-        #s = Kernel.select([socket] , nil , nil, 0.3)
-            
-        #if(s != nil)
-        #    for stream in s[0]
-        #        return_value += socket.recv(1024)
-        #    end
-        #end
-    
-        length = return_value.length 
-        #puts "Return value before removing command prompt is : #{return_value}"
-        
-        #Remove the command prompt. Every result returned by JSSH has "\n> " at the end.
-        if length <= 3 
-            return_value = ""
-        elsif(return_value[0..2] == "\n> ")    
-            return_value = return_value[3..length-1]
-        else    
-            #return_value = return_value[0..length-3]
-            return_value = return_value[0..length-4]
-        end 
-        #puts "Return value after removing command prompt is : #{return_value}"
-        #socket.flush
-        
-        # make sure that command prompt doesn't get there.
-        if(return_value[return_value.length - 3..return_value.length - 1] == "\n> ")
-            return_value = return_value[0..return_value.length - 4]
-        end    
-        if(return_value[0..2] == "\n> ")
-            return_value = return_value[3..return_value.length - 1]
-        end   
-        #puts "return value is : #{return_value}"
-        return return_value
+      end
+      
+      # If received data is less than 1024 characters or for last data 
+      # we read in the above loop 
+      #return_value += data
+      
+      # Get the command prompt inserted by JSSH
+      #s = Kernel.select([socket] , nil , nil, 0.3)
+      
+      #if(s != nil)
+      #    for stream in s[0]
+      #        return_value += socket.recv(1024)
+      #    end
+      #end
+      
+      length = return_value.length 
+      #puts "Return value before removing command prompt is : #{return_value}"
+      
+      #Remove the command prompt. Every result returned by JSSH has "\n> " at the end.
+      if length <= 3 
+        return_value = ""
+      elsif(return_value[0..2] == "\n> ")    
+        return_value = return_value[3..length-1]
+      else    
+        #return_value = return_value[0..length-3]
+        return_value = return_value[0..length-4]
+      end 
+      #puts "Return value after removing command prompt is : #{return_value}"
+      #socket.flush
+      
+      # make sure that command prompt doesn't get there.
+      if(return_value[return_value.length - 3..return_value.length - 1] == "\n> ")
+        return_value = return_value[0..return_value.length - 4]
+      end    
+      if(return_value[0..2] == "\n> ")
+        return_value = return_value[3..return_value.length - 1]
+      end   
+      #puts "return value is : #{return_value}"
+      return return_value
     end
   end
 end # module 
-    
+
