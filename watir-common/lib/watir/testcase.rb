@@ -23,10 +23,10 @@ module Watir
       end
       def sorted_test_methods
         case order
-        when :alphabetically:          test_methods.sort
-        when :sequentially:            test_methods
-        when :reversed_sequentially:   test_methods.reverse
-        when :reversed_alphabetically: test_methods.sort.reverse
+        when :alphabetically then          test_methods.sort
+        when :sequentially then            test_methods
+        when :reversed_sequentially then   test_methods.reverse
+        when :reversed_alphabetically then test_methods.sort.reverse
         else raise ArgumentError, "Execute option not supported: #{@order}"
         end
       end

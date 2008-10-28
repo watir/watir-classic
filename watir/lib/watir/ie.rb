@@ -201,17 +201,17 @@ module Watir
     # character by character (default).
     def speed= how_fast
       case how_fast
-      when :zippy :
+      when :zippy then
 	      @typingspeed = 0
 	      @pause_after_wait = 0.01
 	      @type_keys = false
 	      @speed = :fast
-      when :fast : 
+      when :fast then
 	      @typingspeed = 0
 	      @pause_after_wait = 0.01
 	      @type_keys = true
 	      @speed = :fast
-      when :slow :
+      when :slow then
 	      @typingspeed = 0.08
 	      @pause_after_wait = 0.1
 	      @type_keys = true

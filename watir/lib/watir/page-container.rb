@@ -12,7 +12,7 @@ module Watir
       n = self.document.invoke('parentWindow').navigator.appVersion
       m=/MSIE\s(.*?);/.match( n )
       if m and m[1] =='7.0'
-        if m=/HTTP (\d\d\d.*)/.match( self.title )
+        if m = /HTTP (\d\d\d.*)/.match( self.title )
           raise NavigationException, m[1]
         end
       else

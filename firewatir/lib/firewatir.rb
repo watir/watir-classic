@@ -908,7 +908,7 @@ module FireWatir
         def elements_by_xpath(xpath)
             element = Element.new(nil, self)
             elem_names = element.elements_by_xpath(self, xpath)
-            a = elem_names.inject([]) {|elements,name| elements << element_factory(name)}
+            elem_names.inject([]) {|elements,name| elements << element_factory(name)}
         end    
 	
         #
