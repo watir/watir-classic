@@ -2,7 +2,7 @@
 # Define browsers supported by Watir
 
 module Watir; autoload :IE, 'watir'; end
-Watir::Browser.support 'ie', 'Watir::IE'
+Watir::Browser.support 'ie', 'Watir::IE', [:speed]
 
 module FireWatir; autoload :Firefox, 'firewatir'; end
 Watir::Browser.support 'firefox', 'FireWatir::Firefox'

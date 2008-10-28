@@ -42,6 +42,7 @@ module Watir
       :default => 'fast'
     end
     def execute 
+      @user_choices[:speed] = @user_choices[:speed].to_sym
       @user_choices
     end 
   end
