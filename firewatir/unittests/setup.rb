@@ -10,7 +10,8 @@ libs << File.join(topdir, '..', 'watir-common', 'lib')
 libs << File.join(topdir, '..', 'watir-common') # for the unit tests
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
-$default_browser = 'firefox'
+require 'watir/browser'
+Watir.default_browser = 'firefox'
 require 'unittests/setup/lib'
 module Watir::UnitTest
   alias :uses_page :goto_page

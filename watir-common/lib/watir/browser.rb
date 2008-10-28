@@ -1,3 +1,5 @@
+# watir/browser
+require 'watir/options'
 module Watir
   
   module Browser

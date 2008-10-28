@@ -1,19 +1,19 @@
+# setup/browser
 require 'watir/browser'
-case Watir::UnitTest.options[:browser]
+case Watir.options[:browser]
 when 'ie'
+  at_exit {Watir::IE.quit}
+
   $LOAD_PATH.unshift File.expand_path($watir_dev_lib)
   require 'watir'
 
-  at_exit {Watir::IE.quit}
-
-  speed = Watir::UnitTest.options[:speed].to_sym
+  speed = Watir.options[:speed].to_sym
   Watir::IE.speed = speed
   $browser = Watir::Browser.new
   $browser.speed = speed
 when 'firefox'
   $LOAD_PATH.unshift File.expand_path($firewatir_dev_lib)
   require 'firewatir'
-  
   $browser = Watir::Browser.new
 end
 

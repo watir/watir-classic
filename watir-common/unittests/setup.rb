@@ -8,7 +8,8 @@ $firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
 $watir_dev_lib = File.join(topdir, '..', 'watir', 'lib')
 $LOAD_PATH.unshift File.expand_path(File.join(topdir, 'lib'))
 
-$default_browser = 'ie'
+require 'watir/browser'
+Watir.default_browser = 'ie'
 require 'unittests/setup/lib'
 
 Dir.chdir topdir do
