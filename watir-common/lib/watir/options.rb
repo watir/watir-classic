@@ -5,8 +5,9 @@ require 'user-choices'
 module Watir
   @@options_file = nil
   @@options = nil
-  @@default_browser = 'ie'
   class << self
+    # Specify the location of a yaml file containing Watir options. Must be
+    # specified before the options are parsed.
     def options_file= file
       @@options_file = file
     end
@@ -16,14 +17,10 @@ module Watir
     def options= x
       @@options = x
     end
+    # Return the Watir options, as a hash. If they haven't been parsed yet,
+    # they will be now.
     def options
       @@options ||= Watir::Options.new.execute
-    end
-    def default_browser= browser_option
-      @@default_browser = browser_option
-    end
-    def default_browser
-      @@default_browser
     end
   end
 
@@ -38,14 +35,13 @@ module Watir
     end
     def add_choices builder
       builder.add_choice :browser, 
-      :type => ['firefox', 'ie', 'Firefox', 'IE'], 
-      :default => Watir.default_browser
+      :type => Watir::Browser.options, 
+      :default => Watir::Browser.default
       builder.add_choice :speed, 
       :type => ['slow', 'fast', 'zippy'], 
       :default => 'fast'
     end
     def execute 
-      @user_choices[:browser].downcase!
       @user_choices
     end 
   end

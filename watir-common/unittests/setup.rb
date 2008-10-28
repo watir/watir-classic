@@ -9,7 +9,7 @@ $watir_dev_lib = File.join(topdir, '..', 'watir', 'lib')
 $LOAD_PATH.unshift File.expand_path(File.join(topdir, 'lib'))
 
 require 'watir/browser'
-Watir.default_browser = 'ie'
+Watir::Browser.default = 'ie'
 require 'unittests/setup/lib'
 
 Dir.chdir topdir do

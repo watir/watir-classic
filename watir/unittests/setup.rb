@@ -17,7 +17,7 @@ libs << File.join(topdir, '..', 'watir-common') # for the unit tests
 libs.each { |lib| append_to_load_path(lib) }
 
 require 'watir/browser'
-Watir.default_browser = 'ie'
+Watir::Browser.default = 'ie'
 require 'unittests/setup/lib'
 require 'watir/testcase'
 
