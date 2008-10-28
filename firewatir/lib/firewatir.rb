@@ -1176,4 +1176,4 @@ module FireWatir
 end
 
 require 'watir/browser'
-Watir::Browser.module_eval "@@klass = FireWatir::Firefox"  
+Watir.default_browser ||= 'firefox'  

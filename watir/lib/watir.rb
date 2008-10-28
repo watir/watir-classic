@@ -85,7 +85,7 @@ require 'watir/link'
 require 'watir/collections'
 
 require 'watir/browser'
-Watir::Browser.module_eval "@@klass = Watir::IE"
+Watir.default_browser ||= 'ie' 
 
 module Watir
   include Watir::Exception
