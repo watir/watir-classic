@@ -9,7 +9,7 @@ require 'firewatir'
 
 spec = Gem::Specification.new do |s|
   s.name = 'firewatir'
-  s.version = "1.2.1"
+  s.version = "1.6.0"
   s.summary = 'Automated testing tool for web applications using Firefox browser.'
   s.description = <<-EOF
     FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free, 
@@ -22,8 +22,8 @@ spec = Gem::Specification.new do |s|
     JavaScript popups (currently support will be there shortly).
   EOF
   s.author = 'Angrez Singh'
-  s.homepage = 'http://code.google.com/p/firewatir'
-  s.email = 'firewatir@groups.google.com' # may change this shortly
+  s.homepage = 'http://wtr.rubyforge.org'
+  s.email = 'watir-general@googlegroups.com'
   s.rubyforge_project = 'Watir'
 
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
