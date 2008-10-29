@@ -1,4 +1,4 @@
-require 'watir'
+require 'watir/ie'
 # TODO: move this file to watir/contrib
 
 module Watir

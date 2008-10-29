@@ -2,7 +2,8 @@
 
 License
   ---------------------------------------------------------------------------
-  Copyright (c) 2004-2007, Paul Rogers and Bret Pettichord
+  Copyright (c) 2004 - 2005, Paul Rogers and Bret Pettichord
+  Copyright (c) 2006 - 2008, Bret Pettichord
   All rights reserved.
   
   Redistribution and use in source and binary forms, with or without

@@ -50,7 +50,7 @@ task :bonus_zip => [:rdoc] do
     raise
   end
   
-  require 'watir'
+  require 'watir/ie'
   version = Watir::IE::VERSION_SHORT
   bonus_zip = "pkg/watir-bonus-#{version}.zip"
 
