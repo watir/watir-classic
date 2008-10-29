@@ -1,6 +1,10 @@
 require 'watir/exceptions'
 
 module Watir
+  
+  def wait_until(*args)
+    Waiter.wait_until(*args) {yield}
+  end  
 
 class TimeKeeper
   attr_reader :sleep_time

@@ -42,7 +42,6 @@ require 'watir/winClicker'
 require 'watir/exceptions'
 require 'watir/utils'
 require 'watir/close_all'
-require 'watir/waiter'
 require 'watir/ie-process'
 
 require 'dl/import'
@@ -87,16 +86,13 @@ require 'watir/link'
 require 'watir/collections'
 
 require 'watir/browser'
+require 'watir/waiter'
 
 module Watir
   include Watir::Exception
   
   # Directory containing the watir.rb file
   @@dir = File.expand_path(File.dirname(__FILE__))
-
-  def wait_until(*args)
-    Waiter.wait_until(*args) {yield}
-  end
 
   ATTACHER = Waiter.new
   # Like regular Ruby "until", except that a TimeOutException is raised

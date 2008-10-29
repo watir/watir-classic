@@ -10,3 +10,4 @@ lib/watir/exceptions.rb
 lib/watir/matches.rb
 lib/watir/options.rb
 lib/watir/testcase.rb
+lib/watir/waiter.rb
