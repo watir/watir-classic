@@ -42,7 +42,7 @@ require 'firewatir/MozillaBaseElement'
 require 'firewatir/htmlelements'
 require 'watir/matches'
 require 'firewatir/firefox'
-require 'watir/browser'
+require 'watir'
 
 # this only has an effect if firewatir is required before anyone invokes 
 # Browser.new. Thus it has no effect if Browser.new itself autoloads this.

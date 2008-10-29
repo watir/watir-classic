@@ -85,8 +85,7 @@ require 'watir/image'
 require 'watir/link'
 require 'watir/collections'
 
-require 'watir/browser'
-require 'watir/waiter'
+require 'watir'
 
 module Watir
   include Watir::Exception
