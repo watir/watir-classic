@@ -85,7 +85,6 @@ require 'watir/link'
 require 'watir/collections'
 
 require 'watir/browser'
-Watir::Browser.default ||= 'ie' 
 
 module Watir
   include Watir::Exception
