@@ -1,6 +1,6 @@
 $__firewatir_source_patterns = [
-    'lib/container.rb', 'lib/firewatir.rb', 'lib/htmlelements.rb',
-    'lib/MozillaBaseElement.rb','lib/firewatir/*.rb','unittests/*.rb', 
+    'lib/firewatir.rb', 
+    'lib/firewatir/*.rb','unittests/*.rb', 
     'unittests/html/*.html', 'unittests/html/images/*.*' 
     ]
 
@@ -9,7 +9,7 @@ require 'firewatir'
 
 spec = Gem::Specification.new do |s|
   s.name = 'firewatir'
-  s.version = "1.6.0"
+  s.version = '1.6.0'
   s.summary = 'Automated testing tool for web applications using Firefox browser.'
   s.description = <<-EOF
     FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free, 
