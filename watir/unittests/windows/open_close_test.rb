@@ -1,15 +1,12 @@
 # rapidly open and close IE windows
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', 'lib')
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'watir-common', 'lib')
 require 'test/unit'
-require 'watir'
+require 'watir/ie'
 require 'watir/contrib/ie-new-process'
 
 class ZZ_OpenClose < Test::Unit::TestCase
-  def setup
-    if browser
-      browser.close 
-      browser = nil 
-    end
-  end
   20.times do | i |
     define_method "test_#{i}" do
       sleep 0.05
