@@ -3,5 +3,10 @@ Manifest.txt
 README.txt
 Rakefile
 lib/watir-common.rb
+lib/watir/assertions.rb
+lib/watir/browser.rb
+lib/watir/browsers.rb
 lib/watir/exceptions.rb
 lib/watir/matches.rb
+lib/watir/options.rb
+lib/watir/testcase.rb
