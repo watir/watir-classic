@@ -2,6 +2,7 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
+lib/watir.rb
 lib/watir-common.rb
 lib/watir/assertions.rb
 lib/watir/browser.rb

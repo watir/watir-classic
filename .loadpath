@@ -5,4 +5,5 @@
 	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
 	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
 	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
+	<pathentry path="GEM_LIB/rubyzip-0.9.1/lib" type="var"/>
 </loadpath>
