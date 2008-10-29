@@ -45,5 +45,5 @@ require 'firewatir/firefox'
 require 'watir'
 
 # this only has an effect if firewatir is required before anyone invokes 
-# Browser.new. Thus it has no effect if Browser.new itself autoloads this.
+# Browser.new. Thus it has no effect when Browser.new itself autoloads this library.
 Watir::Browser.default = 'firefox'

@@ -4,9 +4,6 @@ $__firewatir_source_patterns = [
     'unittests/html/*.html', 'unittests/html/images/*.*' 
     ]
 
-$LOAD_PATH.unshift File.dirname(__FILE__)
-require 'firewatir'
-
 spec = Gem::Specification.new do |s|
   s.name = 'firewatir'
   s.version = '1.6.0'
