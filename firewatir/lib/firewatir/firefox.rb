@@ -92,8 +92,6 @@ module FireWatir
     # More details: "http://developer.mozilla.org/en/docs/DOM:document.evaluate"
     FIRST_ORDERED_NODE_TYPE = 9
     
-    VERSION = '1.1.1'
-    
     # variable to check if firefox browser has been started or not. Currently this is
     # used only while starting firefox on windows. For other platforms you need to start
     # firefox manually.

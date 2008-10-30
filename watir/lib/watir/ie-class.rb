@@ -4,9 +4,6 @@ module Watir
     include Container
     include PageContainer
     
-    def self.quit
-    end
-    
     # Maximum number of seconds to wait when attaching to a window
     def self.reset_attach_timeout
       @@attach_timeout = 2.0

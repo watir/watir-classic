@@ -2,7 +2,6 @@
 require 'watir/browser'
 case Watir.options[:browser]
 when 'ie'
-  at_exit {Watir::IE.quit}
   $LOAD_PATH.unshift File.expand_path($watir_dev_lib)
 when 'firefox'
   $LOAD_PATH.unshift File.expand_path($firewatir_dev_lib)

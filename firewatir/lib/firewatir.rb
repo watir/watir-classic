@@ -42,6 +42,7 @@ require 'firewatir/MozillaBaseElement'
 require 'firewatir/htmlelements'
 require 'watir/matches'
 require 'firewatir/firefox'
+require 'firewatir/version'
 require 'watir'
 
 # this only has an effect if firewatir is required before anyone invokes 
