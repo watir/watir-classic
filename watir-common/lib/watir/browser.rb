@@ -6,13 +6,13 @@ module Watir
     @@sub_options = {}
     @@default = 'ie'
     class << self
-      def new *args
+      def new
         set_sub_options
-        klass.new *args
+        klass.new
       end
-      def start *args
+      def start url
         set_sub_options
-        klass.start *args
+        klass.start url
       end
       def klass
         key = Watir.options[:browser]
