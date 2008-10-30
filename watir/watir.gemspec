@@ -10,12 +10,11 @@ $__watir_source_patterns = [
     $WATIR_EXTRA_RDOC_FILES
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'watir-common', 'lib')
-require 'watir'
+require 'watir/version'
 
 spec = Gem::Specification.new do |s|
   s.name = 'watir'
-  s.version = Watir::IE::VERSION_SHORT
+  s.version = Watir::IE::VERSION
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
     WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free, 

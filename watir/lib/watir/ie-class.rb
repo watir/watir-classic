@@ -51,15 +51,6 @@ module Watir
 			@@visible = x
 		end
 		    
-    # The revision number (according to Subversion)
-    REVISION_STRING = '$Revision: 1263 $'
-    REVISION_STRING.scan(/Revision: (\d*)/)
-    REVISION = $1 or 'unknown'
-    
-    # The Release number
-    VERSION_SHORT = '1.6.0'
-    VERSION = VERSION_SHORT + '.' + REVISION
-    
     # Used internally to determine when IE has finished loading a page
     READYSTATE_COMPLETE = 4
        

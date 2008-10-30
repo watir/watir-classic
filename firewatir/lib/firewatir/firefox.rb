@@ -103,9 +103,7 @@ module FireWatir
     # This allows us to identify the window uniquely and close them accordingly.
     @window_title = nil 
     @window_url = nil 
-    
-    
-    #
+        
     # Description: 
     #   Starts the firefox browser. 
     #   On windows this starts the first version listed in the registry.
