@@ -47,14 +47,16 @@ end
 
 class TC_contains_text_in_new_ie < Test::Unit::TestCase
   tags :fails_on_firefox
+  # Doesn't actually raise an error, but fails to close the window afterwards
+  # http://jira.openqa.org/browse/WTR-265
   def setup
-    @browser = Watir::Browser.new
+    @new_browser = Watir::Browser.new
   end
   def test_nothing_raised
-    assert_nothing_raised {@browser.text.include? ''}
+    assert_nothing_raised {@new_browser.text.include? ''}
   end
   def teardown
-    @browser.close
+    @new_browser.close
   end
 end
 
