@@ -1,13 +1,12 @@
 # watir/browsers
 # Define browsers supported by Watir
 
-module Watir; autoload :IE, 'watir/ie'; end
-Watir::Browser.support 'ie', 'Watir::IE', [:speed, :visible]
+Watir::Browser.support :name => 'ie', :class => 'Watir::IE', 
+  :library => 'watir/ie', :gem => 'watir', 
+  :options => [:speed, :visible]
 
-module FireWatir; autoload :Firefox, 'firewatir'; end
-Watir::Browser.support 'firefox', 'FireWatir::Firefox'
+Watir::Browser.support :name => 'firefox', :class => 'FireWatir::Firefox',
+  :library => 'firewatir'
 
-module Watir; autoload :Safari, 'safariwatir'; end
-Watir::Browser.support 'safari', 'Watir::Safari'
-
-
+Watir::Browser.support :name => 'safari', :class => 'Watir::Safari',
+  :library => 'safariwatir'

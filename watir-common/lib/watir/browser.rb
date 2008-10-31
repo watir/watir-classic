@@ -80,9 +80,28 @@ before you invoke Browser.new.
       # the class can be specified as an array of symbols. Options specified
       # by the user and included in this list will be passed (as a hash) to 
       # the set_options class method (if defined) before creating an instance.
-      def support option, class_string, additional_options=[]
+      def support hash_args
+        option = hash_args[:name]
+        class_string = hash_args[:class]
+        additional_options = hash_args[:options]
+        library = hash_args[:library]
+        gem = hash_args[:gem] || library
+
         @@browser_classes[option] = class_string        
         @@sub_options[option] = additional_options
+
+        autoload class_string, library
+        activate_gem gem
+      end
+      def autoload class_string, library
+        mod, klass = class_string.split('::')
+        eval "module ::#{mod}; autoload :#{klass}, '#{library}'; end"
+      end
+      def activate_gem gem_name
+        begin
+          gem gem_name 
+        rescue Gem::LoadError
+        end
       end
       def default
         @@default
