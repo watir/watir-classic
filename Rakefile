@@ -1,3 +1,4 @@
+require 'rake/clean'
 require 'fileutils'
 projects = ['watir', 'firewatir', 'watir-common']
 
@@ -12,8 +13,11 @@ task :gems do
 end
 
 desc "Clean all the projects"
-task :clean do
+task :clean_subprojects do
   projects.each do |x|
     Dir.chdir(x) {puts `rake.bat clean`}
   end
 end
+
+task :clean => [:clean_subprojects]
+CLEAN.add 'gems/*'

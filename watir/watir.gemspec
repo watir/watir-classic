@@ -39,8 +39,8 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6' 
   s.add_dependency 'activesupport'
-  s.add_dependency 'watir-common', '= 1.6.0'
-  s.add_dependency 'firewatir', '= 1.6.0'
+  s.add_dependency 'commonwatir', '= 1.6.1'
+  s.add_dependency 'firewatir'
   
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
