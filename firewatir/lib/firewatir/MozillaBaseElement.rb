@@ -435,7 +435,6 @@ class Element
                                           if(how == \"text\")
                                           {
                                              attribute = element.textContent.replace(/\\xA0/g,\" \").replace(/^\\s+|\\s+$/g, '');
-                                             what = what.replace(/^\\s+|\\s+$/g, '');
                                           }
                                           else
                                           {
@@ -1040,21 +1039,8 @@ class Element
   #
   def text()
     assert_exists
-    
-    #puts "element_type is #{element_type}"
-    if(element_type == "HTMLFrameElement")
-      jssh_socket.send("#{BODY_VAR}.textContent.replace(/\\xA0/g,\" \");\n", 0)
-    else
-      jssh_socket.send("#{element_object}.textContent.replace(/\\xA0/g,\" \");\n", 0)
-    end
-    
-    return_value = read_socket().strip()
-    #puts "text content of element is : #{return_value}"
-    
-    #if(returnType == "boolean")
-    #    return_value = false if returnValue == "false"
-    #    return_value = true if returnValue == "true"
-    #end
+    element = (element_type == "HTMLFrameElement") ? BODY_VAR : element_object
+    return_value = js_eval("#{element}.textContent.replace(/\\xA0/g, \" \")").strip
     @@current_level = 0
     return return_value
   end
