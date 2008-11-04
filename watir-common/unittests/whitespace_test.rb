@@ -14,7 +14,23 @@ class TC_WhiteSpace < Test::Unit::TestCase
     assert_equal 'Login', browser.link(:index => 1).text
   end
 
-  def test_nbsp
+  def test_nbsp_beginning_and_end
     assert browser.link(:text, 'Login').exists?
+  end
+  
+  def test_single_nbsp
+    assert_equal "Test for nbsp.", browser.span(:id, 'single_nbsp').text
+  end
+  
+  def test_multiple_spaces
+    assert_equal "Test for multiple spaces.", browser.span(:id, 'multiple_spaces').text
+  end
+  
+  def test_space_tab
+    assert_equal "Test for space and tab.", browser.span(:id, 'space_tab').text
+  end
+  
+  def test_space_w_cr
+    assert_equal "Test for space and cr.", browser.span(:id, 'space_w_cr').text
   end
 end
