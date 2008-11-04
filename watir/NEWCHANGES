@@ -1,0 +1,59 @@
+== Version 1.6.1
+
+* Fixed install errors reported by Marek J and Tony.
+
+== Version 1.6.0
+
+This release merges the Watir and FireWatir projects. It contains many compatibility fixes,
+as well as a new browser-independent interface your tests can use to allow you
+to execute them against either browser (or Safari or Celerity). This release
+also contains many other fixes.
+
+Watir and FireWatir are still distributed as separate gems. Installing the 
+Watir gem will automatically install FireWatir. Both gems now use common code
+contained in the "commonwatir" gem.
+
+This release is fully backwards compatible with previous versions of Watir and
+FireWatir. Your existing scripts should continue to run without change.
+
+=== Installation
+
+To install both Watir and FireWatir:
+
+  gem update --system
+  gem install watir
+  
+To only install FireWatir (e.g. on Mac or Linux)
+
+  gem update --system
+  gem install firewatir
+  
+To enable Firefox to work with Watir, you will also need to install the JSSH plugin. See this
+page for details.
+http://wiki.openqa.org/display/WTR/FireWatir+Installation#FireWatirInstallation-3%29InstalltheJSSHFirefoxExtension
+
+=== New Features
+
+Replace references to Watir::IE.new to Watir::Browser.new to allow you to
+specify which browser to run your tests against at run time. Details:
+http://wiki.openqa.org/display/WTR/Browser.new
+
+=== Compatibility Fixes
+
+
+=== IE Fixes
+* Fix for:  form field named "submit" causes "submit" method to not work. 
+  Closes #223.
+* Calling ie.radio().set now scrolls to the page to the control, as with other
+  controls. Thanks to Jonathan Kohl for the fix. Closes #172.
+* Fixed ie.speed, which was returning ":fast" when speed was actually ":zippy".
+
+=== Unit Test Improvements
+* New rake targets for Watir: test and cruise, each of which runs the core tests.
+* Numerous fixes and cleanup to the unit test suite.
+* The unit tests use the new Browser.new interface and therefore can be run
+  against either implementation (Watir::IE or FireWatir::Firefox or others for
+  that matter). See this page for details.
+  http://wiki.openqa.org/display/WTR/Running+Unit+Tests+in+Development
+
+  
