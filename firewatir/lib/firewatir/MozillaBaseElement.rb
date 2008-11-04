@@ -434,7 +434,8 @@ class Element
                                        {
                                           if(how == \"text\")
                                           {
-                                             attribute = element.textContent;
+                                             attribute = element.textContent.replace(/\\xA0/g,\" \").replace(/^\\s+|\\s+$/g, '');
+                                             what = what.replace(/^\\s+|\\s+$/g, '');
                                           }
                                           else
                                           {
@@ -1042,9 +1043,9 @@ class Element
     
     #puts "element_type is #{element_type}"
     if(element_type == "HTMLFrameElement")
-      jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
+      jssh_socket.send("#{BODY_VAR}.textContent.replace(/\\xA0/g,\" \");\n", 0)
     else
-      jssh_socket.send("#{element_object}.textContent;\n", 0)
+      jssh_socket.send("#{element_object}.textContent.replace(/\\xA0/g,\" \");\n", 0)
     end
     
     return_value = read_socket().strip()
