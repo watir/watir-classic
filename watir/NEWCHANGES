@@ -1,13 +1,25 @@
+== Version 1.6.2 (not released yet)
+
+* Fixed FireWatir's "text" method to return the same character's as Watir's
+  method. It had been returning extra "spaces". Fix from Tony. (This fix is
+  still in progress.) Closes #266
+
 == Version 1.6.1
 
-* Fixed install errors reported by Marek J and Tony.
+* Fixed install/load errors reported by Marek J and Tony.
 
 == Version 1.6.0
 
-This release merges the Watir and FireWatir projects. It contains many compatibility fixes,
+This release merges the Watir and FireWatir projects. It contains many 
+compatibility fixes,
 as well as a new browser-independent interface your tests can use to allow you
-to execute them against either browser (or Safari or Celerity). This release
-also contains many other fixes.
+to specify the browser at run time. 
+
+We have also updated our existing support for modal dialogs so that it now works
+with Ruby 1.8.6. Users who have been using Ruby 1.8.2 because of this will now
+need to upgrade to Ruby 1.8.6.
+
+This release also contains many other fixes. Details below.
 
 Watir and FireWatir are still distributed as separate gems. Installing the 
 Watir gem will automatically install FireWatir. Both gems now use common code
@@ -28,32 +40,86 @@ To only install FireWatir (e.g. on Mac or Linux)
   gem update --system
   gem install firewatir
   
-To enable Firefox to work with Watir, you will also need to install the JSSH plugin. See this
-page for details.
+To enable Firefox to work with Watir, you will also need to install the 
+JSSH plugin. See this page for details.
 http://wiki.openqa.org/display/WTR/FireWatir+Installation#FireWatirInstallation-3%29InstalltheJSSHFirefoxExtension
 
 === New Features
 
-Replace references to Watir::IE.new to Watir::Browser.new to allow you to
+You can now replace references to Watir::IE.new (or FireWatir::Firefox.new)
+with Watir::Browser.new to allow you to
 specify which browser to run your tests against at run time. Details:
 http://wiki.openqa.org/display/WTR/Browser.new
 
-=== Compatibility Fixes
+It takes two lines of code to allow Browser.new to support an additional Watir
+implementation. The two lines necessary for SafariWatir (on Mac) are provided.
 
+In addition to 'browser', options supported by Browser.new (on IE only right now)
+are 'speed' and 'visible'.
+
+=== Compatibility Fixes
+* FireWatir now raises Watir exceptions.
+* FireWatir now supports multiple attributes for most page elements.
+* Watir now supports multiple attributes for most page elements.
+* Added support to FireWatir for many more element types.
+* Added Radio#checked? and Checkbox#checked? methods to FireWatir.
+* Now firefox.radio().set will click a radio button (as does IE) even if it 
+  is already set. This is important if there is javascript attached to the
+  radio button.
+* TextField#set now respects the maxlength of the field. Previously, FireWatir
+  could overrun the limit. FireWatir::TextField.maxlength now works correctly.
+* Watir::SelectList#includes? and #selected now accept regexp arguments.
+  This functionality is still missing from FireWatir, but it is in Celerity.
+  From Jari Bakken. Fixes #261.
+* FireWatir::Element#disabled is fixed.
+* Added method Watir::Table#row_count_excluding_nested_tables. This works like
+  FireWatir::Table#row_count.
+* Watir#wait_until is now available to FireWatir.
+* Fixed versioning. With FireWatir 1.2.1, FireWatir::Firefox::VERSION
+  actually reported '1.1.1.'.
 
 === IE Fixes
-* Fix for:  form field named "submit" causes "submit" method to not work. 
+* Fix for: form field named "submit" causes "submit" method to not work. 
   Closes #223.
-* Calling ie.radio().set now scrolls to the page to the control, as with other
+* Calling ie.radio().set now scrolls the page to the control, as with other
   controls. Thanks to Jonathan Kohl for the fix. Closes #172.
 * Fixed ie.speed, which was returning ":fast" when speed was actually ":zippy".
+* Fix for visible? method not being inherited correctly. From Alan Baird. 
+  Closes #253
+* Added ie.forms method. Thanks to Jarmo P.
+* Fix for "undefined method 'document'" error that was occuring when loading
+  pages with frames that were slow to load. Reported here: 
+  http://groups.google.com/group/watir-general/browse_thread/thread/ddde6251e30588c9
+* Fixed accessing checkboxes and radio buttons using :ole_object on IE.
+  Closes #217.
 
 === Unit Test Improvements
 * New rake targets for Watir: test and cruise, each of which runs the core tests.
 * Numerous fixes and cleanup to the unit test suite.
-* The unit tests use the new Browser.new interface and therefore can be run
+* The unit tests both both Watir and FireWatir now use the new Browser.new 
+  interface and can be run
   against either implementation (Watir::IE or FireWatir::Firefox or others for
   that matter). See this page for details.
   http://wiki.openqa.org/display/WTR/Running+Unit+Tests+in+Development
+* Added tagging to unit tests. Tests which have known failures are now tagged
+  as ":fails_on_ie" or ":fails_on_firefox".
+* Added coverage modes for running unit tests. These are documented on the wiki
+  page cited above.
+* Updated tests that were still using obsolete Watir 1.0 interfaces.
+* Started merging the Watir test suites into watir-common.
+* General test clean up.
+* Test failures due to not setting IE security settings will now issue
+  helpful error message telling you how to fix your IE security settings.
 
+=== Structural Changes
+* Moved library files into "lib" directories. Now Watir is like all the other
+  Ruby projects.
+* Moved FireWatir classes into the FireWatir module.
+* Removed examples. They are now on the wiki.
+* Simplified code by removing duplication and unused code.
+* The watir-console now works from the development tree.
+* Renamed IE.defaults to IE.options and IE.defaults= to IE.set_options.
+* Added top-level "rake gems" target. Only works on windows right now.
+
+  
   
