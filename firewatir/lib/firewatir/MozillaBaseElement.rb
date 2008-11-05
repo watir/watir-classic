@@ -434,7 +434,7 @@ class Element
                                        {
                                           if(how == \"text\")
                                           {
-                                             attribute = element.textContent.replace(/\\xA0/g,\" \").replace(/^\\s+|\\s+$/g, '');
+                                             attribute = element.textContent.replace(/\\xA0/g,' ').replace(/^\\s+|\\s+$/g, '').replace(/\\s+/g, ' ')
                                           }
                                           else
                                           {
@@ -1040,7 +1040,7 @@ class Element
   def text()
     assert_exists
     element = (element_type == "HTMLFrameElement") ? BODY_VAR : element_object
-    return_value = js_eval("#{element}.textContent.replace(/\\xA0/g, \" \")").strip
+    return_value = js_eval("#{element}.textContent.replace(/\\xA0/g, ' ').replace(/\\s+/g, ' ')").strip
     @@current_level = 0
     return return_value
   end
