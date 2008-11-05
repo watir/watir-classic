@@ -80,6 +80,8 @@ want to run the unit tests.
 * Watir#wait_until is now available to FireWatir.
 * Fixed versioning. With FireWatir 1.2.1, FireWatir::Firefox::VERSION
   actually reported '1.1.1.'.
+* FireWatir will now automatically start Firefox on Mac (as it did on Windows
+  and Linux).
 
 === IE Fixes
 * Fix for: form field named "submit" causes "submit" method to not work. 
