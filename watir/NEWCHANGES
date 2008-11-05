@@ -45,7 +45,6 @@ JSSH plugin. See this page for details.
 http://wiki.openqa.org/display/WTR/FireWatir+Installation#FireWatirInstallation-3%29InstalltheJSSHFirefoxExtension
 
 === New Features
-
 You can now replace references to Watir::IE.new (or FireWatir::Firefox.new)
 with Watir::Browser.new to allow you to
 specify which browser to run your tests against at run time. Details:
@@ -53,9 +52,13 @@ http://wiki.openqa.org/display/WTR/Browser.new
 
 It takes two lines of code to allow Browser.new to support an additional Watir
 implementation. The two lines necessary for SafariWatir (on Mac) are provided.
+(See watir-common/lib/watir/browsers.rb).
 
 In addition to 'browser', options supported by Browser.new (on IE only right now)
 are 'speed' and 'visible'.
+
+Unit tests no longer run from the gems. You will need to get the source if you
+want to run the unit tests. 
 
 === Compatibility Fixes
 * FireWatir now raises Watir exceptions.

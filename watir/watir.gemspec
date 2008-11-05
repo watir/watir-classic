@@ -46,7 +46,7 @@ spec = Gem::Specification.new do |s|
   s.rdoc_options += $WATIR_RDOC_OPTIONS
   s.executables << 'watir-console'  
 
-  s.test_file  = 'unittests/core_tests.rb'
+#  s.test_file  = 'unittests/core_tests.rb'
 
   s.files = $__watir_source_patterns.inject([]) { |list, glob|
   	list << Dir[glob].delete_if { |path|
