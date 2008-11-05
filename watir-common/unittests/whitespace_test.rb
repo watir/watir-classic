@@ -26,6 +26,10 @@ class TC_WhiteSpace < Test::Unit::TestCase
     assert_equal "Test for multiple spaces.", browser.span(:id, 'multiple_spaces').text
   end
   
+  def test_multiple_spaces_access
+    assert_equal 'multiple_spaces', browser.span(:text, "Test for multiple spaces.").id
+  end
+  
   def test_space_tab
     assert_equal "Test for space and tab.", browser.span(:id, 'space_tab').text
   end
