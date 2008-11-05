@@ -4,8 +4,10 @@
 # These options can also be set using environment variables prefixed with 'watir_'.
 # These environment variables will override settings from this file.
 
-# 'IE' (Watir::IE) or 'Firefox' (FireWatir::Firefox)
-browser: IE
+# 'ie' (Watir::IE) or 'firefox' (FireWatir::Firefox)
+browser: ie
 
-# Only affects IE. options are fast, slow, and zippy
-speed: fast
+# These options only affect IE. 
+# speed options are fast, slow, and zippy
+speed: fast 
+visible: true
