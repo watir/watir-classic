@@ -1,8 +1,8 @@
 == Version 1.6.2 (not released yet)
 
 * Fixed FireWatir's "text" method to return the same character's as Watir's
-  method. It had been returning extra "spaces". Fix from Tony. (This fix is
-  still in progress.) Closes #266
+  method. It had been returning extra spaces and other characters. 
+  Fix included contribution from Tony. Closes #266
 
 == Version 1.6.1
 

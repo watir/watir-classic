@@ -10,7 +10,7 @@
 #
 =end
 
-require 'activesupport'
+require 'active_support'
 module FireWatir
   
   class Frame < Element 
