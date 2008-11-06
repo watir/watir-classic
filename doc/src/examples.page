@@ -5,15 +5,6 @@ orderInfo: 20
 ---
 h2. Examples
 
-View this detailed example of how to automate a "search on Google":http://wiki.openqa.org/display/WTR/Example+Test+Case. 
+This is an annotated example of how to automate a "search on Google":http://wiki.openqa.org/display/WTR/Example+Test+Case. 
 
-Here are several simple "examples":https://svn.openqa.org/svn/watir/trunk/watir/examples/. 
-Many people also find our 
-"unit tests":https://svn.openqa.org/svn/watir/trunk/watir/unittests/
-to be
-useful examples of the different Watir commands. All of these examples and unit tests are also conveniently
-packaged in a "bonus-zip":http://rubyforge.org/frs/?group_id=104
-that you can download.
-
-For more extensive examples, see these "test suites for open
-source projects":http://wiki.openqa.org/display/WTR/Example+Test+Suites.
+Here are several "examples":http://wiki.openqa.org/display/WTR/Examples from the Watir community.

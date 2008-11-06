@@ -50,7 +50,10 @@ function doSearch() {
         Hosted by <a href="http://rubyforge.org/projects/wtr/">RubyForge</a> 
         and <a href="http://wiki.openqa.org/display/WTR/Project+Home">OpenQA</a> 
         <br />
-        Logo by Jacinda Scott | Web design by <a href="http://webgen.rubyforge.org">webgen</a> and <a href="http://andreasviklund.com">Andreas Viklund</a></p>
+        Logo by Jacinda Scott | Web design by <a href="http://webgen.rubyforge.org">webgen</a> and <a href="http://andreasviklund.com">Andreas Viklund</a>
+        <br />
+        Watir development is sponsored by <a href="http://www.watircraft.com">WatirCraft</a>
+        </p>
     </div>
   </body>
 </html>

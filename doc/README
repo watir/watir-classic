@@ -1,4 +1,3 @@
-This directory contains the docs used on openqa, when we had a website there.
+This directory contains the pages used on wtr.rubyforge.org.
 
-We should look through this one last time to make sure all the info here shows
-up on the new watir.com website. Then we can delete this.
+It was build with webgen 0.4.7.

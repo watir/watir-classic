@@ -25,5 +25,12 @@ Announce the Release
 ----
 
 How to update website
-c:\work\watir-doc>webgen
-C:\work\watir-doc\output>pscp -v -r *.* bret@rubyforge.org:/var/www/gforge-projects/wtr
+Tools
+gem install RedCloth -v 3.0.4
+gem install webgen -v 0.4.7
+install putty
+
+Update
+C:\work\watir-all\doc>webgen -V 1
+C:\work\watir-all\doc>cd output
+C:\work\watir-all\doc\output>pscp -v -r *.* bret@rubyforge.org:/var/www/gforge-projects/wtr

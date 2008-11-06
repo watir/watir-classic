@@ -10,10 +10,10 @@ You can "browse the code,":http://svn.openqa.org/fisheye/browse/watir/trunk/wati
 or you can check out the source from 
 
 bq. 
-"https://svn.openqa.org/svn/watir/trunk/watir":https://svn.openqa.org/svn/watir/trunk/watir
+"https://svn.openqa.org/svn/watir/trunk":https://svn.openqa.org/svn/watir/trunk
 
-You can check out this code anonymously, or using your OpenQA username and password
+You can check out the code anonymously, or use your OpenQA username and password
 if you are a committer.
 
-Subscribe to this "RSS feed":http://svn.openqa.org/fisheye/changelog/~rss/watir/trunk/watir/rss.xml
+Subscribe to this "RSS feed":http://svn.openqa.org/fisheye/changelog/~rss/watir/trunk/rss.xml
 to receive notification of code changes.

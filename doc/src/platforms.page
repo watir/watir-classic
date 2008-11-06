@@ -3,21 +3,33 @@ title: Platforms
 inMenu: true
 orderInfo: 50
 ---
-h2. Internet Explorer and Windows
+Watir 1.6 provides a single browser interface that can be configured at run 
+time to execute against any supported browser.
 
-This version of Watir works with Internet Explorer and Windows. It works with
-IE 5.5, 6 and 7 and Windows 2000, XP, 2003 Server and Vista.
+h2. Internet Explorer 
 
-Support for other platforms is currently provided by separate ports. We are in the process of rolling together these ports into a single package.
+The Windows version of Watir includes support for Internet Explorer. 
+It works with IE 5.5, 6 and 7 and Windows 2000, XP, 2003 Server and Vista.
+
+Watir has supported IE since 2003.
 
 h2. Firefox
 
-"FireWatir":http://code.google.com/p/firewatir
-is the Watir port for Firefox. It works on Windows, Linux and Mac.
+FireWatir is the name of the Watir library that supports Firefox. It is 
+automatically installed when you install Watir 1.6 on Windows. It can also
+be installed separately on Windows, Mac or Linux.
 
-h2. Safari and OSX
+It supports FireFox 2 and FireFox 3.
 
-"SafariWatir":http://safariwatir.rubyforge.org/ is a Watir port for Safari on the Mac.
+The FireWatir project was merged into the Watir project Summer 2008. Both 
+libraries are now maintained by the same team and community.
+
+h2. Safari
+
+"SafariWatir":http://safariwatir.rubyforge.org/ is the name of the Watir 
+library that supports Safari on OS X. 
+
+SafariWatir is an active project with good relations with the Watir community.
 
 h2. Other Browsers
 
@@ -26,3 +38,13 @@ including Opera, Camino and Konqueror. The Selenium-RC library includes Ruby
 support. We have demonstrated "a Watir interface that 
 uses Selenium":http://awta.wikispaces.com/Common+Driver+for+Selenium+and+Watir
 to drive a browser, and expect to eventually grow this into a full-blown port.
+
+Experimental ports of Watir have been made for Opera and WebKit, although they
+have not been released yet.
+
+h2. Running without a Browser
+
+"Celerity":http://celerity.rubyforge.org is a Watir library that allows tests to run without using a browser.
+It is fast.
+
+
