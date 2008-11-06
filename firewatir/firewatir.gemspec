@@ -29,7 +29,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
   s.require_path = 'lib'    
 
-  s.add_dependency 'commonwatir', '= 1.6.1'
+  s.add_dependency 'commonwatir', '= 1.6.2'
   s.add_dependency 'activesupport'
 
   s.has_rdoc = true

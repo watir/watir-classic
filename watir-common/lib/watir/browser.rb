@@ -54,7 +54,7 @@ before you invoke Browser.new.
   module Browser
     @@browser_classes = {}
     @@sub_options = {}
-    @@default = 'ie'
+    @@default = nil
     class << self
 
       # Create a new instance of a browser driver, as determined by the
@@ -91,15 +91,18 @@ before you invoke Browser.new.
         @@sub_options[option] = additional_options
 
         autoload class_string, library
-        activate_gem gem
+        activate_gem gem, option
       end
       def autoload class_string, library
         mod, klass = class_string.split('::')
         eval "module ::#{mod}; autoload :#{klass}, '#{library}'; end"
       end
-      def activate_gem gem_name
+      # Activate the gem (if installed). The default browser will be set
+      # to the first gem that activates.
+      def activate_gem gem_name, option
         begin
           gem gem_name 
+          @@default ||= option
         rescue Gem::LoadError
         end
       end

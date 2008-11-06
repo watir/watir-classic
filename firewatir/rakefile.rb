@@ -5,6 +5,8 @@ require 'rake/gempackagetask'
 
 task :default => :package
 
+CLEAN << 'pkg' << 'rdoc'
+
 gemspec = eval(File.read('firewatir.gemspec'))
 Rake::GemPackageTask.new(gemspec) do |p|
   p.gem_spec = gemspec
