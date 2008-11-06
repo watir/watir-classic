@@ -284,6 +284,33 @@ module Watir
       assert_exists
       return ! disabled
     end
+
+    # If any parent element isn't visible then we cannot write to the
+    # element. The only realiable way to determine this is to iterate
+    # up the DOM element tree checking every element to make sure it's
+    # visible.
+    def visible?
+      # Now iterate up the DOM element tree and return false if any
+      # parent element isn't visible or is disabled.
+      assert_exists
+      object = @o
+      while object
+        begin
+          if object.currentstyle.invoke('visibility') =~ /^hidden$/i
+            return false
+          end
+          if object.currentstyle.invoke('display') =~ /^none$/i
+            return false
+          end
+          if object.invoke('isDisabled')
+            return false
+          end
+        rescue WIN32OLERuntimeError
+        end
+        object = object.parentElement
+      end
+      true
+    end
     
     # Get attribute value for any attribute of the element.
     # Returns null if attribute doesn't exist.

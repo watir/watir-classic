@@ -994,6 +994,18 @@ class Element
     return false if(value == "true")
     return value
   end
+
+  #
+  # Description: 
+  #   Checks element for display: none or visibility: hidden, these are 
+  #   the most common methods to hide an html element
+  
+  def visible? 
+    assert_exists 
+    val = js_eval "var val = 'true'; var str = ''; var obj = #{element_object}; while (obj != null) { try { str = document.defaultView.getComputedStyle(obj,null).visibility; if (str=='hidden') { val = 'false'; break; } str = #{DOCUMENT_VAR}.defaultView.getComputedStyle(obj,null).display; if (str=='none') { val = 'false'; break; } } catch(err) {} obj = obj.parentNode; } val;" 
+    return (val == 'false')? false: true 
+  end 
+
   
   #
   # Description:
