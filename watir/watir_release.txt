@@ -1,13 +1,11 @@
 How to Release Watir
 
-Change version number in ie.rb.
-"rake gem bonus_zip" to build both the gem and the bonus zip.
-"rubyforge config" -- this does something important (not sure what)
-"rubyforge login" -- not sure if this is necessary
+Change version numbers.
+"rake gems"
+"rubyforge config" -- updates your rubyforge autoconfig file
+"rubyforge login" 
 Release the gem: 
   C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
-Release the bonus_zip: 
-  C:\work\watir> rubyforge add_file wtr watir 1.5.3 pkg\watir-bonus-*
 Upload the rdocs:
   pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
 
@@ -20,6 +18,7 @@ Announce the Release
   http://groups.google.com/group/watir-general
 - Watir Confluence News
   http://wiki.openqa.org/pages/viewrecentblogposts.action?key=WTR  
+- Ruby Talk (comp.lang.ruby)
 
 ----
 
