@@ -40,11 +40,13 @@ class TC_Pre < Test::Unit::TestCase
     pre = browser.pre( :index, 2 )
     assert( pre.text.include?( "A second block" ) )
     assert_false( pre.text.include?( "this is the last block" ) )
-    
+  end
+
+  tag_method :test_embedded_spaces, :fails_on_firefox # http://jira.openqa.org/browse/WTR-267
+  def test_embedded_spaces
     pre = browser.pre( :index, 3 )
     assert( pre.text.include?( "continue    to work" ) )
     assert_false( pre.text.include?( "Pre Tag Test" ) )
-    
   end
   
 end
