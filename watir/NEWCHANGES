@@ -1,8 +1,15 @@
-== Version 1.6.2 (not released yet)
+== Version 1.6.2 
+
+* Changed the method of setting Watir::Browser.default when the user does not
+  specify a browser option. This fixes the problem where it would be 'ie' on
+  Mac.
 
 * Fixed FireWatir's "text" method to return the same character's as Watir's
   method. It had been returning extra spaces and other characters. 
   Fix included contribution from Tony. Closes #266
+  
+* Fixed "activesupport" error. Users no longer need to have the latest version
+  installed.
 
 == Version 1.6.1
 
@@ -80,8 +87,8 @@ want to run the unit tests.
 * Watir#wait_until is now available to FireWatir.
 * Fixed versioning. With FireWatir 1.2.1, FireWatir::Firefox::VERSION
   actually reported '1.1.1.'.
-* FireWatir will now automatically start Firefox on Mac (as it did on Windows
-  and Linux).
+* FireWatir will now automatically starts Firefox on Mac (as it did previously 
+  on Windows and Linux).
 
 === IE Fixes
 * Fix for: form field named "submit" causes "submit" method to not work. 
@@ -99,6 +106,8 @@ want to run the unit tests.
   Closes #217.
 
 === Unit Test Improvements
+* Unit tests no longer can be run from a gem install. Rather, you need to run them
+  from a complete source tree.
 * New rake targets for Watir: test and cruise, each of which runs the core tests.
 * Numerous fixes and cleanup to the unit test suite.
 * The unit tests both both Watir and FireWatir now use the new Browser.new 
@@ -126,5 +135,3 @@ want to run the unit tests.
 * Renamed IE.defaults to IE.options and IE.defaults= to IE.set_options.
 * Added top-level "rake gems" target. Only works on windows right now.
 
-  
-  
