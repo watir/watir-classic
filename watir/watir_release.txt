@@ -4,6 +4,8 @@ Change version numbers.
 "rake gems"
 "rubyforge config" -- updates your rubyforge autoconfig file
 "rubyforge login" 
+
+#NOTE: need to use the "preformatted" flag.
 Release the gem: 
   C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
 Upload the rdocs:
