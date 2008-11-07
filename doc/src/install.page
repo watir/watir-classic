@@ -3,41 +3,88 @@ title: Installation
 inMenu: true
 orderInfo: 30
 ---
+Watir is a family of drivers for different browsers running on several 
+operating systems. This page provides an overview of how to install the leading
+drivers on several operating systems.
+
 h2. Install Ruby
 
-First you need to "install Ruby":http://rubyforge.org/frs/?group_id=167 using
-the one-click installer for Windows.
-*We recommend Ruby 1.8.5-24 or Ruby 1.8.6-26 final (or later)*
+h3. Windows
 
-However, if you wish to use Watir's support for the IE showModalDialog
-then you must use Ruby 1.8.2-15 (or 1.8.2-14). This is the dialog that is 
-posted with the showModalDialog() JavaScript command and is supported
-with Watir's ie.modal_dialog command.
+Install Ruby using the "one-click installer":http://rubyforge.org/frs/?group_id=167 
+for Windows. We recommend using the latest version
+of Ruby 1.8.6 with Watir 1.6. 
+"More details.":http://wiki.openqa.org/display/WTR/Install+Ruby
+
+With Watir 1.5 users had who used its support for the IE showModalDialog had
+to use Ruby 1.8.2. With Watir 1.6, these users should now be using Ruby 1.8.6
+just like everybody else.
+
+h3. Mac and Linux
+
+Ruby is probably already installed on your machine. You can verify which version
+of Ruby is install by typing this command in a terminal window:
+
+  ruby -v
+
+We recommend using Ruby 1.8.6 on all platforms. 
 
 h2. Install Watir
 
-Watir is packaged as a _gem_, a Ruby library that can be installed
+Watir drivers are packaged as _gems_, Ruby libraries that can be installed
 over the internet. 
 
-Watir 1.5 was first released in September 2007. To install the latest
-version, type these two commands at a command prompt:
+h3. Windows
+
+Type these commands at a command prompt:
 
   gem update --system 
   gem install watir
 
-The first command will update the gem system itself. This is required
-to install Watir gems beginning with Watir 1.5.4 (April 2008).
+Beginning with Watir 1.6.0 (Oct 2008), this installs drivers for both
+IE and Firefox (FireWatir). 
 
-Watir 1.4 was released in August 2005. If you are upgrading from it,
-see these notes.
+Watir's support for Firefox also requires a plugin.
+* "Windows plugin for Firefox 2":http://wiki.openqa.org/download/attachments/13893658/jssh-WINNT-2.x.xpi
+* "Windows plugin for Firefox 3":http://wiki.openqa.org/download/attachments/13893658/jssh-20080708-WINNT.xpi
 
-* "Upgrading from Watir 1.4":http://wiki.openqa.org/display/WTR/Development+Builds
+If you run into trouble or are installing from behind a firewall, please see
+"additional notes.":http://wiki.openqa.org/display/WTR/Install+Watir#InstallWatir-Windows
 
-h2. Install the IE Developer Toolbar
+h3. Mac
 
-We recommend using the DOM Explorer, packaged with the 
-"IE Developer Toolbar.":http://www.microsoft.com/downloads/details.aspx?familyid=e59c3964-672d-4511-bb3e-2d5e1db91038&displaylang=en
-This quickly shows you the element attributes and properties you 
-need to know to automate them with Watir.
+Type these commands at a command prompt:
 
-After installing the toolbar, select Tools -> Toolbars -> Explorer Bar -> IE DOM Explorer.
+  sudo gem update --system 
+  sudo gem install firewatir
+  sudo gem install safariwatir
+
+Watir's support for Firefox also requires a plugin.
+* "Mac plugin for Firefox 2":http://wiki.openqa.org/download/attachments/13893658/jssh-darwin-0.94.xpi
+* "Mac plugin for Firefox 3":http://wiki.openqa.org/download/attachments/13893658/jssh-20080924-Darwin.xpi
+
+If you run into trouble or are installing from behind a firewall, please see
+"additional notes.":http://wiki.openqa.org/display/WTR/Install+Watir#InstallWatir-Mac
+
+h3. Linux
+
+Type these commands at a command prompt:
+
+  sudo gem update --system 
+  sudo gem install firewatir
+
+Watir's support for Firefox also requires a plugin.
+* "Linux plugin for Firefox 2":http://wiki.openqa.org/download/attachments/13893658/jssh-20070312-linux.xpi
+* "Linux plugin for Firefox 3":http://wiki.openqa.org/download/attachments/13893658/jssh-20080725-Linux.xpi
+
+If you run into trouble or are installing from behind a firewall, please see
+"additional notes.":http://wiki.openqa.org/display/WTR/Install+Watir#InstallWatir-Linux
+
+h2. Install an HTML inspector
+
+To use Watir effectively, you'll need to be able to browse through the structure of
+your application's HTML pages. These tools help you do that.
+
+* On Firefox, use "Firebug":http://getfirebug.com/
+* On Internet Explorer, use the "IE Developer Toolbar":http://wiki.openqa.org/display/WTR/Install+Internet+Explorer+Developer+Toolbar
+
