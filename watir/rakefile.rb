@@ -71,6 +71,7 @@ end
 
 desc 'Run unit tests'
 task :test do
+  require 'watir/ie'
   load 'unittests/core_tests.rb'
 end
 
