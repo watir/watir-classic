@@ -21,3 +21,11 @@ end
 
 task :clean => [:clean_subprojects]
 CLEAN.add 'gems/*'
+
+desc 'Run unit tests'
+task :test do
+  load 'watir/unittests/core_tests.rb'
+end
+
+
+task :cruise => :test
