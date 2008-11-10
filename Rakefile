@@ -22,10 +22,14 @@ end
 task :clean => [:clean_subprojects]
 CLEAN.add 'gems/*'
 
-desc 'Run unit tests'
-task :test do
+desc 'Run unit tests for IE'
+task :test_ie do
   load 'watir/unittests/core_tests.rb'
 end
 
+desc 'Run unit tests for FireFox'
+task :test_ff do
+  load 'firewatir/unittests/mozilla_all_tests.rb' 
+end
 
-task :cruise => :test
+task :cruise => :test_ie
