@@ -7,13 +7,13 @@ def append_to_load_path path
   $LOAD_PATH.unshift File.expand_path(path)
 end
 
-# use local development versions of watir, firewatir, watir-common if available
+# use local development versions of watir, firewatir, commonwatir if available
 topdir = File.join(File.dirname(__FILE__), '..')
 $firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
 $watir_dev_lib = File.join(topdir, 'lib')
 libs = []
-libs << File.join(topdir, '..', 'watir-common', 'lib')
-libs << File.join(topdir, '..', 'watir-common') # for the unit tests
+libs << File.join(topdir, '..', 'commonwatir', 'lib')
+libs << File.join(topdir, '..', 'commonwatir') # for the unit tests
 libs.each { |lib| append_to_load_path(lib) }
 
 require 'watir/browser'
@@ -33,14 +33,14 @@ Test Suites
 =end
 
 tiptopdir = File.join topdir, '..'
-commondir = File.join topdir, '..', 'watir-common'
+commondir = File.join topdir, '..', 'commonwatir'
 append_to_load_path tiptopdir
 $all_tests = []
 Dir.chdir tiptopdir do
   $all_tests += Dir["watir/unittests/*_test.rb"]
 end
 Dir.chdir tiptopdir do
-  $all_tests += Dir["watir-common/unittests/*_test.rb"]
+  $all_tests += Dir["commonwatir/unittests/*_test.rb"]
 end
 
 # These tests won't load unless Watir is in the path

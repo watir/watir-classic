@@ -1,6 +1,6 @@
 require 'rake/clean'
 require 'fileutils'
-projects = ['watir', 'firewatir', 'watir-common']
+projects = ['watir', 'firewatir', 'commonwatir']
 
 desc "Generate all the Watir gems"
 task :gems do

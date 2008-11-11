@@ -1,4 +1,4 @@
-require 'watir/exceptions' # from watir-common
+require 'watir/exceptions' # from commonwatir
 
 module Watir
   module Exception

@@ -1,4 +1,4 @@
-= watir-common
+= commonwatir
 
 * FIX (url)
 
@@ -20,7 +20,7 @@ Common code used by Watir and FireWatir
 
 == INSTALL:
 
-* sudo gem install watir-common
+* sudo gem install commonwatir
 
 == LICENSE:
 

@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'hoe'
-require './lib/watir-common.rb'
+require './lib/commonwatir.rb'
 
 Hoe.new('commonwatir', WatirCommon::VERSION) do |p|
   p.rubyforge_name = 'wtr'

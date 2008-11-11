@@ -59,7 +59,7 @@ http://wiki.openqa.org/display/WTR/Browser.new
 
 It takes two lines of code to allow Browser.new to support an additional Watir
 implementation. The two lines necessary for SafariWatir (on Mac) are provided.
-(See watir-common/lib/watir/browsers.rb).
+(See commonwatir/lib/watir/browsers.rb).
 
 In addition to 'browser', options supported by Browser.new (on IE only right now)
 are 'speed' and 'visible'.
@@ -120,7 +120,7 @@ want to run the unit tests.
 * Added coverage modes for running unit tests. These are documented on the wiki
   page cited above.
 * Updated tests that were still using obsolete Watir 1.0 interfaces.
-* Started merging the Watir test suites into watir-common.
+* Started merging the Watir test suites into commonwatir.
 * General test clean up.
 * Test failures due to not setting IE security settings will now issue
   helpful error message telling you how to fix your IE security settings.

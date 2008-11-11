@@ -1,7 +1,7 @@
 # rapidly open and close IE windows
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', 'lib')
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'watir-common', 'lib')
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'commonwatir', 'lib')
 require 'test/unit'
 require 'watir/ie'
 require 'watir/contrib/ie-new-process'

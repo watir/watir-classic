@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 $root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 $watir_lib = File.join($root, 'watir', 'lib')
-$watir_common_lib = File.join($root, 'watir-common', 'lib')
+$watir_common_lib = File.join($root, 'commonwatir', 'lib')
 $firewatir_lib = File.join($root, 'firewatir', 'lib')
 $libs = "-I #{$watir_lib} -I #{$watir_common_lib} -I #{$firewatir_lib}"
 puts $libs
