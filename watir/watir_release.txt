@@ -31,6 +31,5 @@ gem install webgen -v 0.4.7
 install putty
 
 Update
-C:\work\watir-all\doc>webgen -V 1
-C:\work\watir-all\doc>cd output
-C:\work\watir-all\doc\output>pscp -v -r *.* bret@rubyforge.org:/var/www/gforge-projects/wtr
+C:\work\watir-all> rake website
+C:\work\watir-all> rake publish_website

@@ -20,7 +20,7 @@ task :clean_subprojects do
 end
 
 task :clean => [:clean_subprojects]
-CLEAN.add 'gems/*'
+CLEAN << 'gems/*'
 
 desc 'Run unit tests for IE'
 task :test_ie do
@@ -33,3 +33,16 @@ task :test_ff do
 end
 
 task :cruise => :test_ie
+
+desc 'Build the html for the website (wtr.rubyforge.org)'
+task :website do
+  Dir.chdir 'doc' do
+    puts system('call webgen -V 1')
+  end
+end
+
+desc 'Build and publish the html for the website at wtr.rubyforge.org'
+task :publish_website => [:website] do
+  user = 'bret' # userid on rubyforge
+  puts system("call pscp -v -r doc\\output\\*.* #{user}@rubyforge.org:/var/www/gforge-projects/wtr")
+end

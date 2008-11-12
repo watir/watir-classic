@@ -38,9 +38,17 @@ h2. Users
 
 People "all over the world":http://wiki.openqa.org/display/WTR/Watir+Users are using Watir and "loving it.":http://wiki.openqa.org/display/WTR/Testimonials
 
-h2. Report Bug
+h2. Report Bugs and Contribute Fixes
 
-If you have found a bug in Watir, you can post it to the Watir General list mentioned above, especially if you aren't sure. If you are sure, you can "post it directly in our bug tracking system, Jira.":http://wiki.openqa.org/display/WTR/FAQ#FAQ-HowtocreateaJiraTicket%3F
+Found a bug in Watir? You can post it to the Watir General list 
+mentioned above, especially if you aren't sure. 
+
+You can also check to see if it has already been "reported.":http://jira.openqa.org/browse/WTR
+
+If not, you can "post it directly in our bug tracking system, 
+Jira.":http://wiki.openqa.org/display/WTR/FAQ#FAQ-HowtocreateaJiraTicket%3F
+
+If you have a fix, you can "submit":http://wiki.openqa.org/display/WTR/Submitting+Code it to us.
 
 h2. Core team
 
