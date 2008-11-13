@@ -1,4 +1,5 @@
 # watir/options
+require 'rubygems'
 
 require 'user-choices'
 
