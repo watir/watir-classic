@@ -1,5 +1,5 @@
 # http://www.vbcity.com/forums/topic.asp?tid=108859
-
+require 'watir/ie'
 module Watir
   module PageContainer
     include Win32
