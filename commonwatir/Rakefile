@@ -2,7 +2,7 @@ require 'rubygems'
 require 'hoe'
 require './lib/commonwatir.rb'
 
-Hoe.new('commonwatir', WatirCommon::VERSION) do |p|
+Hoe.new('commonwatir', CommonWatir::VERSION) do |p|
   p.rubyforge_name = 'wtr'
   p.developer('Bret Pettichord', 'bret@watircraft.com')
   p.extra_deps << 'user-choices'

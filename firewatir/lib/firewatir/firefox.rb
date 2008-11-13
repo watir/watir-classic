@@ -134,7 +134,7 @@ module FireWatir
       waitTime = options[:waitTime] || 2
       
       case RUBY_PLATFORM 
-        when /mswin/
+        when /mswin/ then
         # Get the path to Firefox.exe using Registry.
         require 'win32/registry.rb'
         path_to_bin = ""
@@ -148,14 +148,25 @@ module FireWatir
           end
         end
         
-        when /linux/i
-        path_to_bin = `which firefox`.strip
-        when /darwin/i
-        path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
+        when /linux/i then
+          path_to_bin = `which firefox`.strip
+          run_cmd = '@pipe = IO.popen("#{path_to_bin} -jssh #{profile_opt}")'
+        when /darwin/i then
+          path_to_bin = "'/Applications/Firefox.app/Contents/MacOS/firefox-bin'"
+          run_cmd = '@pipe = IO.popen("#{path_to_bin} -jssh #{profile_opt}")'
         when /java/
-        raise "Not implemented: Create a browser finder in JRuby"
-      end     
-      @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
+          require 'rbconfig'
+          host_os = Config::CONFIG['host_os']
+          case host_os
+          when /linux/i then
+          path_to_bin = `which firefox`.strip
+          run_cmd = '@pipe = IO.popen("#{path_to_bin} -jssh #{profile_opt}")'
+          when /darwin/i then
+          path_to_bin = "'/Applications/Firefox.app/Contents/MacOS/firefox-bin'"
+          run_cmd = '@pipe = IO.popen("#{path_to_bin} -jssh #{profile_opt}")'
+          end
+      end    
+      @t = Thread.new { eval run_cmd }
       sleep waitTime
       
       set_defaults()
@@ -315,6 +326,7 @@ module FireWatir
       if js_eval("getWindows().length").to_i == 1
         $jssh_socket.send(" getWindows()[0].close(); \n", 0)
         @t.join if @t != nil
+        Process.kill('TERM', @pipe.pid) if @pipe
         #sleep 5
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
@@ -325,7 +337,7 @@ module FireWatir
         if(window_number > 0)
           $jssh_socket.send(" getWindows()[#{window_number}].close();\n", 0)
           read_socket();
-        end    
+        end
         
         #Get the parent window url from the stack and return that window.
         #@@current_window = @@window_stack.pop()
