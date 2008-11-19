@@ -951,6 +951,7 @@ module FireWatir
     def select( item )
       select_item_in_select_list(:text, item)
     end
+    alias :set :select
     
     #
     # Description:
@@ -960,7 +961,7 @@ module FireWatir
     # - item - Value of the item to be selected.
     #
     def select_value( item )
-      select_item_in_select_list( :value , item )
+      select_item_in_select_list(:value, item)
     end
     
     # Description:

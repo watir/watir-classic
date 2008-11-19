@@ -11,22 +11,39 @@ class TC_SelectList < Test::Unit::TestCase
     goto_page "selectboxes1.html"
   end
   
-  def test_SelectList_exists
+  def test_exists
     assert(browser.select_list(:name, "sel1").exists?)   
     assert_false(browser.select_list(:name, "missing").exists?)   
     assert_false(browser.select_list(:id, "missing").exists?)   
   end
   
-  def test_SelectList_enabled
+  def test_enabled
     assert(browser.select_list(:name, "sel1").enabled?)   
     assert_raises(UnknownObjectException) { browser.select_list(:name, "NoName").enabled? }  
     assert_false(browser.select_list(:id, 'selectbox_4').enabled?)
   end
   
-  def test_SelectList_class_name
+  def test_class_name
     assert_raises(UnknownObjectException) { browser.select_list(:name, "missing").class_name }  
     assert_equal("list_style", browser.select_list(:name, "sel1").class_name)   
     assert_equal("", browser.select_list(:name, "sel2").class_name)
+  end
+
+  def test_select_by_text
+    assert_equal(['Option 3'], browser.select_list(:name, "sel1").getSelectedItems)
+    browser.select_list(:name, "sel1").select('Option 2')
+    assert_equal(['Option 2'], browser.select_list(:name, "sel1").getSelectedItems)
+  end
+  
+  def test_select_by_value
+    browser.select_list(:name, "sel3").select_value(/2/)
+    assert(browser.text.include?("PASS"))
+  end
+  
+  def test_set # by text
+    assert_equal(['Option 3'], browser.select_list(:name, "sel1").getSelectedItems)
+    browser.select_list(:name, "sel1").set('Option 2')
+    assert_equal(['Option 2'], browser.select_list(:name, "sel1").getSelectedItems)
   end
   
   # Option
@@ -72,17 +89,12 @@ class TC_SelectList < Test::Unit::TestCase
   tag_method :test_selected_not_found, :fails_on_firefox
   def test_selected_not_found
     selectbox = browser.select_list(:name, 'sel1')
-    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?("option doesn't exist")}
-    assert_raises(Watir::Exception::UnknownObjectException) {selectbox.selected?(/option doesn't exist/)}
+    assert_raises(UnknownObjectException) {selectbox.selected?("option doesn't exist")}
+    assert_raises(UnknownObjectException) {selectbox.selected?(/option doesn't exist/)}
   end
+
     
-  def test_select_list_select_using_value2
-    # the event should get fired
-    browser.select_list( :name , "sel3").select_value( /2/ )
-    assert(browser.text.include?("PASS") )
-  end
-  
-  def test_select_list_properties
+  def test_properties
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).value }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).name }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).id }  
@@ -103,7 +115,7 @@ class TC_SelectList < Test::Unit::TestCase
     assert(browser.select_list(:id, 'selectbox_4').disabled)
   end
   
-  def test_select_list_iterator
+  def test_iterator
     assert_equal(4, browser.select_lists.length)
     assert_equal("o3"   ,    browser.select_lists[1].value)  
     assert_equal("sel1" ,    browser.select_lists[1].name )  
