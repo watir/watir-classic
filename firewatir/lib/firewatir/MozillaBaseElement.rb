@@ -1728,6 +1728,7 @@ end
 #   Class for iterating over elements of common type like links, images, divs etc.
 #
 class ElementCollections
+  include Enumerable
 def self.inherited subclass
   class_name = subclass.to_s.demodulize
   method_name = class_name.underscore

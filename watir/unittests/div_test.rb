@@ -60,6 +60,11 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal(index - 1, browser.divs.length)   # -1 as we add 1 at the end of the loop
   end
   
+  def test_enumerable
+    match = browser.divs.detect{|d| d.class_name == 'blueText'}
+    assert_equal('div2', match.id)
+  end
+  
   def test_objects_in_div
     assert browser.div(:id, 'buttons1').button(:index,1).exists? 
     assert !browser.div(:id, 'buttons1').button(:index,3).exists? 
