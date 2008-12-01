@@ -6,11 +6,20 @@ require 'unittests/setup'
 
 class TC_Frames < Test::Unit::TestCase
   
-  
   def setup
     goto_page("frame_buttons.html")
   end
-  
+
+  tag_method :test_doesnt_exist, :fails_on_firefox, :fails_on_ie # bug WTR-268
+  def test_doesnt_exist
+    assert_false browser.frame("missingFrame").exists?
+  end
+
+  tag_method :test_exists, :fails_on_ie # related to bug WTR-268
+  def test_exists
+    assert browser.frame('buttonFrame2').exists?
+  end
+   
   def test_frame_no_what
     assert_raises(UnknownFrameException) { browser.frame("missingFrame").button(:id, "b2").enabled?  }  
     assert_raises(UnknownObjectException) { browser.frame("buttonFrame2").button(:id, "b2").enabled?  }  
