@@ -34,7 +34,7 @@ class TC_class_options < Test::Unit::TestCase
 		@previous = IE.options
 	end
 	def test_class_defaults
-		assert_equal({:speed => IE.speed, :visible => IE.visible}, IE.options)
+		assert_equal({:speed => IE.speed, :visible => IE.visible, :attach_timeout => IE.attach_timeout}, IE.options)
 	end
 	def test_change_defaults
 		IE.set_options(:speed => :fast)
@@ -45,6 +45,8 @@ class TC_class_options < Test::Unit::TestCase
 		assert_equal(:slow, IE.speed)
 		IE.set_options(:visible => true)
 		assert_equal(true, IE.visible)
+    IE.set_options(:attach_timeout => 22.0)
+    assert_equal(22.0, IE.attach_timeout)
 	end
 	def test_defaults_affect_on_instance
 		IE.set_options(:speed => :fast)

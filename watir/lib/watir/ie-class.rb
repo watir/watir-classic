@@ -16,7 +16,7 @@ module Watir
     # Return the options used when creating new instances of IE.
     # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
 		def self.options 	
-			{:speed => self.speed, :visible => self.visible}
+			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
 	  end
     # set values for options used when creating new instances of IE.
 		def self.set_options options
