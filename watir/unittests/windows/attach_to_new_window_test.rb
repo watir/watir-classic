@@ -9,10 +9,11 @@ class TC_NewWindow< Watir::TestCase
   include Watir
   
   def setup
+    @original_timeout = IE.attach_timeout
     goto_page "new_browser.html"
   end
   def teardown
-    IE.reset_attach_timeout
+    IE.attach_timeout = @original_timeout
   end
   
   def test_simply_attach_to_new_window

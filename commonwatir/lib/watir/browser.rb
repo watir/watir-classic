@@ -75,9 +75,6 @@ before you invoke Browser.new.
         set_sub_options
         klass.attach(how, what)
       end
-      def reset_attach_timeout
-        klass.reset_attach_timeout
-      end
       def attach_timeout
         klass.attach_timeout
       end

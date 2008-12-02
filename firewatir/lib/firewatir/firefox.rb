@@ -384,8 +384,6 @@ module FireWatir
     end   
 
     # These are for class equivalence with IE and are not used.
-    def self.reset_attach_timeout
-    end
     def self.attach_timeout
     end
     def self.attach_timeout=(timeout)

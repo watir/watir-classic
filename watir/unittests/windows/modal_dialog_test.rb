@@ -9,8 +9,9 @@ class TC_ModalDialog < Watir::TestCase
   include Watir
   
   def setup
+    @original_timeout = IE.attach_timeout
     goto_page 'modal_dialog_launcher.html'
-    Watir::IE.attach_timeout = 5.0
+    IE.attach_timeout = 10.0
   end
 
   def teardown 
@@ -27,7 +28,7 @@ class TC_ModalDialog < Watir::TestCase
         browser.modal_dialog
       end
     ensure
-      IE.reset_attach_timeout
+      IE.attach_timeout = @original_timeout
     end
   end 
      

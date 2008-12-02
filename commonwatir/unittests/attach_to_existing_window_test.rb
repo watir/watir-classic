@@ -2,13 +2,13 @@
 # revision: $Revision: 1417 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
-#require 'watir/ie'
 require 'unittests/setup'
 
 class TC_ExistingWindow < Test::Unit::TestCase
   location __FILE__
 
   def setup
+    @original_timeout = Watir::Browser.attach_timeout
     # Open a few browsers so that the test has a few windows to choose
     # from. The test harness has already opened a window that we won't
     # use.
@@ -18,7 +18,7 @@ class TC_ExistingWindow < Test::Unit::TestCase
   end 
 
   def teardown
-    Watir::Browser.reset_attach_timeout
+    Watir::Browser.attach_timeout = @original_timeout
     Watir::Browser.attach(:url, /pass/).close
     Watir::Browser.attach(:url, /buttons/).close
     Watir::Browser.attach(:url, /visibility/).close
