@@ -1,0 +1,88 @@
+<html>
+<title>Visibility test - Using CSS with and without inline style</title>
+<head>
+<style type='text/css'>
+.stylinvi {
+	visibility: hidden;
+}
+.stylblock {
+	display: none
+}
+</style>
+<script type="text/javascript" language="JavaScript">
+<!--
+function visi(nr)
+{
+	t1 = document.getElementById(nr);
+	if (document.getElementById)
+	{
+		if (t1.currentStyle)
+		{
+			vista = (t1.currentStyle.visibility == 'hidden') ? 'visible' : 'hidden';
+			t1.style.visibility = vista;
+		} else if (document.defaultView)
+		{
+			vista = (document.defaultView.getComputedStyle(t1,null).visibility == 'hidden') ? 'visible' : 'hidden';
+			t1.style.visibility = vista;
+		}
+	}
+}
+
+function blocking(nr)
+{
+	t1 = document.getElementById(nr);
+	if (document.getElementById)
+	{
+		if (t1.currentStyle)
+		{
+			vista = (t1.currentStyle.display == 'none') ? 'block' : 'none';
+			t1.style.display = vista;
+		} else if (document.defaultView)
+		{
+			vista = (document.defaultView.getComputedStyle(t1,null).display == 'none') ? 'block' : 'none';
+			t1.style.display = vista;
+		}
+	}
+}
+-->
+</script>
+</head>
+<body>
+
+<ol>
+<li>DIV 1:
+	<ul>
+	<li class=""><a id="div1vis" onclick="visi('div1'); return false" href="#" class="page">Toggle visible/invisible</a>
+	</li><li class="odd"><a id="div1blk" onclick="blocking('div1'); return false;" href="#" class="page">Toggle display block/none</a>
+	</li></ul>
+</li><li>DIV 2:
+	<ul>
+	<li class=""><a id="div2vis" onclick="visi('div2'); return false" href="#" class="page">Toggle visible/invisible</a>
+	</li>
+	</ul>
+</li><li>DIV 3:
+	<ul>
+	<li class="odd"><a id="div3blk" onclick="blocking('div3'); return false;" href="#" class="page">Toggle display block/none</a>	</li>
+	</ul>
+</li></ol>
+
+<div id="div1">
+<label id="lgnId1lbl1" for="lgnId1">Name 1</label>
+<input type="text" id="lgnId1" value="" size="25" maxlength="97" name="loginId1"/>
+<input type="submit" title="Click1" alt="Sign In" tabindex="3" value="Click1" id="submitAol1"/>
+</div>
+
+<div id="div2" class="stylinvi">
+<label id="lgnId1lbl2" for="lgnId2">Name 2</label>
+<input type="text" id="lgnId2" value="" size="25" maxlength="97" name="loginId2"/>
+<input type="submit" title="Click2" alt="Sign In" tabindex="3" value="Click2" id="submitAol2"/>
+</div>
+
+<div id="div3" class="stylblock">
+<label id="lgnId1lbl3" for="lgnId3">Name 3</label>
+<input type="text" id="lgnId3" value="" size="25" maxlength="97" name="loginId3"/>
+<input type="submit" title="Click3" alt="Sign In" value="Click3" id="submitAol3"/>
+</div>
+
+</body>
+</html>

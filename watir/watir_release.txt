@@ -1,0 +1,35 @@
+How to Release Watir
+
+Change version numbers.
+"rake gems"
+"rubyforge config" -- updates your rubyforge autoconfig file
+"rubyforge login" 
+
+#NOTE: need to use the "preformatted" flag.
+Release the gem: 
+  C:\work\watir> rubyforge add_release wtr watir 1.5.3 pkg\watir-1.5.3.gem -n 'Bug fix release' -a CHANGES
+Upload the rdocs:
+  pscp -v -r rdoc bret@rubyforge.org:/var/www/gforge-projects/wtr/
+
+Don't forget to tag the release!
+
+Announce the Release
+- Rubyforge News
+  http://rubyforge.org/news/?group_id=104
+- Watir General
+  http://groups.google.com/group/watir-general
+- Watir Confluence News
+  http://wiki.openqa.org/pages/viewrecentblogposts.action?key=WTR  
+- Ruby Talk (comp.lang.ruby)
+
+----
+
+How to update website
+Tools
+gem install RedCloth -v 3.0.4
+gem install webgen -v 0.4.7
+install putty
+
+Update
+C:\work\watir-all> rake website
+C:\work\watir-all> rake publish_website

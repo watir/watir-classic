@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>
+Test page for Images
+</title>
+</head>
+<body>
+CVS Revision: "$Revision 1.0$"
+
+<script>
+function disableimage(){
+    if (document.all.disabler_test.disabled==true){
+        document.all.disabler_test.disabled = false;
+        document.all.disable_img.value = 'Click To Disable';
+    } else {
+        document.all.disabler_test.disabled = true;
+        document.all.disable_img.value = 'Click To Enable';
+    }
+}
+</script>
+
+<br>
+<br>
+<table>
+<tr>
+<td>
+<img src = images/triangle.jpg>
+<td> The triangle only has a src
+
+<tr>
+<td>
+<img src = images/square.jpg id=square title="square_image">
+<td> The square has a src and an id
+
+<tr>
+<td>
+<img src = images/circle.jpg name = circle>
+<td> The circle has a src and a name
+
+
+<tr>
+<td>
+<img src = images/missing.jpg name = themissingimage>
+<td> this is a missing image
+
+
+<tr>
+<td>
+<img src = images/button.jpg onClick='javascript:document.location="pass.html";' name='disabler_test' >
+<td> this image has a javascript on click event
+<br>
+  CLick to make it a disabled image - so the javascript doesnt fire<input type=button value='Click To Disable' onClick='javascript:disableimage();' name=disable_img >
+
+<tr>
+<td>
+<img src = images/circle.jpg alt="circle">
+<td> The circle has a src and an alt text
+
+<tr><td>
+<INPUT onClick= javascript:document.all.text1.value='clicked' type=image src="images/square.jpg" value="Position Show Optional" name=tsogpsb>
+<td> This is a button as an image, with a value attribute
+<input type = text name = text1>
+
+
+
+</body>
+</html>

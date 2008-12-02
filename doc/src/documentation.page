@@ -1,0 +1,29 @@
+---
+title: Documentation
+inMenu: true
+orderInfo: 40
+---
+
+h2. Documentation
+
+The "quick start":http://wiki.openqa.org/display/WTR/Quick+Start provides a
+quick introduction to using Watir. The "cheat sheet":http://wiki.openqa.org/display/WTR/Cheat+Sheet 
+provides a handy reference. 
+
+The "tutorial":http://wiki.openqa.org/display/WTR/Tutorial
+provides a detailed, hands-on introduction.
+
+View this  
+"succinct summary of the Watir API":http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+and the provided methods and attributes. You can also review the 
+"rdoc":http://wtr.rubyforge.org/rdoc/  -- 
+detailed API documentation in Ruby's standard format.
+
+The "FAQ":http://wiki.openqa.org/display/WTR/FAQ provides answers to
+frequently asked questions.
+
+This "hands-on introduction":http://bpettichord.backpackit.com/pub/1139340 provides exercises using a sample application, which is provided.
+
+There are also several
+"articles":http://wiki.openqa.org/display/WTR/Articles about Watir.
+

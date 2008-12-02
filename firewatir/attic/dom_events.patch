@@ -1,0 +1,341 @@
+Index: /home/URBACON/mzukowski/firewatir/FireWatir/unittests/radios_test.rb
+===================================================================
+--- /home/URBACON/mzukowski/firewatir/FireWatir/unittests/radios_test.rb	(revision 115)
++++ /home/URBACON/mzukowski/firewatir/FireWatir/unittests/radios_test.rb	(working copy)
+@@ -45,22 +45,22 @@
+        assert_false($ff.button(:value , "foo").enabled?)
+ 
+        # first click the button is enabled and the radio is set
+-       $ff.radio(:name, "box5" , 1).set
++       $ff.radio(:name, "box5" , 1).click
+        assert($ff.radio(:name, "box5",1).isSet?)
+        #assert($ff.button(:value , "foo").enabled?)
+ 
+        # second click the button is disabled and the radio is still set
+-       $ff.radio(:name, "box5", 1).set
++       $ff.radio(:name, "box5", 1).click
+        assert($ff.radio(:name, "box5",1).isSet?)
+        assert_false($ff.button(:value , "foo").enabled?)
+ 
+        # third click the button is enabled and the radio is still set
+-       $ff.radio(:name, "box5", 1).set
++       $ff.radio(:name, "box5", 1).click
+        assert($ff.radio(:name, "box5",1 ).isSet?)
+        assert($ff.button(:value , "foo").enabled?)
+ 
+        # click the radio with a value of 2 , button is disabled and the radio is still set
+-       $ff.radio(:name, "box5", 2).set
++       $ff.radio(:name, "box5", 2).click
+        assert_false($ff.radio(:name, "box5" ,1).isSet?)
+        assert($ff.radio(:name, "box5" ,2).isSet?)
+        assert_false($ff.button(:value , "foo").enabled?)
+Index: /home/URBACON/mzukowski/firewatir/FireWatir/unittests/html/events1.html
+===================================================================
+--- /home/URBACON/mzukowski/firewatir/FireWatir/unittests/html/events1.html	(revision 0)
++++ /home/URBACON/mzukowski/firewatir/FireWatir/unittests/html/events1.html	(revision 0)
+@@ -0,0 +1,75 @@
++<html>
++<head>
++<title>
++Test page for Events
++</title>
++
++<script>
++
++</script>
++
++  <link rel="stylesheet" type="text/css" href="watir_unit_tests.css" />
++
++</head>
++<body>
++CVS Revision: $Revision 1.0$
++<br />
++<br />
++
++<!-- this field uses the old school event mechanism -->
++Text Field 1  <input type="text" name="text_field_1" id="text_field_1" 
++	onkeypress="document.getElementById('pass_1').checked = 'checked'" />
++<input type="checkbox" name="pass_1" id="pass_1" value="pass" />
++<br />
++
++<!-- this field uses the new DOM event mechanism -->
++Text Field 2  <input type="text" name="text_field_2" id="text_field_2" />
++<input type="checkbox" name="pass_2" id="pass_2" value="pass" />
++<script type="text/javascript">
++	document.getElementById('text_field_2').addEventListener('keypress', 
++		function(ev) {
++			document.getElementById('pass_2').checked = 'checked';
++		},
++		true
++	);
++</script>
++
++<br />
++<br />
++Radio Button 1 <input type="radio" name="radio_test" id="radio_1" value="1"
++	onclick="document.getElementById('pass_3').checked = 'checked'" />
++<input type="checkbox" name="pass_3" id="pass_3" value="pass" />
++<br />
++Radio Button 2 <input type="radio" name="radio_test" id="radio_2" value="2" />
++<input type="checkbox" name="pass_4" id="pass_4" value="pass" />
++<script type="text/javascript">
++	document.getElementById('radio_2').addEventListener('click',
++		function(ev) {
++			document.getElementById('pass_4').checked = 'checked';
++		},
++		true
++	);
++</script>
++
++<br />
++<br />
++
++<!-- this checkbox uses the old school event mechanism -->
++Check Box 1  <input type="checkbox" name="checkbox_1" id="checkbox_1" 
++	onclick="document.getElementById('pass_5').checked = 'checked'" />
++<input type="checkbox" name="pass_5" id="pass_5" value="pass" />
++<br />
++
++<!-- this checkbox uses the new DOM event mechanism -->
++Check Box 2  <input type="checkbox" name="checkbox_2" id="checkbox_2" />
++<input type="checkbox" name="pass_6" id="pass_6" value="pass" />
++<script type="text/javascript">
++	document.getElementById('checkbox_2').addEventListener('click', 
++		function(ev) {
++			document.getElementById('pass_6').checked = 'checked';
++		},
++		true
++	);
++</script>
++</body>
++</html>
+
+Property changes on: /home/URBACON/mzukowski/firewatir/FireWatir/unittests/html/events1.html
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+Index: /home/URBACON/mzukowski/firewatir/FireWatir/unittests/events_test.rb
+===================================================================
+--- /home/URBACON/mzukowski/firewatir/FireWatir/unittests/events_test.rb	(revision 0)
++++ /home/URBACON/mzukowski/firewatir/FireWatir/unittests/events_test.rb	(revision 0)
+@@ -0,0 +1,90 @@
++# feature tests for Check Boxes
++# revision: $Revision: 1.0 $
++
++$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') if $0 == __FILE__
++require 'unittests/setup'
++
++class TC_Events < Test::Unit::TestCase
++    include FireWatir
++
++    def setup()
++        $ff.goto($htmlRoot + "events1.html")
++    end
++    
++    def test_typing
++			$ff.text_field(:id, 'text_field_1').set('a')
++			assert $ff.checkbox(:id, 'pass_1').checked,
++				"Typing into 'text_field_1' should set the 'pass_1' checkbox."
++		
++			$ff.text_field(:id, 'text_field_2').set('b')
++			assert $ff.checkbox(:id, 'pass_2').checked,
++				"Typing into 'text_field_2' should set the 'pass_2' checkbox."
++				
++    end
++
++		def test_clicking
++      $ff.radio(:id, 'radio_1').click
++      assert $ff.checkbox(:id, 'pass_3').checked,
++        "Clicking 'radio_1' should set the 'pass_3' checkbox."
++        
++      $ff.radio(:id, 'radio_2').click
++      assert $ff.checkbox(:id, 'pass_4').checked,
++        "Clicking 'radio_2' should set the 'pass_4' checkbox."
++        
++      $ff.checkbox(:id, 'checkbox_1').click
++      assert $ff.checkbox(:id, 'checkbox_1').checked,
++        "Clicking 'checkbox_1' should set 'checkbox_1'."
++      assert $ff.checkbox(:id, 'pass_5').checked,
++        "Clicking 'checkbox_1' should set the 'pass_5' checkbox."
++        
++      $ff.checkbox(:id, 'checkbox_2').click
++      assert $ff.checkbox(:id, 'checkbox_2').checked,
++        "Clicking 'checkbox_2' should set 'checkbox_2'."
++      assert $ff.checkbox(:id, 'pass_6').checked,
++        "Clicking 'checkbox_2' should set the 'pass_6' checkbox."
++    end
++      
++    def test_set
++      $ff.checkbox(:id, 'checkbox_1').set
++      assert $ff.checkbox(:id, 'checkbox_1').checked,
++        "Setting 'checkbox_1' should set 'checkbox_1'."
++      assert $ff.checkbox(:id, 'pass_5').checked,
++        "Setting 'checkbox_1' should set the 'pass_5' checkbox."
++        
++      $ff.checkbox(:id, 'checkbox_2').set
++      assert $ff.checkbox(:id, 'checkbox_2').checked,
++        "Setting 'checkbox_2' should set 'checkbox_2'."
++      assert $ff.checkbox(:id, 'pass_6').checked,
++        "Setting 'checkbox_2' should set the 'pass_6' checkbox."
++      end
++      
++    def test_clear
++      set_clear_set('radio', 'radio_1')
++      set_clear_set('radio', 'radio_2')
++      set_clear_set('checkbox', 'checkbox_1')
++      set_clear_set('checkbox', 'checkbox_2')
++    end
++      
++    def test_span_onclick
++      $ff.goto($htmlRoot + "div.html")
++      $ff.span(:id, "span1").fire_event("onclick")
++      assert $ff.text.include?("PASS"),
++        "Clicking 'span1' should redirect to 'PASS' page."
++    end
++    
++    private
++      def set_clear_set(type, element_id)
++        $ff.__send__(type, :id, element_id).clear
++        assert_false $ff.__send__(type, :id, element_id).isSet?,
++          "'#{element_id}' should be cleared."
++        
++        $ff.__send__(type, :id, element_id).set
++        assert $ff.__send__(type, :id, element_id).isSet?,
++          "'#{element_id}' should be set."
++        
++        $ff.__send__(type, :id, element_id).clear
++        assert_false $ff.__send__(type, :id, element_id).isSet?,
++          "'#{element_id}' should be cleared."
++      end
++
++end
+
+Property changes on: /home/URBACON/mzukowski/firewatir/FireWatir/unittests/events_test.rb
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+Index: /home/URBACON/mzukowski/firewatir/FireWatir/htmlelements.rb
+===================================================================
+--- /home/URBACON/mzukowski/firewatir/FireWatir/htmlelements.rb	(revision 115)
++++ /home/URBACON/mzukowski/firewatir/FireWatir/htmlelements.rb	(working copy)
+@@ -1586,10 +1586,11 @@
+     # Description:
+     #   Used by clear and set method to uncheck and check radio button and checkbox element respectively.
+     #
+-    def set_clear_item(set)
+-        @o.checked = set
+-        @o.fireEvent("onClick")
+-        @container.wait
++    def set_clear_item(set)
++        if set != @o.isSet?
++          @o.fire_event("onclick") 
++          @container.wait
++        end
+     end
+     private :set_clear_item
+ 
+@@ -1599,7 +1600,14 @@
+ # Description:
+ #   Class for RadioButton element.
+ #
+-class Radio < RadioCheckCommon 
++class Radio < RadioCheckCommon 
++    def clear
++        assert_exists
++        assert_enabled
++        #higlight(:set)
++        @o.checked = false
++        #highlight(:clear)
++    end
+ end
+ 
+ #
+Index: /home/URBACON/mzukowski/firewatir/FireWatir/MozillaBaseElement.rb
+===================================================================
+--- /home/URBACON/mzukowski/firewatir/FireWatir/MozillaBaseElement.rb	(revision 115)
++++ /home/URBACON/mzukowski/firewatir/FireWatir/MozillaBaseElement.rb	(working copy)
+@@ -764,29 +764,61 @@
+         #   event - Event to be fired like "onclick", "onchange" etc.
+         #   wait - Whether to wait for the action to get completed or not. By default its true.
+         #
++				# TODO: Provide ability to specify event parameters like keycode for key events, and click screen
++				#       coordinates for mouse events.
+         def fire_event(event, wait = true)
+             assert_exists()
+-            #puts "here in fire event function. Event is : #{event}"
+-            #puts "typeof(#{element_object}.#{event.downcase}); \n"
+-            $jssh_socket.send("typeof(#{element_object}.#{event.downcase});\n", 0)
+-            isDefined = read_socket()
+-            #puts "is method there : #{isDefined}"
+-            if(isDefined != "undefined")        
+-                if(element_type == "HTMLSelectElement")
+-                    event =~ /on(.*)/i
+-                    jssh_command = "var event = #{DOCUMENT_VAR}.createEvent(\"HTMLEvents\");
+-                                    event.initEvent(\"#{$1.downcase}\", true, true);
+-                                    #{element_object}.dispatchEvent(event);"
+-                    jssh_command.gsub!(/\n/, "")
+-                    $jssh_socket.send("#{jssh_command}\n", 0)
+-                    read_socket() if wait
+-                    wait() if wait
+-                else    
+-                    $jssh_socket.send("#{element_object}.#{event.downcase}();\n", 0)
+-                    value = read_socket() if wait
+-                    wait() if wait
+-                end    
+-            end    
++						event = event.to_s # in case event was given as a symbol
++						
++            event = event.downcase
++            
++            event =~ /on(.*)/i
++            event = $1 if $1
++            
++						# check if we've got an old-school on-event
++						#$jssh_socket.send("typeof(#{element_object}.#{event});\n", 0)
++            #is_defined = read_socket()
++              
++            # info about event types harvested from: 
++            #   http://www.howtocreate.co.uk/tutorials/javascript/domevents
++            case event
++            when 'abort', 'blur', 'change', 'error', 'focus', 'load', 'reset', 'resize',
++                    'scroll', 'select', 'submit', 'unload'
++                dom_event_type = 'HTMLEvents'
++                dom_event_init = "initEvent(\"#{event}\", true, true)"
++            when 'keydown', 'keypress', 'keyup'
++                dom_event_type = 'KeyEvents'
++                # Firefox has a proprietary initializer for keydown/keypress/keyup.
++                # Args are as follows:
++                #   'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
++                dom_event_init = "initKeyEvent(\"#{event}\", true, true, #{WINDOW_VAR}, false, false, false, false, 0, 0)"
++            when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover',
++                    'mouseup'
++                dom_event_type = 'MouseEvents'
++                # Args are as follows:
++                #   'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
++                dom_event_init = "initMouseEvent(\"#{event}\", true, true, #{WINDOW_VAR}, 1, 0, 0, 0, 0, false, false, false, false, 0, null)"
++            else
++                dom_event_type = 'HTMLEvents'
++                dom_event_init = "initEvents(\"#{event}\", true, true)"
++            end
++
++            if(element_type == "HTMLSelectElement")
++                dom_event_type = 'HTMLEvents'
++                dom_event_init = "initEvent(\"#{event}\", true, true)"
++            end
++            
++            
++            jssh_command  = "var event = #{DOCUMENT_VAR}.createEvent(\"#{dom_event_type}\"); "
++            jssh_command << "event.#{dom_event_init}; "
++            jssh_command << "#{element_object}.dispatchEvent(event);"
++            
++						#puts "JSSH COMMAND:\n#{jssh_command}\n"
++														
++						$jssh_socket.send("#{jssh_command}\n", 0)
++						read_socket() if wait
++						wait() if wait
++            
+             @@current_level = 0
+         end
+         alias fireEvent fire_event

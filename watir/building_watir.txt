@@ -1,0 +1,63 @@
+Watir 1.4.1 was packaged/delivered in the following forms:
+
+* Gem. The gem included the watir library, the unit tests (which could 
+  automatically be run at install time), and the rdoc (which was generated at 
+  install time) and the unit. At that time autoit was not automatically 
+  registered, but since then it will now automatically be registered on first
+  use if necessary.
+  
+* Rdoc. The rdoc was built with a batchfile and consequently was included in
+  the one-click installer and uploaded to the website.
+
+* Nullsoft one-click installer (exe). This replaced the use of the old 
+  zip file with install.rb. 
+
+* Tarball & install.rb. Users were often encouraged to download the latest 
+  tarball from CVS and then they would run the install.rb script to install 
+  from the tarball.
+
+* Website. The website and doc set (including rdoc) was uploaded to 
+  wtr.rubyforge.org using the website-upload.scr script.
+
+Issues with this arrangement:
+
+* The watir library could be installed two different ways, ending up in two 
+  different locations. They could even be different versions and then when
+  you uninstalled the one (say a gem) the other (non-gem) would still be there.
+  This could lead to deep confusion.
+  
+* The install.rb script broke, mostly because of its dependence on the fox GUI
+  libraries. 
+
+* The build/release process had many manual steps and required different kinds
+  of scripts to be run in a particular order and each script had different 
+  dependencies.
+  
+* With the move to svn.openqa.org, we lost our download tarball option.
+
+* We've had a lot of complaints about the one-click installer. It's hard to say
+  what the problem is, since it has worked fine in all the training classes
+  we've given to students on a multitude of laptops.
+  
+* There are some known bugs, specifically related to installing Watir under
+  directories with a space in them.
+    
+Goals for Watir 1.5
+
+* Always use the gem to install the watir library, even with the one-click 
+  installer.
+  
+* Provide an easy way for users to install from source. Either a new
+  command-line only install.rb or a fully automated rake-based build.
+
+* Put all build/deploy processes in the rake file.
+    
+Build Plan for Watir 1.5
+
+* Gem. We will continue to provide a gem, which many people find to be the most
+  preferable form of install.
+
+* Bonus. This is the stuff that had been included in the old installers: the
+  doc, the rdoc, the examples and the unit tests. This can be delivered as a
+  zip file. This plus the gem gives the users everything they got before, 
+  except for the nifty menu/desktop links. 

@@ -1,0 +1,52 @@
+---
+title: Overview
+inMenu: true
+orderInfo: 10
+---
+h2. Automated testing that doesn't hurt
+
+Watir is an open-source library for automating web browsers. 
+It allows you to write tests that are easy to read and maintain. 
+It is simple and flexible.
+
+Watir drives browsers the same way people do. 
+It clicks links, fills in forms, presses buttons. 
+Watir also checks results, such as whether expected text appears on the page.
+
+Watir is a family of Ruby libraries. They support Internet Explorer on
+Windows, Firefox on Windows, Mac and Linux, and Safari on Mac.
+
+Like other programming languages, Ruby gives you the power to 
+connect to databases, read data files and spreadsheets, export XML, and 
+structure your code as reusable libraries. 
+Unlike other programing languages, Ruby is concise and often a joy to read.
+
+Watir stands for "Web Application Testing in Ruby". 
+It is pronounced _water._
+
+h2. Why Watir?
+
+* It's a free "Open Source":http://www.opensource.org/docs/definition.php tool. There are no costs to use the tool.
+* There's a very active and growing "community":community.html behind it.
+* It uses "Ruby":http://www.ruby-lang.org, a full-featured modern scripting language, 
+  rather than a "proprietary vendorscript":http://www.stickyminds.com/sitewide.asp?ObjectId=2326&ObjectType=COL&Function=edetail.
+* It is powerful and easy to use. 
+* Don't just take our word for it, "read what our users are saying.":http://wiki.openqa.org/display/WTR/Testimonials
+
+h2. Quotes
+
+"Watir Rocks! Truly awesome!!" -- Shashank Date
+
+"Watir is the most compelling alternative [to Fit] for filling
+the automated acceptance testing need." -- Ward Cunningham
+
+"I have limited scripting experience and none with Ruby,
+but I was able to follow your examples and be productive in short order." -- Kevin Sheehy
+
+"I've been trying to find the Holy Grail of Automated Web UI Testing...
+And the one I'm currently enamored with is Watir." -- Scott Hanselman
+
+"I wanted to run around my office dancing and celebrating." -- Beth Ferguson 
+
+"*Install Watir Now*":install.html
+
