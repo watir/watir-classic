@@ -385,13 +385,10 @@ module FireWatir
 
     # These are for class equivalence with IE and are not used.
     def self.reset_attach_timeout
-      @@attach_timeout = 2.0
     end
     def self.attach_timeout
-      @@attach_timeout
     end
     def self.attach_timeout=(timeout)
-      @@attach_timeout = timeout
     end
 
     #
