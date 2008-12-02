@@ -115,12 +115,14 @@ module FireWatir
     #                 to jssh on port 9997 an exception is thrown.
     #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
     #                 the last used profile. 
+    #     :suppressNewWindow - do not create a new firefox thread. Connect to an existing one.
     
     # TODO: Start the firefox version given by user. For example 
     #       ff = FireWatir::Firefox.new("1.5.0.4")
     #
     
     def initialize(options = {})
+
       if(options.kind_of?(Integer))
         options = {:waitTime => options}
       end
@@ -130,39 +132,42 @@ module FireWatir
       else
         profile_opt = ""
       end
-      
-      waitTime = options[:waitTime] || 2
-      
-      case RUBY_PLATFORM 
+
+      unless(options[:suppressNewWindow])
+
+        waitTime = options[:waitTime] || 2
+        
+        case RUBY_PLATFORM 
         when /mswin/
-        # Get the path to Firefox.exe using Registry.
-        require 'win32/registry.rb'
-        path_to_bin = ""
-        Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
-          keys = reg.keys
-          reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
-          reg1.each do |subkey, type, data|
-            if(subkey =~ /pathtoexe/i)
-              path_to_bin = data
+          # Get the path to Firefox.exe using Registry.
+          require 'win32/registry.rb'
+          path_to_bin = ""
+          Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
+            keys = reg.keys
+            reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
+            reg1.each do |subkey, type, data|
+              if(subkey =~ /pathtoexe/i)
+                path_to_bin = data
+              end
             end
           end
-        end
-        
+          
         when /linux/i
-        path_to_bin = `which firefox`.strip
+          path_to_bin = `which firefox`.strip
         when /darwin/i
-        path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
+          path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
         when /java/
-        raise "Not implemented: Create a browser finder in JRuby"
-      end     
-      @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
-      sleep waitTime
-      
+          raise "Not implemented: Create a browser finder in JRuby"
+        end     
+        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
+        sleep waitTime
+      end
+
       set_defaults()
       get_window_number()
       set_browser_document()
     end
-    
+
     #
     # Description:
     # Creates a new instance of Firefox. Loads the URL and return the instance.
@@ -299,8 +304,10 @@ module FireWatir
       # Get window and window's parent title and url
       $jssh_socket.send("#{DOCUMENT_VAR}.title;\n", 0)
       @window_title = read_socket()
+      #STDERR.puts "Using window title: #{@window_title}"
       $jssh_socket.send("#{DOCUMENT_VAR}.URL;\n", 0)
       @window_url = read_socket()
+      #STDERR.puts "Using window URL: #{@window_url}"
     end
     private :set_browser_document
     
@@ -363,7 +370,30 @@ module FireWatir
       end    
       self
     end
-    
+
+    # Class method to return a browser object if a window matches for how
+    # and what. Window can be referenced by url or title.
+    # The second argument can be either a string or a regular expression. 
+    # Watir::Browser.attach(:url, 'http://www.google.com')
+    # Watir::Browser.attach(:title, 'Google')
+    def self.attach how, what
+      #STDERR.puts "firefox class attach"
+      br = new :suppressNewWindow => true # don't create window
+      br.attach(how, what)
+      br
+    end   
+
+    # These are for class equivalence with IE and are not used.
+    def self.reset_attach_timeout
+      @@attach_timeout = 2.0
+    end
+    def self.attach_timeout
+      @@attach_timeout
+    end
+    def self.attach_timeout=(timeout)
+      @@attach_timeout = timeout
+    end
+
     #
     # Description:
     #   Finds a Firefox browser window with a given title or url.
@@ -372,7 +402,7 @@ module FireWatir
       jssh_command = "getWindows().length;";
       $jssh_socket.send("#{jssh_command}\n", 0)
       @@total_windows = read_socket()
-      #puts "total windows are : " + @@total_windows.to_s
+      #STDERR.puts "total windows are : " + @@total_windows.to_s
       
       jssh_command =  "var windows = getWindows(); var window_number = 0;var found = false;
                              for(var i = 0; i < windows.length; i++)

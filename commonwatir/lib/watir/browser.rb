@@ -70,6 +70,21 @@ before you invoke Browser.new.
         set_sub_options
         klass.start url
       end
+      # Attach to an existing browser.
+      def attach(how, what)
+        set_sub_options
+        klass.attach(how, what)
+      end
+      def reset_attach_timeout
+        klass.reset_attach_timeout
+      end
+      def attach_timeout
+        klass.attach_timeout
+      end
+      def attach_timeout=(timeout)
+        klass.attach_timeout = timeout
+      end
+
       def klass
         key = Watir.options[:browser]
         eval @@browser_classes[key] # this triggers the autoload
