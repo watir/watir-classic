@@ -96,10 +96,7 @@ module FireWatir
     # used only while starting firefox on windows. For other platforms you need to start
     # firefox manually.
     #@@firefox_started = false
-    
-    # Stack to hold windows.
-    @@window_stack = Array.new
-    
+        
     # This allows us to identify the window uniquely and close them accordingly.
     @window_title = nil 
     @window_url = nil 
@@ -201,9 +198,6 @@ module FireWatir
         @@current_window -= 1;
       end
       
-      # This will store the information about the window.
-      #@@window_stack.push(@@current_window)
-      #puts "here in get_window_number window number is #{@@current_window}"
       return @@current_window
     end
     private :get_window_number
@@ -333,15 +327,7 @@ module FireWatir
           $jssh_socket.send(" getWindows()[#{window_number}].close();\n", 0)
           read_socket();
         end    
-        
-        #Get the parent window url from the stack and return that window.
-        #@@current_window = @@window_stack.pop()
-        @window_url = @@window_stack.pop()
-        @window_title = @@window_stack.pop()
-        # Find window with this url.
-        window_number = find_window("url", @window_url)
-        @@current_window = window_number
-        set_browser_document()
+
       end
     end
     
@@ -360,11 +346,6 @@ module FireWatir
       if(window_number == 0)
         raise NoMatchingWindowFoundException.new("Unable to locate window, using #{how} and #{what}")  
       elsif(window_number > 0)
-        # Push the window_title and window_url of parent window. So that when we close the child window
-        # appropriate handle of parent window is returned back.
-        @@window_stack.push(@window_title)
-        @@window_stack.push(@window_url)
-        
         @@current_window = window_number.to_i
         set_browser_document()
       end    
