@@ -7,6 +7,7 @@ require 'watir/process'
 require 'watir/waiter'
 
 class TC_IE_Each < Test::Unit::TestCase  
+  tag :fails_on_ie
   def setup
     assert_equal 0, Watir::IE.process_count
     @hits = 0
