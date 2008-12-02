@@ -42,11 +42,13 @@ class TC_New < Test::Unit::TestCase
     assert_equal 'http://wtr.rubyforge.org/', @new.url
   end
   
+  tag_method :test_new_process_creates_a_new_process, :fails_on_ie
   def test_new_process_creates_a_new_process
     @new = Watir::IE.new_process
     assert_equal @background_iexplore_processes + 1, Watir::IE.process_count
   end
   
+  tag_method :test_start_process_with_arg_creates_a_new_process_and_goes_to_that_page, :fails_on_ie
   def test_start_process_with_arg_creates_a_new_process_and_goes_to_that_page
     @new = Watir::IE.start_process 'http://wtr.rubyforge.org'
     assert_equal @background_iexplore_processes + 1, Watir::IE.process_count

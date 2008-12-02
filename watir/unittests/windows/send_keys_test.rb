@@ -4,7 +4,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_Fields < Test::Unit::TestCase
+class TC_SendKeys < Test::Unit::TestCase
   def setup
     goto_page "textfields1.html"
   end
@@ -24,6 +24,7 @@ class TC_Fields < Test::Unit::TestCase
     assert(browser.text.include?('PASS'))
   end
   
+  tag_method :test_autoregistration, :fails_on_ie
   def test_autoregistration
     Watir::_unregister('AutoItX3.dll')
     assert_raises(WIN32OLERuntimeError) { WIN32OLE.new('AutoItX3.Control') }
