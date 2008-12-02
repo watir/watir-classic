@@ -8,18 +8,18 @@ class TC_ExistingWindow < Test::Unit::TestCase
   location __FILE__
   include Watir
 
-  def setup
-    @original_timeout = Watir::Browser.attach_timeout
+  def setup 
+    @original_timeout = Browser.options[:attach_timeout]
     @browsers = []
   end 
 
   def teardown
-    Browser.attach_timeout = @original_timeout
+    Browser.set_options :attach_timeout => @original_timeout
     @browsers.each {|x| x.close}
   end
 
   def test_missing_window
-    Browser.attach_timeout = 0.1
+    Browser.set_options :attach_timeout => 0.1
     assert_raises(NoMatchingWindowFoundException) { Browser.attach(:title, "missing") }
     assert_raises(NoMatchingWindowFoundException) { Browser.attach(:title, /missing/) }
     assert_raises(NoMatchingWindowFoundException) { Browser.attach(:url, "missing") }
@@ -42,7 +42,7 @@ class TC_ExistingWindow < Test::Unit::TestCase
     
     b3 = Browser.attach(:url, /buttons1.html/)
     assert_equal("Test page for buttons", b3.title)
-    
+
     #hard to test :url with explicit text
   end
 end
