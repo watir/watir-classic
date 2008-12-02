@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + '../..') unless $SETUP_LOADED
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 
 require 'unittests/setup'
 require 'watir/contrib/ie-new-process'
