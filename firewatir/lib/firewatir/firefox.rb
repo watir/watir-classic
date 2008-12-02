@@ -85,22 +85,12 @@ module FireWatir
   include Watir::Exception
   
   class Firefox
-    
     include FireWatir::Container
     
     # XPath Result type. Return only first node that matches the xpath expression.
     # More details: "http://developer.mozilla.org/en/docs/DOM:document.evaluate"
     FIRST_ORDERED_NODE_TYPE = 9
-    
-    # variable to check if firefox browser has been started or not. Currently this is
-    # used only while starting firefox on windows. For other platforms you need to start
-    # firefox manually.
-    #@@firefox_started = false
-        
-    # This allows us to identify the window uniquely and close them accordingly.
-    @window_title = nil 
-    @window_url = nil 
-        
+                    
     # Description: 
     #   Starts the firefox browser. 
     #   On windows this starts the first version listed in the registry.
@@ -112,11 +102,9 @@ module FireWatir
     #                 to jssh on port 9997 an exception is thrown.
     #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
     #                 the last used profile. 
-    #     :suppressNewWindow - do not create a new firefox thread. Connect to an existing one.
+    #     :suppress_launch_process - do not create a new firefox process. Connect to an existing one.
     
-    # TODO: Start the firefox version given by user. For example 
-    #       ff = FireWatir::Firefox.new("1.5.0.4")
-    #
+    # TODO: Start the firefox version given by user. 
     
     def initialize(options = {})
 
@@ -130,7 +118,7 @@ module FireWatir
         profile_opt = ""
       end
 
-      unless(options[:suppressNewWindow])
+      unless(options[:suppress_launch_process])
 
         waitTime = options[:waitTime] || 2
         
@@ -186,19 +174,15 @@ module FireWatir
     #   Gets the window number opened. Used internally by Firewatir.
     #
     def get_window_number()
-      $jssh_socket.send("getWindows().length;\n", 0)
-      @@current_window = read_socket().to_i - 1
-      
-      # Derek Berner 5/16/08 
       # If at any time a non-browser window like the "Downloads" window 
       #   pops up, it will become the topmost window, so make sure we 
       #   ignore it.
-      @@current_window = js_eval("getWindows().length").to_i - 1
-      while js_eval("getWindows()[#{@@current_window}].getBrowser") == ''
-        @@current_window -= 1;
+      window_count = js_eval("getWindows().length").to_i - 1
+      while js_eval("getWindows()[#{window_count}].getBrowser") == ''
+        window_count -= 1;
       end
       
-      return @@current_window
+      return @window_number = window_count
     end
     private :get_window_number
     
@@ -286,7 +270,7 @@ module FireWatir
     def set_browser_document
       # Get the window in variable WINDOW_VAR.
       # Get the browser in variable BROWSER_VAR.
-      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@@current_window}];"
+      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@window_number}];"
       jssh_command += " var #{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser();"
       # Get the document and body in variable DOCUMENT_VAR and BODY_VAR respectively.
       jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
@@ -310,7 +294,6 @@ module FireWatir
     #   Closes the window.
     #
     def close()
-      #puts "current window number is : #{@@current_window}"
       # Derek Berner 5/16/08
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
@@ -346,7 +329,7 @@ module FireWatir
       if(window_number == 0)
         raise NoMatchingWindowFoundException.new("Unable to locate window, using #{how} and #{what}")  
       elsif(window_number > 0)
-        @@current_window = window_number.to_i
+        @window_number = window_number
         set_browser_document()
       end    
       self
@@ -358,17 +341,10 @@ module FireWatir
     # Watir::Browser.attach(:url, 'http://www.google.com')
     # Watir::Browser.attach(:title, 'Google')
     def self.attach how, what
-      #STDERR.puts "firefox class attach"
-      br = new :suppressNewWindow => true # don't create window
+      br = new :suppress_launch_process => true # don't create window
       br.attach(how, what)
       br
     end   
-
-    # These are for class equivalence with IE and are not used.
-    def self.attach_timeout
-    end
-    def self.attach_timeout=(timeout)
-    end
 
     #
     # Description:
