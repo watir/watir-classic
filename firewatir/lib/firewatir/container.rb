@@ -54,14 +54,7 @@ module FireWatir
     DOCUMENT_VAR = "document"
     # Name of the variable with which body is identified in JSSh.
     BODY_VAR    = "body"
-    
-    
-    # The delay when entering text on a web page when speed = :slow.
-    DEFAULT_TYPING_SPEED = 0.01
-    
-    # The default time we wait after a page has loaded when speed = :slow.
-    DEFAULT_SLEEP_TIME = 0.1
-    
+        
     # The default color for highlighting objects as they are accessed.
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
     
@@ -438,7 +431,7 @@ module FireWatir
       # puts doc[35].to_s
     end
     
-    # evaluate javascript and return the result.
+    # evaluate javascript and return the result. Note: errors are not raised!
     def js_eval javascript
       javascript.gsub!("\n", "")
       jssh_socket.send("#{javascript};\n", 0)

@@ -85,25 +85,12 @@ module FireWatir
   include Watir::Exception
   
   class Firefox
-    
     include FireWatir::Container
     
     # XPath Result type. Return only first node that matches the xpath expression.
     # More details: "http://developer.mozilla.org/en/docs/DOM:document.evaluate"
     FIRST_ORDERED_NODE_TYPE = 9
-    
-    # variable to check if firefox browser has been started or not. Currently this is
-    # used only while starting firefox on windows. For other platforms you need to start
-    # firefox manually.
-    #@@firefox_started = false
-    
-    # Stack to hold windows.
-    @@window_stack = Array.new
-    
-    # This allows us to identify the window uniquely and close them accordingly.
-    @window_title = nil 
-    @window_url = nil 
-        
+                    
     # Description: 
     #   Starts the firefox browser. 
     #   On windows this starts the first version listed in the registry.
@@ -115,12 +102,12 @@ module FireWatir
     #                 to jssh on port 9997 an exception is thrown.
     #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
     #                 the last used profile. 
+    #     :suppress_launch_process - do not create a new firefox process. Connect to an existing one.
     
-    # TODO: Start the firefox version given by user. For example 
-    #       ff = FireWatir::Firefox.new("1.5.0.4")
-    #
+    # TODO: Start the firefox version given by user. 
     
     def initialize(options = {})
+
       if(options.kind_of?(Integer))
         options = {:waitTime => options}
       end
@@ -130,135 +117,92 @@ module FireWatir
       else
         profile_opt = ""
       end
-      
-      waitTime = options[:waitTime] || 2
-      
-      case RUBY_PLATFORM 
+
+      unless(options[:suppress_launch_process])
+
+        waitTime = options[:waitTime] || 2
+        
+        case RUBY_PLATFORM 
         when /mswin/
-        # Get the path to Firefox.exe using Registry.
-        require 'win32/registry.rb'
-        path_to_bin = ""
-        Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
-          keys = reg.keys
-          reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
-          reg1.each do |subkey, type, data|
-            if(subkey =~ /pathtoexe/i)
-              path_to_bin = data
+          # Get the path to Firefox.exe using Registry.
+          require 'win32/registry.rb'
+          path_to_bin = ""
+          Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
+            keys = reg.keys
+            reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
+            reg1.each do |subkey, type, data|
+              if(subkey =~ /pathtoexe/i)
+                path_to_bin = data
+              end
             end
           end
-        end
-        
+          
         when /linux/i
-        path_to_bin = `which firefox`.strip
+          path_to_bin = `which firefox`.strip
         when /darwin/i
-        path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
+          path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
         when /java/
-        raise "Not implemented: Create a browser finder in JRuby"
-      end     
-      @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
-      sleep waitTime
-      
+          raise "Not implemented: Create a browser finder in JRuby"
+        end     
+        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
+        sleep waitTime
+      end
+
       set_defaults()
       get_window_number()
       set_browser_document()
     end
-    
-    #
-    # Description:
+
     # Creates a new instance of Firefox. Loads the URL and return the instance.
-    #
     # Input:
     #   url - url of the page to be loaded.
-    #
-    # Output:
-    #   New instance of firefox browser with the given url loaded.
-    #
     def self.start(url)
       ff = Firefox.new
       ff.goto(url)
       return ff
     end
     
-    #
-    # Description:
-    #   Gets the window number opened. Used internally by Firewatir.
-    #
+    # Gets the window number opened. 
     def get_window_number()
-      $jssh_socket.send("getWindows().length;\n", 0)
-      @@current_window = read_socket().to_i - 1
-      
-      # Derek Berner 5/16/08 
       # If at any time a non-browser window like the "Downloads" window 
       #   pops up, it will become the topmost window, so make sure we 
       #   ignore it.
-      @@current_window = js_eval("getWindows().length").to_i - 1
-      while js_eval("getWindows()[#{@@current_window}].getBrowser") == ''
-        @@current_window -= 1;
+      window_count = js_eval("getWindows().length").to_i - 1
+      while js_eval("getWindows()[#{window_count}].getBrowser") == ''
+        window_count -= 1;
       end
-      
-      # This will store the information about the window.
-      #@@window_stack.push(@@current_window)
-      #puts "here in get_window_number window number is #{@@current_window}"
-      return @@current_window
+      @window_index = window_count
     end
     private :get_window_number
     
-    #
-    # Description:
-    #   Loads the given url in the browser. Waits for the page to get loaded.
-    #
-    # Input:
-    #   url - url to be loaded.
-    #
+    # Loads the given url in the browser. Waits for the page to get loaded.
     def goto(url)
-      #set_defaults()
       get_window_number()
       set_browser_document()
-      # Load the given url.
-      $jssh_socket.send("#{BROWSER_VAR}.loadURI(\"#{url}\");\n" , 0)
-      read_socket()
-      
+      js_eval "#{BROWSER_VAR}.loadURI(\"#{url}\")"
       wait()
     end
     
-    #
-    # Description: 
-    #   Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
-    #
+    # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
-      #set_browser_document()
-      $jssh_socket.send("if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack();\n", 0)
-      read_socket();
+      js_eval "if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack()"
       wait()
     end
     
-    #
-    # Description:
-    #   Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
-    #
+    # Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
     def forward()
-      #set_browser_document()
-      $jssh_socket.send("if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward();\n", 0)
-      read_socket();
+      js_eval "if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward()"
       wait()
     end
     
-    #
-    # Description:
-    #   Reloads the current page in the browser. Waits for the page to get loaded.
-    #
+    # Reloads the current page in the browser. Waits for the page to get loaded.
     def refresh()
-      #set_browser_document()
-      $jssh_socket.send("#{BROWSER_VAR}.reload();\n", 0)
-      read_socket();
+      js_eval "#{BROWSER_VAR}.reload()"
       wait()
     end
     
-    #
-    # Description:
-    #   This function creates a new socket at port 9997 and sets the default values for instance and class variables.
-    #   Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
-    #
+    # This function creates a new socket at port 9997 and sets the default values for instance and class variables.
+    # Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
     def set_defaults(no_of_tries = 0)
       # JSSH listens on port 9997. Create a new socket to connect to port 9997.
       begin
@@ -274,46 +218,29 @@ module FireWatir
     end
     private :set_defaults
     
-    def set_slow_speed
-      @typingspeed = DEFAULT_TYPING_SPEED
-      @defaultSleepTime = DEFAULT_SLEEP_TIME
-    end
-    private :set_slow_speed
-    
-    #
-    # Description:
     #   Sets the document, window and browser variables to point to correct object in JSSh.
-    #
     def set_browser_document
       # Get the window in variable WINDOW_VAR.
       # Get the browser in variable BROWSER_VAR.
-      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@@current_window}];"
+      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@window_index}];"
       jssh_command += " var #{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser();"
       # Get the document and body in variable DOCUMENT_VAR and BODY_VAR respectively.
       jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
       jssh_command += "var #{BODY_VAR} = #{DOCUMENT_VAR}.body;"
       
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      read_socket()
+      js_eval jssh_command
       
       # Get window and window's parent title and url
-      $jssh_socket.send("#{DOCUMENT_VAR}.title;\n", 0)
-      @window_title = read_socket()
-      $jssh_socket.send("#{DOCUMENT_VAR}.URL;\n", 0)
-      @window_url = read_socket()
+      @window_title = js_eval "#{DOCUMENT_VAR}.title"
+      @window_url = js_eval "#{DOCUMENT_VAR}.URL"
     end
     private :set_browser_document
     
-    #
-    # Description:
     #   Closes the window.
-    #
-    def close()
-      #puts "current window number is : #{@@current_window}"
-      # Derek Berner 5/16/08
+    def close
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
-        $jssh_socket.send(" getWindows()[0].close(); \n", 0)
+        js_eval("getWindows()[0].close()")
         @t.join if @t != nil
         #sleep 5
       else
@@ -323,57 +250,46 @@ module FireWatir
         
         # If matching window found. Close the window.
         if(window_number > 0)
-          $jssh_socket.send(" getWindows()[#{window_number}].close();\n", 0)
-          read_socket();
+          js_eval("getWindows()[#{window_number}].close()")
         end    
-        
-        #Get the parent window url from the stack and return that window.
-        #@@current_window = @@window_stack.pop()
-        @window_url = @@window_stack.pop()
-        @window_title = @@window_stack.pop()
-        # Find window with this url.
-        window_number = find_window("url", @window_url)
-        @@current_window = window_number
-        set_browser_document()
+
       end
     end
     
-    #
-    # Description:
     #   Used for attaching pop up window to an existing Firefox window, either by url or title.
     #   ff.attach(:url, 'http://www.google.com')
     #   ff.attach(:title, 'Google') 
     #
     # Output:
     #   Instance of newly attached window.
-    #
     def attach(how, what)
       window_number = find_window(how, what)
       
       if(window_number == 0)
         raise NoMatchingWindowFoundException.new("Unable to locate window, using #{how} and #{what}")  
       elsif(window_number > 0)
-        # Push the window_title and window_url of parent window. So that when we close the child window
-        # appropriate handle of parent window is returned back.
-        @@window_stack.push(@window_title)
-        @@window_stack.push(@window_url)
-        
-        @@current_window = window_number.to_i
+        @window_index = window_number
         set_browser_document()
       end    
       self
     end
-    
+
+    # Class method to return a browser object if a window matches for how
+    # and what. Window can be referenced by url or title.
+    # The second argument can be either a string or a regular expression. 
+    # Watir::Browser.attach(:url, 'http://www.google.com')
+    # Watir::Browser.attach(:title, 'Google')
+    def self.attach how, what
+      br = new :suppress_launch_process => true # don't create window
+      br.attach(how, what)
+      br
+    end   
+
     #
     # Description:
     #   Finds a Firefox browser window with a given title or url.
     #
     def find_window(how, what)
-      jssh_command = "getWindows().length;";
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      @@total_windows = read_socket()
-      #puts "total windows are : " + @@total_windows.to_s
-      
       jssh_command =  "var windows = getWindows(); var window_number = 0;var found = false;
                              for(var i = 0; i < windows.length; i++)
                              {
@@ -418,10 +334,7 @@ module FireWatir
                             window_number;"
       
       jssh_command.gsub!(/\n/, "")
-      #puts "jssh_command is : #{jssh_command}"
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      window_number = read_socket()
-      #puts "window number is : " + window_number.to_s
+      window_number = js_eval jssh_command
       
       return window_number.to_i
     end
@@ -451,76 +364,38 @@ module FireWatir
       end
     end
     
-    #
-    # Description:
-    #   Returns the url of the page currently loaded in the browser.
-    #
-    # Output:
-    #   URL of the page.
-    #
+    # Returns the url of the page currently loaded in the browser.
     def url()
       @window_url
     end 
     
-    #
-    # Description:
-    #   Returns the title of the page currently loaded in the browser.
-    #
-    # Output:
-    #   Title of the page.
-    #
-    def title()
+    # Returns the title of the page currently loaded in the browser.
+    def title
       @window_title
     end
     
-    #
-    # Description:
-    #   Returns the html of the page currently loaded in the browser.
-    #
-    # Output:
-    #   HTML shown on the page.
-    #
-    def html()
-      $jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
-      #$jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
-      result = read_socket()
+    # Returns the html of the page currently loaded in the browser.
+    def html
+      result = js_eval("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
       return "<html>" + result + "</html>"
     end
     
-    #
-    # Description:
-    #   Returns the text of the page currently loaded in the browser.
-    #
-    # Output:
-    #   Text shown on the page.
-    #
-    def text()
-      $jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
-      return read_socket().strip
+    # Returns the text of the page currently loaded in the browser.
+    def text
+      js_eval("#{BODY_VAR}.textContent").strip
     end
     
-    #
-    # Description:
-    #   Maximize the current browser window.
-    #
+    # Maximize the current browser window.
     def maximize()
-      $jssh_socket.send("#{WINDOW_VAR}.maximize();\n", 0)
-      read_socket()
+      js_eval "#{WINDOW_VAR}.maximize()"
     end
     
-    #
-    # Description:
-    #   Minimize the current browser window.
-    #
+    # Minimize the current browser window.
     def minimize()
-      $jssh_socket.send("#{WINDOW_VAR}.minimize();\n", 0)
-      read_socket()
+      js_eval "#{WINDOW_VAR}.minimize()"
     end
     
-    #
-    # Description:
-    #   Waits for the page to get loaded.
-    #
+    # Waits for the page to get loaded.
     def wait(last_url = nil)
       #puts "In wait function "
       isLoadingDocument = ""
@@ -530,18 +405,15 @@ module FireWatir
         isLoadingDocument = js_eval("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
-        # Derek Berner 5/16/08
         # Raise an exception if the page fails to load
         if (Time.now - start) > 300
           raise "Page Load Timeout"
         end
       end
-      # Derek Berner 5/16/08
       # If the redirect is to a download attachment that does not reload this page, this
       # method will loop forever. Therefore, we need to ensure that if this method is called
       # twice with the same URL, we simply accept that we're done.
-      $jssh_socket.send("#{BROWSER_VAR}.contentDocument.URL;\n", 0)
-      url = read_socket()
+      url = js_eval("#{BROWSER_VAR}.contentDocument.URL")
       
       if(url != last_url)
         # Check for Javascript redirect. As we are connected to Firefox via JSSh. JSSh
@@ -604,14 +476,12 @@ module FireWatir
     end
     
     # Add an error checker that gets called on every page load.
-    #
     # * checker - a Proc object 
     def add_checker(checker)
       @error_checkers << checker
     end
     
     # Disable an error checker
-    #
     # * checker - a Proc object that is to be disabled
     def disable_checker(checker)
       @error_checkers.delete(checker)
@@ -733,37 +603,19 @@ module FireWatir
       return return_value
     end
     
-    #
-    # Description:
-    #   Returns the document element of the page currently loaded in the browser.
-    #
-    # Output:
-    #   Document element.
-    #
+    # Returns the document element of the page currently loaded in the browser.
     def document
       Document.new("#{DOCUMENT_VAR}")
     end
     
-    #
-    # Description:
-    #   Returns the first element that matches the xpath query.
-    #
-    # Input:
-    #   Xpath expression or query.
-    #
-    # Output:
-    #   Element matching the xpath query.
-    #
+    # Returns the first element that matches the given xpath expression or query.
     def element_by_xpath(xpath)
       temp = Element.new(nil, self)
       element_name = temp.element_by_xpath(self, xpath)
       return element_factory(element_name)
     end
     
-    # 
-    # Description:
-    #   Factory method to create object of correct Element class while using XPath to get the element.
-    #
+    # Return object of correct Element class while using XPath to get the element.
     def element_factory(element_name)
       jssh_type = Element.new(element_name,self).element_type
       #puts "jssh type is : #{jssh_type}" # DEBUG
@@ -793,10 +645,7 @@ module FireWatir
     end
     private :element_factory
     
-    #
-    # Description:
-    #   Get the class name for element of input type depending upon its type like checkbox, radio etc.
-    #
+    #   Return the class name for element of input type depending upon its type like checkbox, radio etc.
     def input_class(input_type)
       hash = {
                 'select-one' => 'SelectList',
@@ -819,10 +668,8 @@ module FireWatir
     end
     private :input_class
     
-    #
-    # Description:
-    #   Converts element type returned by JSSh like HTMLDivElement to its corresponding class in Firewatir.
-    #
+    # For a provided element type returned by JSSh like HTMLDivElement, 
+    # returns its corresponding class in Firewatir.
     def jssh2firewatir(candidate_class)
       hash = {
                 'Div' => 'Div',
@@ -1066,18 +913,14 @@ module FireWatir
     end
     alias showFrames show_frames
     
-    # 5/16/08 Derek Berner
-    # Wrapper method to send JS commands concisely,
-    # and propagate errors
+    # Evaluate javascript and return result. Raise an exception if an error occurred.
     def js_eval(str)
-      #puts "JS Eval: #{str}"
-      $jssh_socket.send("#{str};\n",0)
+      $jssh_socket.send("#{str};\n", 0)
       value = read_socket()
-      if md=/^(\w+)Error:(.*)$/.match(value) 
+      if md = /^(\w+)Error:(.*)$/.match(value) 
         eval "class JS#{md[1]}Error\nend"
         raise (eval "JS#{md[1]}Error"), md[2]
       end
-      #puts "Value: #{value}"
       value
     end
     

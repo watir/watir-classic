@@ -70,6 +70,20 @@ before you invoke Browser.new.
         set_sub_options
         klass.start url
       end
+      # Attach to an existing browser.
+      def attach(how, what)
+        set_sub_options
+        klass.attach(how, what)
+      end
+      def set_options options
+        return unless defined?(klass.set_options)
+        klass.set_options options
+      end
+      def options
+        return {} unless defined?(klass.options)
+        klass.options
+      end
+
       def klass
         key = Watir.options[:browser]
         eval @@browser_classes[key] # this triggers the autoload
@@ -93,6 +107,21 @@ before you invoke Browser.new.
         autoload class_string, library
         activate_gem gem, option
       end
+      
+      def default
+        @@default
+      end
+      # Specifies a default browser. Must be specified before options are parsed.
+      def default= option
+        @@default = option
+      end
+      # Returns the names of the browsers that are supported by this module.
+      # These are the options for 'watir_browser' (env var) or 'browser:' (yaml).
+      def browser_names
+        @@browser_classes.keys
+      end      
+      
+      private
       def autoload class_string, library
         mod, klass = class_string.split('::')
         eval "module ::#{mod}; autoload :#{klass}, '#{library}'; end"
@@ -106,21 +135,11 @@ before you invoke Browser.new.
         rescue Gem::LoadError
         end
       end
-      def default
-        @@default
-      end
-      # Specifies a default browser. Must be specified before options are parsed.
-      def default= option
-        @@default = option
-      end
-      def options
-        @@browser_classes.keys
-      end
       def set_sub_options
-        return unless defined?(klass.set_options)
         sub_options = @@sub_options[Watir.options[:browser]]
+        return if sub_options.nil?
         specified_options = Watir.options.reject {|k, v| !sub_options.include? k}
-        klass.set_options specified_options
+        self.set_options specified_options
       end
     end
   end

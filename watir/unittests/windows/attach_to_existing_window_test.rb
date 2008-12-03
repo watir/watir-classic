@@ -4,14 +4,15 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_ExistingWindow< Test::Unit::TestCase
+class TC_ExistingWindow < Test::Unit::TestCase
   include Watir
 
   def setup
     goto_page 'buttons1.html'
+    @original_timeout = IE.attach_timeout
   end
   def teardown
-    IE.reset_attach_timeout
+    IE.attach_timeout = @original_timeout
   end
 
   def test_find_window

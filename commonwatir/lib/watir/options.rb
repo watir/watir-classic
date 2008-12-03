@@ -36,7 +36,7 @@ module Watir
     end
     def add_choices builder
       builder.add_choice :browser, 
-      :type => Watir::Browser.options, 
+      :type => Watir::Browser.browser_names, 
       :default => Watir::Browser.default
       builder.add_choice :speed, 
       :type => ['slow', 'fast', 'zippy'], 

@@ -5,10 +5,7 @@ module Watir
     include PageContainer
     
     # Maximum number of seconds to wait when attaching to a window
-    def self.reset_attach_timeout
-      @@attach_timeout = 2.0
-    end
-    reset_attach_timeout
+    @@attach_timeout = 2.0 # default value
     def self.attach_timeout
       @@attach_timeout
     end
@@ -19,7 +16,7 @@ module Watir
     # Return the options used when creating new instances of IE.
     # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
 		def self.options 	
-			{:speed => self.speed, :visible => self.visible}
+			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
 	  end
     # set values for options used when creating new instances of IE.
 		def self.set_options options
