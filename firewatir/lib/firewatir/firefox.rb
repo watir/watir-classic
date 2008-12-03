@@ -450,18 +450,12 @@ module FireWatir
 								    }
                                 }
                                 wait;"
-        #puts "command in wait is : #{jssh_command}"                
-        jssh_command = jssh_command.gsub(/\n/, "")
-        $jssh_socket.send("#{jssh_command}; \n", 0)
-        wait_time = read_socket();
-        #puts "wait time is : #{wait_time}"
+        wait_time = js_eval(jssh_command).to_i
         begin
-          wait_time = wait_time.to_i
           if(wait_time != -1)
             sleep(wait_time)
             # Call wait again. In case there are multiple redirects.
-            $jssh_socket.send("browser = window.getBrowser(); \n",0)
-            read_socket()
+            js_eval "browser = window.getBrowser()"
             wait(url)
           end    
         rescue
@@ -619,9 +613,7 @@ module FireWatir
       candidate_class = jssh_type =~ /HTML(.*)Element/ ? $1 : ''
       #puts candidate_class # DEBUG
       if candidate_class == 'Input'
-        $jssh_socket.send("#{element_name}.type;\n", 0)
-        input_type = read_socket().downcase.strip
-        puts input_type # DEBUG
+        input_type = js_eval("#{element_name}.type").downcase.strip
         firewatir_class = input_class(input_type)
       else
         firewatir_class = jssh2firewatir(candidate_class)
