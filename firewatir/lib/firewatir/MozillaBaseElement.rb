@@ -195,7 +195,7 @@ class Element
     if set_or_clear == :set
       #puts "element_name is : #{element_object}"
       jssh_command = " var original_color = #{element_object}.style.background;"
-      jssh_command += " #{element_object}.style.background = \"#{DEFAULT_HIGHLIGHT_COLOR}\"; original_color;"
+      jssh_command << " #{element_object}.style.background = \"#{DEFAULT_HIGHLIGHT_COLOR}\"; original_color;"
       
       # TODO: Need to change this so that it would work if user sets any other color.
       #puts "color is : #{DEFAULT_HIGHLIGHT_COLOR}"
@@ -299,45 +299,45 @@ class Element
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
       #end
       #if(@@current_element_object == "")
-      jssh_command += "var elements_#{tag} = null; elements_#{tag} = document.getElementsByTagName(\"#{tag}\");"
+      jssh_command << "var elements_#{tag} = null; elements_#{tag} = document.getElementsByTagName(\"#{tag}\");"
       if(types != nil and (types.include?("textarea") or types.include?("button")) )
-        jssh_command += "elements_#{tag} = document.body.getElementsByTagName(\"*\");"
+        jssh_command << "elements_#{tag} = document.body.getElementsByTagName(\"*\");"
       end
       #    @@has_changed = true
     else
       #puts "container name is: " + @container.element_name
       #locate if defined? locate
       #@container.locate
-      jssh_command += "var elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"#{tag}\");"
+      jssh_command << "var elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"#{tag}\");"
       if(types != nil and (types.include?("textarea") or types.include?("button") ) )
-        jssh_command += "elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"*\");"
+        jssh_command << "elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"*\");"
       end
       #    @@has_changed = false
     end
     
     
     if(types != nil)
-      jssh_command += "var types = new Array("
+      jssh_command << "var types = new Array("
       count = 0
       types.each do |type|
         if count == 0
-          jssh_command += "\"#{type}\""
+          jssh_command << "\"#{type}\""
           count += 1
         else
-          jssh_command += ",\"#{type}\""
+          jssh_command << ",\"#{type}\""
         end
       end
-      jssh_command += ");"
+      jssh_command << ");"
     else
-      jssh_command += "var types = null;"
+      jssh_command << "var types = null;"
     end
-    #jssh_command += "var elements = #{element_object}.getElementsByTagName('*');"
-    jssh_command += "var object_index = 1; var o = null; var element_name = \"\";"
+    #jssh_command << "var elements = #{element_object}.getElementsByTagName('*');"
+    jssh_command << "var object_index = 1; var o = null; var element_name = \"\";"
     
     if(value == nil)
-      jssh_command += "var value = null;"
+      jssh_command << "var value = null;"
     else
-      jssh_command += "var value = \"#{value}\";"
+      jssh_command << "var value = \"#{value}\";"
     end
     
     
@@ -366,11 +366,11 @@ class Element
     end
     sKey = sKey[0..sKey.length-2]
     sVal = sVal[0..sVal.length-2]
-    jssh_command += sKey + ");"
-    jssh_command += sVal + ");"
+    jssh_command << sKey + ");"
+    jssh_command << sVal + ");"
     
     #index
-    jssh_command += "var target_index = 1;
+    jssh_command << "var target_index = 1;
                              for(var k=0; k<hashKeys.length; k++)
                              {
                                if(hashKeys[k] == \"index\")
@@ -380,15 +380,15 @@ class Element
                                }
                              }"
     
-    #jssh_command += "elements.length;"
+    #jssh_command << "elements.length;"
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
       
-      jssh_command += "for(var i=0; i<elements_#{tag}.length; i++)
+      jssh_command << "for(var i=0; i<elements_#{tag}.length; i++)
                                  {
                                     if(element_name != \"\") break;
                                     var element = elements_#{tag}[i];"
     else
-      jssh_command += "for(var i=0; i<elements_#{@@current_level}_#{tag}.length; i++)
+      jssh_command << "for(var i=0; i<elements_#{@@current_level}_#{tag}.length; i++)
                                  {
                                     if(element_name != \"\") break;
                                     var element = elements_#{@@current_level}_#{tag}[i];"
@@ -398,7 +398,7 @@ class Element
     # is not supplied. For e.g.: <button>Sign In</button>, in this case value of "value" attribute is "Sign In"
     # though value attribute is not supplied. But for Firefox value of "value" attribute is null. So to make sure
     # script runs on both IE and Watir we are also considering innerHTML if element is of button type.
-    jssh_command += "   var attribute = \"\";
+    jssh_command << "   var attribute = \"\";
                                 var same_type = false;
                                 if(types)
                                 {
@@ -484,18 +484,18 @@ class Element
     #                     end
     #                 end
     #                 #puts "old reg ex is #{what} new reg ex is #{newRegExp}"
-    #                 jssh_command += "   var regExp = new RegExp(#{newRegExp});
+    #                 jssh_command << "   var regExp = new RegExp(#{newRegExp});
     #                                     found = regExp.test(attribute);"
     #             elsif(how == :index)
-    #                 jssh_command += "   found = (attribute == #{what});"
+    #                 jssh_command << "   found = (attribute == #{what});"
     #             else
-    #                 jssh_command += "   found = (attribute == \"#{what}\");"
+    #                 jssh_command << "   found = (attribute == \"#{what}\");"
     #             end
     
     
-    #jssh_command += "    found;"
+    #jssh_command << "    found;"
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
-      jssh_command += "   if(found)
+      jssh_command << "   if(found)
                                     {
                                         if(value)
                                         {
@@ -514,7 +514,7 @@ class Element
                                         }
                                     }"
     else
-      jssh_command += "   if(found)
+      jssh_command << "   if(found)
                                     {
                                         if(value)
                                         {
@@ -534,7 +534,7 @@ class Element
                                     }"
     end
     
-    jssh_command += "
+    jssh_command << "
                                     else {
                                         o = null;
                                         element_name = \"\";
@@ -624,18 +624,18 @@ class Element
                                 }"
     end
     
-    jssh_command +="    var element_name = ''; var object_index = 1;var attribute = '';
+    jssh_command <<"    var element_name = ''; var object_index = 1;var attribute = '';
                                 var element = '';"
     if(@container.class == FireWatir::Firefox)
-      jssh_command += "for(var i = 0; i < elements_frames.length; i++)
+      jssh_command << "for(var i = 0; i < elements_frames.length; i++)
                                  {
                                     element = elements_frames[i];"
     else
-      jssh_command += "for(var i = 0; i < elements_frames_#{@@current_level}.length; i++)
+      jssh_command << "for(var i = 0; i < elements_frames_#{@@current_level}.length; i++)
                                  {
                                     element = elements_frames_#{@@current_level}[i];"
     end
-    jssh_command += "       if(\"index\" == \"#{how}\")
+    jssh_command << "       if(\"index\" == \"#{how}\")
                                     {
                                         attribute = object_index; object_index += 1;
                                     }
@@ -662,26 +662,26 @@ class Element
         end
       end
       #puts "old reg ex is #{what} new reg ex is #{newRegExp}"
-      jssh_command += "   var regExp = new RegExp(#{newRegExp});
+      jssh_command << "   var regExp = new RegExp(#{newRegExp});
                                     found = regExp.test(attribute);"
     elsif(how == :index)
-      jssh_command += "   found = (attribute == #{what});"
+      jssh_command << "   found = (attribute == #{what});"
     else
-      jssh_command += "   found = (attribute == \"#{what}\");"
+      jssh_command << "   found = (attribute == \"#{what}\");"
     end
     
-    jssh_command +=     "   if(found)
+    jssh_command <<     "   if(found)
                                     {"
     if(@container.class == FireWatir::Firefox)
-      jssh_command += "       element_name = \"elements_frames[\" + i + \"]\";
+      jssh_command << "       element_name = \"elements_frames[\" + i + \"]\";
                                         document = elements_frames[i].contentDocument;
                                         body = document.body;"
     else
-      jssh_command += "       element_name = \"elements_frames_#{@@current_level}[\" + i + \"]\";
+      jssh_command << "       element_name = \"elements_frames_#{@@current_level}[\" + i + \"]\";
                                         document = elements_frames_#{@@current_level}[i].contentDocument;
                                         body = document.body;"
     end
-    jssh_command += "           break;
+    jssh_command << "           break;
                                     }
                                 }
                                 element_name;"
@@ -770,7 +770,7 @@ class Element
     
     jssh_command = "var element_xpath_#{rand_no} = new Array();"
     
-    jssh_command += "var result = document.evaluate(\"#{xpath}\", document, null, #{ORDERED_NODE_ITERATOR_TYPE}, null);
+    jssh_command << "var result = document.evaluate(\"#{xpath}\", document, null, #{ORDERED_NODE_ITERATOR_TYPE}, null);
                              var iterate = result.iterateNext();
                              while(iterate)
                              {
@@ -1136,8 +1136,8 @@ class Element
       jssh_command = "var event = document.createEvent(\"MouseEvents\");"
       
       # Info about initMouseEvent at: http://www.xulplanet.com/references/objref/MouseEvent.html
-      jssh_command += "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
-      jssh_command += "#{element_object}.dispatchEvent(event);\n"
+      jssh_command << "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
+      jssh_command << "#{element_object}.dispatchEvent(event);\n"
       
       #puts "jssh_command is: #{jssh_command}"
       jssh_socket.send("#{jssh_command}", 0)
@@ -1204,10 +1204,10 @@ class Element
   #def click_js_popup(button = "OK")
   #    jssh_command = "var win = browser.contentWindow;"
   #    if(button =~ /ok/i)
-  #        jssh_command += "var popuptext = '';win.alert = function(param) {popuptext = param; return true; };
+  #        jssh_command << "var popuptext = '';win.alert = function(param) {popuptext = param; return true; };
   #                         win.confirm = function(param) {popuptext = param; return true; };"
   #    elsif(button =~ /cancel/i)
-  #        jssh_command += "var popuptext = '';win.alert = function(param) {popuptext = param; return false; };
+  #        jssh_command << "var popuptext = '';win.alert = function(param) {popuptext = param; return false; };
   #                         win.confirm = function(param) {popuptext = param; return false; };"
   #    end
   #    jssh_command.gsub!(/\n/, "")
@@ -1243,8 +1243,8 @@ class Element
   #        when "HTMLAnchorElement", "HTMLImageElement"
   #            jssh_command = "var event = document.createEvent(\"MouseEvents\");"
   #            # Info about initMouseEvent at: http://www.xulplanet.com/references/objref/MouseEvent.html
-  #            jssh_command += "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
-  #            jssh_command += "#{@@current_js_object.element_name}.dispatchEvent(event);\n"
+  #            jssh_command << "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
+  #            jssh_command << "#{@@current_js_object.element_name}.dispatchEvent(event);\n"
   #
   #            jssh_socket.send("#{jssh_command}", 0)
   #            read_socket()
@@ -1390,7 +1390,7 @@ class Element
     setPath.gsub!("|", "\\")
     
     #jssh_command = "var textBox = document.getBoxObjectFor(#{element_object}).firstChild;"
-    #jssh_command += "textBox.value = \"#{setPath}\";\n";
+    #jssh_command << "textBox.value = \"#{setPath}\";\n";
     
     #puts jssh_command
     jssh_socket.send("#{element_object}.value = \"#{setPath}\";\n", 0)
@@ -1418,7 +1418,7 @@ class Element
     if(methodName =~ /invoke/)
       jssh_command = "#{element_object}."
       for i in args do
-        jssh_command += i;
+        jssh_command << i;
       end
       #puts "#{jssh_command}"
       jssh_socket.send("#{jssh_command};\n", 0)
@@ -1475,17 +1475,17 @@ class Element
         count = 0
         if args != nil
           for i in args
-            jssh_command += "," if count != 0
+            jssh_command << "," if count != 0
             if i.kind_of? Numeric
-              jssh_command += i.to_s
+              jssh_command << i.to_s
             else
-              jssh_command += "\"#{i.to_s.gsub(/"/,"\\\"")}\""
+              jssh_command << "\"#{i.to_s.gsub(/"/,"\\\"")}\""
           end
           count = count + 1
         end
       end
       
-      jssh_command += ");\n"
+      jssh_command << ");\n"
     end
     
     if(method_type == "boolean")
@@ -1543,7 +1543,7 @@ def all
   jssh_command = "var arr_coll_#{@@current_level}=new Array(); "
   
   if(@container.class == FireWatir::Firefox || @container.class == Frame)
-    jssh_command +="var element_collection = null; element_collection = document.getElementsByTagName(\"*\");
+    jssh_command <<"var element_collection = null; element_collection = document.getElementsByTagName(\"*\");
                             if(element_collection != null && typeof(element_collection) != 'undefined')
                             {
                                 for (var i = 0; i < element_collection.length; i++)
@@ -1554,7 +1554,7 @@ def all
                             }
                             arr_coll_#{@@current_level}.length;"
   else
-    jssh_command +="var element_collection = null; element_collection = #{@container.element_name}.getElementsByTagName(\"*\");
+    jssh_command <<"var element_collection = null; element_collection = #{@container.element_name}.getElementsByTagName(\"*\");
                                 if(element_collection!= null && typeof(element_collection) != 'undefined')
                                 {
                                     for (var i = 0; i < element_collection.length; i++)
@@ -1788,24 +1788,24 @@ def locate_tagged_elements(tag, types = [])
   else
     search_tag = tag
   end
-  jssh_command += "var #{elements_tag} = null; "
-  jssh_command += "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
+  jssh_command << "var #{elements_tag} = null; "
+  jssh_command << "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
 
     
   # generate array containing results
   if types.empty?
-    jssh_command += "#{result_name} = #{elements_tag};"
+    jssh_command << "#{result_name} = #{elements_tag};"
   else
     # generate types array
-    jssh_command += "var types = new Array("
+    jssh_command << "var types = new Array("
     types.each_with_index do |type, count|
-      jssh_command += "," unless count == 0
-      jssh_command += "\"#{type}\""
+      jssh_command << "," unless count == 0
+      jssh_command << "\"#{type}\""
     end
-    jssh_command += ");"
+    jssh_command << ");"
 
     # check the type of each element
-    jssh_command += "for(var i=0; i<#{elements_tag}.length; i++)
+    jssh_command << "for(var i=0; i<#{elements_tag}.length; i++)
                        {
                           var element = #{elements_tag}[i];
                           var same_type = false;
@@ -1825,7 +1825,7 @@ def locate_tagged_elements(tag, types = [])
                           }
                       };"
   end
-  jssh_command += "#{result_name}.length;"
+  jssh_command << "#{result_name}.length;"
   
   # Remove \n that are there in the string as a result of pressing enter while formatting.
   jssh_command.gsub!(/\n/, "")

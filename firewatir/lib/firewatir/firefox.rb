@@ -221,9 +221,9 @@ module FireWatir
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
       jssh_command = "var window = getWindows()[#{@window_index}];"
-      jssh_command += " var browser = window.getBrowser();"
-      jssh_command += "var document = browser.contentDocument;"
-      jssh_command += "var body = document.body;"
+      jssh_command << " var browser = window.getBrowser();"
+      jssh_command << "var document = browser.contentDocument;"
+      jssh_command << "var body = document.body;"
       
       js_eval jssh_command
       
@@ -298,13 +298,13 @@ module FireWatir
                                     attribute = windows[i].getBrowser().contentDocument.title;
                                 }"
       if(what.class == Regexp)                    
-        jssh_command += "var regExp = new RegExp(#{what.inspect});
+        jssh_command << "var regExp = new RegExp(#{what.inspect});
                                  found = regExp.test(attribute);"
       else
-        jssh_command += "found = (attribute == \"#{what}\");"
+        jssh_command << "found = (attribute == \"#{what}\");"
       end
       
-      jssh_command +=     "if(found)
+      jssh_command <<     "if(found)
                                 {
                                     window_number = i;
                                     break;
@@ -501,12 +501,12 @@ module FireWatir
     def startClicker(button, waitTime = 1, userInput = nil, text = nil)
       jssh_command = "var win = browser.contentWindow;"
       if(button =~ /ok/i)
-        jssh_command += "var popuptext = '';
+        jssh_command << "var popuptext = '';
                                  var old_alert = win.alert;
                                  var old_confirm = win.confirm;
                                  win.alert = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return true;
                                               }
@@ -516,12 +516,12 @@ module FireWatir
                                                 win.alert(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return true;"
+          jssh_command <<          "popuptext = param; return true;"
         end
-        jssh_command += "};
+        jssh_command << "};
                                  win.confirm = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return true;
                                               }
@@ -530,15 +530,15 @@ module FireWatir
                                                 win.confirm(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return true;"
+          jssh_command <<          "popuptext = param; return true;"
         end
-        jssh_command += "};"
+        jssh_command << "};"
         
       elsif(button =~ /cancel/i)
         jssh_command = "var old_confirm = win.confirm; 
                                               win.confirm = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return false;
                                               }
@@ -547,9 +547,9 @@ module FireWatir
                                                 win.confirm(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return false;"
+          jssh_command <<          "popuptext = param; return false;"
         end
-        jssh_command += "};"
+        jssh_command << "};"
       end
       js_eval jssh_command
     end
@@ -893,21 +893,21 @@ module FireWatir
   #            read_socket(shell)
   #            #jssh_command =  "var url = document.URL;"
   #            jssh_command = "var length = getWindows().length; var win;length;\n"
-  #            #jssh_command += "for(var i = 0; i < length; i++)"
-  #            #jssh_command += "{"
-  #            #jssh_command += "   win = getWindows()[i];"
-  #            #jssh_command += "   if(win.opener != null && "
-  #            #jssh_command += "      win.title == \"[JavaScript Application]\" &&"
-  #            #jssh_command += "      win.opener.document.URL == url)"
-  #            #jssh_command += "   {"
-  #            #jssh_command += "       break;"
-  #            #jssh_command += "   }"
-  #            #jssh_command += "}"
+  #            #jssh_command << "for(var i = 0; i < length; i++)"
+  #            #jssh_command << "{"
+  #            #jssh_command << "   win = getWindows()[i];"
+  #            #jssh_command << "   if(win.opener != null && "
+  #            #jssh_command << "      win.title == \"[JavaScript Application]\" &&"
+  #            #jssh_command << "      win.opener.document.URL == url)"
+  #            #jssh_command << "   {"
+  #            #jssh_command << "       break;"
+  #            #jssh_command << "   }"
+  #            #jssh_command << "}"
   #            
-  #            #jssh_command += " win.title;\n";
-  #            #jssh_command += "var dialog = win.document.childNodes[0];"
-  #            #jssh_command += "vbox = dialog.childNodes[1].childNodes[1];"
-  #            #jssh_command += "vbox.childNodes[1].childNodes[0].childNodes[0].textContent;\n"
+  #            #jssh_command << " win.title;\n";
+  #            #jssh_command << "var dialog = win.document.childNodes[0];"
+  #            #jssh_command << "vbox = dialog.childNodes[1].childNodes[1];"
+  #            #jssh_command << "vbox.childNodes[1].childNodes[0].childNodes[0].textContent;\n"
   #            puts jssh_command 
   #            shell.send("#{jssh_command}", 0)
   #            jstext = read_socket(shell)
