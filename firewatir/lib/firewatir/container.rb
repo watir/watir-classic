@@ -431,11 +431,16 @@ module FireWatir
       # puts doc[35].to_s
     end
     
-    # evaluate javascript and return the result. Note: errors are not raised!
-    def js_eval javascript
-      javascript.gsub!("\n", "")
-      jssh_socket.send("#{javascript};\n", 0)
-      read_socket
+    # Evaluate javascript and return result. Raise an exception if an error occurred.
+    def js_eval(str)
+      str.gsub!("\n", "")
+      jssh_socket.send("#{str};\n", 0)
+      value = read_socket()
+      if md = /^(\w+)Error:(.*)$/.match(value) 
+        eval "class JS#{md[1]}Error\nend"
+        raise (eval "JS#{md[1]}Error"), md[2]
+      end
+      value
     end
     
     # evaluate the provides javascript method on the current object and return
