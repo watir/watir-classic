@@ -11,6 +11,7 @@ class TC_ExistingWindow < Test::Unit::TestCase
   def setup 
     @original_timeout = Browser.options[:attach_timeout]
     @browsers = []
+    uses_page "pass.html"
   end 
 
   def teardown
@@ -25,15 +26,19 @@ class TC_ExistingWindow < Test::Unit::TestCase
     assert_raises(NoMatchingWindowFoundException) { Browser.attach(:url, "missing") }
     assert_raises(NoMatchingWindowFoundException) { Browser.attach(:url, /missing/) }
   end    
-  
-  def test_existing_window
-    # Open a few browsers so that the test has a few windows to choose
-    # from. The test harness has already opened a window that we won't
-    # use.
-    ["pass.html", "buttons1.html", "visibility.html"].each do |file|
+
+  # Open a few browsers so that the test has a few windows to choose
+  # from. The test harness has already opened a window that we won't
+  # use.
+  def open_several_windows
+    ["buttons1.html", "whitespace.html"].each do |file|
       @browsers << Browser.start(self.class.html_root + file)
     end
-
+  end
+  
+  def test_existing_window
+    open_several_windows
+      
     b1 = Browser.attach(:title , /buttons/i)
     assert_equal("Test page for buttons", b1.title)
 
@@ -42,8 +47,24 @@ class TC_ExistingWindow < Test::Unit::TestCase
     
     b3 = Browser.attach(:url, /buttons1.html/)
     assert_equal("Test page for buttons", b3.title)
+  end
+  
+  def test_title_and_url_are_correct_after_reload
+    uses_page "whitespace.html"
+    assert_equal 'Test page for whitespace', browser.title
+    assert_match /whitespace.html/, browser.url
+    browser.link(:text, 'Login').click
+    assert_equal 'Pass Page', browser.title
+    assert_match /pass.html/, browser.url
+  end
 
-    #hard to test :url with explicit text
+  def test_working_back_and_forth
+    open_several_windows
+    buttons = Browser.attach(:url, /buttons1.html/)
+    whitespace = Browser.attach(:url, /whitespace.html/)
+    assert_match /This button is a submit/, buttons.text
+    whitespace.link(:text, 'Login').click
+    assert_match /pass/i, whitespace.text
   end
 end
 

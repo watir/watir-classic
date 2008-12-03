@@ -220,14 +220,12 @@ module FireWatir
     
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
-      jssh_command = "var window = getWindows()[#{@window_index}];"
-      jssh_command << " var browser = window.getBrowser();"
+      jssh_command =  "var window = getWindows()[#{@window_index}];"
+      jssh_command << "var browser = window.getBrowser();"
       jssh_command << "var document = browser.contentDocument;"
       jssh_command << "var body = document.body;"
-      
       js_eval jssh_command
       
-      # Get window and window's parent title and url
       @window_title = js_eval "document.title"
       @window_url = js_eval "document.URL"
     end
@@ -242,7 +240,7 @@ module FireWatir
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
         # For e.g: Close Button, Close this Window link etc.
-        window_number = find_window(:url, @window_url)
+        window_number = find_window(:url, @window_url) 
         
         # If matching window found. Close the window.
         if window_number > 0
@@ -341,7 +339,7 @@ module FireWatir
     end
     
     # Returns the url of the page currently loaded in the browser.
-    def url()
+    def url
       @window_url
     end 
     
