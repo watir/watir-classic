@@ -179,31 +179,25 @@ module FireWatir
     def goto(url)
       get_window_number()
       set_browser_document()
-      # Load the given url.
-      $jssh_socket.send("#{BROWSER_VAR}.loadURI(\"#{url}\");\n" , 0)
-      read_socket()
-      
+      js_eval "#{BROWSER_VAR}.loadURI(\"#{url}\")"
       wait()
     end
     
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
-      $jssh_socket.send("if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack();\n", 0)
-      read_socket();
+      js_eval "if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack()"
       wait()
     end
     
     # Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
     def forward()
-      $jssh_socket.send("if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward();\n", 0)
-      read_socket();
+      js_eval "if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward()"
       wait()
     end
     
     # Reloads the current page in the browser. Waits for the page to get loaded.
     def refresh()
-      $jssh_socket.send("#{BROWSER_VAR}.reload();\n", 0)
-      read_socket();
+      js_eval "#{BROWSER_VAR}.reload()"
       wait()
     end
     
@@ -234,30 +228,19 @@ module FireWatir
       jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
       jssh_command += "var #{BODY_VAR} = #{DOCUMENT_VAR}.body;"
       
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      read_socket()
+      js_eval jssh_command
       
       # Get window and window's parent title and url
-      $jssh_socket.send("#{DOCUMENT_VAR}.title;\n", 0)
-      @window_title = read_socket()
-      #STDERR.puts "Using window title: #{@window_title}"
-      $jssh_socket.send("#{DOCUMENT_VAR}.URL;\n", 0)
-      @window_url = read_socket()
-      #STDERR.puts "Using window URL: #{@window_url}"
+      @window_title = js_eval "#{DOCUMENT_VAR}.title"
+      @window_url = js_eval "#{DOCUMENT_VAR}.URL"
     end
     private :set_browser_document
-
-    # return the number of windows
-    def window_count
-      
-    end
     
     #   Closes the window.
-    def close()
-      # Derek Berner 5/16/08
+    def close
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
-        $jssh_socket.send("getWindows()[0].close(); \n", 0)
+        js_eval("getWindows()[0].close()")
         @t.join if @t != nil
         #sleep 5
       else
@@ -267,8 +250,7 @@ module FireWatir
         
         # If matching window found. Close the window.
         if(window_number > 0)
-          $jssh_socket.send("getWindows()[#{window_number}].close();\n", 0)
-          read_socket();
+          js_eval("getWindows()[#{window_number}].close()")
         end    
 
       end
@@ -352,10 +334,7 @@ module FireWatir
                             window_number;"
       
       jssh_command.gsub!(/\n/, "")
-      #puts "jssh_command is : #{jssh_command}"
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      window_number = read_socket()
-      #puts "window number is : " + window_number.to_s
+      window_number = js_eval jssh_command
       
       return window_number.to_i
     end
@@ -391,34 +370,29 @@ module FireWatir
     end 
     
     # Returns the title of the page currently loaded in the browser.
-    def title()
+    def title
       @window_title
     end
     
     # Returns the html of the page currently loaded in the browser.
-    def html()
-      $jssh_socket.send("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
-      #$jssh_socket.send("#{BODY_VAR}.innerHTML;\n", 0)
-      result = read_socket()
+    def html
+      result = js_eval("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
       return "<html>" + result + "</html>"
     end
     
     # Returns the text of the page currently loaded in the browser.
-    def text()
-      $jssh_socket.send("#{BODY_VAR}.textContent;\n", 0)
-      return read_socket().strip
+    def text
+      js_eval("#{BODY_VAR}.textContent").strip
     end
     
     # Maximize the current browser window.
     def maximize()
-      $jssh_socket.send("#{WINDOW_VAR}.maximize();\n", 0)
-      read_socket()
+      js_eval "#{WINDOW_VAR}.maximize()"
     end
     
     # Minimize the current browser window.
     def minimize()
-      $jssh_socket.send("#{WINDOW_VAR}.minimize();\n", 0)
-      read_socket()
+      js_eval "#{WINDOW_VAR}.minimize()"
     end
     
     # Waits for the page to get loaded.
@@ -431,18 +405,15 @@ module FireWatir
         isLoadingDocument = js_eval("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
-        # Derek Berner 5/16/08
         # Raise an exception if the page fails to load
         if (Time.now - start) > 300
           raise "Page Load Timeout"
         end
       end
-      # Derek Berner 5/16/08
       # If the redirect is to a download attachment that does not reload this page, this
       # method will loop forever. Therefore, we need to ensure that if this method is called
       # twice with the same URL, we simply accept that we're done.
-      $jssh_socket.send("#{BROWSER_VAR}.contentDocument.URL;\n", 0)
-      url = read_socket()
+      url = js_eval("#{BROWSER_VAR}.contentDocument.URL")
       
       if(url != last_url)
         # Check for Javascript redirect. As we are connected to Firefox via JSSh. JSSh
@@ -942,18 +913,14 @@ module FireWatir
     end
     alias showFrames show_frames
     
-    # 5/16/08 Derek Berner
-    # Wrapper method to send JS commands concisely,
-    # and propagate errors
+    # Evaluate javascript and return result. Raise an exception if an error occurred.
     def js_eval(str)
-      #puts "JS Eval: #{str}"
-      $jssh_socket.send("#{str};\n",0)
+      $jssh_socket.send("#{str};\n", 0)
       value = read_socket()
-      if md=/^(\w+)Error:(.*)$/.match(value) 
+      if md = /^(\w+)Error:(.*)$/.match(value) 
         eval "class JS#{md[1]}Error\nend"
         raise (eval "JS#{md[1]}Error"), md[2]
       end
-      #puts "Value: #{value}"
       value
     end
     

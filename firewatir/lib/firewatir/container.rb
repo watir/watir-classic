@@ -431,7 +431,7 @@ module FireWatir
       # puts doc[35].to_s
     end
     
-    # evaluate javascript and return the result.
+    # evaluate javascript and return the result. Note: errors are not raised!
     def js_eval javascript
       javascript.gsub!("\n", "")
       jssh_socket.send("#{javascript};\n", 0)
