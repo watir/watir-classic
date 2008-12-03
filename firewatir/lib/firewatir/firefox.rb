@@ -909,18 +909,7 @@ module FireWatir
       end
     end
     alias showFrames show_frames
-    
-    # Evaluate javascript and return result. Raise an exception if an error occurred.
-    def js_eval(str)
-      $jssh_socket.send("#{str};\n", 0)
-      value = read_socket()
-      if md = /^(\w+)Error:(.*)$/.match(value) 
-        eval "class JS#{md[1]}Error\nend"
-        raise (eval "JS#{md[1]}Error"), md[2]
-      end
-      value
-    end
-    
+        
   end # Class Firefox
   
   # 
