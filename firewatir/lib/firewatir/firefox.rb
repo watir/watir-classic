@@ -238,16 +238,15 @@ module FireWatir
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
-        @t.join if @t != nil
-        #sleep 5
+        @t.join if @t != nil # why? consider removing this. it may be causing hangs.
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
         # For e.g: Close Button, Close this Window link etc.
-        window_number = find_window("url", @window_url)
+        window_number = find_window(:url, @window_url)
         
         # If matching window found. Close the window.
-        if(window_number > 0)
-          js_eval("getWindows()[#{window_number}].close()")
+        if window_number > 0
+          js_eval "getWindows()[#{window_number}].close()"
         end    
 
       end
@@ -282,12 +281,11 @@ module FireWatir
       br
     end   
 
-    #
-    # Description:
-    #   Finds a Firefox browser window with a given title or url.
-    #
+    # return the window index for the browser window with the given title or url.
+    #   how - :url or :title
+    #   what - string or regexp
     def find_window(how, what)
-      jssh_command =  "var windows = getWindows(); var window_number = 0;var found = false;
+      jssh_command =  "var windows = getWindows(); var window_number = 0; var found = false;
                              for(var i = 0; i < windows.length; i++)
                              {
                                 var attribute = '';
@@ -300,23 +298,7 @@ module FireWatir
                                     attribute = windows[i].getBrowser().contentDocument.title;
                                 }"
       if(what.class == Regexp)                    
-        # Construct the regular expression because we can't use it directly by converting it to string.
-        # If reg ex is /Google/i then its string conversion will be (?i-mx:Google) so we can't use it.
-        # Construct the regular expression again from the string conversion.
-        oldRegExp = what.to_s
-        newRegExp = "/" + what.source + "/"
-        flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
-        
-        for i in 0..flags.length do
-          flag = flags[i, 1]
-          if(flag == '-')
-            break;
-          else
-            newRegExp << flag
-          end
-        end
-        
-        jssh_command += "var regExp = new RegExp(#{newRegExp});
+        jssh_command += "var regExp = new RegExp(#{what.inspect});
                                  found = regExp.test(attribute);"
       else
         jssh_command += "found = (attribute == \"#{what}\");"
@@ -330,10 +312,7 @@ module FireWatir
                             }
                             window_number;"
       
-      jssh_command.gsub!(/\n/, "")
-      window_number = js_eval jssh_command
-      
-      return window_number.to_i
+      return window_number = js_eval(jssh_command).to_i
     end
     private :find_window
     
