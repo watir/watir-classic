@@ -179,25 +179,25 @@ module FireWatir
     def goto(url)
       get_window_number()
       set_browser_document()
-      js_eval "#{BROWSER_VAR}.loadURI(\"#{url}\")"
+      js_eval "browser.loadURI(\"#{url}\")"
       wait()
     end
     
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
-      js_eval "if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack()"
+      js_eval "if(browser.canGoBack) browser.goBack()"
       wait()
     end
     
     # Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
     def forward()
-      js_eval "if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward()"
+      js_eval "if(browser.canGoForward) browser.goForward()"
       wait()
     end
     
     # Reloads the current page in the browser. Waits for the page to get loaded.
     def refresh()
-      js_eval "#{BROWSER_VAR}.reload()"
+      js_eval "browser.reload()"
       wait()
     end
     
@@ -220,19 +220,16 @@ module FireWatir
     
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
-      # Get the window in variable WINDOW_VAR.
-      # Get the browser in variable BROWSER_VAR.
-      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@window_index}];"
-      jssh_command += " var #{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser();"
-      # Get the document and body in variable DOCUMENT_VAR and BODY_VAR respectively.
-      jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
-      jssh_command += "var #{BODY_VAR} = #{DOCUMENT_VAR}.body;"
+      jssh_command = "var window = getWindows()[#{@window_index}];"
+      jssh_command += " var browser = window.getBrowser();"
+      jssh_command += "var document = browser.contentDocument;"
+      jssh_command += "var body = document.body;"
       
       js_eval jssh_command
       
       # Get window and window's parent title and url
-      @window_title = js_eval "#{DOCUMENT_VAR}.title"
-      @window_url = js_eval "#{DOCUMENT_VAR}.URL"
+      @window_title = js_eval "document.title"
+      @window_url = js_eval "document.URL"
     end
     private :set_browser_document
     
@@ -376,23 +373,23 @@ module FireWatir
     
     # Returns the html of the page currently loaded in the browser.
     def html
-      result = js_eval("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
+      result = js_eval("var htmlelem = document.getElementsByTagName('html')[0]; htmlelem.innerHTML")
       return "<html>" + result + "</html>"
     end
     
     # Returns the text of the page currently loaded in the browser.
     def text
-      js_eval("#{BODY_VAR}.textContent").strip
+      js_eval("body.textContent").strip
     end
     
     # Maximize the current browser window.
     def maximize()
-      js_eval "#{WINDOW_VAR}.maximize()"
+      js_eval "window.maximize()"
     end
     
     # Minimize the current browser window.
     def minimize()
-      js_eval "#{WINDOW_VAR}.minimize()"
+      js_eval "window.minimize()"
     end
     
     # Waits for the page to get loaded.
@@ -402,7 +399,7 @@ module FireWatir
       start = Time.now
       
       while isLoadingDocument != "false"
-        isLoadingDocument = js_eval("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;")
+        isLoadingDocument = js_eval("browser=window.getBrowser(); browser.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
         # Raise an exception if the page fails to load
@@ -413,7 +410,7 @@ module FireWatir
       # If the redirect is to a download attachment that does not reload this page, this
       # method will loop forever. Therefore, we need to ensure that if this method is called
       # twice with the same URL, we simply accept that we're done.
-      url = js_eval("#{BROWSER_VAR}.contentDocument.URL")
+      url = js_eval("browser.contentDocument.URL")
       
       if(url != last_url)
         # Check for Javascript redirect. As we are connected to Firefox via JSSh. JSSh
@@ -422,10 +419,10 @@ module FireWatir
         # So we currently don't wait for such a page.
         # wait variable in JSSh tells if we should wait more for the page to get loaded
         # or continue. -1 means page is not redirected. Anyother positive values means wait.
-        jssh_command = "var wait = -1; var meta = null; meta = #{BROWSER_VAR}.contentDocument.getElementsByTagName('meta');
+        jssh_command = "var wait = -1; var meta = null; meta = browser.contentDocument.getElementsByTagName('meta');
                                 if(meta != null)
                                 {
-                                    var doc_url = #{BROWSER_VAR}.contentDocument.URL;
+                                    var doc_url = browser.contentDocument.URL;
                                     for(var i=0; i< meta.length;++i)
                                     {
 						    			var content = meta[i].content;
@@ -463,7 +460,7 @@ module FireWatir
           if(wait_time != -1)
             sleep(wait_time)
             # Call wait again. In case there are multiple redirects.
-            $jssh_socket.send("#{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser(); \n",0)
+            $jssh_socket.send("browser = window.getBrowser(); \n",0)
             read_socket()
             wait(url)
           end    
@@ -529,7 +526,7 @@ module FireWatir
     #   text        - Text that should appear on pop up.
     #
     def startClicker(button, waitTime = 1, userInput = nil, text = nil)
-      jssh_command = "var win = #{BROWSER_VAR}.contentWindow;"
+      jssh_command = "var win = browser.contentWindow;"
       if(button =~ /ok/i)
         jssh_command += "var popuptext = '';
                                  var old_alert = win.alert;
@@ -605,7 +602,7 @@ module FireWatir
     
     # Returns the document element of the page currently loaded in the browser.
     def document
-      Document.new("#{DOCUMENT_VAR}")
+      Document.new("document")
     end
     
     # Returns the first element that matches the given xpath expression or query.
@@ -883,7 +880,7 @@ module FireWatir
     #   Name, and index of all the frames available on the page.
     #
     def show_frames
-      jssh_command = "var frameset = #{WINDOW_VAR}.frames;
+      jssh_command = "var frameset = window.frames;
                             var elements_frames = new Array();
                             for(var i = 0; i < frameset.length; i++)
                             {
@@ -941,7 +938,7 @@ module FireWatir
   #            sleep 4 
   #            shell = TCPSocket.new("localhost", 9997)
   #            read_socket(shell)
-  #            #jssh_command =  "var url = #{DOCUMENT_VAR}.URL;"
+  #            #jssh_command =  "var url = document.URL;"
   #            jssh_command = "var length = getWindows().length; var win;length;\n"
   #            #jssh_command += "for(var i = 0; i < length; i++)"
   #            #jssh_command += "{"

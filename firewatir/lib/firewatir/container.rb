@@ -46,14 +46,6 @@ module FireWatir
     
     # IP Address of the machine where the script is to be executed. Default to localhost.
     MACHINE_IP = "127.0.0.1"
-    # Name of the variable with which window is identified in JSSh.
-    WINDOW_VAR = "window"
-    # Name of the variable with which browser is identified in JSSh.
-    BROWSER_VAR = "browser"
-    # Name of the variable with which document is identified in JSSh.
-    DOCUMENT_VAR = "document"
-    # Name of the variable with which body is identified in JSSh.
-    BODY_VAR    = "body"
         
     # The default color for highlighting objects as they are accessed.
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
