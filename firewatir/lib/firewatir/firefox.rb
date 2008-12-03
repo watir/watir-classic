@@ -572,10 +572,7 @@ module FireWatir
         end
         jssh_command += "};"
       end
-      jssh_command.gsub!(/\n/, "")
-      #puts "jssh command sent for js pop up is : #{jssh_command}"
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      read_socket()
+      js_eval jssh_command
     end
     
     #
@@ -586,11 +583,9 @@ module FireWatir
     #   Text shown in javascript pop up.
     #
     def get_popup_text()
-      $jssh_socket.send("popuptext;\n", 0)
-      return_value = read_socket()
+      return_value = js_eval "popuptext"
       # reset the variable
-      $jssh_socket.send("popuptext = '';\n", 0)
-      read_socket()
+      js_eval "popuptext = ''"
       return return_value
     end
     
@@ -884,9 +879,7 @@ module FireWatir
                             }
                             elements_frames.length;"
       
-      jssh_command.gsub!("\n", "")
-      $jssh_socket.send("#{jssh_command};\n", 0)
-      length = read_socket().to_i 
+      length = js_eval(jssh_command).to_i
       
       puts "There are #{length} frames"
       
