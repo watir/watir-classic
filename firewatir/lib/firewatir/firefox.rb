@@ -232,14 +232,11 @@ module FireWatir
       @window_url = js_eval "document.URL"
     end
 
-    public 
-    def element_name
-      window_var
-    end
-    private
+    public
     def window_var
       "window"
     end
+    private
     def browser_var
       "browser"
     end
