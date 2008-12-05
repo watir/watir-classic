@@ -28,8 +28,9 @@ task :clean => [:clean_subprojects]
 CLEAN << 'gems/*'
 
 desc 'Run unit tests for IE'
-task :test_ie do
-  load 'watir/unittests/core_tests.rb'
+Rake::TestTask.new :test_ie do |t|
+  t.test_files = FileList['watir/unittests/core_tests.rb']
+  t.verbose = true
 end
 
 desc 'Run unit tests for FireFox'
