@@ -1,6 +1,11 @@
+require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
+require 'rake/testtask'
+gem 'ci_reporter'
+require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
+ENV['CI_REPORTS'] = ENV['CC_BUILD_ARTIFACTS']
 
 desc "Generate all the Watir gems"
 task :gems do
@@ -32,7 +37,7 @@ task :test_ff do
   load 'firewatir/unittests/mozilla_all_tests.rb' 
 end
 
-task :cruise => :test_ie
+task :cruise => ['ci:setup:testunit', :test_ie]
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
 task :website do
