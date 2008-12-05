@@ -603,7 +603,7 @@ class Element
     jssh_command = ""
     if(@container.class == FireWatir::Firefox)
       # In firefox 3 if you write Frame Name then it will not show anything. So we add .toString function to every element.
-      jssh_command = "var frameset = window.frames;
+      jssh_command = "var frameset = #{@container.element_name}.frames;
                                 var elements_frames = new Array();
                                 for(var i = 0; i < frameset.length; i++)
                                 {

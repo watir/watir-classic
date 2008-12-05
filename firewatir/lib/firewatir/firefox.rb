@@ -144,7 +144,7 @@ module FireWatir
         when /java/
           raise "Not implemented: Create a browser finder in JRuby"
         end     
-        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
+        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}") } 
         sleep waitTime
       end
 
@@ -163,6 +163,8 @@ module FireWatir
     end
     
     # Gets the window number opened. 
+    # Currently, this returns the most recently opened window, which may or may
+    # not be the current window.
     def get_window_number()
       # If at any time a non-browser window like the "Downloads" window 
       #   pops up, it will become the topmost window, so make sure we 
@@ -201,6 +203,7 @@ module FireWatir
       wait()
     end
     
+    private
     # This function creates a new socket at port 9997 and sets the default values for instance and class variables.
     # Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
     def set_defaults(no_of_tries = 0)
@@ -216,12 +219,11 @@ module FireWatir
       end
       @error_checkers = []
     end
-    private :set_defaults
     
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
-      jssh_command =  "var window = getWindows()[#{@window_index}];"
-      jssh_command << "var browser = window.getBrowser();"
+      jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
+      jssh_command << "var browser = #{window_var}.getBrowser();"
       jssh_command << "var document = browser.contentDocument;"
       jssh_command << "var body = document.body;"
       js_eval jssh_command
@@ -229,8 +231,26 @@ module FireWatir
       @window_title = js_eval "document.title"
       @window_url = js_eval "document.URL"
     end
-    private :set_browser_document
+
+    public 
+    def element_name
+      window_var
+    end
+    private
+    def window_var
+      "window"
+    end
+    def browser_var
+      "browser"
+    end
+    def document_var
+      "document"
+    end
+    def body_var
+      "body"
+    end
     
+    public
     #   Closes the window.
     def close
       # Try to join thread only if there is exactly one open window
@@ -361,12 +381,12 @@ module FireWatir
     
     # Maximize the current browser window.
     def maximize()
-      js_eval "window.maximize()"
+      js_eval "#{window_var}.maximize()"
     end
     
     # Minimize the current browser window.
     def minimize()
-      js_eval "window.minimize()"
+      js_eval "#{window_var}.minimize()"
     end
     
     # Waits for the page to get loaded.
@@ -376,7 +396,7 @@ module FireWatir
       start = Time.now
       
       while isLoadingDocument != "false"
-        isLoadingDocument = js_eval("browser=window.getBrowser(); browser.webProgress.isLoadingDocument;")
+        isLoadingDocument = js_eval("browser=#{window_var}.getBrowser(); browser.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
         # Raise an exception if the page fails to load
@@ -432,7 +452,7 @@ module FireWatir
           if(wait_time != -1)
             sleep(wait_time)
             # Call wait again. In case there are multiple redirects.
-            js_eval "browser = window.getBrowser()"
+            js_eval "browser = #{window_var}.getBrowser()"
             wait(url)
           end    
         rescue
@@ -844,7 +864,7 @@ module FireWatir
     #   Name, and index of all the frames available on the page.
     #
     def show_frames
-      jssh_command = "var frameset = window.frames;
+      jssh_command = "var frameset = #{window_var}.frames;
                             var elements_frames = new Array();
                             for(var i = 0; i < frameset.length; i++)
                             {

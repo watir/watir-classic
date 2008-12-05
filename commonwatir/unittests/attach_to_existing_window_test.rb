@@ -58,6 +58,7 @@ class TC_ExistingWindow < Test::Unit::TestCase
     assert_match /pass.html/, browser.url
   end
 
+  tag_method :test_working_back_and_forth, :fails_on_firefox
   def test_working_back_and_forth
     open_several_windows
     buttons = Browser.attach(:url, /buttons1.html/)
