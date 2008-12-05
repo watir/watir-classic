@@ -181,25 +181,25 @@ module FireWatir
     def goto(url)
       get_window_number()
       set_browser_document()
-      js_eval "browser.loadURI(\"#{url}\")"
+      js_eval "#{browser_var}.loadURI(\"#{url}\")"
       wait()
     end
     
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
-      js_eval "if(browser.canGoBack) browser.goBack()"
+      js_eval "if(#{browser_var}.canGoBack) #{browser_var}.goBack()"
       wait()
     end
     
     # Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
     def forward()
-      js_eval "if(browser.canGoForward) browser.goForward()"
+      js_eval "if(#{browser_var}.canGoForward) #{browser_var}.goForward()"
       wait()
     end
     
     # Reloads the current page in the browser. Waits for the page to get loaded.
     def refresh()
-      js_eval "browser.reload()"
+      js_eval "#{browser_var}.reload()"
       wait()
     end
     
@@ -223,8 +223,8 @@ module FireWatir
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
       jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
-      jssh_command << "var browser = #{window_var}.getBrowser();"
-      jssh_command << "var document = browser.contentDocument;"
+      jssh_command << "var #{browser_var} = #{window_var}.getBrowser();"
+      jssh_command << "var document = #{browser_var}.contentDocument;"
       jssh_command << "var body = document.body;"
       js_eval jssh_command
       
@@ -416,10 +416,10 @@ module FireWatir
         # So we currently don't wait for such a page.
         # wait variable in JSSh tells if we should wait more for the page to get loaded
         # or continue. -1 means page is not redirected. Anyother positive values means wait.
-        jssh_command = "var wait = -1; var meta = null; meta = browser.contentDocument.getElementsByTagName('meta');
+        jssh_command = "var wait = -1; var meta = null; meta = #{browser_var}.contentDocument.getElementsByTagName('meta');
                                 if(meta != null)
                                 {
-                                    var doc_url = browser.contentDocument.URL;
+                                    var doc_url = #{browser_var}.contentDocument.URL;
                                     for(var i=0; i< meta.length;++i)
                                     {
 						    			var content = meta[i].content;
@@ -517,7 +517,7 @@ module FireWatir
     #   text        - Text that should appear on pop up.
     #
     def startClicker(button, waitTime = 1, userInput = nil, text = nil)
-      jssh_command = "var win = browser.contentWindow;"
+      jssh_command = "var win = #{browser_var}.contentWindow;"
       if(button =~ /ok/i)
         jssh_command << "var popuptext = '';
                                  var old_alert = win.alert;
