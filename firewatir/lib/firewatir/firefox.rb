@@ -224,12 +224,12 @@ module FireWatir
     def set_browser_document
       jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
       jssh_command << "var #{browser_var} = #{window_var}.getBrowser();"
-      jssh_command << "var document = #{browser_var}.contentDocument;"
-      jssh_command << "var body = document.body;"
+      jssh_command << "var #{document_var} = #{browser_var}.contentDocument;"
+      jssh_command << "var body = #{document_var}.body;"
       js_eval jssh_command
       
-      @window_title = js_eval "document.title"
-      @window_url = js_eval "document.URL"
+      @window_title = js_eval "#{document_var}.title"
+      @window_url = js_eval "#{document_var}.URL"
     end
 
     public
@@ -240,11 +240,8 @@ module FireWatir
     def browser_var
       "browser"
     end
-    def document_var
+    def document_var # unfinished
       "document"
-    end
-    def body_var
-      "body"
     end
     
     public
@@ -367,7 +364,7 @@ module FireWatir
     
     # Returns the html of the page currently loaded in the browser.
     def html
-      result = js_eval("var htmlelem = document.getElementsByTagName('html')[0]; htmlelem.innerHTML")
+      result = js_eval("var htmlelem = #{document_var}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
       return "<html>" + result + "</html>"
     end
     
