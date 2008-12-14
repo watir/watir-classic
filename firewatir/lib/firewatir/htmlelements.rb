@@ -1869,7 +1869,22 @@ module FireWatir
     TAG = 'LI'
   end
   class Lis < ElementCollections; end
-  
+
+  class Dl < NonControlElement
+    TAG = 'DL'
+  end
+  class Dls < ElementCollections; end
+
+  class Dt < NonControlElement
+    TAG = 'DT'
+  end
+  class Dts < ElementCollections; end
+
+  class Dd < NonControlElement
+    TAG = 'DD'
+  end
+  class Dds < ElementCollections; end
+
   class H1 < NonControlElement
     TAG = 'H1'
   end

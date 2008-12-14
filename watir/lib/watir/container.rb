@@ -611,6 +611,42 @@ module Watir
     def divs
       Divs.new(self)
     end
+    
+    # this is the main method for accessing the dls iterator. Returns a Dls collection
+    #
+    # Typical usage:
+    #
+    #   ie.dls.each { |d| puts d.to_s }            # iterate through all the dls on the page
+    #   ie.dls[1].to_s                             # goto the first dl on the page
+    #   ie.dls.length                              # show how many dls are on the page.
+    #
+    def dls
+      Dls.new(self)
+    end
+    
+    # this is the main method for accessing the dds iterator. Returns a Dds collection
+    #
+    # Typical usage:
+    #
+    #   ie.dds.each { |d| puts d.to_s }            # iterate through all the dds on the page
+    #   ie.dds[1].to_s                             # goto the first dd on the page
+    #   ie.dds.length                              # show how many dds are on the page.
+    #
+    def dds
+      Dds.new(self)
+    end
+    
+    # this is the main method for accessing the dts iterator. Returns a Dts collection
+    #
+    # Typical usage:
+    #
+    #   ie.dts.each { |d| puts d.to_s }            # iterate through all the dts on the page
+    #   ie.dts[1].to_s                             # goto the first dt on the page
+    #   ie.dts.length                              # show how many dts are on the page.
+    #
+    def dts
+      Dts.new(self)
+    end
         
     # this is the main method for accessing the spans iterator.
     #

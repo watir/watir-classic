@@ -384,7 +384,69 @@ module FireWatir
     end    
     
     
-    
+    #
+    # Description:
+    #   Used to access a definition list element - a <dl> HTML tag.
+    #
+    # Input:
+    #   - how - Attribute used to identify the definition list element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dl(:id, 'user_name')                    # access the dl element with an ID of user_name
+    #    ff.dl(:title, 'address')                   # access the dl element with a title of address
+    #
+    # Returns:
+    #   Dl object.
+    #
+    def dl(how, what = nil)
+      locate if defined?(locate)
+      Dl.new(self, how, what)
+    end
+
+    #
+    # Description:
+    #   Used to access a definition term element - a <dt> HTML tag.
+    #
+    # Input:
+    #   - how  - Attribute used to identify the image element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dt(:id, 'user_name')                    # access the dt element with an ID of user_name
+    #    ff.dt(:title, 'address')                   # access the dt element with a title of address
+    #
+    # Returns:
+    #   Dt object.
+    #
+    def dt(how, what = nil)
+      locate if defined?(locate)
+      Dt.new(self, how, what)
+    end
+
+    #
+    # Description:
+    #   Used to access a definition description element - a <dd> HTML tag.
+    #
+    # Input:
+    #   - how  - Attribute used to identify the image element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dd(:id, 'user_name')                    # access the dd element with an ID of user_name
+    #    ff.dd(:title, 'address')                   # access the dd element with a title of address
+    #
+    # Returns:
+    #   Dd object.
+    #
+    def dd(how, what = nil)
+      locate if defined?(locate)
+      Dd.new(self, how, what)
+    end
+
     # Description:
     #	Searching for Page Elements. Not for external consumption.
     #        

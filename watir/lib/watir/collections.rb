@@ -309,4 +309,22 @@ module Watir
     end
   end
   
+  class Dls < ElementCollections
+    include CommonCollection
+    def element_class; Dl; end
+    def element_tag; 'DL'; end
+  end
+
+  class Dts < ElementCollections
+    include CommonCollection
+    def element_class; Dt; end
+    def element_tag; 'DT'; end
+  end
+
+  class Dds < ElementCollections
+    include CommonCollection
+    def element_class; Dd; end
+    def element_tag; 'DD'; end
+  end
+
 end
