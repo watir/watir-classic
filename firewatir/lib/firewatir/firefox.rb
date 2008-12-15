@@ -203,6 +203,14 @@ module FireWatir
       wait()
     end
     
+    # Executes the given JavaScript string 
+    def execute_script(source)
+      result = js_eval source.to_s
+      wait()
+      
+      result
+    end
+    
     private
     # This function creates a new socket at port 9997 and sets the default values for instance and class variables.
     # Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.

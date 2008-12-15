@@ -378,6 +378,11 @@ module Watir
       wait
     end
     
+    # Execute the given JavaScript string
+    def execute_script(source)
+      document.parentWindow.eval(source.to_s)
+    end
+    
     # clear the list of urls that we have visited
     def clear_url_list
       @url_list.clear
