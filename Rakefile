@@ -52,3 +52,6 @@ task :publish_website => [:website] do
   user = 'bret' # userid on rubyforge
   puts system("call pscp -v -r doc\\output\\*.* #{user}@rubyforge.org:/var/www/gforge-projects/wtr")
 end
+
+desc 'Run tests for all browser'
+task :test => [:test_ie, :test_ff]
