@@ -419,6 +419,12 @@ module Watir
     def focus
     end
     
+    # Hidden element is never visible - returns false.
+    def visible?
+      assert_exists
+      false
+    end
+    
   end
   
   # For fields that accept file uploads

@@ -1444,6 +1444,15 @@ module FireWatir
     def focus
     end
     
+    #
+    # Description:
+    #   Hidden element is never visible - returns false.
+    # 
+    def visible?
+      assert_exists
+      false
+    end
+    
   end
   
   #

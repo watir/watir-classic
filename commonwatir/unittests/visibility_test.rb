@@ -40,4 +40,8 @@ class TC_Visibility < Test::Unit::TestCase
     assert_equal(true, browser.div(:id, "div3").visible? )
     assert_equal(true, browser.text_field(:id, "lgnId3").visible? )  
   end
+  
+  def test_hidden_element
+    assert_equal(false, browser.hidden(:id, 'hidden-type').visible? )
+  end
 end
