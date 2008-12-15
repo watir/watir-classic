@@ -38,7 +38,7 @@ require 'socket'
 
 require 'firewatir/exceptions'
 require 'firewatir/container'
-require 'firewatir/MozillaBaseElement'
+require 'firewatir/mozilla_base_element'
 require 'firewatir/htmlelements'
 require 'watir/matches'
 require 'firewatir/firefox'
