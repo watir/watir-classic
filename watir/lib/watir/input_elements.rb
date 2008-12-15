@@ -24,8 +24,7 @@ module Watir
     attr_accessor :o
     
     # This method clears the selected items in the select box
-    # TODO: fix Camel case
-    def clearSelection
+    def clear
       assert_exists
       highlight(:set)
       wait = false
@@ -88,7 +87,7 @@ module Watir
     # Returns all the items in the select list as an array.
     # An empty array is returned if the select box has no contents.
     # Raises UnknownObjectException if the select box is not found
-    def getAllContents # BUG: camel_case.rb
+    def options 
       assert_exists
       @container.log "There are #{@o.length} items"
       returnArray = []
@@ -98,7 +97,7 @@ module Watir
     
     # Returns the selected items as an array.
     # Raises UnknownObjectException if the select box is not found.
-    def getSelectedItems     # TODO: fix camel case
+    def selected_options
       assert_exists
       returnArray = []
       @container.log "There are #{@o.length} items"
@@ -112,7 +111,7 @@ module Watir
     end
 
     # Does the SelectList include the specified option (text)?
-    def includes? text_or_regexp
+    def include? text_or_regexp
       getAllContents.grep(text_or_regexp).size > 0
     end
 
@@ -258,10 +257,12 @@ module Watir
     #  19 Jan 2005 - It is added as prototype functionality, and may change
     #   * destination_how   - symbol, :id, :name how we identify the drop target
     #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
-    def dragContentsTo(destination_how, destination_what)
+    def drag_contents_to(destination_how, destination_what)
       assert_exists
       destination = @container.text_field(destination_how, destination_what)
-      raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
+      unless destination.exists?
+        raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "
+      end
       
       @o.focus
       @o.select
@@ -466,16 +467,14 @@ module Watir
       @value = value
     end
     
-    # BUG: rename me
     # This method determines if a radio button or check box is set.
     # Returns true is set/checked or false if not set/checked.
     # Raises UnknownObjectException if its unable to locate an object.
-    def isSet?
+    def set? # could be just "checked?"
       assert_exists
       return @o.checked
     end
-    alias getState isSet?
-    alias checked? isSet?
+    alias checked? set?
     
     # This method is the common code for setting or clearing checkboxes and radio.
     def set_clear_item(set)

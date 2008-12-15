@@ -374,7 +374,7 @@ module Watir
     #    ie.checkbox(:id, 'day_to_send', 'monday')         # access the check box with an id of day_to_send and a value of monday
     #    ie.checkbox(:name,'email_frequency', 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
     #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
-    def checkbox(how, what=nil, value=nil)
+    def checkbox(how, what=nil, value=nil) # should be "check_box" ?
       CheckBox.new(self, how, what, value)
     end
     

@@ -1282,7 +1282,7 @@ class Element
   # Output:
   #   Array of option elements.
   #
-  def options
+  def js_options
     jssh_socket.send("#{element_object}.options.length;\n", 0)
     length = read_socket().to_i
     #puts "options length is : #{length}"
@@ -1292,7 +1292,7 @@ class Element
     end
     return arr_options
   end
-  private :options
+  private :js_options
   
   #
   # Description:

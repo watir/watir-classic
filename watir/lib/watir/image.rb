@@ -43,13 +43,13 @@ module Watir
     end
     
     # this method returns the file created date of the image
-    def fileCreatedDate
+    def file_created_date
       assert_exists
       return @o.invoke("fileCreatedDate")
     end
     
     # this method returns the filesize of the image
-    def fileSize
+    def file_size
       assert_exists
       return @o.invoke("fileSize").to_s
     end
@@ -70,7 +70,7 @@ module Watir
     # If the image was not loaded, the browser is unable to determine some of the properties.
     # We look for these missing properties to see if the image is really there or not.
     # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
-    def hasLoaded?
+    def loaded?
       locate
       raise UnknownObjectException, "Unable to locate image using #{@how} and #{@what}" if @o == nil
       return false if @o.fileCreatedDate == "" and @o.fileSize.to_i == -1
