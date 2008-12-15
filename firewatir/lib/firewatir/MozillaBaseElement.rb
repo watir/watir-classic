@@ -1428,7 +1428,7 @@ class Element
     else
       #assert_exists
       #puts "element name is #{element_object}"
-      
+
       # We get method name with trailing '=' when we try to assign a value to a
       # property. So just remove the '=' to get the type
       temp = ""
@@ -1440,11 +1440,11 @@ class Element
         temp = "#{element_object}.#{methodName}"
       end
       #puts "temp is : #{temp}"
-      
+
       jssh_socket.send("typeof(#{temp});\n", 0)
       method_type = read_socket()
       #puts "method_type is : #{method_type}"
-      
+
       if(assigning_value)
         if(method_type != "boolean" && args[0].class != Fixnum)
           args[0].gsub!("\\", "\\"*4)
@@ -1459,7 +1459,7 @@ class Element
         read_socket()
         return
       end
-      
+
       methodName = "#{element_object}.#{methodName}"
       if(args.length == 0)
         #puts "In if loop #{methodName}"
@@ -1471,7 +1471,7 @@ class Element
       else
         #puts "In else loop : #{methodName}"
         jssh_command =  "#{methodName}("
-        
+
         count = 0
         if args != nil
           for i in args
@@ -1480,247 +1480,249 @@ class Element
               jssh_command << i.to_s
             else
               jssh_command << "\"#{i.to_s.gsub(/"/,"\\\"")}\""
+            end
+            count = count + 1
           end
-          count = count + 1
         end
+
+        jssh_command << ");\n"
       end
-      
-      jssh_command << ");\n"
-    end
-    
-    if(method_type == "boolean")
-      jssh_command = jssh_command.gsub("\"false\"", "false")
-      jssh_command = jssh_command.gsub("\"true\"", "true")
-    end
-    #puts "jssh_command is #{jssh_command}"
-    jssh_socket.send("#{jssh_command}", 0)
-    returnValue = read_socket()
-    #puts "return value is : #{returnValue}"
-    
-    @@current_level = 0
-    
-    if(method_type == "boolean")
-      return false if(returnValue == "false")
-      return true if(returnValue == "true")
-    elsif(method_type == "number")
-      return returnValue.to_i
-    else
-      return returnValue
+
+      if(method_type == "boolean")
+        jssh_command = jssh_command.gsub("\"false\"", "false")
+        jssh_command = jssh_command.gsub("\"true\"", "true")
+      end
+      #puts "jssh_command is #{jssh_command}"
+      jssh_socket.send("#{jssh_command}", 0)
+      returnValue = read_socket()
+      #puts "return value is : #{returnValue}"
+
+      @@current_level = 0
+
+      if(method_type == "boolean")
+        return false if(returnValue == "false")
+        return true if(returnValue == "true")
+      elsif(method_type == "number")
+        return returnValue.to_i
+      else
+        return returnValue
+      end
     end
   end
-end
-end
+
+end # class Element
 
 #
 # Description:
 #   Class for returning the document element.
 #
 class Document
-include FireWatir::Container
-@@current_level = 0
+  include FireWatir::Container
+  @@current_level = 0
 
-#
-# Description:
-#   Creates new instance of Document class.
-#
-def initialize(container)
-  @length = 0
-  @elements = nil
-  @arr_elements = ""
-  @container = container
-end
-
-#
-# Description:
-#   Find all the elements in the document by querying DOM.
-#   Set the class variables like length and the variable name of array storing the elements in JSSH.
-#
-# Output:
-#   Array of elements.
-#
-def all
-  @arr_elements = "arr_coll_#{@@current_level}"
-  jssh_command = "var arr_coll_#{@@current_level}=new Array(); "
-  
-  if(@container.class == FireWatir::Firefox || @container.class == Frame)
-    jssh_command <<"var element_collection = null; element_collection = document.getElementsByTagName(\"*\");
-                            if(element_collection != null && typeof(element_collection) != 'undefined')
-                            {
-                                for (var i = 0; i < element_collection.length; i++)
-                                {
-                                    if((element_collection[i].tagName != 'BR') && (element_collection[i].tagName != 'HR') && (element_collection[i].tagName != 'DOCTYPE') && (element_collection[i].tagName != 'META') && (typeof(element_collection[i].tagName) != 'undefined'))
-                                        arr_coll_#{@@current_level}.push(element_collection[i]);
-                                }
-                            }
-                            arr_coll_#{@@current_level}.length;"
-  else
-    jssh_command <<"var element_collection = null; element_collection = #{@container.element_name}.getElementsByTagName(\"*\");
-                                if(element_collection!= null && typeof(element_collection) != 'undefined')
-                                {
-                                    for (var i = 0; i < element_collection.length; i++)
-                                    {
-                                        if((element_collection[i].tagName != 'BR') && (element_collection[i].tagName != 'HR') && (element_collection[i].tagName != 'DOCTYPE') && (element_collection[i].tagName != 'META') && (typeof(element_collection[i].tagName) != 'undefined'))
-                                        arr_coll_#{@@current_level}.push(element_collection[i]);
-                                    }
-                                }
-                                arr_coll_#{@@current_level}.length;"
+  #
+  # Description:
+  #   Creates new instance of Document class.
+  #
+  def initialize(container)
+    @length = 0
+    @elements = nil
+    @arr_elements = ""
+    @container = container
   end
+
+  #
+  # Description:
+  #   Find all the elements in the document by querying DOM.
+  #   Set the class variables like length and the variable name of array storing the elements in JSSH.
+  #
+  # Output:
+  #   Array of elements.
+  #
+  def all
+    @arr_elements = "arr_coll_#{@@current_level}"
+    jssh_command = "var arr_coll_#{@@current_level}=new Array(); "
   
-  # Remove \n that are there in the string as a result of pressing enter while formatting.
-  jssh_command.gsub!(/\n/, "")
-  #puts  jssh_command
-  jssh_socket.send("#{jssh_command};\n", 0)
-  @length = read_socket().to_i;
-  #puts "elements length is in locate_tagged_elements is : #{@length}"
+    if(@container.class == FireWatir::Firefox || @container.class == Frame)
+      jssh_command <<"var element_collection = null; element_collection = document.getElementsByTagName(\"*\");
+                              if(element_collection != null && typeof(element_collection) != 'undefined')
+                              {
+                                  for (var i = 0; i < element_collection.length; i++)
+                                  {
+                                      if((element_collection[i].tagName != 'BR') && (element_collection[i].tagName != 'HR') && (element_collection[i].tagName != 'DOCTYPE') && (element_collection[i].tagName != 'META') && (typeof(element_collection[i].tagName) != 'undefined'))
+                                          arr_coll_#{@@current_level}.push(element_collection[i]);
+                                  }
+                              }
+                              arr_coll_#{@@current_level}.length;"
+    else
+      jssh_command <<"var element_collection = null; element_collection = #{@container.element_name}.getElementsByTagName(\"*\");
+                                  if(element_collection!= null && typeof(element_collection) != 'undefined')
+                                  {
+                                      for (var i = 0; i < element_collection.length; i++)
+                                      {
+                                          if((element_collection[i].tagName != 'BR') && (element_collection[i].tagName != 'HR') && (element_collection[i].tagName != 'DOCTYPE') && (element_collection[i].tagName != 'META') && (typeof(element_collection[i].tagName) != 'undefined'))
+                                          arr_coll_#{@@current_level}.push(element_collection[i]);
+                                      }
+                                  }
+                                  arr_coll_#{@@current_level}.length;"
+    end
   
-  elements = nil
-  elements = Array.new(@length)
-  for i in 0..@length - 1 do
-    temp = Element.new("arr_coll_#{@@current_level}[#{i}]", @container)
-    elements[i] = temp
+    # Remove \n that are there in the string as a result of pressing enter while formatting.
+    jssh_command.gsub!(/\n/, "")
+    #puts  jssh_command
+    jssh_socket.send("#{jssh_command};\n", 0)
+    @length = read_socket().to_i;
+    #puts "elements length is in locate_tagged_elements is : #{@length}"
+  
+    elements = nil
+    elements = Array.new(@length)
+    for i in 0..@length - 1 do
+      temp = Element.new("arr_coll_#{@@current_level}[#{i}]", @container)
+      elements[i] = temp
+    end
+    @@current_level += 1
+    return elements
+  
   end
-  @@current_level += 1
-  return elements
-  
-end
 
-#
-# Description:
-#   Returns the count of elements in the document.
-#
-# Output:
-#   Count of elements found in the document.
-#
-def length
-  return @length
-end
-
-#
-# Description:
-#   Iterates over elements in the document.
-#
-def each
-  for i in 0..@length - 1
-    yield Element.new("#{@arr_elements}[#{i}]", @container)
+  #
+  # Description:
+  #   Returns the count of elements in the document.
+  #
+  # Output:
+  #   Count of elements found in the document.
+  #
+  def length
+    return @length
   end
-end
+  alias_method :size, :length
 
-#
-# Description:
-#   Gets the element at the nth index in the array of the elements.
-#
-# Input:
-#   n - Index of element you want to access. Index is 1 based.
-#
-# Output:
-#   Element at the nth index.
-#
-def [](n)
-  return Element.new("#{@arr_elements}[#{n-1}]", @container)
-end
-
-#
-# Description:
-#   Get all forms available on the page.
-#   Used internally by Firewatir use ff.show_forms instead.
-#
-# Output:
-#   Array containing Form elements
-#
-def get_forms()
-  jssh_socket.send("var element_forms = document.forms; element_forms.length;\n", 0)
-  length = read_socket().to_i
-  forms = Array.new(length)
-  
-  for i in 0..length - 1 do
-    forms[i] = Form.new(@container, :jssh_name, "element_forms[#{i}]")
+  #
+  # Description:
+  #   Iterates over elements in the document.
+  #
+  def each
+    for i in 0..@length - 1
+      yield Element.new("#{@arr_elements}[#{i}]", @container)
+    end
   end
-  return forms
-end
 
-#
-# Description:
-#   Get all images available on the page.
-#   Used internally by Firewatir use ff.show_images instead.
-#
-# Output:
-#   Array containing Image elements
-#
-def get_images
-  return Images.new(@container)
-end
+  #
+  # Description:
+  #   Gets the element at the nth index in the array of the elements.
+  #
+  # Input:
+  #   n - Index of element you want to access. Index is 1 based.
+  #
+  # Output:
+  #   Element at the nth index.
+  #
+  def [](n)
+    return Element.new("#{@arr_elements}[#{n-1}]", @container)
+  end
 
-#
-# Description:
-#   Get all links available on the page.
-#   Used internally by Firewatir use ff.show_links instead.
-#
-# Output:
-#   Array containing Link elements
-#
-def get_links
-  return Links.new(@container)
-end
+  #
+  # Description:
+  #   Get all forms available on the page.
+  #   Used internally by Firewatir use ff.show_forms instead.
+  #
+  # Output:
+  #   Array containing Form elements
+  #
+  def get_forms()
+    jssh_socket.send("var element_forms = document.forms; element_forms.length;\n", 0)
+    length = read_socket().to_i
+    forms = Array.new(length)
+  
+    for i in 0..length - 1 do
+      forms[i] = Form.new(@container, :jssh_name, "element_forms[#{i}]")
+    end
+    return forms
+  end
 
-#
-# Description:
-#   Get all divs available on the page.
-#   Used internally by Firewatir use ff.show_divs instead.
-#
-# Output:
-#   Array containing Div elements
-#
-def get_divs
-  return Divs.new(@container)
-end
+  #
+  # Description:
+  #   Get all images available on the page.
+  #   Used internally by Firewatir use ff.show_images instead.
+  #
+  # Output:
+  #   Array containing Image elements
+  #
+  def get_images
+    return Images.new(@container)
+  end
 
-#
-# Description:
-#   Get all tables available on the page.
-#   Used internally by Firewatir use ff.show_tables instead.
-#
-# Output:
-#   Array containing Table elements
-#
-def get_tables
-  return Tables.new(@container)
-end
+  #
+  # Description:
+  #   Get all links available on the page.
+  #   Used internally by Firewatir use ff.show_links instead.
+  #
+  # Output:
+  #   Array containing Link elements
+  #
+  def get_links
+    return Links.new(@container)
+  end
 
-#
-# Description:
-#   Get all pres available on the page.
-#   Used internally by Firewatir use ff.show_pres instead.
-#
-# Output:
-#   Array containing Pre elements
-#
-def get_pres
-  return Pres.new(@container)
-end
+  #
+  # Description:
+  #   Get all divs available on the page.
+  #   Used internally by Firewatir use ff.show_divs instead.
+  #
+  # Output:
+  #   Array containing Div elements
+  #
+  def get_divs
+    return Divs.new(@container)
+  end
 
-#
-# Description:
-#   Get all spans available on the page.
-#   Used internally by Firewatir use ff.show_spans instead.
-#
-# Output:
-#   Array containing Span elements
-#
-def get_spans
-  return Spans.new(@container)
-end
+  #
+  # Description:
+  #   Get all tables available on the page.
+  #   Used internally by Firewatir use ff.show_tables instead.
+  #
+  # Output:
+  #   Array containing Table elements
+  #
+  def get_tables
+    return Tables.new(@container)
+  end
 
-#
-# Description:
-#   Get all labels available on the page.
-#   Used internally by Firewatir use ff.show_labels instead.
-#
-# Output:
-#   Array containing Label elements
-#
-def get_labels
-  return Labels.new(@container)
-end
+  #
+  # Description:
+  #   Get all pres available on the page.
+  #   Used internally by Firewatir use ff.show_pres instead.
+  #
+  # Output:
+  #   Array containing Pre elements
+  #
+  def get_pres
+    return Pres.new(@container)
+  end
+
+  #
+  # Description:
+  #   Get all spans available on the page.
+  #   Used internally by Firewatir use ff.show_spans instead.
+  #
+  # Output:
+  #   Array containing Span elements
+  #
+  def get_spans
+    return Spans.new(@container)
+  end
+
+  #
+  # Description:
+  #   Get all labels available on the page.
+  #   Used internally by Firewatir use ff.show_labels instead.
+  #
+  # Output:
+  #   Array containing Label elements
+  #
+  def get_labels
+    return Labels.new(@container)
+  end
 end
 
 #
@@ -1729,53 +1731,54 @@ end
 #
 class ElementCollections
   include Enumerable
-def self.inherited subclass
-  class_name = subclass.to_s.demodulize
-  method_name = class_name.underscore
-  element_class_name = class_name.singularize
   
-  FireWatir::Container.module_eval "def #{method_name}
-          locate if defined?(locate)
-          return #{class_name}.new(self); end"
-  
-  subclass.class_eval "def element_class; #{element_class_name}; end"
-end
+  def self.inherited subclass
+    class_name = subclass.to_s.demodulize
+    method_name = class_name.underscore
+    element_class_name = class_name.singularize
 
-include FireWatir::Container # XXX not sure if this is right
-@@current_level = 0
+    FireWatir::Container.module_eval "def #{method_name}
+    locate if defined?(locate)
+    return #{class_name}.new(self); end"
 
-def initialize(container)
-  @container = container
-  elements = locate_elements
-  length = elements.length
-  #puts "length is : #{length}"
-  @element_objects = Array.new(length)
-  for i in 0..length - 1 do
-    @element_objects[i] = element_class.new(container, :jssh_name, elements[i])
+    subclass.class_eval "def element_class; #{element_class_name}; end"
   end
-end
 
-# default implementation. overridden by some subclasses.
-def locate_elements
-  locate_tagged_elements(element_class::TAG)
-end
+  include FireWatir::Container # XXX not sure if this is right
+  @@current_level = 0
+
+  def initialize(container)
+    @container = container
+    elements = locate_elements
+    length = elements.length
+    #puts "length is : #{length}"
+    @element_objects = Array.new(length)
+    for i in 0..length - 1 do
+      @element_objects[i] = element_class.new(container, :jssh_name, elements[i])
+    end
+  end
+
+  # default implementation. overridden by some subclasses.
+  def locate_elements
+    locate_tagged_elements(element_class::TAG)
+  end
 
 
-# Return all the elements of give tag and type inside the container.
-#
-# Input:
-#   tag - tag name of the elements
-#   types - array of element type names. used in case where same 
-#   element tag has different types like input has type image, button etc.
-#
-def locate_tagged_elements(tag, types = [])
+  # Return all the elements of give tag and type inside the container.
+  #
+  # Input:
+  #   tag - tag name of the elements
+  #   types - array of element type names. used in case where same
+  #   element tag has different types like input has type image, button etc.
+  #
+  def locate_tagged_elements(tag, types = [])
 
-  # generate array to hold results
-  result_name = "arr_coll_#{tag}_#{@@current_level}"
-  jssh_command = "var #{result_name}=new Array();"
+    # generate array to hold results
+    result_name = "arr_coll_#{tag}_#{@@current_level}"
+    jssh_command = "var #{result_name}=new Array();"
 
-  # generate array of elements matching the tag
-  case @container
+    # generate array of elements matching the tag
+    case @container
     when FireWatir::Firefox, FireWatir::Frame
       elements_tag = "elements_#{tag}"
       container_name = "document"
@@ -1783,94 +1786,97 @@ def locate_tagged_elements(tag, types = [])
       elements_tag = "elements_#{@@current_level}_#{tag}"
       container_name = @container.element_name
     end
-  if types.include?("textarea") || types.include?("button")
-    search_tag = '*'
-  else
-    search_tag = tag
-  end
-  jssh_command << "var #{elements_tag} = null; "
-  jssh_command << "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
-
-    
-  # generate array containing results
-  if types.empty?
-    jssh_command << "#{result_name} = #{elements_tag};"
-  else
-    # generate types array
-    jssh_command << "var types = new Array("
-    types.each_with_index do |type, count|
-      jssh_command << "," unless count == 0
-      jssh_command << "\"#{type}\""
+    if types.include?("textarea") || types.include?("button")
+      search_tag = '*'
+    else
+      search_tag = tag
     end
-    jssh_command << ");"
+    jssh_command << "var #{elements_tag} = null; "
+    jssh_command << "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
 
-    # check the type of each element
-    jssh_command << "for(var i=0; i<#{elements_tag}.length; i++)
-                       {
-                          var element = #{elements_tag}[i];
-                          var same_type = false;
-    
-                          for(var j=0; j<types.length; j++)
-                          {
-                              if(types[j] == element.type || types[j] == element.tagName)
-                              {
-                                  same_type = true;
-                                  break;
-                              }
-                          }
-  
-                          if(same_type)
-                          {
-                              #{result_name}.push(element);
-                          }
-                      };"
+
+    # generate array containing results
+    if types.empty?
+      jssh_command << "#{result_name} = #{elements_tag};"
+    else
+      # generate types array
+      jssh_command << "var types = new Array("
+      types.each_with_index do |type, count|
+        jssh_command << "," unless count == 0
+        jssh_command << "\"#{type}\""
+      end
+      jssh_command << ");"
+
+      # check the type of each element
+      jssh_command << "
+      for(var i=0; i<#{elements_tag}.length; i++)
+      {
+          var element = #{elements_tag} [i];
+          var same_type = false;
+
+          for (var j = 0; j < types.length; j++)
+          {
+              if (types[j] == element.type || types[j] == element.tagName)
+              {
+                  same_type = true;
+                  break;
+              }
+          }
+
+          if (same_type)
+          {
+              #{result_name}.push(element);
+          }
+      };"
+    end
+    jssh_command << "#{result_name}.length;"
+
+    # Remove \n that are there in the string as a result of pressing enter while formatting.
+    jssh_command.gsub!(/\n/, "")
+    #puts jssh_command
+    jssh_socket.send("#{jssh_command};\n", 0)
+    length = read_socket().to_i;
+    #puts "elements length is in locate_tagged_elements is : #{length}"
+
+    elements = (0...length).collect {|i| "#{result_name}[#{i}]"}
+
+    @@current_level = @@current_level + 1
+    return elements
   end
-  jssh_command << "#{result_name}.length;"
-  
-  # Remove \n that are there in the string as a result of pressing enter while formatting.
-  jssh_command.gsub!(/\n/, "")
-  #puts jssh_command
-  jssh_socket.send("#{jssh_command};\n", 0)
-  length = read_socket().to_i;
-  #puts "elements length is in locate_tagged_elements is : #{length}"
-  
-  elements = (0...length).collect {|i| "#{result_name}[#{i}]"}
+  private :locate_tagged_elements
 
-  @@current_level = @@current_level + 1
-  return elements
-end
-private :locate_tagged_elements
-
-#
-# Description:
-#   Gets the length of elements of same tag and type found on the page.
-#
-# Ouput:
-#   Count of elements found on the page.
-#
-def length
-  return @element_objects.length
-end
-
-#
-# Description:
-#   Iterate over the elements of same tag and type found on the page.
-#
-def each
-  for i in 0..@element_objects.length - 1
-    yield @element_objects[i]
+  #
+  # Description:
+  #   Gets the length of elements of same tag and type found on the page.
+  #
+  # Ouput:
+  #   Count of elements found on the page.
+  #
+  def length
+    return @element_objects.length
   end
+  alias_method :size, :length
+
+  #
+  # Description:
+  #   Iterate over the elements of same tag and type found on the page.
+  #
+  def each
+    for i in 0..@element_objects.length - 1
+      yield @element_objects[i]
+    end
+  end
+
+  #
+  # Description:
+  #   Accesses nth element of same tag and type found on the page.
+  #
+  # Input:
+  #   n - index of element (1 based)
+  #
+  def [](n)
+    return @element_objects[n-1]
+  end
+
 end
 
-#
-# Description:
-#   Accesses nth element of same tag and type found on the page.
-#
-# Input:
-#   n - index of element (1 based)
-#
-def [](n)
-  return @element_objects[n-1]
-end
-
-end
