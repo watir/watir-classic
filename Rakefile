@@ -5,7 +5,6 @@ require 'rake/testtask'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
-ENV['CI_REPORTS'] = ENV['CC_BUILD_ARTIFACTS']
 
 desc "Generate all the Watir gems"
 task :gems do
@@ -38,7 +37,12 @@ task :test_ff do
   load 'firewatir/unittests/mozilla_all_tests.rb' 
 end
 
-task :cruise => ['ci:setup:testunit', :test_ie]
+task :move_ci_reports do
+  dir_arr = Dir.glob("test/reports/*.xml")
+  dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
+end
+
+task :cruise => ['ci:setup:testunit', :test_ie, :move_ci_reports]
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
 task :website do
