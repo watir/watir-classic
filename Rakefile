@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake/clean'
+require 'ftools'
 require 'fileutils'
 require 'rake/testtask'
 gem 'ci_reporter'
@@ -38,7 +39,7 @@ task :test_ff do
 end
 
 task :move_ci_reports do
-  dir_arr = Dir.glob("test/reports/*.xml")
+  dir_arr = Dir.glob("watir/test/reports/*.xml")
   dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
 end
 
