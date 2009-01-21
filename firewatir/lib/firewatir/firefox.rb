@@ -230,10 +230,37 @@ module FireWatir
     
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
+      # Add eventlistener for browser window so that we can reset the document back whenever there is redirect
+      # or browser loads on its own after some time. Useful when you are searching for flight results etc and
+      # page goes to search page after that it goes automatically to results page.
+      # Details : http://zenit.senecac.on.ca/wiki/index.php/Mozilla.dev.tech.xul#What_is_an_example_of_addProgressListener.3F
+      jssh_command = "var listObj = new Object();"; # create new object
+      jssh_command << "listObj.wpl = Components.interfaces.nsIWebProgressListener;"; # set the web progress listener.
+      jssh_command << "listObj.QueryInterface = function(aIID) {
+                                  if (aIID.equals(listObj.wpl) || 
+                                      aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+                                      aIID.equals(Components.interfaces.nsISupports)) 
+                                          return this;
+                                  throw Components.results.NS_NOINTERFACE;
+                              };" # set function to locate the object via QueryInterface
+      jssh_command << "listObj.onStateChange = function(aProgress, aRequest, aFlag, aStatus) { 
+                                                if (aFlag & listObj.wpl.STATE_STOP) { 
+                                                    if ( aFlag & listObj.wpl.STATE_IS_NETWORK ) {
+                                                       #{document_var} = #{browser_var}.contentDocument;
+                                                       #{body_var} = #{document_var}.body;
+                                                    } 
+                                                } 
+                                             };" # add function to be called when window state is change. When state is STATE_STOP & 
+                                                 # STATE_IS_NETWORK then only everything is loaded. Now we can reset our variables.
+      jssh_command.gsub!(/\n/, "")
+      js_eval jssh_command
+
       jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
       jssh_command << "var #{browser_var} = #{window_var}.getBrowser();"
+      # Add listener create above to browser object
+      jssh_command << "#{browser_var}.addProgressListener( listObj,Components.interfaces.nsIWebProgress.NOTIFY_STATE_WINDOW );"
       jssh_command << "var #{document_var} = #{browser_var}.contentDocument;"
-      jssh_command << "var body = #{document_var}.body;"
+      jssh_command << "var #{body_var} = #{document_var}.body;"
       js_eval jssh_command
       
       @window_title = js_eval "#{document_var}.title"
@@ -250,6 +277,9 @@ module FireWatir
     end
     def document_var # unfinished
       "document"
+    end
+    def body_var # unfinished
+      "body"
     end
     
     public
@@ -362,12 +392,12 @@ module FireWatir
     
     # Returns the url of the page currently loaded in the browser.
     def url
-      @window_url
+      @window_url = js_eval "#{document_var}.URL"
     end 
     
     # Returns the title of the page currently loaded in the browser.
     def title
-      @window_title
+      @window_title = js_eval "#{document_var}.title"
     end
     
     # Returns the html of the page currently loaded in the browser.
