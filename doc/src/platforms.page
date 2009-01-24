@@ -31,6 +31,17 @@ library that supports Safari on OS X.
 
 SafariWatir is an active project with good relations with the Watir community.
 
+h2. Chrome
+
+"ChromeWatir":http://wiki.openqa.org/display/WTR/ChromeWatir is a library
+to run tests using Google's Chrome browser with Watir's API.
+
+h2. Flash Testing
+
+"FlashWatir":http://code.google.com/p/flash-watir/ is an extension to Watir
+in order to test Macromedia Flash components. Currently supports Firefox 
+with ongoing work to support IE. 
+
 h2. Other Browsers
 
 Selenium is a popular open-source testing tool that supports most browsers,
