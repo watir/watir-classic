@@ -39,7 +39,7 @@ task :test_ff do
 end
 
 task :move_ci_reports do
-  dir_arr = Dir.glob("watir/test/reports/*.xml")
+  dir_arr = Dir["watir/test/reports/*.xml"]
   dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
   
   dir_arr = Dir[ENV['CC_BUILD_ARTIFACTS'] + '/*.xml']
@@ -55,7 +55,7 @@ task :move_ci_reports do
       xmlFile.close
     end
   end
-  
+   
 end
 
 task :cruise => ['ci:setup:testunit', :test_ie, :move_ci_reports]
