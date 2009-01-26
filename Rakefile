@@ -41,6 +41,21 @@ end
 task :move_ci_reports do
   dir_arr = Dir.glob("watir/test/reports/*.xml")
   dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
+  
+  dir_arr = Dir[ENV['CC_BUILD_ARTIFACTS'] + '/*.xml']
+  if dir_arr.length != 0
+    dir_arr.each do |f|
+      sContent = File.readlines(f, '\n')
+      sContent.each do |line|
+        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"../work/transform-results.xsl\"?>")
+      end
+    
+      xmlFile = File.open(f, "w+")
+      xmlFile.puts sContent
+      xmlFile.close
+    end
+  end
+  
 end
 
 task :cruise => ['ci:setup:testunit', :test_ie, :move_ci_reports]
