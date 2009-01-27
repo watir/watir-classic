@@ -6,7 +6,7 @@ require 'rake/testtask'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
-
+ 
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |x|
