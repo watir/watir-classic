@@ -6,7 +6,7 @@ require 'rake/testtask'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
- 
+
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |x|
@@ -34,8 +34,9 @@ Rake::TestTask.new :test_ie do |t|
 end
 
 desc 'Run unit tests for FireFox'
-task :test_ff do
-  load 'firewatir/unittests/mozilla_all_tests.rb' 
+Rake::TestTask.new :test_ff do |t|
+  t.test_files = FileList['firewatir/unittests/mozilla_all_tests.rb']
+  t.verbose = true
 end
 
 task :move_ci_reports do
