@@ -812,6 +812,7 @@ class Element
   def element_by_xpath(container, xpath)
     #puts "here locating element by xpath"
     rand_no = rand(1000)
+    xpath.gsub!("\"", "\\\"")
     jssh_command = "var element_xpath_#{rand_no} = null; element_xpath_#{rand_no} = document.evaluate(\"#{xpath}\", document, null, #{FIRST_ORDERED_NODE_TYPE}, null).singleNodeValue; element_xpath_#{rand_no};"
     
     jssh_socket.send("#{jssh_command}\n", 0)             
