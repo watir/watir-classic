@@ -48,6 +48,19 @@ module FireWatir
       assert_exists
       get_frame_html
     end
+
+    def document_var # unfinished
+        "document"
+    end
+    def body_var # unfinished
+        "body"
+    end
+    def window_var
+        "window"
+    end
+    def browser_var
+        "browser"
+    end
   end
   
   class Form < Element

@@ -293,15 +293,15 @@ class Element
     else
       jssh_command = "var isButtonElement = false;"
     end
-    
+  
     # Because in both the below cases we need to get element with respect to document.
     # when we locate a frame document is automatically adjusted to point to HTML inside the frame
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
       #end
       #if(@@current_element_object == "")
-      jssh_command << "var elements_#{tag} = null; elements_#{tag} = document.getElementsByTagName(\"#{tag}\");"
+      jssh_command << "var elements_#{tag} = null; elements_#{tag} = #{@container.document_var}.getElementsByTagName(\"#{tag}\");"
       if(types != nil and (types.include?("textarea") or types.include?("button")) )
-        jssh_command << "elements_#{tag} = document.body.getElementsByTagName(\"*\");"
+        jssh_command << "elements_#{tag} = #{@container.document_var}.body.getElementsByTagName(\"*\");"
       end
       #    @@has_changed = true
     else
@@ -674,12 +674,12 @@ class Element
                                     {"
     if(@container.class == FireWatir::Firefox)
       jssh_command << "       element_name = \"elements_frames[\" + i + \"]\";
-                                        document = elements_frames[i].contentDocument;
-                                        body = document.body;"
+                                        #{@container.document_var} = elements_frames[i].contentDocument;
+                                        #{@container.body_var} = #{@container.document_var}.body;"
     else
       jssh_command << "       element_name = \"elements_frames_#{@@current_level}[\" + i + \"]\";
-                                        document = elements_frames_#{@@current_level}[i].contentDocument;
-                                        body = document.body;"
+                                        #{@container.document_var} = elements_frames_#{@@current_level}[i].contentDocument;
+                                        #{@container.body_var} = #{@container.document_var}.body;"
     end
     jssh_command << "           break;
                                     }
@@ -702,7 +702,7 @@ class Element
   end
   
   def get_frame_html
-    jssh_socket.send("var htmlelem = document.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
+    jssh_socket.send("var htmlelem = #{@container.document_var}.getElementsByTagName('html')[0]; htmlelem.innerHTML;\n", 0)
     #jssh_socket.send("body.innerHTML;\n", 0)
     result = read_socket()
     return "<html>" + result + "</html>"
@@ -767,10 +767,10 @@ class Element
     #jssh_command = "var xpathResult = document.evaluate(\"count(#{xpath})\", document, null, #{NUMBER_TYPE}, null); xpathResult.numberValue;"
     #jssh_socket.send("#{jssh_command}\n", 0);
     #node_count = read_socket()
-    
+    xpath.gsub!("\"", "\\\"")
     jssh_command = "var element_xpath_#{rand_no} = new Array();"
     
-    jssh_command << "var result = document.evaluate(\"#{xpath}\", document, null, #{ORDERED_NODE_ITERATOR_TYPE}, null);
+    jssh_command << "var result = #{@container.document_var}.evaluate(\"#{xpath}\", #{@container.document_var}, null, #{ORDERED_NODE_ITERATOR_TYPE}, null);
                              var iterate = result.iterateNext();
                              while(iterate)
                              {
@@ -813,7 +813,7 @@ class Element
     #puts "here locating element by xpath"
     rand_no = rand(1000)
     xpath.gsub!("\"", "\\\"")
-    jssh_command = "var element_xpath_#{rand_no} = null; element_xpath_#{rand_no} = document.evaluate(\"#{xpath}\", document, null, #{FIRST_ORDERED_NODE_TYPE}, null).singleNodeValue; element_xpath_#{rand_no};"
+    jssh_command = "var element_xpath_#{rand_no} = null; element_xpath_#{rand_no} = #{@container.document_var}.evaluate(\"#{xpath}\", #{container.document_var}, null, #{FIRST_ORDERED_NODE_TYPE}, null).singleNodeValue; element_xpath_#{rand_no};"
     
     jssh_socket.send("#{jssh_command}\n", 0)             
     result = read_socket()
@@ -914,13 +914,13 @@ class Element
       # Firefox has a proprietary initializer for keydown/keypress/keyup.
       # Args are as follows:
       #   'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-      dom_event_init = "initKeyEvent(\"#{event}\", true, true, window, false, false, false, false, 0, 0)"
+      dom_event_init = "initKeyEvent(\"#{event}\", true, true, #{@container.window_var}, false, false, false, false, 0, 0)"
       when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover',
                     'mouseup'
       dom_event_type = 'MouseEvents'
       # Args are as follows:
       #   'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
-      dom_event_init = "initMouseEvent(\"#{event}\", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)"
+      dom_event_init = "initMouseEvent(\"#{event}\", true, true, #{@container.window_var}, 1, 0, 0, 0, 0, false, false, false, false, 0, null)"
     else
       dom_event_type = 'HTMLEvents'
       dom_event_init = "initEvents(\"#{event}\", true, true)"
@@ -932,7 +932,7 @@ class Element
     end
     
     
-    jssh_command  = "var event = document.createEvent(\"#{dom_event_type}\"); "
+    jssh_command  = "var event = #{@container.document_var}.createEvent(\"#{dom_event_type}\"); "
     jssh_command << "event.#{dom_event_init}; "
     jssh_command << "#{element_object}.dispatchEvent(event);"
     
@@ -1003,7 +1003,7 @@ class Element
   
   def visible? 
     assert_exists 
-    val = js_eval "var val = 'true'; var str = ''; var obj = #{element_object}; while (obj != null) { try { str = document.defaultView.getComputedStyle(obj,null).visibility; if (str=='hidden') { val = 'false'; break; } str = document.defaultView.getComputedStyle(obj,null).display; if (str=='none') { val = 'false'; break; } } catch(err) {} obj = obj.parentNode; } val;" 
+    val = js_eval "var val = 'true'; var str = ''; var obj = #{element_object}; while (obj != null) { try { str = #{@container.document_var}.defaultView.getComputedStyle(obj,null).visibility; if (str=='hidden') { val = 'false'; break; } str = #{@container.document_var}.defaultView.getComputedStyle(obj,null).display; if (str=='none') { val = 'false'; break; } } catch(err) {} obj = obj.parentNode; } val;" 
     return (val == 'false')? false: true 
   end 
 
@@ -1134,7 +1134,7 @@ class Element
       # More info: http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-48250443
       # https://bugzilla.mozilla.org/show_bug.cgi?id=148585
       
-      jssh_command = "var event = document.createEvent(\"MouseEvents\");"
+      jssh_command = "var event = #{@container.document_var}.createEvent(\"MouseEvents\");"
       
       # Info about initMouseEvent at: http://www.xulplanet.com/references/objref/MouseEvent.html
       jssh_command << "event.initMouseEvent('click',true,true,null,1,0,0,0,0,false,false,false,false,0,null);"
@@ -1545,7 +1545,7 @@ class Document
     jssh_command = "var arr_coll_#{@@current_level}=new Array(); "
   
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
-      jssh_command <<"var element_collection = null; element_collection = document.getElementsByTagName(\"*\");
+      jssh_command <<"var element_collection = null; element_collection = #{@container.document_var}.getElementsByTagName(\"*\");
                               if(element_collection != null && typeof(element_collection) != 'undefined')
                               {
                                   for (var i = 0; i < element_collection.length; i++)
@@ -1631,7 +1631,7 @@ class Document
   #   Array containing Form elements
   #
   def get_forms()
-    jssh_socket.send("var element_forms = document.forms; element_forms.length;\n", 0)
+    jssh_socket.send("var element_forms = #{@container.document_var}.forms; element_forms.length;\n", 0)
     length = read_socket().to_i
     forms = Array.new(length)
   
@@ -1782,7 +1782,7 @@ class ElementCollections
     case @container
     when FireWatir::Firefox, FireWatir::Frame
       elements_tag = "elements_#{tag}"
-      container_name = "document"
+      container_name = "#{@container.document_var}"
     else
       elements_tag = "elements_#{@@current_level}_#{tag}"
       container_name = @container.element_name

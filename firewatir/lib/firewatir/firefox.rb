@@ -271,7 +271,7 @@ module FireWatir
     def window_var
       "window"
     end
-    private
+    #private
     def browser_var
       "browser"
     end
@@ -408,7 +408,7 @@ module FireWatir
     
     # Returns the text of the page currently loaded in the browser.
     def text
-      js_eval("body.textContent").strip
+      js_eval("#{body_var}.textContent").strip
     end
     
     # Maximize the current browser window.
@@ -428,7 +428,7 @@ module FireWatir
       start = Time.now
       
       while isLoadingDocument != "false"
-        isLoadingDocument = js_eval("browser=#{window_var}.getBrowser(); browser.webProgress.isLoadingDocument;")
+        isLoadingDocument = js_eval("#{browser_var}=#{window_var}.getBrowser(); #{browser_var}.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
         # Raise an exception if the page fails to load
@@ -439,7 +439,7 @@ module FireWatir
       # If the redirect is to a download attachment that does not reload this page, this
       # method will loop forever. Therefore, we need to ensure that if this method is called
       # twice with the same URL, we simply accept that we're done.
-      url = js_eval("browser.contentDocument.URL")
+      url = js_eval("#{browser_var}.contentDocument.URL")
       
       if(url != last_url)
         # Check for Javascript redirect. As we are connected to Firefox via JSSh. JSSh
@@ -484,7 +484,7 @@ module FireWatir
           if(wait_time != -1)
             sleep(wait_time)
             # Call wait again. In case there are multiple redirects.
-            js_eval "browser = #{window_var}.getBrowser()"
+            js_eval "#{browser_var} = #{window_var}.getBrowser()"
             wait(url)
           end    
         rescue
@@ -620,7 +620,7 @@ module FireWatir
     
     # Returns the document element of the page currently loaded in the browser.
     def document
-      Document.new("document")
+      Document.new("#{document_var}")
     end
     
     # Returns the first element that matches the given xpath expression or query.
