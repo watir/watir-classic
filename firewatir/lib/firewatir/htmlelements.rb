@@ -169,6 +169,10 @@ module FireWatir
     TAG = 'SPAN'
   end
   
+  class Strong < NonControlElement 
+    TAG = 'STRONG'
+  end
+  
   class Label < NonControlElement
     TAG = 'LABEL'
     
@@ -1887,6 +1891,11 @@ module FireWatir
   #   Class for accessing all the span elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#spans method
   class Spans < ElementCollections; end
+  
+  #   Class for accessing all the strong elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#strongs method
+  class Strongs < ElementCollections; end
+  
   
   #   Class for accessing all the div elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#divs method

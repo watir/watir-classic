@@ -662,6 +662,20 @@ module Watir
       Spans.new(self)
     end
     
+    # this is the main method for accessing the Strongs iterator.
+    #
+    # Returns a Strongs object
+    #
+    # Typical usage:
+    #
+    #   ie.strongs.each { |s| puts s.to_s }            # iterate through all the strongs on the page
+    #   ie.strongs[1].to_s                             # goto the first strong on the page
+    #   ie.strongs.length                              # show how many strongs are on the page.
+    #
+    def strongs
+      return Strongs.new(self)
+    end
+
     
     # this is the main method for accessing the ps iterator.
     #

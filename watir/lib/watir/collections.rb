@@ -314,19 +314,25 @@ module Watir
   class Dls < ElementCollections
     include CommonCollection
     def element_class; Dl; end
-    def element_tag; 'DL'; end
+    def element_tag; Dl::TAG; end
   end
 
   class Dts < ElementCollections
     include CommonCollection
     def element_class; Dt; end
-    def element_tag; 'DT'; end
+    def element_tag; Dt::TAG; end
   end
 
   class Dds < ElementCollections
     include CommonCollection
     def element_class; Dd; end
-    def element_tag; 'DD'; end
+    def element_tag; Dd::TAG; end
   end
-
+  
+  class Strongs < ElementCollections
+    include CommonCollection
+    def element_class; Strong; end
+    def element_tag; Strong::TAG; end
+  end
+  
 end
