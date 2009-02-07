@@ -492,7 +492,7 @@ module FireWatir
       value = read_socket()
       if md = /^(\w+)Error:(.*)$/.match(value) 
         eval "class JS#{md[1]}Error\nend"
-        raise (eval "JS#{md[1]}Error"), md[2]
+        raise RuntimeError, (eval "JS#{md[1]}Error"), md[2]
       end
       value
     end

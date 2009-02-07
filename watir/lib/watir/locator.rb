@@ -91,7 +91,9 @@ module Watir
       end
 
       @specifiers = {:index => 1} # default if not specified
-      @specifiers[:value] = value.to_s if value
+      if value
+        @specifiers[:value] = value.is_a?(Regexp) ? value : value.to_s
+      end
       specifiers.each do | how, what |
         how = :value if how == :caption
         how = :class_name if how == :class

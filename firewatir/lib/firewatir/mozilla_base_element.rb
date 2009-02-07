@@ -334,32 +334,22 @@ class Element
     #jssh_command << "var elements = #{element_object}.getElementsByTagName('*');"
     jssh_command << "var object_index = 1; var o = null; var element_name = \"\";"
     
-    if(value == nil)
+    case value
+    when Regexp
+      jssh_command << "var value = #{ rb_regexp_to_js(value) };"
+    when nil
       jssh_command << "var value = null;"
     else
       jssh_command << "var value = \"#{value}\";"
     end
-    
-    
+
     #add hash arrays
     sKey = "var hashKeys = new Array("
     sVal = "var hashValues = new Array("
     @specifiers.each do |k,v|
       sKey += "\"#{k}\","
-      if v.class == Regexp
-        oldRegExp = v.to_s
-        newRegExp = v.inspect
-        flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
-        
-        for i in 0..flags.length do
-          flag = flags[i, 1]
-          if(flag == '-')
-            break;
-          else
-            newRegExp << flag
-          end
-        end
-        sVal += "#{newRegExp},"
+      if v.is_a?(Regexp)
+        sVal += "#{rb_regexp_to_js(v)},"
       else
         sVal += "\"#{v}\","
       end
@@ -458,7 +448,7 @@ class Element
                                        if(attribute == \"\") o = 'NoMethodError';
                                        var found = false;
                                        if (typeof what == \"object\" || typeof what == \"function\") 
-			                           {
+			               {
                                           var regExp = new RegExp(what);
                                           found = regExp.test(attribute);
                                        }
@@ -467,39 +457,12 @@ class Element
                                           found = (attribute == what);
                                        }"
     
-    #             if(what.class == Regexp)
-    #                 # Construct the regular expression because we can't use it directly by converting it to string.
-    #                 # If reg ex is /Google/i then its string conversion will be (?i-mx:Google) so we can't use it.
-    #                 # Construct the regular expression again from the string conversion.
-    #                 oldRegExp = what.to_s
-    #                 newRegExp = what.inspect
-    #                 flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
-    
-    #                 for i in 0..flags.length do
-    #                     flag = flags[i, 1]
-    #                     if(flag == '-')
-    #                         break;
-    #                     else
-    #                         newRegExp << flag
-    #                     end
-    #                 end
-    #                 #puts "old reg ex is #{what} new reg ex is #{newRegExp}"
-    #                 jssh_command << "   var regExp = new RegExp(#{newRegExp});
-    #                                     found = regExp.test(attribute);"
-    #             elsif(how == :index)
-    #                 jssh_command << "   found = (attribute == #{what});"
-    #             else
-    #                 jssh_command << "   found = (attribute == \"#{what}\");"
-    #             end
-    
-    
-    #jssh_command << "    found;"
     if(@container.class == FireWatir::Firefox || @container.class == Frame)
       jssh_command << "   if(found)
                                     {
                                         if(value)
                                         {
-                                            if(element.value == \"#{value}\")
+                                            if(element.value == value || (value.test && value.test(element.value)))
                                             {
                                                 o = element;
                                                 element_name = \"elements_#{tag}[\" + i + \"]\";
@@ -518,7 +481,7 @@ class Element
                                     {
                                         if(value)
                                         {
-                                            if(element.value == \"#{value}\")
+                                            if(element.value == value || (value.test && value.test(element.value)))
                                             {
                                                 o = element;
                                                 element_name = \"elements_#{@@current_level}_#{tag}[\" + i + \"]\";
@@ -583,6 +546,23 @@ class Element
     end
   end
   
+  def rb_regexp_to_js(regexp)
+    old_exp = regexp.to_s
+    new_exp = regexp.inspect
+    flags = old_exp.slice(2, old_exp.index(':') - 2)
+    
+    for i in 0..flags.length do
+      flag = flags[i, 1]
+      if(flag == '-')
+        break;
+      else
+        new_exp << flag
+      end
+    end
+    
+    new_exp
+  end
+  
   #
   # Description:
   #   Locates frame element. Logic for locating the frame is written in JavaScript so that we don't make small
@@ -624,7 +604,7 @@ class Element
                                 }"
     end
     
-    jssh_command <<"    var element_name = ''; var object_index = 1;var attribute = '';
+    jssh_command << "    var element_name = ''; var object_index = 1;var attribute = '';
                                 var element = '';"
     if(@container.class == FireWatir::Firefox)
       jssh_command << "for(var i = 0; i < elements_frames.length; i++)
