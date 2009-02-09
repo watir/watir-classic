@@ -54,9 +54,7 @@ namespace :cruise do
       sContent.each do |line|
         line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
       end
-      xmlFile = File.open(f, "w+")
-      xmlFile.puts sContent
-      xmlFile.close
+      File.open(f, "w+") { |file| file.puts sContent }
     end
   end
   
