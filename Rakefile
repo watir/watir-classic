@@ -48,7 +48,7 @@ namespace :cruise do
     
   def add_style_sheet_to_reports(report_dir)
     dir_arr = Dir[report_dir]
-    return if dir_arr.empty
+    return if dir_arr.empty?
     dir_arr.each do |f|
       sContent = File.readlines(f, '\n')
       sContent.each do |line|
