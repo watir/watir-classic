@@ -39,47 +39,36 @@ Rake::TestTask.new :mozilla_all_tests do |t|
   t.verbose = true
 end
 
-task :move_ci_reports do
-  dir_arr = Dir["watir/test/reports/*.xml"]
-  dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
-  
-  dir_arr = Dir[ENV['CC_BUILD_ARTIFACTS'] + '/*.xml']
-  if dir_arr.length != 0
-    File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
-    dir_arr.each do |f|
-      sContent = File.readlines(f, '\n')
-      sContent.each do |line|
-        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
-      end
-      xmlFile = File.open(f, "w+")
-      xmlFile.puts sContent
-      xmlFile.close
-    end
-  end
-end
-
-task :move_ci_reports_ff do
-  dir_arr = Dir["firewatir/test/reports/*.xml"]
-  dir_arr.each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
-  
-  dir_arr = Dir[ENV['CC_BUILD_ARTIFACTS'] + '/*.xml']
-  if dir_arr.length != 0
-    File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
-    dir_arr.each do |f|
-      sContent = File.readlines(f, '\n')
-      sContent.each do |line|
-        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
-      end
-      xmlFile = File.open(f, "w+")
-      xmlFile.puts sContent
-      xmlFile.close
-    end
-  end
-end
-
 namespace :cruise do
-  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_ci_reports]
-  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_ci_reports_ff]
+  def move_reports(report_dir)
+    Dir[report_dir].each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
+    File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
+    add_style_sheet_to_reports(ENV['CC_BUILD_ARTIFACTS'] + '/*.xml')
+  end
+    
+  def add_style_sheet_to_reports(report_dir)
+    dir_arr = Dir[report_dir]
+    return if dir_arr.empty
+    dir_arr.each do |f|
+      sContent = File.readlines(f, '\n')
+      sContent.each do |line|
+        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
+      end
+      xmlFile = File.open(f, "w+")
+      xmlFile.puts sContent
+      xmlFile.close
+    end
+  end
+  
+  task :move_reports_ie do
+    move_reports "watir/test/reports/*.xml"
+  end
+  task :move_reports_ff do
+    move_reports "firewatir/test/reports/*.xml"
+  end
+  
+  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_reports_ie]
+  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_reports_ff]
 end
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
