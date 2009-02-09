@@ -27,14 +27,14 @@ end
 task :clean => [:clean_subprojects]
 CLEAN << 'gems/*'
 
-desc 'Run unit tests for IE'
-Rake::TestTask.new :test_ie do |t|
+desc 'Run core_tests tests for IE'
+Rake::TestTask.new :core_tests do |t|
   t.test_files = FileList['watir/unittests/core_tests.rb']
   t.verbose = true
 end
 
-desc 'Run unit tests for FireFox'
-Rake::TestTask.new :test_ff do |t|
+desc 'Run mozilla_all_tests for FireFox'
+Rake::TestTask.new :mozilla_all_tests do |t|
   t.test_files = FileList['firewatir/unittests/mozilla_all_tests.rb']
   t.verbose = true
 end
@@ -77,9 +77,10 @@ task :move_ci_reports_ff do
   end
 end
 
-task :cruise => ['ci:setup:testunit', :test_ie, :move_ci_reports]
-
-task :cruise_ff => ['ci:setup:testunit', :test_ff, :move_ci_reports_ff]
+namespace :cruise do
+  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_ci_reports]
+  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_ci_reports_ff]
+end
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
 task :website do
