@@ -41,6 +41,7 @@ end
 
 namespace :cruise do
   def move_reports(report_dir)
+    return unless ENV['CC_BUILD_ARTIFACTS']
     Dir[report_dir].each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
     File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
     add_style_sheet_to_reports(ENV['CC_BUILD_ARTIFACTS'] + '/*.xml')
@@ -65,7 +66,9 @@ namespace :cruise do
     move_reports "firewatir/test/reports/*.xml"
   end
   
+  desc 'Run tests for Internet Explorer'
   task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_reports_ie]
+  desc 'Run tests for Firefox'
   task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_reports_ff]
 end
 
