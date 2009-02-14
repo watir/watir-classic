@@ -925,47 +925,5 @@ module FireWatir
     end
     alias showFrames show_frames
         
-  end # Class Firefox
-  
-  # 
-  # Module for handling the Javascript pop-ups. Not in use currently, will be available in future.    
-  # Use ff.startClicker() method for clicking javascript pop ups. Refer to unit tests on how to handle
-  # javascript pop up (unittests/javascript_test.rb)
-  #module Dialog
-  #    # Class for handling javascript popup. Not in use currently, will be available in future. See unit tests on how to handle
-  #    # javascript pop up (unittests/javascript_test.rb).
-  #    class JSPopUp
-  #        include Container
-  #        
-  #        def has_appeared(text)
-  #            require 'socket' 
-  #            sleep 4 
-  #            shell = TCPSocket.new("localhost", 9997)
-  #            read_socket(shell)
-  #            #jssh_command =  "var url = document.URL;"
-  #            jssh_command = "var length = getWindows().length; var win;length;\n"
-  #            #jssh_command << "for(var i = 0; i < length; i++)"
-  #            #jssh_command << "{"
-  #            #jssh_command << "   win = getWindows()[i];"
-  #            #jssh_command << "   if(win.opener != null && "
-  #            #jssh_command << "      win.title == \"[JavaScript Application]\" &&"
-  #            #jssh_command << "      win.opener.document.URL == url)"
-  #            #jssh_command << "   {"
-  #            #jssh_command << "       break;"
-  #            #jssh_command << "   }"
-  #            #jssh_command << "}"
-  #            
-  #            #jssh_command << " win.title;\n";
-  #            #jssh_command << "var dialog = win.document.childNodes[0];"
-  #            #jssh_command << "vbox = dialog.childNodes[1].childNodes[1];"
-  #            #jssh_command << "vbox.childNodes[1].childNodes[0].childNodes[0].textContent;\n"
-  #            puts jssh_command 
-  #            shell.send("#{jssh_command}", 0)
-  #            jstext = read_socket(shell)
-  #            puts jstext
-  #            return jstext == text
-  #        end
-  #    end
-  #end       
-  
-end
+  end # Firefox
+end # FireWatir
