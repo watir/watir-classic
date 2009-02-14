@@ -26,9 +26,9 @@ module FireWatir
     #
     def locate
       case @how
-      then :jssh_name
+      when :jssh_name
         @element_name = @what
-      then :xpath
+      when :xpath
         @element_name = element_by_xpath(@container, @what)
       else
         @element_name = locate_tagged_element('A', @how, @what)
