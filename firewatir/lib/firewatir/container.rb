@@ -46,14 +46,6 @@ module FireWatir
     
     # IP Address of the machine where the script is to be executed. Default to localhost.
     MACHINE_IP = "127.0.0.1"
-    # Name of the variable with which window is identified in JSSh.
-    WINDOW_VAR = "window"
-    # Name of the variable with which browser is identified in JSSh.
-    BROWSER_VAR = "browser"
-    # Name of the variable with which document is identified in JSSh.
-    DOCUMENT_VAR = "document"
-    # Name of the variable with which body is identified in JSSh.
-    BODY_VAR    = "body"
         
     # The default color for highlighting objects as they are accessed.
     DEFAULT_HIGHLIGHT_COLOR = "yellow"
@@ -392,7 +384,69 @@ module FireWatir
     end    
     
     
-    
+    #
+    # Description:
+    #   Used to access a definition list element - a <dl> HTML tag.
+    #
+    # Input:
+    #   - how - Attribute used to identify the definition list element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dl(:id, 'user_name')                    # access the dl element with an ID of user_name
+    #    ff.dl(:title, 'address')                   # access the dl element with a title of address
+    #
+    # Returns:
+    #   Dl object.
+    #
+    def dl(how, what = nil)
+      locate if defined?(locate)
+      Dl.new(self, how, what)
+    end
+
+    #
+    # Description:
+    #   Used to access a definition term element - a <dt> HTML tag.
+    #
+    # Input:
+    #   - how  - Attribute used to identify the image element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dt(:id, 'user_name')                    # access the dt element with an ID of user_name
+    #    ff.dt(:title, 'address')                   # access the dt element with a title of address
+    #
+    # Returns:
+    #   Dt object.
+    #
+    def dt(how, what = nil)
+      locate if defined?(locate)
+      Dt.new(self, how, what)
+    end
+
+    #
+    # Description:
+    #   Used to access a definition description element - a <dd> HTML tag.
+    #
+    # Input:
+    #   - how  - Attribute used to identify the image element.
+    #   - what - Value of that attribute.
+    #
+    # Typical Usage:
+    #
+    #    ff.dd(:id, 'user_name')                    # access the dd element with an ID of user_name
+    #    ff.dd(:title, 'address')                   # access the dd element with a title of address
+    #
+    # Returns:
+    #   Dd object.
+    #
+    def dd(how, what = nil)
+      locate if defined?(locate)
+      Dd.new(self, how, what)
+    end
+
     # Description:
     #	Searching for Page Elements. Not for external consumption.
     #        
@@ -431,11 +485,16 @@ module FireWatir
       # puts doc[35].to_s
     end
     
-    # evaluate javascript and return the result. Note: errors are not raised!
-    def js_eval javascript
-      javascript.gsub!("\n", "")
-      jssh_socket.send("#{javascript};\n", 0)
-      read_socket
+    # Evaluate javascript and return result. Raise an exception if an error occurred.
+    def js_eval(str)
+      str.gsub!("\n", "")
+      jssh_socket.send("#{str};\n", 0)
+      value = read_socket()
+      if md = /^(\w+)Error:(.*)$/.match(value) 
+        eval "class JS#{md[1]}Error < StandardError\nend"
+        raise (eval "JS#{md[1]}Error"), md[2]
+      end
+      value
     end
     
     # evaluate the provides javascript method on the current object and return

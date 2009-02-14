@@ -102,7 +102,7 @@ class TC_Forms3 < Test::Unit::TestCase
     browser.text_field(:id, "t1").set("Hello, reset test!")
     assert_equal(browser.text_field(:id, 't1').value, 'Hello, reset test!')
     
-    browser.button(:caption, "Reset").click
+    browser.button(:id, "reset_button").click
     assert_equal("" , browser.text_field(:id, 't1').value)
     
     # also verify it works under a form

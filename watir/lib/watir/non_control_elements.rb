@@ -124,5 +124,17 @@ module Watir
   class H6 < NonControlElement
     TAG = 'H6'
   end
-
+  class Dl < NonControlElement
+    TAG = 'DL'
+  end
+  class Dt < NonControlElement
+    TAG = 'DT'
+  end
+  class Dd < NonControlElement
+    TAG = 'DD'
+  end
+  class Strong < NonControlElement
+    TAG = 'STRONG'
+  end
+    
 end

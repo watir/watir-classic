@@ -48,6 +48,19 @@ module FireWatir
       assert_exists
       get_frame_html
     end
+
+    def document_var # unfinished
+        "document"
+    end
+    def body_var # unfinished
+        "body"
+    end
+    def window_var
+        "window"
+    end
+    def browser_var
+        "browser"
+    end
   end
   
   class Form < Element
@@ -154,6 +167,10 @@ module FireWatir
   
   class Span < NonControlElement 
     TAG = 'SPAN'
+  end
+  
+  class Strong < NonControlElement 
+    TAG = 'STRONG'
   end
   
   class Label < NonControlElement
@@ -699,16 +716,18 @@ module FireWatir
     end
     
     # this method returns the file created date of the image
-    #def fileCreatedDate
+    #def file_created_date
     #    assert_exists
     #    return @o.invoke("fileCreatedDate")
     #end
+    # alias fileCreatedDate file_created_date
     
     # this method returns the filesize of the image
-    #def fileSize
+    #def file_size
     #    assert_exists
     #    return @o.invoke("fileSize").to_s
     #end
+    # alias fileSize file_size
     
     #
     # Description:
@@ -738,12 +757,13 @@ module FireWatir
     # If the image was not loaded, the browser is unable to determine some of the properties. 
     # We look for these missing properties to see if the image is really there or not. 
     # If the Disk cache is full ( tools menu -> Internet options -> Temporary Internet Files) , it may produce incorrect responses.
-    #def hasLoaded?
+    #def has_loaded
     #    locate
     #    raise UnknownObjectException, "Unable to locate image using #{@how} and #{@what}" if @o == nil
     #    return false if @o.fileCreatedDate == "" and  @o.fileSize.to_i == -1
     #    return true
     #end
+    # alias hasLoaded? loaded?
     
     #
     # Description:
@@ -902,7 +922,7 @@ module FireWatir
     # Description:
     #   Clears the selected items in the select box.
     #
-    def clearSelection
+    def clear
       assert_exists
       #highlight( :set)
       wait = false
@@ -915,10 +935,11 @@ module FireWatir
       @o.wait if wait
       #highlight( :clear)
     end
+    alias clearSelection clear
     
     def each
       assert_exists
-      arr_options = options 
+      arr_options = js_options 
       #puts arr_options[0]#.length
       for i in 0..arr_options.length - 1 do
         yield Option.new(self, :jssh_name, arr_options[i])
@@ -937,7 +958,7 @@ module FireWatir
     #
     def [] (key)
       assert_exists
-      arr_options = options
+      arr_options = js_options
       return Option.new(self, :jssh_name, arr_options[key - 1])
     end
     
@@ -1006,13 +1027,15 @@ module FireWatir
     # Output:
     #   Array containing the items of the select list.
     #
-    def getAllContents() # BUG: camel_case.rb
+    def options
       assert_exists
       #element.log "There are #{@o.length} items"
       returnArray = []
       @o.each { |thisItem| returnArray << thisItem.text }
       return returnArray 
     end
+    
+    alias getAllContents options
     
     #
     # Description:
@@ -1022,7 +1045,7 @@ module FireWatir
     # Output:
     #   Array containing the selected items of the select list.
     #
-    def getSelectedItems
+    def selected_options
       assert_exists
       returnArray = []
       #element.log "There are #{@o.length} items"
@@ -1035,6 +1058,8 @@ module FireWatir
       end
       return returnArray 
     end
+    
+    alias getSelectedItems selected_options
     
     #
     # Description:
@@ -1255,7 +1280,7 @@ module FireWatir
     #   * destination_how   - symbol, :id, :name how we identify the drop target 
     #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
     # TODO: Can we have support for this in Firefox.
-    #def dragContentsTo( destination_how , destination_what)
+    #def drag_contents_to( destination_how , destination_what)
     #    assert_exists
     #    destination = element.text_field(destination_how, destination_what)
     #    raise UnknownObjectException ,  "Unable to locate destination using #{destination_how } and #{destination_what } "   if destination.exists? == false
@@ -1275,6 +1300,7 @@ module FireWatir
     #    destination.value= ( destination.value + value.to_s  )
     #    self.value = ""
     #end
+    # alias dragContentsTo drag_contents_to
     
     #
     # Description:
@@ -1444,6 +1470,15 @@ module FireWatir
     def focus
     end
     
+    #
+    # Description:
+    #   Hidden element is never visible - returns false.
+    # 
+    def visible?
+      assert_exists
+      false
+    end
+    
   end
   
   #
@@ -1511,12 +1546,13 @@ module FireWatir
     # Output:
     #   True if element is checked, false otherwise.
     #
-    def isSet?
+    def set?
       assert_exists
       return @o.checked
     end
-    alias getState isSet?
-    alias checked? isSet?
+    alias getState set?
+    alias checked? set?
+    alias isSet?   set?
     
     #
     # Description:
@@ -1856,6 +1892,11 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#spans method
   class Spans < ElementCollections; end
   
+  #   Class for accessing all the strong elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#strongs method
+  class Strongs < ElementCollections; end
+  
+  
   #   Class for accessing all the div elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#divs method
   class Divs < ElementCollections; end
@@ -1869,7 +1910,22 @@ module FireWatir
     TAG = 'LI'
   end
   class Lis < ElementCollections; end
-  
+
+  class Dl < NonControlElement
+    TAG = 'DL'
+  end
+  class Dls < ElementCollections; end
+
+  class Dt < NonControlElement
+    TAG = 'DT'
+  end
+  class Dts < ElementCollections; end
+
+  class Dd < NonControlElement
+    TAG = 'DD'
+  end
+  class Dds < ElementCollections; end
+
   class H1 < NonControlElement
     TAG = 'H1'
   end

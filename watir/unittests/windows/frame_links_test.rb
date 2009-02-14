@@ -18,7 +18,7 @@ class TC_Frame_Links < Test::Unit::TestCase
   
   def test_click_no_wait_in_a_frame
     browser.frame('linkFrame').link(:text, 'test1').click_no_wait
-    wait_until(2){browser.frame('linkFrame').text.include?('Links2-Pass')}
+    wait_until(10){browser.frame('linkFrame').text.include?('Links2-Pass')}
     assert(browser.frame('linkFrame').text.include?('Links2-Pass'))
   end  
   

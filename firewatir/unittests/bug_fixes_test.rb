@@ -171,7 +171,6 @@ class TC_Bugs< Test::Unit::TestCase
         goto_page("select_tealeaf.html")
         browser.select_lists.each do |select|
             contents =  select.getAllContents().to_s
-            puts contents
             assert_equal("=<>>=<=", contents)
             break
         end

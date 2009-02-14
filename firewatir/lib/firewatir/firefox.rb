@@ -144,7 +144,7 @@ module FireWatir
         when /java/
           raise "Not implemented: Create a browser finder in JRuby"
         end     
-        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}")} 
+        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}") } 
         sleep waitTime
       end
 
@@ -163,6 +163,8 @@ module FireWatir
     end
     
     # Gets the window number opened. 
+    # Currently, this returns the most recently opened window, which may or may
+    # not be the current window.
     def get_window_number()
       # If at any time a non-browser window like the "Downloads" window 
       #   pops up, it will become the topmost window, so make sure we 
@@ -179,28 +181,37 @@ module FireWatir
     def goto(url)
       get_window_number()
       set_browser_document()
-      js_eval "#{BROWSER_VAR}.loadURI(\"#{url}\")"
+      js_eval "#{browser_var}.loadURI(\"#{url}\")"
       wait()
     end
     
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
-      js_eval "if(#{BROWSER_VAR}.canGoBack) #{BROWSER_VAR}.goBack()"
+      js_eval "if(#{browser_var}.canGoBack) #{browser_var}.goBack()"
       wait()
     end
     
     # Loads the next page (if there is any) in the browser. Waits for the page to get loaded.
     def forward()
-      js_eval "if(#{BROWSER_VAR}.canGoForward) #{BROWSER_VAR}.goForward()"
+      js_eval "if(#{browser_var}.canGoForward) #{browser_var}.goForward()"
       wait()
     end
     
     # Reloads the current page in the browser. Waits for the page to get loaded.
     def refresh()
-      js_eval "#{BROWSER_VAR}.reload()"
+      js_eval "#{browser_var}.reload()"
       wait()
     end
     
+    # Executes the given JavaScript string 
+    def execute_script(source)
+      result = js_eval source.to_s
+      wait()
+      
+      result
+    end
+    
+    private
     # This function creates a new socket at port 9997 and sets the default values for instance and class variables.
     # Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
     def set_defaults(no_of_tries = 0)
@@ -216,41 +227,76 @@ module FireWatir
       end
       @error_checkers = []
     end
-    private :set_defaults
     
     #   Sets the document, window and browser variables to point to correct object in JSSh.
     def set_browser_document
-      # Get the window in variable WINDOW_VAR.
-      # Get the browser in variable BROWSER_VAR.
-      jssh_command = "var #{WINDOW_VAR} = getWindows()[#{@window_index}];"
-      jssh_command += " var #{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser();"
-      # Get the document and body in variable DOCUMENT_VAR and BODY_VAR respectively.
-      jssh_command += "var #{DOCUMENT_VAR} = #{BROWSER_VAR}.contentDocument;"
-      jssh_command += "var #{BODY_VAR} = #{DOCUMENT_VAR}.body;"
-      
+      # Add eventlistener for browser window so that we can reset the document back whenever there is redirect
+      # or browser loads on its own after some time. Useful when you are searching for flight results etc and
+      # page goes to search page after that it goes automatically to results page.
+      # Details : http://zenit.senecac.on.ca/wiki/index.php/Mozilla.dev.tech.xul#What_is_an_example_of_addProgressListener.3F
+      jssh_command = "var listObj = new Object();"; # create new object
+      jssh_command << "listObj.wpl = Components.interfaces.nsIWebProgressListener;"; # set the web progress listener.
+      jssh_command << "listObj.QueryInterface = function(aIID) {
+                                  if (aIID.equals(listObj.wpl) || 
+                                      aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+                                      aIID.equals(Components.interfaces.nsISupports)) 
+                                          return this;
+                                  throw Components.results.NS_NOINTERFACE;
+                              };" # set function to locate the object via QueryInterface
+      jssh_command << "listObj.onStateChange = function(aProgress, aRequest, aFlag, aStatus) { 
+                                                if (aFlag & listObj.wpl.STATE_STOP) { 
+                                                    if ( aFlag & listObj.wpl.STATE_IS_NETWORK ) {
+                                                       #{document_var} = #{browser_var}.contentDocument;
+                                                       #{body_var} = #{document_var}.body;
+                                                    } 
+                                                } 
+                                             };" # add function to be called when window state is change. When state is STATE_STOP & 
+                                                 # STATE_IS_NETWORK then only everything is loaded. Now we can reset our variables.
+      jssh_command.gsub!(/\n/, "")
+      js_eval jssh_command
+
+      jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
+      jssh_command << "var #{browser_var} = #{window_var}.getBrowser();"
+      # Add listener create above to browser object
+      jssh_command << "#{browser_var}.addProgressListener( listObj,Components.interfaces.nsIWebProgress.NOTIFY_STATE_WINDOW );"
+      jssh_command << "var #{document_var} = #{browser_var}.contentDocument;"
+      jssh_command << "var #{body_var} = #{document_var}.body;"
       js_eval jssh_command
       
-      # Get window and window's parent title and url
-      @window_title = js_eval "#{DOCUMENT_VAR}.title"
-      @window_url = js_eval "#{DOCUMENT_VAR}.URL"
+      @window_title = js_eval "#{document_var}.title"
+      @window_url = js_eval "#{document_var}.URL"
     end
-    private :set_browser_document
+
+    public
+    def window_var
+      "window"
+    end
+    #private
+    def browser_var
+      "browser"
+    end
+    def document_var # unfinished
+      "document"
+    end
+    def body_var # unfinished
+      "body"
+    end
     
+    public
     #   Closes the window.
     def close
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
-        @t.join if @t != nil
-        #sleep 5
+        @t.join if @t != nil # why? consider removing this. it may be causing hangs.
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
         # For e.g: Close Button, Close this Window link etc.
-        window_number = find_window("url", @window_url)
+        window_number = find_window(:url, @window_url) 
         
         # If matching window found. Close the window.
-        if(window_number > 0)
-          js_eval("getWindows()[#{window_number}].close()")
+        if window_number > 0
+          js_eval "getWindows()[#{window_number}].close()"
         end    
 
       end
@@ -285,12 +331,11 @@ module FireWatir
       br
     end   
 
-    #
-    # Description:
-    #   Finds a Firefox browser window with a given title or url.
-    #
+    # return the window index for the browser window with the given title or url.
+    #   how - :url or :title
+    #   what - string or regexp
     def find_window(how, what)
-      jssh_command =  "var windows = getWindows(); var window_number = 0;var found = false;
+      jssh_command =  "var windows = getWindows(); var window_number = 0; var found = false;
                              for(var i = 0; i < windows.length; i++)
                              {
                                 var attribute = '';
@@ -303,29 +348,13 @@ module FireWatir
                                     attribute = windows[i].getBrowser().contentDocument.title;
                                 }"
       if(what.class == Regexp)                    
-        # Construct the regular expression because we can't use it directly by converting it to string.
-        # If reg ex is /Google/i then its string conversion will be (?i-mx:Google) so we can't use it.
-        # Construct the regular expression again from the string conversion.
-        oldRegExp = what.to_s
-        newRegExp = "/" + what.source + "/"
-        flags = oldRegExp.slice(2, oldRegExp.index(':') - 2)
-        
-        for i in 0..flags.length do
-          flag = flags[i, 1]
-          if(flag == '-')
-            break;
-          else
-            newRegExp << flag
-          end
-        end
-        
-        jssh_command += "var regExp = new RegExp(#{newRegExp});
+        jssh_command << "var regExp = new RegExp(#{what.inspect});
                                  found = regExp.test(attribute);"
       else
-        jssh_command += "found = (attribute == \"#{what}\");"
+        jssh_command << "found = (attribute == \"#{what}\");"
       end
       
-      jssh_command +=     "if(found)
+      jssh_command <<     "if(found)
                                 {
                                     window_number = i;
                                     break;
@@ -333,10 +362,7 @@ module FireWatir
                             }
                             window_number;"
       
-      jssh_command.gsub!(/\n/, "")
-      window_number = js_eval jssh_command
-      
-      return window_number.to_i
+      return window_number = js_eval(jssh_command).to_i
     end
     private :find_window
     
@@ -365,34 +391,34 @@ module FireWatir
     end
     
     # Returns the url of the page currently loaded in the browser.
-    def url()
-      @window_url
+    def url
+      @window_url = js_eval "#{document_var}.URL"
     end 
     
     # Returns the title of the page currently loaded in the browser.
     def title
-      @window_title
+      @window_title = js_eval "#{document_var}.title"
     end
     
     # Returns the html of the page currently loaded in the browser.
     def html
-      result = js_eval("var htmlelem = #{DOCUMENT_VAR}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
+      result = js_eval("var htmlelem = #{document_var}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
       return "<html>" + result + "</html>"
     end
     
     # Returns the text of the page currently loaded in the browser.
     def text
-      js_eval("#{BODY_VAR}.textContent").strip
+      js_eval("#{body_var}.textContent").strip
     end
     
     # Maximize the current browser window.
     def maximize()
-      js_eval "#{WINDOW_VAR}.maximize()"
+      js_eval "#{window_var}.maximize()"
     end
     
     # Minimize the current browser window.
     def minimize()
-      js_eval "#{WINDOW_VAR}.minimize()"
+      js_eval "#{window_var}.minimize()"
     end
     
     # Waits for the page to get loaded.
@@ -402,7 +428,7 @@ module FireWatir
       start = Time.now
       
       while isLoadingDocument != "false"
-        isLoadingDocument = js_eval("#{BROWSER_VAR}=#{WINDOW_VAR}.getBrowser(); #{BROWSER_VAR}.webProgress.isLoadingDocument;")
+        isLoadingDocument = js_eval("#{browser_var}=#{window_var}.getBrowser(); #{browser_var}.webProgress.isLoadingDocument;")
         #puts "Is browser still loading page: #{isLoadingDocument}"
         
         # Raise an exception if the page fails to load
@@ -413,7 +439,7 @@ module FireWatir
       # If the redirect is to a download attachment that does not reload this page, this
       # method will loop forever. Therefore, we need to ensure that if this method is called
       # twice with the same URL, we simply accept that we're done.
-      url = js_eval("#{BROWSER_VAR}.contentDocument.URL")
+      url = js_eval("#{browser_var}.contentDocument.URL")
       
       if(url != last_url)
         # Check for Javascript redirect. As we are connected to Firefox via JSSh. JSSh
@@ -422,10 +448,10 @@ module FireWatir
         # So we currently don't wait for such a page.
         # wait variable in JSSh tells if we should wait more for the page to get loaded
         # or continue. -1 means page is not redirected. Anyother positive values means wait.
-        jssh_command = "var wait = -1; var meta = null; meta = #{BROWSER_VAR}.contentDocument.getElementsByTagName('meta');
+        jssh_command = "var wait = -1; var meta = null; meta = #{browser_var}.contentDocument.getElementsByTagName('meta');
                                 if(meta != null)
                                 {
-                                    var doc_url = #{BROWSER_VAR}.contentDocument.URL;
+                                    var doc_url = #{browser_var}.contentDocument.URL;
                                     for(var i=0; i< meta.length;++i)
                                     {
 						    			var content = meta[i].content;
@@ -453,18 +479,12 @@ module FireWatir
 								    }
                                 }
                                 wait;"
-        #puts "command in wait is : #{jssh_command}"                
-        jssh_command = jssh_command.gsub(/\n/, "")
-        $jssh_socket.send("#{jssh_command}; \n", 0)
-        wait_time = read_socket();
-        #puts "wait time is : #{wait_time}"
+        wait_time = js_eval(jssh_command).to_i
         begin
-          wait_time = wait_time.to_i
           if(wait_time != -1)
             sleep(wait_time)
             # Call wait again. In case there are multiple redirects.
-            $jssh_socket.send("#{BROWSER_VAR} = #{WINDOW_VAR}.getBrowser(); \n",0)
-            read_socket()
+            js_eval "#{browser_var} = #{window_var}.getBrowser()"
             wait(url)
           end    
         rescue
@@ -529,14 +549,14 @@ module FireWatir
     #   text        - Text that should appear on pop up.
     #
     def startClicker(button, waitTime = 1, userInput = nil, text = nil)
-      jssh_command = "var win = #{BROWSER_VAR}.contentWindow;"
+      jssh_command = "var win = #{browser_var}.contentWindow;"
       if(button =~ /ok/i)
-        jssh_command += "var popuptext = '';
+        jssh_command << "var popuptext = '';
                                  var old_alert = win.alert;
                                  var old_confirm = win.confirm;
                                  win.alert = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return true;
                                               }
@@ -546,12 +566,12 @@ module FireWatir
                                                 win.alert(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return true;"
+          jssh_command <<          "popuptext = param; return true;"
         end
-        jssh_command += "};
+        jssh_command << "};
                                  win.confirm = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return true;
                                               }
@@ -560,15 +580,15 @@ module FireWatir
                                                 win.confirm(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return true;"
+          jssh_command <<          "popuptext = param; return true;"
         end
-        jssh_command += "};"
+        jssh_command << "};"
         
       elsif(button =~ /cancel/i)
         jssh_command = "var old_confirm = win.confirm; 
                                               win.confirm = function(param) {"
         if(text != nil)                 
-          jssh_command +=          "if(param == \"#{text}\") {
+          jssh_command <<          "if(param == \"#{text}\") {
                                                 popuptext = param; 
                                                 return false;
                                               }
@@ -577,14 +597,11 @@ module FireWatir
                                                 win.confirm(param);
                                               }"
         else
-          jssh_command +=          "popuptext = param; return false;"
+          jssh_command <<          "popuptext = param; return false;"
         end
-        jssh_command += "};"
+        jssh_command << "};"
       end
-      jssh_command.gsub!(/\n/, "")
-      #puts "jssh command sent for js pop up is : #{jssh_command}"
-      $jssh_socket.send("#{jssh_command}\n", 0)
-      read_socket()
+      js_eval jssh_command
     end
     
     #
@@ -595,17 +612,15 @@ module FireWatir
     #   Text shown in javascript pop up.
     #
     def get_popup_text()
-      $jssh_socket.send("popuptext;\n", 0)
-      return_value = read_socket()
+      return_value = js_eval "popuptext"
       # reset the variable
-      $jssh_socket.send("popuptext = '';\n", 0)
-      read_socket()
+      js_eval "popuptext = ''"
       return return_value
     end
     
     # Returns the document element of the page currently loaded in the browser.
     def document
-      Document.new("#{DOCUMENT_VAR}")
+      Document.new("#{document_var}")
     end
     
     # Returns the first element that matches the given xpath expression or query.
@@ -622,9 +637,7 @@ module FireWatir
       candidate_class = jssh_type =~ /HTML(.*)Element/ ? $1 : ''
       #puts candidate_class # DEBUG
       if candidate_class == 'Input'
-        $jssh_socket.send("#{element_name}.type;\n", 0)
-        input_type = read_socket().downcase.strip
-        puts input_type # DEBUG
+        input_type = js_eval("#{element_name}.type").downcase.strip
         firewatir_class = input_class(input_type)
       else
         firewatir_class = jssh2firewatir(candidate_class)
@@ -883,7 +896,7 @@ module FireWatir
     #   Name, and index of all the frames available on the page.
     #
     def show_frames
-      jssh_command = "var frameset = #{WINDOW_VAR}.frames;
+      jssh_command = "var frameset = #{window_var}.frames;
                             var elements_frames = new Array();
                             for(var i = 0; i < frameset.length; i++)
                             {
@@ -895,9 +908,7 @@ module FireWatir
                             }
                             elements_frames.length;"
       
-      jssh_command.gsub!("\n", "")
-      $jssh_socket.send("#{jssh_command};\n", 0)
-      length = read_socket().to_i 
+      length = js_eval(jssh_command).to_i
       
       puts "There are #{length} frames"
       
@@ -912,18 +923,7 @@ module FireWatir
       end
     end
     alias showFrames show_frames
-    
-    # Evaluate javascript and return result. Raise an exception if an error occurred.
-    def js_eval(str)
-      $jssh_socket.send("#{str};\n", 0)
-      value = read_socket()
-      if md = /^(\w+)Error:(.*)$/.match(value) 
-        eval "class JS#{md[1]}Error\nend"
-        raise (eval "JS#{md[1]}Error"), md[2]
-      end
-      value
-    end
-    
+        
   end # Class Firefox
   
   # 
@@ -941,23 +941,23 @@ module FireWatir
   #            sleep 4 
   #            shell = TCPSocket.new("localhost", 9997)
   #            read_socket(shell)
-  #            #jssh_command =  "var url = #{DOCUMENT_VAR}.URL;"
+  #            #jssh_command =  "var url = document.URL;"
   #            jssh_command = "var length = getWindows().length; var win;length;\n"
-  #            #jssh_command += "for(var i = 0; i < length; i++)"
-  #            #jssh_command += "{"
-  #            #jssh_command += "   win = getWindows()[i];"
-  #            #jssh_command += "   if(win.opener != null && "
-  #            #jssh_command += "      win.title == \"[JavaScript Application]\" &&"
-  #            #jssh_command += "      win.opener.document.URL == url)"
-  #            #jssh_command += "   {"
-  #            #jssh_command += "       break;"
-  #            #jssh_command += "   }"
-  #            #jssh_command += "}"
+  #            #jssh_command << "for(var i = 0; i < length; i++)"
+  #            #jssh_command << "{"
+  #            #jssh_command << "   win = getWindows()[i];"
+  #            #jssh_command << "   if(win.opener != null && "
+  #            #jssh_command << "      win.title == \"[JavaScript Application]\" &&"
+  #            #jssh_command << "      win.opener.document.URL == url)"
+  #            #jssh_command << "   {"
+  #            #jssh_command << "       break;"
+  #            #jssh_command << "   }"
+  #            #jssh_command << "}"
   #            
-  #            #jssh_command += " win.title;\n";
-  #            #jssh_command += "var dialog = win.document.childNodes[0];"
-  #            #jssh_command += "vbox = dialog.childNodes[1].childNodes[1];"
-  #            #jssh_command += "vbox.childNodes[1].childNodes[0].childNodes[0].textContent;\n"
+  #            #jssh_command << " win.title;\n";
+  #            #jssh_command << "var dialog = win.document.childNodes[0];"
+  #            #jssh_command << "vbox = dialog.childNodes[1].childNodes[1];"
+  #            #jssh_command << "vbox.childNodes[1].childNodes[0].childNodes[0].textContent;\n"
   #            puts jssh_command 
   #            shell.send("#{jssh_command}", 0)
   #            jstext = read_socket(shell)

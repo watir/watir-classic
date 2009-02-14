@@ -14,7 +14,8 @@ It clicks links, fills in forms, presses buttons.
 Watir also checks results, such as whether expected text appears on the page.
 
 Watir is a family of Ruby libraries. They support Internet Explorer on
-Windows, Firefox on Windows, Mac and Linux, and Safari on Mac.
+Windows, Firefox on Windows, Mac and Linux, Safari on Mac, Chrome on 
+Windows and Flash testing with Firefox.
 
 Like other programming languages, Ruby gives you the power to 
 connect to databases, read data files and spreadsheets, export XML, and 

@@ -38,9 +38,30 @@ module Watir
     class Form        
         alias waitForIE wait 
     end
+
+
+    class Image
+      alias fileCreatedDate file_created_date
+      alias fileSize file_size
+      alias hasLoaded? loaded?
+    end
+    
+    class RadioCheckCommon
+      alias getState set?
+      alias isSet?   set?
+    end
+    
     class TextField
         alias readOnly? :readonly?
         alias getContents value
         alias maxLength maxlength
-    end    
+        alias dragContentsTo drag_contents_to
+    end 
+    
+    class SelectList
+        alias getAllContents options
+        alias getSelectedItems selected_options
+        alias clearSelection clear
+        alias includes? include?
+    end   
 end

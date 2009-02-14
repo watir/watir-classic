@@ -374,7 +374,7 @@ module Watir
     #    ie.checkbox(:id, 'day_to_send', 'monday')         # access the check box with an id of day_to_send and a value of monday
     #    ie.checkbox(:name,'email_frequency', 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
     #    ie.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
-    def checkbox(how, what=nil, value=nil)
+    def checkbox(how, what=nil, value=nil) # should be "check_box" ?
       CheckBox.new(self, how, what, value)
     end
     
@@ -611,6 +611,42 @@ module Watir
     def divs
       Divs.new(self)
     end
+    
+    # this is the main method for accessing the dls iterator. Returns a Dls collection
+    #
+    # Typical usage:
+    #
+    #   ie.dls.each { |d| puts d.to_s }            # iterate through all the dls on the page
+    #   ie.dls[1].to_s                             # goto the first dl on the page
+    #   ie.dls.length                              # show how many dls are on the page.
+    #
+    def dls
+      Dls.new(self)
+    end
+    
+    # this is the main method for accessing the dds iterator. Returns a Dds collection
+    #
+    # Typical usage:
+    #
+    #   ie.dds.each { |d| puts d.to_s }            # iterate through all the dds on the page
+    #   ie.dds[1].to_s                             # goto the first dd on the page
+    #   ie.dds.length                              # show how many dds are on the page.
+    #
+    def dds
+      Dds.new(self)
+    end
+    
+    # this is the main method for accessing the dts iterator. Returns a Dts collection
+    #
+    # Typical usage:
+    #
+    #   ie.dts.each { |d| puts d.to_s }            # iterate through all the dts on the page
+    #   ie.dts[1].to_s                             # goto the first dt on the page
+    #   ie.dts.length                              # show how many dts are on the page.
+    #
+    def dts
+      Dts.new(self)
+    end
         
     # this is the main method for accessing the spans iterator.
     #
@@ -626,6 +662,20 @@ module Watir
       Spans.new(self)
     end
     
+    # this is the main method for accessing the Strongs iterator.
+    #
+    # Returns a Strongs object
+    #
+    # Typical usage:
+    #
+    #   ie.strongs.each { |s| puts s.to_s }            # iterate through all the strongs on the page
+    #   ie.strongs[1].to_s                             # goto the first strong on the page
+    #   ie.strongs.length                              # show how many strongs are on the page.
+    #
+    def strongs
+      return Strongs.new(self)
+    end
+
     
     # this is the main method for accessing the ps iterator.
     #

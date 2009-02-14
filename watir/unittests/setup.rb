@@ -56,9 +56,7 @@ if Watir::UnitTest.options[:browser] != 'ie'
 end
 
 
-# not in all tests!
-$window_tests =
-    [
+=begin
      'attach_to_existing_window', # could actually run robustly as part of the core suite!
      'attach_to_new_window', # creates new window
      'close_window', # creates new window
@@ -71,5 +69,9 @@ $window_tests =
      #new 
      'open_close',
      'send_keys', # visible
-    ].collect {|x| "unittests/windows/#{x}_test.rb"}
+=end
+Dir.chdir tiptopdir do
+  $window_tests = Dir["watir/unittests/windows/*_test.rb"] - ["watir/unittests/windows/ie-each_test.rb"]
+end
+
 

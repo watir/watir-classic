@@ -1,5 +1,4 @@
 # feature tests for Visibility 
-# revision: 
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
@@ -40,5 +39,9 @@ class TC_Visibility < Test::Unit::TestCase
     #wait_until { browser.div(:id, "div3").visible? }
     assert_equal(true, browser.div(:id, "div3").visible? )
     assert_equal(true, browser.text_field(:id, "lgnId3").visible? )  
+  end
+  
+  def test_hidden_element
+    assert_equal(false, browser.hidden(:id, 'hidden-type').visible? )
   end
 end

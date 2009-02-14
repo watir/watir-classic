@@ -8,9 +8,11 @@ module Watir
     def element_tag
       element_class::TAG
     end
+    
     def length
       @container.document.getElementsByTagName(element_tag).length
     end
+    alias_method :size, :length
   end
   
   # This class is used as part of the .show method of the iterators class
@@ -307,6 +309,30 @@ module Watir
       @show_attributes.delete("name")
       @show_attributes.add("className", 20)
     end
+  end
+  
+  class Dls < ElementCollections
+    include CommonCollection
+    def element_class; Dl; end
+    def element_tag; Dl::TAG; end
+  end
+
+  class Dts < ElementCollections
+    include CommonCollection
+    def element_class; Dt; end
+    def element_tag; Dt::TAG; end
+  end
+
+  class Dds < ElementCollections
+    include CommonCollection
+    def element_class; Dd; end
+    def element_tag; Dd::TAG; end
+  end
+  
+  class Strongs < ElementCollections
+    include CommonCollection
+    def element_class; Strong; end
+    def element_tag; Strong::TAG; end
   end
   
 end

@@ -57,6 +57,9 @@ class TC_CheckBox < Test::Unit::TestCase
     
        assert(browser.checkbox(:name, "box4" , 1).exists?)   
        assert_false(browser.checkbox(:name, "box4" , 22).exists?)   
+
+       assert(browser.checkbox(:name, "box4" , /[0-9]/).exists?)   
+       assert_false(browser.checkbox(:name, "box4" , /\d\d\d/).exists?)   
     end
 
     #def test_checkbox_Enabled

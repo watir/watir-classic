@@ -12,7 +12,7 @@ desc 'Generate Watir API Documentation'
 Rake::RDocTask.new('rdoc') do |rdoc| 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.options += $WATIR_RDOC_OPTIONS
-  rdoc.rdoc_files.include('lib/watir.rb')
+  rdoc.rdoc_files.include('lib/watir/ie.rb')
   $WATIR_EXTRA_RDOC_FILES.each do |file|
     rdoc.rdoc_files.include(file)
   end
