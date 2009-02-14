@@ -122,10 +122,8 @@ class TC_Bugs< Test::Unit::TestCase
 
     tag_method :test_close_bug_26, :fails_on_ie
     def test_close_bug_26
-        if ! (RUBY_PLATFORM =~ /darwin/i)
-            browser.close()
-            browser = FireWatir::Firefox.new
-        end    
+        browser.close()
+        browser = FireWatir::Firefox.new
     end
 
     def test_class_bug_29

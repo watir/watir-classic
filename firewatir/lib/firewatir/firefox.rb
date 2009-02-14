@@ -288,7 +288,11 @@ module FireWatir
       # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
-        @t.join if @t != nil # why? consider removing this. it may be causing hangs.
+        if RUBY_PLATFORM =~ /darwin/
+          %x{ osascript -e 'tell application "Firefox" to quit'}
+        else
+          @t.join if @t != nil
+        end
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
         # For e.g: Close Button, Close this Window link etc.
