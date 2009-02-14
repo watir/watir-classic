@@ -309,6 +309,7 @@ module FireWatir
     # Output:
     #   Instance of newly attached window.
     def attach(how, what)
+      $stderr.puts("warning: #{self.class}.attach is experimental") if $VERBOSE
       window_number = find_window(how, what)
       
       if(window_number == 0)
