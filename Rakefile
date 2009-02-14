@@ -41,10 +41,10 @@ end
 
 namespace :cruise do
   def move_reports(report_dir)
+    add_style_sheet_to_reports(report_dir + '/*.xml')
     return unless ENV['CC_BUILD_ARTIFACTS']
     Dir[report_dir].each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
     File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
-    add_style_sheet_to_reports(ENV['CC_BUILD_ARTIFACTS'] + '/*.xml')
   end
     
   def add_style_sheet_to_reports(report_dir)
