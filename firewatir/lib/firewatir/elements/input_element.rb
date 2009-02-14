@@ -10,9 +10,10 @@ module FireWatir
     #   Locate the element on the page. Element can be a select list, text field, button, hidden, file field.
     #
     def locate
-      if @how == :jssh_name
+      case @how
+      when :jssh_name
         @element_name = @what
-      elsif @how == :xpath
+      when :xpath
         @element_name = element_by_xpath(@container, @what)
       else
         if(self.class::INPUT_TYPES.include?("select-one"))

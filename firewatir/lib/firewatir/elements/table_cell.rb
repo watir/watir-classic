@@ -10,9 +10,10 @@ module FireWatir
     #   Locate the table cell element on the page.
     #
     def locate
-      if @how == :jssh_name
+      case @how
+      when :jssh_name
         @element_name = @what
-      elsif @how == :xpath
+      when :xpath
         @element_name = element_by_xpath(@container, @what)
       else
         @element_name = locate_tagged_element("TD", @how, @what)

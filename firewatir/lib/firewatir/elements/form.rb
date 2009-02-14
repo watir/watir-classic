@@ -18,9 +18,10 @@ module FireWatir
 
     def locate
       # Get form using xpath.
-      if @how == :jssh_name
+      case @how
+      when :jssh_name
         @element_name = @what
-      elsif @how == :xpath
+      when :xpath
         @element_name = element_by_xpath(container, @what)
       else
         @element_name = locate_tagged_element("form", @how, @what)

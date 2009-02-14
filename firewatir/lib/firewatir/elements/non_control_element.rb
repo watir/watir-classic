@@ -17,9 +17,10 @@ module FireWatir
     #   Locate the element on the page. Element can be a span, div, label, p or pre HTML tag.
     #
     def locate
-      if(@how == :jssh_name)
+      case @how
+      when :jssh_name
         @element_name = @what
-      elsif @how == :xpath
+      when :xpath
         @element_name = element_by_xpath(@container, @what)
       else
         @element_name = locate_tagged_element(self.class::TAG, @how, @what)

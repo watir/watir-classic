@@ -25,9 +25,10 @@ module FireWatir
     #   Locate the link element on the page.
     #
     def locate
-      if @how == :jssh_name
+      case @how
+      then :jssh_name
         @element_name = @what
-      elsif @how == :xpath
+      then :xpath
         @element_name = element_by_xpath(@container, @what)
       else
         @element_name = locate_tagged_element('A', @how, @what)
