@@ -1,8 +1,12 @@
 $__firewatir_source_patterns = [
-    'lib/firewatir.rb', 
-    'lib/firewatir/*.rb','unittests/*.rb', 
-    'unittests/html/*.html', 'unittests/html/images/*.*' 
-    ]
+  'lib/firewatir.rb',
+  'lib/firewatir/*.rb',
+  'lib/firewatir/elements/*.rb',
+  'unittests/*.rb',
+  'unittests/html/*.html',
+  'unittests/html/images/*.*',
+  'LICENSE'
+]
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'firewatir/version'
