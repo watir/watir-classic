@@ -107,10 +107,6 @@ module FireWatir
     # TODO: Start the firefox version given by user. 
     
     def initialize(options = {})
-      if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
-        raise "multiple browsers not supported on os x"
-      end
-      
       if(options.kind_of?(Integer))
         options = {:waitTime => options}
       end
@@ -122,6 +118,10 @@ module FireWatir
       end
 
       unless(options[:suppress_launch_process])
+        if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+          raise "multiple browsers not supported on os x"
+        end
+
         bin = path_to_bin()
         @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
         sleep options[:waitTime] || 2
