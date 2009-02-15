@@ -11,7 +11,7 @@ module FireWatir
     #   Sets the path of the file in the textbox.
     #
     # Input:
-    #   setPath - Path of the file.
+    #   path - Path of the file.
     #
     def set(path)
       assert_exists
