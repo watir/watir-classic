@@ -7,8 +7,9 @@ TOPDIR = File.join(File.dirname(__FILE__), '..')
 $LOAD_PATH.unshift TOPDIR
 require 'unittests/setup'
 
-Dir.chdir TOPDIR
-$all_tests.each {|x| require x}
+Dir.chdir TOPDIR do
+  $all_tests.each {|x| require x}
+end
 
 Watir::UnitTest.filter_out do |test|
   test.class.to_s =~ /xpath/i

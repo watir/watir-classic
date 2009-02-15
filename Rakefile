@@ -25,7 +25,7 @@ task :clean_subprojects do
 end
 
 task :clean => [:clean_subprojects]
-CLEAN << 'gems/*'
+CLEAN << 'gems/*' << 'test/reports'
 
 desc 'Run core_tests tests for IE'
 Rake::TestTask.new :core_tests do |t|
@@ -42,36 +42,33 @@ Rake::TestTask.new :mozilla_all_tests do |t|
 end
 
 namespace :cruise do
-  def move_reports(report_dir)
-    add_style_sheet_to_reports(report_dir + '/*.xml')
-    return unless ENV['CC_BUILD_ARTIFACTS']
-    Dir[report_dir].each { |e| File::move(e, ENV['CC_BUILD_ARTIFACTS']) }
-    File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
-  end
-    
   def add_style_sheet_to_reports(report_dir)
-    dir_arr = Dir[report_dir]
-    return if dir_arr.empty?
-    dir_arr.each do |f|
+    Dir[report_dir].each do |f|
       sContent = File.readlines(f, '\n')
       sContent.each do |line|
-        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
+        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, 
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
       end
       File.open(f, "w+") { |file| file.puts sContent }
     end
   end
   
-  task :move_reports_ie do
-    move_reports "watir/test/reports/*.xml"
-  end
-  task :move_reports_ff do
-    move_reports "firewatir/test/reports/*.xml"
+  task :move_reports do
+    reports = "test/reports/*.xml"
+    add_style_sheet_to_reports(reports)
+    File::copy("transform-results.xsl", "test/reports")    
+    if ENV['CC_BUILD_ARTIFACTS']
+      Dir[reports].each { |e| File::copy(e, ENV['CC_BUILD_ARTIFACTS']) }
+      File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])    
+    else
+      puts "Build results not copied. CC_BUILD_ARTIFACTS not defined"
+    end
   end
   
   desc 'Run tests for Internet Explorer'
-  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_reports_ie]
+  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_reports]
   desc 'Run tests for Firefox'
-  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_reports_ff]
+  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_reports]
 end
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
@@ -86,6 +83,3 @@ task :publish_website => [:website] do
   user = 'bret' # userid on rubyforge
   puts system("call pscp -v -r doc\\output\\*.* #{user}@rubyforge.org:/var/www/gforge-projects/wtr")
 end
-
-desc 'Run tests for all browser'
-task :test => [:test_ie, :test_ff]
