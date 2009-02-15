@@ -13,10 +13,14 @@ module FireWatir
     # Input:
     #   setPath - Path of the file.
     #
-    def set(setPath)
+    def set(path)
       assert_exists
 
-      setFileFieldValue(setPath)
+      path.gsub!("\\", "\\\\\\")
+
+      jssh_socket.send("#{element_object}.value = \"#{path}\";\n", 0)
+      read_socket()
+      @@current_level = 0
     end
 
   end # FileField

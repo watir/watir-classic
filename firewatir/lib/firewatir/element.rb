@@ -1321,34 +1321,6 @@ module FireWatir
   
     #
     # Description:
-    #   Sets the value of file in HTMLInput file field control.
-    #
-    # Input:
-    #   setPath - location of the file to be uploaded. '|' should not be part of filename.
-    #
-    def setFileFieldValue(setPath)
-      # why isn't this method defined in FileField?
-    
-      # As ruby converts \\ to \ and while sending name to jssh \ is ignored.
-      # So replace \ with \\. Now this is even trickier you can't replace \ with \\
-      # directly like this string.gsub!("\\", "\\\\") this doesn't work.
-      # Work around is replace '\' with two special character and then replace
-      # special character with \.
-      setPath.gsub!("\\", "||")
-      setPath.gsub!("|", "\\")
-    
-      #jssh_command = "var textBox = document.getBoxObjectFor(#{element_object}).firstChild;"
-      #jssh_command << "textBox.value = \"#{setPath}\";\n";
-    
-      #puts jssh_command
-      jssh_socket.send("#{element_object}.value = \"#{setPath}\";\n", 0)
-      read_socket()
-      @@current_level = 0
-    end
-    private :setFileFieldValue
-  
-    #
-    # Description:
     #   Traps all the function calls for an element that is not defined and fires them again
     #   as it is to the jssh. This can be used in case the element supports properties or methods
     #   that are not defined in the corresponding element class or in the base class(Element).
