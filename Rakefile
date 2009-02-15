@@ -31,12 +31,14 @@ desc 'Run core_tests tests for IE'
 Rake::TestTask.new :core_tests do |t|
   t.test_files = FileList['watir/unittests/core_tests.rb']
   t.verbose = true
+  t.options = '-v'
 end
 
 desc 'Run mozilla_all_tests for FireFox'
 Rake::TestTask.new :mozilla_all_tests do |t|
   t.test_files = FileList['firewatir/unittests/mozilla_all_tests.rb']
   t.verbose = true
+  t.options = '-v'
 end
 
 namespace :cruise do
