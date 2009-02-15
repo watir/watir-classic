@@ -31,14 +31,12 @@ desc 'Run core_tests tests for IE'
 Rake::TestTask.new :core_tests do |t|
   t.test_files = FileList['watir/unittests/core_tests.rb']
   t.verbose = true
-  t.options = '-v'
 end
 
 desc 'Run mozilla_all_tests for FireFox'
 Rake::TestTask.new :mozilla_all_tests do |t|
   t.test_files = FileList['firewatir/unittests/mozilla_all_tests.rb']
   t.verbose = true
-  t.options = '-v'
 end
 
 namespace :cruise do
@@ -65,10 +63,15 @@ namespace :cruise do
     end
   end
   
+  task :verbose do
+    # ci:setup_testunit also mucks with this
+    ENV["TESTOPTS"] = "#{ENV["TESTOPTS"]} -v"
+  end
+  
   desc 'Run tests for Internet Explorer'
-  task :ie_core_tests => ['ci:setup:testunit', :core_tests, :move_reports]
+  task :ie_core_tests => ['ci:setup:testunit', :verbose, :core_tests, :move_reports]
   desc 'Run tests for Firefox'
-  task :ff_mozilla_all_tests => ['ci:setup:testunit', :mozilla_all_tests, :move_reports]
+  task :ff_mozilla_all_tests => ['ci:setup:testunit', :verbose, :mozilla_all_tests, :move_reports]
 end
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
