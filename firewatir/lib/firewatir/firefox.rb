@@ -942,14 +942,13 @@ module FireWatir
     end
 
     def path_from_registry
-      if RUBY_PLATFORM =~ /java/
-        raise NotImplementedError, "(need to know how to access windows registry on JRuby)"
-      else
-        require 'win32/registry.rb'
-        lm = Win32::Registry::HKEY_LOCAL_MACHINE
-        lm.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
-          reg1 = lm.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{reg.keys[0]}\\Main")
-          return reg1.find { |key, type, data| key =~ /pathtoexe/i }
+      raise NotImplementedError, "(need to know how to access windows registry on JRuby)" if RUBY_PLATFORM =~ /java/
+      require 'win32/registry.rb'
+      lm = Win32::Registry::HKEY_LOCAL_MACHINE
+      lm.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
+        reg1 = lm.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{reg.keys[0]}\\Main")
+        if entry = reg1.find { |key, type, data| key =~ /pathtoexe/i }
+          return entry.last
         end
       end
     end
