@@ -107,7 +107,10 @@ module FireWatir
     # TODO: Start the firefox version given by user. 
     
     def initialize(options = {})
-
+      if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+        raise "multiple browsers not supported on os x"
+      end
+      
       if(options.kind_of?(Integer))
         options = {:waitTime => options}
       end
@@ -119,33 +122,9 @@ module FireWatir
       end
 
       unless(options[:suppress_launch_process])
-
-        waitTime = options[:waitTime] || 2
-        
-        case RUBY_PLATFORM 
-        when /mswin/
-          # Get the path to Firefox.exe using Registry.
-          require 'win32/registry.rb'
-          path_to_bin = ""
-          Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
-            keys = reg.keys
-            reg1 = Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{keys[0]}\\Main")
-            reg1.each do |subkey, type, data|
-              if(subkey =~ /pathtoexe/i)
-                path_to_bin = data
-              end
-            end
-          end
-          
-        when /linux/i
-          path_to_bin = `which firefox`.strip
-        when /darwin/i
-          path_to_bin = '/Applications/Firefox.app/Contents/MacOS/firefox'
-        when /java/
-          raise "Not implemented: Create a browser finder in JRuby"
-        end     
-        @t = Thread.new { system("#{path_to_bin} -jssh #{profile_opt}") } 
-        sleep waitTime
+        bin = path_to_bin()
+        @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
+        sleep options[:waitTime] || 2
       end
 
       set_defaults()
@@ -285,14 +264,15 @@ module FireWatir
     public
     #   Closes the window.
     def close
-      # Try to join thread only if there is exactly one open window
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
-        if RUBY_PLATFORM =~ /darwin/
-          %x{ osascript -e 'tell application "Firefox" to quit'}
-        else
-          @t.join if @t != nil
+        
+        if current_os == :macosx
+          %x{ osascript -e 'tell application "Firefox" to quit' }
         end
+
+        # wait for the app to close properly
+        @t.join if @t
       else
         # Check if window exists, because there may be the case that it has been closed by click event on some element.
         # For e.g: Close Button, Close this Window link etc.
@@ -928,6 +908,51 @@ module FireWatir
       end
     end
     alias showFrames show_frames
+
+    private
+
+    def path_to_bin
+      path = case current_os()
+             when :windows
+               path_from_registry
+             when :macosx
+               '/Applications/Firefox.app/Contents/MacOS/firefox'
+             when :linux
+               `which firefox`.strip
+             end
+
+      raise "unable to locate Firefox executable" if path.nil? || path.empty?
+
+      path
+    end
+
+    def current_os
+      return @current_os if defined?(@current_os)
+
+      platform = RUBY_PLATFORM =~ /java/ ? java.lang.System.getProperty("os.name") : RUBY_PLATFORM
+
+      @current_os = case platform
+                    when /mswin|windows/i
+                      :windows
+                    when /darwin|mac os/i
+                      :macosx
+                    when /linux/i
+                      :linux
+                    end
+    end
+
+    def path_from_registry
+      if RUBY_PLATFORM =~ /java/
+        raise NotImplementedError, "(need to know how to access windows registry on JRuby)"
+      else
+        require 'win32/registry.rb'
+        lm = Win32::Registry::HKEY_LOCAL_MACHINE
+        lm.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
+          reg1 = lm.open("SOFTWARE\\Mozilla\\Mozilla Firefox\\#{reg.keys[0]}\\Main")
+          return reg1.find { |key, type, data| key =~ /pathtoexe/i }
+        end
+      end
+    end
         
   end # Firefox
 end # FireWatir
