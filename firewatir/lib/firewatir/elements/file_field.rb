@@ -20,6 +20,8 @@ module FireWatir
 
       jssh_socket.send("#{element_object}.value = \"#{path}\";\n", 0)
       read_socket()
+      @o.fireEvent("onChange")
+      
       @@current_level = 0
     end
 
