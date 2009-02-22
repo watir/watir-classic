@@ -72,6 +72,9 @@ namespace :cruise do
   task :ie_core_tests => ['ci:setup:testunit', :verbose, :core_tests, :move_reports]
   desc 'Run tests for Firefox'
   task :ff_mozilla_all_tests => ['ci:setup:testunit', :verbose, :mozilla_all_tests, :move_reports]
+  
+  desc 'Run all tests'
+  task :all => [:ie_core_tests, :ff_mozilla_all_tests]
 end
 
 desc 'Build the html for the website (wtr.rubyforge.org)'
