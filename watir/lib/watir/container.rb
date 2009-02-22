@@ -648,6 +648,18 @@ module Watir
       Dts.new(self)
     end
         
+    # this is the main method for accessing the ems iterator. Returns a Ems collection
+    #
+    # Typical usage:
+    #
+    #   ie.ems.each { |d| puts d.to_s }            # iterate through all the ems on the page
+    #   ie.ems[1].to_s                             # goto the first em on the page
+    #   ie.ems.length                              # show how many ems are on the page.
+    #
+    def ems
+      Ems.new(self)
+    end
+        
     # this is the main method for accessing the spans iterator.
     #
     # Returns a Spans object

@@ -269,6 +269,10 @@ module FireWatir
   #   It would normally only be accessed by the FireWatir::Container#dds method
   class Dds < ElementCollections; end
 
+  #   Class for accessing all the dd elements in the document.
+  #   It would normally only be accessed by the FireWatir::Container#dds method
+  class Ems < ElementCollections; end
+
   #   Class for accessing all the area elements in the document.
   #   It would normally only be accessed by the FireWatir::Container#areas method
   class Areas < ElementCollections; end

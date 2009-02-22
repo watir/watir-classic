@@ -100,5 +100,9 @@ module FireWatir
   class Body < NonControlElement
     TAG = 'TBODY'
   end
+  
+  class Em < NonControlElement
+    TAG = 'EM'
+  end
 
 end # FireWatir
