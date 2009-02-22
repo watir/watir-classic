@@ -335,4 +335,10 @@ module Watir
     def element_tag; Strong::TAG; end
   end
   
+  class Ems < ElementCollections
+    include CommonCollection
+    def element_class; Em; end
+    def element_tag; Em::TAG; end
+  end
+  
 end

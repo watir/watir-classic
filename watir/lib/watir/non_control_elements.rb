@@ -136,5 +136,8 @@ module Watir
   class Strong < NonControlElement
     TAG = 'STRONG'
   end
+  class Em < NonControlElement
+    TAG = 'EM'
+  end
     
 end
