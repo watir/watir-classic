@@ -955,7 +955,7 @@ module FireWatir
 
     def path_from_spotlight
       ff = %x[mdfind 'kMDItemCFBundleIdentifier == "org.mozilla.firefox"']
-      ff = ff.empty? ? '/Applications/Firefox.app' : ff.chomp
+      ff = ff.empty? ? '/Applications/Firefox.app' : ff.split("\n").first
 
       "#{ff}/Contents/MacOS/firefox"
     end
