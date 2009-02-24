@@ -916,7 +916,7 @@ module FireWatir
              when :windows
                path_from_registry
              when :macosx
-               '/Applications/Firefox.app/Contents/MacOS/firefox'
+               path_from_spotlight
              when :linux
                `which firefox`.strip
              end
@@ -951,6 +951,13 @@ module FireWatir
           return entry.last
         end
       end
+    end
+
+    def path_from_spotlight
+      ff = %x[mdfind 'kMDItemCFBundleIdentifier == "org.mozilla.firefox"']
+      ff = ff.empty? ? '/Applications/Firefox.app' : ff.chomp
+
+      "#{ff}/Contents/MacOS/firefox"
     end
         
   end # Firefox
