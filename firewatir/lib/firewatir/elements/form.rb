@@ -22,7 +22,7 @@ module FireWatir
       when :jssh_name
         @element_name = @what
       when :xpath
-        @element_name = element_by_xpath(container, @what)
+        @element_name = element_by_xpath(@container, @what)
       else
         @element_name = locate_tagged_element("form", @how, @what)
       end
