@@ -442,7 +442,7 @@ module Watir
       WindowHelper.check_autoit_installed
       begin
         thrd = Thread.new do
-          system("rubyw -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Chose File to Upload', '', 15; sleep 1; if waitresult == 1\" -e \"@autoit.ControlSetText 'Chose File to Upload', '', 'Edit1', '#{setPath}'; @autoit.ControlSend 'Chose File to Upload', '', 'Button2', '{ENTER}';\" -e \"end\"")
+          system("rubyw -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Choose File to Upload', '', 15; sleep 1; if waitresult == 1\" -e \"@autoit.ControlSetText 'Choose File to Upload', '', 'Edit1', '#{setPath}'; @autoit.ControlSend 'Choose File to Upload', '', 'Button2', '{ENTER}';\" -e \"end\"")
         end
       thrd.join(1)
       rescue
