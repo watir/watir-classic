@@ -375,7 +375,7 @@ module FireWatir
       
       window_number = js_eval(jssh_command).to_s   
       @opened_new_window = window_number
-      return window_number =~ /false|undefined|-1/ ? nil : window_number.to_i
+      return window_number >= 0 ? window_number.to_i : nil
     end
     private :open_window
 
