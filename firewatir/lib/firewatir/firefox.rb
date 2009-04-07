@@ -104,7 +104,7 @@ module FireWatir
     #                 the last used profile. 
     #     :suppress_launch_process - do not create a new firefox process. Connect to an existing one.
     
-    # TODO: Start the firefox version given by user. 
+    # TODO: Start the firefox version given by user.
     
     def initialize(options = {})
       if(options.kind_of?(Integer))
@@ -116,12 +116,23 @@ module FireWatir
       else
         profile_opt = ""
       end
-
-      unless(options[:suppress_launch_process])
+      
+      # check for jssh not running, firefox may be open but not with -jssh
+      # if its not open at all, regardless of the :suppress_launch_process option start it
+      # error if running without jssh, we don't want to kill their current window (mac only)
+      jssh_down = false
+      begin
+        set_defaults()
+      rescue Watir::Exception::UnableToStartJSShException
+        jssh_down = true
+      end
+      
+      if not options[:suppress_launch_process] or jssh_down
         if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+          raise "Firefox is running without -jssh" if jssh_down
           raise "multiple browsers not supported on os x"
         end
-
+        
         bin = path_to_bin()
         @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
         sleep options[:waitTime] || 2
@@ -141,6 +152,16 @@ module FireWatir
       return ff
     end
     
+    def test_jssh
+      begin
+        js_eval("getWindows.length")
+      rescue Watir::Exception::UnableToStartJSShException
+        return false
+      end
+      true
+    end
+    private :test_jssh
+    
     # Gets the window number opened. 
     # Currently, this returns the most recently opened window, which may or may
     # not be the current window.
@@ -151,6 +172,14 @@ module FireWatir
       window_count = js_eval("getWindows().length").to_i - 1
       while js_eval("getWindows()[#{window_count}].getBrowser") == ''
         window_count -= 1;
+      end
+      
+      # now correctly handles instances where only browserless windows are open
+      # opens one we can use if count is 0
+      
+      if window_count == 0
+        open_window
+        window_count = 1
       end
       @window_index = window_count
     end
@@ -264,6 +293,7 @@ module FireWatir
     public
     #   Closes the window.
     def close
+      
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
         
@@ -293,12 +323,24 @@ module FireWatir
     # Output:
     #   Instance of newly attached window.
     def attach(how, what)
+      
+      if how.nil?
+        window_number = open_window
+        if(window_number.nil?)
+          raise NoMatchingWindowFoundException.new("Unable to open a new window")  
+        else
+          @window_index = window_number
+          set_browser_document()
+        end
+        return self
+      end     
+      
       $stderr.puts("warning: #{self.class}.attach is experimental") if $VERBOSE
       window_number = find_window(how, what)
       
-      if(window_number == 0)
+      if(window_number.nil?)
         raise NoMatchingWindowFoundException.new("Unable to locate window, using #{how} and #{what}")  
-      elsif(window_number > 0)
+      elsif(window_number >= 0)
         @window_index = window_number
         set_browser_document()
       end    
@@ -314,23 +356,48 @@ module FireWatir
       br = new :suppress_launch_process => true # don't create window
       br.attach(how, what)
       br
-    end   
+    end
+    
+    # loads up a new window in an existing process
+    # Watir::Browser.attach() with no arguments passed the attach method will create a new window
+    # this will only be called one time per instance we're only ever going to run in 1 window
+    
+    def open_window
+      
+      if @opened_new_window
+        return @opened_new_window
+      end
+
+      jssh_command = "var windows = getWindows(); var window = windows[0];
+                      window.open();
+                      var windows = getWindows(); var window_number = windows.length - 1;
+                      window_number;"      
+      
+      window_number = js_eval(jssh_command).to_s   
+      @opened_new_window = window_number
+      return window_number =~ /false|undefined|-1/ ? nil : window_number.to_i
+    end
 
     # return the window index for the browser window with the given title or url.
     #   how - :url or :title
     #   what - string or regexp
     def find_window(how, what)
-      jssh_command =  "var windows = getWindows(); var window_number = 0; var found = false;
+      jssh_command =  "var windows = getWindows(); var window_number = false; var found = false;
                              for(var i = 0; i < windows.length; i++)
                              {
                                 var attribute = '';
+                                var browser = windows[i].getBrowser();
+                                if(!browser)
+                                {
+                                  continue;
+                                }
                                 if(\"#{how}\" == \"url\")
                                 {
-                                    attribute = windows[i].getBrowser().contentDocument.URL;
+                                    attribute = browser.contentDocument.URL;
                                 }
                                 if(\"#{how}\" == \"title\")
                                 {
-                                    attribute = windows[i].getBrowser().contentDocument.title;
+                                    attribute = browser.contentDocument.title;
                                 }"
       if(what.class == Regexp)                    
         jssh_command << "var regExp = new RegExp(#{what.inspect});
@@ -346,8 +413,8 @@ module FireWatir
                                 }
                             }
                             window_number;"
-      
-      return window_number = js_eval(jssh_command).to_i
+      window_number = js_eval(jssh_command).to_s
+      return window_number == 'false' ? nil : window_number.to_i
     end
     private :find_window
     

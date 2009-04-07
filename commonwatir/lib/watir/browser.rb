@@ -71,7 +71,7 @@ before you invoke Browser.new.
         klass.start url
       end
       # Attach to an existing browser.
-      def attach(how, what)
+      def attach(how = nil, what = nil)
         set_sub_options
         klass.attach(how, what)
       end
