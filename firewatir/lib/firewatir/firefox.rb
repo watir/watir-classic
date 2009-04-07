@@ -377,6 +377,7 @@ module FireWatir
       @opened_new_window = window_number
       return window_number =~ /false|undefined|-1/ ? nil : window_number.to_i
     end
+    private :open_window
 
     # return the window index for the browser window with the given title or url.
     #   how - :url or :title
