@@ -152,16 +152,6 @@ module FireWatir
       return ff
     end
     
-    def test_jssh
-      begin
-        js_eval("getWindows.length")
-      rescue Watir::Exception::UnableToStartJSShException
-        return false
-      end
-      true
-    end
-    private :test_jssh
-    
     # Gets the window number opened. 
     # Currently, this returns the most recently opened window, which may or may
     # not be the current window.
