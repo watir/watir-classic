@@ -135,20 +135,15 @@ module FireWatir
       if options[:launch_new_window] and not options[:suppress_launch_process]
         open_window
       elsif not options[:suppress_launch_process]
-        launch_browser(options)
+        bin = path_to_bin()
+        @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
+        sleep options[:waitTime] || 2
       end
 
       set_defaults()
       get_window_number()
       set_browser_document()
     end
-    
-    def launch_browser(options = {})
-      bin = path_to_bin()
-      @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
-      sleep options[:waitTime] || 2
-    end
-    private :launch_browser
 
     # Creates a new instance of Firefox. Loads the URL and return the instance.
     # Input:
