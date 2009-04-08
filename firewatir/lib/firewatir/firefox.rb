@@ -127,20 +127,26 @@ module FireWatir
         jssh_down = true
       end
       
-      if not options[:suppress_launch_process] or jssh_down
-        if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
-          raise "Firefox is running without -jssh" if jssh_down
-          raise "multiple browsers not supported on os x"
-        end
-        
-        bin = path_to_bin()
-        @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
-        sleep options[:waitTime] || 2
+      if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+        raise "Firefox is running without -jssh" if jssh_down
+        options[:launch_new_window] = true
+      end
+      
+      if options[:launch_new_window]
+        open_window
+      elsif not options[:suppress_launch_process]
+        launch_browser(options)
       end
 
       set_defaults()
       get_window_number()
       set_browser_document()
+    end
+    
+    def launch_browser(options = {})
+      bin = path_to_bin()
+      @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
+      sleep options[:waitTime] || 2
     end
 
     # Creates a new instance of Firefox. Loads the URL and return the instance.
@@ -314,17 +320,6 @@ module FireWatir
     #   Instance of newly attached window.
     def attach(how, what)
       
-      if how.nil?
-        window_number = open_window
-        if(window_number.nil?)
-          raise NoMatchingWindowFoundException.new("Unable to open a new window")  
-        else
-          @window_index = window_number
-          set_browser_document()
-        end
-        return self
-      end     
-      
       $stderr.puts("warning: #{self.class}.attach is experimental") if $VERBOSE
       window_number = find_window(how, what)
       
@@ -363,9 +358,9 @@ module FireWatir
                       var windows = getWindows(); var window_number = windows.length - 1;
                       window_number;"      
       
-      window_number = js_eval(jssh_command).to_s   
+      window_number = js_eval(jssh_command).to_i
       @opened_new_window = window_number
-      return window_number >= 0 ? window_number.to_i : nil
+      return window_number if window_number >= 0
     end
     private :open_window
 
