@@ -111,12 +111,6 @@ module FireWatir
         options = {:waitTime => options}
       end
       
-      if(options[:profile])
-        profile_opt = "-no-remote -P #{options[:profile]}"
-      else
-        profile_opt = ""
-      end
-      
       # check for jssh not running, firefox may be open but not with -jssh
       # if its not open at all, regardless of the :suppress_launch_process option start it
       # error if running without jssh, we don't want to kill their current window (mac only)
@@ -129,22 +123,34 @@ module FireWatir
       
       if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
         raise "Firefox is running without -jssh" if jssh_down
-        options[:launch_new_window] = true
-      end
-      
-      if options[:launch_new_window] and not options[:suppress_launch_process]
-        open_window
+        open_window unless options[:suppress_launch_process]
       elsif not options[:suppress_launch_process]
-        bin = path_to_bin()
-        @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
-        sleep options[:waitTime] || 2
+        launch_browser(options)
       end
 
       set_defaults()
       get_window_number()
       set_browser_document()
     end
-
+    
+    # Launches firebox browser
+    # options as .new
+    
+    def launch_browser(options = {})
+      
+      if(options[:profile])
+        profile_opt = "-no-remote -P #{options[:profile]}"
+      else
+        profile_opt = ""
+      end
+      
+      bin = path_to_bin()
+      @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
+      sleep options[:waitTime] || 2
+      
+    end
+    private :launch_browser
+    
     # Creates a new instance of Firefox. Loads the URL and return the instance.
     # Input:
     #   url - url of the page to be loaded.
