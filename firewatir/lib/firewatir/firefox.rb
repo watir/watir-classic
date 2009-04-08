@@ -174,7 +174,7 @@ module FireWatir
       # now correctly handles instances where only browserless windows are open
       # opens one we can use if count is 0
       
-      if window_count == 0
+      if window_count < 0
         open_window
         window_count = 1
       end
