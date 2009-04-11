@@ -56,7 +56,7 @@ module Watir
     
     # IE inserts some element whose tagName is empty and just acts as block level element
     # Probably some IE method of cleaning things
-    # To pass the same to REXML we need to give some name to empty tagName
+    # To pass the same to the xml parser we need to give some name to empty tagName
     EMPTY_TAG_NAME = "DUMMY"
     
     # The time, in seconds, it took for the new page to load after executing the
@@ -464,7 +464,7 @@ module Watir
     # Note: This code needs to be prepared for the ie object to be closed at 
     # any moment!
     def wait(no_sleep=false)
-      @rexmlDomobject = nil
+      @nokogiriDomobject = nil
       @down_load_time = 0.0
       a_moment = 0.2 # seconds
       start_load_time = Time.now
@@ -684,49 +684,42 @@ module Watir
       document.focus
     end
     
-    #
+    
     # Functions written for using xpath for getting the elements.
-    #
-    
-    # Get the Rexml object.
-    def rexml_document_object
-      #puts "Value of rexmlDomobject is : #{@rexmlDomobject}"
-      if @rexmlDomobject == nil
-        create_rexml_document_object
-      end
-      return @rexmlDomobject
+    def nokogiri_document_object
+    	if @nokogiriDomobject == nil
+    		create_nokogiri_document_object
+    	end
+    	return @nokogiriDomobject
     end
-    
-    # Create the Rexml object if it is nil. This method is private so can be called only
-    # from rexml_document_object method.
-    def create_rexml_document_object
-      # Use our modified rexml libraries
-      require 'rexml/document'
-      unless REXML::Version >= '3.1.4'
-        raise "Requires REXML version of at least 3.1.4. Actual: #{REXML::Version}"
-      end
-      if @rexmlDomobject == nil
+
+    # Create the Nokogiri object if it is nil. This method is private so can be called only
+    # from nokogiri_document_object method.
+    def create_nokogiri_document_object
+      require 'nokogiri'
+      if @nokogiriDomobject == nil
         htmlSource ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
-	# Angrez: Resolving Jira issue WTR-114
-	htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
+				# Angrez: Resolving Jira issue WTR-114
+				htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
         begin
-          @rexmlDomobject = REXML::Document.new(htmlSource)
+         #@nokogiriDomobject = Nokogiri::HTML::Document.new(htmlSource)
+          @nokogiriDomobject = Nokogiri.parse(htmlSource)
         rescue => e
-          output_rexml_document("error.xml", htmlSource)
+          output_nokogiri_document("error.xml", htmlSource)
           raise e
         end
       end
     end
-    private :create_rexml_document_object
+    private :create_nokogiri_document_object
     
-    def output_rexml_document(name, text)
+    def output_nokogiri_document(name, text)
       file = File.open(name,"w")
       file.print(text)
       file.close
     end
-    private :output_rexml_document
+    private :output_nokogiri_document
     
     #Function Tokenizes the tag line and returns array of tokens.
     #Token could be either tagName or "=" or attribute name or attribute value
@@ -896,15 +889,15 @@ module Watir
     
     # execute xpath and return an array of elements
     def elements_by_xpath(xpath)
-      doc = rexml_document_object
+      doc = nokogiri_document_object
       modifiedXpath = ""
       selectedElements = Array.new
-      doc.elements.each(xpath) do |element|
-        modifiedXpath = element.xpath                   # element = a REXML element
-#        puts "modified xpath: #{modifiedXpath}"
-#        puts "text: #{element.text}"
-#        puts "class: #{element.attributes['class']}"
-#        require 'breakpoint'; breakpoint
+      
+      # strip any trailing slash from the xpath expression (as used in watir unit tests)
+      xpath.chop! unless (/\/$/ =~ xpath).nil?
+      
+      doc.search(xpath).each do |element|
+        modifiedXpath = element.path
         temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
         selectedElements << temp if temp != nil
       end
