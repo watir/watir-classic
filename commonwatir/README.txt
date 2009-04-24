@@ -26,7 +26,7 @@ Common code used by Watir and FireWatir
 
 (The MIT License)
 
-Copyright (c) 2008 Bret Pettichord
+Copyright (c) 2008, 2009 Bret Pettichord
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
