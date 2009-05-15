@@ -117,10 +117,10 @@ module Watir
   end
   
   def self._register(dll)
-    system("regsvr32.exe /s "    + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
+    system("regsvr32.exe /s "    + "#{@@dir}/#{dll}".gsub('/', '\\'))
   end
   def self._unregister(dll)
-    system("regsvr32.exe /s /u " + "#{@@dir}/watir/#{dll}".gsub('/', '\\'))
+    system("regsvr32.exe /s /u " + "#{@@dir}/#{dll}".gsub('/', '\\'))
   end
 end
 

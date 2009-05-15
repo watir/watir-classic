@@ -159,7 +159,7 @@ module Watir
       @what = value
       @option = nil
       
-      unless [:text, :value].include? attribute
+      unless [:text, :value, :label].include? attribute
         raise MissingWayOfFindingObjectException,
                     "Option does not support attribute #{@how}"
       end
