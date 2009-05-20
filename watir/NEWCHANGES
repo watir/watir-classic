@@ -41,6 +41,7 @@ This is a release candidate.
 * FireWatir.attach is now available, analogous to IE.attach.
 * Some Javascript errors that were being ignored, now raise Ruby exceptions.
 * Added event handler which resets the context of document 
+* Fix bug that occurred when new page was automatically loaded. (Angrez, 3ef8b6)
   when page gets loaded automatically (Angrez)
 * Changed code to use document_var, body_var, window_var, browser_var instead of 
   "document", "body", "window", "browser" variables. (Angrez)
@@ -82,5 +83,5 @@ This is a release candidate.
 * Tag tests that are known to fail on IE or Firefox.
 * Fixed one test that was failing on non-English platforms. (Jarib)
 * New Rake task (:test) runs all tests.
-* Use ci_reporter to provide more detailed test results for watirbuild.com.
-
+* Use ci_reporter to provide more detailed test results for watirbuild.com. 
+  Use xls transform to format results.
