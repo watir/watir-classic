@@ -446,8 +446,8 @@ module Watir
           file_field_set =
             "rubyw -e
               \"require 'win32ole'
-              @autoit=WIN32OLE.new('AutoItX3.Control')
-              waitresult=@autoit.WinWait('#{popup_title}', '', 15)
+              @autoit = WIN32OLE.new('AutoItX3.Control')
+              waitresult = @autoit.WinWait('#{popup_title}', '', 15)
               sleep 1
               if waitresult == 1
                 @autoit.ControlSetText('#{popup_title}', '', 'Edit1', '#{path_to_file}')
