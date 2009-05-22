@@ -442,16 +442,17 @@ module Watir
       WindowHelper.check_autoit_installed
       begin
         thrd = Thread.new do
-          popup_title = 'Choose file'
           file_field_set =
             "rubyw -e
               \"require 'win32ole'
               @autoit = WIN32OLE.new('AutoItX3.Control')
-              wait_result = @autoit.WinWait('#{popup_title}', '', 15)
-              sleep 1
-              if wait_result == 1
-                @autoit.ControlSetText('#{popup_title}', '', 'Edit1', '#{path_to_file}')
-                @autoit.ControlSend('#{popup_title}', '', 'Button2', '{ENTER}')
+              ['Choose file', 'Choose File to Upload'].each do |popup_title|
+                wait_result = @autoit.WinWait(popup_title, '', 15)
+                sleep 1
+                if wait_result == 1
+                  @autoit.ControlSetText(popup_title, '', 'Edit1', '#{path_to_file}')
+                  @autoit.ControlSend(popup_title, '', 'Button2', '{ENTER}')
+                end
               end\""
           system file_field_set
         end
