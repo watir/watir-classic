@@ -444,18 +444,15 @@ module Watir
         thrd = Thread.new do
           popup_title = 'Choose file'
           file_field_set =
-            "rubyw
-            -e
+            "rubyw -e
               \"require 'win32ole';
               @autoit=WIN32OLE.new('AutoItX3.Control');
               waitresult=@autoit.WinWait '#{popup_title}', '', 15;
               sleep 1;
-              if waitresult == 1\"
-            -e
-              \"@autoit.ControlSetText '#{popup_title}', '', 'Edit1', '#{setPath}';
-              @autoit.ControlSend '#{popup_title}', '', 'Button2', '{ENTER}';\"
-            -e
-              \"end\""
+              if waitresult == 1;
+                @autoit.ControlSetText '#{popup_title}', '', 'Edit1', '#{setPath}';
+                @autoit.ControlSend '#{popup_title}', '', 'Button2', '{ENTER}';
+              end\""
           system file_field_set
         end
       thrd.join(1)
