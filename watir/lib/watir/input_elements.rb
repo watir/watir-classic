@@ -436,7 +436,7 @@ module Watir
     
     # set the file location in the Choose file dialog in a new process
     # will raise a Watir Exception if AutoIt is not correctly installed
-    def set(setPath)
+    def set(path_to_file)
       assert_exists
       require 'watir/windowhelper'
       WindowHelper.check_autoit_installed
@@ -450,7 +450,7 @@ module Watir
               waitresult=@autoit.WinWait '#{popup_title}', '', 15
               sleep 1
               if waitresult == 1
-                @autoit.ControlSetText '#{popup_title}', '', 'Edit1', '#{setPath}'
+                @autoit.ControlSetText '#{popup_title}', '', 'Edit1', '#{path_to_file}'
                 @autoit.ControlSend '#{popup_title}', '', 'Button2', '{ENTER}'
               end\""
           system file_field_set
