@@ -433,6 +433,7 @@ module Watir
   # launching into a new process. 
   class FileField < InputElement
     INPUT_TYPES = ["file"]
+    POPUP_TITLES = ['Choose file', 'Choose File to Upload']
     
     # set the file location in the Choose file dialog in a new process
     # will raise a Watir Exception if AutoIt is not correctly installed
@@ -446,7 +447,9 @@ module Watir
             "rubyw -e
               \"require 'win32ole'
               @autoit = WIN32OLE.new('AutoItX3.Control')
-              ['Choose file', 'Choose File to Upload'].each do |popup_title|
+              # inspect inserts array in this string, instead of string
+              # gsub replaces double quotes (which break this string) by single quotes
+              #{POPUP_TITLES.inspect.gsub('"', "'")}.each do |popup_title|
                 wait_result = @autoit.WinWait(popup_title, '', 15)
                 sleep 1
                 if wait_result == 1
