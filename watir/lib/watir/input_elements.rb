@@ -444,7 +444,7 @@ module Watir
       begin
         thrd = Thread.new do
           file_field_set =
-            "rubyw -e
+            "ruby -e
               \"require 'win32ole'
               @autoit = WIN32OLE.new('AutoItX3.Control')
               # inspect inserts array in this string, instead of string
@@ -457,6 +457,7 @@ module Watir
                   @autoit.ControlSend(popup_title, '', 'Button2', '{ENTER}')
                 end
               end\""
+          puts file_field_set
           system file_field_set
         end
       thrd.join(1)
