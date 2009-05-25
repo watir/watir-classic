@@ -443,20 +443,24 @@ module Watir
       WindowHelper.check_autoit_installed
       begin
         thrd = Thread.new do
+          sleep 1 # it takes some time for popup to appear
           file_field_set =
-            "rubyw -e
-              \"require 'win32ole'
+            "ruby -e \"
+              require 'win32ole'
               @autoit = WIN32OLE.new('AutoItX3.Control')
-              # inspect inserts array in this string, instead of string
-              # gsub replaces double quotes (which break this string) by single quotes
-              #{POPUP_TITLES.inspect.gsub('"', "'")}.each do |popup_title|
-                wait_result = @autoit.WinWait(popup_title, '', 15)
-                sleep 1
-                if wait_result == 1
-                  @autoit.ControlSetText(popup_title, '', 'Edit1', '#{path_to_file}')
-                  @autoit.ControlSend(popup_title, '', 'Button2', '{ENTER}')
-                end
-              end\""
+              time = Time.now
+              while Time.now - time < 15 # the loop will wait up to 15 seconds for popup to appear
+                # inspect inserts array in this string, instead of string
+                # gsub replaces double quotes (which break this string) by single quotes
+                #{POPUP_TITLES.inspect.gsub('"', "'")}.each do |popup_title|
+                  wait_result = @autoit.WinWait(popup_title, '', 1)
+                  if wait_result == 1
+                    @autoit.ControlSetText(popup_title, '', 'Edit1', '#{path_to_file}')
+                    @autoit.ControlSend(popup_title, '', 'Button2', '{ENTER}')
+                    exit
+                  end # if
+                end # each
+              end # while\""
           system file_field_set
         end
       thrd.join(1)
