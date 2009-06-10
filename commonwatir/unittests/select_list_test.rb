@@ -1,10 +1,7 @@
-
-# feature tests for white space
-
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_WhiteSpace < Test::Unit::TestCase
+class TC_SelectLists < Test::Unit::TestCase
   location __FILE__
 
   def setup
