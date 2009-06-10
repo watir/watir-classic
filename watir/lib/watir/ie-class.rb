@@ -392,7 +392,13 @@ module Watir
     def close
       return unless exists?
       @closing = true
+      @ie.stop
+      wait
+      chwnd = @ie.hwnd.to_i
       @ie.quit
+      while Win32API.new("user32","IsWindow", 'L', 'L').Call(chwnd) == 1
+        sleep 0.3
+      end
     end
     
     # Maximize the window (expands to fill the screen)
