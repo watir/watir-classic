@@ -145,6 +145,8 @@ module FireWatir
       attribute = attribute.to_s
       found     = false
       
+      value = value.to_s unless [Regexp, String].any? { |e| value.kind_of? e }
+
       highlight( :set )
       each do |option|
         next unless value.matches(option.invoke(attribute))
