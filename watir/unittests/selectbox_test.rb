@@ -40,6 +40,12 @@ class TC_SelectList < Test::Unit::TestCase
     assert(browser.text.include?("PASS"))
   end
   
+  def test_select_by_numeric
+    # make sure we still find the right option if passed a number
+    browser.select_list(:id, 'year').select(2011)
+    assert_equal(['2011'], browser.select_list(:id, 'year').selected_options)
+  end
+  
   def test_set # by text
     assert_equal(['Option 3'], browser.select_list(:name, "sel1").getSelectedItems)
     browser.select_list(:name, "sel1").set('Option 2')
@@ -116,7 +122,7 @@ class TC_SelectList < Test::Unit::TestCase
   end
   
   def test_iterator
-    assert_equal(4, browser.select_lists.length)
+    assert_equal(5, browser.select_lists.length)
     assert_equal("o3"   ,    browser.select_lists[1].value)  
     assert_equal("sel1" ,    browser.select_lists[1].name )  
     assert_equal("select-one",         browser.select_lists[1].type )  

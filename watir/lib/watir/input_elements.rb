@@ -37,7 +37,7 @@ module Watir
       @container.wait if wait
       highlight(:clear)
     end
-    #        private :clearSelection
+
     
     # This method selects an item, or items in a select box, by text.
     # Raises NoValueFoundException   if the specified value is not found.
@@ -49,7 +49,7 @@ module Watir
        
     # Selects an item, or items in a select box, by value.
     # Raises NoValueFoundException   if the specified value is not found.
-    #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
+    #  * item   - the value of the thing to select, string, reg exp
     def select_value(item)
       select_item_in_select_list(:value, item)
     end
@@ -61,25 +61,28 @@ module Watir
     def select_item_in_select_list(attribute, value)
       assert_exists
       highlight(:set)
-      doBreak = false
-      @container.log "Setting box #{@o.name} to #{attribute} #{value} "
+      found = false
+
+      value = value.to_s unless [Regexp, String].any? { |e| value.kind_of? e }
+
+      @container.log "Setting box #{@o.name} to #{attribute.inspect} => #{value.inspect}"
       @o.each do |option| # items in the list
         if value.matches(option.invoke(attribute.to_s))
           if option.selected
-            doBreak = true
+            found = true
             break
           else
             option.selected = true
             @o.fireEvent("onChange")
             @container.wait
-            doBreak = true
+            found = true
             break
           end
         end
       end
-      unless doBreak
-        raise NoValueFoundException,
-                        "No option with #{attribute.to_s} of #{value} in this select element"
+
+      unless found
+        raise NoValueFoundException, "No option with #{attribute.inspect} of #{value.inspect} in this select element"
       end
       highlight(:clear)
     end
