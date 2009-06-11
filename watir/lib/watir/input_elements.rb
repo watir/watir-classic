@@ -487,6 +487,10 @@ module Watir
       @value = value
     end
     
+    def inspect
+      '#<%s:0x%x located=%s how=%s what=%s value=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect, @value.inspect]
+    end
+    
     # This method determines if a radio button or check box is set.
     # Returns true is set/checked or false if not set/checked.
     # Raises UnknownObjectException if its unable to locate an object.

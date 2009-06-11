@@ -23,6 +23,10 @@ module Watir
       @o = o
     end
     
+    def inspect
+      '#<%s:0x%x located=%s how=%s what=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect]
+    end
+    
     private
     def self.def_wrap(ruby_method_name, ole_method_name=nil)
       ole_method_name = ruby_method_name unless ole_method_name

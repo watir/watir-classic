@@ -47,9 +47,5 @@ class TC_ie < Test::Unit::TestCase
     assert_nil(@faked_ie.locate_tagged_element('A', :text, "whatever"))
   end
 
-  def test_inspect_only_returns_url_and_title
-    assert_match(/#<Watir::IE:0x[0-9a-f]+ url="about:blank" title="">/, browser.inspect)
-  end
-
 end
 
