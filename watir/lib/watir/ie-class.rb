@@ -385,6 +385,8 @@ module Watir
     # Execute the given JavaScript string
     def execute_script(source)
       document.parentWindow.eval(source.to_s)
+    rescue WIN32OLERuntimeError
+      document.parentWindow.execScript(source.to_s)
     end
     
     # clear the list of urls that we have visited
