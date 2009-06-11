@@ -151,6 +151,22 @@ module FireWatir
     def [](n)
       return @element_objects[n-1]
     end
+    
+    #
+    # Returns the first element in the collection.
+    # 
+    
+    def first
+      @element_objects.first
+    end
+    
+    #
+    # Returns the last element in the collection.
+    # 
+    
+    def last
+      @element_objects.last
+    end
 
   end # ElementCollections
 

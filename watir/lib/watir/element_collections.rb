@@ -49,7 +49,15 @@ module Watir
     def [](n)
       return iterator_object(n-1)
     end
-    
+
+    def first
+      iterator_object(0)
+    end
+
+    def last
+      iterator_object(length - 1)
+    end
+
     # this method is the way to show the objects, normally used from irb
     def show
       s = "index".ljust(6)
