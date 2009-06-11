@@ -377,7 +377,11 @@ module Watir
       @ie.refresh2(3)
       wait
     end
-    
+
+    def inspect
+      '#<%s:0x%x url=%s title=%s' % [self.class, hash*2, url.inspect, title.inspect]
+    end
+
     # Execute the given JavaScript string
     def execute_script(source)
       document.parentWindow.eval(source.to_s)
