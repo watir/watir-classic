@@ -445,6 +445,17 @@ module FireWatir
       @window_title = js_eval "#{document_var}.title"
     end
     
+    #   Returns the Status of the page currently loaded in the browser from statusbar.
+    #
+    # Output:
+    #   Status of the page.
+    #
+    def status
+      js_status = js_eval("#{window_var}.status")
+      js_status.empty? ? js_eval("#{WINDOW_VAR}.XULBrowserWindow.statusText;") : js_status
+    end
+
+
     # Returns the html of the page currently loaded in the browser.
     def html
       result = js_eval("var htmlelem = #{document_var}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
