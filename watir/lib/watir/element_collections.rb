@@ -85,6 +85,10 @@ module Watir
       map { |e| e.to_s }.join("\n")
     end
 
+    def inspect
+      '#<%s:0x%x length=%s container=%s>' % [self.class, hash*2, @length.inspect, @container.inspect]
+    end
+
     # this method creates an object of the correct type that the iterators use
     private
     def iterator_object(i)

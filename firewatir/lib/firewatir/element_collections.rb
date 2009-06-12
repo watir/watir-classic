@@ -168,6 +168,15 @@ module FireWatir
       @element_objects.last
     end
 
+    def to_s
+      map { |e| e.to_s }.join("\n")
+    end
+
+    def inspect
+      '#<%s:0x%x length=%s container=%s> elements=%s>' %
+        [self.class, hash*2, length.inspect, @container.inspect, @element_objects.inspect]
+    end
+
   end # ElementCollections
 
   #   Class for accessing all the button elements in the document.
