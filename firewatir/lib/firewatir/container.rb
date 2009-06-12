@@ -71,7 +71,7 @@ module FireWatir
     #   Frame object.
     #
     def frame(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if(what == nil)
         what = how
         how = :name
@@ -99,7 +99,7 @@ module FireWatir
     #   Form object.
     #
     def form(how, what=nil)   
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if(what == nil)
         what = how
         how = :name
@@ -124,7 +124,7 @@ module FireWatir
     #   Table object.
     #
     def table(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Table.new(self, how, what)
     end
     
@@ -144,7 +144,7 @@ module FireWatir
     #    TableCell Object
     #
     def cell(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TableCell.new(self, how, what)
     end
     
@@ -164,7 +164,7 @@ module FireWatir
     #   TableRow object
     #
     def row(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TableRow.new(self, how, what)
     end
     
@@ -188,7 +188,7 @@ module FireWatir
     #   Button element.
     #
     def button(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if what.nil? && String === how
         what = how
         how = :value
@@ -212,7 +212,7 @@ module FireWatir
     #   FileField object
     #
     def file_field(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       FileField.new(self, how, what)
     end    
     
@@ -233,7 +233,7 @@ module FireWatir
     #   TextField object.
     #
     def text_field(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TextField.new(self, how, what)
     end    
     
@@ -254,7 +254,7 @@ module FireWatir
     #   Hidden object.
     #
     def hidden(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Hidden.new(self, how, what)
     end
     
@@ -275,7 +275,7 @@ module FireWatir
     #   Select List object.
     #
     def select_list(how, what=nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return SelectList.new(self, how, what)
     end
     
@@ -306,7 +306,7 @@ module FireWatir
     #   Checkbox object.
     #
     def checkbox(how, what=nil, value = nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return CheckBox.new(self, how, what, value) 
     end
     
@@ -337,7 +337,7 @@ module FireWatir
     #   Radio button object.
     #
     def radio(how, what=nil, value = nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Radio.new(self, how, what, value) 
     end
     
@@ -358,7 +358,7 @@ module FireWatir
     #   Link object.
     #
     def link(how, what=nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Link.new(self, how, what)
     end
     
@@ -379,7 +379,7 @@ module FireWatir
     #   Image object.
     #
     def image(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Image.new(self, how, what)
     end    
     
@@ -401,7 +401,7 @@ module FireWatir
     #   Dl object.
     #
     def dl(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dl.new(self, how, what)
     end
 
@@ -422,7 +422,7 @@ module FireWatir
     #   Dt object.
     #
     def dt(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dt.new(self, how, what)
     end
 
@@ -443,7 +443,7 @@ module FireWatir
     #   Dd object.
     #
     def dd(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dd.new(self, how, what)
     end
 
@@ -471,7 +471,7 @@ module FireWatir
     #
     def show_all_objects
       puts "-----------Objects in the current context-------------" 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       elements = Document.new(self).all
       puts elements.length
       elements.each  do |n|

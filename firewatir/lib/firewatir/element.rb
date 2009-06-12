@@ -963,7 +963,7 @@ module FireWatir
       if(element_object == nil || element_object == "")
         @@current_level = 0
         #puts "locating element"
-        locate if defined?(locate)
+        locate if respond_to?(:locate)
         if(@element_name == nil || @element_name == "")
           return false
         else

@@ -12,7 +12,7 @@ module FireWatir
       element_class_name = class_name.singularize
 
       FireWatir::Container.module_eval "def #{method_name}
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return #{class_name}.new(self); end"
 
       subclass.class_eval "def element_class; #{element_class_name}; end"

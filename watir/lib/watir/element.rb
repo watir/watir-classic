@@ -50,7 +50,7 @@ module Watir
 
     public
     def assert_exists
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       unless ole_object
         raise UnknownObjectException.new(
           Watir::Exception.message_for_unable_to_locate(@how, @what))
