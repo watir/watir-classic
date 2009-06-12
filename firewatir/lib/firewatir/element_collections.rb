@@ -1,10 +1,12 @@
 module FireWatir
+
   #
   # Description:
   #   Class for iterating over elements of common type like links, images, divs etc.
   #
   class ElementCollections
     include Enumerable
+    include JsshSocket
 
     def self.inherited subclass
       class_name = subclass.to_s.demodulize
@@ -18,7 +20,6 @@ module FireWatir
       subclass.class_eval "def element_class; #{element_class_name}; end"
     end
 
-    include FireWatir::Container # XXX not sure if this is right
     @@current_level = 0
 
     def initialize(container)

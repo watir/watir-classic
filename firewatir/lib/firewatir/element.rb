@@ -957,8 +957,8 @@ module FireWatir
     #   True if element exists, false otherwise.
     #
     def exists?
-      #puts "element is : #{element_object}"
-      #puts caller(0)
+      # puts "element is : #{element_object}"
+      # puts caller(0)
       # If elements array has changed locate the element again. So that the element name points to correct element.
       if(element_object == nil || element_object == "")
         @@current_level = 0

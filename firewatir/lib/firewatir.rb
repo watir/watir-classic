@@ -4,6 +4,7 @@ require 'socket'
 require 'active_support'
 
 require 'firewatir/exceptions'
+require 'firewatir/jssh_socket'
 require 'firewatir/container'
 require "firewatir/element"
 require "firewatir/document"
