@@ -81,6 +81,10 @@ module Watir
       puts s
     end
     
+    def to_s
+      map { |e| e.to_s }.join("\n")
+    end
+
     # this method creates an object of the correct type that the iterators use
     private
     def iterator_object(i)
