@@ -476,7 +476,7 @@ module Watir
     # Note: This code needs to be prepared for the ie object to be closed at 
     # any moment!
     def wait(no_sleep=false)
-      @nokogiriDomobject = nil
+      @xml_parser_doc = nil
       @down_load_time = 0.0
       a_moment = 0.2 # seconds
       start_load_time = Time.now
@@ -698,40 +698,40 @@ module Watir
     
     
     # Functions written for using xpath for getting the elements.
-    def nokogiri_document_object
-    	if @nokogiriDomobject == nil
-    		create_nokogiri_document_object
+    def xmlparser_document_object
+    	if @xml_parser_doc == nil
+    		create_xml_parser_doc
     	end
-    	return @nokogiriDomobject
+    	return @xml_parser_doc
     end
 
     # Create the Nokogiri object if it is nil. This method is private so can be called only
-    # from nokogiri_document_object method.
-    def create_nokogiri_document_object
+    # from xmlparser_document_object method.
+    def create_xml_parser_doc
       require 'nokogiri'
-      if @nokogiriDomobject == nil
+      if @xml_parser_doc == nil
         htmlSource ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
 				# Angrez: Resolving Jira issue WTR-114
 				htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
         begin
-         #@nokogiriDomobject = Nokogiri::HTML::Document.new(htmlSource)
-          @nokogiriDomobject = Nokogiri.parse(htmlSource)
+         #@xml_parser_doc = Nokogiri::HTML::Document.new(htmlSource)
+          @xml_parser_doc = Nokogiri.parse(htmlSource)
         rescue => e
-          output_nokogiri_document("error.xml", htmlSource)
+          output_xml_parser_doc("error.xml", htmlSource)
           raise e
         end
       end
     end
-    private :create_nokogiri_document_object
+    private :create_xml_parser_doc
     
-    def output_nokogiri_document(name, text)
+    def output_xml_parser_doc(name, text)
       file = File.open(name,"w")
       file.print(text)
       file.close
     end
-    private :output_nokogiri_document
+    private :output_xml_parser_doc
     
     #Function Tokenizes the tag line and returns array of tokens.
     #Token could be either tagName or "=" or attribute name or attribute value
@@ -901,7 +901,7 @@ module Watir
     
     # execute xpath and return an array of elements
     def elements_by_xpath(xpath)
-      doc = nokogiri_document_object
+      doc = xmlparser_document_object 
       modifiedXpath = ""
       selectedElements = Array.new
       
