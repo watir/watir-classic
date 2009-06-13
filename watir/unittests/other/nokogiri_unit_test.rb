@@ -1,18 +1,20 @@
 require 'test/unit'
-require "rexml/document"
+require 'nokogiri'
 
-class RexmlTest < Test::Unit::TestCase
+class NokogiriTest < Test::Unit::TestCase
   def setup
     file = File.open( "xpath_bug.xml" )
-    @doc = REXML::Document.new file
+    @doc = Nokogiri::HTML::Document.read_io(file, nil, nil, 2145)
   end
   def fixture xpath
     matches = []
-    @doc.elements.each(xpath) do |element|
-      matches << element                  
-      assert_equal('Add', element.text)    
-      assert_equal('ButtonText', element.attributes['class'])
+    
+    @doc.xpath(xpath).each() do |node|
+    	matches << node
+    	assert_equal('Add', node.text)
+    	assert_equal('ButtonText', node['class'])
     end
+    
     assert_equal(1, matches.length)
   end  
   def test_text
@@ -22,3 +24,4 @@ class RexmlTest < Test::Unit::TestCase
     fixture "//div[contains(.,'Add') and @class='ButtonText']"
   end
 end
+
