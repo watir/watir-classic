@@ -377,7 +377,7 @@ module FireWatir
     
     # Returns the url of the page currently loaded in the browser.
     def url
-      @window_url = js_eval "#{document_var}.URL"
+      @window_url = js_eval "#{document_var}.location"
     end 
     
     # Returns the title of the page currently loaded in the browser.
