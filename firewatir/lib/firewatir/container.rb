@@ -43,6 +43,7 @@ module FireWatir
   module Container 
     include FireWatir
     include Watir::Exception
+    include JsshSocket
     
     # IP Address of the machine where the script is to be executed. Default to localhost.
     MACHINE_IP = "127.0.0.1"
@@ -71,7 +72,7 @@ module FireWatir
     #   Frame object.
     #
     def frame(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if(what == nil)
         what = how
         how = :name
@@ -99,7 +100,7 @@ module FireWatir
     #   Form object.
     #
     def form(how, what=nil)   
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if(what == nil)
         what = how
         how = :name
@@ -124,7 +125,7 @@ module FireWatir
     #   Table object.
     #
     def table(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Table.new(self, how, what)
     end
     
@@ -144,7 +145,7 @@ module FireWatir
     #    TableCell Object
     #
     def cell(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TableCell.new(self, how, what)
     end
     
@@ -164,7 +165,7 @@ module FireWatir
     #   TableRow object
     #
     def row(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TableRow.new(self, how, what)
     end
     
@@ -188,7 +189,7 @@ module FireWatir
     #   Button element.
     #
     def button(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       if what.nil? && String === how
         what = how
         how = :value
@@ -212,7 +213,7 @@ module FireWatir
     #   FileField object
     #
     def file_field(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       FileField.new(self, how, what)
     end    
     
@@ -233,7 +234,7 @@ module FireWatir
     #   TextField object.
     #
     def text_field(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       TextField.new(self, how, what)
     end    
     
@@ -254,7 +255,7 @@ module FireWatir
     #   Hidden object.
     #
     def hidden(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Hidden.new(self, how, what)
     end
     
@@ -275,7 +276,7 @@ module FireWatir
     #   Select List object.
     #
     def select_list(how, what=nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return SelectList.new(self, how, what)
     end
     
@@ -306,7 +307,7 @@ module FireWatir
     #   Checkbox object.
     #
     def checkbox(how, what=nil, value = nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return CheckBox.new(self, how, what, value) 
     end
     
@@ -337,7 +338,7 @@ module FireWatir
     #   Radio button object.
     #
     def radio(how, what=nil, value = nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Radio.new(self, how, what, value) 
     end
     
@@ -358,7 +359,7 @@ module FireWatir
     #   Link object.
     #
     def link(how, what=nil) 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return Link.new(self, how, what)
     end
     
@@ -379,7 +380,7 @@ module FireWatir
     #   Image object.
     #
     def image(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Image.new(self, how, what)
     end    
     
@@ -401,7 +402,7 @@ module FireWatir
     #   Dl object.
     #
     def dl(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dl.new(self, how, what)
     end
 
@@ -422,7 +423,7 @@ module FireWatir
     #   Dt object.
     #
     def dt(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dt.new(self, how, what)
     end
 
@@ -443,7 +444,7 @@ module FireWatir
     #   Dd object.
     #
     def dd(how, what = nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       Dd.new(self, how, what)
     end
 
@@ -471,7 +472,7 @@ module FireWatir
     #
     def show_all_objects
       puts "-----------Objects in the current context-------------" 
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       elements = Document.new(self).all
       puts elements.length
       elements.each  do |n|
@@ -485,102 +486,6 @@ module FireWatir
       # puts doc[35].to_s
     end
     
-    # Evaluate javascript and return result. Raise an exception if an error occurred.
-    def js_eval(str)
-      str.gsub!("\n", "")
-      jssh_socket.send("#{str};\n", 0)
-      value = read_socket()
-      if md = /^(\w+)Error:(.*)$/.match(value) 
-        eval "class JS#{md[1]}Error < StandardError\nend"
-        raise (eval "JS#{md[1]}Error"), md[2]
-      end
-      value
-    end
-    
-    # evaluate the provides javascript method on the current object and return
-    # the result
-    def js_eval_method method_name
-      js_eval("#{element_object}.#{method_name}")
-    end
-    
-    def jssh_socket
-      $jssh_socket || @container.jssh_socket
-    end
-    
-    #
-    # Description:
-    #  Reads the javascript execution result from the jssh socket. 
-    #
-    # Input:
-    # 	- socket - It is the jssh socket, the  only point of communication between the browser and firewatir scripts.
-    # 
-    # Output:	
-    #	The javascript execution result as string.	
-    #
-    def read_socket(socket = jssh_socket)
-      return_value = "" 
-      data = ""
-      receive = true
-      #puts Thread.list
-      s = nil
-      while(s == nil) do
-        s = Kernel.select([socket] , nil , nil, 1)
-      end
-      #if(s != nil)
-      for stream in s[0]
-        data = stream.recv(1024)
-        #puts "data is : #{data}"
-        while(receive)
-          #while(data.length == 1024)
-          return_value += data
-          if(return_value.include?("\n> "))
-            receive = false
-          else    
-            data = stream.recv(1024)
-          end    
-          #puts "return_value is : #{return_value}"
-          #puts "data length is : #{data.length}"
-        end
-      end
-      
-      # If received data is less than 1024 characters or for last data 
-      # we read in the above loop 
-      #return_value += data
-      
-      # Get the command prompt inserted by JSSH
-      #s = Kernel.select([socket] , nil , nil, 0.3)
-      
-      #if(s != nil)
-      #    for stream in s[0]
-      #        return_value += socket.recv(1024)
-      #    end
-      #end
-      
-      length = return_value.length 
-      #puts "Return value before removing command prompt is : #{return_value}"
-      
-      #Remove the command prompt. Every result returned by JSSH has "\n> " at the end.
-      if length <= 3 
-        return_value = ""
-      elsif(return_value[0..2] == "\n> ")    
-        return_value = return_value[3..length-1]
-      else    
-        #return_value = return_value[0..length-3]
-        return_value = return_value[0..length-4]
-      end 
-      #puts "Return value after removing command prompt is : #{return_value}"
-      #socket.flush
-      
-      # make sure that command prompt doesn't get there.
-      if(return_value[return_value.length - 3..return_value.length - 1] == "\n> ")
-        return_value = return_value[0..return_value.length - 4]
-      end    
-      if(return_value[0..2] == "\n> ")
-        return_value = return_value[3..return_value.length - 1]
-      end   
-      #puts "return value is : #{return_value}"
-      return return_value
-    end
   end
 end # module 
 

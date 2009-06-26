@@ -46,5 +46,6 @@ class TC_ie < Test::Unit::TestCase
   def test_getLink_ByTextReturnsNilOnNoLinks
     assert_nil(@faked_ie.locate_tagged_element('A', :text, "whatever"))
   end
+
 end
 

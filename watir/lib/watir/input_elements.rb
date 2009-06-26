@@ -37,7 +37,7 @@ module Watir
       @container.wait if wait
       highlight(:clear)
     end
-    #        private :clearSelection
+
     
     # This method selects an item, or items in a select box, by text.
     # Raises NoValueFoundException   if the specified value is not found.
@@ -49,7 +49,7 @@ module Watir
        
     # Selects an item, or items in a select box, by value.
     # Raises NoValueFoundException   if the specified value is not found.
-    #  * item   - the value of the thing to select, string, reg exp or an array of string and reg exps
+    #  * item   - the value of the thing to select, string, reg exp
     def select_value(item)
       select_item_in_select_list(:value, item)
     end
@@ -61,25 +61,28 @@ module Watir
     def select_item_in_select_list(attribute, value)
       assert_exists
       highlight(:set)
-      doBreak = false
-      @container.log "Setting box #{@o.name} to #{attribute} #{value} "
+      found = false
+
+      value = value.to_s unless [Regexp, String].any? { |e| value.kind_of? e }
+
+      @container.log "Setting box #{@o.name} to #{attribute.inspect} => #{value.inspect}"
       @o.each do |option| # items in the list
         if value.matches(option.invoke(attribute.to_s))
           if option.selected
-            doBreak = true
+            found = true
             break
           else
             option.selected = true
             @o.fireEvent("onChange")
             @container.wait
-            doBreak = true
+            found = true
             break
           end
         end
       end
-      unless doBreak
-        raise NoValueFoundException,
-                        "No option with #{attribute.to_s} of #{value} in this select element"
+
+      unless found
+        raise NoValueFoundException, "No option with #{attribute.inspect} of #{value.inspect} in this select element"
       end
       highlight(:clear)
     end
@@ -159,7 +162,7 @@ module Watir
       @what = value
       @option = nil
       
-      unless [:text, :value].include? attribute
+      unless [:text, :value, :label].include? attribute
         raise MissingWayOfFindingObjectException,
                     "Option does not support attribute #{@how}"
       end
@@ -433,18 +436,35 @@ module Watir
   # launching into a new process. 
   class FileField < InputElement
     INPUT_TYPES = ["file"]
+    POPUP_TITLES = ['Choose file', 'Choose File to Upload']
     
     # set the file location in the Choose file dialog in a new process
     # will raise a Watir Exception if AutoIt is not correctly installed
-    def set(setPath)
+    def set(path_to_file)
       assert_exists
       require 'watir/windowhelper'
       WindowHelper.check_autoit_installed
       begin
-        thrd = Thread.new do
-          system("rubyw -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Choose file', '', 15; sleep 1; if waitresult == 1\" -e \"@autoit.ControlSetText 'Choose file', '', 'Edit1', '#{setPath}'; @autoit.ControlSend 'Choose file', '', 'Button2', '{ENTER}';\" -e \"end\"")
-        end
-      thrd.join(1)
+        Thread.new do
+          sleep 1 # it takes some time for popup to appear
+
+          system %{ruby -e '
+              require "win32ole"
+
+              @autoit = WIN32OLE.new("AutoItX3.Control")
+              time    = Time.now
+
+              while (Time.now - time) < 15 # the loop will wait up to 15 seconds for popup to appear
+                #{POPUP_TITLES.inspect}.each do |popup_title|
+                  next unless @autoit.WinWait(popup_title, "", 1) == 1
+
+                  @autoit.ControlSetText(popup_title, "", "Edit1", #{path_to_file.inspect})
+                  @autoit.ControlSend(popup_title, "", "Button2", "{ENTER}")
+                  exit
+                end # each
+              end # while
+          '}
+        end.join(1)
       rescue
         raise Watir::Exception::WatirException, "Problem accessing Choose file dialog"
       end
@@ -465,6 +485,10 @@ module Watir
     def initialize(container, how, what, value=nil)
       super container, how, what
       @value = value
+    end
+    
+    def inspect
+      '#<%s:0x%x located=%s how=%s what=%s value=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect, @value.inspect]
     end
     
     # This method determines if a radio button or check box is set.

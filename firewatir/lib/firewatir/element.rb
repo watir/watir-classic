@@ -684,14 +684,10 @@ module FireWatir
         raise ArgumentError, "Argument #{target} should be a string or regexp."
       end
     end
-    #
-    # Description:
-    #   Method for inspecting the object. Defined here because IRB was not able to locate the object.
-    #   TODO: Need to find out why IRB is unable to find object though both (this and IRB) are executing same statements
-    #
+    
+
     def inspect
-      assert_exists
-      puts self.to_s
+      '#<%s:0x%x located=%s how=%s what=%s>' % [self.class, hash*2, !!@o, @how.inspect, @what.inspect]
     end
   
     #
@@ -961,13 +957,13 @@ module FireWatir
     #   True if element exists, false otherwise.
     #
     def exists?
-      #puts "element is : #{element_object}"
-      #puts caller(0)
+      # puts "element is : #{element_object}"
+      # puts caller(0)
       # If elements array has changed locate the element again. So that the element name points to correct element.
       if(element_object == nil || element_object == "")
         @@current_level = 0
         #puts "locating element"
-        locate if defined?(locate)
+        locate if respond_to?(:locate)
         if(@element_name == nil || @element_name == "")
           return false
         else
@@ -1220,79 +1216,6 @@ module FireWatir
     #    @@current_js_object = nil
     #end
     #private :click_js_popup_creator_button
-  
-    #
-    # Description:
-    #   Gets all the options of the select list element.
-    #
-    # Output:
-    #   Array of option elements.
-    #
-    def js_options
-      jssh_socket.send("#{element_object}.options.length;\n", 0)
-      length = read_socket().to_i
-      #puts "options length is : #{length}"
-      arr_options = Array.new(length)
-      for i in 0..length - 1
-        arr_options[i] = "#{element_object}.options[#{i}]"
-      end
-      return arr_options
-    end
-    private :js_options
-  
-    #
-    # Description:
-    #   Used to get class name for option element. Used internally by Firewatir use ff.select_list(...).option(..).class
-    #
-    # Output:
-    #   Class name of option element.
-    #
-    def option_class_name
-      jssh_socket.send("#{element_object}.className;\n", 0)
-      return read_socket()
-    end
-    private :option_class_name
-  
-    #
-    # Description:
-    #   Used to get text for option element. Used internally by Firewatir use ff.select_list(...).option(..).text
-    #
-    # Output:
-    #   Text of option element.
-    #
-    def option_text
-      jssh_socket.send("#{element_object}.text;\n", 0)
-      return read_socket()
-    end
-    private :option_text
-  
-    #
-    # Description:
-    #   Used to get value for option element. Used internally by Firewatir use ff.select_list(...).option(..).value
-    #
-    # Output:
-    #   Value of option element.
-    #
-    def option_value
-      jssh_socket.send("#{element_object}.value;\n", 0)
-      return read_socket()
-    end
-    private :option_value
-  
-    #
-    # Description:
-    #   Used to check if option is selected or not. Used internally by Firewatir use ff.select_list(...).option(..).selected
-    #
-    # Output:
-    #   True if option is selected, false otherwise.
-    #
-    def option_selected
-      jssh_socket.send("#{element_object}.selected;\n", 0)
-      value = read_socket()
-      return true if value == "true"
-      return false if value == "false"
-    end
-    private :option_selected
   
     #
     # Description:

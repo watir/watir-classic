@@ -4,3 +4,4 @@
 $LOAD_PATH.unshift  File.expand_path(File.join(File.dirname(__FILE__), '..', 'watir', 'win32ole'))
 require 'win32ole'
 
+WIN32OLE.codepage = WIN32OLE::CP_UTF8

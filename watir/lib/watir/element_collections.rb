@@ -49,7 +49,15 @@ module Watir
     def [](n)
       return iterator_object(n-1)
     end
-    
+
+    def first
+      iterator_object(0)
+    end
+
+    def last
+      iterator_object(length - 1)
+    end
+
     # this method is the way to show the objects, normally used from irb
     def show
       s = "index".ljust(6)
@@ -73,6 +81,14 @@ module Watir
       puts s
     end
     
+    def to_s
+      map { |e| e.to_s }.join("\n")
+    end
+
+    def inspect
+      '#<%s:0x%x length=%s container=%s>' % [self.class, hash*2, @length.inspect, @container.inspect]
+    end
+
     # this method creates an object of the correct type that the iterators use
     private
     def iterator_object(i)

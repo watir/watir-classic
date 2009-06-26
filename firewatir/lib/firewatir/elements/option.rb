@@ -3,7 +3,7 @@ module FireWatir
   # Description:
   #   Class for Option element.
   #
-  class Option < SelectList
+  class Option < InputElement
     #
     # Description:
     #   Initializes the instance of option object.
@@ -81,7 +81,8 @@ module FireWatir
     #
     def class_name
       assert_exists
-      option_class_name
+      jssh_socket.send("#{element_object}.className;\n", 0)
+      return read_socket()
     end
     
     #
@@ -93,7 +94,8 @@ module FireWatir
     #
     def text
       assert_exists
-      option_text
+      jssh_socket.send("#{element_object}.text;\n", 0)
+      return read_socket()
     end
     
     #
@@ -105,7 +107,8 @@ module FireWatir
     #
     def value
       assert_exists
-      option_value
+      jssh_socket.send("#{element_object}.value;\n", 0)
+      return read_socket()
     end
     
     #
@@ -117,9 +120,12 @@ module FireWatir
     #
     def selected
       assert_exists
-      #@option.selected
-      option_selected
+      jssh_socket.send("#{element_object}.selected;\n", 0)
+      value = read_socket()
+      return true if value == "true"
+      return false if value == "false"
     end
+    
     
   end # Option
 end # FireWatir

@@ -12,7 +12,7 @@ module Watir
     #   * container  - an instance of an IE object
     #   * anElement  - a Watir object (TextField, Button, etc.)
     def Table.create_from_element(container, element)
-      element.locate if defined?(element.locate)
+      element.locate if element.respond_to?(:locate)
       o = element.ole_object.parentElement
       o = o.parentElement until o.tagName == 'TABLE'
       new container, :ole_object, o 

@@ -23,6 +23,10 @@ module Watir
       @o = o
     end
     
+    def inspect
+      '#<%s:0x%x located=%s how=%s what=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect]
+    end
+    
     private
     def self.def_wrap(ruby_method_name, ole_method_name=nil)
       ole_method_name = ruby_method_name unless ole_method_name
@@ -46,7 +50,7 @@ module Watir
 
     public
     def assert_exists
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       unless ole_object
         raise UnknownObjectException.new(
           Watir::Exception.message_for_unable_to_locate(@how, @what))

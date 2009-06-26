@@ -16,13 +16,13 @@ module FireWatir
       assert_exists
       #highlight( :set)
       wait = false
-      @o.each do |selectBoxItem|
+      each do |selectBoxItem|
         if selectBoxItem.selected
           selectBoxItem.selected = false
           wait = true
         end
       end
-      @o.wait if wait
+      self.wait if wait
       #highlight( :clear)
     end
     alias clearSelection clear
@@ -60,7 +60,7 @@ module FireWatir
     #   - item - Text of item to be selected.
     #
     def select( item )
-      select_item_in_select_list(:text, item)
+      select_items_in_select_list(:text, item)
     end
     alias :set :select
 
@@ -72,42 +72,8 @@ module FireWatir
     # - item - Value of the item to be selected.
     #
     def select_value( item )
-      select_item_in_select_list(:value, item)
+      select_items_in_select_list(:value, item)
     end
-
-    # Description:
-    #   Selects item from the select box.
-    #
-    # Input:
-    #   - name  - :value or :text - how we find an item in the select box
-    #   - item  - value of either item text or item value.
-    #
-    def select_item_in_select_list(attribute, value)
-      assert_exists
-      highlight( :set )
-      doBreak = false
-      #element.log "Setting box #{@o.name} to #{attribute} #{value} "
-      @o.each do |option| # items in the list
-        if value.matches( option.invoke(attribute.to_s))
-          if option.selected
-            doBreak = true
-            break
-          else
-            option.selected = true
-            @o.fireEvent("onChange")
-            @o.wait
-            doBreak = true
-            break
-          end
-        end
-      end
-      unless doBreak
-        raise NoValueFoundException,
-        "No option with #{attribute.to_s} of #{value} in this select element"
-      end
-      highlight( :clear )
-    end
-    private :select_item_in_select_list
 
     #
     # Description:
@@ -121,7 +87,7 @@ module FireWatir
       assert_exists
       #element.log "There are #{@o.length} items"
       returnArray = []
-      @o.each { |thisItem| returnArray << thisItem.text }
+      each { |thisItem| returnArray << thisItem.text }
       return returnArray
     end
 
@@ -139,7 +105,7 @@ module FireWatir
       assert_exists
       returnArray = []
       #element.log "There are #{@o.length} items"
-      @o.each do |thisItem|
+      each do |thisItem|
         #puts "#{thisItem.selected}"
         if thisItem.selected
           #element.log "Item ( #{thisItem.text} ) is selected"
@@ -163,6 +129,60 @@ module FireWatir
       assert_exists
       Option.new(self, attribute, value)
     end
+    
+    private
+    
+    # Description:
+    #   Selects items from the select box.
+    #
+    # Input:
+    #   - name  - :value or :text - how we find an item in the select box
+    #   - item  - value of either item text or item value.
+    #
+    def select_items_in_select_list(attribute, value)
+      assert_exists
+      
+      attribute = attribute.to_s
+      found     = false
+      
+      value = value.to_s unless [Regexp, String].any? { |e| value.kind_of? e }
 
+      highlight( :set )
+      each do |option|
+        next unless value.matches(option.invoke(attribute))
+        found = true  
+        next if option.selected
+        
+        option.selected = true
+        fireEvent("onChange")
+        wait
+      end
+      highlight( :clear )
+
+      unless found
+        raise NoValueFoundException, "No option with #{attribute} of #{value.inspect} in this select element"
+      end
+      
+      value
+    end
+
+    #
+    # Description:
+    #   Gets all the options of the select list element.
+    #
+    # Output:
+    #   Array of option elements.
+    #
+    def js_options
+      jssh_socket.send("#{element_object}.options.length;\n", 0)
+      length = read_socket().to_i
+      # puts "options length is : #{length}"
+      arr_options = Array.new(length)
+      for i in 0..length - 1
+        arr_options[i] = "#{element_object}.options[#{i}]"
+      end
+      return arr_options
+    end
+  
   end # Selects
 end # FireWatir

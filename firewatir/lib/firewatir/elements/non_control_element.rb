@@ -6,7 +6,7 @@ module FireWatir
       class_name = subclass.to_s.demodulize
       method_name = class_name.underscore
       FireWatir::Container.module_eval "def #{method_name}(how, what=nil)
-      locate if defined?(locate)
+      locate if respond_to?(:locate)
       return #{class_name}.new(self, how, what); end"
     end
 

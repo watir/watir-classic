@@ -104,27 +104,28 @@ module FireWatir
     #                 the last used profile. 
     #     :suppress_launch_process - do not create a new firefox process. Connect to an existing one.
     
-    # TODO: Start the firefox version given by user. 
+    # TODO: Start the firefox version given by user.
     
     def initialize(options = {})
       if(options.kind_of?(Integer))
         options = {:waitTime => options}
       end
       
-      if(options[:profile])
-        profile_opt = "-no-remote -P #{options[:profile]}"
-      else
-        profile_opt = ""
+      # check for jssh not running, firefox may be open but not with -jssh
+      # if its not open at all, regardless of the :suppress_launch_process option start it
+      # error if running without jssh, we don't want to kill their current window (mac only)
+      jssh_down = false
+      begin
+        set_defaults()
+      rescue Watir::Exception::UnableToStartJSShException
+        jssh_down = true
       end
-
-      unless(options[:suppress_launch_process])
-        if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
-          raise "multiple browsers not supported on os x"
-        end
-
-        bin = path_to_bin()
-        @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
-        sleep options[:waitTime] || 2
+      
+      if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+        raise "Firefox is running without -jssh" if jssh_down
+        open_window unless options[:suppress_launch_process]
+      elsif not options[:suppress_launch_process]
+        launch_browser(options)
       end
 
       set_defaults()
@@ -132,6 +133,29 @@ module FireWatir
       set_browser_document()
     end
 
+    def inspect
+      '#<%s:0x%x url=%s title=%s>' % [self.class, hash*2, url.inspect, title.inspect]
+    end
+
+
+    # Launches firebox browser
+    # options as .new
+    
+    def launch_browser(options = {})
+      
+      if(options[:profile])
+        profile_opt = "-no-remote -P #{options[:profile]}"
+      else
+        profile_opt = ""
+      end
+      
+      bin = path_to_bin()
+      @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
+      sleep options[:waitTime] || 2
+      
+    end
+    private :launch_browser
+    
     # Creates a new instance of Firefox. Loads the URL and return the instance.
     # Input:
     #   url - url of the page to be loaded.
@@ -151,6 +175,14 @@ module FireWatir
       window_count = js_eval("getWindows().length").to_i - 1
       while js_eval("getWindows()[#{window_count}].getBrowser") == ''
         window_count -= 1;
+      end
+      
+      # now correctly handles instances where only browserless windows are open
+      # opens one we can use if count is 0
+      
+      if window_count < 0
+        open_window
+        window_count = 1
       end
       @window_index = window_count
     end
@@ -264,6 +296,7 @@ module FireWatir
     public
     #   Closes the window.
     def close
+      
       if js_eval("getWindows().length").to_i == 1
         js_eval("getWindows()[0].close()")
         
@@ -293,12 +326,13 @@ module FireWatir
     # Output:
     #   Instance of newly attached window.
     def attach(how, what)
+      
       $stderr.puts("warning: #{self.class}.attach is experimental") if $VERBOSE
       window_number = find_window(how, what)
       
-      if(window_number == 0)
+      if(window_number.nil?)
         raise NoMatchingWindowFoundException.new("Unable to locate window, using #{how} and #{what}")  
-      elsif(window_number > 0)
+      elsif(window_number >= 0)
         @window_index = window_number
         set_browser_document()
       end    
@@ -314,23 +348,49 @@ module FireWatir
       br = new :suppress_launch_process => true # don't create window
       br.attach(how, what)
       br
-    end   
+    end
+    
+    # loads up a new window in an existing process
+    # Watir::Browser.attach() with no arguments passed the attach method will create a new window
+    # this will only be called one time per instance we're only ever going to run in 1 window
+    
+    def open_window
+      
+      if @opened_new_window
+        return @opened_new_window
+      end
+
+      jssh_command = "var windows = getWindows(); var window = windows[0];
+                      window.open();
+                      var windows = getWindows(); var window_number = windows.length - 1;
+                      window_number;"      
+      
+      window_number = js_eval(jssh_command).to_i
+      @opened_new_window = window_number
+      return window_number if window_number >= 0
+    end
+    private :open_window
 
     # return the window index for the browser window with the given title or url.
     #   how - :url or :title
     #   what - string or regexp
     def find_window(how, what)
-      jssh_command =  "var windows = getWindows(); var window_number = 0; var found = false;
+      jssh_command =  "var windows = getWindows(); var window_number = false; var found = false;
                              for(var i = 0; i < windows.length; i++)
                              {
                                 var attribute = '';
+                                var browser = windows[i].getBrowser();
+                                if(!browser)
+                                {
+                                  continue;
+                                }
                                 if(\"#{how}\" == \"url\")
                                 {
-                                    attribute = windows[i].getBrowser().contentDocument.URL;
+                                    attribute = browser.contentDocument.URL;
                                 }
                                 if(\"#{how}\" == \"title\")
                                 {
-                                    attribute = windows[i].getBrowser().contentDocument.title;
+                                    attribute = browser.contentDocument.title;
                                 }"
       if(what.class == Regexp)                    
         jssh_command << "var regExp = new RegExp(#{what.inspect});
@@ -346,8 +406,8 @@ module FireWatir
                                 }
                             }
                             window_number;"
-      
-      return window_number = js_eval(jssh_command).to_i
+      window_number = js_eval(jssh_command).to_s
+      return window_number == 'false' ? nil : window_number.to_i
     end
     private :find_window
     
@@ -385,6 +445,17 @@ module FireWatir
       @window_title = js_eval "#{document_var}.title"
     end
     
+    #   Returns the Status of the page currently loaded in the browser from statusbar.
+    #
+    # Output:
+    #   Status of the page.
+    #
+    def status
+      js_status = js_eval("#{window_var}.status")
+      js_status.empty? ? js_eval("#{WINDOW_VAR}.XULBrowserWindow.statusText;") : js_status
+    end
+
+
     # Returns the html of the page currently loaded in the browser.
     def html
       result = js_eval("var htmlelem = #{document_var}.getElementsByTagName('html')[0]; htmlelem.innerHTML")
