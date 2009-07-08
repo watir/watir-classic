@@ -379,6 +379,10 @@ module FireWatir
                              for(var i = 0; i < windows.length; i++)
                              {
                                 var attribute = '';
+                                if(typeof(windows[i].getBrowser) != 'function')
+                                {
+                                    continue;
+                                }
                                 var browser = windows[i].getBrowser();
                                 if(!browser)
                                 {
