@@ -374,9 +374,10 @@ module FireWatir
     # return the window index for the browser window with the given title or url.
     #   how - :url or :title
     #   what - string or regexp
+    # Start searching windows in reverse order so that we attach/find the latest opened window.
     def find_window(how, what)
       jssh_command =  "var windows = getWindows(); var window_number = false; var found = false;
-                             for(var i = 0; i < windows.length; i++)
+                             for(var i = windows.length - 1; i >= 0; i--)
                              {
                                 var attribute = '';
                                 if(typeof(windows[i].getBrowser) != 'function')
