@@ -341,4 +341,37 @@ module Watir
     def element_tag; Em::TAG; end
   end
   
+  class HTMLElements < ElementCollections
+    include CommonCollection
+    def element_class; HTMLElement; end
+    def element_tag; '*'; end
+
+    def initialize(container, how, what)
+      @container = container
+      @how = how
+      @what = what
+      if how == :index
+        raise MissingWayOfFindingObjectException,
+                    "Option does not support attribute #{@how}"
+      end
+    end
+    
+    def length
+      count = 0
+      each {|element| count += 1 }
+      count
+    end
+    alias :size :length
+  
+    def each
+      @container.locate_all_elements(@how, @what).each { |element| yield element }
+    end
+    
+    def iterator_object(i)
+      count = 0
+      each {|e|  return e if count == i;count += 1;}
+    end
+    
+  end
+  
 end

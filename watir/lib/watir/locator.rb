@@ -160,4 +160,29 @@ module Watir
       false
     end
   end
+  
+  # This is like the TaggedElementLocator but
+  # get all the elements by forcing @tag to be '*'
+  class ElementLocator < TaggedElementLocator
+    def initialize(container)
+      @container = container
+    end
+    
+    def each
+      count = 0
+      each_element('*') do |element| 
+        catch :next_element do
+          @specifiers.each do |how, what|
+            next if how == :index
+            unless match? element, how, what
+              throw :next_element
+            end
+          end
+          yield element          
+        end
+      end 
+      nil
+    end
+    
+  end  
 end    
