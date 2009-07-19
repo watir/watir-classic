@@ -347,13 +347,13 @@ module Watir
     def element_tag; '*'; end
 
     def initialize(container, how, what)
-      @container = container
       @how = how
       @what = what
       if how == :index
         raise MissingWayOfFindingObjectException,
                     "Option does not support attribute #{@how}"
       end
+      super(container)
     end
     
     def length
