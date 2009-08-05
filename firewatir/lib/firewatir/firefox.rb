@@ -1003,7 +1003,7 @@ module FireWatir
       platform = RUBY_PLATFORM =~ /java/ ? java.lang.System.getProperty("os.name") : RUBY_PLATFORM
 
       @current_os = case platform
-                    when /mswin|windows/i
+                    when /mingw32|mswin|windows/i
                       :windows
                     when /darwin|mac os/i
                       :macosx
