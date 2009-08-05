@@ -18,7 +18,6 @@ module Watir::UnitTest
 end
 
 require 'unittests/setup/testUnitAddons'
-require 'unittests/iostring'
 
 commondir = File.join(topdir, '..', 'commonwatir')
 $all_tests = []

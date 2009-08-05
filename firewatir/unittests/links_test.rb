@@ -174,14 +174,13 @@ end
 
 class TC_Links_Display < Test::Unit::TestCase
   
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showLinks, :fails_on_ie
   def test_showLinks
     goto_page("links1.html")
-    $stdout = @mockout
-    browser.showLinks
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showLinks }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 11 links
 link:  name: 
          id: 

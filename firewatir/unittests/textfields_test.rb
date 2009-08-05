@@ -207,14 +207,14 @@ end
 
 class TC_Labels_Display < Test::Unit::TestCase
   
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showLabels, :fails_on_ie
   def test_showLabels
     goto_page("textfields1.html")
-    $stdout = @mockout
-    browser.showLabels
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+
+    actual = capture_stdout { browser.showLabels }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 3 labels
 label: name: 
          id: 

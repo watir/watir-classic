@@ -51,13 +51,12 @@ end
 
 class TC_Form_Display < Test::Unit::TestCase
   
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   def test_showforms
     goto_page("forms2.html")
-    $stdout = @mockout
-    browser.showForms
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showForms }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 4 forms
 Form name: 
        id: 
@@ -183,17 +182,6 @@ class TC_Forms3 < Test::Unit::TestCase
   end
 end
 
-#class TC_Forms3_Display < Test::Unit::TestCase
-#  
-#  include MockStdoutTestCase # BUG in test: output not verified!                
-#  def test_show_stuff
-#    goto_page("forms3.html")
-#    $stdout = @mockout
-#    browser.showAllObjects
-#    puts browser.getText
-#    puts browser.getHTML
-#  end
-#end
 
 class TC_Forms4 < Test::Unit::TestCase
   

@@ -148,15 +148,13 @@ class TC_Frame_Links < Test::Unit::TestCase
   end    
 end
 
-require 'unittests/iostring'
 class TC_showlinks < Test::Unit::TestCase
   tags :fails_on_firefox
-  include MockStdoutTestCase
+  include CaptureIOHelper
   
   def test_showLinks
     goto_page "links1.html"
-    $stdout = @mockout
-    browser.showLinks
+    actual = capture_stdout { browser.showLinks }
     expected = [/^index name +id +href + text\/src$/,
     get_path_regex(1, "links2.html", "test1"),
     get_path_regex(2, "link_pass.html", "test1"),
@@ -167,7 +165,7 @@ class TC_showlinks < Test::Unit::TestCase
     get_path_regex(7, "links1.html", "link using a name", "link_name"),
     get_path_regex(8, "links1.html", "link using a title"),
     get_path_regex(9, "pass.html", "image and a text link / file:///#{$myDir.downcase}/html/images/triangle.jpg")]
-    items = @mockout.split(/\n/).collect {|s| CGI.unescape(s.downcase.strip)}
+    items = actual.split(/\n/).collect {|s| CGI.unescape(s.downcase.strip)}
     expected.each_with_index{|regex, x| assert_match(regex, items[x])}
   end
   

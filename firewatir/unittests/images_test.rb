@@ -166,14 +166,13 @@ end
 
 class TC_Images_Display < Test::Unit::TestCase
   
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showImages, :fails_on_ie
   def test_showImages
     goto_page("images1.html")
-    $stdout = @mockout
-    browser.showImages
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showImages }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 6 images
 image: name: 
          id: 

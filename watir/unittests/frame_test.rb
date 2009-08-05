@@ -115,15 +115,13 @@ class TC_IFrames < Test::Unit::TestCase
   
 end   
 
-require 'unittests/iostring'
 class TC_show_frames < Test::Unit::TestCase
-  include MockStdoutTestCase                
+  include CaptureIOHelper
   
   def capture_and_compare(page, expected)
     goto_page page
-    $stdout = @mockout
-    browser.showFrames
-    assert_equal(expected, @mockout)
+    actual = capture_stdout { browser.showFrames }
+    assert_equal(expected, actual)
   end
 
   tag_method :test_show_nested_frames, :fails_on_firefox

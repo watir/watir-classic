@@ -6,6 +6,7 @@ require 'unittests/setup/options'
 unit_options = Watir::UnitTest::Options.new.execute
 require 'unittests/setup/browser'
 require 'unittests/setup/filter'
+require 'unittests/setup/capture_io_helper'
 require 'unittests/setup/watir-unittest'
 
 failure_tag = "fails_on_#{Watir.options[:browser]}".to_sym

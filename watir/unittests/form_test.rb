@@ -52,14 +52,12 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   end
 end
 
-require 'unittests/iostring'
 class TC_Form_Display < Test::Unit::TestCase
-  include MockStdoutTestCase                
+  include CaptureIOHelper
   def test_showforms
     goto_page "forms2.html"
-    $stdout = @mockout
-    browser.showForms
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showForms }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 4 forms
 Form name: 
        id: 
@@ -168,17 +166,6 @@ class TC_Forms3 < Test::Unit::TestCase
     assert_nothing_raised("raised an exception when it shouldnt have") { browser.button(:src , /button/).click }
     
     assert( browser.text.include?("PASS") )
-  end
-end
-
-class TC_Forms3_Display < Test::Unit::TestCase
-  include MockStdoutTestCase # BUG in test: output not verified!                
-  def test_show_stuff
-    goto_page "forms3.html"
-    $stdout = @mockout
-    browser.show_all_objects
-    puts browser.text
-    puts browser.html
   end
 end
 

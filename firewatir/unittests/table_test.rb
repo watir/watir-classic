@@ -331,14 +331,13 @@ class TC_Tables_Complex < Test::Unit::TestCase
 end
 
 class TC_Tables_Display < Test::Unit::TestCase
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showTables, :fails_on_ie
   def test_showTables
     goto_page("table1.html")
-    $stdout = @mockout
-    browser.showTables
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showTables }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 7 tables
 table:   id: tblTest
        rows: 2

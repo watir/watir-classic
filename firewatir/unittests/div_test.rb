@@ -192,14 +192,14 @@ end
 
 class TC_Divs_Display < Test::Unit::TestCase
   
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showDivs, :fails_on_ie
   def test_showDivs
     goto_page("div.html")
-    $stdout = @mockout
-    browser.showDivs
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showDivs }
+    
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 7 divs
 div:   name: 
          id: div1
@@ -234,14 +234,13 @@ END_OF_MESSAGE
 end
 
 class TC_Spans_Display < Test::Unit::TestCase
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showSpans, :fails_on_ie
   def test_showSpans
     goto_page("div.html")
-    $stdout = @mockout
-    browser.showSpans
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showSpans }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 7 spans
 span:  name: 
          id: span1

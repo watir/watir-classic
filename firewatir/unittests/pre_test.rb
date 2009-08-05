@@ -53,14 +53,13 @@ end
 
 
 class TC_Pres_Display < Test::Unit::TestCase
-  include MockStdoutTestCase
+  include CaptureIOHelper
 
   tag_method :test_showPres, :fails_on_ie
   def test_showPres
     goto_page("pre.html")
-    $stdout = @mockout
-    browser.showPres
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+    actual = capture_stdout { browser.showPres }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 3 pres
 pre:     id: 1
        name: 1

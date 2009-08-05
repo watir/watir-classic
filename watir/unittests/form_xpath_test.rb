@@ -25,14 +25,13 @@ class TC_Forms2_XPath < Test::Unit::TestCase
   end     
 end
 
-require 'unittests/iostring'
 class TC_Form_Display_XPath < Test::Unit::TestCase
-  include MockStdoutTestCase                
+  include CaptureIOHelper                
   def test_showforms
     goto_page "forms2.html"
-    $stdout = @mockout
-    browser.show_forms
-    assert_equal(<<END_OF_MESSAGE, @mockout)
+
+    actual = capture_stdout { browser.show_forms }
+    assert_equal(<<END_OF_MESSAGE, actual)
 There are 4 forms
 Form name: 
        id: 
