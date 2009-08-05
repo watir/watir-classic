@@ -72,13 +72,11 @@ module Watir
         puts "there are #{count} frames"
         for i in 0..count-1 do
           begin
-            fname = allFrames[i.to_s].name.to_s
+            fname = allFrames.item(i).name.to_s
             puts "frame  index: #{i + 1} name: #{fname}"
           rescue => e
             if e.to_s.match(/Access is denied/)
               puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied" 
-            elsif RUBY_PLATFORM =~ /^1.9/
-              raise e # until we fix the WIN32OLE stuff on 1.9, let the exception bubble
             end
           end
         end

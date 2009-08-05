@@ -156,7 +156,7 @@ module Watir
     
     # returns an ole object
     def _row(index)
-      return @o.invoke("rows")[(index - 1).to_s]
+      return @o.invoke("rows").item(index - 1)
     end
     private :_row
     
@@ -202,7 +202,7 @@ module Watir
     
     # returns an ole table body
     def ole_table_body_at_index(n)
-      return @o.tBodies[(n-1).to_s]
+      return @o.tBodies.item(n-1)
     end
     
     # iterates through each of the TableBodies in the Table. Yields a TableBody object

@@ -608,7 +608,7 @@ module Watir
         end
         s += n.innerText
         if n.getElementsByTagName("IMG").length > 0
-          s += " / " + n.getElementsByTagName("IMG")[0.to_s].src
+          s += " / " + n.getElementsByTagName("IMG").item(0).src
         end
         s += "\n"
       end
@@ -928,7 +928,7 @@ module Watir
       
       #puts "Hello; Given xpath is : #{xpath}"
       doc = document
-      curElem = doc.getElementsByTagName("body")["0"]
+      curElem = doc.getElementsByTagName("body").item(0)
       xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
       xpath = $1
       
