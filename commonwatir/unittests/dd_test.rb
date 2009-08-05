@@ -12,6 +12,9 @@ class TC_Dd < Test::Unit::TestCase
   def test_exists
     assert browser.dd(:id, "someone").exists?, "Could not find <dd> by :id"
     assert browser.dd(:class, "name").exists?, "Could not find <dd> by :class"
+    assert_nothing_raised do
+       browser.dd(:xpath, "//dd[@id='someone']").locate
+     end
     assert browser.dd(:xpath, "//dd[@id='someone']").exists?, "Could not find <dd> by :xpath"
     assert browser.dd(:index, 1).exists?, "Could not find <dd> by :index"
   end

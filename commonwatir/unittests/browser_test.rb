@@ -10,7 +10,7 @@ class TC_Browser < Test::Unit::TestCase
 
   def test_status_returns_window_status
     browser.execute_script "window.status = 'All done!'"
-    assert_equal "All done!", browser.status
+    assert_match /done/i, browser.status
   end
 
 end

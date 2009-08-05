@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'rake/clean'
-require 'ftools'
 require 'fileutils'
 require 'rake/testtask'
 gem 'ci_reporter'
@@ -54,10 +53,10 @@ namespace :cruise do
   task :move_reports do
     reports = "test/reports/*.xml"
     add_style_sheet_to_reports(reports)
-    File::copy("transform-results.xsl", "test/reports")    
+    FileUtils.cp("transform-results.xsl", "test/reports")
     if ENV['CC_BUILD_ARTIFACTS']
-      Dir[reports].each { |e| File::copy(e, ENV['CC_BUILD_ARTIFACTS']) }
-      File::copy("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])    
+      Dir[reports].each { |e| FileUtils.cp(e, ENV['CC_BUILD_ARTIFACTS']) }
+      FileUtils.cp("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
     else
       puts "Build results not copied. CC_BUILD_ARTIFACTS not defined"
     end

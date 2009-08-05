@@ -379,13 +379,17 @@ module Watir
     end
     
     # Supports double-byte characters
-    def characters_in(value) 
-      index = 0
-      while index < value.length 
-        len = value[index] > 128 ? 2 : 1
-        yield value[index, len]
-        index += len
-      end 
+    def characters_in(value, &blk) 
+      if RUBY_VERSION =~ /^1.8/
+        index = 0
+        while index < value.length 
+          len = value[index] > 128 ? 2 : 1
+          yield value[index, len]
+          index += len
+        end 
+      else
+        value.each_char(&blk)
+      end
     end
     
     # Return the value (a string), limited to the maxlength of the element.

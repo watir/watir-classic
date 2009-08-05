@@ -201,8 +201,8 @@ class TC_Button2 < Test::Unit::TestCase
     exception = assert_raise(UnknownObjectException) do
       browser.button(:value => 'Click Me', :index => 2).name
     end
-    assert_equal('Unable to locate element, using {:index=>2, :value=>"Click Me"}', 
-      exception.message)
+    # can't assume hash ordering
+    assert_match(/Unable to locate element, using \{(:index=>2, :value=>"Click Me"|:value=>"Click Me", :index=>2)\}/, exception.message)
   end
 end
 
