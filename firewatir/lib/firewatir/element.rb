@@ -115,7 +115,7 @@ module FireWatir
       end
       return return_value
     end
-    private:get_attribute_value
+    private :get_attribute_value
   
   
     #
@@ -513,9 +513,9 @@ module FireWatir
   
     def rb_regexp_to_js(regexp)
       old_exp = regexp.to_s
-      new_exp = regexp.inspect
+      new_exp = regexp.inspect.sub(/\w*$/, '')
       flags = old_exp.slice(2, old_exp.index(':') - 2)
-    
+
       for i in 0..flags.length do
         flag = flags[i, 1]
         if(flag == '-')
@@ -524,7 +524,7 @@ module FireWatir
           new_exp << flag
         end
       end
-    
+
       new_exp
     end
   
