@@ -981,6 +981,8 @@ module FireWatir
       #else
       #    return true
       #end
+    rescue UnknownFrameException
+      false
     end
     alias exist? exists?
   

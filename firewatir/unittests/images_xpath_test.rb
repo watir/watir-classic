@@ -3,7 +3,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'ftools'
 require 'webrick'
 
 class TC_Images_XPath < Test::Unit::TestCase

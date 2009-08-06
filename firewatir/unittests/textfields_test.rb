@@ -77,11 +77,12 @@ class TC_Fields < Test::Unit::TestCase
             "max length:   500",
             "length:       0"
         ]
-        assert_equal(expected, browser.text_field(:index, 1).to_s)
+
+        assert_equal(expected.sort, browser.text_field(:index, 1).to_s.split("\n").sort)
         expected[0] = "name:         "
         expected[2] = "id:           text2"
         expected[3] = "value:        goodbye all"
-        assert_equal(expected, browser.text_field(:index, 2).to_s)
+        assert_equal(expected.sort, browser.text_field(:index, 2).to_s.split("\n").sort)
         assert_raises(UnknownObjectException) { browser.text_field(:index, 999).to_s }  
         #puts browser.text_field(:name, "text1").to_s
         #puts browser.text_field(:name, "readOnly").to_s

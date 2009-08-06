@@ -3,7 +3,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'ftools'
 require 'webrick'
 
 class TC_Images < Test::Unit::TestCase
@@ -145,11 +144,6 @@ class TC_Images < Test::Unit::TestCase
         end
         assert_equal( index-1 , browser.images.length )
     end
-    
-    #def test_save_local_image
-    #   browser.images[1].save(build_windows_path("sample.img.dat"))
-    #    assert(File.compare(@saved_img_path, browser.images[1].src.gsub(/^file:\/\/\//, '')))
-    #end
     
     def clean_saved_image
         File.delete(@saved_img_path) if (File.exists?(@saved_img_path))
