@@ -1054,7 +1054,7 @@ module FireWatir
       if(element_type == "HTMLTableCellElement")
         return text()
       else
-        result = string_creator(attributes) #.join("\n")
+        result = string_creator(attributes).join("\n")
         @@current_level = 0
         return result
       end

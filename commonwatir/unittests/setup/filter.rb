@@ -1,4 +1,5 @@
 require 'test/unit'
+
 require 'test/unit/collector/objectspace'
 
 # Modify the Test::Unit runner in Eclipse, so it only runs our tests
