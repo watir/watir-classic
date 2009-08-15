@@ -5,7 +5,7 @@
 if RUBY_VERSION =~ /^1.8/
   $LOAD_PATH.unshift  File.expand_path(File.join(File.dirname(__FILE__), '..', 'watir', 'win32ole'))
 else
-  $stderr.puts "loading win32ole from stdlib on 1.9"
+  # loading win32ole from stdlib on 1.9
 end
 
 
