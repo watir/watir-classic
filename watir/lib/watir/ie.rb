@@ -15,9 +15,9 @@
   notice, this list of conditions and the following disclaimer in the
   documentation and/or other materials provided with the distribution.
 
-  3. Neither the names Paul Rogers, nor Bret Pettichord nor the names of any 
-  other contributors to this software may be used to endorse or promote 
-  products derived from this software without specific prior written 
+  3. Neither the names Paul Rogers, nor Bret Pettichord nor the names of any
+  other contributors to this software may be used to endorse or promote
+  products derived from this software without specific prior written
   permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS
@@ -50,7 +50,7 @@ require 'Win32API'
 
 require 'watir/matches'
 
-# these switches need to be deleted from ARGV to enable the Test::Unit 
+# these switches need to be deleted from ARGV to enable the Test::Unit
 # functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
 # Note: this means that watir must be require'd BEFORE test/unit.
@@ -66,6 +66,7 @@ $FAST_SPEED = ARGV.delete('-f')
 # Eat the -s command line switch (deprecated)
 ARGV.delete('-s')
 
+require 'watir/core_ext'
 require 'watir/logger'
 require 'watir/win32'
 require 'watir/container'
@@ -90,7 +91,7 @@ require 'watir'
 
 module Watir
   include Watir::Exception
-  
+
   # Directory containing the watir.rb file
   @@dir = File.expand_path(File.dirname(__FILE__))
 
@@ -101,8 +102,8 @@ module Watir
     ATTACHER.timeout = IE.attach_timeout
     ATTACHER.wait_until { yield }
   end
-            
-  @@autoit = nil  
+
+  @@autoit = nil
 
   def self.autoit
     unless @@autoit
@@ -115,7 +116,7 @@ module Watir
     end
     @@autoit
   end
-  
+
   def self._register(dll)
     system("regsvr32.exe /s "    + "#{@@dir}/#{dll}".gsub('/', '\\'))
   end
