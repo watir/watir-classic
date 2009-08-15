@@ -1,42 +1,55 @@
 module Watir
-  class TaggedElementLocator
+  class Locator
     include Watir
     include Watir::Exception
 
+    def normalize_specifiers!(specifiers)
+      specifiers.each do |how, what|
+        case how
+        when :index
+          what = what.to_i
+        when :url
+          how = :href
+        when :class
+          how = :class_name
+        when :caption
+          how = :value
+        end
+
+        @specifiers[how] = what
+      end
+    end
+
+
+  end
+
+  class TaggedElementLocator < Locator
     def initialize(container, tag)
       @container = container
       @tag = tag
     end
-    
-    def set_specifier(how, what)    
+
+    def set_specifier(how, what)
       if how.class == Hash and what.nil?
         specifiers = how
       else
         specifiers = {how => what}
       end
-        
+
       @specifiers = {:index => 1} # default if not specified
-
-      specifiers.each do |how, what|  
-        what = what.to_i if how == :index
-        how = :href if how == :url
-        how = :class_name if how == :class
-        
-        @specifiers[how] = what
-      end
-
+      normalize_specifiers! specifiers
     end
 
     def each_element tag
-      @container.document.getElementsByTagName(tag).each do |ole_element| 
-        yield Element.new(ole_element) 
+      @container.document.getElementsByTagName(tag).each do |ole_element|
+        yield Element.new(ole_element)
       end
-    end    
+    end
 
     def locate
       count = 0
       each_element(@tag) do |element|
-        
+
         catch :next_element do
           @specifiers.each do |how, what|
             next if how == :index
@@ -48,15 +61,15 @@ module Watir
           unless count == @specifiers[:index]
             throw :next_element
           end
-          return element.ole_object          
+          return element.ole_object
         end
 
       end # elements
       nil
     end
-    
+
     def match?(element, how, what)
-      begin 
+      begin
         method = element.method(how)
       rescue NameError
         raise MissingWayOfFindingObjectException,
@@ -73,14 +86,17 @@ module Watir
       end
     end
 
-  end  
-  class InputElementLocator
+  end
+  class InputElementLocator < Locator
+
     attr_accessor :document, :element, :elements
+
     def initialize container, types
       @container = container
       @types = types
       @elements = nil
     end
+
     def specifier= arg
       how, what, value = arg
 
@@ -94,12 +110,8 @@ module Watir
       if value
         @specifiers[:value] = value.is_a?(Regexp) ? value : value.to_s
       end
-      specifiers.each do | how, what |
-        how = :value if how == :caption
-        how = :class_name if how == :class
-        what = what.to_i if how == :index
-        @specifiers[how] = what
-      end
+
+      normalize_specifiers! specifiers
     end
 
     def locate
@@ -134,7 +146,7 @@ module Watir
 
       what.matches(attribute)
     end
-    
+
     def fast_locate
       # Searching through all elements returned by ole_inner_elements
       # is *significantly* slower than IE's getElementById() and
@@ -146,7 +158,7 @@ module Watir
       # :id.
 
       the_id = @specifiers[:id]
-      if the_id && the_id.class == String && 
+      if the_id && the_id.class == String &&
         @specifiers[:index] == 1 && @specifiers.length == 2
         @element = @document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
@@ -159,5 +171,6 @@ module Watir
       end
       false
     end
+
   end
-end    
+end
