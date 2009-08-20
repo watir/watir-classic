@@ -820,7 +820,7 @@ module Watir
     #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
     #   * types - what object types we will look at.
     #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-    def locate_input_element(how, what, types, value=nil)
+    def locate_input_element(how, what, types, value=nil, klass=nil)
       case how
       when :xpath
         return element_by_xpath(what)
@@ -835,6 +835,7 @@ module Watir
       return locator.element if locator.fast_locate
       # todo: restrict search to elements.getElementsByTag('INPUT'); faster
       locator.elements = ole_inner_elements if locator.elements.nil?
+      locator.klass = klass if klass 
       locator.locate
     end
     

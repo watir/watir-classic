@@ -89,14 +89,15 @@ module Watir
   end
   class InputElementLocator < Locator
 
-    attr_accessor :document, :element, :elements
+    attr_accessor :document, :element, :elements, :klass
 
     def initialize container, types
       @container = container
       @types = types
       @elements = nil
+      @klass = Element
     end
-
+    
     def specifier= arg
       how, what, value = arg
 
@@ -117,7 +118,13 @@ module Watir
     def locate
       count = 0
       @elements.each do |object|
-        element = Element.new(object)
+        if @klass == Element
+          element = Element.new(object)
+        else
+          element = @klass.new(@container, @specifiers, nil)
+          element.ole_object = object
+          def element.locate; @o; end
+        end
 
         catch :next_element do
           throw :next_element unless @types.include?(element.type)

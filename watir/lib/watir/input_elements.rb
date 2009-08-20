@@ -524,7 +524,7 @@ module Watir
   # most of the methods available to this element are inherited from the Element class
   class RadioCheckCommon < InputElement
     def locate #:nodoc:
-      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value)
+      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value, self.class)
     end
     def initialize(container, how, what, value=nil)
       super container, how, what
