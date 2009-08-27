@@ -803,10 +803,6 @@ module FireWatir
       jssh_socket.send("#{element_object};\n", 0)
       temp = read_socket()
 
-      if temp == ""
-        return nil
-      end
-
       #puts "#{element_object} and type is #{temp}"
       temp =~ /\[object\s(.*)\]/
       if $1
@@ -1099,6 +1095,14 @@ module FireWatir
       highlight(:clear)
       # Wait for firefox to reload.
       wait()
+    end
+
+    #
+    # Description:
+    #   Document var.  Unfinished.
+    #
+    def document_var
+      "document"
     end
 
     #
