@@ -1033,7 +1033,7 @@ module FireWatir
       ff = %x[mdfind 'kMDItemCFBundleIdentifier == "org.mozilla.firefox"']
       ff = ff.empty? ? '/Applications/Firefox.app' : ff.split("\n").first
 
-      "#{ff}/Contents/MacOS/firefox"
+      "#{ff}/Contents/MacOS/firefox-bin"
     end
 
   end # Firefox
