@@ -38,6 +38,26 @@ Rake::TestTask.new :mozilla_all_tests do |t|
   t.verbose = true
 end
 
+#
+# ------------------------------ watirspec -----------------------------------
+#
+
+if File.exist?(path = "spec/watirspec/watirspec.rake")
+  load path
+end
+
+namespace :watirspec do
+  desc 'Initialize and fetch the watirspec submodule'
+  task :init do
+    sh "git submodule init"
+    sh "git submodule update"
+  end
+end
+
+#
+# ----------------------------------------------------------------------------
+#
+
 namespace :cruise do
   def add_style_sheet_to_reports(report_dir)
     Dir[report_dir].each do |f|
