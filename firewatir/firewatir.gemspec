@@ -26,7 +26,7 @@ spec = Gem::Specification.new do |s|
     JavaScript popups (currently support will be there shortly).
   EOF
   s.author = 'Angrez Singh'
-  s.homepage = 'http://wtr.rubyforge.org'
+  s.homepage = 'http://www.watir.com'
   s.email = 'watir-general@googlegroups.com'
   s.rubyforge_project = 'Watir'
 
