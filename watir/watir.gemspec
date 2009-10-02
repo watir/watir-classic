@@ -30,7 +30,7 @@ spec = Gem::Specification.new do |s|
   s.author = 'Bret Pettichord'
   s.email = 'watir-general@groups.google.com'
   s.rubyforge_project = 'Watir'
-  s.homepage = 'http://wtr.rubyforge.org/'
+  s.homepage = 'http://www.watir.com/'
 
   s.platform = Gem::Platform::RUBY
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
