@@ -380,7 +380,7 @@ module Watir
     
     # Supports double-byte characters
     def characters_in(value, &blk) 
-      if RUBY_VERSION =~ /^1.8/
+      if RUBY_VERSION =~ /^1\.8/
         index = 0
         while index < value.length 
           len = value[index] > 128 ? 2 : 1

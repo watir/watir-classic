@@ -2,7 +2,7 @@
 
 # Use our modified win32ole library
 
-if RUBY_VERSION =~ /^1.8/
+if RUBY_VERSION =~ /^1\.8/
   $LOAD_PATH.unshift  File.expand_path(File.join(File.dirname(__FILE__), '..', 'watir', 'win32ole'))
 else
   # loading win32ole from stdlib on 1.9

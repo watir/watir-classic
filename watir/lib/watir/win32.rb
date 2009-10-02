@@ -5,7 +5,7 @@ module Watir
 
     GetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')    
     User32 = DL.dlopen('user32')
-    if RUBY_VERSION =~ /^1.8/
+    if RUBY_VERSION =~ /^1\.8/
       FindWindowEx = User32['FindWindowEx', 'LLLpp']
       # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
       GetWindow = User32['GetWindow', 'ILL']
