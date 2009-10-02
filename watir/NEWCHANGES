@@ -21,6 +21,16 @@ This is a release candidate.
     SelectList#includes?        => include?
     TextField#dragContentsTo    => drag_contents_to
     Radio/Checkbox#isSet?       => set?
+* Patch for winclicker fix. http://jira.openqa.org/browse/WTR-279 (Derek Berner)
+* Add support for using a Regexp as the third argument (value) when locating 
+  checkboxes/radio buttons. (Jarib)
+* Add support for <strong> element. (Jarib)
+* Add support and tests for <em> element. (Jarib)
+* SelectList#select now supports Numeric arguments. (Jarib)
+* Additional inspect implementations for both IE and FF. (Jarib)
+* Added ElementCollections#{first,last}. (Jarib)
+* Fixes for running on Ruby 1.9. (Jarib)
+* Removed ActiveSupport dependency. (Jarib)
   
 === Firefox Improvements
 
@@ -31,14 +41,31 @@ This is a release candidate.
 * FireWatir.attach is now available, analogous to IE.attach.
 * Some Javascript errors that were being ignored, now raise Ruby exceptions.
 * Added event handler which resets the context of document 
-when page gets loaded automatically (Angrez)
+  when page gets loaded automatically (Angrez)
+* Changed code to use document_var, body_var, window_var, browser_var instead of 
+  "document", "body", "window", "browser" variables. (Angrez)
+* Changed code to replace every quote (") in xpath query with (\") so that it 
+  doesn't give error while executing the xpath query (Angrez)
+* Fire onchange event for FireWatir file fields. Closes WTR-286. (Jarib)
+* Fixes for running and closing Firefox on Mac OS X
+* added functionality to allow Watir::Browser.attach with no arguments to open 
+ a new firefox window rather than taking over the existing focused window (Rob Aldred)
+* also modified some setup functions to correctly handle closed browsers, 
+ browserless windows and others (Rob Aldred)
+* Add test and implementation for Firefox#status http://jira.openqa.org/browse/WTR-250 (Jarib)
 
 === IE Improvements
 
 * Allow attach timeout to be accessed as an option. Thus:
     IE.set_options :attach_timeout => 5.0
   This was previously available as class method.
-*   
+* Fix for Autoit auto-registration. (Bret) 
+* Fix for IE6, 7 and 8 file downloads. (Željko Filipin & Jarmo Pertman)
+* Replaced REXML with Nokogiri for xml parsing. (Aidy Lewis)
+* Option now supports :label attribute http://jira.openqa.org/browse/WTR-297
+* Patch for IE.close causing WIN32OLE errors http://jira.openqa.org/browse/WTR-304 (Tony)
+* Watir::IE.inspect issue fixed: http://jira.openqa.org/browse/WTR-180 (Jarib)
+* Fix for Browser#execute_script on IE7. (Jarib)
 
 === Structure Improvements
 
