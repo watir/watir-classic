@@ -30,6 +30,8 @@ This is a release candidate.
   and @map@ to be used with methods such as @divs@ and @links@.
 * FireWatir.attach is now available, analogous to IE.attach.
 * Some Javascript errors that were being ignored, now raise Ruby exceptions.
+* Added event handler which resets the context of document 
+when page gets loaded automatically (Angrez)
 
 === IE Improvements
 
