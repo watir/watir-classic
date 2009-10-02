@@ -4,6 +4,6 @@ require './lib/commonwatir.rb'
 
 Hoe.new('commonwatir', CommonWatir::VERSION) do |p|
   p.rubyforge_name = 'wtr'
-  p.developer('Bret Pettichord', 'bret@watircraft.com')
+  p.developer('Bret Pettichord', 'bret@pettichord.com')
   p.extra_deps << 'user-choices'
 end
