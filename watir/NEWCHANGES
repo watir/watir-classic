@@ -1,4 +1,4 @@
-== Version 1.7.0
+== Version 1.6.5
 
 This is a release candidate.
 
@@ -30,7 +30,6 @@ This is a release candidate.
 * Additional inspect implementations for both IE and FF. (Jarib)
 * Added ElementCollections#{first,last}. (Jarib)
 * Fixes for running on Ruby 1.9. (Jarib)
-* Removed ActiveSupport dependency. (Jarib)
   
 === Firefox Improvements
 
@@ -67,6 +66,7 @@ This is a release candidate.
 * Patch for IE.close causing WIN32OLE errors http://jira.openqa.org/browse/WTR-304 (Tony)
 * Watir::IE.inspect issue fixed: http://jira.openqa.org/browse/WTR-180 (Jarib)
 * Fix for Browser#execute_script on IE7. (Jarib)
+* Removed ActiveSupport dependency. (Jarib)
 
 === Structure Improvements
 
