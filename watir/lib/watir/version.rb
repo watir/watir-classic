@@ -1,5 +1,5 @@
 module Watir
   class IE
-    VERSION = '1.6.2'
+    VERSION = '1.6.5.rc1'
   end
 end

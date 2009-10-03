@@ -38,7 +38,7 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6'
-  s.add_dependency 'commonwatir', '= 1.6.2'
+  s.add_dependency 'commonwatir', '= ' + Watir::IE::VERSION
   s.add_dependency 'firewatir'
   s.add_dependency 'nokogiri'
 
