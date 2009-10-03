@@ -2,9 +2,10 @@ require 'rubygems'
 require 'hoe'
 require './lib/commonwatir.rb'
 
-Hoe.new('commonwatir', CommonWatir::VERSION) do |p|
-  p.rubyforge_name = 'wtr'
-  p.developer('Bret Pettichord', 'bret@pettichord.com')
-  p.extra_deps << ['user-choices', '>= 0']
-  p.url = 'http://www.watir.com'
+Hoe.spec 'commonwatir' do
+  self.version = CommonWatir::VERSION
+  self.rubyforge_name = 'wtr'
+  self.developer('Bret Pettichord', 'bret@pettichord.com')
+  self.extra_deps << ['user-choices', '>= 0']
+  self.url = 'http://www.watir.com'
 end
