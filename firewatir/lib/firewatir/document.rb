@@ -17,6 +17,30 @@ module FireWatir
       @arr_elements = ""
       @container = container
     end
+    
+    def frames
+      jssh_command = "var frameset = #{@container.window_var}.frames;
+                      var elements_frames = new Array();
+                      for(var i = 0; i < frameset.length; i++)
+                      {
+                          var frames = frameset[i].frames;
+                          for(var j = 0; j < frames.length; j++)
+                          {
+                              elements_frames.push(frames[j].frameElement);    
+                          }
+                      }
+                      elements_frames.length;"
+      
+      jssh_command.gsub!("\n", "")
+      $jssh_socket.send("#{jssh_command};\n", 0)
+      length = read_socket().to_i 
+      
+      frame_array = Array.new(length)
+      for i in 0..length - 1 do
+          frame_array[i] = Frame.new(self, :jssh_name, "elements_frames[#{i}]")
+      end
+      frame_array
+    end
 
     #
     # Description:
