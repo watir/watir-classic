@@ -681,7 +681,7 @@ module FireWatir
 
     # Returns the document element of the page currently loaded in the browser.
     def document
-      Document.new("#{document_var}")
+      Document.new(self)
     end
 
     # Returns the first element that matches the given xpath expression or query.
