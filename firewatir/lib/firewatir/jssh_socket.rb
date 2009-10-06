@@ -5,8 +5,11 @@ module JsshSocket
     jssh_socket.send("#{str};\n", 0)
     value = read_socket()
     if md = /^(\w+)Error:(.*)$/.match(value)
-      eval "class JS#{md[1]}Error < StandardError\nend"
-      raise (eval "JS#{md[1]}Error"), md[2]
+      errclassname="JS#{md[1]}Error"
+      unless JsshSocket.const_defined?(errclassname)
+        JsshSocket.const_set(errclassname, Class.new(StandardError))
+      end
+      raise JsshSocket.const_get(errclassname), md[2]
     end
     value
   end

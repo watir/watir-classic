@@ -542,6 +542,8 @@ module FireWatir
     # Output:
     #   Nil if unable to locate frame, else return the Frame element.
     #
+    # TODO/FIX: If multiple tabs are open on the current window, will count frames from every tab, not just the current tab. 
+    #
     def locate_frame(how, what)
       # Get all the frames the are there on the page.
       #puts "how is #{how} and what is #{what}"
