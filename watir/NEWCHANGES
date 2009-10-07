@@ -89,3 +89,4 @@ This is a release candidate.
 * New Rake task (:test) runs all tests.
 * Use ci_reporter to provide more detailed test results for watirbuild.com. 
   Use xls transform to format results.
+* Add WatirSpec submodule + load it in Rakefile if available. (Jarib)
