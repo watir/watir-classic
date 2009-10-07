@@ -53,6 +53,10 @@ This is a release candidate.
 * also modified some setup functions to correctly handle closed browsers, 
  browserless windows and others (Rob Aldred)
 * Add test and implementation for Firefox#status http://jira.openqa.org/browse/WTR-250 (Jarib)
+* 2 problems fixed with .click (jubishop)
+  a) When chaining together element calls the @container becomes an 
+     HTMLElement, but there's no container_var defined for HTMLElement
+  b) When an <a tag has no href then element_type was returning nil.
 
 === IE Improvements
 
