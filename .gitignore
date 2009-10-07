@@ -1,4 +1,8 @@
+*~
 .loadpath
 .externalToolBuilders
-*~
+commonwatir/pkg
+firewatir/pkg
+watir/pkg
+gems
 
