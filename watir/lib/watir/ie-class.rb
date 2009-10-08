@@ -341,7 +341,6 @@ module Watir
     
     # Return the status of the window, typically from the status bar at the bottom.
     def status
-      raise NoStatusBarException if !@ie.statusBar
       return @ie.statusText
     end
     
