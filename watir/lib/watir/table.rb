@@ -87,7 +87,7 @@ module Watir
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
-      1.upto(@o.getElementsByTagName("TR").length) do |i| 
+      1.upto(@o.rows.length) do |i| 
         yield TableRow.new(@container, :ole_object, _row(i))
       end
     end

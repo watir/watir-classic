@@ -359,4 +359,18 @@ class TC_Tables_Complex < Test::Unit::TestCase
     assert_equal("subtable2 Row 1 Col2",table[2][1].table(:index,1)[1][2].text.strip)
     assert_equal("subtable2 Row 1 Col1",table[2][1].table(:index,1)[1][1].text.strip)
   end
+  
+  def test_each_itterator
+    # for WTR-324: keep Watir::Table.each from crashing when run on nested tables
+    table = browser.table(:index,1)
+    assert_equal(table.row_count, 4)
+    assert_equal(table.row_count_excluding_nested_tables, 2)
+    example_row_count = 0
+    assert_nothing_thrown do 
+      table.each do
+        example_row_count += 1
+      end
+    end
+    assert_equal(example_row_count, 2)
+  end
 end
