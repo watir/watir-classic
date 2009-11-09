@@ -1,7 +1,5 @@
 == Version 1.6.5
 
-This is a release candidate.
-
 === New Features (Both IE and Firefox)
 
 * Browser.attach is now available.
@@ -57,6 +55,8 @@ This is a release candidate.
   a) When chaining together element calls the @container becomes an 
      HTMLElement, but there's no container_var defined for HTMLElement
   b) When an <a tag has no href then element_type was returning nil.
+* fix bug in Firefox#document. change creating error class by eval in jssh 
+socket to creating class with ruby.
 
 === IE Improvements
 
