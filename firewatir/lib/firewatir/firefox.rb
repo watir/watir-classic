@@ -476,7 +476,7 @@ module FireWatir
     #
     def status
       js_status = js_eval("#{window_var}.status")
-      js_status.empty? ? js_eval("#{WINDOW_VAR}.XULBrowserWindow.statusText;") : js_status
+      js_status.empty? ? js_eval("#{window_var}.XULBrowserWindow.statusText;") : js_status
     end
 
 

@@ -25,7 +25,15 @@ class TC_FirefoxBrowser < Test::Unit::TestCase
         assert_true(result)
     end
  
-    def teardown()
+    def test_status
+        # Create the browser as all browsers are closed in above test case.
         browser = Watir::Browser.new
+        goto_page("radioButtons1.html")
+        status = browser.status
+        assert_equal(status, "Done")
+    end
+    
+    def teardown()
+        
     end
 end
