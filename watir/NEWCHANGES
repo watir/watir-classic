@@ -1,3 +1,8 @@
+== Version 1.6.6 (in development)
+
+* Added close_all method to firefox. (Angrez)
+* Fixed status method for firefox. (Angrez)
+
 == Version 1.6.5
 
 === New Features (Both IE and Firefox)
@@ -44,19 +49,22 @@
   "document", "body", "window", "browser" variables. (Angrez)
 * Changed code to replace every quote (") in xpath query with (\") so that it 
   doesn't give error while executing the xpath query (Angrez)
-* Fire onchange event for FireWatir file fields. Closes WTR-286. (Jarib)
+* Fire onchange event for FireWatir file fields. Closes http://jira.openqa.org/browse/WTR-286. (Jarib)
 * Fixes for running and closing Firefox on Mac OS X
-* added functionality to allow Watir::Browser.attach with no arguments to open 
- a new firefox window rather than taking over the existing focused window (Rob Aldred)
-* also modified some setup functions to correctly handle closed browsers, 
- browserless windows and others (Rob Aldred)
+* Added functionality to allow Watir::Browser.attach with no arguments to open 
+  a new firefox window rather than taking over the existing focused window (Rob Aldred)
+* Also modified some setup functions to correctly handle closed browsers, 
+  browserless windows and others (Rob Aldred)
 * Add test and implementation for Firefox#status http://jira.openqa.org/browse/WTR-250 (Jarib)
 * 2 problems fixed with .click (jubishop)
   a) When chaining together element calls the @container becomes an 
      HTMLElement, but there's no container_var defined for HTMLElement
   b) When an <a tag has no href then element_type was returning nil.
-* fix bug in Firefox#document. change creating error class by eval in jssh 
-socket to creating class with ruby.
+* Fix bug in Firefox#document. Change creating error class by eval in jssh 
+  socket to creating class with ruby. (Ethan)
+* Add support for Browser#frames. (Ethan)
+* Make the version dependencies for Watir and FireWatir be the same. (This change
+  will also be backported to 1.6.3.) (Bret)
 
 === IE Improvements
 
@@ -64,29 +72,32 @@ socket to creating class with ruby.
     IE.set_options :attach_timeout => 5.0
   This was previously available as class method.
 * Fix for Autoit auto-registration. (Bret) 
-* Fix for IE6, 7 and 8 file downloads. (Željko Filipin & Jarmo Pertman)
+* Fix for IE6, 7 and 8 file downloads. (Zeljko Filipin & Jarmo Pertman)
 * Replaced REXML with Nokogiri for xml parsing. (Aidy Lewis)
 * Option now supports :label attribute http://jira.openqa.org/browse/WTR-297
 * Patch for IE.close causing WIN32OLE errors http://jira.openqa.org/browse/WTR-304 (Tony)
 * Watir::IE.inspect issue fixed: http://jira.openqa.org/browse/WTR-180 (Jarib)
 * Fix for Browser#execute_script on IE7. (Jarib)
 * Removed ActiveSupport dependency. (Jarib)
+* Fix Browser#status so it works even when the status bar is not visible. (Bret)
+* Fix bug when using "each" with nested tables. 
+  http://jira.openqa.org/browse/WTR-324 (Alan Baird)
 
 === Structure Improvements
 
 * Lots of rework of the FireWatir code, including removing duplication and 
   dead code, renaming variables, and simplifying code. Also a few performance
-  improvements.
+  improvements. (Bret)
 * Rename source file names for consistency.
   
 === Unit Tests
 
 * Add tests demonstrating known bugs.
-* Make the "window" tests run more reliably.
-* Relocate unreliable tests.
+* Make the "window" tests run more reliably. (Bret)
+* Relocate unreliable tests. (Bret)
 * Tag tests that are known to fail on IE or Firefox.
 * Fixed one test that was failing on non-English platforms. (Jarib)
-* New Rake task (:test) runs all tests.
+* New Rake task (:test) runs all tests. (Jim Matthews)
 * Use ci_reporter to provide more detailed test results for watirbuild.com. 
-  Use xls transform to format results.
+  Use xls transform to format results. (Jim Matthews)
 * Add WatirSpec submodule + load it in Rakefile if available. (Jarib)
