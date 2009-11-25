@@ -5,12 +5,16 @@
 
 == Version 1.6.5
 
+Charley Baker was release manager for this release of Watir.
+
 === New Features (Both IE and Firefox)
 
 * Browser.attach is now available.
 * Browser.options and Browser.set_options are now available.
 * Add support for definition lists, this adds these methods:
   dd, dt, dl, dds, dts, dls. (Jarib)
+* Added support for "visible?" method to both IE and Firefox. Closes
+  http://jira.openqa.org/browse/WTR-262 (Tony)
 * Hidden#visible? should always return false. (Jarib)
 * New method execute_script.
 * Add ElementCollections#size as alias of length. (Jarib)
@@ -72,7 +76,7 @@
     IE.set_options :attach_timeout => 5.0
   This was previously available as class method.
 * Fix for Autoit auto-registration. (Bret) 
-* Fix for IE6, 7 and 8 file downloads. (Zeljko Filipin & Jarmo Pertman)
+* Fix for IE6, 7 and 8 file uploads. (Zeljko Filipin & Jarmo Pertman)
 * Replaced REXML with Nokogiri for xml parsing. (Aidy Lewis)
 * Option now supports :label attribute http://jira.openqa.org/browse/WTR-297
 * Patch for IE.close causing WIN32OLE errors http://jira.openqa.org/browse/WTR-304 (Tony)
@@ -87,7 +91,7 @@
 
 * Lots of rework of the FireWatir code, including removing duplication and 
   dead code, renaming variables, and simplifying code. Also a few performance
-  improvements. (Bret)
+  improvements. (Bret & Charley)
 * Rename source file names for consistency.
   
 === Unit Tests
