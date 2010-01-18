@@ -907,7 +907,7 @@ module Watir
       # strip any trailing slash from the xpath expression (as used in watir unit tests)
       xpath.chop! unless (/\/$/ =~ xpath).nil?
       
-      doc.search(xpath).each do |element|
+      doc.xpath(xpath).each do |element|
         modifiedXpath = element.path
         temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
         selectedElements << temp if temp != nil
