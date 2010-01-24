@@ -1024,7 +1024,7 @@ module FireWatir
     def current_os
       return @current_os if defined?(@current_os)
 
-      platform = RUBY_PLATFORM =~ /java/ ? java.lang.System.getProperty("os.name") : RUBY_PLATFORM
+      platform = RUBY_PLATFORM =~ /java/ ? Java::java.lang.System.getProperty("os.name") : RUBY_PLATFORM
 
       @current_os = case platform
                     when /mingw32|mswin|windows/i
@@ -1037,7 +1037,6 @@ module FireWatir
     end
 
     def path_from_registry
-      raise NotImplementedError, "(need to know how to access windows registry on JRuby)" if RUBY_PLATFORM =~ /java/
       require 'win32/registry.rb'
       lm = Win32::Registry::HKEY_LOCAL_MACHINE
       lm.open('SOFTWARE\Mozilla\Mozilla Firefox') do |reg|
@@ -1045,6 +1044,14 @@ module FireWatir
         if entry = reg1.find { |key, type, data| key =~ /pathtoexe/i }
           return entry.last
         end
+      end
+    rescue LoadError
+      if RUBY_PLATFORM =~ /java/
+        return(ENV['FIREFOX_HOME'] or raise(
+          NotImplementedError,
+          'No Registry support in this JRuby; upgrade or set FIREFOX_HOME'))
+      else
+        raise
       end
     end
 
