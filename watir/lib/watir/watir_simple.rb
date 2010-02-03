@@ -48,7 +48,7 @@ module Watir
 # = Note
 # Most action methods in Watir::Simple will automatically wait for the browser
 # not to be busy before and after they perform the specified action.
-#
+#--
 # revision: $Revision$
   module Simple
 
@@ -181,7 +181,7 @@ module Watir
 
   # Select an item from a selectbox (a.k.a "combo box", or "pulldown")
   # The selectbox is chose by matching its name attribute.
-  # The item is selected based on the text content of <OPTION> tags.
+  # The item is selected based on the text content of <tt><OPTION></tt> tags.
 	def select_from_combobox_with_name(name, text)
 		wait_before_and_after {	@@browser.selectBox(:name, name).select(text) }
 	end
@@ -189,7 +189,7 @@ module Watir
 
   # Select an item from a selectbox (a.k.a "combo box", or "pulldown")
   # The selectbox is chose by matching its id attribute.
-  # The item is selected based on the text content of <OPTION> tags.
+  # The item is selected based on the text content of <tt><OPTION></tt> tags.
   def select_from_combobox_with_id(id, text)
 		wait_before_and_after {	@@browser.selectBox(:id, id).select(text) }
 	end
@@ -198,7 +198,7 @@ module Watir
   # Select an item from a selectbox (a.k.a "combo box", or "pulldown")
   # The selectbox is chose by matching its order of appearance in the
   # document.
-  # The item is selected based on the text content of <OPTION> tags.
+  # The item is selected based on the text content of <tt><OPTION></tt> tags.
   def select_from_combobox_with_index(index, text)
 		wait_before_and_after {	@@browser.selectBox(:index, index).select(text) }
 	end
