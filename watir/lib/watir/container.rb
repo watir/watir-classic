@@ -2,18 +2,18 @@ module Watir
   # This module contains the factory methods that are used to access most html objects
   #
   # For example, to access a button on a web page that has the following html
-  #  <input type = button name= 'b1' value='Click Me' onClick='javascript:doSomething()'>
+  #  <input type=button name='b1' value='Click Me' onClick='javascript:doSomething()'>
   #
-  # the following watir code could be used
+  # the following watir code could be used to click the button
   #
-  #  ie.button(:name, 'b1').click
+  #  browser.button(:name, 'b1').click
   #
-  # or
+  # or to find the name attribute
   #
-  #  ie.button(:value, 'Click Me').to_s
+  #  browser.button(:value, 'Click Me').name
   #
   # there are many methods available to the Button object
-  #
+  #--
   # Is includable for classes that have @container, document and ole_inner_elements
   module Container
     include Watir::Exception
@@ -43,7 +43,9 @@ module Watir
       @container.logger.debug(what) if @logger
     end
     
-    # Wait until Internet Explorer has finished loading the page.
+    # Wait until Browser has finished loading the page.
+		#--
+		# called explicitly by most click and set methods
     def wait(no_sleep=false)
       @container.wait(no_sleep)
     end
@@ -58,7 +60,7 @@ module Watir
     end
     private :process_default
     
-    def set_container container
+    def set_container container #:nodoc:
       @container = container 
       @page_container = container.page_container
     end
@@ -79,10 +81,11 @@ module Watir
                         end"
     end
     
-    #
+    #--
     #           Factory Methods
-    #
-    
+    #++
+    public
+
     # this method is the main way of accessing a frame
     #   *  how   - how the frame is accessed. This can also just be the name of the frame.
     #   *  what  - what we want to access.
@@ -93,10 +96,9 @@ module Watir
     #
     # Typical usage:
     #
-    #   ie.frame(:index, 1)
-    #   ie.frame(:name, 'main_frame')
-    #   ie.frame('main_frame')        # in this case, just a name is supplied
-    public
+    #   browser.frame(:index, 1)
+    #   browser.frame(:name, 'main_frame')
+    #   browser.frame('main_frame')        # in this case, just a name is supplied
     def frame(how, what=nil)
       how, what = process_default :name, how, what
       Frame.new(self, how, what)
@@ -186,7 +188,7 @@ module Watir
       ModalDialog.new(self, how, what)
     end
 
-    # This is the main method for accessing a button. Often declared as an <input type = submit> tag.
+    # This is the main method for accessing a button. Often declared as an <tt><input type = submit></tt> tag.
     #  *  how   - symbol - how we access the button, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
     #
@@ -226,7 +228,7 @@ module Watir
       Buttons.new(self)
     end
     
-    # This is the main method for accessing a file field. Usually an <input type = file> HTML tag.
+    # This is the main method for accessing a file field. Usually an <tt><input type = file></tt> HTML tag.
     #  *  how   - symbol - how we access the field, valid values are
     #    :index      - find the file field using index
     #    :id         - find the file field using id attribute
@@ -257,7 +259,8 @@ module Watir
       FileFields.new(self)
     end
     
-    # This is the main method for accessing a text field. Usually an <input type = text> HTML tag. or a text area - a  <textarea> tag
+    # This is the main method for accessing a text field. Usually an <tt><input type=text></tt> HTML tag.
+		# or a text area - a  <tt><textarea></tt> tag
     #  *  how   - symbol - how we access the field, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
     #
@@ -286,7 +289,7 @@ module Watir
       TextFields.new(self)
     end
     
-    # This is the main method for accessing a hidden field. Usually an <input type = hidden> HTML tag
+    # This is the main method for accessing a hidden field. Usually an <tt><input type = hidden></tt> HTML tag
     #
     #  *  how   - symbol - how we access the hidden field, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
@@ -316,7 +319,7 @@ module Watir
       Hiddens.new(self)
     end
     
-    # This is the main method for accessing a selection list. Usually a <select> HTML tag.
+    # This is the main method for accessing a selection list. Usually a <tt><select></tt> HTML tag.
     #  *  how   - symbol - how we access the selection list, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
     #
@@ -346,7 +349,7 @@ module Watir
       SelectLists.new(self)
     end
     
-    # This is the main method for accessing a check box. Usually an <input type = checkbox> HTML tag.
+    # This is the main method for accessing a check box. Usually an <tt><input type = checkbox></tt> HTML tag.
     #
     #  *  how   - symbol - how we access the check box - :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
@@ -358,16 +361,16 @@ module Watir
     #
     # Typical usage
     #
-    #    ie.checkbox(:id, 'send_email')                    # access the check box with an id of send_mail
-    #    ie.checkbox(:name, 'send_copy')                   # access the check box with a name of send_copy
-    #    ie.checkbox(:name, /n_/)                          # access the first check box whose name matches n_
-    #    ie.checkbox(:index, 2)                            # access the second check box on the page (1 based, so the first field is accessed with :index,1)
+    #   ie.checkbox(:id, 'send_email')                    # access the check box with an id of send_mail
+    #   ie.checkbox(:name, 'send_copy')                   # access the check box with a name of send_copy
+    #   ie.checkbox(:name, /n_/)                          # access the first check box whose name matches n_
+    #   ie.checkbox(:index, 2)                            # access the second check box on the page (1 based, so the first field is accessed with :index,1)
     #
     # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
     #
-    #  <input type = checkbox name = email_frequency value = 'daily' > Daily Email
-    #  <input type = checkbox name = email_frequency value = 'Weekly'> Weekly Email
-    #  <input type = checkbox name = email_frequency value = 'monthly'>Monthly Email
+    #		<input type = checkbox name = email_frequency value = 'daily' > Daily Email
+    #		<input type = checkbox name = email_frequency value = 'Weekly'> Weekly Email
+    #		<input type = checkbox name = email_frequency value = 'monthly'>Monthly Email
     #
     # Watir can access these using the following:
     #
@@ -389,7 +392,7 @@ module Watir
       CheckBoxes.new(self)
     end
     
-    # This is the main method for accessing a radio button. Usually an <input type = radio> HTML tag.
+    # This is the main method for accessing a radio button. Usually an <tt><input type = radio></tt> HTML tag.
     #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
     #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
@@ -478,9 +481,9 @@ module Watir
     #   ie.li(:index,2)                    # access the second li on the page
     #   ie.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #   
-#    def li(how, what=nil)
-#      return Li.new(self, how, what)
-#    end
+		#    def li(how, what=nil)
+		#      return Li.new(self, how, what)
+		#    end
     
     # this is the main method for accessing the lis iterator.
     #
@@ -561,7 +564,7 @@ module Watir
       return Areas.new(self)
     end
     
-    # This is the main method for accessing images - normally an <img src="image.gif"> HTML tag.
+    # This is the main method for accessing images - normally an <tt><img src="image.gif"></tt> HTML tag.
     #  *  how   - symbol - how we access the image, :index, :id, :name, :src, :title or :alt are supported
     #  *  what  - string, integer or regular expression - what we are looking for,
     #
