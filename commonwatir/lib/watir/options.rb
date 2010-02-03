@@ -1,3 +1,4 @@
+#--
 # watir/options
 require 'rubygems'
 

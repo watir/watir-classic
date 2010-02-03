@@ -1,4 +1,5 @@
-# The 'watir' library loads the common watir code, common to all watir
+#--
+#  The 'watir' library loads the common watir code, common to all watir
 # implementations. The 'watir/browser' library will autoload the actual
 # implementations.
 

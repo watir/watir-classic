@@ -1,3 +1,4 @@
+#--
 # watir/browsers
 # Define browsers supported by Watir
 
