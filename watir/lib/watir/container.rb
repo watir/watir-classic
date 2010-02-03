@@ -44,8 +44,8 @@ module Watir
     end
     
     # Wait until Browser has finished loading the page.
-		#--
-		# called explicitly by most click and set methods
+    #--
+    # called explicitly by most click and set methods
     def wait(no_sleep=false)
       @container.wait(no_sleep)
     end
@@ -260,7 +260,7 @@ module Watir
     end
     
     # This is the main method for accessing a text field. Usually an <tt><input type=text></tt> HTML tag.
-		# or a text area - a  <tt><textarea></tt> tag
+    # or a text area - a  <tt><textarea></tt> tag
     #  *  how   - symbol - how we access the field, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
     #
@@ -368,9 +368,9 @@ module Watir
     #
     # In many instances, checkboxes on an html page have the same name, but are identified by different values. An example is shown next.
     #
-    #		<input type = checkbox name = email_frequency value = 'daily' > Daily Email
-    #		<input type = checkbox name = email_frequency value = 'Weekly'> Weekly Email
-    #		<input type = checkbox name = email_frequency value = 'monthly'>Monthly Email
+    #   <input type = checkbox name = email_frequency value = 'daily' > Daily Email
+    #   <input type = checkbox name = email_frequency value = 'Weekly'> Weekly Email
+    #   <input type = checkbox name = email_frequency value = 'monthly'>Monthly Email
     #
     # Watir can access these using the following:
     #
@@ -481,9 +481,9 @@ module Watir
     #   browser.li(:index,2)                    # access the second li on the page
     #   browser.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
     #   
-		#    def li(how, what=nil)
-		#      return Li.new(self, how, what)
-		#    end
+    #    def li(how, what=nil)
+    #      return Li.new(self, how, what)
+    #    end
     
     # this is the main method for accessing the lis iterator.
     #
