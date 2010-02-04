@@ -151,6 +151,7 @@ module Watir
     include CommonCollection
     def element_class; Li; end
     
+    private
     def set_show_items
       super
       @show_attributes.delete( "name")
