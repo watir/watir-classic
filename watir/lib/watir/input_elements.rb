@@ -220,7 +220,9 @@ module Watir
   
   # Returned by the Watir::Container#button method
   class Button < InputElement
+    #:stopdoc:
     INPUT_TYPES = ["button", "submit", "image", "reset"]
+    #:startdoc:
   end
 
   #
@@ -230,10 +232,18 @@ module Watir
   # This class is the main class for Text Fields
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
   class TextField < InputElement
+    #:stopdoc:
     INPUT_TYPES = ["text", "password", "textarea"]
     
     def_wrap_guard :size
+
+    # Returns true or false if the text field is read only.
+    #   Raises UnknownObjectException if the object can't be found.
+    def_wrap :readonly?, :readOnly
+
+    #:startdoc:
     
+    # return number of maxlength attribute
     def maxlength
       assert_exists
       begin
@@ -243,9 +253,6 @@ module Watir
       end
     end
         
-    # Returns true or false if the text field is read only.
-    #   Raises UnknownObjectException if the object can't be found.
-    def_wrap :readonly?, :readOnly
     
     def text_string_creator
       n = []
@@ -263,7 +270,7 @@ module Watir
       r.join("\n")
     end
     
-    def assert_not_readonly
+    def assert_not_readonly #:nodoc:
       if self.readonly?
         raise ObjectReadOnlyException, 
           "Textfield #{@how} and #{@what} is read only."
@@ -273,7 +280,10 @@ module Watir
     # Returns true if the text field contents is matches the specified target,
     # which can be either a string or a regular expression.
     #   Raises UnknownObjectException if the object can't be found
-    def verify_contains(target) # FIXME: verify_contains should have same name and semantics as IE#contains_text (prolly make this work for all elements)
+    #--
+    # I vote for deprecating this
+    # we should use text_field().text.include?(some) or text.match(/some/) instead of this method
+    def verify_contains(target) #:nodoc:
       assert_exists
       if target.kind_of? String
         return true if self.value == target
@@ -380,11 +390,11 @@ module Watir
       @o.value = v.to_s
     end
     
-    def requires_typing
+    def requires_typing #:nodoc:
     	@type_keys = true
     	self
     end
-    def abhors_typing
+    def abhors_typing #:nodoc:
     	@type_keys = false
     	self
     end
@@ -433,7 +443,9 @@ module Watir
   # this class can be used to access hidden field objects
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
   class Hidden < TextField
+    #:stopdoc:
     INPUT_TYPES = ["hidden"]
+    #:startdoc:
     
     # set is overriden in this class, as there is no way to set focus to a hidden field
     def set(n)
@@ -464,13 +476,16 @@ module Watir
   
   # For fields that accept file uploads
   # Windows dialog is opened and handled in this case by autoit 
-  # launching into a new process. 
+  # launching into a new process.
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#file_field method
   class FileField < InputElement
+    #:stopdoc:
     INPUT_TYPES = ["file"]
     POPUP_TITLES = ['Choose file', 'Choose File to Upload']
+    #:startdoc:
     
     # set the file location in the Choose file dialog in a new process
-    # will raise a Watir Exception if AutoIt is not correctly installed
+    # will raise a WatirException if AutoIt is not correctly installed
     def set(path_to_file)
       assert_exists
       require 'watir/windowhelper'
@@ -503,14 +518,12 @@ module Watir
     end
   end
   
-  # This class is the class for radio buttons and check boxes.
-  # It contains methods common to both.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or Watir::Container#radio methods
-  #
+  # This class contains common methods to both radio buttons and check boxes.
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or by Watir::Container#radio methods
+  #--
   # most of the methods available to this element are inherited from the Element class
-  #
   class RadioCheckCommon < InputElement
-    def locate
+    def locate #:nodoc:
       @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value)
     end
     def initialize(container, how, what, value=nil)
@@ -523,9 +536,9 @@ module Watir
     end
     
     # This method determines if a radio button or check box is set.
-    # Returns true is set/checked or false if not set/checked.
+    # Returns true if set/checked; false if not set/checked.
     # Raises UnknownObjectException if its unable to locate an object.
-    def set? # could be just "checked?"
+    def set? 
       assert_exists
       return @o.checked
     end
@@ -545,6 +558,7 @@ module Watir
   #  this class makes the docs better
   #++
   # This class is the watir representation of a radio button.
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#radio method
   class Radio < RadioCheckCommon
     INPUT_TYPES = ["radio"]
     # This method clears a radio button. One of them will almost always be set.
@@ -572,11 +586,12 @@ module Watir
   end
   
   # This class is the watir representation of a check box.
+  # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
   class CheckBox < RadioCheckCommon
     INPUT_TYPES = ["checkbox"]
-    # With no arguments supplied, sets the check box.
-    # If the optional value is supplied, the checkbox is set, when its true and 
-    # cleared when its false
+    # This method checks or unchecks the checkbox.
+    # With no arguments supplied it sets the checkbox.
+    # Setting false argument unchecks/clears the checkbox.
     #   Raises UnknownObjectException if it's unable to locate an object
     #         ObjectDisabledException if the object is disabled
     def set(value=true)
