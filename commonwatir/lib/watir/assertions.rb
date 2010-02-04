@@ -1,7 +1,7 @@
 require 'test/unit/assertions'
 
 module Watir
-  # Verification methods
+  # Verification methods used by Watir::TestCase
   module Assertions
   include Test::Unit::Assertions
     
