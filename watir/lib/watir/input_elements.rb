@@ -1,6 +1,6 @@
 module Watir
   
-  class InputElement < Element
+  class InputElement < Element #:nodoc:all
     def locate
       @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
     end
@@ -19,10 +19,12 @@ module Watir
   # This class is the way in which select boxes are manipulated.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
   class SelectList < InputElement
+    #:stopdoc:
     INPUT_TYPES = ["select-one", "select-multiple"]
-    
+    #exposed to Option class
     attr_accessor :o
-    
+    #:startdoc:
+
     # This method clears the selected items in the select box
     def clear
       assert_exists
@@ -58,7 +60,7 @@ module Watir
     # Selects something from the select box
     #  * name  - symbol  :value or :text - how we find an item in the select box
     #  * item  - string or reg exp - what we are looking for
-    def select_item_in_select_list(attribute, value)
+    def select_item_in_select_list(attribute, value) #:nodoc:
       assert_exists
       highlight(:set)
       found = false
@@ -87,7 +89,7 @@ module Watir
       highlight(:clear)
     end
     
-    # Returns all the items in the select list as an array.
+    # Returns array of all text items displayed in a select box
     # An empty array is returned if the select box has no contents.
     # Raises UnknownObjectException if the select box is not found
     def options 
@@ -98,7 +100,7 @@ module Watir
       return returnArray
     end
     
-    # Returns the selected items as an array.
+    # Returns array of the selected text items in a select box
     # Raises UnknownObjectException if the select box is not found.
     def selected_options
       assert_exists
@@ -127,6 +129,25 @@ module Watir
       getSelectedItems.grep(text_or_regexp).size > 0
     end
 
+    # this method provides the access to the <tt><option></tt> item in select_list
+    #
+    # Usage example:
+    #
+    # Given the following html:
+    #
+    #   <select  id="gender">
+    #     <option value="U">Unknown</option>
+    #     <option value="M" selected>Male</option>
+    #     <option value="F">Female</option>
+    #   </select>
+    #
+    # get the +value+ attribute of option with visible +text+ 'Female'
+    #   browser.select_list(:id, 'gender').option(:text, 'Female').value #=> 'F'
+    # or find out if the +value+ 'M' is selected
+    #   browser.select_list(:id, 'gender').option(:value, 'M').selected #=> true
+    #
+    #  * attribute  - Symbol :value, :text or other attribute - how we find an item in the select box
+    #  * value  - string or reg exp - what we are looking for
     def option(attribute, value)
       assert_exists
       Option.new(self, attribute, value)
@@ -134,25 +155,29 @@ module Watir
   end
   
   module OptionAccess
+    # text of SelectList#option
     def text
       @option.text
     end
+    # value of SelectList#option
     def value
       @option.value
     end
+    # return true if SelectList#option is selected, else false
     def selected
       @option.selected
     end
   end
   
-  class OptionWrapper
+  class OptionWrapper #:nodoc:all
     include OptionAccess
     def initialize(option)
       @option = option
     end
   end
   
-  # An item in a select list
+  # An item in a select list.
+  # Normally a user would not need to create this object as it is returned by the Watir::SelectList#option method
   class Option
     include OptionAccess
     include Watir::Exception
@@ -181,6 +206,8 @@ module Watir
       end
     end
     private :assert_exists
+    
+    # select the accessed option in select_list
     def select
       assert_exists
       @select_list.select_item_in_select_list(@how, @what)
