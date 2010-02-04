@@ -4,7 +4,7 @@ module Watir
     
   # presumes element_class or element_tag is defined
   # for subclasses of ElementCollections
-  module CommonCollection
+  module CommonCollection #:nodoc:all
     def element_tag
       element_class::TAG
     end
@@ -17,7 +17,7 @@ module Watir
   
   # This class is used as part of the .show method of the iterators class
   # it would not normally be used by a user
-  class AttributeLengthPairs
+  class AttributeLengthPairs #:nodoc:all
     
     # This class is used as part of the .show method of the iterators class
     # it would not normally be used by a user
@@ -68,6 +68,8 @@ module Watir
   # it would normally only be accessed by the Watir::Container#buttons method
   class Buttons < ElementCollections
     def element_class; Button; end
+    # number of buttons
+    #   browser.buttons.length
     def length
       get_length_of_input_objects(["button", "submit", "image"])
     end
@@ -84,6 +86,8 @@ module Watir
   # normal access is via the Container#file_fields method
   class FileFields < ElementCollections
     def element_class; FileField; end
+    # number of file_fields
+    #   browser.file_fields.length
     def length
       get_length_of_input_objects(["file"])
     end
@@ -100,6 +104,8 @@ module Watir
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
   class CheckBoxes < ElementCollections
     def element_class; CheckBox; end
+    # number of checkboxes
+    #   browser.checkboxes.length
     def length
       get_length_of_input_objects("checkbox")
     end
@@ -114,6 +120,8 @@ module Watir
   # Normally a user would not need to create this object as it is returned by the Watir::Container#radios method
   class Radios < ElementCollections
     def element_class; Radio; end
+    # number of radios
+    #   browser.radios.length
     def length
       get_length_of_input_objects("radio")
     end
@@ -180,6 +188,8 @@ module Watir
   # An instance is returned by Watir::Container#images
   class Images < ElementCollections
     def element_class; Image; end
+    # number of images
+    #   browser.images.length
     def length
       all = @container.document.all
       imgs = []
@@ -199,6 +209,8 @@ module Watir
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_fields method
   class TextFields < ElementCollections
     def element_class; TextField; end
+    # number of text_fields
+    #   browser.text_fields.length
     def length
       # text areas are also included in the TextFields, but we need to get them seperately
       get_length_of_input_objects(["text", "password"]) +
@@ -210,6 +222,8 @@ module Watir
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hiddens method
   class Hiddens < ElementCollections
     def element_class; Hidden; end
+    # number of hidden elements
+    #   browser.hiddens.length
     def length
       get_length_of_input_objects("hidden")
     end
