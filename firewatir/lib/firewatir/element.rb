@@ -1028,7 +1028,7 @@ module FireWatir
     # Returns the class name of the element
     def_wrap :class_name, :className
     # Return the html of the object
-    def_wrap :html, :innerHTML
+    def_wrap :html, :outerHTML
     # Return the action of form
     def_wrap :action
 
