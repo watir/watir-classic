@@ -26,19 +26,6 @@ class TC_JSEvents < Test::Unit::TestCase
     assert(browser.text.include?("PASS") )
   end
   
-  #onMouseOver tests
-  #window status
-  
-  def test_no_status_bar_exception
-    browser.link(:text, "New Window No Status Bar").click
-    status_bar_test_win = nil
-    # Note: this test will fail if the Google toolbar popup blocker is turned on
-    assert_nothing_raised { status_bar_test_win = Watir::IE.attach(:title, "Pass Page") }
-    assert_raises( Watir::NoStatusBarException ) { status_bar_test_win.status }
-    status_bar_test_win.close
-    status_bar_test_win = nil
-  end
-  
   def test_page_nostatus
     assert_equal("Done", browser.status) 
   end
