@@ -1,0 +1,112 @@
+= FireWatir
+This is FireWatir, Web Application Testing In Ruby using Firefox browser
+
+Project Home:: http://www.watir.com
+Gem:: http://gemcutter.org/gems/firewatir
+Source Code:: http://github.com/bret/watir
+General Usage Discussions:: http://groups.google.com/group/watir-general
+Development Discussions:: http://rubyforge.org/mailman/listinfo/wtr-development
+Bugs, Issues, Roadmap:: http://jira.openqa.org/browse/WTR
+
+== DESCRIPTION
+
+Firewatir is part of Watir project, a family of open-source drivers for automating web browsers.
+For other browsers please see www.watir.com
+
+== EXAMPLES
+* http://watir.com/examples
+
+Start new Firefox browser driver
+
+  # using Watir::Browser interface
+  require 'watir'
+  Watir::Browser.default = 'firefox'
+  browser = Watir::Browser.new
+
+  # or using Firewatir library directly
+  require 'firewatir'
+  browser = FireWatir::Firefox.new
+
+Typical usage
+
+  require "firewatir"
+  # go to the page you want to test
+  ff = FireWatir::Firefox.start("http://myserver/mypage")
+
+  # enter "Angrez" into an input field named "username"
+  ff.text_field(:name, "username").set("Angrez")
+
+  # enter "Ruby Co" into input field with id "company_ID"
+  ff.text_field(:id, "company_ID").set("Ruby Co")
+
+  # click on a link that has "green" somewhere in the text that is displayed
+  # to the user, using a regular expression
+  ff.link(:text, /green/)
+
+  # click button that has a caption of "Cancel"
+  ff.button(:value, "Cancel").click
+
+== FEATURES
+
+FireWatir allows your script to read and interact with HTML objects--HTML tags and their attributes and contents.
+Types of objects that FireWatir can identify include:
+
+  Type         Description
+  ===========  ===============================================================
+  button       <tt><input></tt> tags, with the type="button" attribute
+  check_box    <tt><input></tt> tags, with the type="checkbox" attribute
+  div          <tt><div></tt> tags
+  form
+  frame
+  hidden       hidden <tt><input></tt> tags
+  image        <tt><img></tt> tags
+  label
+  link         <tt><a></tt> (anchor) tags
+  p            <tt><p></tt> (paragraph) tags
+  radio        radio buttons; <tt><input></tt> tags, with the type="radio" attribute
+  select_list  <tt><select></tt> tags, known informally as drop-down boxes
+  span         <tt><span></tt> tags
+  table        <tt><table></tt> tags
+  text_field   <tt><input></tt> tags with the type="text" attribute (a single-line
+               text field), the type="text_area" attribute (a multi-line
+               text field), and the type="password" attribute (a
+               single-line field in which the input is replaced with asterisks)
+
+In general, there are several ways to identify a specific object.  FireWatir's
+syntax is in the form (how, what), where "how" is a means of identifying
+the object, and "what" is the specific string or regular expression
+that FireWatir will seek, as shown in the examples above.  Available "how"
+options depend upon the type of object, but here are a few examples:
+
+   How           Description
+   ============  ===============================================================
+   :id           Used to find an object that has an "id=" attribute. Since each
+                 id should be unique, according to the XHTML specification,
+                 this is recommended as the most reliable method to find an
+                 object.
+   :name         Used to find an object that has a "name=" attribute.  This is
+                 useful for older versions of HTML, but "name" is deprecated
+                 in XHTML.
+   :value        Used to find a text field with a given default value, or a
+                 button with a given caption
+   :index        Used to find the nth object of the specified type on a page.
+                 For example, button(:index, 2) finds the second button.
+                 Current versions of FireWatir use 1-based indexing, but future
+                 versions will use 0-based indexing.
+   :xpath	     The xpath expression for identifying the element.
+
+Note that the XHTML specification requires that tags and their attributes be
+in lower case.  FireWatir doesn't enforce this; FireWatir will find tags and
+attributes whether they're in upper, lower, or mixed case.  This is either
+a bug or a feature.
+
+
+== INSTALL
+* http://wiki.openqa.org/display/WTR/FireWatir+Installation
+
+Firewatir gen is normally installed during watir gem installation
+however you need to install Jssh to communicate with Firefox.
+
+  [sudo] gem install firewatir
+
+
