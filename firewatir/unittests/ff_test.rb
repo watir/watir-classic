@@ -9,7 +9,7 @@ class TC_FirefoxBrowser < Test::Unit::TestCase
     def setup()
     end
     
-    def test_close_all_firefox_browsers
+    def close_all_firefox_browsers
         ff1 = Watir::Browser.new
         ff2 = Watir::Browser.new
         ff3 = Watir::Browser.new
@@ -27,12 +27,20 @@ class TC_FirefoxBrowser < Test::Unit::TestCase
  
     def test_status
         # Create the browser as all browsers are closed in above test case.
-        browser = Watir::Browser.new
+        #browser = Watir::Browser.new
         goto_page("radioButtons1.html")
         status = browser.status
         assert_equal(status, "Done")
     end
     
+    def test_element_html
+	  # Create the browser as all browsers are closed in above test case.
+        #browser = Watir::Browser.new
+        goto_page("buttons1.html")
+        html = browser.button(:id, "b7").html
+        assert_equal(html, "Click Me2")
+    end
+
     def teardown()
         
     end

@@ -334,7 +334,7 @@ module FireWatir
         end  
 
         if current_os == :windows
-            system("taskkill /im Firefox.exe /f /t >nul 2>&1")
+            system("taskkill /im firefox.exe /f /t >nul 2>&1")
         end
     end
 

@@ -109,7 +109,7 @@ module FireWatir
           end
         end
       end
-
+    
       if return_value == "null" || return_value =~ /\[object\s.*\]/
         return_value = ""
       end
@@ -1028,7 +1028,7 @@ module FireWatir
     # Returns the class name of the element
     def_wrap :class_name, :className
     # Return the html of the object
-    def_wrap :html, :outerHTML
+    def_wrap :html, :innerHTML
     # Return the action of form
     def_wrap :action
 
