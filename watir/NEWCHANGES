@@ -2,6 +2,7 @@
 
 * Added close_all method to firefox. Closes http://jira.openqa.org/browse/WTR-222 (Angrez)
 * Fixed status method for firefox.  (Angrez)
+* Fixed url method for firefox. Closes http://jira.openqa.org/browse/WTR-428 (Alister)
 
 == Version 1.6.5
 
