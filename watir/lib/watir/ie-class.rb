@@ -3,7 +3,7 @@ module Watir
     include Watir::Exception
     include Container
     include PageContainer
-    
+
     # Maximum number of seconds to wait when attaching to a window
     @@attach_timeout = 2.0 # default value
     def self.attach_timeout
@@ -15,7 +15,7 @@ module Watir
 
     # Return the options used when creating new instances of IE.
     # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
-		def self.options 	
+		def self.options
 			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
 	  end
     # set values for options used when creating new instances of IE.
@@ -24,7 +24,7 @@ module Watir
 				send "#{name}=", value
 			end
 		end
-		# The globals $FAST_SPEED and $HIDE_IE are checked both at initialization 
+		# The globals $FAST_SPEED and $HIDE_IE are checked both at initialization
 		# and later, because they
 		# might be set after initialization. Setting them beforehand (e.g. from
 		# the command line) will affect the class, otherwise it is only a temporary
@@ -47,55 +47,55 @@ module Watir
 			$HIDE_IE = nil
 			@@visible = x
 		end
-		    
+
     # Used internally to determine when IE has finished loading a page
     READYSTATE_COMPLETE = 4
-       
+
     # The default color for highlighting objects as they are accessed.
     HIGHLIGHT_COLOR = 'yellow'
-    
+
     # IE inserts some element whose tagName is empty and just acts as block level element
     # Probably some IE method of cleaning things
     # To pass the same to the xml parser we need to give some name to empty tagName
     EMPTY_TAG_NAME = "DUMMY"
-    
+
     # The time, in seconds, it took for the new page to load after executing the
     # the last command
     attr_reader :down_load_time
-    
+
     # the OLE Internet Explorer object
     attr_accessor :ie
-    
+
     # access to the logger object
     attr_accessor :logger
-    
+
     # this contains the list of unique urls that have been visited
     attr_reader :url_list
-    
+
     # Create a new IE window. Works just like IE.new in Watir 1.4.
     def self.new_window
       ie = new true
       ie._new_window_init
       ie
     end
-    
+
     # Create an IE browser.
-    def initialize suppress_new_window=nil 
-      _new_window_init unless suppress_new_window 
+    def initialize suppress_new_window=nil
+      _new_window_init unless suppress_new_window
     end
-    
+
     def _new_window_init
       create_browser_window
       initialize_options
       goto 'about:blank' # this avoids numerous problems caused by lack of a document
     end
-    
+
     # Create a new IE Window, starting at the specified url.
     # If no url is given, start empty.
     def self.start url=nil
       start_window url
     end
-    
+
     # Create a new IE window, starting at the specified url.
     # If no url is given, start empty. Works like IE.start in Watir 1.4.
     def self.start_window url=nil
@@ -112,15 +112,15 @@ module Watir
       ie._new_process_init
       ie
     end
-    
+
     def _new_process_init
       iep = Process.start
       @ie = iep.window
       @process_id = iep.process_id
       initialize_options
-      goto 'about:blank'      
+      goto 'about:blank'
     end
-    
+
     # Create a new IE window in a new process, starting at the specified URL. 
     # Same as IE.start.
     def self.start_process url=nil
@@ -128,7 +128,7 @@ module Watir
       ie.goto url if url
       ie
     end
-    
+
     # Return a Watir::IE object for an existing IE window. Window can be
     # referenced by url, title, or window handle.
     # Second argument can be either a string or a regular expression in the 
@@ -143,7 +143,7 @@ module Watir
       ie._attach_init(how, what)
       ie
     end
-    
+
     # this method is used internally to attach to an existing window
     def _attach_init how, what
       attach_browser_window how, what
@@ -159,12 +159,12 @@ module Watir
       ie.initialize_options
       ie
     end
-  
+
     def create_browser_window
       @ie = WIN32OLE.new('InternetExplorer.Application')
     end
     private :create_browser_window
-    
+
     def initialize_options
       self.visible = IE.visible
       self.speed = IE.speed
@@ -174,7 +174,7 @@ module Watir
       @error_checkers = []
       @activeObjectHighLightColor = HIGHLIGHT_COLOR
 
-      
+
       @logger = DefaultLogger.new
       @url_list = []
     end
@@ -206,12 +206,12 @@ module Watir
         raise ArgumentError, "Invalid speed: #{how_fast}"
       end
     end
-    
+
     def speed
       return @speed if @speed == :slow
       return @type_keys ? :fast : :zippy
     end
-    
+
     # deprecated: use speed = :fast instead
     def set_fast_speed
     	self.speed = :fast
@@ -221,14 +221,14 @@ module Watir
     def set_slow_speed
     	self.speed = :slow
     end
-    
+
     def visible
       @ie.visible
     end
     def visible=(boolean)
       @ie.visible = boolean if boolean != @ie.visible
     end
-    
+
     # Yields successively to each IE window on the current desktop. Takes a block.
     # This method will not work when
     # Watir/Ruby is run under a service (instead of a user).
@@ -261,7 +261,7 @@ module Watir
       ieTemp = nil
       IE.each do |ie|
         window = ie.ie
-        
+
         case how
         when :url
           ieTemp = window if (what.matches(window.locationURL))
@@ -285,8 +285,8 @@ module Watir
       end
       return ieTemp
     end
-    
-    def attach_browser_window how, what 
+
+    def attach_browser_window how, what
       log "Seeking Window with #{how}: #{what}"
       ieTemp = nil
       begin
@@ -300,14 +300,14 @@ module Watir
       @ie = ieTemp
     end
     private :attach_browser_window
-    
+
     # Return the current window handle
     def hwnd
-      raise "Not attached to a browser" if @ie.nil? 
+      raise "Not attached to a browser" if @ie.nil?
       @hwnd ||= @ie.hwnd
     end
     attr_writer :hwnd
-    
+
     include Watir::Win32
 
   	# Are we attached to an open browser?
@@ -320,34 +320,34 @@ module Watir
       end
     end
     alias :exist? :exists?
-    
+
     # deprecated: use logger= instead
     def set_logger(logger)
       @logger = logger
     end
-    
+
     def log(what)
       @logger.debug(what) if @logger
     end
-    
+
     #
     # Accessing data outside the document
     #
-    
+
     # Return the title of the document
     def title
       @ie.document.title
     end
-    
+
     # Return the status of the window, typically from the status bar at the bottom.
     def status
       return @ie.statusText
     end
-    
+
     #
     # Navigation
     #
-    
+
     # Navigate to the specified URL.
     #  * url - string - the URL to navigate to
     def goto(url)
@@ -355,21 +355,21 @@ module Watir
       wait
       return @down_load_time
     end
-    
+
     # Go to the previous page - the same as clicking the browsers back button
     # an WIN32OLERuntimeError exception is raised if the browser cant go back
     def back
       @ie.GoBack
       wait
     end
-    
+
     # Go to the next page - the same as clicking the browsers forward button
     # an WIN32OLERuntimeError exception is raised if the browser cant go forward
     def forward
       @ie.GoForward
       wait
     end
-    
+
     # Refresh the current page - the same as clicking the browsers refresh button
     # an WIN32OLERuntimeError exception is raised if the browser cant refresh
     def refresh
@@ -387,49 +387,49 @@ module Watir
     rescue WIN32OLERuntimeError
       document.parentWindow.execScript(source.to_s)
     end
-    
+
     # clear the list of urls that we have visited
     def clear_url_list
       @url_list.clear
     end
-    
+
     # Closes the Browser
     def close
       return unless exists?
       @closing = true
       @ie.stop
-      wait
+      wait rescue nil
       chwnd = @ie.hwnd.to_i
       @ie.quit
       while Win32API.new("user32","IsWindow", 'L', 'L').Call(chwnd) == 1
         sleep 0.3
       end
     end
-    
+
     # Maximize the window (expands to fill the screen)
     def maximize
       set_window_state :SW_MAXIMIZE
     end
-    
+
     # Minimize the window (appears as icon on taskbar)
     def minimize
       set_window_state :SW_MINIMIZE
     end
-    
+
     # Restore the window (after minimizing or maximizing)
     def restore
       set_window_state :SW_RESTORE
     end
-    
+
     # Make the window come to the front
     def bring_to_front
       autoit.WinActivate title, ''
     end
-    
+
     def front?
       1 == autoit.WinActive(title, '')
     end
-    
+
     private
     def set_window_state(state)
       autoit.WinSetState title, '', autoit.send(state)
@@ -438,7 +438,7 @@ module Watir
       Watir::autoit
     end
     public
-    
+
     # Send key events to IE window.
     # See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
     # for complete documentation on keys supported and syntax.
@@ -446,30 +446,30 @@ module Watir
       autoit.WinActivate title
       autoit.Send key_string
     end
-    
+
     def dir
       return File.expand_path(File.dirname(__FILE__))
     end
-    
+
     #
     # Document and Document Data
     #
-    
+
     # Return the current document
     def document
       return @ie.document
     end
-    
+
     # returns the current url, as displayed in the address bar of the browser
     def url
       return @ie.LocationURL
     end
-        
+
     #
     # Synchronization
     #
     include Watir::Utils
-    
+
     # Block execution until the page has loaded.
     # =nodoc
     # Note: This code needs to be prepared for the ie object to be closed at 
@@ -480,7 +480,7 @@ module Watir
       a_moment = 0.2 # seconds
       start_load_time = Time.now
 
-      begin      
+      begin
         while @ie.busy # XXX need to add time out
           sleep a_moment
         end
@@ -499,7 +499,7 @@ module Watir
         sleep @pause_after_wait unless no_sleep
         return @down_load_time
       end
-            
+
       while doc = documents_to_wait_for.shift
         begin
           until doc.readyState == "complete" do
@@ -521,30 +521,30 @@ module Watir
       sleep @pause_after_wait unless no_sleep
       @down_load_time
     end
-    
+
     # Error checkers
-    
+
     # this method runs the predefined error checks
     def run_error_checks
       @error_checkers.each { |e| e.call(self) }
     end
-    
+
     # this method is used to add an error checker that gets executed on every page load
     # *  checker   Proc Object, that contains the code to be run
     def add_checker(checker)
       @error_checkers << checker
     end
-    
+
     # this allows a checker to be disabled
     # *  checker   Proc Object, the checker that is to be disabled
     def disable_checker(checker)
       @error_checkers.delete(checker)
     end
-    
+
     #
     # Show me state
     #
-    
+
     # Show all forms displays all the forms that are on a web page.
     def show_forms
       if allForms = document.forms
@@ -561,7 +561,7 @@ module Watir
         puts "No forms"
       end
     end
-    
+
     # this method shows all the images availble in the document
     def show_images
       doc = document
@@ -574,7 +574,7 @@ module Watir
         index += 1
       end
     end
-    
+
     # this method shows all the links availble in the document
     def show_links
       props = ["name", "id", "href"]
@@ -589,7 +589,7 @@ module Watir
       end
       s += "text/src".ljust(text_size)
       s += "\n"
-      
+
       # now get the details of the links
       doc.links.each do |n|
         index += 1
@@ -613,12 +613,12 @@ module Watir
       end
       puts s
     end
-    
+
     # this method shows the name, id etc of the object that is currently active - ie the element that has focus
     # its mostly used in irb when creating a script
     def show_active
       s = ""
-      
+
       current = document.activeElement
       begin
         s += current.invoke("type").to_s.ljust(16)
@@ -635,7 +635,7 @@ module Watir
       end
       s += "\n"
     end
-    
+
     # this method shows all the divs availble in the document
     def show_divs
       divs = document.getElementsByTagName("DIV")
@@ -646,7 +646,7 @@ module Watir
         index += 1
       end
     end
-    
+
     # this method is used to show all the tables that are available
     def show_tables
       tables = document.getElementsByTagName("TABLE")
@@ -657,7 +657,7 @@ module Watir
         index += 1
       end
     end
-    
+
     def show_pres
       pres = document.getElementsByTagName("PRE")
       puts "Found #{ pres.length } pre tags"
@@ -667,7 +667,7 @@ module Watir
         index+=1
       end
     end
-    
+
     # this method shows all the spans availble in the document
     def show_spans
       spans = document.getElementsByTagName("SPAN")
@@ -678,7 +678,7 @@ module Watir
         index += 1
       end
     end
-    
+
     def show_labels
       labels = document.getElementsByTagName("LABEL")
       puts "Found #{labels.length} label tags"
@@ -688,14 +688,14 @@ module Watir
         index += 1
       end
     end
-    
+
     # Gives focus to the frame
     def focus
       document.activeElement.blur
       document.focus
     end
-    
-    
+
+
     # Functions written for using xpath for getting the elements.
     def xmlparser_document_object
     	if @xml_parser_doc == nil
@@ -724,14 +724,14 @@ module Watir
       end
     end
     private :create_xml_parser_doc
-    
+
     def output_xml_parser_doc(name, text)
       file = File.open(name,"w")
       file.print(text)
       file.close
     end
     private :output_xml_parser_doc
-    
+
     #Function Tokenizes the tag line and returns array of tokens.
     #Token could be either tagName or "=" or attribute name or attribute value
     #Attribute value could be either quoted string or single word
@@ -749,11 +749,11 @@ module Watir
         i +=1 while (i < length && outerHtml[i,1] =~ /\s/)
         next if i == length
         currentToken = outerHtml[i,1]
-        
+
         #Either current tag has been closed or user has not closed the tag >
         # and we have received the opening of next element
         break if currentToken =~ /<|>/
-        
+
         #parse quoted value
         if(currentToken == "\"" || currentToken == "'")
           parsingValue = false
@@ -782,7 +782,7 @@ module Watir
       return tokens
     end
     private :tokenize_tagline
-    
+
     # This function get and clean all the attributes of the tag.
     def all_tag_attributes(outerHtml)
       tokens = tokenize_tagline(outerHtml)
@@ -823,7 +823,7 @@ module Watir
       return tagLine
     end
     private :all_tag_attributes
-    
+
     # This function is used to escape the characters that are not valid XML data.
     def xml_escape(str)
       str = str.gsub(/&/,'&amp;')
@@ -833,7 +833,7 @@ module Watir
       str
     end
     private :xml_escape
-    
+
     # Returns HTML Source
     # Traverse the DOM tree rooted at body element
     # and generate the HTML source.
@@ -865,7 +865,7 @@ module Watir
         #tagLine += spaceString
         outerHtml = all_tag_attributes(element.outerHtml) if tagName != EMPTY_TAG_NAME
         tagLine += "<#{tagName} #{outerHtml}"
-        
+
         canHaveChildren = element.canHaveChildren
         if canHaveChildren
           tagLine += ">"
@@ -890,23 +890,23 @@ module Watir
       return htmlString
     end
     private :html_source
-    
+
     # return the first element that matches the xpath
     def element_by_xpath(xpath)
       temp = elements_by_xpath(xpath)
       temp = temp[0] if temp
       return temp
     end
-    
+
     # execute xpath and return an array of elements
     def elements_by_xpath(xpath)
-      doc = xmlparser_document_object 
+      doc = xmlparser_document_object
       modifiedXpath = ""
       selectedElements = Array.new
-      
+
       # strip any trailing slash from the xpath expression (as used in watir unit tests)
       xpath.chop! unless (/\/$/ =~ xpath).nil?
-      
+
       doc.xpath(xpath).each do |element|
         modifiedXpath = element.path
         temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
@@ -919,53 +919,53 @@ module Watir
         return selectedElements
       end
     end
-    
+
     # Method that iterates over IE DOM object and get the elements for the given
     # xpath.
     def element_by_absolute_xpath(xpath)
       curElem = nil
-      
+
       #puts "Hello; Given xpath is : #{xpath}"
       doc = document
       curElem = doc.getElementsByTagName("body").item(0)
       xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
       xpath = $1
-      
+
       if xpath == nil
         puts "Function Requires absolute XPath."
         return
       end
-      
+
       arr = xpath.split(/\//)
       return nil if arr.length == 0
-      
+
       lastTagName = arr[arr.length-1].to_s.upcase
-      
+
       # lastTagName is like tagName[number] or just tagName. For the first case we need to
       # separate tagName and number.
       lastTagName =~ /(\w*)\[?\d*\]?/
       lastTagName = $1
       #puts lastTagName
-      
+
       for element in arr do
         element =~ /(\w*)\[?(\d*)\]?/
         tagname = $1
         tagname = tagname.upcase
-        
+
         if $2 != nil && $2 != ""
           index = $2
           index = "#{index}".to_i - 1
         else
           index = 0
         end
-        
+
         #puts "#{element} #{tagname} #{index}"
         allElemns = curElem.childnodes
         if allElemns == nil || allElemns.length == 0
           puts "#{element} is null"
           next # Go to next element
         end
-        
+
         #puts "Current element is : #{curElem.tagName}"
         allElemns.each do |child|
           gotIt = false
@@ -984,7 +984,7 @@ module Watir
             end
           end
         end
-        
+
       #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
       end
       begin
@@ -999,11 +999,11 @@ module Watir
       end
     end
     private :element_by_absolute_xpath
-    
+
     def attach_command
       "Watir::IE.attach(:hwnd, #{hwnd})"
     end
-    
-    
+
+
   end # class IE
 end
