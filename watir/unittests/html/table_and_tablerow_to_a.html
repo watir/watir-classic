@@ -1,0 +1,174 @@
+<html>
+<head>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        table, tr, td, th {
+            border-width: 1px;
+            border-style: solid;
+        }
+
+        td {
+            width: 30px;
+        }
+
+        td.reddish {
+            color: red;
+        }
+    </style>
+    <title>Watir::Table#to_a and Watir::TableRow#to_a</title>
+</head>
+
+<body>
+<p>normal table</p>
+<table id="normal">
+    <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>8</td>
+        <td class="reddish">9</td>
+    </tr>
+</table>
+
+<p>table with headers</p>
+<table id="headers">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+    </tr>
+</table>
+
+<p>table with nested tables</p>
+<table id="nested">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <th>11</th>
+                    <th>12</th>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>14</td>
+                </tr>
+            </table>
+        </td>
+        <td>3</td>
+    </tr>
+</table>
+
+<p>table with nested table with non-direct child</p>
+<table id="nestednondirectchild">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+    </tr>
+    <tr>
+        <td>
+        <span>
+            <table>
+                <tr>
+                    <th>11</th>
+                    <th>12</th>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>14</td>
+                </tr>
+            </table>
+        </span>
+        </td>
+        <td>3</td>
+    </tr>
+</table>
+
+<p>table with deep-nested tables</p>
+<table id="deepnested">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <th>11</th>
+                    <th>12</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>404</td>
+                                <td>405</td>
+                            </tr>
+                            <tr>
+                                <td>406</td>
+                                <td>407</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>14</td>
+                </tr>
+            </table>
+        </td>
+        <td>3</td>
+    </tr>
+</table>
+
+<p>table with colspan</p>
+<table id="colspan">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+    </tr>
+    <tr>
+        <td colspan="2">3</td>
+    </tr>
+</table>
+
+<p>table with rowspan</p>
+<table id="rowspan">
+    <tr>
+        <th>1</th>
+        <th>2</th>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td rowspan="2">4</td>
+    </tr>
+    <tr>
+        <td>5</td>
+    </tr>
+</table>
+</body>
+</html>

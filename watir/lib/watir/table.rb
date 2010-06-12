@@ -120,22 +120,17 @@ module Watir
       _row(index).cells.length
     end
     
-    # This method returns the table as a 2 dimensional array. 
-    # Don't expect too much if there are nested tables, colspan etc.
-    # Raises an UnknownObjectException if the table doesn't exist.
-    # http://www.w3.org/TR/html4/struct/tables.html
-    def to_a
+    # Returns multi-dimensional array of the cell texts in a table.
+    #
+    # Works with tr, th, td elements, colspan, rowspan and nested tables.
+    # Takes an optional parameter *max_depth*, which is by default 1
+    def to_a(max_depth=1)
       assert_exists
       y = []
-      table_rows = @o.getElementsByTagName("TR")
-      for row in table_rows
-        x = []
-        for td in row.getElementsbyTagName("TD")
-          x << td.innerText.strip
-        end
-        y << x
+      @o.rows.each do |row|
+        y << TableRow.new(@container, :ole_object, row).to_a(max_depth)
       end
-      return y
+      y
     end
     
     def table_body(index=1)
@@ -311,6 +306,44 @@ module Watir
     def column_count
       locate
       @cells.length
+    end
+
+    # Returns (multi-dimensional) array of the cell texts in table's row.
+    #
+    # Works with th, td elements, colspan, rowspan and nested tables.
+    # Takes an optional parameter *max_depth*, which is by default 1
+    def to_a(max_depth=1)
+      assert_exists
+      y = []
+      @o.cells.each do |cell|
+        inner_tables = cell.getElementsByTagName("TABLE")
+        inner_tables.each do |inner_table|
+          # make sure that the inner table is directly child for this cell
+          if inner_table?(cell, inner_table)
+            max_depth -= 1
+            y << Table.new(@container, :ole_object, inner_table).to_a(max_depth) if max_depth >= 1
+          end
+        end
+
+        if inner_tables.length == 0
+          y << cell.innerText.strip
+        end
+      end
+      y
+    end
+
+    private
+    # Returns true if inner_table is direct child
+    # table for cell and there's not any table-s in between
+    def inner_table?(cell, inner_table)
+      parent_element = inner_table.parentElement
+      if parent_element.uniqueID == cell.uniqueID
+        return true
+      elsif parent_element.tagName == "TABLE"
+        return false
+      else
+        return inner_table?(cell, parent_element)
+      end
     end
   end
   
