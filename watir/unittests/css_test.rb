@@ -7,17 +7,16 @@ require 'unittests/setup'
 class TC_CSS < Test::Unit::TestCase
   
   def isMessageDisplayed(message)
-    s = false
     divs = browser.divs
     divs.each do |d|
       if d.text.downcase.match( /#{message}/i )
         if d.class_name.downcase.match(/show/i)
-          s = true
+          return true
         end
       end
     end
     
-    return s
+    return false
   end
   
   def setup
@@ -30,6 +29,14 @@ class TC_CSS < Test::Unit::TestCase
     
     browser.button(:caption, "Failure").click
     assert_false(isMessageDisplayed("Success") )
+  end
+
+  def test_inline_style
+    assert_equal("300px", browser.form(:index, 1).style.width)
+  end
+
+  def test_internal_style
+    assert_equal("#f00", browser.div(:id => "Container").style.backgroundColor)
   end
 end
 

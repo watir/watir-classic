@@ -73,9 +73,11 @@ module Watir
     def_wrap_guard :value
     # return the title of the element
     def_wrap_guard :title
-    # return the style of the element
-    def_wrap_guard :style
-    
+
+    def_wrap_guard :currentstyle
+    # return current style instead of the inline style of the element
+    alias style currentstyle
+
     def_wrap_guard :alt
     def_wrap_guard :src
     
