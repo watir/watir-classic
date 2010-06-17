@@ -297,7 +297,7 @@ module Watir
     # visible.
     def visible?
       # Now iterate up the DOM element tree and return false if any
-      # parent element isn't visible or is disabled.
+      # parent element isn't visible 
       assert_exists
       object = @o
       while object
@@ -306,9 +306,6 @@ module Watir
             return false
           end
           if object.currentstyle.invoke('display') =~ /^none$/i
-            return false
-          end
-          if object.invoke('isDisabled')
             return false
           end
         rescue WIN32OLERuntimeError
