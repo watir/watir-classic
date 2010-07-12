@@ -85,6 +85,7 @@ require 'watir/input_elements'
 require 'watir/table'
 require 'watir/image'
 require 'watir/link'
+require 'watir/html_element'
 require 'watir/collections'
 
 require 'watir'

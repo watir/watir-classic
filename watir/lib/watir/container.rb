@@ -734,6 +734,37 @@ module Watir
       Labels.new(self)
     end
     
+    
+    # This is the main method for accessing a generic element with a given attibute
+    #  *  how   - symbol - how we access the element. Supports all values except :index and :xpath
+    #  *  what  - string, integer or regular expression - what we are looking for,
+    #
+    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
+    #
+    # returns an Watir::Element object
+    #
+    # Typical Usage
+    #
+    #   ie.element(:class, /foo/)      # access the first element with class 'foo'. We can use a string in place of the regular expression
+    #   ie.element(:id, "11")          # access the first element that matches an id
+    def element(how, what)
+      return HTMLElement.new(self, how, what)  
+    end
+    
+    # this is the main method for accessing generic html elements by an attribute
+    #
+    # Returns a HTMLElements object
+    #
+    # Typical usage:
+    #
+    #   ie.elements(:class, 'test').each { |l| puts l.to_s }  # iterate through all elements of a given attribute
+    #   ie.elements(:alt, 'foo')[1].to_s                       # get the first element of a given attribute
+    #   ie.elements(:id, 'foo').length                        # show how many elements are foung in the collection
+    #
+    def elements(how, what)
+      return HTMLElements.new(self, how, what)  
+    end
+
     #--
     #
     # Searching for Page Elements
@@ -813,6 +844,14 @@ module Watir
       locator.set_specifier(how, what)
       locator.locate
     end
-
+    
+    # returns the the locator object so you can iterate 
+    # over the elements using #each
+    def locate_all_elements(how, what)
+      locator = ElementLocator.new(self)
+      locator.set_specifier(how, what)
+      locator
+    end
+    
   end # module
 end
