@@ -171,7 +171,6 @@ module Watir
       end
       false
     end
-
   end
 
   # This is like the TaggedElementLocator but
