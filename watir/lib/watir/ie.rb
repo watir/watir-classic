@@ -40,7 +40,6 @@ require 'watir/win32ole'
 require 'logger'
 require 'watir/winClicker'
 require 'watir/exceptions'
-require 'watir/utils'
 require 'watir/close_all'
 require 'watir/ie-process'
 

@@ -468,7 +468,6 @@ module Watir
     #
     # Synchronization
     #
-    include Watir::Utils
 
     # Block execution until the page has loaded.
     # =nodoc
