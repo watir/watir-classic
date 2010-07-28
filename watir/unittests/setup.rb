@@ -1,6 +1,5 @@
 # watir/unittests/setup.rb
 $SETUP_LOADED = true
-
 $myDir = File.expand_path(File.dirname(__FILE__))
 
 def append_to_load_path path
@@ -45,10 +44,10 @@ end
 
 # These tests won't load unless Watir is in the path
 $watir_only_tests = [
-  "images_xpath_test.rb",
-  "images_test.rb",
-  "dialog_test.rb",
-  "ie_test.rb"
+        "images_xpath_test.rb",
+        "images_test.rb",
+        "dialog_test.rb",
+        "ie_test.rb"
 ].map {|file| "watir/unittests/#{file}"}
 
 if Watir::UnitTest.options[:browser] != 'ie'
@@ -74,4 +73,15 @@ Dir.chdir tiptopdir do
   $window_tests = Dir["watir/unittests/windows/*_test.rb"] - ["watir/unittests/windows/ie-each_test.rb"]
 end
 
+# load development libs also in #click_no_wait processes
+Watir::PageContainer.class_eval do
+  alias_method :__spawned_click_no_wait_command, :spawned_click_no_wait_command
 
+  def spawned_click_no_wait_command(command)
+    # make it actually wait in tests for easier testing
+    #
+    # please note that this implementation of click_no_wait takes considerably more time than
+    # in real situation due to the loading of setup.rb!
+    "ruby -r#{File.expand_path(File.join(File.dirname(__FILE__), "setup.rb"))} -e #{command.inspect}"
+  end
+end

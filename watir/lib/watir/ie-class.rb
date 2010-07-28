@@ -308,8 +308,6 @@ module Watir
     end
     attr_writer :hwnd
 
-    include Watir::Win32
-
   	# Are we attached to an open browser?
     def exists?
       return false if @closing

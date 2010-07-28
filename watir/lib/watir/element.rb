@@ -5,28 +5,29 @@ module Watir
     include Watir::Exception
     include Container # presumes @container is defined
     attr_accessor :container
-    
+
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
-    
+
     # ole_object - the ole object for the element being wrapped
     def initialize(ole_object)
       @o = ole_object
       @original_color = nil
     end
-    
+
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
     def ole_object # BUG: should use an attribute reader and rename the instance variable
       return @o
     end
+
     def ole_object=(o)
       @o = o
     end
-    
+
     def inspect
       '#<%s:0x%x located=%s how=%s what=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect]
     end
-    
+
     private
     def self.def_wrap(ruby_method_name, ole_method_name=nil)
       ole_method_name = ruby_method_name unless ole_method_name
@@ -35,6 +36,7 @@ module Watir
                           ole_object.invoke('#{ole_method_name}')
                         end"
     end
+
     def self.def_wrap_guard(method_name)
       class_eval "def #{method_name}
                           assert_exists
@@ -47,21 +49,21 @@ module Watir
     end
 
 
-
     public
     def assert_exists
       locate if respond_to?(:locate)
       unless ole_object
         raise UnknownObjectException.new(
-          Watir::Exception.message_for_unable_to_locate(@how, @what))
+                Watir::Exception.message_for_unable_to_locate(@how, @what))
       end
     end
+
     def assert_enabled
       unless enabled?
         raise ObjectDisabledException, "object #{@how} and #{@what} is disabled"
       end
     end
-    
+
     # return the name of the element (as defined in html)
     def_wrap_guard :name
     # return the id of the element
@@ -80,7 +82,7 @@ module Watir
 
     def_wrap_guard :alt
     def_wrap_guard :src
-    
+
     # return the type of the element
     def_wrap_guard :type # input elements only
     # return the url the link points to
@@ -101,33 +103,34 @@ module Watir
       begin
         ole_object.getAdjacentText("afterEnd").strip
       rescue
-                ''
+        ''
       end
     end
-    
+
     # return the text after the element
     def after_text # label only
       assert_exists
       begin
         ole_object.getAdjacentText("beforeBegin").strip
       rescue
-                ''
+        ''
       end
     end
-    
+
     # Return the innerText of the object
     # Raise an ObjectNotFound exception if the object cannot be found
     def text
       assert_exists
       return ole_object.innerText.strip
     end
-    
+
     def ole_inner_elements
       assert_exists
       return ole_object.all
     end
+
     private :ole_inner_elements
-    
+
     def document
       assert_exists
       return ole_object
@@ -140,8 +143,9 @@ module Watir
       result.set_container self
       result
     end
-    
+
     include Comparable
+
     def <=> other
       assert_exists
       other.assert_exists
@@ -149,21 +153,23 @@ module Watir
     end
 
     # Return true if self is contained earlier in the html than other. 
-    alias :before? :< 
+    alias :before? :<
     # Return true if self is contained later in the html than other. 
-    alias :after? :> 
-      
+    alias :after? :>
+
     def typingspeed
       @container.typingspeed
     end
-		def type_keys
-			return @container.type_keys if @type_keys.nil? 
-			@type_keys
-		end
+
+    def type_keys
+      return @container.type_keys if @type_keys.nil?
+      @type_keys
+    end
+
     def activeObjectHighLightColor
       @container.activeObjectHighLightColor
     end
-    
+
     # Return an array with many of the properties, in a format to be used by the to_s method
     def string_creator
       n = []
@@ -174,8 +180,9 @@ module Watir
       n <<   "disabled:".ljust(TO_S_SIZE) +   self.disabled.to_s
       return n
     end
+
     private :string_creator
-    
+
     # Display basic details about the object. Sample output for a button is shown.
     # Raises UnknownObjectException if the object is not found.
     #      name      b4
@@ -187,7 +194,7 @@ module Watir
       assert_exists
       return string_creator.join("\n")
     end
-    
+
     # This method is responsible for setting and clearing the colored highlighting on the currently active element.
     # use :set   to set the highlight
     #   :clear  to clear the highlight
@@ -212,8 +219,9 @@ module Watir
         end
       end
     end
+
     private :highlight
-    
+
     #   This method clicks the active element.
     #   raises: UnknownObjectException  if the object is not found
     #   ObjectDisabledException if the object is currently disabled
@@ -221,24 +229,24 @@ module Watir
       click!
       @container.wait
     end
-    
+
     def click_no_wait
       assert_enabled
-      
+
       highlight(:set)
-      object = "#{self.class}.new(self, :unique_number, #{self.unique_number})"
-      @page_container.eval_in_spawned_process(object + ".click!")
+      element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
+      @page_container.click_no_wait(element)
       highlight(:clear)
     end
 
     def click!
       assert_enabled
-      
+
       highlight(:set)
       ole_object.click
       highlight(:clear)
     end
-    
+
     # Flash the element the specified number of times.
     # Defaults to 10 flashes.
     def flash number=10
@@ -251,20 +259,20 @@ module Watir
       end
       nil
     end
-    
+
     # Executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
     #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def fire_event(event)
       assert_enabled
-      
+
       highlight(:set)
       ole_object.fireEvent(event)
       @container.wait
       highlight(:clear)
     end
-    
+
     # This method sets focus on the active element.
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
@@ -272,7 +280,7 @@ module Watir
       assert_enabled
       ole_object.focus
     end
-    
+
     # Returns whether this element actually exists.
     def exists?
       begin
@@ -282,8 +290,9 @@ module Watir
       end
       @o ? true: false
     end
+
     alias :exist? :exists?
-    
+
     # Returns true if the element is enabled, false if it isn't.
     #   raises: UnknownObjectException  if the object is not found
     def enabled?
@@ -314,26 +323,26 @@ module Watir
       end
       true
     end
-    
+
     # Get attribute value for any attribute of the element.
     # Returns null if attribute doesn't exist.
     def attribute_value(attribute_name)
       assert_exists
       return ole_object.getAttribute(attribute_name)
     end
-    
+
   end
-  
+
   class ElementMapper # Still to be used
     include Container
-    
+
     def initialize wrapper_class, container, how, what
       @wrapper_class = wrapper_class
       set_container
       @how = how
       @what = what
     end
-    
+
     def method_missing method, *args
       locate
       @wrapper_class.new(@o).send(method, *args)
