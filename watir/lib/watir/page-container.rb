@@ -50,13 +50,20 @@ module Watir
 
     def click_no_wait(element)
       ruby_code = "require 'rubygems';" <<
-              "require 'watir/core';" <<
+              "require '#{File.expand_path(File.dirname(__FILE__))}/watir/core';" <<
               "#{element}.click!"
       system(spawned_click_no_wait_command(ruby_code))
     end
 
     def spawned_click_no_wait_command(command)
-      "start rubyw -e #{command.inspect}"
+      unless $DEBUG
+        "start rubyw -e #{command.inspect}"
+      else
+        puts "#click_no_wait command:"
+        command = "ruby -e #{command.inspect}"
+        puts command
+        command
+      end
     end
 
     private :spawned_click_no_wait_command
