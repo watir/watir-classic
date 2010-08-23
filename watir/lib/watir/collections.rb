@@ -366,7 +366,7 @@ module Watir
       @what = what
       if how == :index
         raise MissingWayOfFindingObjectException,
-                    "Option does not support attribute #{@how}"
+                    "#{self.class} does not support attribute #{@how}"
       end
       super(container)
     end
