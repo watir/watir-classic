@@ -50,7 +50,7 @@ module Watir
 
     def click_no_wait(element)
       ruby_code = "require 'rubygems';" <<
-              "require '#{File.expand_path(File.dirname(__FILE__))}/watir/core';" <<
+              "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
               "#{element}.click!"
       system(spawned_click_no_wait_command(ruby_code))
     end
