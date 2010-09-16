@@ -5,7 +5,10 @@ $__firewatir_source_patterns = [
   'unittests/*.rb',
   'unittests/html/*.html',
   'unittests/html/images/*.*',
-  'LICENSE'
+  'LICENSE',
+  'CHANGES',
+  'README.rdoc',
+  'rakefile.rb'
 ]
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')

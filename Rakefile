@@ -8,8 +8,11 @@ projects = ['watir', 'firewatir', 'commonwatir']
  
 desc "Generate all the Watir gems"
 task :gems do
-  projects.each do |x|
-    Dir.chdir(x) {puts `rake.bat gem`}
+  projects.each do |project|
+    tmp_changes_file = "#{project}/CHANGES"
+    FileUtils.cp "CHANGES", tmp_changes_file
+    Dir.chdir(project) {puts `rake.bat gem`}
+    FileUtils.rm tmp_changes_file
   end
   FileUtils.makedirs 'gems'
   gems = Dir['*/pkg/*.gem']
