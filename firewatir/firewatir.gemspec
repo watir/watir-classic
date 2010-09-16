@@ -8,15 +8,14 @@ $__firewatir_source_patterns = [
   'LICENSE',
   'CHANGES',
   'README.rdoc',
-  'rakefile.rb'
+  'rakefile.rb',
+  'VERSION'
 ]
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
-require 'firewatir/version'
-
 spec = Gem::Specification.new do |s|
+  version = File.read("VERSION").strip rescue "0.0.0"
   s.name = 'firewatir'
-  s.version = FireWatir::Firefox::VERSION
+  s.version = version
   s.summary = 'Automated testing tool for web applications using Firefox browser.'
   s.description = <<-EOF
     FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free, 
@@ -36,7 +35,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
   s.require_path = 'lib'    
 
-  s.add_dependency 'commonwatir', '= ' + FireWatir::Firefox::VERSION
+  s.add_dependency 'commonwatir', '= ' + version
   s.add_dependency 'activesupport'
 
   s.has_rdoc = true

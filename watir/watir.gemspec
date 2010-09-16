@@ -1,7 +1,7 @@
 require 'watir-rdoc'
 
 $__watir_source_patterns = [
-    'CHANGES', 'rakefile.rb',
+    'CHANGES', 'rakefile.rb', 'VERSION',
     'lib/watir/*.rb', 'lib/watir/AutoItX3.dll',
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
@@ -9,12 +9,10 @@ $__watir_source_patterns = [
     'lib/watir/contrib/*.rb'] +
     $WATIR_EXTRA_RDOC_FILES
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
-require 'watir/version'
-
 spec = Gem::Specification.new do |s|
+  version = File.read("VERSION").strip rescue "0.0.0"
   s.name = 'watir'
-  s.version = Watir::IE::VERSION
+  s.version = version
   s.summary = 'Automated testing tool for web applications.'
   s.description = <<-EOF
     WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free,
@@ -38,8 +36,8 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6'
-  s.add_dependency 'commonwatir', '= ' + Watir::IE::VERSION
-  s.add_dependency 'firewatir', '= ' + Watir::IE::VERSION
+  s.add_dependency 'commonwatir', '= ' + version
+  s.add_dependency 'firewatir', '= ' + version
   s.add_dependency 'nokogiri'
 
   s.has_rdoc = true

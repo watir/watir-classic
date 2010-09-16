@@ -50,8 +50,7 @@ task :bonus_zip => [:rdoc] do
     raise
   end
   
-  require 'watir/version'
-  version = Watir::IE::VERSION
+  version = File.read("VERSION").strip rescue "0.0.0"
   bonus_zip = "pkg/watir-bonus-#{version}.zip"
 
   if File.exist?(bonus_zip)
