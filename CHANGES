@@ -11,6 +11,8 @@
 * #close will close the browser even if #wait raises an Exception. Closes http://jira.openqa.org/browse/WTR-443 (Jarmo Pertman)
 * Added #element and #elements methods for locating non-specific elements. Closes http://jira.openqa.org/browse/WTR-103 (Hugh McGowan)
 * #click_no_wait fixes and improvements. Closes http://jira.openqa.org/browse/WTR-449 (Jarmo Pertman)
+* #wait will raise a Timeout::Error if page hasn't been loaded within 5 minutes. Closes http://jira.openqa.org/browse/WTR-452 (Bret)
+* Fixed a problem when #wait blocked forever. Closes http://jira.openqa.org/browse/WTR-446 (Jarmo Pertman)
 
 === Firefox improvements
 
