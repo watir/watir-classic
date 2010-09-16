@@ -1,3 +1,115 @@
+== Version 1.6.6 (in development)
+
+* Added close_all method to firefox. Closes http://jira.openqa.org/browse/WTR-222 (Angrez)
+* Fixed status method for firefox.  (Angrez)
+* Fixed url method for firefox. Closes http://jira.openqa.org/browse/WTR-428 (Alister)
+
+== Version 1.6.5
+
+Charley Baker was release manager for this release of Watir.
+
+=== New Features (Both IE and Firefox)
+
+* Browser.attach is now available.
+* Browser.options and Browser.set_options are now available.
+* Add support for definition lists, this adds these methods:
+  dd, dt, dl, dds, dts, dls. (Jarib)
+* Added support for "visible?" method to both IE and Firefox. Closes
+  http://jira.openqa.org/browse/WTR-262 (Tony)
+* Hidden#visible? should always return false. (Jarib)
+* New method execute_script.
+* Add ElementCollections#size as alias of length. (Jarib)
+* Some camelCase => snake_case renames (with aliasing). (Jarib)
+    Image#fileCreatedDate       => file_created_date
+    Image#fileSize              => file_size
+    Image#hasLoaded?            => loaded?
+    SelectList#getAllContents   => options
+    SelectList#getSelectedItems => selected_options
+    SelectList#clearSelection   => clear
+    SelectList#includes?        => include?
+    TextField#dragContentsTo    => drag_contents_to
+    Radio/Checkbox#isSet?       => set?
+* Patch for winclicker fix. http://jira.openqa.org/browse/WTR-279 (Derek Berner)
+* Add support for using a Regexp as the third argument (value) when locating 
+  checkboxes/radio buttons. (Jarib)
+* Add support for <strong> element. (Jarib)
+* Add support and tests for <em> element. (Jarib)
+* SelectList#select now supports Numeric arguments. (Jarib)
+* Additional inspect implementations for both IE and FF. 
+  Closes http://jira.openqa.org/browse/WTR-158 (Jarib)
+* Add ElementCollections#{first,last}. (Jarib)
+* Fixes for running on Ruby 1.9. (Jarib)
+  
+=== Firefox Improvements
+
+* SelectList#set is now defined for Firefox. Like with IE, it is an alias for
+  SelectList#select. Closes http://jira.openqa.org/browse/WTR-271 (Bret)
+* Element collections are now enumerable. This allows methods such as @select@
+  and @map@ to be used with methods such as @divs@ and @links@.
+* FireWatir.attach is now available, analogous to IE.attach. Includes http://jira.openqa.org/browse/WTR-296
+* Some Javascript errors that were being ignored, now raise Ruby exceptions.
+* Added event handler which resets the context of document 
+* Fix bug that occurred when new page was automatically loaded. (Angrez, 3ef8b6)
+  when page gets loaded automatically (Angrez)
+* Changed code to use document_var, body_var, window_var, browser_var instead of 
+  "document", "body", "window", "browser" variables. (Angrez)
+* Changed code to replace every quote (") in xpath query with (\") so that it 
+  doesn't give error while executing the xpath query (Angrez)
+* Fire onchange event for FireWatir file fields. Closes http://jira.openqa.org/browse/WTR-286. (Jarib)
+* Fixes for running and closing Firefox on Mac OS X http://jira.openqa.org/browse/WTR-272 (Jarib)
+* Added functionality to allow Watir::Browser.attach with no arguments to open 
+  a new firefox window rather than taking over the existing focused window (Rob Aldred)
+* Also modified some setup functions to correctly handle closed browsers, 
+  browserless windows and others (Rob Aldred)
+* Add test and implementation for Firefox#status http://jira.openqa.org/browse/WTR-250 (Jarib)
+* 2 problems fixed with .click (jubishop)
+  a) When chaining together element calls the @container becomes an 
+     HTMLElement, but there's no container_var defined for HTMLElement
+  b) When an <a tag has no href then element_type was returning nil.
+* Fix bug in Firefox#document. Change creating error class by eval in jssh 
+  socket to creating class with ruby. (Ethan)
+* Add support for Browser#frames. (Ethan)
+* Make the version dependencies for Watir and FireWatir be the same. (This change
+  will also be backported to 1.6.3.) (Bret)
+
+=== IE Improvements
+
+* Allow attach timeout to be accessed as an option. Thus:
+    IE.set_options :attach_timeout => 5.0
+  This was previously available as class method.
+* Fix for Autoit auto-registration. (Bret) 
+  * Fixes http://jira.openqa.org/browse/WTR-290, http://jira.openqa.org/browse/WTR-308, http://jira.openqa.org/browse/WTR-298
+* Fix for IE6, 7 and 8 file uploads. (Zeljko Filipin & Jarmo Pertman)
+* Replaced REXML with Nokogiri for xml parsing. Fixes http://jira.openqa.org/browse/WTR-19 (Aidy Lewis)
+* Option now supports :label attribute http://jira.openqa.org/browse/WTR-297
+* Patch for IE.close causing WIN32OLE errors http://jira.openqa.org/browse/WTR-304 (Tony)
+* Watir::IE.inspect issue fixed: http://jira.openqa.org/browse/WTR-180 (Jarib)
+* Fix for Browser#execute_script on IE7. (Jarib)
+* Removed ActiveSupport dependency. (Jarib)
+* Fix Browser#status so it works even when the status bar is not visible. (Bret)
+* Fix bug when using "each" with nested tables. 
+  http://jira.openqa.org/browse/WTR-324 (Alan Baird)
+* Now uses UTF-8 codepage by default http://jira.openqa.org/browse/WTR-219 (Jarib)
+
+=== Structure Improvements
+
+* Lots of rework of the FireWatir code, including removing duplication and 
+  dead code, renaming variables, and simplifying code. Also a few performance
+  improvements. (Bret & Charley)
+* Rename source file names for consistency.
+  
+=== Unit Tests
+
+* Add tests demonstrating known bugs.
+* Make the "window" tests run more reliably. (Bret)
+* Relocate unreliable tests. (Bret)
+* Tag tests that are known to fail on IE or Firefox.
+* Fixed one test that was failing on non-English platforms. (Jarib)
+* New Rake task (:test) runs all tests. (Jim Matthews)
+* Use ci_reporter to provide more detailed test results for watirbuild.com. 
+  Use xls transform to format results. (Jim Matthews)
+* Add WatirSpec submodule + load it in Rakefile if available. (Jarib)
+
 == Version 1.6.2 
 
 * Changed the method of setting Watir::Browser.default when the user does not
