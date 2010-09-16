@@ -468,6 +468,8 @@ module Watir
     #
 
     # Block execution until the page has loaded.
+    #
+    # Will raise Timeout::Error if page hasn't been loaded within 5 minutes.
     # =nodoc
     # Note: This code needs to be prepared for the ie object to be closed at 
     # any moment!
@@ -476,17 +478,23 @@ module Watir
       @down_load_time = 0.0
       a_moment = 0.2 # seconds
       start_load_time = Time.now
-
+      timeout = 5*60
+      timeout_error = Timeout::Error.new("Failed to load page within #{timeout} seconds!")
       begin
-        while @ie.busy # XXX need to add time out
+        while @ie.busy
           sleep a_moment
+          raise timeout_error if Time.now - start_load_time >= timeout
         end
-        until @ie.readyState == READYSTATE_COMPLETE do
+        # this is the line which has been changed to accept also state 3
+        until @ie.readyState == READYSTATE_INTERACTIVE ||
+                @ie.readyState == READYSTATE_COMPLETE do
           sleep a_moment
+          raise timeout_error if Time.now - start_load_time >= timeout
         end
         sleep a_moment
         until @ie.document do
           sleep a_moment
+          raise timeout_error if Time.now - start_load_time >= timeout
         end
 
         documents_to_wait_for = [@ie.document]
@@ -501,6 +509,7 @@ module Watir
         begin
           until doc.readyState == "complete" do
             sleep a_moment
+            raise timeout_error if Time.now - start_load_time >= timeout
           end
           @url_list << doc.location.href unless @url_list.include?(doc.location.href)
           doc.frames.length.times do |n|
