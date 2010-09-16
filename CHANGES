@@ -1,8 +1,28 @@
-== Version 1.6.6 (in development)
+== Version 1.6.6 - 2010/09/XX
+
+=== IE improvements
+
+* #elements_by_xpath uses now Nokogiri's xpath method instead of search (Matt Baker)
+* Element#style returns now currentStyle. Closes http://jira.openqa.org/browse/WTR-444 (Jarmo Pertman)
+* Element#visible? doesn't return false anymore for disabled elements (Charley Baker)
+* TH elements texts are included into Table#to_a results. Closes http://jira.openqa.org/browse/WTR-445 (Jarmo Pertman)
+* Added TableRow#to_a method which returns an array of the texts of the cells for the table row. Closes http://jira.openqa.org/browse/WTR-445 (Jarmo Pertman)
+* Added an optional numeric parameter max_depth for Table#to_a and TableRow#to_a for getting text values for nested tables. Closes http://jira.openqa.org/browse/WTR-445 (Jarmo Pertman)
+* #close will close the browser even if #wait raises an Exception. Closes http://jira.openqa.org/browse/WTR-443 (Jarmo Pertman)
+* Added #element and #elements methods for locating non-specific elements. Closes http://jira.openqa.org/browse/WTR-103 (Hugh McGowan)
+* #click_no_wait fixes and improvements. Closes http://jira.openqa.org/browse/WTR-449 (Jarmo Pertman)
+
+=== Firefox improvements
 
 * Added close_all method to firefox. Closes http://jira.openqa.org/browse/WTR-222 (Angrez)
 * Fixed status method for firefox.  (Angrez)
-* Fixed url method for firefox. Closes http://jira.openqa.org/browse/WTR-428 (Alister)
+* Fixed url method for firefox. Closes http://jira.openqa.org/browse/WTR-428 (Alister Scott)
+* Added JRuby support (Ian Dees)
+
+=== Cleanup & Maintenance
+
+* Some rdoc cleanup (marekj)
+* Removed Watir::Utils (Jarmo Pertman)
 
 == Version 1.6.5
 
