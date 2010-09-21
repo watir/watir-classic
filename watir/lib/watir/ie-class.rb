@@ -49,6 +49,7 @@ module Watir
 		end
 
     # Used internally to determine when IE has finished loading a page
+    READYSTATE_INTERACTIVE = 3
     READYSTATE_COMPLETE = 4
 
     # The default color for highlighting objects as they are accessed.
@@ -476,49 +477,39 @@ module Watir
     def wait(no_sleep=false)
       @xml_parser_doc = nil
       @down_load_time = 0.0
-      a_moment = 0.2 # seconds
+      interval = 0.05
       start_load_time = Time.now
-      timeout = 5*60
-      timeout_error = Timeout::Error.new("Failed to load page within #{timeout} seconds!")
-      begin
-        while @ie.busy
-          sleep a_moment
-          raise timeout_error if Time.now - start_load_time >= timeout
-        end
-        # this is the line which has been changed to accept also state 3
-        until @ie.readyState == READYSTATE_INTERACTIVE ||
-                @ie.readyState == READYSTATE_COMPLETE do
-          sleep a_moment
-          raise timeout_error if Time.now - start_load_time >= timeout
-        end
-        sleep a_moment
-        until @ie.document do
-          sleep a_moment
-          raise timeout_error if Time.now - start_load_time >= timeout
-        end
 
-        documents_to_wait_for = [@ie.document]
-
-      rescue WIN32OLERuntimeError # IE window must have been closed
-        @down_load_time = Time.now - start_load_time
-        sleep @pause_after_wait unless no_sleep
-        return @down_load_time
-      end
-
-      while doc = documents_to_wait_for.shift
+      Timeout::timeout(5*60) do
         begin
-          until doc.readyState == "complete" do
-            sleep a_moment
-            raise timeout_error if Time.now - start_load_time >= timeout
+          until [READYSTATE_INTERACTIVE, READYSTATE_COMPLETE].include?(@ie.readyState)
+            sleep interval
           end
-          @url_list << doc.location.href unless @url_list.include?(doc.location.href)
-          doc.frames.length.times do |n|
-            begin
-              documents_to_wait_for << doc.frames[n.to_s].document
-            rescue WIN32OLERuntimeError, NoMethodError
+
+          until @ie.document
+            sleep interval
+          end
+
+          documents_to_wait_for = [@ie.document]
+        rescue WIN32OLERuntimeError # IE window must have been closed
+          @down_load_time = Time.now - start_load_time
+          return @down_load_time
+        end
+
+        while doc = documents_to_wait_for.shift
+          begin
+            until ["interactive", "complete"].include?(doc.readyState)
+              sleep interval
             end
+            @url_list << doc.location.href unless @url_list.include?(doc.location.href)
+            doc.frames.length.times do |n|
+              begin
+                documents_to_wait_for << doc.frames[n.to_s].document
+              rescue WIN32OLERuntimeError, NoMethodError
+              end
+            end
+          rescue WIN32OLERuntimeError
           end
-        rescue WIN32OLERuntimeError
         end
       end
 
