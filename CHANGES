@@ -20,6 +20,7 @@
 * Fixed status method for firefox.  (Angrez)
 * Fixed url method for firefox. Closes http://jira.openqa.org/browse/WTR-428 (Alister Scott)
 * Added JRuby support (Ian Dees)
+* Forcing to use ActiveSupport 2.3.9 due to incompatibilities with newer versions (Jarmo Pertman)
 
 === Cleanup & Maintenance
 
