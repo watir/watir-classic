@@ -61,7 +61,6 @@ $FAST_SPEED = ARGV.delete('-f')
 ARGV.delete('-s')
 
 require 'watir/win32'
-require 'watir/version'
 require 'watir/popup'
 require 'watir/frame'
 require 'watir/modal_dialog'
