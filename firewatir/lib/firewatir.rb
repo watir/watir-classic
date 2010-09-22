@@ -1,6 +1,7 @@
 $:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'socket'
+gem 'activesupport', '=2.3.9'
 require 'active_support'
 
 require 'firewatir/exceptions'
@@ -30,7 +31,6 @@ require "firewatir/element_collections"
 
 require 'watir/matches'
 require 'firewatir/firefox'
-require 'firewatir/version'
 require 'watir'
 
 
