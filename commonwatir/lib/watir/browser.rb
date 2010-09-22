@@ -76,11 +76,11 @@ before you invoke Browser.new.
         klass.attach(how, what)
       end
       def set_options options
-        return unless defined?(klass.set_options)
+        return unless klass.respond_to?(:set_options)
         klass.set_options options
       end
       def options
-        return {} unless defined?(klass.options)
+        return {} unless klass.respond_to?(:options)
         klass.options
       end
 
