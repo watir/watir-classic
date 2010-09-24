@@ -2,6 +2,7 @@
 # to work with minimum functionality
 #
 # this is needed for #click_no_wait to perform faster
+require 'timeout'
 require 'watir/win32ole'
 
 require 'logger'
