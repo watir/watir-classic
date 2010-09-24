@@ -232,12 +232,28 @@ module Watir
 
     def click_no_wait
       assert_enabled
-
       highlight(:set)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
-      @page_container.click_no_wait(element)
+      ruby_code = "require 'rubygems';" <<
+              "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
+              "#{element}.click!"
+      system(spawned_click_no_wait_command(ruby_code))
       highlight(:clear)
     end
+
+    def spawned_click_no_wait_command(command)
+      command = "-e #{command.inspect}"
+      unless $DEBUG
+        "start rubyw #{command}"
+      else
+        puts "#click_no_wait command:"
+        command = "ruby #{command}"
+        puts command
+        command
+      end
+    end
+
+    private :spawned_click_no_wait_command
 
     def click!
       assert_enabled

@@ -74,7 +74,7 @@ Dir.chdir tiptopdir do
 end
 
 # load development libs also in #click_no_wait processes
-Watir::PageContainer.class_eval do
+Watir::Element.class_eval do
   alias_method :__spawned_click_no_wait_command, :spawned_click_no_wait_command
 
   def spawned_click_no_wait_command(command)

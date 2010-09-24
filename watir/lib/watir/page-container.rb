@@ -48,26 +48,6 @@ module Watir
       page.innertext.strip
     end
 
-    def click_no_wait(element)
-      ruby_code = "require 'rubygems';" <<
-              "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
-              "#{element}.click!"
-      system(spawned_click_no_wait_command(ruby_code))
-    end
-
-    def spawned_click_no_wait_command(command)
-      unless $DEBUG
-        "start rubyw -e #{command.inspect}"
-      else
-        puts "#click_no_wait command:"
-        command = "ruby -e #{command.inspect}"
-        puts command
-        command
-      end
-    end
-
-    private :spawned_click_no_wait_command
-
     def set_container container
       @container = container
       @page_container = self
