@@ -5,20 +5,16 @@ require 'rake/testtask'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
- 
+
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |project|
-    tmp_changes_file = "#{project}/CHANGES"
-    tmp_version_file = "#{project}/VERSION"
-
-    FileUtils.cp "CHANGES", tmp_changes_file
-    FileUtils.cp "VERSION", tmp_version_file
-
-    Dir.chdir(project) {puts `rake.bat gem`}
-
-    FileUtils.rm tmp_changes_file
-    FileUtils.rm tmp_version_file
+    tmp_files = %w{CHANGES VERSION}
+    FileUtils.cp tmp_files, project
+    Dir.chdir(project) do
+      puts `rake.bat gem`
+      FileUtils.rm tmp_files
+    end
   end
   FileUtils.makedirs 'gems'
   gems = Dir['*/pkg/*.gem']
@@ -32,8 +28,9 @@ task :clean_subprojects do
   end
 end
 
-task :clean => [:clean_subprojects]
-CLEAN << 'gems/*' << 'test/reports'
+task :clean => [:clean_subprojects] do
+  FileUtils.rm_r Dir.glob("gems/*") << "test/reports", :force => true
+end
 
 desc 'Run core_tests tests for IE'
 Rake::TestTask.new :core_tests do |t|
@@ -72,13 +69,13 @@ namespace :cruise do
     Dir[report_dir].each do |f|
       sContent = File.readlines(f, '\n')
       sContent.each do |line|
-        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/, 
-          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
+        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/,
+                  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
       end
       File.open(f, "w+") { |file| file.puts sContent }
     end
   end
-  
+
   task :move_reports do
     reports = "test/reports/*.xml"
     add_style_sheet_to_reports(reports)
@@ -90,17 +87,17 @@ namespace :cruise do
       puts "Build results not copied. CC_BUILD_ARTIFACTS not defined"
     end
   end
-  
+
   task :verbose do
     # ci:setup_testunit also mucks with this
     ENV["TESTOPTS"] = "#{ENV["TESTOPTS"]} -v"
   end
-  
+
   desc 'Run tests for Internet Explorer'
   task :ie_core_tests => ['ci:setup:testunit', :verbose, :core_tests, :move_reports]
   desc 'Run tests for Firefox'
   task :ff_mozilla_all_tests => ['ci:setup:testunit', :verbose, :mozilla_all_tests, :move_reports]
-  
+
   desc 'Run all tests'
   task :all => [:ie_core_tests, :ff_mozilla_all_tests]
 end
