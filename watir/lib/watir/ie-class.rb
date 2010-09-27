@@ -482,6 +482,10 @@ module Watir
 
       Timeout::timeout(5*60) do
         begin
+          while @ie.busy
+            sleep interval
+          end
+
           until [READYSTATE_INTERACTIVE, READYSTATE_COMPLETE].include?(@ie.readyState)
             sleep interval
           end
