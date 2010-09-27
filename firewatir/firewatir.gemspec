@@ -9,7 +9,8 @@ $__firewatir_source_patterns = [
   'CHANGES',
   'README.rdoc',
   'rakefile.rb',
-  'VERSION'
+  'VERSION',
+  'firewatir.gemspec'
 ]
 
 spec = Gem::Specification.new do |s|

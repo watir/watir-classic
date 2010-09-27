@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 require 'rake/packagetask'
+require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 
@@ -19,6 +20,11 @@ Rake::RDocTask.new('rdoc') do |rdoc|
   rdoc.rdoc_files.include('lib/watir/contrib/*.rb')  
   rdoc.rdoc_files.include('lib/watir/*.rb')   
   rdoc.rdoc_files.exclude('lib/watir/camel_case.rb')
+end
+
+Rake::TestTask.new do |t|
+  t.test_files = FileList['unittests/core_tests.rb']
+  t.verbose = true
 end
 
 CLEAN << 'pkg' << 'rdoc'

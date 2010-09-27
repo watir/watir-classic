@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
-require 'rake/testtask'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
@@ -33,15 +32,13 @@ task :clean => [:clean_subprojects] do
 end
 
 desc 'Run core_tests tests for IE'
-Rake::TestTask.new :core_tests do |t|
-  t.test_files = FileList['watir/unittests/core_tests.rb']
-  t.verbose = true
+task :core_tests do
+  Dir.chdir("watir") {system "call rake.bat test"}
 end
 
 desc 'Run mozilla_all_tests for FireFox'
-Rake::TestTask.new :mozilla_all_tests do |t|
-  t.test_files = FileList['firewatir/unittests/mozilla_all_tests.rb']
-  t.verbose = true
+task :mozilla_all_tests do
+  Dir.chdir("firewatir") {system "call rake.bat test"}
 end
 
 #
