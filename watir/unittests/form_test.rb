@@ -36,12 +36,23 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert_equal('Click Me', browser.form(:index, 1).button(:name, 'b1').value)
   end
 
-  # The following tests form bug 2261 
+  # The following tests form bug 2261
   tag_method :test_form_outer_html, :fails_on_firefox
-  def test_form_outer_html 
+
+  def test_form_outer_html
     expected = "\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>"
-    assert_equal(expected, browser.form(:name, 'test2').html)
+    actual = browser.form(:name, 'test2').html
+
+    # ignore attributes order by sorting them
+    sorted_expected, sorted_actual = [expected, actual].map! do |html|
+      html.strip.downcase.scan(%r{<form (.*)><br><(.*)> </form>}).flatten.
+              map {|part| part.split(" ").sort.join(" ")}.join("><br><")
+    end
+    assert_not_equal("", sorted_expected)
+    assert_not_equal("", sorted_actual)
+    assert_equal(sorted_expected, sorted_actual)
   end
+  
   tag_method :test_form_inner_html, :fails_on_ie
   def test_form_inner_html
     expected = "\n<br><input value=\"Submit\" type=\"submit\">\n"
