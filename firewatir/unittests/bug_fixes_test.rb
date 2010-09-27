@@ -149,7 +149,7 @@ class TC_Bugs< Test::Unit::TestCase
     def test_file_field_bug_20
         goto_page("fileupload.html")
         # Enter dummy path.
-        if(RUBY_PLATFORM =~ /.*mswin.*/)
+        if(RUBY_PLATFORM =~ /mswin|msys|mingw32/)
             browser.file_field(:name, "file3").set("c:\\results.txt")
         else    
             browser.file_field(:name, "file3").set("/user/lib/results.txt")
