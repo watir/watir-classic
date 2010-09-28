@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 
 module FireWatir
   include Watir::Exception
@@ -367,6 +368,11 @@ module FireWatir
     def contains_text(target)
       #puts "Text to match is : #{match_text}"
       #puts "Html is : #{self.text}"
+
+      if !exists? || text.nil?
+        return false
+      end
+
       case target
         when Regexp
         self.text.match(target)
