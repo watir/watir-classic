@@ -17,8 +17,14 @@ def launch_subrake(cmd)
   puts `#{$0} #{cmd}`
 end
 
+task :default => :gems
+
+task :gemdir do
+  mkdir_p "gems" if !File.exist?("gems")
+end
+
 desc "Generate all the Watir gems"
-task :gems do
+task :gems => :gemdir do
   projects.each do |project|
     tmp_files = %w{CHANGES VERSION}
     FileUtils.cp tmp_files, project
@@ -27,7 +33,6 @@ task :gems do
       FileUtils.rm tmp_files
     end
   end
-  FileUtils.makedirs 'gems'
   gems = Dir['*/pkg/*.gem']
   gems.each {|gem| FileUtils.install gem, 'gems'}
 end
@@ -41,6 +46,7 @@ task :clean_subprojects do
   end
 end
 
+desc "Clean the build environment and projects"
 task :clean => [:clean_subprojects] do
   FileUtils.rm_r Dir.glob("gems/*") << "test/reports", :force => true
 end
