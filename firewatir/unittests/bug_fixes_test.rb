@@ -103,6 +103,11 @@ class TC_Bugs< Test::Unit::TestCase
         assert_false(browser.contains_text(/pass/))
     end
 
+    def test_attribute_name_fails_with_hyphen
+      goto_page("div.html")
+      assert("attribute2", browser.div(:id, "div1").attribute("data-html5-attribute"))
+    end
+
     tag_method :test_frame_bug_21, :fails_on_ie
     def test_frame_bug_21
         goto_page("frame_buttons.html")

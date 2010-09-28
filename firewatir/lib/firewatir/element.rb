@@ -91,12 +91,16 @@ module FireWatir
       when "url", "href", "src", "action", "name"
         return_value = js_eval_method("getAttribute(\"#{attribute_name}\")")
       else
-        jssh_command = "var attribute = '';
-          if(#{element_object}.#{attribute_name} != undefined)
-              attribute = #{element_object}.#{attribute_name};
-          else
-              attribute = #{element_object}.getAttribute(\"#{attribute_name}\");
-          attribute;"
+        if valid_js_identifier? attribute_name
+          jssh_command = "var attribute = '';
+             if(#{element_object}.#{attribute_name} != undefined)
+                 attribute = #{element_object}.#{attribute_name};
+             else
+                 attribute = #{element_object}.getAttribute(\"#{attribute_name}\");
+             attribute;"
+        else
+          jssh_command = "var attribute = ''; attribute = #{element_object}.getAttribute(\"#{attribute_name}\"); attribute;"
+        end
         return_value = js_eval(jssh_command)
       end
       if attribute_name == "value"
