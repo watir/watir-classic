@@ -5,13 +5,25 @@ gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
 projects = ['watir', 'firewatir', 'commonwatir']
 
+def launch_subrake(cmd)
+  # if Rake.application.unix?
+  #   puts `#{$0} #{cmd}`
+  # else
+  #   puts `rake.bat #{cmd}`
+  # end
+  # I have left the above commented out because I am not certain that
+  # the below works on Windows. If it does, delete the above. If not,
+  # uncomment above and delete the below.
+  puts `#{$0} #{cmd}`
+end
+
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |project|
     tmp_files = %w{CHANGES VERSION}
     FileUtils.cp tmp_files, project
     Dir.chdir(project) do
-      puts `rake.bat gem`
+      launch_subrake "gem"
       FileUtils.rm tmp_files
     end
   end
@@ -22,8 +34,10 @@ end
 
 desc "Clean all the projects"
 task :clean_subprojects do
-  projects.each do |x|
-    Dir.chdir(x) {puts `rake.bat clean`}
+  projects.each do |project|
+    Dir.chdir(project) do
+      launch_subrake "clean"
+    end
   end
 end
 
@@ -33,12 +47,16 @@ end
 
 desc 'Run core_tests tests for IE'
 task :core_tests do
-  Dir.chdir("watir") {system "call rake.bat test"}
+  Dir.chdir("watir") do
+    launch_subrake "test"
+  end
 end
 
 desc 'Run mozilla_all_tests for FireFox'
 task :mozilla_all_tests do
-  Dir.chdir("firewatir") {system "call rake.bat test"}
+  Dir.chdir("firewatir") do
+    launch_subrake "test"
+  end
 end
 
 #
