@@ -981,4 +981,9 @@ module FireWatir
     end
 
   end # Firefox
+
+  # Wait until passed block returns true
+  def wait_until(*args)
+    Watir::Waiter.wait_until(*args) {yield}
+  end
 end # FireWatir
