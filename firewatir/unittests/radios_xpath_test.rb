@@ -45,7 +45,6 @@ class TC_Radios_XPath < Test::Unit::TestCase
     def test_Radio_isSet
        assert_raises(UnknownObjectException) {   browser.radio(:xpath, "//input[@name='noName']").isSet?  }  
 
-       puts "radio 1 is set : #{ browser.radio(:xpath, "//input[@name='box1']").isSet? } "
        assert_false(browser.radio(:xpath, "//input[@name='box1']").isSet?)   
 
        assert(browser.radio(:xpath, "//input[@name='box3']").isSet?)   

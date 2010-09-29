@@ -137,7 +137,7 @@ class TC_Links < Test::Unit::TestCase
         assert_nothing_raised {browser.link(:text, 'Create').exists? }   
     end
     def test_link_to_s
-       puts  browser.link(:id,"linktos").to_s
+      assert_equal("name:         \ntype:         \nid:           linktos\nvalue:        \ndisabled:     \nhref:         link_pass.html\ninner text:   to string test", browser.link(:id,"linktos").to_s)
     end
 end
 

@@ -111,7 +111,7 @@ class TC_Images_XPath < Test::Unit::TestCase
         #assert_raises(UnknownObjectException ) { browser.image(:xpath , "//img[@src='no_image_with_this']").hasLoaded? }
         
         # to string tests -- output should be verified!
-        puts browser.image(:xpath , "//img[@name='circle']").to_s
+        assert_equal("name:         circle\ntype:         \nid:           \nvalue:        \ndisabled:     \nsrc:          images/circle.jpg\nheight:       106\nalt:          \nwidth:        106", browser.image(:xpath , "//img[@name='circle']").to_s)
     end
     
 end

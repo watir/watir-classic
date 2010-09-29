@@ -122,8 +122,8 @@ class TC_Images < Test::Unit::TestCase
         assert_equal('square_image', browser.image(:id, 'square').title)
 
         # to string tests -- output should be verified!
-        puts browser.image(:name  , "circle").to_s
-        puts  browser.image(:index , 2).to_s
+        assert_equal("name:         circle\ntype:         \nid:           \nvalue:        \ndisabled:     \nsrc:          images/circle.jpg\nheight:       106\nalt:          \nwidth:        106", browser.image(:name, "circle").to_s)
+        assert_equal("name:         \ntype:         \nid:           square\nvalue:        \ndisabled:     \nsrc:          images/square.jpg\nheight:       88\nalt:          \nwidth:        88", browser.image(:index , 2).to_s)
     end
     
     def test_image_iterator

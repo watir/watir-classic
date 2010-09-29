@@ -24,8 +24,8 @@ class TC_Divs < Test::Unit::TestCase
   
   tag_method :test_show_all_objects, :fails_on_ie
   def test_show_all_objects
-    assert_equal(36, browser.show_all_objects.length)
-    assert_equal(3,browser.div(:id,"text_fields1").show_all_objects.length)
+    assert_equal(36, browser.show_all_objects(false).length)
+    assert_equal(3,browser.div(:id,"text_fields1").show_all_objects(false).length)
    
     assert_equal(8,browser.text_fields.length)
     assert_equal(3,browser.div(:id,"text_fields1").text_fields.length)
