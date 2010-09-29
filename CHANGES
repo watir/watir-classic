@@ -29,6 +29,10 @@
 * It is now possible to execute unit-tests within gems with `rake test` (Jarmo Pertman)
 * Don't output unnecessary information to stdout in FireWatir unit-tests (Željko Filipin)
 
+
+Whole Changelog is available at http://github.com/bret/watir/compare/v1.6.5...v1.6.6
+
+
 == Version 1.6.5
 
 Charley Baker was release manager for this release of Watir.
