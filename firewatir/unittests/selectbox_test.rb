@@ -119,8 +119,16 @@ class TC_SelectList < Test::Unit::TestCase
             index+=1
         end
         assert_equal( index-1, browser.select_lists.length)
-        # Bug Fix 25 
-        browser.select_lists.each { |list| puts list.getAllContents() }
+        # Bug Fix 25
+        values = [
+          ["Option 1", "Option 2", "Option 3", "Option 4"],
+          ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"],
+          ["Option 1", "Option 2", "Option 3", "Option 4"],
+          ["Option 1", "Option 2"],
+          ["Option 1", "Option 2"]]
+        browser.select_lists.each_with_index do |list, index|
+          assert_equal(values[index], list.getAllContents())
+        end
     end
 end
 
