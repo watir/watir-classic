@@ -26,6 +26,8 @@
 
 * Some rdoc cleanup (marekj)
 * Removed Watir::Utils (Jarmo Pertman)
+* It is now possible to execute unit-tests within gems with `rake test` (Jarmo Pertman)
+* Don't output unnecessary information to stdout in FireWatir unit-tests (Željko Filipin)
 
 == Version 1.6.5
 
