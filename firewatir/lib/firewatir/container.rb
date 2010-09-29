@@ -470,17 +470,19 @@ module FireWatir
     # Output:
     #   Prints all the available elements on the page.
     #
-    def show_all_objects
-      puts "-----------Objects in the current context-------------" 
+    def show_all_objects(output = true)
       locate if respond_to?(:locate)
       elements = Document.new(self).all
-      puts elements.length
-      elements.each  do |n|
-        puts n.tagName
-        puts n.to_s
-        puts "------------------------------------------" 
+      if output
+        puts "-----------Objects in the current context-------------"
+        puts elements.length
+        elements.each  do |n|
+          puts n.tagName
+          puts n.to_s
+          puts "------------------------------------------"
+        end
+        puts "Total number of objects in the current context :	#{elements.length}"
       end
-      puts "Total number of objects in the current context :	#{elements.length}"
       return elements
       # Test the index access. 
       # puts doc[35].to_s
