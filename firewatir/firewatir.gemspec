@@ -7,7 +7,6 @@ $__firewatir_source_patterns = [
   'unittests/html/images/*.*',
   'LICENSE',
   'CHANGES',
-  'README.rdoc',
   'rakefile.rb',
   'VERSION',
   'firewatir.gemspec'
