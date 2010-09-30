@@ -13,14 +13,14 @@ Gem:: https://rubygems.org/gems/commonwatir
 
 You have to install Ruby and RubyGems first. To be able to drive Firefox you have to install Firefox add-on. Detailed installation instructions are at http://watir.com/installation
 
-Windows
+=== Windows
 
 To install Internet Explorer and Firefox driver:
 
   gem update --system
   gem install watir
 
-Mac
+=== Mac
 
 To install Firefox driver:
 
@@ -32,7 +32,7 @@ To install Safari driver, you have to install Xcode first:
   sudo gem install rb-appscript
   sudo gem install safariwatir
 
-Linux:
+=== Linux
 
 To install Firefox driver:
 
