@@ -9,7 +9,7 @@ Gem:: https://rubygems.org/gems/watir
 Gem:: https://rubygems.org/gems/firewatir
 Gem:: https://rubygems.org/gems/commonwatir
 
-== INSTALL
+== Install
 
 You have to install Ruby and RubyGems first. To be able to drive Firefox you have to install Firefox add-on. Detailed installation instructions are at http://watir.com/installation
 
@@ -39,7 +39,7 @@ To install Firefox driver:
   sudo gem update --system
   sudo gem install firewatir
 
-== EXAMPLES
+== Examples
 
 Some examples from http://watir.com/examples
 
