@@ -1,5 +1,4 @@
 # feature tests for Select Boxes
-# revision: $Revision$
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'

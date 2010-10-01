@@ -1,5 +1,4 @@
 # feature tests for Links with multiple attributes
-# revision: $Revision: 1009 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'

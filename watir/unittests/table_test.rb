@@ -1,6 +1,4 @@
 # feature tests for Tables
-# revision: $Revision$
-
 # Why do so many of these tests call "strip"? A distinct smell...
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
