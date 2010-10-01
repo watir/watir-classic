@@ -27,7 +27,7 @@ To install Firefox driver:
   sudo gem update --system
   sudo gem install firewatir
 
-To install Safari driver, you have to install Xcode first:
+To install Safari driver, you have to install Xcode first and then:
 
   sudo gem install rb-appscript
   sudo gem install safariwatir
@@ -43,52 +43,56 @@ To install Firefox driver:
 
 Some examples from http://watir.com/examples
 
-Including the Firefox driver
+Including Watir gem to drive Internet Explorer on Windows
+
+  require 'watir'
+
+Including FireWatir gem to drive Firefox on Windows/Mac/Linux
 
   require 'firewatir'
 
 Starting a new browser & and going to our site
 
-  b = Watir::Browser.new
-  b.goto("http://bit.ly/watir-example")
+  browser = Watir::Browser.new
+  browser.goto("http://bit.ly/watir-example")
 
 Setting a text field
 
-  b.text_field(:name, "entry.0.single").set "Watir"
+  browser.text_field(:name => "entry.0.single").set "Watir"
 
 Setting a multi-line text box
 
-  b.text_field(:name, "entry.1.single").set "I come here from Australia. \n The weather is great here."
+  browser.text_field(:name => "entry.1.single").set "I come here from Australia. \n The weather is great here."
 
 Setting and clearing a radio button
 
-  b.radio(:value, "watir").set
-  b.radio(:value, "watir".clear
+  browser.radio(:value => "watir").set
+  browser.radio(:value => "watir".clear
 
 Setting and clearing check boxes
 
-  b.checkbox(:value, "Ruby").set
-  b.checkbox(:value, "Python").set
-  b.checkbox(:value, "Python").clear
+  browser.checkbox(:value => "Ruby").set
+  browser.checkbox(:value => "Python").set
+  browser.checkbox(:value => "Python").clear
 
 Clicking a button
 
-  b.button(:name, "logon").click
+  browser.button(:name => "logon").click
 
 Clearing, getting and selecting selection list values
 
-  b.select_list(:name, "entry.6.single").clear
-  puts b.select_list(:name, "entry.6.single").options
-  b.select_list(:name, "entry.6.single").select "Chrome"
+  browser.select_list(:name => "entry.6.single").clear
+  puts browser.select_list(:name => "entry.6.single").options
+  browser.select_list(:name => "entry.6.single").select "Chrome"
 
 Clicking a button
 
-  b.button(:name, "submit").click
+  browser.button(:name => "submit").click
 
 Checking for text in a page
 
-  puts b.text.include? "Your response has been recorded."
+  puts browser.text.include? "Your response has been recorded."
 
 Checking the title of a page
 
-  puts b.title == "Thanks!"
+  puts browser.title == "Thanks!"
