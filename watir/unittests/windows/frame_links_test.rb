@@ -1,5 +1,4 @@
 # tests of click_no_wait for links in frames
-# revision: $Revision: 1078 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'

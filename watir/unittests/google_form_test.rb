@@ -1,5 +1,4 @@
 # defect report from users of Watir Recorder
-# revision: $Revision: 746 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'

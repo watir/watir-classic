@@ -1,5 +1,4 @@
 # feature tests for attaching to existing IE windows
-# revision: $Revision: 1417 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'

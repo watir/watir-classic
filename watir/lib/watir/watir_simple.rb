@@ -49,7 +49,6 @@ module Watir
 # Most action methods in Watir::Simple will automatically wait for the browser
 # not to be busy before and after they perform the specified action.
 #--
-# revision: $Revision$
   module Simple
 
   # Open up a browser and point it at a certain URL.

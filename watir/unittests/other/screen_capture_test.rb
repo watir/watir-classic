@@ -1,5 +1,4 @@
 # feature tests for screen capture
-# revision: $Revision:1338 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'

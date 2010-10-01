@@ -1,5 +1,4 @@
 # defect reproduction
-# revision: $Revision: 958 $
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
