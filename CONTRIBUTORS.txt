@@ -1,0 +1,55 @@
+This is an old, out of date list of our contributors, from an old README file.
+Watir exists because of the help and assistance of many different people over the ages.
+More recent contributors are acknowledged in the CHANGES file.
+
+Contributors:
+   Bret Pettichord
+   Paul Rogers
+   Jonathan Kohl
+   Chris Morris
+   Karlin Fox
+   Lorenzo Jorquera
+   Atilla Ozgur
+   Justin McCarthy
+   Chris McMahon
+   Elisabeth Hendrickson
+   Michael Kelly
+   Peter Chau
+   Danny Faught
+   Andy Sipe
+   John Lloyd-Jones
+   Chris Hedges
+   Park Heesob
+   Shashank Date
+   Jared Luxenberg
+   Alexey Verkhovsky
+   Tuyet Cong-Ton-Nu
+   Jeff Wood
+   Angrez Singh
+   Abhishek Goliya
+   Yaxin Wang
+   Michael Bolton
+   Paul Carvalho
+   Konstantin Sobolev
+   David Schmidt
+   Dara Lillis
+   Charley Baker
+   Prema Arya
+   Xavier Noria
+   Jeff Fry
+   Zeljko Filipin
+   Paul Taylor - Bug fix 194
+   Vincent Xu - Chinese input support
+   Tomislav Car - Filefield fix (210)
+   Michael Hwee & Aidy Lewis - Multiple attribute support for FireWatir (233)
+   Alan Baird - Fix for visible? method (253)
+   Jari Bakken - Regexp support for includes? and selected? methods for select lists (261)
+
+Acknowledgements:
+   Chris Morris
+   Brian Marick
+   Jonathan Kohl
+   Penny Tonita
+   Janet Gregory
+   Andy Tinkham
+   Jacinda Scott (logo creator)
