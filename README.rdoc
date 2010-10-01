@@ -8,6 +8,9 @@ Support:: http://watir.com/support
 Gem:: https://rubygems.org/gems/watir
 Gem:: https://rubygems.org/gems/firewatir
 Gem:: https://rubygems.org/gems/commonwatir
+Gem:: https://rubygems.org/gems/safariwatir
+Gem:: https://rubygems.org/gems/watir-webdriver
+Gem:: https://rubygems.org/gems/celerity
 
 == Install
 
