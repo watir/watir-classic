@@ -3,12 +3,13 @@ require 'rake/clean'
 require 'fileutils'
 gem 'ci_reporter'
 require 'ci/reporter/rake/test_unit'
+
 projects = ['watir', 'firewatir', 'commonwatir']
 
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |project|
-    tmp_files = %w{CHANGES VERSION}
+    tmp_files = %w{CHANGES VERSION  README.rdoc}
     FileUtils.cp tmp_files, project
     Dir.chdir(project) do
       puts `rake.bat gem`
@@ -97,17 +98,4 @@ namespace :cruise do
 
   desc 'Run all tests'
   task :all => [:ie_core_tests, :ff_mozilla_all_tests]
-end
-
-desc 'Build the html for the website (wtr.rubyforge.org)'
-task :website do
-  Dir.chdir 'doc' do
-    puts system('call webgen -V 1')
-  end
-end
-
-desc 'Build and publish the html for the website at wtr.rubyforge.org'
-task :publish_website => [:website] do
-  user = 'bret' # userid on rubyforge
-  puts system("call pscp -v -r doc\\output\\*.* #{user}@rubyforge.org:/var/www/gforge-projects/wtr")
 end

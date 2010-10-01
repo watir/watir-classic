@@ -9,7 +9,8 @@ $__firewatir_source_patterns = [
   'CHANGES',
   'rakefile.rb',
   'VERSION',
-  'firewatir.gemspec'
+  'firewatir.gemspec',
+  "README.rdoc"
 ]
 
 spec = Gem::Specification.new do |s|
@@ -39,10 +40,12 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'activesupport', '=2.3.9'
 
   s.has_rdoc = true
-    s.rdoc_options << 
+  s.rdoc_options <<
       '--title' << 'FireWatir API Reference' <<
   		'--accessor' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R' <<
-  		'--exclude' << 'unittests|camel_case.rb|testUnitAddons.rb'
+  		'--exclude' << 'unittests|camel_case.rb|testUnitAddons.rb' <<
+        '--main' << 'README.rdoc'
+  s.extra_rdoc_files = 'README.rdoc'
 
 #  s.test_file  = 'unittests/mozilla_all_tests.rb'
 

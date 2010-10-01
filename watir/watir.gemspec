@@ -1,7 +1,7 @@
 require 'watir-rdoc'
 
 $__watir_source_patterns = [
-    'CHANGES', 'rakefile.rb', 'VERSION', 'watir.gemspec', 'watir-rdoc.rb',
+    'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb',
     'lib/watir/*.rb', 'lib/watir/AutoItX3.dll',
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
@@ -42,6 +42,7 @@ spec = Gem::Specification.new do |s|
 
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
+  s.extra_rdoc_files = $WATIR_EXTRA_RDOC_FILES
   s.executables << 'watir-console'
 
 #  s.test_file  = 'unittests/core_tests.rb'
