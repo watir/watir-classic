@@ -1,4 +1,4 @@
-== Version 1.6.6 - 2010/09/XX
+== Version 1.6.6 - 2010/10/2
 
 === IE improvements
 
@@ -25,9 +25,11 @@
 === Cleanup & Maintenance
 
 * Some rdoc cleanup (marekj)
+* README changes (Željko Filipin)
 * Removed Watir::Utils (Jarmo Pertman)
 * It is now possible to execute unit-tests within gems with `rake test` (Jarmo Pertman)
 * Don't output unnecessary information to stdout in FireWatir unit-tests (Željko Filipin)
+* Update the 3 gem projects to each use the common readme file (Bret)
 
 
 Whole Changelog is available at http://github.com/bret/watir/compare/v1.6.5...v1.6.6
