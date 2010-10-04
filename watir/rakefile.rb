@@ -44,33 +44,3 @@ if defined? Rake::GemPackageTask
 else
   puts 'Warning: without Rubygems packaging tasks are not available'
 end
-
-desc "Create the bonus files zip"
-task :bonus_zip => [:rdoc] do
-
-  begin
-    gem 'rubyzip'
-    require 'zip/zip'
-  rescue LoadError
-    puts "rubyzip needs to be installed: gem install rubyzip."
-    raise
-  end
-  
-  version = File.read("VERSION").strip rescue "0.0.0"
-  bonus_zip = "pkg/watir-bonus-#{version}.zip"
-
-  if File.exist?(bonus_zip)
-    File.delete(bonus_zip)
-  end
-  if !File.directory?("pkg")
-    Dir.mkdir("pkg")
-  end
-  Zip::ZipFile::open(bonus_zip, true) do |zf|
-    Dir['{rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
-  end
-  
-  puts "  Successfully built BonusZip"
-  puts "  File: #{bonus_zip}"
-  
-end
-
