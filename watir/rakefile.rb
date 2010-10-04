@@ -66,7 +66,7 @@ task :bonus_zip => [:rdoc] do
     Dir.mkdir("pkg")
   end
   Zip::ZipFile::open(bonus_zip, true) do |zf|
-    Dir['{doc,rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
+    Dir['{rdoc,examples,unittests}/**/*'].each { |f| zf.add(f, f) }
   end
   
   puts "  Successfully built BonusZip"
