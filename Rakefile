@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
-gem 'ci_reporter'
-require 'ci/reporter/rake/test_unit'
 
 projects = ['watir', 'firewatir', 'commonwatir']
 
@@ -56,46 +54,4 @@ namespace :watirspec do
     sh "git submodule init"
     sh "git submodule update"
   end
-end
-
-#
-# ----------------------------------------------------------------------------
-#
-
-namespace :cruise do
-  def add_style_sheet_to_reports(report_dir)
-    Dir[report_dir].each do |f|
-      sContent = File.readlines(f, '\n')
-      sContent.each do |line|
-        line.sub!(/<\?xml version=\"1.0\" encoding=\"UTF-8\"\?>/,
-                  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text\/xsl\" href=\"transform-results.xsl\"?>")
-      end
-      File.open(f, "w+") { |file| file.puts sContent }
-    end
-  end
-
-  task :move_reports do
-    reports = "test/reports/*.xml"
-    add_style_sheet_to_reports(reports)
-    FileUtils.cp("transform-results.xsl", "test/reports")
-    if ENV['CC_BUILD_ARTIFACTS']
-      Dir[reports].each { |e| FileUtils.cp(e, ENV['CC_BUILD_ARTIFACTS']) }
-      FileUtils.cp("transform-results.xsl", ENV['CC_BUILD_ARTIFACTS'])
-    else
-      puts "Build results not copied. CC_BUILD_ARTIFACTS not defined"
-    end
-  end
-
-  task :verbose do
-    # ci:setup_testunit also mucks with this
-    ENV["TESTOPTS"] = "#{ENV["TESTOPTS"]} -v"
-  end
-
-  desc 'Run tests for Internet Explorer'
-  task :ie_core_tests => ['ci:setup:testunit', :verbose, :core_tests, :move_reports]
-  desc 'Run tests for Firefox'
-  task :ff_mozilla_all_tests => ['ci:setup:testunit', :verbose, :mozilla_all_tests, :move_reports]
-
-  desc 'Run all tests'
-  task :all => [:ie_core_tests, :ff_mozilla_all_tests]
 end
