@@ -1,4 +1,11 @@
 module JsshSocket
+  # Determine if str is a valid identifier in Javascript
+  # This is NOT a full validation - it will mess up on unicode. Sorry.
+  # See Section 7.6 of the ECMA-262 spec
+  def valid_js_identifier?(str)
+    /\A[a-z$_][a-z0-9]*\Z/i.match(str)
+  end
+
   # Evaluate javascript and return result. Raise an exception if an error occurred.
   def js_eval(str)
     str.gsub!("\n", "")
