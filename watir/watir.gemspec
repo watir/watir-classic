@@ -1,7 +1,7 @@
 require 'watir-rdoc'
 
 $__watir_source_patterns = [
-    'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb',
+    'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb', 'LICENSE',
     'lib/watir/*.rb', 'lib/watir/AutoItX3.dll',
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',

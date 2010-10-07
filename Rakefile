@@ -7,7 +7,7 @@ projects = ['watir', 'firewatir', 'commonwatir']
 desc "Generate all the Watir gems"
 task :gems do
   projects.each do |project|
-    tmp_files = %w{CHANGES VERSION  README.rdoc}
+    tmp_files = %w{CHANGES VERSION  README.rdoc LICENSE}
     FileUtils.cp tmp_files, project
     Dir.chdir(project) do
       puts `rake.bat gem`
