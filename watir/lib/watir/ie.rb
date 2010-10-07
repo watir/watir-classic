@@ -1,3 +1,4 @@
+require 'watir'
 require 'watir/core'
 require 'watir/winClicker'
 require 'watir/close_all'
@@ -28,6 +29,5 @@ require 'watir/popup'
 require 'watir/frame'
 require 'watir/modal_dialog'
 require 'watir/collections'
-require 'watir'
 
 require 'watir/camel_case'

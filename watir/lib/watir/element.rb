@@ -2,7 +2,8 @@ module Watir
   # Base class for html elements.
   # This is not a class that users would normally access.
   class Element # Wrapper
-    include Watir::Exception
+    include ElementExtensions
+    include Exception
     include Container # presumes @container is defined
     attr_accessor :container
 

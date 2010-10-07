@@ -6,8 +6,6 @@ require 'timeout'
 require 'watir/win32ole'
 
 require 'logger'
-require 'watir/exceptions'
-require 'watir/matches'
 
 require 'watir/core_ext'
 require 'watir/logger'

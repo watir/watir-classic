@@ -1,6 +1,7 @@
 module Watir
   class IE
-    include Watir::Exception
+    include Wait
+    include Exception
     include Container
     include PageContainer
 

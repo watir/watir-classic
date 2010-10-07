@@ -2,6 +2,7 @@ module FireWatir
   # Base class for html elements.
   # This is not a class that users would normally access.
   class Element
+    include Watir::ElementExtensions
     include FireWatir::Container
     # Number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14

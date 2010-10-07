@@ -4,6 +4,7 @@ require 'socket'
 gem 'activesupport', '=2.3.9'
 require 'active_support'
 
+require 'watir'
 require 'firewatir/exceptions'
 require 'firewatir/jssh_socket'
 require 'firewatir/container'
@@ -29,10 +30,7 @@ require "firewatir/elements/file_field"
 require "firewatir/elements/radio_check_common"
 require "firewatir/element_collections"
 
-require 'watir/matches'
 require 'firewatir/firefox'
-require 'watir'
-
 
 #--
 # this only has an effect if firewatir is required before anyone invokes 

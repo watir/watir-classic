@@ -4,4 +4,8 @@
 # implementations.
 
 require 'watir/waiter'
+require 'watir/wait'
+require 'watir/element_extensions'
+require 'watir/exceptions'
+require 'watir/matches'
 require 'watir/browser'

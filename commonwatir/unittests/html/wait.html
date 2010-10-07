@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>Wait Tests</title>
+    <script type="text/javascript">
+        function toggleDiv() {
+            var divStyle = document.getElementById('div1').style;
+            divStyle.display = divStyle.display == "none" ? "" : "none";
+        }
+    </script>
+</head>
+
+<div id="div1">div1</div>
+<a id="link1" href="javascript:void(0)" onclick="javascript:setTimeout(toggleDiv, 500);">Click me!</a>
+
+</html>

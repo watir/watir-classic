@@ -3,6 +3,7 @@ module FireWatir
   include Watir::Exception
 
   class Firefox
+    include Watir::Wait
     include FireWatir::Container
 
     # XPath Result type. Return only first node that matches the xpath expression.
