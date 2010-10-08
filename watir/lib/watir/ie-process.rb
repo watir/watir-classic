@@ -17,7 +17,7 @@ module Watir
       attr_reader :process_id
       
       def window
-        Wait.wait_until do
+        Wait.until do
           IE.each do | ie |
             window = ie.ie
             hwnd = ie.hwnd

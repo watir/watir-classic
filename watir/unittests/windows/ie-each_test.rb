@@ -39,9 +39,8 @@ class TC_IE_Each < Test::Unit::TestCase
     Watir::IE.each {|ie| assert_equal(Watir::IE, ie.class)}    
   end
   
-  include Watir
   def teardown
     @ie.each {|ie| ie.close }
-    wait_until {Watir::IE.process_count == 0}
+    Wait.until {Watir::IE.process_count == 0}
   end
 end

@@ -20,7 +20,7 @@ module Watir
           raise NoMethodError, "undefined method `#{m}' for #{@element.inspect}:#{@element.class}"
         end
 
-        Watir::Wait.wait_until(@timeout) { @element.present? }
+        Watir::Wait.until(@timeout) { @element.present? }
         @element.send(m, *args, &block)
       end
     end
@@ -47,7 +47,7 @@ module Watir
 
     def when_present(timeout = 60)
       if block_given?
-        Watir::Wait.wait_until(timeout) { self.present? }
+        Watir::Wait.until(timeout) { self.present? }
         yield self
       else
         return WhenPresentDecorator.new(self, timeout)
@@ -55,11 +55,11 @@ module Watir
     end
 
     def wait_until_present(timeout = 60)
-      Watir::Wait.wait_until(timeout) { self.present? }
+      Watir::Wait.until(timeout) { self.present? }
     end
 
     def wait_while_present(timeout = 60)
-      Watir::Wait.wait_while(timeout) { self.present? }
+      Watir::Wait.while(timeout) { self.present? }
     end
 
   end # module ElementExtensions

@@ -11,7 +11,7 @@ module Watir
     # Wait until the block evaluates to true or times out.
     #
 
-    def wait_until(timeout = 60, &block)
+    def until(timeout = 60, &block)
       end_time = ::Time.now + timeout
 
       until ::Time.now > end_time
@@ -26,7 +26,7 @@ module Watir
     #
     # Wait while the block evaluates to true or times out.
     #
-    def wait_while(timeout = 60, &block)
+    def while(timeout = 60, &block)
       end_time = ::Time.now + timeout
 
       until ::Time.now > end_time

@@ -4,6 +4,7 @@
 # implementations.
 
 require 'watir/wait'
+require 'watir/wait_helper'
 require 'watir/element_extensions'
 require 'watir/exceptions'
 require 'watir/matches'

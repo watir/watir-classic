@@ -7,7 +7,7 @@ module Watir
 # Like regular Ruby "until", except that a TimeOutException is raised
 # if the timeout is exceeded. Timeout is IE.attach_timeout.
   def self.until_with_timeout # block
-    Wait.wait_until(IE.attach_timeout) { yield }
+    Wait.until(IE.attach_timeout) { yield }
   end
 
   @@autoit = nil

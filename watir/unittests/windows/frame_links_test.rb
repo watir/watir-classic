@@ -4,7 +4,6 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_L
 require 'unittests/setup'
 
 class TC_Frame_Links < Test::Unit::TestCase
-  include Watir
   
   def setup
     goto_page "frame_links.html"
@@ -17,7 +16,7 @@ class TC_Frame_Links < Test::Unit::TestCase
   
   def test_click_no_wait_in_a_frame
     browser.frame('linkFrame').link(:text, 'test1').click_no_wait
-    wait_until(10){browser.frame('linkFrame').text.include?('Links2-Pass')}
+    Wait.until(10){browser.frame('linkFrame').text.include?('Links2-Pass')}
     assert(browser.frame('linkFrame').text.include?('Links2-Pass'))
   end  
   

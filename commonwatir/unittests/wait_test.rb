@@ -98,4 +98,22 @@ class Wait < Test::Unit::TestCase
   def test_wait_while_present_exception
     assert_raises(Watir::Wait::TimeoutError) {browser.div(:id => "div1").wait_while_present(0.1)}
   end
+
+  def test_wait_module_until
+    div = browser.div(:id => "div1")
+    assert div.visible?
+    browser.link(:id => "link1").click
+
+    Watir::Wait.until(2) {not div.visible?}
+    assert !div.visible?
+  end
+
+  def test_wait_module_while
+    div = browser.div(:id => "div1")
+    assert div.visible?
+    browser.link(:id => "link1").click
+
+    Watir::Wait.while(2) {div.visible?}
+    assert !div.visible?
+  end
 end

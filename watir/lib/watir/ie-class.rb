@@ -1,6 +1,6 @@
 module Watir
   class IE
-    include Wait
+    include WaitHelper
     include Exception
     include Container
     include PageContainer
