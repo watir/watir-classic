@@ -1,4 +1,7 @@
 # feature tests for wait_until
+#
+# Watir::Waiter is DEPRECATED! Use methods from Watir::Wait and Watir::ElementExtensions instead!
+#
 
 require 'watir/testcase'
 require 'watir/waiter'

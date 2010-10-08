@@ -23,5 +23,4 @@ require 'watir/image'
 require 'watir/link'
 require 'watir/html_element'
 
-require 'watir/waiter'
 require 'watir/module'

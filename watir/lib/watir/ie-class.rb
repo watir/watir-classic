@@ -295,7 +295,7 @@ module Watir
         Watir::until_with_timeout do
           ieTemp = IE._find how, what
         end
-      rescue TimeOutException
+      rescue Watir::Wait::TimeoutError
         raise NoMatchingWindowFoundException,
                  "Unable to locate a window with #{how} of #{what}"
       end

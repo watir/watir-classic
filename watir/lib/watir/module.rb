@@ -4,12 +4,10 @@ module Watir
 # Directory containing the watir.rb file
   @@dir = File.expand_path(File.dirname(__FILE__))
 
-  ATTACHER = Waiter.new
 # Like regular Ruby "until", except that a TimeOutException is raised
 # if the timeout is exceeded. Timeout is IE.attach_timeout.
   def self.until_with_timeout # block
-    ATTACHER.timeout = IE.attach_timeout
-    ATTACHER.wait_until { yield }
+    Wait.wait_until(IE.attach_timeout) { yield }
   end
 
   @@autoit = nil

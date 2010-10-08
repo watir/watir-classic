@@ -1,3 +1,8 @@
+#######
+#
+# Using Watir::Waiter is DEPRECATED! Use Watir::Wait and Watir::ElementExtensions methods instead!
+#
+#######
 require 'watir/exceptions'
 
 module Watir
@@ -37,6 +42,7 @@ class Waiter
 
   def initialize(timeout=@@default_timeout,
                  polling_interval=@@default_polling_interval)
+    Kernel.warn "Using Watir::Waiter is DEPRECATED! Use Watir::Wait and Watir::ElementExtensions methods instead!"
     @timeout = timeout
     @polling_interval = polling_interval
     @timer = TimeKeeper.new
