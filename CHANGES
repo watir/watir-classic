@@ -2,7 +2,7 @@
 
 === Common improvements
 
-* added new waiting methods on Watir::IE and Watir::Firefox: #wait_until, #wait_until?, #wait_while and #wait_while? (Jari Bakken and Jarmo Pertman)
+* added new waiting methods on Watir::IE and Watir::Firefox: #wait_until and #wait_while (Jari Bakken and Jarmo Pertman)
 * added new waiting methods on Watir::Element: #when_present, #wait_until_present and #wait_while_present (Jari Bakken and Jarmo Pertman)
 * added method #present? for Watir::Element (Jari Bakken and Jarmo Pertman)
 * deprecated old waiting methods in Watir::Waiter - if you really need to use it then you'd have to require "watir/waiter",
