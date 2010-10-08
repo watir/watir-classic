@@ -5,7 +5,7 @@ require 'fileutils'
 projects = ['watir', 'firewatir', 'commonwatir']
 
 def launch_subrake(cmd)
-  system("ruby #{$0} #{cmd}")
+  puts Rake.application.unix? ? `rake #{cmd}` : `rake.bat #{cmd}`
 end
 
 task :default => :gems
@@ -42,15 +42,18 @@ task :clean => [:clean_subprojects] do
   FileUtils.rm_r Dir.glob("gems/*") << "test/reports", :force => true
 end
 
-desc 'Run core_tests tests for IE'
-task :core_tests do
+desc "Run tests for Watir and FireWatir"
+task :test => [:test_watir, :test_firewatir]
+
+desc 'Run tests for Watir'
+task :test_watir do
   Dir.chdir("watir") do
     launch_subrake "test"
   end
 end
 
-desc 'Run mozilla_all_tests for FireFox'
-task :mozilla_all_tests do
+desc 'Run tests for FireWatir'
+task :test_firewatir do
   Dir.chdir("firewatir") do
     launch_subrake "test"
   end
