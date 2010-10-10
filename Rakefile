@@ -5,7 +5,7 @@ require 'fileutils'
 projects = ['watir', 'firewatir', 'commonwatir']
 
 def launch_subrake(cmd)
-  puts Rake.application.unix? ? `rake #{cmd}` : `rake.bat #{cmd}`
+  system("#{Gem.ruby} -S rake #{cmd}")
 end
 
 task :default => :gems
