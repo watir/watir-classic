@@ -53,7 +53,7 @@ module Watir
     end
 
     def attach_command
-      @container.page_container.attach_command + ".frame(#{@how.inspect}, #{@what.inspect})"
+      @container.page_container.attach_command + ".frame(#{@how.inspect}, #{@what.inspect})".gsub('"','\'')
     end
     
   end

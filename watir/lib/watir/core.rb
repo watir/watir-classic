@@ -1,12 +1,16 @@
 # these require statements are needed for Watir
 # to work with minimum functionality
-#
-# this is needed for #click_no_wait to perform faster
 require 'timeout'
 require 'watir/win32ole'
 
-require 'logger'
+# these are required already in commonwatir, but not when using click_no_wait!
+require 'watir/exceptions'
+require 'watir/matches'
+require 'watir/wait'
+require 'watir/wait_helper'
+require 'watir/element_extensions'
 
+require 'logger'
 require 'watir/core_ext'
 require 'watir/logger'
 require 'watir/container'
@@ -16,6 +20,7 @@ require 'watir/ie-class'
 require 'watir/element'
 require 'watir/element_collections'
 require 'watir/form'
+require 'watir/frame'
 require 'watir/non_control_elements'
 require 'watir/input_elements'
 require 'watir/table'
