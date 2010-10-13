@@ -10,7 +10,7 @@ end
 topdir = File.join(File.dirname(__FILE__), '..')
 $firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
 $watir_dev_lib = File.join(topdir, 'lib')
-commonwatir_dir = "commonwatir-#{File.read("VERSION").strip}" rescue "commonwatir"
+commonwatir_dir = "commonwatir#{File.exist?('VERSION') ? "-#{File.read('VERSION').strip}" : ""}"
 commonwatir_absolute_dir = File.join(topdir, '..', commonwatir_dir)
 libs = []
 libs << File.join(commonwatir_absolute_dir, 'lib')

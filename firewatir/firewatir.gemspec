@@ -15,7 +15,7 @@ $__firewatir_source_patterns = [
 ]
 
 spec = Gem::Specification.new do |s|
-  version = File.read("VERSION").strip rescue "0.0.0"
+  version = File.exist?('VERSION') ? File.read('VERSION').strip : "0.0.0"
   s.name = 'firewatir'
   s.version = version
   s.summary = 'Automated testing tool for web applications using Firefox browser.'

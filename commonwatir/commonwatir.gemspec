@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'commonwatir'
-  s.version = File.read("VERSION").strip rescue "0.0.0"
+  s.version = File.exist?('VERSION') ? File.read('VERSION').strip : "0.0.0"
   s.summary = "Common library for Watir and FireWatir"
   s.description = "Common library for Watir and FireWatir."
   s.author = 'Bret Pettichord'

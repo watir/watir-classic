@@ -10,7 +10,7 @@ $__watir_source_patterns = [
     $WATIR_EXTRA_RDOC_FILES
 
 spec = Gem::Specification.new do |s|
-  version = File.read("VERSION").strip rescue "0.0.0"
+  version = File.exist?('VERSION') ? File.read('VERSION').strip : "0.0.0"
   s.name = 'watir'
   s.version = version
   s.summary = 'Automated testing tool for web applications.'
