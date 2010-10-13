@@ -11,6 +11,7 @@
 === IE improvements
 
 * removed Watir::Simple (Željko Filipin)
+* #click_no_wait was not working with frame elements. Closes http://jira.openqa.org/browse/WTR-459 (Jarmo Pertman)
 
 === Firefox improvements
 
