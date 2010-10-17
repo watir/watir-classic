@@ -325,6 +325,7 @@ module Watir
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
     def clear
+      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -346,6 +347,7 @@ module Watir
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
     def append(value)
+      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -361,6 +363,7 @@ module Watir
     #   Raises ObjectDisabledException if the object is disabled
     #   Raises ObjectReadOnlyException if the object is read only
     def set(value)
+      assert_exists
       assert_enabled
       assert_not_readonly
       
@@ -566,6 +569,7 @@ module Watir
     #   Raises UnknownObjectException if its unable to locate an object
     #         ObjectDisabledException IF THE OBJECT IS DISABLED
     def clear
+      assert_exists
       assert_enabled
       highlight(:set)
       set_clear_item(false)
@@ -576,6 +580,7 @@ module Watir
     #   Raises UnknownObjectException  if it's unable to locate an object
     #         ObjectDisabledException  if the object is disabled
     def set
+      assert_exists
       assert_enabled
       highlight(:set)
       @o.scrollIntoView
@@ -595,6 +600,7 @@ module Watir
     #   Raises UnknownObjectException if it's unable to locate an object
     #         ObjectDisabledException if the object is disabled
     def set(value=true)
+      assert_exists
       assert_enabled
       highlight :set
       unless @o.checked == value

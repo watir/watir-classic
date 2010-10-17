@@ -232,6 +232,7 @@ module Watir
     end
 
     def click_no_wait
+      assert_exists
       assert_enabled
       highlight(:set)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
@@ -257,6 +258,7 @@ module Watir
     private :spawned_click_no_wait_command
 
     def click!
+      assert_exists
       assert_enabled
 
       highlight(:set)
@@ -282,6 +284,7 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def fire_event(event)
+      assert_exists
       assert_enabled
 
       highlight(:set)
@@ -294,6 +297,7 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def focus
+      assert_exists
       assert_enabled
       ole_object.focus
     end
