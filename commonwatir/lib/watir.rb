@@ -3,6 +3,7 @@
 # implementations. The 'watir/browser' library will autoload the actual
 # implementations.
 
+require 'watir/version'
 require 'watir/wait'
 require 'watir/wait_helper'
 require 'watir/element_extensions'
