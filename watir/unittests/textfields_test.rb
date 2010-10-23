@@ -72,16 +72,18 @@ class TC_Fields < Test::Unit::TestCase
     build_to_s_regex("max length", "20"),
     build_to_s_regex("read only", "false")
     ]
-    items = browser.text_field(:index, 1).to_s.split(/\n/)
+    items = browser.text_field(:index, $ORIGIN).to_s.split(/\n/)
     expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
+
     expected[1] = build_to_s_regex("id", "text2")
     expected[2] = build_to_s_regex("name", "")
     expected[3] = build_to_s_regex("value", "goodbye all")
     expected[6] = build_to_s_regex("max length", "2147483647")  
       
-    items = browser.text_field(:index, 2).to_s.split(/\n/)
+    items = browser.text_field(:index, $ORIGIN + 1).to_s.split(/\n/)
     expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
-    assert_raises(UnknownObjectException) { browser.text_field(:index, 999).to_s }  
+
+    assert_raises(UnknownObjectException) { browser.text_field(:index, 999).to_s }
   end
   
   def build_to_s_regex(lhs, rhs)
@@ -118,19 +120,19 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).disabled }  
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).type }  
     
-    assert_equal("Hello World" , browser.text_field(:index, 1).value) 
-    assert_equal("text"        , browser.text_field(:index, 1).type)
-    assert_equal("text1"       , browser.text_field(:index, 1).name)
-    assert_equal(""            , browser.text_field(:index, 1).id)
-    assert_equal(false         , browser.text_field(:index, 1).disabled)
+    assert_equal("Hello World" , browser.text_field(:index, $ORIGIN).value)
+    assert_equal("text"        , browser.text_field(:index, $ORIGIN).type)
+    assert_equal("text1"       , browser.text_field(:index, $ORIGIN).name)
+    assert_equal(""            , browser.text_field(:index, $ORIGIN).id)
+    assert_equal(false         , browser.text_field(:index, $ORIGIN).disabled)
     
-    assert_equal(""            , browser.text_field(:index, 2).name)
-    assert_equal("text2"       , browser.text_field(:index, 2).id)
+    assert_equal(""            , browser.text_field(:index, $ORIGIN + 1).name)
+    assert_equal("text2"       , browser.text_field(:index, $ORIGIN + 1).id)
     
     assert(browser.text_field(:index, 4).disabled)
     
     assert_equal("This used to test :afterText", browser.text_field(:name, "aftertest").title)
-    assert_equal("", browser.text_field(:index, 1).title)
+    assert_equal("", browser.text_field(:index, $ORIGIN).title)
     # adding for issue: http://jira.openqa.org/browse/WTR-89
     assert_equal("RegEx test", browser.text_field(:name, /REgEx/i).value)
   end
@@ -143,7 +145,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("text1", browser.text_fields[1].name)
     assert_equal("password", browser.text_fields[browser.text_fields.length].type)
     
-    index = 1
+    index = $ORIGIN
     browser.text_fields.each do |t|
       assert_equal(browser.text_field(:index, index).value, t.value) 
       assert_equal(browser.text_field(:index, index).id,    t.id)
@@ -187,24 +189,24 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_label_properties
-    assert_raises(UnknownObjectException) { browser.label(:index,20).innerText } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).for } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).name } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).type } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).id } 
+    assert_raises(UnknownObjectException) { browser.label(:index, 20).innerText }
+    assert_raises(UnknownObjectException) { browser.label(:index, 20).for }
+    assert_raises(UnknownObjectException) { browser.label(:index, 20).name }
+    assert_raises(UnknownObjectException) { browser.label(:index, 20).type }
+    assert_raises(UnknownObjectException) { browser.label(:index, 20).id }
     
-    assert_false(browser.label(:index,10).exists?) 
-    assert_false(browser.label(:id,'missing').exists?) 
-    assert(browser.label(:index,1).exists?) 
+    assert_false(browser.label(:index, 10).exists?)
+    assert_false(browser.label(:id, 'missing').exists?)
+    assert(browser.label(:index, $ORIGIN).exists?)
     
-    assert_equal("", browser.label(:index,1).id)
-    assert_false(browser.label(:index,1).disabled?) 
-    assert(browser.label(:index,1).enabled?)
+    assert_equal("", browser.label(:index, $ORIGIN).id)
+    assert_false(browser.label(:index, $ORIGIN).disabled?)
+    assert(browser.label(:index, $ORIGIN).enabled?)
     
-    assert_equal("label2", browser.label(:index,2).id )
+    assert_equal("label2", browser.label(:index, $ORIGIN + 1).id )
     
-    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index,3).innerText)
-    assert_equal("password1", browser.label(:index,3).for)
+    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index, $ORIGIN + 2).innerText)
+    assert_equal("password1", browser.label(:index, $ORIGIN + 2).for)
   end
 
   def test_max_length_is_not_exceeded

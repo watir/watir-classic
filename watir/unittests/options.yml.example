@@ -4,6 +4,9 @@
 # These options can also be set using environment variables prefixed with 'watir_'.
 # These environment variables will override settings from this file.
 
+# Whether to use zero or one based indexing
+origin: 1
+
 # 'ie' (Watir::IE) or 'firefox' (FireWatir::Firefox)
 browser: ie
 

@@ -14,6 +14,7 @@ module Watir
         builder.add_choice :coverage,
         :type => ['regression', 'all', 'known failures'],
         :default => 'regression'
+        builder.add_choice :origin, :type => :integer, :default => 1
       end
       def execute 
         Watir::UnitTest.options = @user_choices

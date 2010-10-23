@@ -4,6 +4,7 @@ require 'watir/options'
 Watir.options_file = $suite_options_file = $myDir + '/options.yml' 
 require 'unittests/setup/options'
 unit_options = Watir::UnitTest::Options.new.execute
+$ORIGIN = unit_options[:origin]
 require 'unittests/setup/browser'
 require 'unittests/setup/filter'
 require 'unittests/setup/capture_io_helper'
