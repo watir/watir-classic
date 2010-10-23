@@ -3,7 +3,7 @@ require 'watir/assertions'
 
 module Watir
 
-  # This is a 'test/unit' testcase customized to exeucte test methods sequentially by default
+  # This is a 'test/unit' testcase customized to execute test methods sequentially by default
   # and extra assertions
   #
   # Example Usage
