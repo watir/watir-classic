@@ -1,4 +1,5 @@
 module Watir
+  @@origin = 1 # default, for now
   class << self
     def origin
       @@origin

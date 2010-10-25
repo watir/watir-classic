@@ -20,7 +20,6 @@ module Watir
       end
     end
 
-
   end
 
   class TaggedElementLocator < Locator
@@ -36,7 +35,7 @@ module Watir
         specifiers = {how => what}
       end
 
-      @specifiers = {:index => 1} # default if not specified
+      @specifiers = {:index => Watir.origin} # default if not specified
       normalize_specifiers! specifiers
     end
 
@@ -47,7 +46,7 @@ module Watir
     end
 
     def locate
-      count = 0
+      count = Watir.origin - 1
       each_element(@tag) do |element|
 
         catch :next_element do
@@ -107,7 +106,7 @@ module Watir
         specifiers = {how => what}
       end
 
-      @specifiers = {:index => 1} # default if not specified
+      @specifiers = {:index => Watir.origin} # default if not specified
       if value
         @specifiers[:value] = value.is_a?(Regexp) ? value : value.to_s
       end
@@ -116,7 +115,7 @@ module Watir
     end
 
     def locate
-      count = 0
+      count = Watir.origin - 1
       @elements.each do |object|
         if @klass == Element
           element = Element.new(object)

@@ -129,7 +129,7 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(""            , browser.text_field(:index, $ORIGIN + 1).name)
     assert_equal("text2"       , browser.text_field(:index, $ORIGIN + 1).id)
     
-    assert(browser.text_field(:index, 4).disabled)
+    assert(browser.text_field(:index, $ORIGIN + 3).disabled)
     
     assert_equal("This used to test :afterText", browser.text_field(:name, "aftertest").title)
     assert_equal("", browser.text_field(:index, $ORIGIN).title)
@@ -140,12 +140,12 @@ class TC_Fields < Test::Unit::TestCase
   def test_text_field_iterators
     assert_equal(13, browser.text_fields.length)
     
-    # watir is 1 based, so this is the first text field
-    assert_equal("Hello World", browser.text_fields[1].value)
-    assert_equal("text1", browser.text_fields[1].name)
-    assert_equal("password", browser.text_fields[browser.text_fields.length].type)
+    assert_equal("Hello World", browser.text_fields[Watir.origin].value)
+    assert_equal("text1", browser.text_fields[Watir.origin].name)
+    last = browser.text_fields.length - (Watir.origin == 0? 1: 0)
+    assert_equal("password", browser.text_fields[last].type)
     
-    index = $ORIGIN
+    index = Watir.origin
     browser.text_fields.each do |t|
       assert_equal(browser.text_field(:index, index).value, t.value) 
       assert_equal(browser.text_field(:index, index).id,    t.id)
@@ -178,8 +178,8 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_labels_iterator
     assert_equal(3, browser.labels.length)
-    assert_equal('Label For this Field' , browser.labels[1].innerText.strip )
-    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[3].innerText )
+    assert_equal('Label For this Field' , browser.labels[Watir.origin].innerText.strip )
+    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[Watir.origin + 2].innerText )
     
     count=0
     browser.labels.each do |l|
