@@ -9,7 +9,7 @@ require 'unittests/setup/filter'
 require 'unittests/setup/capture_io_helper'
 require 'unittests/setup/watir-unittest'
 
-Watir.origin = $ORIGIN = unit_options[:origin]
+Watir.index_base = unit_options[:origin]
 
 failure_tag = "fails_on_#{Watir.options[:browser]}".to_sym
 case unit_options[:coverage]

@@ -35,7 +35,7 @@ module Watir
         specifiers = {how => what}
       end
 
-      @specifiers = {:index => Watir.origin} # default if not specified
+      @specifiers = {:index => Watir.index_base} # default if not specified
       normalize_specifiers! specifiers
     end
 
@@ -46,7 +46,7 @@ module Watir
     end
 
     def locate
-      count = Watir.origin - 1
+      count = Watir.index_base - 1
       each_element(@tag) do |element|
 
         catch :next_element do
@@ -106,7 +106,7 @@ module Watir
         specifiers = {how => what}
       end
 
-      @specifiers = {:index => Watir.origin} # default if not specified
+      @specifiers = {:index => Watir.index_base} # default if not specified
       if value
         @specifiers[:value] = value.is_a?(Regexp) ? value : value.to_s
       end
@@ -115,7 +115,7 @@ module Watir
     end
 
     def locate
-      count = Watir.origin - 1
+      count = Watir.index_base - 1
       @elements.each do |object|
         if @klass == Element
           element = Element.new(object)

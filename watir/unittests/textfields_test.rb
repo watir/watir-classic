@@ -72,7 +72,7 @@ class TC_Fields < Test::Unit::TestCase
     build_to_s_regex("max length", "20"),
     build_to_s_regex("read only", "false")
     ]
-    items = browser.text_field(:index, $ORIGIN).to_s.split(/\n/)
+    items = browser.text_field(:index, Watir.index_base).to_s.split(/\n/)
     expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
 
     expected[1] = build_to_s_regex("id", "text2")
@@ -80,7 +80,7 @@ class TC_Fields < Test::Unit::TestCase
     expected[3] = build_to_s_regex("value", "goodbye all")
     expected[6] = build_to_s_regex("max length", "2147483647")  
       
-    items = browser.text_field(:index, $ORIGIN + 1).to_s.split(/\n/)
+    items = browser.text_field(:index, Watir.index_base + 1).to_s.split(/\n/)
     expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
 
     assert_raises(UnknownObjectException) { browser.text_field(:index, 999).to_s }
@@ -120,19 +120,19 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).disabled }  
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).type }  
     
-    assert_equal("Hello World" , browser.text_field(:index, $ORIGIN).value)
-    assert_equal("text"        , browser.text_field(:index, $ORIGIN).type)
-    assert_equal("text1"       , browser.text_field(:index, $ORIGIN).name)
-    assert_equal(""            , browser.text_field(:index, $ORIGIN).id)
-    assert_equal(false         , browser.text_field(:index, $ORIGIN).disabled)
+    assert_equal("Hello World" , browser.text_field(:index, Watir.index_base).value)
+    assert_equal("text"        , browser.text_field(:index, Watir.index_base).type)
+    assert_equal("text1"       , browser.text_field(:index, Watir.index_base).name)
+    assert_equal(""            , browser.text_field(:index, Watir.index_base).id)
+    assert_equal(false         , browser.text_field(:index, Watir.index_base).disabled)
     
-    assert_equal(""            , browser.text_field(:index, $ORIGIN + 1).name)
-    assert_equal("text2"       , browser.text_field(:index, $ORIGIN + 1).id)
+    assert_equal(""            , browser.text_field(:index, Watir.index_base + 1).name)
+    assert_equal("text2"       , browser.text_field(:index, Watir.index_base + 1).id)
     
-    assert(browser.text_field(:index, $ORIGIN + 3).disabled)
+    assert(browser.text_field(:index, Watir.index_base + 3).disabled)
     
     assert_equal("This used to test :afterText", browser.text_field(:name, "aftertest").title)
-    assert_equal("", browser.text_field(:index, $ORIGIN).title)
+    assert_equal("", browser.text_field(:index, Watir.index_base).title)
     # adding for issue: http://jira.openqa.org/browse/WTR-89
     assert_equal("RegEx test", browser.text_field(:name, /REgEx/i).value)
   end
@@ -140,12 +140,12 @@ class TC_Fields < Test::Unit::TestCase
   def test_text_field_iterators
     assert_equal(13, browser.text_fields.length)
     
-    assert_equal("Hello World", browser.text_fields[Watir.origin].value)
-    assert_equal("text1", browser.text_fields[Watir.origin].name)
-    last = browser.text_fields.length - (Watir.origin == 0? 1: 0)
+    assert_equal("Hello World", browser.text_fields[Watir.index_base].value)
+    assert_equal("text1", browser.text_fields[Watir.index_base].name)
+    last = browser.text_fields.length - (Watir.index_base == 0? 1: 0)
     assert_equal("password", browser.text_fields[last].type)
     
-    index = Watir.origin
+    index = Watir.index_base
     browser.text_fields.each do |t|
       assert_equal(browser.text_field(:index, index).value, t.value) 
       assert_equal(browser.text_field(:index, index).id,    t.id)
@@ -178,8 +178,8 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_labels_iterator
     assert_equal(3, browser.labels.length)
-    assert_equal('Label For this Field' , browser.labels[Watir.origin].innerText.strip )
-    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[Watir.origin + 2].innerText )
+    assert_equal('Label For this Field' , browser.labels[Watir.index_base].innerText.strip )
+    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[Watir.index_base + 2].innerText )
     
     count=0
     browser.labels.each do |l|
@@ -197,16 +197,16 @@ class TC_Fields < Test::Unit::TestCase
     
     assert_false(browser.label(:index, 10).exists?)
     assert_false(browser.label(:id, 'missing').exists?)
-    assert(browser.label(:index, $ORIGIN).exists?)
+    assert(browser.label(:index, Watir.index_base).exists?)
     
-    assert_equal("", browser.label(:index, $ORIGIN).id)
-    assert_false(browser.label(:index, $ORIGIN).disabled?)
-    assert(browser.label(:index, $ORIGIN).enabled?)
+    assert_equal("", browser.label(:index, Watir.index_base).id)
+    assert_false(browser.label(:index, Watir.index_base).disabled?)
+    assert(browser.label(:index, Watir.index_base).enabled?)
     
-    assert_equal("label2", browser.label(:index, $ORIGIN + 1).id )
+    assert_equal("label2", browser.label(:index, Watir.index_base + 1).id )
     
-    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index, $ORIGIN + 2).innerText)
-    assert_equal("password1", browser.label(:index, $ORIGIN + 2).for)
+    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index, Watir.index_base + 2).innerText)
+    assert_equal("password1", browser.label(:index, Watir.index_base + 2).for)
   end
 
   def test_max_length_is_not_exceeded

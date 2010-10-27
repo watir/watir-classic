@@ -4,7 +4,7 @@
 # implementations.
 
 require 'watir/version'
-require 'watir/origin'
+require 'watir/index_base'
 require 'watir/waiter' # this will be removed in some future version
 require 'watir/wait'
 require 'watir/wait_helper'
