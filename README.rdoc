@@ -46,11 +46,11 @@ To install Firefox driver:
 
 Some examples from http://watir.com/examples
 
-Including Watir gem to drive Internet Explorer on Windows
+Loading Watir gem to drive Internet Explorer on Windows
 
   require 'watir'
 
-Including FireWatir gem to drive Firefox on Windows/Mac/Linux
+Loading FireWatir gem to drive Firefox on Windows/Mac/Linux
 
   require 'firewatir'
 
@@ -69,8 +69,8 @@ Setting a multi-line text box
 
 Setting and clearing a radio button
 
-  browser.radio(:value => "watir").set
-  browser.radio(:value => "watir".clear
+  browser.radio(:value => "Watir").set
+  browser.radio(:value => "Watir").clear
 
 Setting and clearing check boxes
 
@@ -94,7 +94,7 @@ Clicking a button
 
 Checking for text in a page
 
-  puts browser.text.include? "Your response has been recorded."
+  puts browser.text.include?("Your response has been recorded.")
 
 Checking the title of a page
 
