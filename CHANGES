@@ -1,3 +1,21 @@
+== Version NEXT - 2010/XX/XX
+
+=== General improvements
+
+*
+
+=== IE improvements
+
+* Fixed Watir::IE#close_all. Closes http://jira.openqa.org/browse/WTR-463 (Jarmo Pertman)
+
+=== Firefox improvements
+
+*
+
+=== Cleanup & Maintenance
+
+*
+
 == Version 1.6.7 - 2010/10/26
 
 === General improvements

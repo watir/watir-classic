@@ -17,7 +17,7 @@ module Watir
           hwnd_modal, arr = GetWindow.call(hwnd, GW_ENABLEDPOPUP) # GW_ENABLEDPOPUP = 6
           hwnd_modal > 0
         end
-      rescue TimeOutException
+      rescue Wait::TimeoutError
         return nil
       end
       if hwnd_modal == hwnd || hwnd_modal == 0
@@ -47,7 +47,7 @@ module Watir
               @hwnd, arr = FindWindowEx.call(0, 0, nil, title)
               @hwnd > 0
             end
-          rescue TimeOutException
+          rescue Wait::TimeoutError
             raise NoMatchingWindowFoundException, 
               "Modal Dialog with title #{what} not found. Timeout = #{Watir::IE.attach_timeout}"
           end
@@ -67,7 +67,7 @@ module Watir
           intUnknown = intArray.first
           intUnknown > 0
         end
-      rescue TimeOutException => e        
+      rescue Wait::TimeoutError => e
         raise NoMatchingWindowFoundException, 
           "Unable to attach to Modal Window #{what.inspect} after #{e.duration} seconds."
       end
