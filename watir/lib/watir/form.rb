@@ -45,6 +45,8 @@ module Watir
       # Get form using xpath.
       if @how == :xpath
         @ole_object = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @ole_object = @container.element_by_css(@what)
       else
         count = 1
         doc = @container.document

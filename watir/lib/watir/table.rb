@@ -32,6 +32,8 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @o = @container.element_by_css(@what)
       elsif @how == :ole_object
         @o = @what
       else
@@ -260,6 +262,8 @@ module Watir
         @o = @what
       elsif @how == :xpath
         @o = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @o = @container.element_by_css(@what)
       else
         @o = @container.locate_tagged_element("TR", @how, @what)
       end
@@ -355,6 +359,8 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @o = @container.element_by_css(@what)
       elsif @how == :ole_object
         @o = @what
       else
