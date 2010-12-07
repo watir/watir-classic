@@ -281,6 +281,13 @@ module FireWatir
         #puts "container name is: " + @container.element_name
         #locate if defined? locate
         #@container.locate
+	
+	# We cannot assume that the container exists at this point, because code like:
+	# b.div(:id, "something_that_does_not_exist").h2(:text, /foobar/).exists? would return true
+	if (!@container.exists?)
+	  return nil
+	end
+
         jssh_command << "var elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"#{tag}\");"
         if(types != nil and (types.include?("textarea") or types.include?("button") ) )
           jssh_command << "elements_#{@@current_level}_#{tag} = #{@container.element_name}.getElementsByTagName(\"*\");"
