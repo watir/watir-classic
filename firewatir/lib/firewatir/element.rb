@@ -264,6 +264,9 @@ module FireWatir
         jssh_command = "var isButtonElement = false;"
       end
 
+      # In HTML, getElementsByTagName is case insensitive. However, in XHTML, it needs to be lowercase.
+      tag = tag.downcase
+
       # Because in both the below cases we need to get element with respect to document.
       # when we locate a frame document is automatically adjusted to point to HTML inside the frame
       if(@container.class == FireWatir::Firefox || @container.class == Frame)
