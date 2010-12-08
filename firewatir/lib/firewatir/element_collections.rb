@@ -39,7 +39,7 @@ module FireWatir
     end
 
 
-    # Return all the elements of give tag and type inside the container.
+    # Return all the elements of given tag and type inside the container.
     #
     # Input:
     #   tag - tag name of the elements
@@ -66,6 +66,10 @@ module FireWatir
       else
         search_tag = tag
       end
+
+      # In HTML, getElementsByTagName is case insensitive. However, in XHTML, it needs to be lowercase.
+      search_tag = search_tag.downcase
+
       jssh_command << "var #{elements_tag} = null; "
       jssh_command << "#{elements_tag} = #{container_name}.getElementsByTagName(\"#{search_tag}\");"
 
