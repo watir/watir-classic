@@ -6,9 +6,12 @@ topdir = File.join(File.dirname(__FILE__), '..')
 $firewatir_dev_lib = File.join(topdir, 'lib')
 $watir_dev_lib = File.join(topdir, '..', 'watir', 'lib')
 commonwatir_dir = "commonwatir#{File.exist?('VERSION') ? "-#{File.read('VERSION').strip}" : ""}"
+
 libs = []
 libs << File.join(topdir, '..', commonwatir_dir, 'lib')
+libs << File.join(topdir, '..', 'commonwatir', 'lib')
 libs << File.join(topdir, '..', commonwatir_dir) # for the unit tests
+libs << File.join(topdir, '..', 'commonwatir')
 libs.each { |lib| $LOAD_PATH.unshift File.expand_path(lib) }
 
 require 'watir/browser'
@@ -21,6 +24,10 @@ end
 require 'unittests/setup/testUnitAddons'
 
 commondir = File.join(topdir, '..', commonwatir_dir)
+if !File.exists?(commondir)
+  commondir = File.join(topdir, '..', "commonwatir")
+end
+
 $all_tests = []
 Dir.chdir topdir do
   $all_tests += Dir["unittests/*_test.rb"]
