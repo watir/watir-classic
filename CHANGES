@@ -2,7 +2,7 @@
 
 === General improvements
 
-*
+* Updated bundled version of AutoIt to 3.3.6.1. Closes http://jira.openqa.org/browse/WTR-440 (Jarmo Pertman)
 
 === IE improvements
 
