@@ -12,7 +12,7 @@
 
 === Firefox improvements
 
-*
+* Fixed Element#exists? for cases where nested elements were used for locating (Alok Menghrajani)
 
 === Cleanup & Maintenance
 
