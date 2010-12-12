@@ -824,6 +824,8 @@ module Watir
       case how
       when :xpath
         return element_by_xpath(what)
+      when :css
+        return element_by_css(what)
       when :ole_object
         return what
       end
@@ -837,6 +839,11 @@ module Watir
       locator.elements = ole_inner_elements if locator.elements.nil?
       locator.klass = klass if klass 
       locator.locate
+    end
+    
+    # abstract method for locating an element using a CSS selector expression
+    def element_by_css(selector)
+      raise MissingWayOfFindingObjectException, "CSS selectors not yet supported for #{self.class.name}"
     end
     
     # returns the ole object for the specified element

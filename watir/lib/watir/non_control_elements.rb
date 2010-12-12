@@ -21,6 +21,8 @@ module Watir
     def locate
       if @how == :xpath
         @o = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @o = @container.element_by_css(@what)
       else
         @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
       end

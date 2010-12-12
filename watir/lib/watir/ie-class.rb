@@ -890,6 +890,19 @@ module Watir
     end
     private :html_source
 
+    # execute css selector and return an array of (ole object) elements
+    def elements_by_css(selector)
+      xmlparser_document_object # Needed to ensure Nokogiri has been loaded
+      xpath = Nokogiri::CSS.xpath_for(selector)[0]
+      elements_by_xpath(xpath)
+    end
+
+    # return the first (ole object) element that matches the css selector
+    def element_by_css(selector)
+      temp = elements_by_css(selector)
+      return temp[0] if temp
+    end
+
     # return the first element that matches the xpath
     def element_by_xpath(xpath)
       temp = elements_by_xpath(xpath)
