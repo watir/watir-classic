@@ -468,6 +468,7 @@ module Watir
     #
     # Synchronization
     #
+    READYSTATES = {:complete => 4}
 
     # Block execution until the page has loaded.
     #
@@ -487,7 +488,7 @@ module Watir
             sleep interval
           end
 
-          until [READYSTATE_INTERACTIVE, READYSTATE_COMPLETE].include?(@ie.readyState)
+          until READYSTATES.has_value?(@ie.readyState)
             sleep interval
           end
 
@@ -503,7 +504,7 @@ module Watir
 
         while doc = documents_to_wait_for.shift
           begin
-            until ["interactive", "complete"].include?(doc.readyState)
+            until READYSTATES.has_key?(doc.readyState.to_sym)
               sleep interval
             end
             @url_list << doc.location.href unless @url_list.include?(doc.location.href)
