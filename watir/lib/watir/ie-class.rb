@@ -311,7 +311,6 @@ module Watir
 
   	# Are we attached to an open browser?
     def exists?
-      return false if @closing
       begin
         @ie.name =~ /Internet Explorer/
       rescue WIN32OLERuntimeError
@@ -395,7 +394,6 @@ module Watir
     # Closes the Browser
     def close
       return unless exists?
-      @closing = true
       @ie.stop
       wait rescue nil
       chwnd = @ie.hwnd.to_i
