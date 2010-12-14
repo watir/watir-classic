@@ -2,7 +2,7 @@ require 'watir-rdoc'
 
 $__watir_source_patterns = [
     'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb', 'LICENSE',
-    'lib/watir/*.rb', 'lib/watir/AutoItX3.dll',
+    'lib/watir/*.rb', 'lib/watir/AutoItX3.dll', 'lib/watir/AutoItX.chm',
     'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
     'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/win32ole.so',
