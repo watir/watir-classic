@@ -14,6 +14,7 @@
 === Firefox improvements
 
 * Fixed Element#exists? for cases where nested elements were used for locating (Alok Menghrajani)
+* Ignore uppercase tags in XHTML when searching for elements (Alok Menghrajani)
 
 === Cleanup & Maintenance
 
