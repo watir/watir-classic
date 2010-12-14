@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_Em < Test::Unit::TestCase
+class TC_HTML_Case_Sensitive_Tags < Test::Unit::TestCase
   include Watir::Exception
   location __FILE__
 
