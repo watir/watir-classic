@@ -1,8 +1,4 @@
-== Version NEXT - 2010/XX/XX
-
-=== General improvements
-
-*
+== Version 1.7.0 - 2010/12/20
 
 === IE improvements
 
@@ -15,10 +11,6 @@
 
 * Fixed Element#exists? for cases where nested elements were used for locating (Alok Menghrajani)
 * Ignore uppercase tags in XHTML when searching for elements (Alok Menghrajani)
-
-=== Cleanup & Maintenance
-
-*
 
 == Version 1.6.7 - 2010/10/26
 
