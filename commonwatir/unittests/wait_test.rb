@@ -75,6 +75,13 @@ class Wait < Test::Unit::TestCase
     assert_raises(Watir::Wait::TimeoutError) {browser.div(:id => "non-existing").when_present(0.1).text}
   end
 
+  def test_when_present_element_id
+    browser.link(:id => "link1").click
+    div = browser.div(:id => "div1")
+    assert_equal "div1", div.when_present(2).id
+    assert div.visible?
+  end
+
   def test_wait_until_present
     browser.link(:id => "link1").click
 

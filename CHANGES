@@ -12,6 +12,10 @@
 * Fixed Element#exists? for cases where nested elements were used for locating (Alok Menghrajani)
 * Ignore uppercase tags in XHTML when searching for elements (Alok Menghrajani)
 
+=== General improvements
+
+* Return Element#id correctly when using Element#when_present and friends methods. Closes http://jira.openqa.org/browse/WTR-469 (Jarmo Pertman)
+
 == Version 1.6.7 - 2010/10/26
 
 === General improvements
