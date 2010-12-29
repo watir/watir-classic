@@ -26,6 +26,7 @@ module Watir
     
       # Returns element id
       def id
+        Watir::Wait.until(@timeout) { @element.present? }
         @element.id
       end
 
