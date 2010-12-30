@@ -2,7 +2,7 @@
 
 === IE improvements
 
-* Fixed Watir::IE#close_all. Closes http://jira.openqa.org/browse/WTR-463 (Jarmo Pertman)
+* Fixed Watir::IE#close_all to close all IE windows, even the ones with tabs. Closes http://jira.openqa.org/browse/WTR-463 (Jarmo Pertman)
 * IE#wait waits now again until browser has a state of READYSTATE_COMPLETE due to strange timing issues. Closes http://jira.openqa.org/browse/WTR-466 (Jarmo Pertman)
 * Added CSS3 selectors with usage like browser.text_field(:css => "input[name='text1']") (Jonas Tingeborn)
 * Updated bundled version of AutoIt to 3.3.6.1. Closes http://jira.openqa.org/browse/WTR-440 (Jarmo Pertman)
