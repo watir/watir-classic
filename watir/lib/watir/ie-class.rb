@@ -402,7 +402,13 @@ module Watir
       wait rescue nil
       chwnd = @ie.hwnd.to_i
       @ie.quit
-      while Win32API.new("user32","IsWindow", 'L', 'L').Call(chwnd) == 1
+      t = Time.now
+      while exists?
+        # just in case to avoid possible endless loop
+        if Time.now - t > 10
+          puts "Impossible to close all IE windows, continuing."
+          break
+        end
         sleep 0.3
       end
     end
