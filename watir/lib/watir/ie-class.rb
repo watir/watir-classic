@@ -233,14 +233,18 @@ module Watir
     # Yields successively to each IE window on the current desktop. Takes a block.
     # This method will not work when
     # Watir/Ruby is run under a service (instead of a user).
-	# Yields to the window and its hwnd.
+    # Yields to the window and its hwnd.
     def self.each
       shell = WIN32OLE.new('Shell.Application')
+      ie_browsers = []
       shell.Windows.each do |window|
         next unless (window.path =~ /Internet Explorer/ rescue false)
         next unless (hwnd = window.hwnd rescue false)
         ie = IE.bind(window)
         ie.hwnd = hwnd
+        ie_browsers << ie
+      end
+      ie_browsers.each do |ie|
         yield ie
       end
     end
@@ -312,7 +316,7 @@ module Watir
   	# Are we attached to an open browser?
     def exists?
       begin
-        @ie.name =~ /Internet Explorer/
+        !!(@ie.name =~ /Internet Explorer/)
       rescue WIN32OLERuntimeError
         false
       end
