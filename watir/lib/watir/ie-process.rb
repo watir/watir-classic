@@ -18,12 +18,17 @@ module Watir
       
       def window
         Wait.until do
+          found_window = nil
           IE.each do | ie |
             window = ie.ie
             hwnd = ie.hwnd
             process_id = Process.process_id_from_hwnd hwnd        
-            return window if process_id == @process_id
+            if process_id == @process_id
+              found_window = window
+              break
+            end
           end
+          found_window
         end
       end
       
