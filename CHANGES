@@ -1,4 +1,4 @@
-== Version 1.7.1 - 2011/01/XX
+== Version 1.7.1 - 2011/01/10
 
 === IE improvements
 
@@ -6,7 +6,7 @@
 
 === Firefox improvements
 
--
+- Nothing
 
 Whole Changelog is available at http://github.com/bret/watir/compare/v1.7.1...v1.7.0
 
