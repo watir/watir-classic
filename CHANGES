@@ -18,6 +18,8 @@ Whole Changelog is available at http://github.com/bret/watir/compare/v1.7.1...v1
 * IE#wait waits now again until browser has a state of READYSTATE_COMPLETE due to strange timing issues. Closes http://jira.openqa.org/browse/WTR-466 (Jarmo Pertman)
 * Added CSS3 selectors with usage like browser.text_field(:css => "input[name='text1']") (Jonas Tingeborn)
 * Updated bundled version of AutoIt to 3.3.6.1. Closes http://jira.openqa.org/browse/WTR-440 (Jarmo Pertman)
+  Note: If you want to update your install to use this version of AutoIt, you'll need to manually uninstall it first.
+  When you run your Watir scripts, it will automatically install the new version.
 
 === Firefox improvements
 
