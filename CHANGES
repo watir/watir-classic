@@ -1,3 +1,13 @@
+== Version X.X.X - 2011/XX/XX
+
+=== IE improvements
+
+*
+
+=== Firefox improvements
+
+* remove :waitTime option and try to handle better firefox startup (Jarmo Pertman)
+
 == Version 1.7.1 - 2011/01/10
 
 === IE improvements
