@@ -236,9 +236,9 @@ module Watir
       assert_enabled
       highlight(:set)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
-      ruby_code = "require 'rubygems';" <<
-              "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
-              "#{element}.click!"
+      # fill the $LOAD_PATH in spawned process
+      ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
+                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.click!"
       system(spawned_click_no_wait_command(ruby_code))
       highlight(:clear)
     end
