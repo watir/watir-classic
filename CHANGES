@@ -2,12 +2,12 @@
 
 === IE improvements
 
-*
+* Improved speed of #click_no_wait by not loading RubyGems (Jarmo Pertman)
 
 === Firefox improvements
 
-* removed dependency for ActiveSupport, making it possible to use FireWatir with Rails 3 (Jarmo Pertman)
-* removed :waitTime option and try to handle better firefox startup (Jarmo Pertman)
+* Removed dependency for ActiveSupport, making it possible to use FireWatir with Rails 3 (Jarmo Pertman)
+* Removed :waitTime option and try to handle better firefox startup (Jarmo Pertman)
 
 == Version 1.7.1 - 2011/01/10
 
