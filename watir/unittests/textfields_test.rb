@@ -23,6 +23,7 @@ class TC_Fields < Test::Unit::TestCase
     
     assert(browser.text_field(:beforeText, /after/i).exists? )
     assert(browser.text_field(:afterText, /before/i).exists? )
+    assert(browser.text_field(:value, 'foo').exists?)
   end
   
   tag_method :test_text_field_dragContentsTo, :fails_on_firefox
@@ -136,7 +137,7 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_text_field_iterators
-    assert_equal(13, browser.text_fields.length)
+    assert_equal(14, browser.text_fields.length)
     
     # watir is 1 based, so this is the first text field
     assert_equal("Hello World", browser.text_fields[1].value)
@@ -214,5 +215,10 @@ class TC_Fields < Test::Unit::TestCase
 
   def test_max_length
     assert_equal(20, browser.text_field(:name, 'text1').maxlength)
+  end
+  
+  def test_additional_events
+    browser.text_field(:value, 'foo').set 'bar'
+	assert(browser.text_field(:value, 'bar').exists?)
   end
 end
