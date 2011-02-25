@@ -3,6 +3,7 @@
 === IE improvements
 
 * Improved speed of #click_no_wait by not loading RubyGems (Jarmo Pertman)
+* Added check to maxlength so we don't clobber any incoming js events. (Charley Baker)
 
 === Firefox improvements
 
