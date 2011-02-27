@@ -106,6 +106,13 @@ module FireWatir
       wait()
     end
 
+    # Returns true if Firefox window is opened.
+    def exists?
+      js_eval("getWindows().length").to_i == 1 || ((window = find_window(:url, @window_url)) && window > 0)
+    end
+
+    alias_method :exist?, :exists?
+
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
       js_eval "if(#{browser_var}.canGoBack) #{browser_var}.goBack()"
