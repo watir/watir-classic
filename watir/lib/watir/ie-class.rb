@@ -406,7 +406,7 @@ module Watir
       while exists?
         # just in case to avoid possible endless loop
         if Time.now - t > 10
-          puts "Impossible to close all IE windows, continuing."
+          Kernel.warn "Unable to close IE window, ignoring."
           break
         end
         sleep 0.3
