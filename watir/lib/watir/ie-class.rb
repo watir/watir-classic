@@ -404,11 +404,9 @@ module Watir
       @ie.quit
       t = Time.now
       while exists?
-        # just in case to avoid possible endless loop
-        if Time.now - t > 10
-          Kernel.warn "Unable to close IE window, ignoring."
-          break
-        end
+        # just in case to avoid possible endless loop if failing to close some
+        # window or tab
+        break if Time.now - t > 10
         sleep 0.3
       end
     end
