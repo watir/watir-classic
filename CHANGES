@@ -9,6 +9,7 @@
 
 * Removed dependency for ActiveSupport, making it possible to use FireWatir with Rails 3 (Jarmo Pertman)
 * Removed :waitTime option and try to handle better firefox startup (Jarmo Pertman)
+* Added #exists? with alias #exist? to FireWatir::Firefox browser object (Jarmo Pertman)
 
 == Version 1.7.1 - 2011/01/10
 
