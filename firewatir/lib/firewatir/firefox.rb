@@ -108,7 +108,7 @@ module FireWatir
 
     # Returns true if Firefox window is opened.
     def exists?
-      js_eval("getWindows().length").to_i == 1 || ((window = find_window(:url, @window_url)) && window > 0)
+      !!find_window(:url, @window_url)
     end
 
     alias_method :exist?, :exists?
