@@ -103,6 +103,18 @@ module Watir
       how, what = process_default :name, how, what
       Frame.new(self, how, what)
     end
+
+    # this is the main method for accessing the frames iterator. Returns a Frames collection
+    #
+    # Typical usage:
+    #
+    #   browser.frames.each { |f| puts f.src }             # iterate through all the frames on the page
+    #   browser.frames[1].to_s                             # goto the first frames on the page
+    #   browser.frames.length                              # show how many frames are on the page.
+    #
+    def frames
+      Frames.new(self)
+    end
         
     # this method is used to access a form.
     # available ways of accessing it are, :index, :name, :id, :method, :action, :xpath

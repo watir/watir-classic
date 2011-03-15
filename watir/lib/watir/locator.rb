@@ -20,7 +20,13 @@ module Watir
       end
     end
 
-
+    def match_with_specifiers?(element)
+      @specifiers.each do |how, what|
+        next if how == :index
+        return false unless match? element, how, what
+      end
+      return true
+    end
   end
 
   class TaggedElementLocator < Locator
@@ -49,21 +55,9 @@ module Watir
     def locate
       count = 0
       each_element(@tag) do |element|
-
-        catch :next_element do
-          @specifiers.each do |how, what|
-            next if how == :index
-            unless match? element, how, what
-              throw :next_element
-            end
-          end
-          count += 1
-          unless count == @specifiers[:index]
-            throw :next_element
-          end
-          return element.ole_object
-        end
-
+        next unless match_with_specifiers?(element)
+        count += 1
+        return element.ole_object if count == @specifiers[:index]
       end # elements
       nil
     end
@@ -73,7 +67,7 @@ module Watir
         method = element.method(how)
       rescue NameError
         raise MissingWayOfFindingObjectException,
-              "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
       end
       case method.arity
       when 0
@@ -82,11 +76,41 @@ module Watir
        	method.call(what)
       else
         raise MissingWayOfFindingObjectException,
-              "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
       end
     end
 
   end
+
+  class FrameLocator < TaggedElementLocator
+    attr_accessor :tag
+
+    def initialize(container)
+      @container = container
+    end
+
+    def each_element tag
+      frames = @container.document.frames
+      i = 0
+      @container.document.getElementsByTagName(tag).each do |frame|
+        element = Element.new(frame)
+        document = frames.item(i)
+        yield element, document
+        i += 1
+      end
+    end
+
+    def locate
+      count = 0
+      each_element(@tag) do |element, document|
+        next unless match_with_specifiers?(element)
+        count += 1
+        return element.ole_object, document if count == @specifiers[:index]
+      end # elements
+      nil
+    end
+  end
+
   class InputElementLocator < Locator
 
     attr_accessor :document, :element, :elements, :klass
@@ -126,19 +150,10 @@ module Watir
           def element.locate; @o; end
         end
 
-        catch :next_element do
-          throw :next_element unless @types.include?(element.type)
-          @specifiers.each do |how, what|
-            next if how == :index
-            unless match? element, how, what
-              throw :next_element
-            end
-          end
-          count += 1
-          throw :next_element unless count == @specifiers[:index]
-          return object
-        end
-
+        next unless @types.include?(element.type) && match_with_specifiers?(element)
+        
+        count += 1
+        return object if count == @specifiers[:index]
       end
       nil
     end
@@ -166,7 +181,7 @@ module Watir
 
       the_id = @specifiers[:id]
       if the_id && the_id.class == String &&
-        @specifiers[:index] == 1 && @specifiers.length == 2
+          @specifiers[:index] == 1 && @specifiers.length == 2
         @element = @document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
         return true if @element && @element.invoke('id') == the_id
@@ -190,15 +205,8 @@ module Watir
     def each
       count = 0
       each_element('*') do |element| 
-        catch :next_element do
-          @specifiers.each do |how, what|
-            next if how == :index
-            unless match? element, how, what
-              throw :next_element
-            end
-          end
-          yield element          
-        end
+        next unless match_with_specifiers?(element)
+        yield element          
       end 
       nil
     end
