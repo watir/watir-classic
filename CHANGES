@@ -1,3 +1,11 @@
+== Version X.X.X - 2011/XX/XX
+
+=== IE improvements
+
+* Added #frames method.
+* Added Frame#exists?, #src, #name and other Element methods.
+* Added multiple locators support for #frame method.
+
 == Version 1.8.0 - 2011/28/02
 
 === IE improvements
