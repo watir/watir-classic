@@ -231,19 +231,27 @@ module Watir
       @container.wait
     end
 
-    def click_no_wait
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
-      # fill the $LOAD_PATH in spawned process
-      ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
-                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.click!"
-      system(spawned_click_no_wait_command(ruby_code))
-      highlight(:clear)
+    def replace_method(method)
+      method == 'click' ? 'click!' : method
     end
 
-    def spawned_click_no_wait_command(command)
+    def build_method(method_name, *args)
+      arguments = args.map { |argument| argument = argument.inspect }
+      "#{replace_method(method_name)}(#{arguments.join(',')})"
+    end
+    private :build_method
+
+    def generate_ruby_code(element, method_name, *args)
+      element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
+      method = build_method(method_name, *args)
+      code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
+             "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
+             "#{element}.#{method};"
+      return code
+    end
+    private :generate_ruby_code
+
+    def spawned_no_wait_command(command)
       command = "-e #{command.inspect}"
       unless $DEBUG
         "start rubyw #{command}"
@@ -255,7 +263,7 @@ module Watir
       end
     end
 
-    private :spawned_click_no_wait_command
+    private :spawned_no_wait_command
 
     def click!
       assert_exists
@@ -352,6 +360,18 @@ module Watir
       return ole_object.getAttribute(attribute_name)
     end
 
+    def method_missing(method_name, *args, &block)
+      if method_name.to_s =~ /(.*)_no_wait/ && self.respond_to?($1)
+        assert_exists
+        assert_enabled
+        highlight(:set)
+        ruby_code = generate_ruby_code(self, $1, *args)
+        system(spawned_no_wait_command(ruby_code))
+        highlight(:clear)
+      else
+        super
+      end
+    end
   end
 
   class ElementMapper # Still to be used

@@ -109,7 +109,7 @@ module Watir
     # Typical usage:
     #
     #   browser.frames.each { |f| puts f.src }             # iterate through all the frames on the page
-    #   browser.frames[1].to_s                             # goto the first frames on the page
+    #   browser.frames[1].to_s                             # goto the first frame on the page
     #   browser.frames.length                              # show how many frames are on the page.
     #
     def frames
@@ -130,6 +130,18 @@ module Watir
       Form.new(self, how, what)
     end
     
+    # this is the main method for accessing the forms iterator. Returns a Forms collection
+    #
+    # Typical usage:
+    #
+    #   browser.forms.each { |f| puts f.src }             # iterate through all the forms on the page
+    #   browser.forms[1].to_s                             # goto the first form on the page
+    #   browser.forms.length                              # show how many forms are on the page.
+    #
+    def forms
+      Forms.new(self)
+    end
+
     # This method is used to get a table from the page.
     # :index (1 based counting) and :id are supported.
     #  NOTE :name is not supported, as the table tag does not have a name attribute. It is not part of the DOM.

@@ -554,15 +554,14 @@ module Watir
 
     # Show all forms displays all the forms that are on a web page.
     def show_forms
-      if allForms = document.forms
-        count = allForms.length
+      if all_forms = self.forms
+        count = all_forms.length
         puts "There are #{count} forms"
-        for i in 0..count-1 do
-          wrapped = FormWrapper.new(allForms.item(i))
-          puts "Form name: #{wrapped.name}"
-          puts "       id: #{wrapped.id}"
-          puts "   method: #{wrapped.method}"
-          puts "   action: #{wrapped.action}"
+        all_forms.each do |form|
+          puts "Form name: #{form.name}"
+          puts "       id: #{form.id}"
+          puts "   method: #{form.method}"
+          puts "   action: #{form.action}"
         end
       else
         puts "No forms"

@@ -14,6 +14,8 @@ module Watir
           how = :class_name
         when :caption
           how = :value
+        when :method
+          how = :form_method
         end
 
         @specifiers[how] = what
@@ -108,6 +110,14 @@ module Watir
         return element.ole_object, document if count == @specifiers[:index]
       end # elements
       nil
+    end
+  end
+
+  class FormLocator < TaggedElementLocator
+    def each_element(tag)
+      @container.document.forms.each do |form|
+        yield FormElement.new(form)
+      end
     end
   end
 

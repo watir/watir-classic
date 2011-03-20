@@ -5,17 +5,23 @@ module Watir
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate
       @o = nil
-      locator = FrameLocator.new(@container)
-      locator.set_specifier(@how, @what)
-      ['FRAME', 'IFRAME'].each do |frame_tag|
-        locator.tag = frame_tag
-        located_frame, document = locator.locate
-        unless (located_frame.nil? && document.nil?)
-          @o = located_frame
-          @document = document.document
-          break
+      if @how == :xpath
+        @o = @container.element_by_xpath(@what)
+      elsif @how == :css
+        @o = @container.element_by_css(@what)
+      else      
+        locator = FrameLocator.new(@container)
+        locator.set_specifier(@how, @what)
+        ['FRAME', 'IFRAME'].each do |frame_tag|
+          locator.tag = frame_tag
+          located_frame, document = locator.locate
+          unless (located_frame.nil? && document.nil?)
+            @o = located_frame
+            @document = document.document
+            break
+          end
         end
-      end      
+      end
     end
 
     def ole_inner_elements

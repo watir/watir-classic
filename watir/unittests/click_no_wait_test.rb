@@ -15,7 +15,7 @@ class ClickNoWait_Tests < Watir::TestCase
   end
 
   def test_spawned_click_no_wait_command
-    assert_equal("start rubyw -e \"some command\"", browser.link(:id => 'link1').send(:__spawned_click_no_wait_command, "some command"))
+    assert_equal("start rubyw -e \"some command\"", browser.link(:id => 'link1').send(:__spawned_no_wait_command, "some command"))
   end
 
 end

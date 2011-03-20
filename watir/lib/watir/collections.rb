@@ -364,6 +364,14 @@ module Watir
         @container.document.getElementsByTagName("IFRAME").length
     end
   end
+
+  class Forms < ElementCollections
+    def element_class; Form; end
+    def element_tag; 'FORM'; end
+    def length
+      @container.document.getElementsByTagName("FORM").length
+    end
+  end
   
   class HTMLElements < ElementCollections
     include CommonCollection
