@@ -6,6 +6,10 @@
 * Added Frame#exists?, #src, #name and other Element methods.
 * Added multiple locators support for #frame method.
 
+=== General improvements
+
+* Using Watir::Util for better compatibility with ActiveSupport used by Rails 3. Closes http://jira.openqa.org/browse/WTR-474 (Jarmo Pertman)
+
 == Version 1.8.0 - 2011/28/02
 
 === IE improvements

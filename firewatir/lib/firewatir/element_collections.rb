@@ -9,9 +9,9 @@ module FireWatir
     include JsshSocket
 
     def self.inherited subclass
-      class_name = subclass.to_s.demodulize
-      method_name = class_name.underscore
-      element_class_name = class_name.singularize
+      class_name = Watir::Util.demodulize(subclass.to_s)
+      method_name = Watir::Util.underscore(class_name)
+      element_class_name = Watir::Util.singularize(class_name)
 
       FireWatir::Container.module_eval "def #{method_name}
       locate if respond_to?(:locate)
