@@ -3,8 +3,8 @@ module FireWatir
   # Base class containing items that are common between the span, div, label, p and pre classes.
   class NonControlElement < Element
     def self.inherited subclass
-      class_name = subclass.to_s.demodulize
-      method_name = class_name.underscore
+      class_name = Watir::Util.demodulize(subclass.to_s)
+      method_name = Watir::Util.underscore(class_name)
       FireWatir::Container.module_eval "def #{method_name}(how, what=nil)
       locate if respond_to?(:locate)
       return #{class_name}.new(self, how, what); end"

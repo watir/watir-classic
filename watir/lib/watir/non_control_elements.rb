@@ -8,8 +8,8 @@ module Watir
   class NonControlElement < Element
 
     def self.inherited subclass
-      class_name = subclass.to_s.demodulize
-      method_name = class_name.underscore
+      class_name = Watir::Util.demodulize(subclass.to_s)
+      method_name = Watir::Util.underscore(class_name)
       Watir::Container.module_eval <<-RUBY
         def #{method_name}(how, what=nil)
           return #{class_name}.new(self, how, what)
