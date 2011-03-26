@@ -234,9 +234,16 @@ module Watir
     def replace_method(method)
       method == 'click' ? 'click!' : method
     end
+    private :replace_method
 
     def build_method(method_name, *args)
-      arguments = args.map { |argument| argument = argument.inspect }
+      arguments = args.map do |argument|
+        if argument.is_a?(String)
+          argument = "'#{argument}'"  
+        else
+          argument = argument.inspect
+        end
+      end
       "#{replace_method(method_name)}(#{arguments.join(',')})"
     end
     private :build_method
@@ -244,10 +251,9 @@ module Watir
     def generate_ruby_code(element, method_name, *args)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
       method = build_method(method_name, *args)
-      code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
-             "require '#{File.expand_path(File.dirname(__FILE__))}/core';" <<
-             "#{element}.#{method};"
-      return code
+      ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
+                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
+      return ruby_code
     end
     private :generate_ruby_code
 
@@ -256,7 +262,7 @@ module Watir
       unless $DEBUG
         "start rubyw #{command}"
       else
-        puts "#click_no_wait command:"
+        puts "#no_wait command:"
         command = "ruby #{command}"
         puts command
         command
