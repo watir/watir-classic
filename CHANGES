@@ -5,6 +5,7 @@
 * Added #frames method.
 * Added Frame#exists?, #src, #name and other Element methods.
 * Added multiple locators support for #frame method.
+* Added *_no_wait methods.
 
 === General improvements
 
