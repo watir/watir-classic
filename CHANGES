@@ -2,10 +2,10 @@
 
 === IE improvements
 
-* Added #frames method. (Ivan Kabluchkov)
-* Added Frame#exists?, #src, #name and other Element methods. (Ivan Kabluchkov)
-* Added multiple locators support for #frame method. (Ivan Kabluchkov)
-* Added *_no_wait methods. (Ivan Kabluchkov)
+* Added #frames method (Ivan Kabluchkov).
+* Added Frame#exists?, #src, #name and other Element methods (Ivan Kabluchkov).
+* Added multiple locators support for #frame method (Ivan Kabluchkov).
+* Added *_no_wait methods (Ivan Kabluchkov).
 
 === General improvements
 
