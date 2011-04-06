@@ -1,4 +1,4 @@
-== Version X.X.X - 2011/XX/XX
+== Version 1.8.1 - 2011/04/07
 
 === IE improvements
 
@@ -6,6 +6,10 @@
 * Added Frame#exists?, #src, #name and other Element methods (Ivan Kabluchkov).
 * Added multiple locators support for #frame method (Ivan Kabluchkov).
 * Added *_no_wait methods (Ivan Kabluchkov).
+
+=== Firefox improvements
+
+* Nothing
 
 === General improvements
 
