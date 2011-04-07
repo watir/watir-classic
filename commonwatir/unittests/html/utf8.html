@@ -7,6 +7,15 @@
 </head>
 
 <body>
+  <script src="./base64.js"></script>
+  <script>
+  function base64_encode() {
+    document.getElementById("output").value = Base64.encode(document.getElementById("input").value);
+  }
+  </script>
   <div id="utf8_string">æøå</div>
+  <input id="input" type="text">
+  <input id="output" type="text">
+  <input type="submit" id="button" onClick="base64_encode(); return false"/>
 </body>
 </html>
