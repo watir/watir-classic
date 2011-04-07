@@ -1316,6 +1316,12 @@ module FireWatir
             args[0].gsub!("\\", "\\"*4)
             args[0].gsub!("\"", "\\\"")
             args[0].gsub!("\n","\\n")
+
+            if (args[0].class == String)
+              args[0] = args[0].to_json()
+              args[0] = args[0][1, args[0].length - 2]
+            end
+
             jssh_command = "#{element_object}.#{methodName}\"#{args[0]}\""
           else
             jssh_command = "#{element_object}.#{methodName}#{args[0]}"
