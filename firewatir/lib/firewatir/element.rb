@@ -1,3 +1,5 @@
+require 'json'
+
 module FireWatir
   # Base class for html elements.
   # This is not a class that users would normally access.
@@ -114,7 +116,7 @@ module FireWatir
           end
         end
       end
-    
+
       if return_value == "null" || return_value =~ /\[object\s.*\]/
         return_value = ""
       end
@@ -281,7 +283,7 @@ module FireWatir
         #puts "container name is: " + @container.element_name
         #locate if defined? locate
         #@container.locate
-	
+
 	# We cannot assume that the container exists at this point, because code like:
 	# b.div(:id, "something_that_does_not_exist").h2(:text, /foobar/).exists? would return true
 	if (!@container.exists?)
@@ -557,7 +559,7 @@ module FireWatir
     # Output:
     #   Nil if unable to locate frame, else return the Frame element.
     #
-    # TODO/FIX: If multiple tabs are open on the current window, will count frames from every tab, not just the current tab. 
+    # TODO/FIX: If multiple tabs are open on the current window, will count frames from every tab, not just the current tab.
     #
     def locate_frame(how, what)
       # Get all the frames the are there on the page.
@@ -1318,7 +1320,7 @@ module FireWatir
             args[0].gsub!("\n","\\n")
 
             if (args[0].class == String)
-              args[0] = args[0].to_json()
+              args[0] = args[0].to_json(:ascii_only => 1)
               args[0] = args[0][1, args[0].length - 2]
             end
 
