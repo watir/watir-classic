@@ -12,7 +12,8 @@ module Watir::UnitTest
     browser.goto new_url unless browser.url == new_url
   end
   def browser
-    $browser
+    return $browser if $browser && $browser.exists?
+    $browser = Watir::Browser.new
   end
 
   def assert_class element, klass

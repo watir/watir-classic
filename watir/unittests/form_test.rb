@@ -27,7 +27,12 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:action, "pass.html").exists?)   
     assert_false(browser.form(:action, "missing").exists?)   
   end
-  
+
+  def test_multiple_attribute
+    assert_true(browser.form(:name => 'test2', :id => 'f2').exists?)
+    assert_true(browser.form(:name => 'test2', :method => 'get', :action => 'pass2.html'))
+  end
+
   def test_button_in_form
     assert(browser.form(:name, "test2").button(:caption, "Submit").exists?)
   end     
@@ -59,6 +64,19 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   end
   def test_form_flash
     assert_nothing_raised{ browser.form(:name, 'test2').flash }
+  end
+end
+
+class TC_Forms_Collection < Test::Unit::TestCase
+  def setup
+    goto_page "forms2.html"
+  end
+
+  def test_forms_collection
+    forms = browser.forms
+    assert_equal(4, forms.length)
+    assert_equal('pass.html', forms.first.action)
+    assert_equal('test2', forms.last.name)
   end
 end
 
@@ -288,3 +306,4 @@ class TC_Hidden_Fields < Test::Unit::TestCase
     assert_equal("hidden_1", browser.hiddens[2].id)
   end
 end
+

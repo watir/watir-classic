@@ -38,7 +38,6 @@ spec = Gem::Specification.new do |s|
   s.require_path = 'lib'    
 
   s.add_dependency 'commonwatir', '= ' + version
-  s.add_dependency 'activesupport', '=2.3.9'
 
   s.has_rdoc = true
   s.rdoc_options <<

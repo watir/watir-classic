@@ -9,6 +9,16 @@ Test page for Text Fields
 function addEvent(e) {
     document.all.events_text.value = document.all.events_text.value + "\n" + e
 }
+function handle_focus(obj) {
+	if (obj.value == "foo") {
+		obj.value = "";
+	}
+}
+function handle_blur(obj) {
+	if (obj.value == "") {
+		obj.value = "foo";
+	}
+}
 </script>
 
 
@@ -72,6 +82,9 @@ This Field has javascript events in it
 
 <textarea name = events_text cols = 20 rows = 10 ></textarea>
 <input type=button onClick='document.all.events_text.value=""' value="Clear Events Box">
+
+Handle text field with focus and blur events for maxlength issue.
+<input type="text" value="foo" onfocus="handle_focus(this);" onblur="handle_blur(this);">
 
 
 <br>

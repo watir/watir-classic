@@ -23,6 +23,13 @@ module Watir
         Watir::Wait.until(@timeout) { @element.present? }
         @element.send(m, *args, &block)
       end
+    
+      # Returns element id
+      def id
+        Watir::Wait.until(@timeout) { @element.present? }
+        @element.id
+      end
+
     end
 
     #

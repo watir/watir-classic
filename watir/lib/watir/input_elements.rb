@@ -245,7 +245,7 @@ module Watir
     
     # return number of maxlength attribute
     def maxlength
-      assert_exists
+      assert_exists unless @o
       begin
         ole_object.invoke('maxlength').to_i
       rescue WIN32OLERuntimeError

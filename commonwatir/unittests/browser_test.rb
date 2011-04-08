@@ -15,4 +15,24 @@ class TC_Browser < Test::Unit::TestCase
 
 end
 
+class TC_Browser_Exists < Test::Unit::TestCase
+  def setup
+    @browser = Watir::Browser.new
+    @browser.goto self.class.html_root + "blankpage.html"
+  end
+
+  def teardown
+    @browser.close if @browser.exists?
+  end
+
+  def test_exists
+    assert @browser.exists?
+  end
+
+  def test_not_exists
+    @browser.close
+    assert_false @browser.exists?
+  end
+end
+
 

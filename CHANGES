@@ -1,24 +1,66 @@
-== Version NEXT - 2010/XX/XX
-
-=== General improvements
-
-*
+== Version 1.8.1 - 2011/04/07
 
 === IE improvements
 
-* Fixed Watir::IE#close_all. Closes http://jira.openqa.org/browse/WTR-463 (Jarmo Pertman)
+* Added #frames method (Ivan Kabluchkov).
+* Added Frame#exists?, #src, #name and other Element methods (Ivan Kabluchkov).
+* Added multiple locators support for #frame method (Ivan Kabluchkov).
+* Added *_no_wait methods (Ivan Kabluchkov).
+
+=== Firefox improvements
+
+* Nothing
+
+=== General improvements
+
+* Using Watir::Util for better compatibility with ActiveSupport used by Rails 3. Closes http://jira.openqa.org/browse/WTR-474 (Jarmo Pertman)
+
+== Version 1.8.0 - 2011/28/02
+
+=== IE improvements
+
+* Improved speed of #click_no_wait by not loading RubyGems (Jarmo Pertman)
+* Added check to maxlength so we don't clobber any incoming js events. (Charley Baker)
+
+=== Firefox improvements
+
+* Removed dependency for ActiveSupport, making it possible to use FireWatir with Rails 3 (Jarmo Pertman)
+* Removed :waitTime option and try to handle better firefox startup (Jarmo Pertman)
+* Added #exists? with alias #exist? to FireWatir::Firefox browser object (Jarmo Pertman)
+
+== Version 1.7.1 - 2011/01/10
+
+=== IE improvements
+
+* Fixed Watir::IE.start_process/new_process. Doesn't completely close http://jira.openqa.org/browse/WTR-472 (Jarmo Pertman)
+
+=== Firefox improvements
+
+- Nothing
+
+Whole Changelog is available at http://github.com/bret/watir/compare/v1.7.1...v1.7.0
+
+== Version 1.7.0 - 2011/01/06
+
+=== IE improvements
+
+* Fixed Watir::IE#close_all to close all IE windows, even the ones with tabs. Closes http://jira.openqa.org/browse/WTR-463 (Jarmo Pertman)
 * IE#wait waits now again until browser has a state of READYSTATE_COMPLETE due to strange timing issues. Closes http://jira.openqa.org/browse/WTR-466 (Jarmo Pertman)
 * Added CSS3 selectors with usage like browser.text_field(:css => "input[name='text1']") (Jonas Tingeborn)
 * Updated bundled version of AutoIt to 3.3.6.1. Closes http://jira.openqa.org/browse/WTR-440 (Jarmo Pertman)
+    Note: If you want to use this version of AutoIt, you'll need to manually uninstall all previously installed Watir and possibly manually installed AutoIt versions first.
+    When you run your Watir scripts, it will automatically install and use the new version.
 
 === Firefox improvements
 
 * Fixed Element#exists? for cases where nested elements were used for locating (Alok Menghrajani)
 * Ignore uppercase tags in XHTML when searching for elements (Alok Menghrajani)
 
-=== Cleanup & Maintenance
+=== General improvements
 
-*
+* Return Element#id correctly when using Element#when_present and friends methods. Closes http://jira.openqa.org/browse/WTR-469 (Jarmo Pertman)
+
+Whole Changelog is available at http://github.com/bret/watir/compare/v1.6.7...v1.7.0
 
 == Version 1.6.7 - 2010/10/26
 

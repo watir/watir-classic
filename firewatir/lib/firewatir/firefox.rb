@@ -16,9 +16,6 @@ module FireWatir
     #
     # Input:
     #   options  - Hash of any of the following options:
-    #     :waitTime - Time to wait for Firefox to start. By default it waits for 2 seconds.
-    #                 This is done because if Firefox is not started and we try to connect
-    #                 to jssh on port 9997 an exception is thrown.
     #     :profile  - The Firefox profile to use. If none is specified, Firefox will use
     #                 the last used profile.
     #     :suppress_launch_process - do not create a new firefox process. Connect to an existing one.
@@ -26,21 +23,17 @@ module FireWatir
     # TODO: Start the firefox version given by user.
 
     def initialize(options = {})
-      if(options.kind_of?(Integer))
-        options = {:waitTime => options}
-      end
-
-      # check for jssh not running, firefox may be open but not with -jssh
-      # if its not open at all, regardless of the :suppress_launch_process option start it
-      # error if running without jssh, we don't want to kill their current window (mac only)
-      jssh_down = false
-      begin
-        set_defaults()
-      rescue Watir::Exception::UnableToStartJSShException
-        jssh_down = true
-      end
-
       if current_os == :macosx && !%x{ps x | grep firefox-bin | grep -v grep}.empty?
+        # check for jssh not running, firefox may be open but not with -jssh
+        # if its not open at all, regardless of the :suppress_launch_process option start it
+        # error if running without jssh, we don't want to kill their current window (mac only)
+        jssh_down = false
+        begin
+          set_defaults()
+        rescue Watir::Exception::UnableToStartJSShException
+          jssh_down = true
+        end
+
         raise "Firefox is running without -jssh" if jssh_down
         open_window unless options[:suppress_launch_process]
       elsif not options[:suppress_launch_process]
@@ -70,8 +63,6 @@ module FireWatir
 
       bin = path_to_bin()
       @t = Thread.new { system("#{bin} -jssh #{profile_opt}") }
-      sleep options[:waitTime] || 2
-
     end
     private :launch_browser
 
@@ -115,6 +106,13 @@ module FireWatir
       wait()
     end
 
+    # Returns true if Firefox window is opened.
+    def exists?
+      !!find_window(:url, @window_url)
+    end
+
+    alias_method :exist?, :exists?
+
     # Loads the previous page (if there is any) in the browser. Waits for the page to get loaded.
     def back()
       js_eval "if(#{browser_var}.canGoBack) #{browser_var}.goBack()"
@@ -144,7 +142,8 @@ module FireWatir
     private
     # This function creates a new socket at port 9997 and sets the default values for instance and class variables.
     # Generatesi UnableToStartJSShException if cannot connect to jssh even after 3 tries.
-    def set_defaults(no_of_tries = 0)
+    def set_defaults
+      no_of_tries = 0
       # JSSH listens on port 9997. Create a new socket to connect to port 9997.
       begin
         $jssh_socket = TCPSocket::new(MACHINE_IP, "9997")
@@ -152,7 +151,8 @@ module FireWatir
         read_socket()
       rescue
         no_of_tries += 1
-        retry if no_of_tries < 3
+        sleep 1
+        retry if no_of_tries < 10
         raise UnableToStartJSShException, "Unable to connect to machine : #{MACHINE_IP} on port 9997. Make sure that JSSh is properly installed and Firefox is running with '-jssh' option"
       end
       @error_checkers = []

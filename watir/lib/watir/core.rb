@@ -4,6 +4,7 @@ require 'timeout'
 require 'watir/win32ole'
 
 # these are required already in commonwatir, but not when using click_no_wait!
+require 'watir/util'
 require 'watir/exceptions'
 require 'watir/matches'
 require 'watir/wait'
@@ -11,7 +12,6 @@ require 'watir/wait_helper'
 require 'watir/element_extensions'
 
 require 'logger'
-require 'watir/core_ext'
 require 'watir/logger'
 require 'watir/container'
 require 'watir/locator'

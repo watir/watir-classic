@@ -233,14 +233,18 @@ module Watir
     # Yields successively to each IE window on the current desktop. Takes a block.
     # This method will not work when
     # Watir/Ruby is run under a service (instead of a user).
-	# Yields to the window and its hwnd.
+    # Yields to the window and its hwnd.
     def self.each
       shell = WIN32OLE.new('Shell.Application')
+      ie_browsers = []
       shell.Windows.each do |window|
         next unless (window.path =~ /Internet Explorer/ rescue false)
         next unless (hwnd = window.hwnd rescue false)
         ie = IE.bind(window)
         ie.hwnd = hwnd
+        ie_browsers << ie
+      end
+      ie_browsers.each do |ie|
         yield ie
       end
     end
@@ -312,7 +316,7 @@ module Watir
   	# Are we attached to an open browser?
     def exists?
       begin
-        @ie.name =~ /Internet Explorer/
+        !!(@ie.name =~ /Internet Explorer/)
       rescue WIN32OLERuntimeError
         false
       end
@@ -398,7 +402,11 @@ module Watir
       wait rescue nil
       chwnd = @ie.hwnd.to_i
       @ie.quit
-      while Win32API.new("user32","IsWindow", 'L', 'L').Call(chwnd) == 1
+      t = Time.now
+      while exists?
+        # just in case to avoid possible endless loop if failing to close some
+        # window or tab
+        break if Time.now - t > 10
         sleep 0.3
       end
     end
@@ -546,15 +554,14 @@ module Watir
 
     # Show all forms displays all the forms that are on a web page.
     def show_forms
-      if allForms = document.forms
-        count = allForms.length
+      if all_forms = self.forms
+        count = all_forms.length
         puts "There are #{count} forms"
-        for i in 0..count-1 do
-          wrapped = FormWrapper.new(allForms.item(i))
-          puts "Form name: #{wrapped.name}"
-          puts "       id: #{wrapped.id}"
-          puts "   method: #{wrapped.method}"
-          puts "   action: #{wrapped.action}"
+        all_forms.each do |form|
+          puts "Form name: #{form.name}"
+          puts "       id: #{form.id}"
+          puts "   method: #{form.method}"
+          puts "   action: #{form.action}"
         end
       else
         puts "No forms"

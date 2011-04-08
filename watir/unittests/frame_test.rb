@@ -11,43 +11,44 @@ class TC_Frames < Test::Unit::TestCase
   end
 
   def test_frame_no_what
-    assert_raises(UnknownFrameException) { browser.frame("missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame("missingFrame").button(:id, "b2").enabled?  }
     assert_raises(UnknownObjectException) { browser.frame("buttonFrame2").button(:id, "b2").enabled?  }
     assert(browser.frame("buttonFrame").button(:id, "b2").enabled?)
     assert_false(browser.frame("buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
 
   def test_frame_using_name
-    assert_raises(UnknownFrameException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
     assert_raises(UnknownObjectException) { browser.frame(:name, "buttonFrame2").button(:id, "b2").enabled?  }
     assert(browser.frame(:name, "buttonFrame").button(:id, "b2").enabled?)
     assert_false(browser.frame(:name, "buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
 
   def test_frame_using_name_and_regexp
-    assert_raises(UnknownFrameException) { browser.frame(:name, /missingFrame/).button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:name, /missingFrame/).button(:id, "b2").enabled?  }
     assert(browser.frame(:name, /button/).button(:id, "b2").enabled?)
   end
 
   def test_frame_using_index
-    assert_raises(UnknownFrameException) { browser.frame(:index, 8).button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:index, 8).button(:id, "b2").enabled?  }
     assert_raises(UnknownObjectException) { browser.frame(:index, 2).button(:id, "b2").enabled?  }
     assert(browser.frame(:index, 1 ).button(:id, "b2").enabled?)
     assert_false(browser.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
+    assert_equal('blankpage.html', browser.frame(:index, 2).src)
   end
 
   tag_method :test_frame_with_invalid_attribute, :fails_on_firefox
 
   def test_frame_with_invalid_attribute
-    assert_raises(ArgumentError) { browser.frame(:blah, 'no_such_thing').button(:id, "b2").enabled?  }
+    assert_raises(MissingWayOfFindingObjectException) { browser.frame(:blah, 'no_such_thing').button(:id, "b2").enabled?  }
   end
 
   def test_preset_frame
     # with ruby's instance_eval, we are able to use the same frame for several actions
     results = browser.frame("buttonFrame").instance_eval do
       [
-              button(:id, "b2").enabled?,
-              button(:caption, "Disabled Button").enabled?
+        button(:id, "b2").enabled?,
+        button(:caption, "Disabled Button").enabled?
       ]
     end
     assert_equal([true, false], results)
@@ -63,11 +64,11 @@ class TC_Frames2 < Test::Unit::TestCase
   end
 
   def test_frame_with_no_name
-    assert_raises(UnknownFrameException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
   end
 
   def test_frame_by_id
-    assert_raises(UnknownFrameException) { browser.frame(:id, "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:id, "missingFrame").button(:id, "b2").enabled?  }
     assert(browser.frame(:id, 'first_frame').button(:id, "b2").enabled?)
   end
 
@@ -85,8 +86,8 @@ class TC_NestedFrames < Test::Unit::TestCase
   end
 
   def test_frame
-    assert_raises(UnknownFrameException) { browser.frame("missingFrame").button(:id, "b2").enabled?  }
-    assert_raises(UnknownFrameException) { browser.frame("nestedFrame").frame("subFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame("missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame("nestedFrame").frame("subFrame").button(:id, "b2").enabled?  }
     assert(browser.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").enabled?)
     browser.frame("nestedFrame").frame("senderFrame").text_field(:index, "1").set("Hello")
     browser.frame("nestedFrame").frame("senderFrame").button(:name, "sendIt").click
@@ -171,3 +172,25 @@ class TC_Frames_click_no_wait < Test::Unit::TestCase
   end
 end
 
+class TC_Frame_multiple_attributes < Test::Unit::TestCase
+  def setup
+    goto_page "frame_multi.html"
+  end
+
+  def test_get_frame_by_name_and_id
+    assert_equal('blankpage.html', browser.frame(:id => 'second_frame', :name => 'buttonFrame2').src)
+  end
+end
+
+class TC_frames_method_for_container < Test::Unit::TestCase
+  def setup
+    goto_page "frame_multi.html"
+  end
+
+  def test_frames_collection
+    frames = browser.frames
+    assert_equal(3, frames.length)
+    assert_equal('first_frame', frames[1].id)
+    assert_equal('pass.html', frames[3].src)
+  end
+end

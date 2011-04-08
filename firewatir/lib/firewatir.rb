@@ -1,9 +1,6 @@
 $:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'socket'
-gem 'activesupport', '=2.3.9'
-require 'active_support'
-
 require 'watir'
 require 'firewatir/exceptions'
 require 'firewatir/jssh_socket'
