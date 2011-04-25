@@ -20,11 +20,11 @@ spec = Gem::Specification.new do |s|
   s.version = version
   s.summary = 'Automated testing tool for web applications using Firefox browser.'
   s.description = <<-EOF
-    FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free, 
-    open-source functional testing tool for automating browser-based tests of web applications. 
+    FireWatir stands for "Web Application Testing in Ruby for Firefox". FireWatir (pronounced firewater) is a free,
+    open-source functional testing tool for automating browser-based tests of web applications.
     It works with applications written in any language.
-    FireWatir drives the Firefox browser the same way an end user would. 
-    It clicks links, fills in forms, presses buttons. 
+    FireWatir drives the Firefox browser the same way an end user would.
+    It clicks links, fills in forms, presses buttons.
     FireWatir also checks results, such as whether expected text appears on the page, or whether a control is enabled.
     FireWatir is a Ruby library that works with Firefox on Windows. It also works on Linux, Mac but without support for
     JavaScript popups (currently support will be there shortly).
@@ -35,9 +35,11 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = 'Watir'
 
   s.requirements << 'Mozilla Firefox browser 1.5 or later.'
-  s.require_path = 'lib'    
+  s.require_path = 'lib'
 
   s.add_dependency 'commonwatir', '= ' + version
+  s.add_dependency 'json_pure'
+  s.add_dependency 'character-encodings'
 
   s.has_rdoc = true
   s.rdoc_options <<
