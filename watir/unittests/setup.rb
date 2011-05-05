@@ -68,16 +68,3 @@ end
 =end
 
 $window_tests = Dir["unittests/windows/*_test.rb"] - ["unittests/windows/ie-each_test.rb"]
-
-# load development libs also in #click_no_wait processes
-Watir::Element.class_eval do
-  alias_method :__spawned_no_wait_command, :spawned_no_wait_command
-
-  def spawned_no_wait_command(command)
-    # make it actually wait in tests for easier testing
-    #
-    # please note that this implementation of click_no_wait takes considerably more time than
-    # in real situation due to the loading of setup.rb!
-    "ruby -r#{File.expand_path(File.join(File.dirname(__FILE__), "setup.rb"))} -e #{command.inspect}"
-  end
-end
