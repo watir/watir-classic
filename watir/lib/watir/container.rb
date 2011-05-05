@@ -269,9 +269,13 @@ module Watir
     #    browser.file_field(:index, 2)                         # access the second file upload on the page (1 based, so the first field is accessed with :index,1)
     #
     def file_field(how, what=nil)
-      FileField.new(self, how, what)
+      FileUpload.new(self, how, what)
     end
-    
+
+    def file_download_link(how, what=nil)
+      FileDownload.new(self, how, what)
+    end
+
     # this is the main method for accessing the file_fields iterator. It returns a FileFields object
     #
     # Typical usage:

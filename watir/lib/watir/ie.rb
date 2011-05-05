@@ -30,3 +30,10 @@ require 'watir/modal_dialog'
 require 'watir/collections'
 
 require 'watir/camel_case'
+
+require 'ffi'
+require 'rautomation'
+require 'watir/dialogs/file_upload'
+require 'watir/dialogs/file_download'
+require 'watir/dialogs/javascript'
+
