@@ -39,6 +39,8 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'commonwatir', '= ' + version
   s.add_dependency 'firewatir', '= ' + version
   s.add_dependency 'nokogiri'
+  s.add_dependency 'ffi'
+  s.add_dependency 'rautomation'
 
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS
