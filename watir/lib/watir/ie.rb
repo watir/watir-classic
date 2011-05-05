@@ -1,6 +1,5 @@
 require 'watir'
 require 'watir/core'
-require 'watir/winClicker'
 require 'watir/close_all'
 require 'watir/ie-process'
 
