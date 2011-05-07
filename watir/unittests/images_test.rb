@@ -1,6 +1,6 @@
 # feature tests for Images
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..','..') unless $SETUP_LOADED
 require 'unittests/setup'
 require 'ftools'
 require 'webrick'
@@ -30,7 +30,7 @@ class TC_Images < Test::Unit::TestCase
     assert(    browser.image(:id , /squ/ ).exists?  )
     
     assert( !  browser.image(:src, "missingsrc.gif").exists?  )
-    
+                                                             puts "file:///#{$myDir}/html/images/triangle.jpg"
     assert(    browser.image(:src, "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
     assert(    browser.image(:src , /triangle/ ).exists?  )
     

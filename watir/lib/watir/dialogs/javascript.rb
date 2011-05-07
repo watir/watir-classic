@@ -1,5 +1,6 @@
 #TODO: work around rautomation persistently hitting the button
-
+# should be able to handle any dialog but defaults to standard dialogs
+# need docs
 module Watir
   def javascript_dialog(opts={})
     JavascriptDialog.new(opts)

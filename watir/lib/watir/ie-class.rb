@@ -413,43 +413,40 @@ module Watir
 
     # Maximize the window (expands to fill the screen)
     def maximize
-      set_window_state :SW_MAXIMIZE
+      rautomation.maximize
     end
 
     # Minimize the window (appears as icon on taskbar)
     def minimize
-      set_window_state :SW_MINIMIZE
+      rautomation.minimize
     end
 
     # Restore the window (after minimizing or maximizing)
     def restore
-      set_window_state :SW_RESTORE
+      rautomation.restore
     end
 
     # Make the window come to the front
     def bring_to_front
-      autoit.WinActivate title, ''
+      rautomation.activate
     end
 
     def front?
-      1 == autoit.WinActive(title, '')
+      rautomation.active?
     end
 
-    private
-    def set_window_state(state)
-      autoit.WinSetState title, '', autoit.send(state)
+    def rautomation
+      @@rautomation ||= ::RAutomation::Window.new(:hwnd => hwnd)
+      @@rautomation
     end
-    def autoit
-      Watir::autoit
-    end
-    public
 
-    # Send key events to IE window.
-    # See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
-    # for complete documentation on keys supported and syntax.
+    # Activates the window and sends keys to it.
+    #
+    # Refer to MSDN documentation at http://msdn.microsoft.com/en-us/library/dd375731(v=VS.85).aspx
+    # for the keycodes.
+    # @see RAutomation::Window#send_keys
     def send_keys(key_string)
-      autoit.WinActivate title
-      autoit.Send key_string
+      rautomation.send_keys key_string
     end
 
     def dir

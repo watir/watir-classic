@@ -2,7 +2,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'watir/WindowHelper'
 require 'watir/process'
 
 $mydir = File.expand_path(File.dirname(__FILE__)).gsub('/', '\\')
@@ -20,11 +19,6 @@ class TC_JavaScript_Test < Test::Unit::TestCase
   
   def setup
     @background_ruby_process_count = ruby_process_count
-    begin
-      WindowHelper.check_autoit_installed
-    rescue
-      raise "There is a Problem with Autoit - is it installed?"
-    end
   end
   
   def check_dialog(extra_file, expected_result, &block)
@@ -38,7 +32,8 @@ class TC_JavaScript_Test < Test::Unit::TestCase
   
   def test_alert_button
     check_dialog('jscriptExtraAlert', /Alert button!/) do
-      browser.button(:id, 'btnAlert').click
+
+      browser.button(:id, 'btnAlert').click_no_wait
     end
     
   end

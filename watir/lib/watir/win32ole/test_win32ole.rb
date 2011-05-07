@@ -17,15 +17,16 @@ webbrowser = ie.Application
  
 # wait for google page to be displayed
 puts webbrowser.Busy
-sleep(5)
+#sleep(5)
 puts webbrowser.Busy
 
-fnGetUnknown = Win32API.new(iedialog_file, 'GetUnknown', ['p', 'p'], 'v')
 
+fnGetUnknown = Win32API.new(iedialog_file, 'GetUnknown', ['p', 'p'], 'v')
 intPointer = " " * 4 # will contain the int value of the IUnknown*
 fnGetUnknown.call("Google - Microsoft Internet Explorer", intPointer)
 
 intArray = intPointer.unpack('L')
+puts intArray
 intUnknown = intArray.first
 puts intUnknown
 
