@@ -1,0 +1,6 @@
+run and fix 'unittest/other' tests
+make sure modal dialogs work in 187 with the older win32ole
+look at win32ole and figure out why test fails and why it seems to have broken after recompile
+create doc for changes 
+recommend major version change since API is changed
+eat own dog food
