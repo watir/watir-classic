@@ -3,10 +3,6 @@ require 'watir/core'
 require 'watir/close_all'
 require 'watir/ie-process'
 
-require 'dl/import'
-require 'dl/struct'
-require 'Win32API'
-
 # these switches need to be deleted from ARGV to enable the Test::Unit
 # functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
