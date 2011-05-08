@@ -18,7 +18,8 @@ Rake::RDocTask.new('rdoc') do |rdoc|
     rdoc.rdoc_files.include(file)
   end
   rdoc.rdoc_files.include('lib/watir/contrib/*.rb')  
-  rdoc.rdoc_files.include('lib/watir/*.rb')   
+  rdoc.rdoc_files.include('lib/watir/dialogs/*.rb')
+  rdoc.rdoc_files.include('lib/watir/*.rb')
   rdoc.rdoc_files.exclude('lib/watir/camel_case.rb')
 end
 

@@ -30,6 +30,8 @@ require 'watir/html_element'
 
 require 'watir/module'
 
+require 'ffi'
+require 'rautomation'
 require 'watir/dialogs/file_upload'
 require 'watir/dialogs/file_download'
 require 'watir/dialogs/javascript'
