@@ -1,4 +1,3 @@
-run and fix 'unittest/other' tests
 make a warning if someone tries to run with 1.8.6
 tests with file download link
 add deprecation methods
