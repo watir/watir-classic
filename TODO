@@ -1,4 +1,26 @@
 run and fix 'unittest/other' tests
+make a warning if someone tries to run with 1.8.6
+tests with file download link
+add deprecation methods
 create doc for changes 
-recommend major version change since API is changed
+version change
 eat own dog food
+
+add an alias :dialog for :javascript_dialog
+add docs for javascript_dialog
+
+break the connection between the gems
+
+Release plan
+============
+
+1.9
+this release (only release new version of watir)
+
+1.9.1
+merge in convio patches and tests
+move contrib to wiki
+
+1.10
+rename watir to iewatir and make watir gem that can handle platforms appropriately
+
