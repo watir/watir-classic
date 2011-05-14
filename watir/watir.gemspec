@@ -30,6 +30,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://www.watir.com/'
 
   s.platform = Gem::Platform::RUBY
+  s.required_ruby_version = '>= 1.8.7'
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.require_path = 'lib'
 
