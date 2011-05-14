@@ -440,6 +440,13 @@ module Watir
       @@rautomation
     end
 
+    def autoit
+      raise NotImplementedError, 'Watir no longer uses AutoIT. ' <<
+                                 'If you need this functionality you can downgrade to v1.8.1 ' <<
+                                 'or update your scripts to use ie.rautomation. ' <<
+                                 'Please refer to https://github.com/jarmo/RAutomation'
+    end
+
     # Activates the window and sends keys to it.
     #
     # Refer to MSDN documentation at http://msdn.microsoft.com/en-us/library/dd375731(v=VS.85).aspx

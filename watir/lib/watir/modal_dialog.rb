@@ -1,3 +1,9 @@
+class WinClicker
+  def initialize
+    raise NotImplementedError, 'Watir no longer supports WinClicker. Please use click_no_wait and the javascript_dialog method.'
+  end
+end
+
 module Watir
   class ModalDialog
     include Container
