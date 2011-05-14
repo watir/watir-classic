@@ -1,4 +1,3 @@
-
 module Watir
   class FileUpload < InputElement
     #:stopdoc:
