@@ -1,13 +1,8 @@
-make a warning if someone tries to run with 1.8.6
 tests with file download link
-add deprecation methods
-create doc for changes 
-version change
 eat own dog food
 
-add an alias :dialog for :javascript_dialog
-add docs for javascript_dialog
-
+document new features: javascript, rautomation, file_doanload_link
+update deprecation warnings to point to wiki
 break the connection between the gems
 
 Release plan
