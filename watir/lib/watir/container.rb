@@ -273,7 +273,7 @@ module Watir
     end
 
     def file_download_link(how, what=nil)
-      FileDownload.new(self, how, what)
+      FileDownloadLink.new(self, how, what)
     end
 
     # this is the main method for accessing the file_fields iterator. It returns a FileFields object
