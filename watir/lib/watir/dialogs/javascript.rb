@@ -1,10 +1,8 @@
-#TODO: work around rautomation persistently hitting the button
-# should be able to handle any dialog but defaults to standard dialogs
-# need docs
 module Watir
   def javascript_dialog(opts={})
     JavascriptDialog.new(opts)
   end
+  alias :dialog :javascript_dialog
 
   class JavascriptDialog
     WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer','Microsoft Internet Explorer']
