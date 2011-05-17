@@ -10,35 +10,24 @@ class TC_Dialog_Test < Test::Unit::TestCase
   def setup
     goto_page 'JavascriptClick.html'
   end    
-  def teardown
-    begin 
-      javascript_dialog.button("OK").click
-    rescue
-    end
-  end
-  
+
   def test_alert_without_bonus_script
     browser.button(:id, 'btnAlert').click_no_wait
-    javascript_dialog.button("OK").click
+    browser.javascript_dialog.button("OK").click
     assert_match(/Alert button!/, browser.text_field(:id, "testResult").value)
   end
 
   def test_button_name_not_found
     browser.button(:id, 'btnAlert').click_no_wait
-    assert_raises(::RAutomation::UnknownButtonException) {javascript_dialog.button("Yes").click}
-    javascript_dialog.button("OK").click
+    assert_raises(::RAutomation::UnknownButtonException) {browser.javascript_dialog.button("Yes").click}
+    browser.javascript_dialog.button("OK").click
   end
 
   def test_exists
-    assert_false(javascript_dialog.exists?)
+    assert_false(browser.javascript_dialog.exists?)
     browser.button(:id, 'btnAlert').click_no_wait
-    Watir::Wait.until(5) {javascript_dialog.exists?}
-    javascript_dialog.button("OK").click
-  end
-
-  def test_leaves_dialog_open
-    # should be closed in teardown
-    browser.button(:id, 'btnAlert').click_no_wait
+    Watir::Wait.until(5) {browser.javascript_dialog.exists?}
+    browser.javascript_dialog.button("OK").click
   end
 
   def test_copy_array_elements
@@ -52,21 +41,21 @@ class TC_Dialog_Test < Test::Unit::TestCase
 
   def test_confirm_ok
     browser.button(:value, 'confirm').click_no_wait
-    Watir::Wait.until(5) {javascript_dialog.exists?}
-    javascript_dialog.button("OK").click
+    Watir::Wait.until(5) {browser.javascript_dialog.exists?}
+    browser.javascript_dialog.button("OK").click
     assert_equal "You pressed the Confirm and OK button!", browser.text_field(:id, 'testResult').value
   end
 
   def xtest_confirm_cancel
     browser.button(:value, 'confirm').click_no_wait
-    assert javascript_dialog.exists?
-    javascript_dialog.button("Cancel").click
+    assert browser.javascript_dialog.exists?
+    browser.javascript_dialog.button("Cancel").click
     assert_equal "You pressed the Confirm and Cancel button!", browser.text_field(:id, 'testResult').value
   end
 
   def test_dialog_close
-    javascript_dialog.close
-    assert !javascript_dialog.exists?
+    browser.javascript_dialog.close
+    assert !browser.javascript_dialog.exists?
   end
   
 end
