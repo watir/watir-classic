@@ -50,7 +50,7 @@ module Watir
 		end
 
     # Used internally to determine when IE has finished loading a page
-    READYSTATES = {:complete => 4}
+    READYSTATES = {:complete => 4, :interactive => 3}
 
     # The default color for highlighting objects as they are accessed.
     HIGHLIGHT_COLOR = 'yellow'
