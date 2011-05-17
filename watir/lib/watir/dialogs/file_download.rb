@@ -15,7 +15,8 @@ module Watir
 
     # File Download Dialog
     def file_download_window
-      wait_for_window('File Download')
+      @file_download_window ||= wait_for_window('File Download', /save this file/)
+      @file_download_window
     end
 
     def save_file_button
@@ -28,21 +29,26 @@ module Watir
 
     # Save As Dialog
     def save_as_window
-      wait_for_window('Save As')
+      @save_window ||= wait_for_window('Save As')
+      @save_window
     end
 
     def set_file_name(path_to_file)
-      save_as_window.text_field(:value => 'Edit').set path_to_file
+      save_as_window.text_field(:class => 'Edit').set path_to_file
     end
 
     def save_button
-      save_as_window.button('&Save')
+      save_as_window.button(:value=>'&Save')
     end
 
-
-    def wait_for_window(title)
-      window = ::RAutomation::Window.new(:title => title)
-      Watir::Wait.until {window.exists?}
+    def wait_for_window(title, text=nil)
+      args = {:title => title}
+      args.update(:text => text) if text
+      window = nil
+      Watir::Wait.until {
+        window = ::RAutomation::Window.new(args)
+        window.exists?
+      }
       window
     end
 
