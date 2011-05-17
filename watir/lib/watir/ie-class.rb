@@ -421,23 +421,29 @@ module Watir
       rautomation.minimize
     end
 
+    def minimized?
+      rautomation.minimized?
+    end
+
     # Restore the window (after minimizing or maximizing)
     def restore
       rautomation.restore
     end
 
     # Make the window come to the front
-    def bring_to_front
+    def activate
       rautomation.activate
     end
+    alias :bring_to_front :activate
 
-    def front?
+    def active?
       rautomation.active?
     end
+    alias :front? :active?
 
     def rautomation
-      @@rautomation ||= ::RAutomation::Window.new(:hwnd => hwnd)
-      @@rautomation
+      @rautomation ||= ::RAutomation::Window.new(:hwnd => hwnd)
+      @rautomation
     end
 
     def autoit
