@@ -275,16 +275,11 @@ module Watir
     # This is the main method for downloading a file from a link.
     # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
-    # returns a Link object
-    #
     # Typical Usage
     #
-    #   browser.link(:url, /login/)              # access the first link whose url matches login. We can use a string in place of the regular expression
-    #                                       # but the complete path must be used, browser.link(:url, 'http://myserver.com/my_path/login.asp')
-    #   browser.link(:index,2)                   # access the second link on the page
-    #   browser.link(:title, "Picture")         # access a link using the tool tip
-    #   browser.link(:text, 'Click Me')          # access the link that has Click Me as its text
-    #   browser.link(:xpath, "//a[contains(.,'Click Me')]/")      # access the link with Click Me as its text
+    #   browser.file_download_link(:url, /login/)                              # access the first link whose url matches login. We can use a string in place of the regular expression
+    #   browser.file_download_link(:text, 'Click Me')                          # access the link that has Click Me as its text
+    #   browser.file_download_link(:xpath, "//a[contains(.,'Click Me')]/")     # access the link with Click Me as its text
     #
     # returns a FileDownloadLink object
     #
