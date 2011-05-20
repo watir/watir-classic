@@ -923,9 +923,15 @@ module FireWatir
     end
     alias showFrames show_frames
 
+    @@path_to_bin = nil
+    def self.path_to_bin=(path)
+      @@path_to_bin = path
+    end
+
     private
 
     def path_to_bin
+      return @@path_to_bin if @@path_to_bin
       path = case current_os()
              when :windows
                path_from_registry
