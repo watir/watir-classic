@@ -2,13 +2,14 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
+require 'base64'
 
 class TC_Utf8 < Test::Unit::TestCase
   location __FILE__
 
   def setup
     uses_page "utf8.html"
-  end 
+  end
 
   def test_is_correct_encoding
     txt = browser.div(:id, 'utf8_string').text
@@ -19,6 +20,17 @@ class TC_Utf8 < Test::Unit::TestCase
     end
   end
 
+  def test_utf8_text_field_set
+    utf8_str = 'w6ljb2xlIMOgIGxvbA=='
+    browser.text_field(:id, 'input').set Base64.decode64(utf8_str)
+    browser.button(:id, 'button').click
+    assert_equal(utf8_str, browser.text_field(:id, 'output').value)
+  end
+
+  def test_utf8_text_field_value
+    utf8_str = 'w6ljb2xlIMOgIGxvbA=='
+    browser.text_field(:id, 'input').value = Base64.decode64(utf8_str)
+    browser.button(:id, 'button').click
+    assert_equal(utf8_str, browser.text_field(:id, 'output').value)
+  end
 end
-
-

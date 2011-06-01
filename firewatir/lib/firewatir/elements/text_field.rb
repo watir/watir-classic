@@ -186,6 +186,12 @@ module FireWatir
     #   - value - The string to enter into the text field
     #
     def doKeyPress( value )
+      if RUBY_VERSION =~ /^1\.8/
+        # before iterating over each character, we'll convert value to utf-8
+        require "encoding/character/utf-8"
+        value = u"" + value
+      end
+
       begin
         max = maxlength
         if (max > 0 && value.length > max)
