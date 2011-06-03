@@ -196,3 +196,17 @@ class TC_frames_method_for_container < Test::Unit::TestCase
     assert_equal('pass.html', frames[3].src)
   end
 end
+
+class TC_iframe_access < Test::Unit::TestCase
+  def setup
+    goto_page "iframe.html"
+  end
+
+  def test_frame_without_access_should_still_show_properties
+    frame = browser.frame(:name, 'iframe')
+    assert_nothing_raised {frame.src}
+    assert_equal('http://www.google.com', frame.src)
+    assert_raises(FrameAccessDeniedException) {frame.button(:index, 1).click}
+  end
+
+end
