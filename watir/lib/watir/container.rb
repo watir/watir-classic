@@ -272,25 +272,6 @@ module Watir
       FileUpload.new(self, how, what)
     end
 
-    # This is the main method for downloading a file from a link.
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # Typical Usage
-    #
-    #   browser.file_download_link(:url, /login/)                              # access the first link whose url matches login. We can use a string in place of the regular expression
-    #   browser.file_download_link(:text, 'Click Me')                          # access the link that has Click Me as its text
-    #   browser.file_download_link(:xpath, "//a[contains(.,'Click Me')]/")     # access the link with Click Me as its text
-    #
-    # returns a FileDownloadLink object
-    #
-    # Typical Usage
-    #
-    #    browser.file_download_link(:text, 'download').set('output_file') # click the link and download the file with the new name
-    #
-    def file_download_link(how, what=nil)
-      FileDownloadLink.new(self, how, what)
-    end
-
     def javascript_dialog(opts={})
       JavascriptDialog.new(opts)
     end

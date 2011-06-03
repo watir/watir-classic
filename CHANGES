@@ -1,11 +1,11 @@
 == Version 1.9.0 -2011//
 
-We've updated watir/ie for Ruby 1.8.7 and are no longer supporting Ruby 1.8.6.
-* Using RAutomation instead of Autoit, WinClicker and the WindowHelper
-* Added ie.file_download_link
-* New implementation of ie.file_field
-* Replaced ie.dialog with ie.javascript_dialog
-* Recompiled win32ole for 1.8.7 mingw and removed win32ole for 1.8.6
+* Added support for IE9
+* Updated watir/ie for Ruby 1.8.7 and are no longer supporting Ruby 1.8.6.
+  * Using RAutomation instead of Autoit, WinClicker and the WindowHelper
+  * New implementation of ie.file_field
+  * Replaced ie.dialog with ie.javascript_dialog
+  * Recompiled win32ole for 1.8.7 mingw and removed win32ole for 1.8.6
 
 
 == Version 1.8.1 - 2011/04/08
