@@ -46,6 +46,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
   def test_form_outer_html
     expected = "\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>"
     actual = browser.form(:name, 'test2').html
+    actual.sub!('style=""','') # ie9 adds in a style tag so just strip it out
 
     # ignore attributes order by sorting them
     sorted_expected, sorted_actual = [expected, actual].map! do |html|
