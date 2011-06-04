@@ -367,7 +367,7 @@ module Watir
     end
 
     def method_missing(method_name, *args, &block)
-      if method_name.to_s =~ /(.*)_no_wait/ && self.respond_to?($1)
+      if method_name.to_s =~ /(.*)_no_wait$/ && self.respond_to?($1)
         assert_exists
         assert_enabled
         highlight(:set)
@@ -376,6 +376,14 @@ module Watir
         highlight(:clear)
       else
         super
+      end
+    end
+
+    def respond_to?(method_name)
+      if method_name.to_s =~ /(.*)_no_wait$/
+	super($1)
+      else
+	super(method_name)	
       end
     end
   end
