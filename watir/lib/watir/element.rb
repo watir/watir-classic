@@ -276,8 +276,10 @@ module Watir
       assert_enabled
 
       highlight(:set)
-      ole_object.click
-      fire_event 'onClick'
+      # Not sure why but in IE9 Document mode, passing a parameter
+      # to click seems to work. Firing the onClick event breaks other tests
+      # so this seems to be the safest change and also works fine in IE8
+      ole_object.click(0)
       highlight(:clear)
     end
 
