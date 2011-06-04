@@ -252,7 +252,7 @@ module Watir
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
       method = build_method(method_name, *args)
       ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
-                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
+                    "require 'rubygems'; require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
       return ruby_code
     end
     private :generate_ruby_code
