@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_Fields < Test::Unit::TestCase
+class TC_Version < Test::Unit::TestCase
 
   def test_full_version
     assert !Watir::IE.version.nil?
