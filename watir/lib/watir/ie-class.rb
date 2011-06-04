@@ -249,7 +249,21 @@ module Watir
       end
     end
 
-    # return internet explorer instance as specified. if none is found, 
+    def self.version
+      begin
+        require 'win32/registry'
+        ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
+          ie_key.read('Version').last
+        end
+        # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
+      end
+    end
+
+    def self.version_parts
+      version.split('.')
+    end
+
+    # return internet explorer instance as specified. if none is found,
     # return nil.
     # arguments:
     #   :url, url -- the URL of the IE browser window
