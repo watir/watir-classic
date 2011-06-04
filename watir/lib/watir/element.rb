@@ -251,8 +251,8 @@ module Watir
     def generate_ruby_code(element, method_name, *args)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
       method = build_method(method_name, *args)
-      ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
-                    "require 'rubygems'; require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
+      ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
+                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
       return ruby_code
     end
     private :generate_ruby_code
@@ -304,17 +304,21 @@ module Watir
       assert_exists
       assert_enabled
       highlight(:set)
+      dispatch_event(event)
+      @container.wait
+      highlight(:clear)
+    end
+
+    def dispatch_event(event)
       if IE.version_parts.first.to_i >= 8 && @container.page_container.document.respond_to?(:createEvent)
         # we're in IE9 document standards mode
         ole_object.dispatchEvent(create_event(event))
       else
         ole_object.fireEvent(event)
       end
-      @container.wait
-      highlight(:clear)
     end
 
-   def create_event(event)
+    def create_event(event)
        event =~ /on(.*)/i
        event = $1 if $1
        event.downcase!
