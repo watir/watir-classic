@@ -28,11 +28,12 @@ module Watir
 
     def javascript_dialog_window
       return @window if @window
-      RAutomation::Window.wait_timeout = @timeout
-      if @opts[:title]
-        @window = ::RAutomation::Window.new(:title => @opts[:title])
-      else
-        @window = ::RAutomation::Window.new(:title => /^(#{WINDOW_TITLES.join('|')})$/)
+      begin
+        original_timeout = RAutomation::Window.wait_timeout
+        RAutomation::Window.wait_timeout = @timeout
+        ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
+      ensure
+        RAutomation::Window.wait_timeout = original_timeout
       end
       @window
     end
