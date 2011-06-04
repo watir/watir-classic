@@ -557,7 +557,7 @@ module Watir
       unless value == current_value
         click
       end
-       highlight :set
+      highlight :clear
     end
     
     # Clears a check box.
