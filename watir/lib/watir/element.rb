@@ -277,6 +277,7 @@ module Watir
 
       highlight(:set)
       ole_object.click
+      fire_event 'onClick'
       highlight(:clear)
     end
 
@@ -300,12 +301,45 @@ module Watir
     def fire_event(event)
       assert_exists
       assert_enabled
-
       highlight(:set)
-      ole_object.fireEvent(event)
+      if IE.version_parts.first.to_i >= 8 && @container.page_container.document.respond_to?(:createEvent)
+        # we're in IE9 document standards mode
+        ole_object.dispatchEvent(create_event(event))
+      else
+        ole_object.fireEvent(event)
+      end
       @container.wait
       highlight(:clear)
     end
+
+   def create_event(event)
+       event =~ /on(.*)/i
+       event = $1 if $1
+       event.downcase!
+
+       # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
+       case event
+         when 'abort', 'blur', 'change', 'error', 'focus', 'load',
+              'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
+           dom_event_type = 'HTMLEvents'
+           dom_event_init = "initEvent(\"#{event}\", true, true)"
+         when 'keydown', 'keypress', 'keyup'
+           dom_event_type = 'KeyEvents'
+           #   'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+           dom_event_init = "initKeyEvent(\"#{event}\", true, true, #{@container.page_container.window}, false, false, false, false, 0, 0)"
+         when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover',
+                       'mouseup'
+           dom_event_type = 'MouseEvents'
+           #   'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
+           dom_event_init = "initMouseEvent(\"#{event}\", true, true, #{@container.page_container.window}, 1, 0, 0, 0, 0, false, false, false, false, 0, null)"
+         else
+           dom_event_type = 'HTMLEvents'
+           dom_event_init = "initEvents(\"#{event}\", true, true)"
+         end
+        event = @container.page_container.document.createEvent("HTMLEvents")
+        event.initEvent("change", true, true)
+       event
+     end
 
     # This method sets focus on the active element.
     #   raises: UnknownObjectException  if the object is not found
