@@ -31,7 +31,7 @@ module Watir
       begin
         original_timeout = RAutomation::Window.wait_timeout
         RAutomation::Window.wait_timeout = @timeout
-        ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
+        @window = ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
       ensure
         RAutomation::Window.wait_timeout = original_timeout
       end
