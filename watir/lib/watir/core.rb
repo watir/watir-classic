@@ -31,5 +31,5 @@ require 'watir/html_element'
 require 'watir/module'
 
 require 'rautomation'
-require 'watir/dialogs/file_upload'
+require 'watir/dialogs/file_field'
 require 'watir/dialogs/javascript'

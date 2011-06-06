@@ -269,7 +269,7 @@ module Watir
     #    browser.file_field(:index, 2)                         # access the second file upload on the page (1 based, so the first field is accessed with :index,1)
     #
     def file_field(how, what=nil)
-      FileUpload.new(self, how, what)
+      FileField.new(self, how, what)
     end
 
     def javascript_dialog(opts={})

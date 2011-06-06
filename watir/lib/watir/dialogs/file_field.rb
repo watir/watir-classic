@@ -1,5 +1,5 @@
 module Watir
-  class FileUpload < InputElement
+  class FileField < InputElement
     #:stopdoc:
     INPUT_TYPES = ["file"]
     #:startdoc:
