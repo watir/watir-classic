@@ -19,7 +19,10 @@ class TC_Dialog_Test < Test::Unit::TestCase
 
   def test_button_name_not_found
     browser.button(:id, 'btnAlert').click_no_wait
+    original_timeout = RAutomation::Window.wait_timeout
+    RAutomation::Window.wait_timeout = 5
     assert_raises(::RAutomation::UnknownButtonException) {browser.javascript_dialog.button("Yes").click}
+    RAutomation::Window.wait_timeout = original_timeout
     browser.javascript_dialog.button("OK").click
   end
 

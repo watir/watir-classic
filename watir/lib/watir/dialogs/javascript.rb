@@ -3,11 +3,8 @@ module Watir
   class JavascriptDialog
     WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer','Microsoft Internet Explorer']
 
-    attr_accessor :timeout
-
     def initialize(opts={})
       @opts = opts
-      @timeout = 30
     end
 
     def exists?
@@ -27,15 +24,7 @@ module Watir
     end
 
     def javascript_dialog_window
-      return @window if @window
-      begin
-        original_timeout = RAutomation::Window.wait_timeout
-        RAutomation::Window.wait_timeout = @timeout
-        @window = ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
-      ensure
-        RAutomation::Window.wait_timeout = original_timeout
-      end
-      @window
+      @window ||= ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
     end
 
   end
