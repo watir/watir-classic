@@ -13,25 +13,16 @@ class TC_ModalDialog < Watir::TestCase
     IE.attach_timeout = 10.0
   end
 
-  def teardown 
-    if browser 
-      while browser.close_modal do; end
+  def teardown
+    if browser
+      while browser.modal_dialog.exists?(0) do
+        browser.modal_dialog.close
+        sleep 0.5
+      end
     end
-    sleep 0.1
-    IE.attach_timeout = @original_timeout
   end
 
-  def assert_no_modals
-    IE.attach_timeout = 0.2 
-    begin
-      assert_raises(NoMatchingWindowFoundException) do
-        browser.modal_dialog
-      end
-    ensure
-      IE.attach_timeout = @original_timeout
-    end
-  end 
-     
+
   def test_modal_simple_use_case
     browser.button(:value, 'Launch Dialog').click_no_wait
     modal = browser.modal_dialog(:title, 'Modal Dialog')
@@ -68,60 +59,37 @@ class TC_ModalDialog < Watir::TestCase
     modal.text_field(:name, 'modal_text').set('hello')
     modal.button(:value, 'Close').click
 
-    assert_no_modals
+    assert !browser.modal_dialog.exists?
     assert_equal('hello', browser.text_field(:name, 'modaloutput').value)
-  end
-
-  # Now explicitly supply the :title parameter.
-  def test_modal_dialog_use_case_title
-    browser.button(:value, 'Launch Dialog').click_no_wait
-
-    modal = browser.modal_dialog(:title, 'Modal Dialog')
-    assert_not_equal(browser.hwnd, modal.hwnd)
-
-    assert_equal('Modal Dialog', modal.title)
-
-    assert(modal.text.include?('Enter some text:'))
-    modal.button(:value, 'Close').click
-  end
-
-  # Now explicitly supply the :title parameter with regexp match
-  def test_modal_dialog_use_case_title_regexp
-    assert_raises(ArgumentError){browser.modal_dialog(:title, /dal Dia/)}
-  end
-
-  # Now explicitly supply an invalid "how" value
-  def test_modal_dialog_use_case_invalid
-    assert_raise(ArgumentError) { browser.modal_dialog(:esp) }
   end
 
   def test_double_modal
     browser.button(:value, 'Launch Dialog').click_no_wait
-    modal1 = browser.modal_dialog
-    modal1.button(:text, 'Another Modal').click_no_wait
-    modal2 = modal1.modal_dialog
-    assert_equal modal2.title, 'Pass Page'
-    modal2.close
-    modal1.close
+    browser.modal_dialog.button(:text, 'Another Modal').click_no_wait
+    assert_nothing_raised {
+      Watir::Wait.until {browser.modal_dialog.title == 'Pass Page'}
+    }
+    browser.modal_dialog.close
+    browser.modal_dialog.close
   end
-  
+
   def xtest_modal_with_frames
     browser.button(:value, 'Launch Dialog').click_no_wait
     modal1 = browser.modal_dialog
     modal1.button(:value, 'Modal with Frames').click_no_wait
     modal2 = browser.modal_dialog
     modal2.frame('buttonFrame').button(:value, 'Click Me').click
-    assert(modal2.frame('buttonFrame').text.include?('PASS'))    
+    assert(modal2.frame('buttonFrame').text.include?('PASS'))
     modal2.frame('buttonFrame').button(:value, 'Close Window').click
     modal1.close
   end
-  
+
   def test_modal_exists
     browser.button(:value, 'Launch Dialog').click_no_wait
-    modal = browser.modal_dialog(:title, 'Modal Dialog')
+    modal = browser.modal_dialog
     assert(modal.exists?)
     modal.button(:value, 'Close').click
     assert_false(modal.exists?)
   end
-        
+
 end

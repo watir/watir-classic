@@ -209,7 +209,7 @@ module Watir
     # loaded.
     
     def modal_dialog(how=nil, what=nil)
-      ModalDialog.new(self, how, what)
+      ModalDialog.new(self)
     end
 
     # This is the main method for accessing a button. Often declared as an <tt><input type = submit></tt> tag.
