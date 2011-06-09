@@ -30,6 +30,12 @@ end
 
 CLEAN << 'pkg' << 'rdoc'
 
+
+desc 'Attach to an active IE window'
+task :attach do
+  sh "irb.bat -r attach.rb"
+end
+
 task :default => :package
 
 if defined? Rake::GemPackageTask
@@ -45,3 +51,4 @@ if defined? Rake::GemPackageTask
 else
   puts 'Warning: without Rubygems packaging tasks are not available'
 end
+
