@@ -310,9 +310,13 @@ module Watir
     end
 
     def dispatch_event(event)
-      if IE.version_parts.first.to_i >= 8 && @container.page_container.document.respond_to?(:createEvent)
-        # we're in IE9 document standards mode
-        ole_object.dispatchEvent(create_event(event))
+      if IE.version_parts.first.to_i >= 8
+        begin
+          # we're in IE9 document standards mode
+          ole_object.dispatchEvent(create_event(event))
+        rescue WIN32OLERuntimeError
+          ole_object.fireEvent(event)
+        end
       else
         ole_object.fireEvent(event)
       end
@@ -322,28 +326,33 @@ module Watir
        event =~ /on(.*)/i
        event = $1 if $1
        event.downcase!
-
        # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
        case event
          when 'abort', 'blur', 'change', 'error', 'focus', 'load',
               'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
-           dom_event_type = 'HTMLEvents'
-           dom_event_init = "initEvent(\"#{event}\", true, true)"
+           event_name = :initEvent
+           event_type = 'HTMLEvents'
+           event_args = [event, true, true]
          when 'keydown', 'keypress', 'keyup'
-           dom_event_type = 'KeyEvents'
-           #   'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-           dom_event_init = "initKeyEvent(\"#{event}\", true, true, #{@container.page_container.window}, false, false, false, false, 0, 0)"
+           event_name = :initKeyEvent
+           event_type = 'KeyEvents'
+           # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+           event_args = [event, true, true, @container.page_container.document.parentWindow, false, false, false, false, 0, 0]
          when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover',
                        'mouseup'
-           dom_event_type = 'MouseEvents'
-           #   'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
-           dom_event_init = "initMouseEvent(\"#{event}\", true, true, #{@container.page_container.window}, 1, 0, 0, 0, 0, false, false, false, false, 0, null)"
+           event_name = :initMouseEvent
+           event_type = 'MouseEvents'
+           # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
+           event_args = [event, true, true, @container.page_container.document.parentWindow, 1, 0, 0, 0, 0, false, false, false, false, 0, nil]
          else
            dom_event_type = 'HTMLEvents'
            dom_event_init = "initEvents(\"#{event}\", true, true)"
-         end
-        event = @container.page_container.document.createEvent("HTMLEvents")
-        event.initEvent("change", true, true)
+           event_name = :initEvents
+           event_type = 'HTMLEvents'
+           event_args = [true, true]
+       end
+        event = @container.page_container.document.createEvent(event_type)
+        event.send event_name, *event_args
        event
      end
 
