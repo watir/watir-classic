@@ -310,7 +310,7 @@ module Watir
     end
 
     def dispatch_event(event)
-      if IE.version_parts.first.to_i >= 8
+      if IE.version_parts.first.to_i >= 9
         begin
           # we're in IE9 document standards mode
           ole_object.dispatchEvent(create_event(event))
