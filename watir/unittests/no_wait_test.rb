@@ -4,9 +4,9 @@ require 'unittests/setup'
 class TC_No_Wait_Commands < Test::Unit::TestCase
   def test_fire_event_no_wait
     goto_page "javascriptevents.html"
-    browser.link(:text, "Check the Status").fire_event_no_wait("onMouseOver")
+    browser.text_field(:index, 1).fire_event_no_wait("onkeyup")
     assert_nothing_raised{
-      Watir::Wait.until {browser.status == "It worked"}
+      Watir::Wait.until {browser.div(:id, 'event_name').text == 'onkeyup'}
     }
   end
 
