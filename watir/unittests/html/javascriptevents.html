@@ -1,35 +1,33 @@
 <HTML>
 <HEAD> 
 <SCRIPT LANGUAGE="JavaScript">
-
-function enable() {
-frm=document.forms[0]
-{frm.Button1.disabled=false}
-}
-
+   function showMessage(msg) {
+     document.getElementById('event_name').innerHTML = msg;
+   }
 </SCRIPT>
 </HEAD>
 <BODY TEXT="000000" BGCOLOR="FFFFFF">
 <p align="center"> 
+
+<div id="event_name">nothing fired</div>
+
 <form>
 
-<input type="text" name="entertext" onkeyup="javascript:enable();" ></input> 
-<input type="button" value="Button 1" name="Button1" disabled="true" onClick="javascript:document.location='pass.html';"></input>
+
+<input type="text"
+       name="entertext"
+       onkeyup="javascript:showMessage('onkeyup');"
+       onmouseup="javascript:showMessage('onmouseup');"
+></input>
+
+<select onchange="javascript:showMessage('onchange');">
+<option value=o1 >Option 1
+<option value=o2 >Option 2
+<option value=o3 SELECTED >Option 3
+<option value=o4 >Option 4
+</select>
 
 </form>
-</p>
-<p>
-<a href="pass.html"
-onMouseOver="window.status='It worked'; return true">Check the Status</a>  
-</p>
-<p>
-<a href="pass.html"
-onMouseOver="window.status=''; return true">Clear the Status</a>  
 
-</p>
-
-<p>
-<a href = '#' onClick= "javascript:window.open('pass.html','pop_up_test','height=100,width=50,fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); ">New Window No Status Bar</a>
-</p>
 </BODY>
 </HTML>
