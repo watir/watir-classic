@@ -7,7 +7,8 @@ module Watir
 
     def name
       assert_exists
-      @o.getAttributeNode('name').value
+      name = @o.getAttributeNode('name')
+      name ? name.value : ''
     end
 
     def form_method
