@@ -30,10 +30,10 @@ class TC_Form_Display_XPath < Test::Unit::TestCase
     goto_page "forms2.html"
 
     actual = capture_stdout { browser.show_forms }
-    assert_equal(<<END_OF_MESSAGE, actual)
+    expected = <<END_OF_MESSAGE
 There are 4 forms
-Form name: 
-       id: 
+Form name:
+       id:
    method: get
    action: pass.html
 Form name: test2
@@ -41,14 +41,16 @@ Form name: test2
    method: get
    action: pass2.html
 Form name: test3
-       id: 
+       id:
    method: get
    action: pass2.html
 Form name: test2
-       id: 
+       id:
    method: get
    action: pass2.html
 END_OF_MESSAGE
+    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2').gsub!(/\s+\n/,"\n")
+    assert_equal(expected, actual)
   end
 end
 

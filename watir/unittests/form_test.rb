@@ -24,7 +24,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:id, 'f2').exists?)   
     assert_false(browser.form(:id, 'missing').exists?)   
     
-    assert(browser.form(:action, "pass.html").exists?)   
+    assert(browser.form(:action, /pass.html/).exists?)
     assert_false(browser.form(:action, "missing").exists?)   
   end
 
@@ -47,10 +47,10 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     expected = "\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>"
     actual = browser.form(:name, 'test2').html
     actual.sub!('style=""','') # ie9 adds in a style tag so just strip it out
-
+    actual.gsub!('"','').gsub!(/\n/,'') #ie9 also has som additional formatting so remove that too
     # ignore attributes order by sorting them
     sorted_expected, sorted_actual = [expected, actual].map! do |html|
-      html.strip.downcase.scan(%r{<form (.*)><br><(.*)> </form>}).flatten.
+      html.strip.downcase.scan(%r{<form (.*)><br><(.*)>\s*</form>}).flatten.
               map {|part| part.split(" ").sort.join(" ")}.join("><br><")
     end
     assert_not_equal("", sorted_expected)
@@ -76,7 +76,7 @@ class TC_Forms_Collection < Test::Unit::TestCase
   def test_forms_collection
     forms = browser.forms
     assert_equal(4, forms.length)
-    assert_equal('pass.html', forms.first.action)
+    assert(forms.first.action =~ /pass.html$/)
     assert_equal('test2', forms.last.name)
   end
 end
@@ -86,10 +86,10 @@ class TC_Form_Display < Test::Unit::TestCase
   def test_showforms
     goto_page "forms2.html"
     actual = capture_stdout { browser.showForms }
-    assert_equal(<<END_OF_MESSAGE, actual)
+    expected = <<END_OF_MESSAGE
 There are 4 forms
-Form name: 
-       id: 
+Form name:
+       id:
    method: get
    action: pass.html
 Form name: test2
@@ -97,14 +97,16 @@ Form name: test2
    method: get
    action: pass2.html
 Form name: test3
-       id: 
+       id:
    method: get
    action: pass2.html
 Form name: test2
-       id: 
+       id:
    method: get
    action: pass2.html
 END_OF_MESSAGE
+    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2').gsub!(/\s+\n/,"\n")
+    assert_equal(expected, actual)
   end
 end
 

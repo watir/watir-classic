@@ -39,9 +39,14 @@ class TC_Selectbox_XPath < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.select_list(:xpath, "//select[@name='NoName']/").clearSelection }  
     browser.select_list(:xpath, "//select[@name='sel1']/").clearSelection
     
-    # the box sel1 has no ability to have a de-selected item
-    assert_equal( ["Option 3" ] , browser.select_list(:xpath, "//select[@name='sel1']/").getSelectedItems)   
-    
+    if Watir::IE.version_parts[0].to_i >= 9
+      # ie9 allows you to clear a selected item even if it requires a selection
+      assert_equal( [] , browser.select_list(:xpath, "//select[@name='sel1']/").getSelectedItems)
+    else
+      # the box sel1 has no ability to have a de-selected item
+      assert_equal( ["Option 3" ] , browser.select_list(:xpath, "//select[@name='sel1']/").getSelectedItems)
+    end
+
     browser.select_list(:xpath, "//select[@name='sel2']/").clearSelection
     assert_equal( [ ] , browser.select_list(:xpath, "//select[@name='sel2']/").getSelectedItems)   
   end
