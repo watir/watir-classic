@@ -349,7 +349,8 @@ module Watir
            event_type = 'KeyboardEvent'
            # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
            event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
-         when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup'
+         when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+              'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
            event_name = :initMouseEvent
            event_type = 'MouseEvents'
            # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
