@@ -11,8 +11,9 @@ title = ENV['window_title'] || '.'
 require 'watir/ie'
 @ie = Watir::IE.attach :title, /#{title}/
 puts "Attached to: #{@ie.title}"
-puts "Your browser instance is: ie"
+puts "Your browser instance is: ie, browser"
 
 def ie
  @ie
 end
+alias :browser :ie
