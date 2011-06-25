@@ -32,6 +32,8 @@ module Watir
     class NoStatusBarException < WatirException; end
     # This exception is raised if an http error, such as a 404, 500 etc is encountered while navigating
     class NavigationException < WatirException; end
+    # This exception is raised when an event is fired that we don't know how to handle
+    class UnhandledEventException < WatirException; end
     # This exception is raised if a timeout is exceeded
     class TimeOutException < WatirException
       def initialize(duration, timeout)

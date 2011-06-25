@@ -355,9 +355,7 @@ module Watir
            # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
            event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
          else
-           event_name = :initEvents
-           event_type = 'HTMLEvents'
-           event_args = [true, true]
+           raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
        end
        event = @container.page_container.document.createEvent(event_type)
        event.send event_name, *event_args
