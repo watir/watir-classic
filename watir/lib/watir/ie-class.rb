@@ -884,7 +884,12 @@ module Watir
           end
         rescue
           #handling text nodes
-          htmlString += xml_escape(element.toString)
+          if element.toString(0) == '[object Text]'   #IE9 has a different method for getting text
+            element_text = element.wholeText
+          else
+            element_text = element.toString(0)
+          end
+          htmlString += xml_escape(element_text)
           return htmlString
         end
         #puts tagName
