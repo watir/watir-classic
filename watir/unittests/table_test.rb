@@ -118,7 +118,7 @@ class TC_Tables < Test::Unit::TestCase
   tag_method :test_row_in_table, :fails_on_firefox
   def test_row_in_table
     assert_equal 'Row 2 Col1 Row 2 Col2', 
-      browser.table(:id, 't1').row(:id, 'row1').text
+      browser.table(:id, 't1').row(:id, 'row1').text.gsub(/(\r|\n)/,'')
   end
   
   def test_row_iterator

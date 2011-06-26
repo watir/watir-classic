@@ -24,7 +24,8 @@ class TC_FileField < Test::Unit::TestCase
     file = $htmlRoot + "fileupload.html"
     file.gsub! 'file:///', ''
     file.gsub! '/', '\\'
-    browser.file_field(:name,"file1").set(file)	
+    browser.file_field(:name,"file1").set(file)
+    Watir::Wait.until {browser.file_field(:name,"file1").value!= ''}
     assert_equal file, browser.file_field(:name,"file1").value
 
     # click the upload button
