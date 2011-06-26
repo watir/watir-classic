@@ -1,4 +1,8 @@
-== Version 1.9.0 -2011//
+== Version 1.9.1 - 2011/07/
+
+* Bug fixes for IE9
+
+== Version 1.9.0 - 2011/06/15
 
 * Added support for IE9
 * Updated watir/ie for Ruby 1.8.7 and are no longer supporting Ruby 1.8.6.
