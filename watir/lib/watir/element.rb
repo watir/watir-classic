@@ -125,6 +125,13 @@ module Watir
       return ole_object.innerText.strip
     end
 
+    # IE9 only returns empty string for ole_object.name for non-input elements
+    # so get at it through the attribute which will make the matchers work
+    def name
+      assert_exists
+      ole_object.getAttribute('name') || ''
+    end
+
     def ole_inner_elements
       assert_exists
       return ole_object.all
