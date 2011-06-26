@@ -49,7 +49,8 @@ Form name: test2
    method: get
    action: pass2.html
 END_OF_MESSAGE
-    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2').gsub!(/\s+\n/,"\n")
+    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2') if actual =~ /file:/
+    actual.gsub!(/\s+\n/,"\n")
     assert_equal(expected, actual)
   end
 end

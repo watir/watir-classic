@@ -47,7 +47,9 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     expected = "\r\n<FORM id=f2 name=test2 action=pass2.html method=get><BR><INPUT type=submit value=Submit> </FORM>"
     actual = browser.form(:name, 'test2').html
     actual.sub!('style=""','') # ie9 adds in a style tag so just strip it out
-    actual.gsub!('"','').gsub!(/\n/,'') #ie9 also has som additional formatting so remove that too
+    #ie9 also has som additional formatting so remove that too
+    actual.gsub!('"','')
+    actual.gsub!(/\n/,'')
     # ignore attributes order by sorting them
     sorted_expected, sorted_actual = [expected, actual].map! do |html|
       html.strip.downcase.scan(%r{<form (.*)><br><(.*)>\s*</form>}).flatten.
@@ -105,7 +107,8 @@ Form name: test2
    method: get
    action: pass2.html
 END_OF_MESSAGE
-    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2').gsub!(/\s+\n/,"\n")
+    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2') if actual =~ /file:/
+    actual.gsub!(/\s+\n/,"\n")
     assert_equal(expected, actual)
   end
 end
