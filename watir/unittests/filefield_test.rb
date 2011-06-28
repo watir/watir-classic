@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
+require 'uri'
 
 class TC_FileField < Test::Unit::TestCase
   tags :must_be_visible, :creates_windows
@@ -24,14 +25,16 @@ class TC_FileField < Test::Unit::TestCase
     file = $htmlRoot + "fileupload.html"
     file.gsub! 'file:///', ''
     file.gsub! '/', '\\'
-    browser.file_field(:name,"file1").set(file)
-    Watir::Wait.until {browser.file_field(:name,"file1").value!= ''}
-    assert_equal file, browser.file_field(:name,"file1").value
+    browser.file_field(:name,"file3").set(file)
+    Watir::Wait.until {browser.file_field(:name,"file3").value!= ''}
+    assert_equal file, browser.file_field(:name,"file3").value
 
     # click the upload button
     browser.button(:name,"upload").click
-    assert(browser.text.include?("PASS"))	
-  end
+    assert(browser.text.include?("PASS"))
+    uri = URI.parse(browser.url)
+    assert uri.query =~ /fileupload.html&upload=upload/
+   end
   
   def test_iterator
     assert_equal(6, browser.file_fields.length)
