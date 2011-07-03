@@ -1,4 +1,9 @@
-== Version 1.9.1 - 2011/07/
+== Version 1.9.2 - 2011/xx/xx
+
+* Bump RAutomation version dependency to 0.6.0 to fix/improve Watir::IE#send_keys
+* Restored Watir::IE#autoit method to use RAutomation's AutoIt adapter with a deprecation warning.
+
+== Version 1.9.1 - 2011/06/30
 
 * Bug fixes for IE9
 
