@@ -461,10 +461,9 @@ module Watir
     end
 
     def autoit
-      raise NotImplementedError, 'Watir no longer uses AutoIT. ' <<
-                                 'If you need this functionality you can downgrade to v1.8.1 ' <<
-                                 'or update your scripts to use ie.rautomation. ' <<
-                                 'Please refer to https://github.com/jarmo/RAutomation'
+      Kernel.warn "Usage of Watir::IE#autoit method is DEPRECATED! Use Watir::IE#rautomation method instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
+      @autoit ||= ::RAutomation::Window.new(:hwnd => hwnd, :adapter => :autoit)
+      @autoit
     end
 
     # Activates the window and sends keys to it.
