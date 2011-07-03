@@ -469,8 +469,11 @@ module Watir
 
     # Activates the window and sends keys to it.
     #
-    # Refer to MSDN documentation at http://msdn.microsoft.com/en-us/library/dd375731(v=VS.85).aspx
-    # for the keycodes.
+    # Example:
+    #   browser.send_keys("Hello World{enter}")
+    #
+    # Refer to RAutomation::Adapter::WinFfi::KeystrokeConverter.convert_special_characters for
+    # special characters conversion.
     # @see RAutomation::Window#send_keys
     def send_keys(key_string)
       rautomation.send_keys key_string
