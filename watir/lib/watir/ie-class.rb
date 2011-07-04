@@ -250,13 +250,13 @@ module Watir
     end
 
     def self.version
-      begin
-        require 'win32/registry'
-        ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
-          ie_key.read('Version').last
-        end
-        # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
-      end
+      @ie_version ||= begin
+                        require 'win32/registry'
+                        ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
+                          ie_key.read('Version').last
+                        end
+                        # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
+                      end
     end
 
     def self.version_parts
