@@ -5,6 +5,7 @@
  - fix Watir::IE loading for certain Windows XP environments (http://jira.openqa.org/browse/WTR-484).
 * Restored Watir::IE#autoit method to use RAutomation's AutoIt adapter with a deprecation warning.
 * Cache IE.version result to not access registry with each execution - was causing slowness in TextField#set for example.
+* Do not raise UnknownObjectException if parent element doesn't exist when calling Element#exists?
 
 == Version 1.9.1 - 2011/06/30
 
