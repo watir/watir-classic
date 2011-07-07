@@ -1,6 +1,6 @@
 == Version 1.9.2 - 2011/xx/xx
 
-* Bump RAutomation version dependency to 0.6.2 to:
+* Bump RAutomation dependency version to 0.6.2 to:
  - fix/improve Watir::IE#send_keys.
  - fix Watir::IE loading for certain Windows XP environments (http://jira.openqa.org/browse/WTR-484).
 * Restored Watir::IE#autoit method to use RAutomation's AutoIt adapter with a deprecation warning.
