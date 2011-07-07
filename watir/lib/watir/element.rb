@@ -383,10 +383,10 @@ module Watir
     def exists?
       begin
         locate if defined?(locate)
-      rescue WIN32OLERuntimeError
+      rescue WIN32OLERuntimeError, UnknownObjectException
         @o = nil
       end
-      @o ? true: false
+      !!@o
     end
 
     alias :exist? :exists?
