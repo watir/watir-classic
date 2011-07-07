@@ -1,6 +1,8 @@
 == Version 1.9.2 - 2011/xx/xx
 
-* Bump RAutomation version dependency to 0.6.0 to fix/improve Watir::IE#send_keys
+* Bump RAutomation version dependency to 0.6.2 to:
+ - fix/improve Watir::IE#send_keys.
+ - fix Watir::IE loading for certain Windows XP environments (http://jira.openqa.org/browse/WTR-484).
 * Restored Watir::IE#autoit method to use RAutomation's AutoIt adapter with a deprecation warning.
 * Cache IE.version result to not access registry with each execution - was causing slowness in TextField#set for example.
 
