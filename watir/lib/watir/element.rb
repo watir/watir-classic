@@ -211,25 +211,14 @@ module Watir
     def highlight(set_or_clear)
       if set_or_clear == :set
         begin
-          if IE.version_parts[0].to_i >= 9
-            @original_color ||= ole_object.style.backgroundColor
-            ole_object.style.backgroundColor = @container.activeObjectHighLightColor
-          else
-            @original_color ||= style.backgroundColor
-            style.backgroundColor = @container.activeObjectHighLightColor
-          end
+          @original_color ||= ole_object.style.backgroundColor
+          ole_object.style.backgroundColor = @container.activeObjectHighLightColor
         rescue
           @original_color = nil
         end
-      else # BUG: assumes is :clear, but could actually be anything
+      else
         begin
-          unless @original_color == nil
-            if IE.version_parts[0].to_i >= 9
-              ole_object.style.backgroundColor = @original_color
-            else
-              style.backgroundColor = @original_color
-            end
-          end
+          ole_object.style.backgroundColor = @original_color if @original_color
         rescue
           # we could be here for a number of reasons...
           # e.g. page may have reloaded and the reference is no longer valid
