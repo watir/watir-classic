@@ -44,15 +44,4 @@ class TC_Elements < Test::Unit::TestCase
     assert browser.element(:id, 'buttons1').button(:name,'b1').exists? 
   end
 
-  def test_objects_in_element_exists
-    assert browser.div(:id => "buttons1").exists?
-    assert browser.button(:name => "b1").exists?    
-    assert browser.div(:id => "buttons1").button(:name => "b1").exists?
-
-    assert !browser.div(:id => "buttons1").button(:id => 'doesntexist').exists?
-    assert !browser.div(:id => "doesntexist").button(:name => "b1").exists?
-    assert !browser.div(:id => "doesntexist").button(:id => "doesntexist").exists?
-  end
-  
-
 end
