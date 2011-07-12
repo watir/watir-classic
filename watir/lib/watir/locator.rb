@@ -23,11 +23,7 @@ module Watir
     end
 
     def match_with_specifiers?(element)
-      @specifiers.each do |how, what|
-        next if how == :index
-        return false unless match? element, how, what
-      end
-      return true
+      @specifiers.all? {|how, what| how == :index || match?(element, how, what)}
     end
   end
 
