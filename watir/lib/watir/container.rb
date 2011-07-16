@@ -774,7 +774,7 @@ module Watir
     #
     #   ie.element(:class, /foo/)      # access the first element with class 'foo'. We can use a string in place of the regular expression
     #   ie.element(:id, "11")          # access the first element that matches an id
-    def element(how, what)
+    def element(how, what=nil)
       return HTMLElement.new(self, how, what)  
     end
     
