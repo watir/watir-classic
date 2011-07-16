@@ -382,7 +382,6 @@ module Watir
     #
     #  *  how   - symbol - how we access the check box - :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
-    #  *  value - string - when there are multiple objects with different value attributes, this can be used to find the correct object
     #
     # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
@@ -403,11 +402,11 @@ module Watir
     #
     # Watir can access these using the following:
     #
-    #    browser.checkbox(:id, 'day_to_send', 'monday')         # access the check box with an id of day_to_send and a value of monday
-    #    browser.checkbox(:name,'email_frequency', 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
+    #    browser.checkbox(:id => 'day_to_send', :value => 'monday')         # access the check box with an id of day_to_send and a value of monday
+    #    browser.checkbox(:name => 'email_frequency', :value => 'weekly')    # access the check box with a name of email_frequency and a value of 'weekly'
     #    browser.checkbox(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the checkbox with a name of email_frequency and a value of 'daily'
-    def checkbox(how, what=nil, value=nil) # should be "check_box" ?
-      CheckBox.new(self, how, what, value)
+    def checkbox(how, what=nil) # should be "check_box" ?
+      CheckBox.new(self, how, what)
     end
     
     # this is the method for accessing the check boxes iterator. Returns a CheckBoxes object
@@ -424,7 +423,6 @@ module Watir
     # This is the main method for accessing a radio button. Usually an <tt><input type = radio></tt> HTML tag.
     #  *  how   - symbol - how we access the radio button, :index, :id, :name etc
     #  *  what  - string, integer or regular expression - what we are looking for,
-    #  *  value - string - when  there are multiple objects with different value attributes, this can be used to find the correct object
     #
     # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
     #
@@ -445,11 +443,11 @@ module Watir
     #
     # Watir can access these using the following:
     #
-    #    browser.radio(:id, 'day_to_send', 'monday')         # access the radio button with an id of day_to_send and a value of monday
-    #    browser.radio(:name,'email_frequency', 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
+    #    browser.radio(:id => 'day_to_send', :value => 'monday')         # access the radio button with an id of day_to_send and a value of monday
+    #    browser.radio(:name => 'email_frequency', :value => 'weekly')     # access the radio button with a name of email_frequency and a value of 'weekly'
     #    browser.radio(:xpath, "//input[@name='email_frequency' and @value='daily']/")     # access the radio button with a name of email_frequency and a value of 'daily'
-    def radio(how, what=nil, value=nil)
-      Radio.new(self, how, what, value)
+    def radio(how, what=nil)
+      Radio.new(self, how, what)
     end
     
     # This is the method for accessing the radio buttons iterator. Returns a Radios object
@@ -861,7 +859,7 @@ module Watir
       # else:
       
       locator = InputElementLocator.new self, types
-      locator.specifier = [how, what, value]
+      locator.set_specifier how, what
       locator.document = document
       return locator.element if locator.fast_locate
       # todo: restrict search to elements.getElementsByTag('INPUT'); faster

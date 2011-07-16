@@ -485,10 +485,6 @@ module Watir
     def locate #:nodoc:
       @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value, self.class)
     end
-    def initialize(container, how, what, value=nil)
-      super container, how, what
-      @value = value
-    end
     
     def inspect
       '#<%s:0x%x located=%s how=%s what=%s value=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect, @value.inspect]

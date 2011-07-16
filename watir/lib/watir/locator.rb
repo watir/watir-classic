@@ -16,6 +16,8 @@ module Watir
           how = :value
         when :method
           how = :form_method
+        when :value
+          what = what.is_a?(Regexp) ? what : what.to_s
         end
 
         @specifiers[how] = what
@@ -25,23 +27,18 @@ module Watir
     def match_with_specifiers?(element)
       @specifiers.all? {|how, what| how == :index || match?(element, how, what)}
     end
+
+    def set_specifier(how, what=nil)
+      specifiers = what ? {how => what} : how
+      @specifiers = {:index => 1} # default if not specified
+      normalize_specifiers! specifiers
+    end
   end
 
   class TaggedElementLocator < Locator
     def initialize(container, tag)
       @container = container
       @tag = tag
-    end
-
-    def set_specifier(how, what)
-      if how.class == Hash and what.nil?
-        specifiers = how
-      else
-        specifiers = {how => what}
-      end
-
-      @specifiers = {:index => 1} # default if not specified
-      normalize_specifiers! specifiers
     end
 
     def each_element tag
@@ -128,23 +125,6 @@ module Watir
       @klass = Element
     end
     
-    def specifier= arg
-      how, what, value = arg
-
-      if how.class == Hash and what.nil?
-        specifiers = how
-      else
-        specifiers = {how => what}
-      end
-
-      @specifiers = {:index => 1} # default if not specified
-      if value
-        @specifiers[:value] = value.is_a?(Regexp) ? value : value.to_s
-      end
-
-      normalize_specifiers! specifiers
-    end
-
     def locate
       count = 0
       @elements.each do |object|
