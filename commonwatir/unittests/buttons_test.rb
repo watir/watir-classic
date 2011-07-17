@@ -18,10 +18,6 @@ class TC_Button < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").value }  
   end
   
-  def test_exception_when_one_argument
-    assert_raises(UnknownObjectException) { browser.button( "Missing Caption").click }  
-  end    
-  
   def test_exceptions_with_click
     assert_raises(UnknownObjectException)  { browser.button(:caption, "Missing Caption").click }  
     assert_raises(UnknownObjectException)  { browser.button(:id, "missingID").click }  
@@ -56,11 +52,6 @@ class TC_Button < Test::Unit::TestCase
     
     assert_equal("", browser.button(:index, 2).title)
     assert_equal("this is button1", browser.button(:index, 1).title)
-  end
-  
-  def test_default_how
-    browser.button("Click Me").click
-    assert(browser.text.include?("PASS"))
   end
   
   def test_click_and_caption
@@ -213,7 +204,7 @@ class TC_Button_Frame < Test::Unit::TestCase
   end
 
   def test_in_frame
-    assert(browser.frame("buttonFrame").button(:caption, "Click Me").enabled?)
+    assert(browser.frame(:name => "buttonFrame").button(:caption, "Click Me").enabled?)
   end
   
   def test_error_in_frame

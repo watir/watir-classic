@@ -165,7 +165,7 @@ class TC_Frames_click_no_wait < Test::Unit::TestCase
   end
 
   def test_frame_click_no_wait
-    frame = browser.frame("buttonFrame")
+    frame = browser.frame(:name => "buttonFrame")
     assert !frame.text.include?("PASS")
     frame.button(:id => "b2").click_no_wait
     assert_nothing_raised {

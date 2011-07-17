@@ -12,9 +12,6 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:name, "test2").exists?)   
     assert_false(browser.form(:name, "missing").exists?)   
     
-    assert(browser.form("test2").exists?)   
-    assert_false(browser.form("missing").exists?)   
-
     assert(browser.form(:index, 1).exists?)   
     assert_false(browser.form(:index, 88).exists?)   
     

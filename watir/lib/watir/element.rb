@@ -10,6 +10,20 @@ module Watir
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
 
+    def self.inherited subclass
+      class_name = Watir::Util.demodulize(subclass.to_s)
+      method_name = Watir::Util.underscore(class_name)
+      Watir::Container.module_eval <<-RUBY
+        def #{method_name}(how, what=nil)
+          #{class_name}.new(self, how, what)
+        end
+
+        def #{method_name}s
+          #{class_name}s.new(self)
+        end         
+      RUBY
+    end
+
     # ole_object - the ole object for the element being wrapped
     def initialize(ole_object)
       @o = ole_object

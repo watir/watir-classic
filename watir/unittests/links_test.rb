@@ -132,14 +132,14 @@ class TC_Frame_Links < Test::Unit::TestCase
   end
   
   def test_links_in_frames
-    assert(browser.frame("linkFrame").link(:text, "test1").exists?)   
-    assert_false(browser.frame("linkFrame").link(:text, "missing").exists?)   
+    assert(browser.frame(:name => "linkFrame").link(:text, "test1").exists?)   
+    assert_false(browser.frame(:name => "linkFrame").link(:text, "missing").exists?)   
     
-    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { browser.frame("linkFrame").link(:index, 199).href }  
-    assert_match(/links2/, browser.frame("linkFrame").link(:index, 1).href)
+    assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) { browser.frame(:name => "linkFrame").link(:index, 199).href }  
+    assert_match(/links2/, browser.frame(:name => "linkFrame").link(:index, 1).href)
     
     count =0
-    browser.frame("linkFrame").links.each do |l|
+    browser.frame(:name => "linkFrame").links.each do |l|
       count+=1
     end
     
