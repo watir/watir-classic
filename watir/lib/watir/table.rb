@@ -8,8 +8,6 @@ module Watir
   class Table < Element
     include Container
 
-    TAG = "TABLE"
-    
     # Returns the table object containing the element
     #   * container  - an instance of an IE object
     #   * anElement  - a Watir object (TextField, Button, etc.)

@@ -17,8 +17,9 @@ module Watir
     end
 
     def locate
-      return unless self.class.constants.include? "TAG"
-      @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
+      return if [Element, TableBodies, FormElement].include? self.class
+      tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.to_s.split("::").last
+      @o = @container.locate_tagged_element(tag, @how, @what)
     end    
 
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.

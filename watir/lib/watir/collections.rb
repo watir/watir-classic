@@ -6,7 +6,7 @@ module Watir
   # for subclasses of ElementCollections
   module CommonCollection #:nodoc:all
     def element_tag
-      element_class::TAG
+      element_class.constants.include?("TAG") ? element_class::TAG : element_class.to_s.split("::").last
     end
     
     def length
@@ -145,7 +145,7 @@ module Watir
   class Links < ElementCollections
     include CommonCollection
     def element_class; Link; end
-    def element_tag; 'A'; end
+    def element_tag; element_class::TAG; end
     
     private
     def set_show_items
@@ -172,7 +172,6 @@ module Watir
   class Maps < ElementCollections
     include CommonCollection
     def element_class; Map; end
-    def element_tag; 'MAP'; end
   end
 
 
@@ -181,7 +180,6 @@ module Watir
   class Areas < ElementCollections
     include CommonCollection
     def element_class; Area; end
-    def element_tag; 'AREA'; end
   end
   
   # this class collects the images in the container
@@ -234,7 +232,6 @@ module Watir
   class Tables < ElementCollections
     include CommonCollection
     def element_class; Table; end
-    def element_tag; 'TABLE'; end
     
     private
     def set_show_items
@@ -247,21 +244,20 @@ module Watir
   class TableRows < ElementCollections
     include CommonCollection
     def element_class; TableRow; end
-    def element_tag; 'TR'; end
+    def element_tag; element_class::TAG; end
   end
   # this class accesses the table cells in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#cells method
   class TableCells < ElementCollections
     include CommonCollection
     def element_class; TableCell; end
-    def element_tag; 'TD'; end
+    def element_tag; element_class::TAG; end
   end
   # this class accesses the labels in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#labels method
   class Labels < ElementCollections
     include CommonCollection
     def element_class; Label; end
-    def element_tag; 'LABEL'; end
     
     private
     def set_show_items
@@ -329,31 +325,26 @@ module Watir
   class Dls < ElementCollections
     include CommonCollection
     def element_class; Dl; end
-    def element_tag; Dl::TAG; end
   end
 
   class Dts < ElementCollections
     include CommonCollection
     def element_class; Dt; end
-    def element_tag; Dt::TAG; end
   end
 
   class Dds < ElementCollections
     include CommonCollection
     def element_class; Dd; end
-    def element_tag; Dd::TAG; end
   end
   
   class Strongs < ElementCollections
     include CommonCollection
     def element_class; Strong; end
-    def element_tag; Strong::TAG; end
   end
   
   class Ems < ElementCollections
     include CommonCollection
     def element_class; Em; end
-    def element_tag; Em::TAG; end
   end
 
   class Frames < ElementCollections
@@ -367,7 +358,6 @@ module Watir
 
   class Forms < ElementCollections
     def element_class; Form; end
-    def element_tag; 'FORM'; end
     def length
       @container.document.getElementsByTagName("FORM").length
     end

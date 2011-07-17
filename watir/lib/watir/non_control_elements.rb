@@ -12,7 +12,7 @@ module Watir
       method_name = Watir::Util.underscore(class_name)
       Watir::Container.module_eval <<-RUBY
         def #{method_name}(how, what=nil)
-          return #{class_name}.new(self, how, what)
+          #{class_name}.new(self, how, what)
         end
       RUBY
     end
@@ -45,36 +45,23 @@ module Watir
   end
 
 
-  class Pre < NonControlElement
-    TAG = 'PRE'
-  end
+  class Pre < NonControlElement; end
 
-  class P < NonControlElement
-    TAG = 'P'
-  end
+  class P < NonControlElement; end
 
   # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
   # It would not normally be created by users
-  class Div < NonControlElement
-    TAG = 'DIV'
-  end
+  class Div < NonControlElement; end
 
   # this class is used to deal with Span tags in the html page. It would not normally be created by users
-  class Span < NonControlElement
-    TAG = 'SPAN'
-  end
+  class Span < NonControlElement; end
 
-  class Map < NonControlElement
-    TAG = 'MAP'
-  end
+  class Map < NonControlElement; end
 
-  class Area < NonControlElement
-    TAG = 'AREA'
-  end
+  class Area < NonControlElement; end
 
   # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
   class Label < NonControlElement
-    TAG = 'LABEL'
 
     # this method is used to populate the properties in the to_s method
     def label_string_creator
@@ -95,44 +82,18 @@ module Watir
     end
   end
 
-  class Li < NonControlElement
-    TAG = 'LI'
-  end
-  class Ul < NonControlElement
-    TAG = 'UL'
-  end
-  class H1 < NonControlElement
-    TAG = 'H1'
-  end
-  class H2 < NonControlElement
-    TAG = 'H2'
-  end
-  class H3 < NonControlElement
-    TAG = 'H3'
-  end
-  class H4 < NonControlElement
-    TAG = 'H4'
-  end
-  class H5 < NonControlElement
-    TAG = 'H5'
-  end
-  class H6 < NonControlElement
-    TAG = 'H6'
-  end
-  class Dl < NonControlElement
-    TAG = 'DL'
-  end
-  class Dt < NonControlElement
-    TAG = 'DT'
-  end
-  class Dd < NonControlElement
-    TAG = 'DD'
-  end
-  class Strong < NonControlElement
-    TAG = 'STRONG'
-  end
-  class Em < NonControlElement
-    TAG = 'EM'
-  end
+  class Li < NonControlElement; end
+  class Ul < NonControlElement; end
+  class H1 < NonControlElement; end
+  class H2 < NonControlElement; end
+  class H3 < NonControlElement; end
+  class H4 < NonControlElement; end
+  class H5 < NonControlElement; end
+  class H6 < NonControlElement; end
+  class Dl < NonControlElement; end
+  class Dt < NonControlElement; end
+  class Dd < NonControlElement; end
+  class Strong < NonControlElement; end
+  class Em < NonControlElement; end
 
 end
