@@ -15,7 +15,19 @@ module Watir
       set_show_items
     end
     
-    private
+    def element_class
+      instance_eval self.class.to_s.chop      
+    end
+
+    def element_tag
+      element_class.constants.include?("TAG") ? element_class::TAG : element_class.to_s.split("::").last
+    end
+    
+    def length
+      @container.document.getElementsByTagName(element_tag).length
+    end
+    alias_method :size, :length
+
     def set_show_items
       @show_attributes = AttributeLengthPairs.new("id", 20)
       @show_attributes.add("name", 20)

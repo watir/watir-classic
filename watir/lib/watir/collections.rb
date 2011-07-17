@@ -2,19 +2,6 @@ module Watir
   #--
   #   These classes are not for public consumption, so we switch off rdoc
     
-  # presumes element_class or element_tag is defined
-  # for subclasses of ElementCollections
-  module CommonCollection #:nodoc:all
-    def element_tag
-      element_class.constants.include?("TAG") ? element_class::TAG : element_class.to_s.split("::").last
-    end
-    
-    def length
-      @container.document.getElementsByTagName(element_tag).length
-    end
-    alias_method :size, :length
-  end
-  
   # This class is used as part of the .show method of the iterators class
   # it would not normally be used by a user
   class AttributeLengthPairs #:nodoc:all
@@ -67,7 +54,6 @@ module Watir
   # this class accesses the buttons in the document as a collection
   # it would normally only be accessed by the Watir::Container#buttons method
   class Buttons < ElementCollections
-    def element_class; Button; end
     # number of buttons
     #   browser.buttons.length
     def length
@@ -85,7 +71,6 @@ module Watir
   # this class accesses the file fields in the document as a collection
   # normal access is via the Container#file_fields method
   class FileFields < ElementCollections
-    def element_class; FileField; end
     # number of file_fields
     #   browser.file_fields.length
     def length
@@ -119,7 +104,6 @@ module Watir
   # this class accesses the radio buttons in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#radios method
   class Radios < ElementCollections
-    def element_class; Radio; end
     # number of radios
     #   browser.radios.length
     def length
@@ -135,18 +119,12 @@ module Watir
   # this class accesses the select boxes in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_lists method
   class SelectLists < ElementCollections
-    include CommonCollection
-    def element_class; SelectList; end
     def element_tag; 'SELECT'; end
   end
   
   # this class accesses the links in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#links method
   class Links < ElementCollections
-    include CommonCollection
-    def element_class; Link; end
-    def element_tag; element_class::TAG; end
-    
     private
     def set_show_items
       super
@@ -156,9 +134,6 @@ module Watir
   end
   
   class Lis  < ElementCollections
-    include CommonCollection
-    def element_class; Li; end
-    
     private
     def set_show_items
       super
@@ -170,22 +145,17 @@ module Watir
   # this class accesses the maps in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#maps method
   class Maps < ElementCollections
-    include CommonCollection
-    def element_class; Map; end
   end
 
 
   # this class accesses the areas in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#areas method
   class Areas < ElementCollections
-    include CommonCollection
-    def element_class; Area; end
   end
   
   # this class collects the images in the container
   # An instance is returned by Watir::Container#images
   class Images < ElementCollections
-    def element_class; Image; end
     # number of images
     #   browser.images.length
     def length
@@ -206,7 +176,6 @@ module Watir
   # this class accesses the text fields in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_fields method
   class TextFields < ElementCollections
-    def element_class; TextField; end
     # number of text_fields
     #   browser.text_fields.length
     def length
@@ -219,7 +188,6 @@ module Watir
   # this class accesses the hidden fields in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hiddens method
   class Hiddens < ElementCollections
-    def element_class; Hidden; end
     # number of hidden elements
     #   browser.hiddens.length
     def length
@@ -230,9 +198,6 @@ module Watir
   # this class accesses the text fields in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#tables method
   class Tables < ElementCollections
-    include CommonCollection
-    def element_class; Table; end
-    
     private
     def set_show_items
       super
@@ -242,23 +207,14 @@ module Watir
   # this class accesses the table rows in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#rows method
   class TableRows < ElementCollections
-    include CommonCollection
-    def element_class; TableRow; end
-    def element_tag; element_class::TAG; end
   end
   # this class accesses the table cells in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#cells method
   class TableCells < ElementCollections
-    include CommonCollection
-    def element_class; TableCell; end
-    def element_tag; element_class::TAG; end
   end
   # this class accesses the labels in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#labels method
   class Labels < ElementCollections
-    include CommonCollection
-    def element_class; Label; end
-    
     private
     def set_show_items
       super
@@ -269,9 +225,6 @@ module Watir
   # this class accesses the pre tags in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#pres method
   class Pres < ElementCollections
-    include CommonCollection
-    def element_class; Pre; end
-    
     private
     def set_show_items
       super
@@ -283,9 +236,6 @@ module Watir
   # this class accesses the p tags in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#ps method
   class Ps < ElementCollections
-    include CommonCollection
-    def element_class; P; end
-    
     private
     def set_show_items
       super
@@ -297,9 +247,6 @@ module Watir
   # this class accesses the spans in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#spans method
   class Spans < ElementCollections
-    include CommonCollection
-    def element_class; Span; end
-    
     private
     def set_show_items
       super
@@ -311,9 +258,6 @@ module Watir
   # this class accesses the divs in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#divs method
   class Divs < ElementCollections
-    include CommonCollection
-    def element_class; Div; end
-    
     private
     def set_show_items
       super
@@ -323,33 +267,21 @@ module Watir
   end
   
   class Dls < ElementCollections
-    include CommonCollection
-    def element_class; Dl; end
   end
 
   class Dts < ElementCollections
-    include CommonCollection
-    def element_class; Dt; end
   end
 
   class Dds < ElementCollections
-    include CommonCollection
-    def element_class; Dd; end
   end
   
   class Strongs < ElementCollections
-    include CommonCollection
-    def element_class; Strong; end
   end
   
   class Ems < ElementCollections
-    include CommonCollection
-    def element_class; Em; end
   end
 
   class Frames < ElementCollections
-    def element_class; Frame; end
-
     def length
       @container.document.getElementsByTagName("FRAME").length +
         @container.document.getElementsByTagName("IFRAME").length
@@ -357,17 +289,12 @@ module Watir
   end
 
   class Forms < ElementCollections
-    def element_class; Form; end
     def length
       @container.document.getElementsByTagName("FORM").length
     end
   end
   
   class HTMLElements < ElementCollections
-    include CommonCollection
-    def element_class; HTMLElement; end
-    def element_tag; '*'; end
-
     def initialize(container, how, what)
       @how = how
       @what = what
