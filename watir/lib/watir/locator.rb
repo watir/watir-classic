@@ -33,6 +33,16 @@ module Watir
       @specifiers = {:index => 1} # default if not specified
       normalize_specifiers! specifiers
     end
+
+    def locate_by_xpath_css_ole
+      if @specifiers[:xpath]
+        return @container.element_by_xpath(@specifiers[:xpath])
+      elsif @specifiers[:css]
+        return @container.element_by_css(@specifiers[:css])
+      elsif @specifiers[:ole_object]
+        return @specifiers[:ole_object]
+      end
+    end
   end
 
   class TaggedElementLocator < Locator
@@ -48,6 +58,8 @@ module Watir
     end
 
     def locate
+      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
+
       count = 0
       each_element(@tag) do |element|
         next unless match_with_specifiers?(element)
@@ -96,6 +108,8 @@ module Watir
     end
 
     def locate
+      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]      
+
       count = 0
       each_element(@tag) do |element, document|
         next unless match_with_specifiers?(element)
@@ -126,6 +140,8 @@ module Watir
     end
     
     def locate
+      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
+
       count = 0
       @elements.each do |object|
         if @klass == Element

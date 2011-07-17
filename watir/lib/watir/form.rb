@@ -42,18 +42,9 @@ module Watir
     end
 
     def locate
-      log "Get form how is #{@how}  what is #{@what} "
-
-      # Get form using xpath.
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        locator = FormLocator.new(@container, 'FORM')
-        locator.set_specifier(@how, @what)
-        @o = locator.locate
-      end
+      locator = FormLocator.new(@container, 'FORM')
+      locator.set_specifier(@how, @what)
+      @o = locator.locate
     end
 
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.

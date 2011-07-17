@@ -17,17 +17,7 @@ module Watir
     end
     
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        begin
-          @o = @container.locate_tagged_element('A', @how, @what)
-        rescue UnknownObjectException
-          @o = nil
-        end
-      end
+      @o = @container.locate_tagged_element('A', @how, @what)
     end
     
     # if an image is used as part of the link, this will return true

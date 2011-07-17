@@ -30,15 +30,7 @@ module Watir
     end
     
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      elsif @how == :ole_object
-        @o = @what
-      else
-        @o = @container.locate_tagged_element('TABLE', @how, @what)
-      end
+      @o = @container.locate_tagged_element('TABLE', @how, @what)
     end
     
     # override the highlight method, as if the tables rows are set to have a background color,
@@ -257,16 +249,7 @@ module Watir
   class TableRow < Element
     
     def locate
-      @o = nil
-      if @how == :ole_object
-        @o = @what
-      elsif @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        @o = @container.locate_tagged_element("TR", @how, @what)
-      end
+      @o = @container.locate_tagged_element("TR", @how, @what)
       if @o # cant call the assert_exists here, as an exists? method call will fail
         @cells = []
         @o.cells.each do |oo|
@@ -357,15 +340,7 @@ module Watir
     include Container
     
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      elsif @how == :ole_object
-        @o = @what
-      else
-        @o = @container.locate_tagged_element("TD", @how, @what)
-      end
+      @o = @container.locate_tagged_element("TD", @how, @what)
     end
     
     # Returns an initialized instance of a table cell

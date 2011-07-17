@@ -14,13 +14,7 @@ module Watir
     end
     
     def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        @o = @container.locate_tagged_element('IMG', @how, @what)
-      end
+      @o = @container.locate_tagged_element('IMG', @how, @what)
     end
     
     # this method produces the properties for an image as an array
