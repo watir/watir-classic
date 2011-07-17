@@ -4,6 +4,8 @@
 # all share the same class.
 module Watir
   class HTMLElement < Element
+    TAG = "*"
+
     def initialize(container, how, what)
       set_container container
       @how = how
@@ -15,8 +17,5 @@ module Watir
       super nil
     end
     
-    def locate
-      @o = @container.locate_tagged_element('*', @how, @what)
-    end
   end
 end

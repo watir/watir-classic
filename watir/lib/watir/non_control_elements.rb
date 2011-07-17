@@ -18,10 +18,6 @@ module Watir
     end
     include Watir::Exception
 
-    def locate
-      @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
-    end
-
     def initialize(container, how, what)
       set_container container
       @how = how

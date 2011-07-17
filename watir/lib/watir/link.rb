@@ -5,6 +5,8 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Link < Element
+    TAG = "A"
+
     # Returns an initialized instance of a link object
     #   * container  - an instance of a container
     #   * how         - symbol - how we access the link
@@ -14,10 +16,6 @@ module Watir
       @how = how
       @what = what
       super(nil)
-    end
-    
-    def locate
-      @o = @container.locate_tagged_element('A', @how, @what)
     end
     
     # if an image is used as part of the link, this will return true

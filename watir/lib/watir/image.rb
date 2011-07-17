@@ -6,15 +6,13 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Image < Element
+    TAG = "IMG"
+
     def initialize(container, how, what)
       set_container container
       @how = how
       @what = what
       super nil
-    end
-    
-    def locate
-      @o = @container.locate_tagged_element('IMG', @how, @what)
     end
     
     # this method produces the properties for an image as an array

@@ -16,9 +16,14 @@ module Watir
       @original_color = nil
     end
 
+    def locate
+      return unless self.class.constants.include? "TAG"
+      @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
+    end    
+
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
-    def ole_object # BUG: should use an attribute reader and rename the instance variable
-      return @o
+    def ole_object
+      @o
     end
 
     def ole_object=(o)
@@ -52,7 +57,7 @@ module Watir
 
     public
     def assert_exists
-      locate if respond_to?(:locate)
+      locate
       unless ole_object
         raise UnknownObjectException.new(
                 Watir::Exception.message_for_unable_to_locate(@how, @what))
@@ -371,7 +376,7 @@ module Watir
     # Returns whether this element actually exists.
     def exists?
       begin
-        locate if defined?(locate)
+        locate
       rescue WIN32OLERuntimeError, UnknownObjectException
         @o = nil
       end

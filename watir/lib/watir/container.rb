@@ -846,8 +846,7 @@ module Watir
     #                  - :value etc
     #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
     #   * types - what object types we will look at.
-    #   * value - used for objects that have one name, but many values. ex. radio lists and checkboxes
-    def locate_input_element(how, what, types, value=nil, klass=nil)
+    def locate_input_element(how, what, types, klass=nil)
       locator = InputElementLocator.new self, types
       locator.set_specifier how, what
       locator.document = document
@@ -856,11 +855,6 @@ module Watir
       locator.elements = ole_inner_elements if locator.elements.nil?
       locator.klass = klass if klass 
       locator.locate
-    end
-    
-    # abstract method for locating an element using a CSS selector expression
-    def element_by_css(selector)
-      raise MissingWayOfFindingObjectException, "CSS selectors not yet supported for #{self.class.name}"
     end
     
     # returns the ole object for the specified element

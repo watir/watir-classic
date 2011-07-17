@@ -7,6 +7,8 @@ module Watir
   #
   class Table < Element
     include Container
+
+    TAG = "TABLE"
     
     # Returns the table object containing the element
     #   * container  - an instance of an IE object
@@ -27,10 +29,6 @@ module Watir
       @how = how
       @what = what
       super nil
-    end
-    
-    def locate
-      @o = @container.locate_tagged_element('TABLE', @how, @what)
     end
     
     # override the highlight method, as if the tables rows are set to have a background color,
@@ -247,9 +245,10 @@ module Watir
   end
     
   class TableRow < Element
+    TAG = "TR"
     
     def locate
-      @o = @container.locate_tagged_element("TR", @how, @what)
+      super
       if @o # cant call the assert_exists here, as an exists? method call will fail
         @cells = []
         @o.cells.each do |oo|
@@ -338,10 +337,8 @@ module Watir
   class TableCell < Element
     include Watir::Exception
     include Container
-    
-    def locate
-      @o = @container.locate_tagged_element("TD", @how, @what)
-    end
+
+    TAG = "TD"
     
     # Returns an initialized instance of a table cell
     #   * container  - an  IE object
