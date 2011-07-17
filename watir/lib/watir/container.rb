@@ -494,24 +494,6 @@ module Watir
       Links.new(self)
     end
     
-    # This is the main method for accessing li tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
-    #  *  how   - symbol - how we access the li, 
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a li object
-    #
-    # Typical Usage
-    #
-    #   browser.li(:id, /list/)                 # access the first li that matches list.
-    #   browser.li(:index,2)                    # access the second li on the page
-    #   browser.li(:title, "A Picture")        # access a li using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #   
-    #    def li(how, what=nil)
-    #      return Li.new(self, how, what)
-    #    end
-    
     # this is the main method for accessing the lis iterator.
     #
     # Returns a lis object
@@ -523,28 +505,10 @@ module Watir
     #   browser.lis.length                              # show how many lis are on the page.
     #
     def lis
-      return Lis.new(self)
+      Lis.new(self)
     end
     
 
-    # This is the main method for accessing map tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/map.asp?frame=true
-    #  *  how   - symbol - how we access the map,
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a map object
-    #
-    # Typical Usage
-    #
-    #   browser.map(:id, /list/)                 # access the first map that matches list.
-    #   browser.map(:index,2)                    # access the second map on the page
-    #   browser.map(:title, "A Picture")         # access a map using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #    
-    def map(how, what=nil)
-      return Map.new(self, how, what)
-    end
-    
     # this is the main method for accessing the maps iterator.
     #
     # Returns a maps object
@@ -556,27 +520,9 @@ module Watir
     #   browser.maps.length                              # show how many maps are on the page.
     #
     def maps
-      return Maps.new(self)
+      Maps.new(self)
     end
 
-    # This is the main method for accessing area tags - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/area.asp?frame=true
-    #  *  how   - symbol - how we access the area
-    #  *  what  - string, integer or regular expression - what we are looking for,
-    #
-    # Valid values for 'how' are listed in the Watir Wiki - http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-    #
-    # returns a area object
-    #
-    # Typical Usage
-    #
-    #   browser.area(:id, /list/)                 # access the first area that matches list.
-    #   browser.area(:index,2)                    # access the second area on the page
-    #   browser.area(:title, "A Picture")         # access a area using the tooltip text. See http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/title_1.asp?frame=true
-    #    
-    def area(how, what=nil)
-      return Area.new(self, how, what)
-    end
-    
     # this is the main method for accessing the areas iterator.
     #
     # Returns a areas object
@@ -588,7 +534,7 @@ module Watir
     #   browser.areas.length                              # show how many areas are on the page.
     #
     def areas
-      return Areas.new(self)
+      Areas.new(self)
     end
     
     # This is the main method for accessing images - normally an <tt><img src="image.gif"></tt> HTML tag.
@@ -715,7 +661,7 @@ module Watir
     #   browser.strongs.length                              # show how many strongs are on the page.
     #
     def strongs
-      return Strongs.new(self)
+      Strongs.new(self)
     end
 
     
@@ -775,7 +721,7 @@ module Watir
     #   ie.element(:class, /foo/)      # access the first element with class 'foo'. We can use a string in place of the regular expression
     #   ie.element(:id, "11")          # access the first element that matches an id
     def element(how, what=nil)
-      return HTMLElement.new(self, how, what)  
+      HTMLElement.new(self, how, what)  
     end
     
     # this is the main method for accessing generic html elements by an attribute
@@ -789,7 +735,7 @@ module Watir
     #   ie.elements(:id, 'foo').length                        # show how many elements are foung in the collection
     #
     def elements(how, what)
-      return HTMLElements.new(self, how, what)  
+      HTMLElements.new(self, how, what)  
     end
 
     #--
