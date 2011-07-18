@@ -14,7 +14,7 @@ module Watir
       class_name = Watir::Util.demodulize(subclass.to_s)
       method_name = Watir::Util.underscore(class_name)
       Watir::Container.module_eval <<-RUBY
-        def #{method_name}(how, what=nil)
+        def #{method_name}(how={}, what=nil)
           #{class_name}.new(self, how, what)
         end
 

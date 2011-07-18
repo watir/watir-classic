@@ -63,7 +63,7 @@ module Watir
     #    :xpath    - find the table cell using xpath query.
     #
     # returns a TableCell Object
-    def cell(how, what=nil)
+    def cell(how={}, what=nil)
       TableCell.new(self, how, what)
     end
 
@@ -77,7 +77,7 @@ module Watir
     #    :xpath    - find the table row using xpath query.
     #
     # returns a TableRow object
-    def row(how, what=nil)
+    def row(how={}, what=nil)
       TableRow.new(self, how, what)
     end
     def rows
@@ -117,7 +117,7 @@ module Watir
       CheckBoxes.new(self)
     end
 
-    def checkbox(how, what=nil)
+    def checkbox(how={}, what=nil)
       check_box(how, what)
     end
     
@@ -140,7 +140,7 @@ module Watir
     #
     #   ie.element(:class, /foo/)      # access the first element with class 'foo'. We can use a string in place of the regular expression
     #   ie.element(:id, "11")          # access the first element that matches an id
-    def element(how, what=nil)
+    def element(how={}, what=nil)
       HTMLElement.new(self, how, what)  
     end
     
