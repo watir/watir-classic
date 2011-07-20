@@ -30,7 +30,7 @@ module Watir
 
     def set_specifier(how, what=nil)
       specifiers = what ? {how => what} : how
-      @specifiers = {:index => 1} # default if not specified
+      @specifiers = {:index => Watir::Element.base_index} # default if not specified
       normalize_specifiers! specifiers
     end
 
@@ -57,12 +57,19 @@ module Watir
       end
     end
 
+    def each
+      each_element(@tag) do |element| 
+        next unless match_with_specifiers?(element)
+        yield element          
+      end 
+      nil
+    end    
+
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
 
-      count = 0
-      each_element(@tag) do |element|
-        next unless match_with_specifiers?(element)
+      count = Watir::Element.base_index - 1
+      each do |element|
         count += 1
         return element.ole_object if count == @specifiers[:index]
       end # elements
@@ -80,7 +87,7 @@ module Watir
       when 0
         what.matches method.call
       when 1
-       	method.call(what)
+        method.call(what)
       else
         raise MissingWayOfFindingObjectException,
           "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
@@ -110,7 +117,7 @@ module Watir
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]      
 
-      count = 0
+      count = Watir::Element.base_index - 1
       each_element(@tag) do |element, document|
         next unless match_with_specifiers?(element)
         count += 1
@@ -138,11 +145,9 @@ module Watir
       @elements = nil
       @klass = Element
     end
-    
-    def locate
-      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
 
-      count = 0
+    def each_element
+      count = Watir::Element.base_index - 1
       @elements.each do |object|
         if @klass == Element
           element = Element.new(object)
@@ -151,14 +156,29 @@ module Watir
           element.ole_object = object
           def element.locate; @o; end
         end
-
-        next unless @types.include?(element.type) && match_with_specifiers?(element)
-        
-        count += 1
-        return object if count == @specifiers[:index]
+        yield element
       end
       nil
+    end    
+
+    def locate
+      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
+
+      count = Watir::Element.base_index - 1
+      each do |element|
+        count += 1
+        return element.ole_object if count == @specifiers[:index]
+      end
     end
+
+    def each
+      each_element do |element| 
+        next unless @types.include?(element.type) && match_with_specifiers?(element)
+        yield element
+      end 
+      nil
+    end    
+    
     # return true if the element matches the provided how and what
     def match? element, how, what
       begin
@@ -183,7 +203,7 @@ module Watir
 
       the_id = @specifiers[:id]
       if the_id && the_id.class == String &&
-          @specifiers[:index] == 1 && @specifiers.length == 2
+          @specifiers[:index] == Watir::Element.base_index && @specifiers.length == 2
         @element = @document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
         return true if @element && @element.invoke('id') == the_id && @types.include?(@element.getAttribute('type'))
@@ -201,17 +221,7 @@ module Watir
   # get all the elements by forcing @tag to be '*'
   class ElementLocator < TaggedElementLocator
     def initialize(container)
-      @container = container
+      super(container, "*")
     end
-    
-    def each
-      count = 0
-      each_element('*') do |element| 
-        next unless match_with_specifiers?(element)
-        yield element          
-      end 
-      nil
-    end
-    
   end  
 end    

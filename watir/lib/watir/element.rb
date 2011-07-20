@@ -10,19 +10,29 @@ module Watir
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
 
-    def self.inherited subclass
-      class_name = Watir::Util.demodulize(subclass.to_s)
-      method_name = Watir::Util.underscore(class_name)
-      Watir::Container.module_eval <<-RUBY
-        def #{method_name}(how={}, what=nil)
-          #{class_name}.new(self, how, what)
-        end
+    class << self
+      def inherited subclass
+        class_name = Watir::Util.demodulize(subclass.to_s)
+        method_name = Watir::Util.underscore(class_name)
+        Watir::Container.module_eval <<-RUBY
+          def #{method_name}(how={}, what=nil)
+            #{class_name}.new(self, how, what)
+          end
 
-        def #{method_name}s
-          #{class_name}s.new(self)
-        end         
-      RUBY
+          def #{method_name}s(how={}, what=nil)
+            #{class_name}s.new(self, how, what)
+          end         
+        RUBY
+      end
+
+      attr_accessor :zero_based_indexing
+
+      def base_index
+        zero_based_indexing ? 0 : 1
+      end
     end
+
+    @zero_based_indexing = false
 
     # ole_object - the ole object for the element being wrapped
     def initialize(ole_object)
@@ -32,8 +42,8 @@ module Watir
 
     def locate
       return if [Element, TableBodies, FormElement].include? self.class
-      tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.to_s.split("::").last
-      @o = @container.locate_tagged_element(tag, @how, @what)
+      tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.name.split("::").last
+      @o = @container.locate_tagged_element(tag, @how, @what).locate
     end    
 
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.

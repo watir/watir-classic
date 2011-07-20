@@ -67,7 +67,7 @@ module Watir
       TableCell.new(self, how, what)
     end
 
-    def cells
+    def cells(how={}, what=nil)
       TableCells.new(self)
     end
     
@@ -80,8 +80,8 @@ module Watir
     def row(how={}, what=nil)
       TableRow.new(self, how, what)
     end
-    def rows
-      TableRows.new(self)
+    def rows(how={}, what=nil)
+      TableRows.new(self, how, what)
     end
     
     # Access a modal web dialog, which is a PageContainer, like IE or Frame. 
@@ -113,8 +113,8 @@ module Watir
     #   browser.checkboxes.each { |c| puts c.to_s }             # iterate through all the check boxes on the page
     #   browser.checkboxes[1].to_s                              # goto the first check box on the page
     #   browser.checkboxes.length                               # show how many check boxes are on the page.
-    def checkboxes
-      CheckBoxes.new(self)
+    def checkboxes(how={}, what=nil)
+      CheckBoxes.new(self, how, what)
     end
 
     def checkbox(how={}, what=nil)
@@ -154,7 +154,7 @@ module Watir
     #   ie.elements(:alt, 'foo')[1].to_s                       # get the first element of a given attribute
     #   ie.elements(:id, 'foo').length                        # show how many elements are foung in the collection
     #
-    def elements(how, what)
+    def elements(how={}, what=nil)
       HTMLElements.new(self, how, what)  
     end
 
@@ -220,14 +220,14 @@ module Watir
       # todo: restrict search to elements.getElementsByTag('INPUT'); faster
       locator.elements = ole_inner_elements if locator.elements.nil?
       locator.klass = klass if klass 
-      locator.locate
+      locator
     end
     
     # returns the ole object for the specified element
     def locate_tagged_element(tag, how, what)
       locator = TaggedElementLocator.new(self, tag)
       locator.set_specifier(how, what)
-      locator.locate
+      locator
     end
     
     # returns the the locator object so you can iterate 

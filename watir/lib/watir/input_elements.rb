@@ -2,7 +2,8 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
+      locator_or_element = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
+      @o = locator_or_element.is_a?(WIN32OLE) ? locator_or_element : locator_or_element.locate
     end
     def initialize(container, how, what)
       set_container container
@@ -483,7 +484,7 @@ module Watir
   # most of the methods available to this element are inherited from the Element class
   class RadioCheckCommon < InputElement
     def locate #:nodoc:
-      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, self.class)
+      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, self.class).locate
     end
     
     def inspect

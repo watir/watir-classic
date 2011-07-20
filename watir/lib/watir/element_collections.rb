@@ -6,33 +6,33 @@ module Watir
     
     # Super class for all the iteractor classes
     #   * container - an instance of an IE object
-    def initialize(container)
+    def initialize(container, how, what)
+      if how == :index || (how.is_a?(Hash) && how[:index])
+        raise MissingWayOfFindingObjectException,
+                    "#{self.class} does not support attribute :index in #{@how.inspect}"
+      end
+
       @container = container
+      @how = how
+      @what = what
       @page_container = container.page_container
-      @length = length # defined by subclasses
-      
-      # set up the items we want to display when the show method is used
-      set_show_items
     end
     
     def element_class
-      instance_eval self.class.to_s.chop      
+      Watir.const_get self.class.name.split("::").last.chop
     end
 
     def element_tag
-      element_class.constants.include?("TAG") ? element_class::TAG : element_class.to_s.split("::").last
+      element_class.constants.include?("TAG") ? element_class::TAG : element_class.name.split("::").last
     end
     
     def length
-      @container.document.getElementsByTagName(element_tag).length
+      count = 0
+      each {|element| count += 1 }
+      count
     end
-    alias_method :size, :length
+    alias :size :length
 
-    def set_show_items
-      @show_attributes = AttributeLengthPairs.new("id", 20)
-      @show_attributes.add("name", 20)
-    end
-    
     public
     def get_length_of_input_objects(object_type)
       object_types =
@@ -54,7 +54,7 @@ module Watir
     
     # iterate through each of the elements in the collection in turn
     def each
-      0.upto(@length-1) { |i| yield iterator_object(i) }
+      @container.locate_tagged_element(element_tag, @how, @what).each {|element| yield element}
     end
     
     # allows access to a specific item in the collection
@@ -70,29 +70,6 @@ module Watir
       iterator_object(length - 1)
     end
 
-    # this method is the way to show the objects, normally used from irb
-    def show
-      s = "index".ljust(6)
-      @show_attributes.each do |attribute_length_pair|
-        s += attribute_length_pair.attribute.ljust(attribute_length_pair.length)
-      end
-      
-      index = 1
-      self.each do |o|
-        s += "\n"
-        s += index.to_s.ljust(6)
-        @show_attributes.each do |attribute_length_pair|
-          begin
-            s += eval('o.ole_object.invoke("#{attribute_length_pair.attribute}")').to_s.ljust(attribute_length_pair.length)
-          rescue => e
-            s += " ".ljust(attribute_length_pair.length)
-          end
-        end
-        index += 1
-      end
-      puts s
-    end
-    
     def to_s
       map { |e| e.to_s }.join("\n")
     end
@@ -103,8 +80,10 @@ module Watir
 
     # this method creates an object of the correct type that the iterators use
     private
+
     def iterator_object(i)
-      element_class.new(@container, :index, i + 1)
+      count = 0
+      each {|e| return e if count == i; count += 1}
     end
   end
 end
