@@ -68,7 +68,7 @@ module Watir
     end
 
     def cells(how={}, what=nil)
-      TableCells.new(self)
+      TableCells.new(self, how, what)
     end
     
     # this method accesses a table row.
@@ -224,8 +224,8 @@ module Watir
     end
     
     # returns the ole object for the specified element
-    def locate_tagged_element(tag, how, what)
-      locator = TaggedElementLocator.new(self, tag)
+    def locate_tagged_element(tag, how, what, klass=nil)
+      locator = TaggedElementLocator.new(self, tag, klass)
       locator.set_specifier(how, what)
       locator
     end
@@ -234,6 +234,12 @@ module Watir
     # over the elements using #each
     def locate_all_elements(how, what)
       locator = ElementLocator.new(self)
+      locator.set_specifier(how, what)
+      locator
+    end
+
+    def locate_form_element(how, what)
+      locator = FormLocator.new(self)
       locator.set_specifier(how, what)
       locator
     end

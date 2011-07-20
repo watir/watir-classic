@@ -120,6 +120,9 @@ module Watir
   end
 
   class Forms < ElementCollections
+    def each
+      @container.locate_form_element(@how, @what).each {|element| yield element}
+    end    
   end
   
   class HTMLElements < ElementCollections

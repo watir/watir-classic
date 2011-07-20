@@ -1,8 +1,16 @@
 module Watir
 
-  # Forms
+  class Form < Element
+    #   * container   - the containing object, normally an instance of IE
+    #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
+    #   * what        - what we use to access the form
+    def initialize(container, how, what)
+      set_container container
+      @how = how
+      @what = what
+      copy_test_config container
+    end
 
-  class FormElement < Element
     def_wrap_guard :action
 
     def name
@@ -22,29 +30,10 @@ module Watir
       else
         super(arg)
       end
-    end
-  end
-  
-  #   Form Factory object
-  class Form < FormElement
-    include Container
-    
-    attr_accessor :form
-
-    #   * container   - the containing object, normally an instance of IE
-    #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
-    #   * what        - what we use to access the form
-    def initialize(container, how, what)
-      set_container container
-      @how = how
-      @what = what
-      copy_test_config container
-    end
+    end    
 
     def locate
-      locator = FormLocator.new(@container, 'FORM')
-      locator.set_specifier(@how, @what)
-      @o = locator.locate
+      @o = @container.locate_form_element(@how, @what).locate
     end
 
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.

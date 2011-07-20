@@ -46,14 +46,22 @@ module Watir
   end
 
   class TaggedElementLocator < Locator
-    def initialize(container, tag)
+    def initialize(container, tag, klass)
       @container = container
       @tag = tag
+      @klass = klass || Element
     end
 
     def each_element tag
-      @container.document.getElementsByTagName(tag).each do |ole_element|
-        yield Element.new(ole_element)
+      @container.document.getElementsByTagName(tag).each do |ole_object|
+        if @klass == Element
+          element = Element.new(ole_object)
+        else
+          element = @klass.new(@container, @specifiers, nil)
+          element.ole_object = ole_object
+          def element.locate; @o; end unless @klass == TableRow
+        end
+        yield element
       end
     end
 
@@ -128,9 +136,16 @@ module Watir
   end
 
   class FormLocator < TaggedElementLocator
+    def initialize(container)
+      super(container, 'FORM', Form)
+    end
+
     def each_element(tag)
       @container.document.forms.each do |form|
-        yield FormElement.new(form)
+        form_element = Form.new(@container, @specifiers, nil)
+        form_element.ole_object = form
+        def form_element.locate; @o; end
+        yield form_element
       end
     end
   end
@@ -147,14 +162,13 @@ module Watir
     end
 
     def each_element
-      count = Watir::Element.base_index - 1
       @elements.each do |object|
         if @klass == Element
           element = Element.new(object)
         else
           element = @klass.new(@container, @specifiers, nil)
           element.ole_object = object
-          def element.locate; @o; end
+          def element.locate; @o; end          
         end
         yield element
       end
@@ -221,7 +235,7 @@ module Watir
   # get all the elements by forcing @tag to be '*'
   class ElementLocator < TaggedElementLocator
     def initialize(container)
-      super(container, "*")
+      super(container, "*", Element)
     end
   end  
 end    
