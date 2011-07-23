@@ -105,33 +105,42 @@ module Watir
   end
 
   class FrameLocator < TaggedElementLocator
-    attr_accessor :tag
-
     def initialize(container)
       @container = container
+      @tags = Frame::TAG
     end
 
     def each_element tag
       frames = @container.document.frames
       i = 0
-      @container.document.getElementsByTagName(tag).each do |frame|
-        element = Element.new(frame)
-        document = frames.item(i)
-        yield element, document
+      @container.document.getElementsByTagName(tag).each do |ole_object|
+        frame = Frame.new(@container, @specifiers, nil)
+        frame.ole_object = ole_object
+        frame.document = frames.item(i)
+        def frame.locate; @o; end
+        yield frame
         i += 1
       end
     end
+
+    def each
+      @tags.each do |tag|
+        each_element(tag) do |element| 
+          next unless match_with_specifiers?(element)
+          yield element          
+        end 
+      end
+      nil
+    end        
 
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]      
 
       count = Watir::Element.base_index - 1
-      each_element(@tag) do |element, document|
-        next unless match_with_specifiers?(element)
+      each do |frame|
         count += 1
-        return element.ole_object, document if count == @specifiers[:index]
-      end # elements
-      nil
+        return frame.ole_object, frame.document if count == @specifiers[:index]
+      end
     end
   end
 

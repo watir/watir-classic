@@ -1,28 +1,22 @@
 module Watir
   class Frame < Element
     include PageContainer
+    TAG = ['FRAME', 'IFRAME']
+
+    attr_accessor :document
 
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate
-      locator = FrameLocator.new(@container)
-      locator.set_specifier(@how, @what)
-      ['FRAME', 'IFRAME'].each do |frame_tag|
-        locator.tag = frame_tag
-        located_frame, document = locator.locate
-        unless (located_frame.nil? && document.nil?)
-          @o = located_frame
-          begin
-            @document = document.document
-          rescue WIN32OLERuntimeError => e
-            if e.message =~ /Access is denied/
-              # This frame's content is not directly accessible but let the
-              # user continue so they can access the frame properties
-            else
-              raise e
-            end
-          end
-          break
-        end
+      frame, document = @container.locate_frame_element(@how, @what).locate
+      if frame && document
+        @o = frame
+        begin
+          @document = document.document
+        rescue WIN32OLERuntimeError => e
+          # This frame's content is not directly accessible but let the
+          # user continue so they can access the frame properties            
+          raise e unless e.message =~ /Access is denied/
+        end        
       end
     end
 

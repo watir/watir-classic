@@ -123,15 +123,10 @@ class TC_Tables < Test::Unit::TestCase
   
   def test_row_iterator
     t = browser.table(:index, 1)
-    count = 1 
+    count = 1
     t.each do |row|
-      if count == 1
-        assert("Row 1 Col1", row[1].text)
-        assert("Row 1 Col2", row[2].text)
-      elsif count == 2
-        assert("Row 2 Col1", row[1].text)
-        assert("Row 2 Col2", row[2].text)
-      end
+      assert("Row #{count} Col1", row[1].text)
+      assert("Row #{count} Col2", row[2].text)
       count += 1
     end
   end

@@ -243,6 +243,12 @@ module Watir
       locator.set_specifier(how, what)
       locator
     end
+
+    def locate_frame_element(how, what)
+      locator = FrameLocator.new(self)
+      locator.set_specifier(how, what)
+      locator
+    end
     
   end # module
 end

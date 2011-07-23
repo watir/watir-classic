@@ -117,6 +117,9 @@ module Watir
   end
 
   class Frames < ElementCollections
+    def each
+      @container.locate_frame_element(@how, @what).each {|element| yield element}
+    end
   end
 
   class Forms < ElementCollections
