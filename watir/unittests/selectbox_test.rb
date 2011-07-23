@@ -100,17 +100,17 @@ class TC_SelectList < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).disabled }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).type }  
     
-    assert_equal("o3"   ,    browser.select_list(:index, 1).value)  
-    assert_equal("sel1" ,    browser.select_list(:index, 1).name)  
-    assert_equal(""     ,    browser.select_list(:index, 1).id)  
-    assert_equal("select-one",         browser.select_list(:index, 1).type)  
-    assert_equal("select-multiple",    browser.select_list(:index, 2).type)  
+    assert_equal("o3"   ,    browser.select_list(:index, 0).value)  
+    assert_equal("sel1" ,    browser.select_list(:index, 0).name)  
+    assert_equal(""     ,    browser.select_list(:index, 0).id)  
+    assert_equal("select-one",         browser.select_list(:index, 0).type)  
+    assert_equal("select-multiple",    browser.select_list(:index, 1).type)  
     
-    browser.select_list(:index,1).select(/1/)
-    assert_equal("o1", browser.select_list(:index, 1).value)  
+    browser.select_list(:index,0).select(/1/)
+    assert_equal("o1", browser.select_list(:index, 0).value)  
     
-    assert_false( browser.select_list(:index, 1).disabled)
-    assert(browser.select_list(:index, 4).disabled)
+    assert_false( browser.select_list(:index, 0).disabled)
+    assert(browser.select_list(:index, 3).disabled)
     assert(browser.select_list(:id, 'selectbox_4').disabled)
   end
   
@@ -121,7 +121,7 @@ class TC_SelectList < Test::Unit::TestCase
     assert_equal("select-one",         browser.select_lists[1].type )  
     assert_equal("select-multiple" ,   browser.select_lists[2].type )  
     
-    index = 1
+    index = 0
     browser.select_lists.each do |l|
       assert_equal( browser.select_list(:index, index).name, l.name)
       assert_equal( browser.select_list(:index, index).id, l.id)
@@ -129,7 +129,7 @@ class TC_SelectList < Test::Unit::TestCase
       assert_equal( browser.select_list(:index, index).value, l.value)
       index += 1
     end
-    assert_equal(index - 1, browser.select_lists.length)
+    assert_equal(index, browser.select_lists.length)
   end
 end
 

@@ -32,7 +32,7 @@ module Watir
       end
     end
 
-    @zero_based_indexing = false
+    @zero_based_indexing = true
 
     # ole_object - the ole object for the element being wrapped
     def initialize(ole_object)

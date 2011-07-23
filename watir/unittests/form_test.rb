@@ -12,8 +12,8 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:name, "test2").exists?)   
     assert_false(browser.form(:name, "missing").exists?)   
     
-    assert(browser.form(:index, 1).exists?)   
-    assert_false(browser.form(:index, 88).exists?)   
+    assert(browser.form(:index, 0).exists?)   
+    assert_false(browser.form(:index, 87).exists?)   
     
     assert(browser.form(:method, "get").exists?)   
     assert_false(browser.form(:method, "missing").exists?)   
@@ -34,7 +34,7 @@ class TC_Forms2 < Test::Unit::TestCase # Note: there is no TC_Forms1
     assert(browser.form(:name, "test2").button(:caption, "Submit").exists?)
   end     
   def test_form_sub_element
-    assert_equal('Click Me', browser.form(:index, 1).button(:name, 'b1').value)
+    assert_equal('Click Me', browser.form(:index, 0).button(:name, 'b1').value)
   end
 
   # The following tests form bug 2261
@@ -118,12 +118,12 @@ class TC_Forms3 < Test::Unit::TestCase
   # The following tests form bug 2261 
   def test_p_in_form
     assert_equal "This form has a submit button that is an image", 
-      browser.form(:name, 'buttonsubmit').p(:index, 1).text
+      browser.form(:name, 'buttonsubmit').p(:index, 0).text
   end
   
   # test for bug reported by Scott Pack,  http://rubyforge.org/pipermail/wtr-general/2005-June/002223.html
   def test_index_other_element_before_it
-    assert_equal("check1" , browser.checkbox(:index,1).name)
+    assert_equal("check1" , browser.checkbox(:index,0).name)
   end
   
   tag_method :test_reset, :fails_on_firefox
@@ -138,14 +138,14 @@ class TC_Forms3 < Test::Unit::TestCase
     browser.text_field(:id, "t1").set("reset test - using a form")
     assert_equal(browser.text_field(:id, 't1').value, 'reset test - using a form')
     
-    browser.form(:index,2).button(:index,2).click
+    browser.form(:index,1).button(:index,1).click
     assert_equal("" , browser.text_field(:id, 't1').value)
     
     # also verify it works under a form, this time using the :id attribute
     browser.text_field(:id, "t1").set("reset test - using a form")
     assert_equal(browser.text_field(:id, 't1').value, 'reset test - using a form')
     
-    browser.form(:index,2).button(:id,'reset_button').click
+    browser.form(:index,1).button(:id,'reset_button').click
     assert_equal("" , browser.text_field(:id, 't1').value)
   end
   
@@ -215,13 +215,13 @@ class TC_Forms4 < Test::Unit::TestCase
   end
   
   def test_correct_form_field_is_found_using_form_index
-    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'apple')
-    assert_equal(browser.form(:index, 2).text_field(:name, 'name').value, 'banana')
+    assert_equal(browser.form(:index, 0).text_field(:name, 'name').value, 'apple')
+    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'banana')
   end
   
   def test_using_text_on_form
     browser.form(:name, 'apple_form').text_field(:name, 'name').set('strudel')
-    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'strudel')
+    assert_equal(browser.form(:index, 0).text_field(:name, 'name').value, 'strudel')
   end 
   
   def test_submit
@@ -238,12 +238,12 @@ class TC_Hidden_Fields < Test::Unit::TestCase
   def test_hidden
     
     # test using index
+    assert( browser.hidden(:index, 0).exists? )
     assert( browser.hidden(:index, 1).exists? )
-    assert( browser.hidden(:index, 2).exists? )
-    assert_false( browser.hidden(:index, 3).exists? )
+    assert_false( browser.hidden(:index, 2).exists? )
     
-    browser.hidden(:index, 1).value = 44
-    browser.hidden(:index, 2).value = 55
+    browser.hidden(:index, 0).value = 44
+    browser.hidden(:index, 1).value = 55
     
     browser.button(:value, "Show Hidden").click
     

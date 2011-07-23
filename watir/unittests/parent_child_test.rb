@@ -26,7 +26,7 @@ class TC_Relative < Test::Unit::TestCase
     
   tag_method :test_before_and_after, :fails_on_firefox
   def test_before_and_after
-    link = browser.link(:class => 'addtocart', :index => 2)
+    link = browser.link(:class => 'addtocart', :index => 1)
     assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
     assert(link.after?(@headline))
     assert(@headline.before?(link))

@@ -77,7 +77,7 @@ module Watir
     # iterates through the rows in the table. Yields a TableRow object
     def each
       assert_exists
-      1.upto(@o.rows.length) do |i| 
+      0.upto(@o.rows.length - 1) do |i| 
         yield TableRow.new(@container, :ole_object, _row(i))
       end
     end
@@ -105,7 +105,7 @@ module Watir
     # This method returns the number of columns in a row of the table.
     # Raises an UnknownObjectException if the table doesn't exist.
     #   * index         - the index of the row
-    def column_count(index=1)
+    def column_count(index=0)
       assert_exists
       _row(index).cells.length
     end
@@ -123,7 +123,7 @@ module Watir
       y
     end
     
-    def table_body(index=1)
+    def table_body(index=0)
       return @o.getElementsByTagName('TBODY')[index]
     end
     private :table_body
@@ -141,7 +141,7 @@ module Watir
     
     # returns an ole object
     def _row(index)
-      return @o.invoke("rows").item(index - 1)
+      return @o.invoke("rows").item(index)
     end
     private :_row
     
@@ -151,14 +151,14 @@ module Watir
     # row of the table
     #   * columnnumber  - column index to extract values from
     def column_values(columnnumber)
-      return (1..row_count).collect {|i| self[i][columnnumber].text}
+      return (0..row_count - 1).collect {|i| self[i][columnnumber].text}
     end
     
     # Returns an array containing all the text values in the specified row
     # Raises an UnknownObjectException if the table doesn't exist.
     #   * rownumber  - row index to extract values from
     def row_values(rownumber)
-      return (1..column_count(rownumber)).collect {|i| self[rownumber][i].text}
+      return (0..column_count(rownumber) - 1).collect {|i| self[rownumber][i].text}
     end
     
   end
@@ -187,12 +187,12 @@ module Watir
     
     # returns an ole table body
     def ole_table_body_at_index(n)
-      return @o.tBodies.item(n-1)
+      return @o.tBodies.item(n)
     end
     
     # iterates through each of the TableBodies in the Table. Yields a TableBody object
     def each
-      1.upto(@o.tBodies.length) do |i| 
+      0.upto(@o.tBodies.length - 1) do |i| 
         yield TableBody.new(@container, :ole_object, ole_table_body_at_index(i))
       end
     end
@@ -227,13 +227,13 @@ module Watir
     # returns the specified row as a TableRow object
     def [](n)
       assert_exists
-      return @rows[n - 1]
+      return @rows[n]
     end
     
     # iterates through all the rows in the table body
     def each
       locate
-      0.upto(@rows.length - 1) { |i| yield @rows[i] }
+      0.upto(length - 1) { |i| yield @rows[i] }
     end
     
     # returns the number of rows in this table body.
@@ -270,16 +270,16 @@ module Watir
     # this method iterates through each of the cells in the row. Yields a TableCell object
     def each
       locate
-      0.upto(@cells.length-1) { |i| yield @cells[i] }
+      0.upto(@cells.length - 1) { |i| yield @cells[i] }
     end
     
     # Returns an element from the row as a TableCell object
     def [](index)
       assert_exists
-      if @cells.length < index
+      if @cells.length <= index
         raise UnknownCellException, "Unable to locate a cell at index #{index}" 
       end
-      return @cells[(index - 1)]
+      return @cells[index]
     end
     
     # defaults all missing methods to the array of elements, to be able to

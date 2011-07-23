@@ -19,11 +19,11 @@ class TC_CheckBox < Test::Unit::TestCase
   end
   
   def test_checkbox_properties_with_index
-    assert_equal("box1", browser.checkbox(:index, 1).name ) 
-    assert_equal("", browser.checkbox(:index, 1).id ) 
-    assert_equal("checkbox", browser.checkbox(:index, 1).type ) 
-    assert_equal("on", browser.checkbox(:index, 1).value ) 
-    assert_equal(false, browser.checkbox(:index, 1).disabled ) 
+    assert_equal("box1", browser.checkbox(:index, 0).name ) 
+    assert_equal("", browser.checkbox(:index, 0).id ) 
+    assert_equal("checkbox", browser.checkbox(:index, 0).type ) 
+    assert_equal("on", browser.checkbox(:index, 0).value ) 
+    assert_equal(false, browser.checkbox(:index, 0).disabled ) 
   end
   def test_checkbox_properties
     assert_equal("check_box_style", browser.checkbox(:name, "box1").class_name) 
@@ -152,7 +152,7 @@ class TC_CheckBox < Test::Unit::TestCase
   
   def test_checkbox_iterator
     assert_equal(13, browser.checkboxes.length)
-    index = 1
+    index = 0
     browser.checkboxes.each do |c|
       # puts "#{index}: #{c.name}"
       assert_equal( browser.checkbox(:index, index).name , c.name )
@@ -160,7 +160,7 @@ class TC_CheckBox < Test::Unit::TestCase
       assert_equal( browser.checkbox(:index, index).value, c.value )
       index += 1
     end
-    assert_equal(index - 1, browser.checkboxes.length)
+    assert_equal(index, browser.checkboxes.length)
   end
 
   # bug 217

@@ -87,7 +87,7 @@ class Map_Tests < Watir::TestCase
   end
   
   def test_areas
-    assert_equal(3, browser.map(:index, 2).areas.length)
+    assert_equal(3, browser.map(:index, 1).areas.length)
   end
   
   def assert_contains_text text

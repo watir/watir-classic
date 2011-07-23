@@ -25,8 +25,8 @@ class TC_ie < Test::Unit::TestCase
   
   # is this correct? 
   def test_getLink_ByIndexReturnsNilOnNoLinks
-    assert_nil(@faked_ie.locate_tagged_element('A', :index, 1))
-    assert_nil(@faked_ie.locate_tagged_element('A', :index, 1))
+    assert_nil(@faked_ie.locate_tagged_element('A', :index, 0))
+    assert_nil(@faked_ie.locate_tagged_element('A', :index, 0))
   end
   
   def test_getLink_ByBadHow

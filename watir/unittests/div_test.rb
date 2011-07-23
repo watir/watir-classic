@@ -35,28 +35,28 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("blueText", browser.div(:id, "div2").class_name)
     assert_equal("", browser.div(:id, "div1").class_name)
     
-    assert_raises(UnknownObjectException) { browser.div(:index, 44).class_name }
-    assert_equal("div1" ,      browser.div(:index, 1).id)
-    assert_equal("" ,          browser.div(:index, 1).class_name)
-    assert_equal("blueText" ,  browser.div(:index, 2).class_name)
-    assert_equal(""    ,       browser.div(:index, 2).value)
-    assert_equal(false ,       browser.div(:index, 2).disabled)
-    assert_equal(""    ,       browser.div(:index, 2).name)
-    assert_equal("div2",       browser.div(:index, 2).id)
+    assert_raises(UnknownObjectException) { browser.div(:index, 43).class_name }
+    assert_equal("div1" ,      browser.div(:index, 0).id)
+    assert_equal("" ,          browser.div(:index, 0).class_name)
+    assert_equal("blueText" ,  browser.div(:index, 1).class_name)
+    assert_equal(""    ,       browser.div(:index, 1).value)
+    assert_equal(false ,       browser.div(:index, 1).disabled)
+    assert_equal(""    ,       browser.div(:index, 1).name)
+    assert_equal("div2",       browser.div(:index, 1).id)
   end
   
   def test_div_iterator
     assert_equal(8, browser.divs.length)
     assert_equal("div1", browser.divs[1].id)
     
-    index = 1
+    index = 0
     browser.divs.each do |s|
       assert_equal(browser.div(:index,index).name, s.name)
       assert_equal(browser.div(:index,index).id, s.id)
       assert_equal(browser.div(:index,index).class_name , s.class_name)
       index += 1
     end
-    assert_equal(index - 1, browser.divs.length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index, browser.divs.length)
   end
   
   def test_enumerable
@@ -65,16 +65,16 @@ class TC_Divs < Test::Unit::TestCase
   end
   
   def test_objects_in_div
-    assert browser.div(:id, 'buttons1').button(:index,1).exists? 
-    assert !browser.div(:id, 'buttons1').button(:index,3).exists? 
+    assert browser.div(:id, 'buttons1').button(:index,0).exists? 
+    assert !browser.div(:id, 'buttons1').button(:index,2).exists? 
     assert browser.div(:id, 'buttons1').button(:name,'b1').exists? 
     
+    assert browser.div(:id, 'buttons2').button(:index,0).exists? 
     assert browser.div(:id, 'buttons2').button(:index,1).exists? 
-    assert browser.div(:id, 'buttons2').button(:index,2).exists? 
-    assert !browser.div(:id, 'buttons1').button(:index,3).exists? 
+    assert !browser.div(:id, 'buttons1').button(:index,2).exists? 
     
-    browser.div(:id, 'buttons1').button(:index, 1).click
-    assert_equal('button1', browser.div(:id, 'text_fields1').text_field(:index,1).value)
+    browser.div(:id, 'buttons1').button(:index, 0).click
+    assert_equal('button1', browser.div(:id, 'text_fields1').text_field(:index,0).value)
     
     assert_equal(3, browser.div(:id, 'text_fields1').text_fields.length )
     browser.div(:id, 'text_fields1').text_field(:name, 'div_text1').set("drink me")
@@ -114,21 +114,21 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("blueText", browser.span(:id, "span2").class_name)
     assert_equal("", browser.span(:id, "span1").class_name)
     
-    assert_raises(UnknownObjectException) {browser.span(:index , 44).class_name }
-    assert_equal("span1" ,     browser.span(:index , 1).id )
-    assert_equal("" ,          browser.span(:index , 1).class_name )
-    assert_equal("blueText" ,  browser.span(:index , 2).class_name )
-    assert_equal(""    ,       browser.span(:index , 2).value)
-    assert_equal(false ,       browser.span(:index , 2).disabled)
-    assert_equal(""    ,       browser.span(:index , 2).name)
-    assert_equal("span2",      browser.span(:index , 2).id)
+    assert_raises(UnknownObjectException) {browser.span(:index , 43).class_name }
+    assert_equal("span1" ,     browser.span(:index , 0).id )
+    assert_equal("" ,          browser.span(:index , 0).class_name )
+    assert_equal("blueText" ,  browser.span(:index , 1).class_name )
+    assert_equal(""    ,       browser.span(:index , 1).value)
+    assert_equal(false ,       browser.span(:index , 1).disabled)
+    assert_equal(""    ,       browser.span(:index , 1).name)
+    assert_equal("span2",      browser.span(:index , 1).id)
   end
   
   def test_span_iterator
     assert_equal(7, browser.spans.length)
     assert_equal("span1", browser.spans[1].id)
     
-    index = 1
+    index = 0
     browser.spans.each do |s|
       # puts "each - span = " + s.to_s
       assert_equal(browser.span(:index, index ).name , s.name )
@@ -136,30 +136,30 @@ class TC_Divs < Test::Unit::TestCase
       assert_equal(browser.span(:index, index ).class_name , s.class_name )
       index += 1
     end
-    assert_equal(index - 1, browser.spans.length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index, browser.spans.length)
   end
   
   def test_objects_in_span
-    assert(browser.span(:id, 'buttons1').button(:index,1).exists? )
-    assert_false(browser.span(:id, 'buttons1').button(:index,3).exists? )
+    assert(browser.span(:id, 'buttons1').button(:index,0).exists? )
+    assert_false(browser.span(:id, 'buttons1').button(:index,2).exists? )
     assert(browser.span(:id, 'buttons1').button(:name,'b1').exists? )
     
+    assert(browser.span(:id, 'buttons2').button(:index,0).exists? )
     assert(browser.span(:id, 'buttons2').button(:index,1).exists? )
-    assert(browser.span(:id, 'buttons2').button(:index,2).exists? )
-    assert_false(browser.span(:id, 'buttons1').button(:index,3).exists? )
+    assert_false(browser.span(:id, 'buttons1').button(:index,2).exists? )
     
-    browser.span(:id, 'buttons1').button(:index,1).click
-    assert_equal( 'button1' ,   browser.span(:id , 'text_fields1').text_field(:index,1).value)
+    browser.span(:id, 'buttons1').button(:index,0).click
+    assert_equal( 'button1' ,   browser.span(:id , 'text_fields1').text_field(:index,0).value)
     assert_equal( 3 , browser.span(:id , 'text_fields1').text_fields.length )
   end
   
   def test_p
     assert(browser.p(:id, 'number1').exists?)
-    assert(browser.p(:index, 3).exists?)
+    assert(browser.p(:index, 2).exists?)
     assert(browser.p(:title, 'test_3').exists?)
     
     assert_false(browser.p(:id, 'missing').exists?)
-    assert_false(browser.p(:index, 8).exists?)
+    assert_false(browser.p(:index, 7).exists?)
     assert_false(browser.p(:title, 'test_55').exists?)
     
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').class_name }
@@ -168,9 +168,9 @@ class TC_Divs < Test::Unit::TestCase
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').to_s }
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').disabled }
     
-    assert_equal('redText' , browser.p(:index,1).class_name)
-    assert_equal('P_tag_1' , browser.p(:index,1).title)
-    assert_equal('This text is in a p with an id of number2' , browser.p(:index,2).text)
+    assert_equal('redText' , browser.p(:index,0).class_name)
+    assert_equal('P_tag_1' , browser.p(:index,0).title)
+    assert_equal('This text is in a p with an id of number2' , browser.p(:index,1).text)
   end
   
   def test_p_iterator

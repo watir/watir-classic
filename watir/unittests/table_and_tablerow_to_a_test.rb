@@ -79,38 +79,38 @@ class TC_Table_TableRow_to_a < Test::Unit::TestCase
   end
 
   def test_tablerow_to_a_works_with_regular_row
-    first_row = browser.table(:id => "normal")[1]
+    first_row = browser.table(:id => "normal")[0]
     assert_equal(["1", "2", "3"], first_row.to_a)
   end
 
   def test_tablerow_to_a_works_with_headers_in_row
-    first_row = browser.table(:id => "headers")[1]
+    first_row = browser.table(:id => "headers")[0]
     assert_equal(["1", "2", "3", "4"], first_row.to_a)
   end
 
   def test_tablerow_to_a_works_with_nested_tables
-    second_row = browser.table(:id => "nested")[2]
+    second_row = browser.table(:id => "nested")[1]
     assert_equal([[["11", "12"], ["13", "14"]], "3"], second_row.to_a(2))
   end
 
   def test_tablerow_to_a_works_with_deep_nested_tables
-    second_row = browser.table(:id => "deepnested")[2]
+    second_row = browser.table(:id => "deepnested")[1]
     expected_row = [[["11", "12"],
                      [[["404", "405"], ["406", "407"]], "14"]], "3"]
     assert_equal(expected_row, second_row.to_a(3))
   end
 
   def test_tablerow_to_a_works_with_colspan
-    second_row = browser.table(:id => "colspan")[2]
+    second_row = browser.table(:id => "colspan")[1]
     assert_equal(["3"], second_row.to_a)
   end
 
   def test_tablerow_to_a_works_with_rowspan
     t = browser.table(:id => "rowspan")
-    second_row = t[2]
+    second_row = t[1]
     assert_equal(["3", "4"], second_row.to_a)
 
-    third_row = t[3]
+    third_row = t[2]
     assert_equal(["5"], third_row.to_a)
   end
 end

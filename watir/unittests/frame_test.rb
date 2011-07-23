@@ -30,11 +30,11 @@ class TC_Frames < Test::Unit::TestCase
   end
 
   def test_frame_using_index
-    assert_raises(UnknownObjectException) { browser.frame(:index, 8).button(:id, "b2").enabled?  }
-    assert_raises(UnknownObjectException) { browser.frame(:index, 2).button(:id, "b2").enabled?  }
-    assert(browser.frame(:index, 1 ).button(:id, "b2").enabled?)
-    assert_false(browser.frame(:index, 1).button(:caption, "Disabled Button").enabled?)
-    assert_equal('blankpage.html', browser.frame(:index, 2).src)
+    assert_raises(UnknownObjectException) { browser.frame(:index, 7).button(:id, "b2").enabled?  }
+    assert_raises(UnknownObjectException) { browser.frame(:index, 1).button(:id, "b2").enabled?  }
+    assert(browser.frame(:index, 0 ).button(:id, "b2").enabled?)
+    assert_false(browser.frame(:index, 0).button(:caption, "Disabled Button").enabled?)
+    assert_equal('blankpage.html', browser.frame(:index, 1).src)
   end
 
   tag_method :test_frame_with_invalid_attribute, :fails_on_firefox
@@ -83,7 +83,7 @@ class TC_NestedFrames < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.frame(:name => "missingFrame").button(:id, "b2").enabled?  }
     assert_raises(UnknownObjectException) { browser.frame(:name => "nestedFrame").frame(:name => "subFrame").button(:id, "b2").enabled?  }
     assert(browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").button(:name, "sendIt").enabled?)
-    browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").text_field(:index, "1").set("Hello")
+    browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").text_field(:index, "0").set("Hello")
     browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").button(:name, "sendIt").click
     assert(browser.frame(:name => "nestedFrame").frame(:name => "receiverFrame").text_field(:name, "receiverText").verify_contains("Hello"))
   end
@@ -99,7 +99,7 @@ class TC_IFrames < Test::Unit::TestCase
 
   def test_Iframe
     browser.frame(:name => "senderFrame").text_field(:name, "textToSend").set( "Hello World")
-    browser.frame(:name => "senderFrame").button(:index, 1).click
+    browser.frame(:name => "senderFrame").button(:index, 0).click
     assert( browser.frame(:name => "receiverFrame").text_field(:name, "receiverText").verify_contains("Hello World") )
     assert_equal(browser.frame(:src, /iframeTest2/).text_field(:name, 'receiverText').value, "Hello World")
   end
@@ -200,7 +200,7 @@ class TC_iframe_access < Test::Unit::TestCase
     frame = browser.frame(:name, 'iframe')
     assert_nothing_raised {frame.src}
     assert_equal('http://www.google.com', frame.src)
-    assert_raises(FrameAccessDeniedException) {frame.button(:index, 1).click}
+    assert_raises(FrameAccessDeniedException) {frame.button(:index, 0).click}
   end
 
 end

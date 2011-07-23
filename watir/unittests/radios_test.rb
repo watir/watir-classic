@@ -136,16 +136,16 @@ class TC_Radios < Test::Unit::TestCase
     assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   browser.radio(:index, 199).disabled }  
     assert_raises(UnknownObjectException, "UnknownObjectException  was supposed to be thrown" ) {   browser.radio(:index, 199).type }  
     
-    assert_equal("on"   ,    browser.radio(:index, 1).value)  
-    assert_equal("box1" ,    browser.radio(:index, 1).name )  
-    assert_equal(""     ,    browser.radio(:index, 1).id )  
-    assert_equal("radio",    browser.radio(:index, 1).type )  
+    assert_equal("on"   ,    browser.radio(:index, 0).value)  
+    assert_equal("box1" ,    browser.radio(:index, 0).name )  
+    assert_equal(""     ,    browser.radio(:index, 0).id )  
+    assert_equal("radio",    browser.radio(:index, 0).type )  
     
-    assert_equal( false, browser.radio(:index, 1).disabled )
-    assert_equal( true,  browser.radio(:index, 3).disabled )
+    assert_equal( false, browser.radio(:index, 0).disabled )
+    assert_equal( true,  browser.radio(:index, 2).disabled )
     
-    assert_equal("box5"  ,    browser.radio(:index, 2).id )  
-    assert_equal(""      ,    browser.radio(:index, 2).name )  
+    assert_equal("box5"  ,    browser.radio(:index, 1).id )  
+    assert_equal(""      ,    browser.radio(:index, 1).name )  
     
     assert_equal("box4-value5", browser.radio(:name => "box4", :value => 5).title  )
     assert_equal("", browser.radio(:name => "box4", :value => 4).title  )
@@ -157,7 +157,7 @@ class TC_Radios < Test::Unit::TestCase
     assert_equal(true ,  browser.radios[3].disabled )
     assert_equal(false ,  browser.radios[1].disabled )
     
-    index = 1
+    index = 0
     browser.radios.each do |r|
       assert_equal( browser.radio(:index, index).name , r.name )
       assert_equal( browser.radio(:index, index).id , r.id )
@@ -165,7 +165,7 @@ class TC_Radios < Test::Unit::TestCase
       assert_equal( browser.radio(:index, index).disabled , r.disabled )
       index+=1
     end
-    assert_equal(index -1, browser.radios.length)
+    assert_equal(index, browser.radios.length)
   end
   
   # test radio buttons that have a string as a value

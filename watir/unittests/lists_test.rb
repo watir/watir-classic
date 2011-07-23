@@ -12,7 +12,7 @@ class Lists_Tests < Watir::TestCase
     assert(browser.li(:id, 'list2').exists?)
     assert(browser.li(:id, 'list3').exists?)    
     assert(browser.li(:id, 'ordered1').exists?)    
-    assert_equal('Coffee', browser.li(:index, 1).text)
+    assert_equal('Coffee', browser.li(:index, 0).text)
   end
 
   def test_list_item_exists_by_name
