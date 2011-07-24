@@ -34,25 +34,8 @@ module Watir
     end
   end
 
-
-  class Pre < NonControlElement; end
-
-  class P < NonControlElement; end
-
-  # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
-  # It would not normally be created by users
-  class Div < NonControlElement; end
-
-  # this class is used to deal with Span tags in the html page. It would not normally be created by users
-  class Span < NonControlElement; end
-
-  class Map < NonControlElement; end
-
-  class Area < NonControlElement; end
-
   # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
   class Label < NonControlElement
-
     # this method is used to populate the properties in the to_s method
     def label_string_creator
       n = []
@@ -72,18 +55,10 @@ module Watir
     end
   end
 
-  class Li < NonControlElement; end
-  class Ul < NonControlElement; end
-  class H1 < NonControlElement; end
-  class H2 < NonControlElement; end
-  class H3 < NonControlElement; end
-  class H4 < NonControlElement; end
-  class H5 < NonControlElement; end
-  class H6 < NonControlElement; end
-  class Dl < NonControlElement; end
-  class Dt < NonControlElement; end
-  class Dd < NonControlElement; end
-  class Strong < NonControlElement; end
-  class Em < NonControlElement; end
-
+  %w[pre p div span map area li ul h1 h2 h3 h4 h5 h6 dl dt dd strong em].each do |elem|
+    module_eval %Q{
+      class #{elem.capitalize} < NonControlElement; end
+    }
+  end
+  
 end
