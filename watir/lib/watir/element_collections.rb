@@ -20,14 +20,6 @@ module Watir
       @page_container = container.page_container
     end
     
-    def element_class
-      Watir.const_get self.class.name.split("::").last.chop
-    end
-
-    def element_tag
-      element_class.constants.include?("TAG") ? element_class::TAG : element_class.name.split("::").last
-    end
-    
     def length
       count = 0
       each {|element| count += 1 }
@@ -35,25 +27,6 @@ module Watir
     end
     alias :size :length
 
-    public
-    def get_length_of_input_objects(object_type)
-      object_types =
-      if object_type.kind_of? Array
-        object_type
-      else
-        [object_type]
-      end
-      
-      length = 0
-      objects = @container.document.getElementsByTagName("INPUT")
-      if objects.length > 0
-        objects.each do |o|
-          length += 1 if object_types.include?(o.invoke("type").downcase)
-        end
-      end
-      return length
-    end
-    
     # iterate through each of the elements in the collection in turn
     def each
       @container.locate_tagged_element(element_tag, @how, @what, element_class).each {|element| yield element}
@@ -84,12 +57,19 @@ module Watir
       '#<%s:0x%x length=%s container=%s>' % [self.class, hash*2, @length.inspect, @container.inspect]
     end
 
-    # this method creates an object of the correct type that the iterators use
     private
 
     def iterator_object(i)
       count = 0
       each {|e| return e if count == i; count += 1}
+    end
+    
+    def element_class
+      Watir.const_get self.class.name.split("::").last.chop
+    end
+
+    def element_tag
+      element_class.constants.include?("TAG") ? element_class::TAG : element_class.name.split("::").last
     end
   end
 end
