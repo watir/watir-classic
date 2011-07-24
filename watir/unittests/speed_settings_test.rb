@@ -33,7 +33,7 @@ class TC_class_options < Test::Unit::TestCase
 		@previous = IE.options
 	end
 	def test_class_defaults
-		assert_equal({:speed => IE.speed, :visible => IE.visible, :attach_timeout => IE.attach_timeout}, IE.options)
+		assert_equal({:speed => IE.speed, :visible => IE.visible, :attach_timeout => IE.attach_timeout, :zero_based_indexing => IE.zero_based_indexing}, IE.options)
 	end
 	def test_change_defaults
 		IE.set_options(:speed => :fast)

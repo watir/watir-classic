@@ -17,12 +17,12 @@ class TC_BaseIndex < Test::Unit::TestCase
     assert "one", browser.button(:index => 0).class_name
     assert "two", browser.button(:index => 1).class_name    
 
-    Watir::Element.zero_based_indexing = false
+    Watir::IE.zero_based_indexing = false
 
     assert "one", browser.button(:index => 1).class_name
     assert "two", browser.button(:index => 2).class_name    
 
-    Watir::Element.zero_based_indexing = true
+    Watir::IE.zero_based_indexing = true
 
     assert "one", browser.button(:index => 0).class_name
     assert "two", browser.button(:index => 1).class_name    

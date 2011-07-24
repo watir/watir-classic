@@ -30,7 +30,7 @@ module Watir
 
     def set_specifier(how, what=nil)
       specifiers = what ? {how => what} : how
-      @specifiers = {:index => Watir::Element.base_index} # default if not specified
+      @specifiers = {:index => Watir::Browser.base_index} # default if not specified
       normalize_specifiers! specifiers
     end
 
@@ -76,7 +76,7 @@ module Watir
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
 
-      count = Watir::Element.base_index - 1
+      count = Watir::Browser.base_index - 1
       each do |element|
         count += 1
         return element.ole_object if count == @specifiers[:index]
@@ -136,7 +136,7 @@ module Watir
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]      
 
-      count = Watir::Element.base_index - 1
+      count = Watir::Browser.base_index - 1
       each do |frame|
         count += 1
         return frame.ole_object, frame.document if count == @specifiers[:index]
@@ -187,7 +187,7 @@ module Watir
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
 
-      count = Watir::Element.base_index - 1
+      count = Watir::Browser.base_index - 1
       each do |element|
         count += 1
         return element.ole_object if count == @specifiers[:index]
@@ -226,7 +226,7 @@ module Watir
 
       the_id = @specifiers[:id]
       if the_id && the_id.class == String &&
-          @specifiers[:index] == Watir::Element.base_index && @specifiers.length == 2
+          @specifiers[:index] == Watir::Browser.base_index && @specifiers.length == 2
         @element = @document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
         return true if @element && @element.invoke('id') == the_id && @types.include?(@element.getAttribute('type'))

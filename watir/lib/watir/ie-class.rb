@@ -17,7 +17,7 @@ module Watir
     # Return the options used when creating new instances of IE.
     # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
 		def self.options
-			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
+			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout, :zero_based_indexing => self.zero_based_indexing}
 	  end
     # set values for options used when creating new instances of IE.
 		def self.set_options options
@@ -48,6 +48,15 @@ module Watir
 			$HIDE_IE = nil
 			@@visible = x
 		end
+
+    @@zero_based_indexing = true
+    def self.zero_based_indexing= enabled
+      @@zero_based_indexing = enabled
+    end
+
+    def self.zero_based_indexing
+      @@zero_based_indexing
+    end
 
     # Used internally to determine when IE has finished loading a page
     READYSTATES = {:complete => 4}
