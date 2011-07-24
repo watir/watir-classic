@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_CheckBox < Test::Unit::TestCase
+class TC_Checkbox < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
@@ -53,7 +53,7 @@ class TC_CheckBox < Test::Unit::TestCase
     assert_false(browser.button(:value, "foo").enabled?)
   end
   
-  def test_CheckBox_Exists
+  def test_Checkbox_Exists
     assert(browser.checkbox(:name, "box1").exists?)   
     assert_false(browser.checkbox(:name, "missing").exists?)   
     

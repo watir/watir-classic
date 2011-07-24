@@ -535,7 +535,7 @@ module Watir
 
   # This class is the watir representation of a check box.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
-  class CheckBox < RadioCheckCommon
+  class Checkbox < RadioCheckCommon
     INPUT_TYPES = ["checkbox"]
     # This method checks or unchecks the checkbox.
     # With no arguments supplied it sets the checkbox.
@@ -561,11 +561,11 @@ module Watir
     end
 
     Watir::Container.module_eval do
-      def checkboxes(how={}, what=nil)
-        CheckBoxes.new(self, how, what)
-      end
+      remove_method :checkboxs
 
-      alias_method :checkbox, :check_box
+      def checkboxes(how={}, what=nil)
+        Checkboxes.new(self, how, what)
+      end
     end
   end
 
