@@ -1,5 +1,6 @@
 == Version 2.0.0 - 2011/07/XX
 
+* RIP FireWatir - there won't be any new releases
 * all elements are using 0-based indexing instead of old 1-based indexing:
  - disable it temporarily: require "watir"; Watir.options[:zero_based_indexing] = false
 * #radio and #checkbox methods doesn't allow 3 parameters anymore for locating with "value"
@@ -22,7 +23,7 @@
  - td => cell
  - tds => cells
  - a => link
- - as => links
+ - as => links 
 
 == Version 1.9.2 - 2011/07/11
 
