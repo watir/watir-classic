@@ -25,7 +25,8 @@ module Watir
       each {|element| count += 1 }
       count
     end
-    alias :size :length
+
+    alias_method :size, :length
 
     # iterate through each of the elements in the collection in turn
     def each
