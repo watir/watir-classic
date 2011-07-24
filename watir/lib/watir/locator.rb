@@ -163,11 +163,11 @@ module Watir
 
     attr_accessor :document, :element, :elements, :klass
 
-    def initialize container, types
+    def initialize container, types, klass
       @container = container
       @types = types
       @elements = nil
-      @klass = Element
+      @klass = klass || Element
     end
 
     def each_element

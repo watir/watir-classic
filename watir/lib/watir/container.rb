@@ -213,13 +213,11 @@ module Watir
     #   * what  - string that we are looking for, ex. the name, or id tag attribute or index of the object we are looking for.
     #   * types - what object types we will look at.
     def locate_input_element(how, what, types, klass=nil)
-      locator = InputElementLocator.new self, types
+      locator = InputElementLocator.new self, types, klass
       locator.set_specifier how, what
       locator.document = document
       return locator.element if locator.fast_locate
-      # todo: restrict search to elements.getElementsByTag('INPUT'); faster
       locator.elements = ole_inner_elements if locator.elements.nil?
-      locator.klass = klass if klass 
       locator
     end
     
