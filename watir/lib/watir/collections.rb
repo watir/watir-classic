@@ -1,25 +1,25 @@
 module Watir
   class InputElementCollections < ElementCollections
     def each
-      @container.locate_input_element(@how, @what, element_class::INPUT_TYPES, element_class).each {|element| yield element}
+      @container.input_element_locator(@how, @what, element_class::INPUT_TYPES, element_class).each {|element| yield element}
     end    
   end
 
   class Frames < ElementCollections
     def each
-      @container.locate_frame_element(@how, @what).each {|element| yield element}
+      @container.locator_for(FrameLocator, @how, @what).each {|element| yield element}
     end
   end
 
   class Forms < ElementCollections
     def each
-      @container.locate_form_element(@how, @what).each {|element| yield element}
+      @container.locator_for(FormLocator, @how, @what).each {|element| yield element}
     end    
   end
   
   class HTMLElements < ElementCollections
     def each
-      @container.locate_all_elements(@how, @what).each { |element| yield element }
+      @container.locator_for(ElementLocator, @how, @what).each { |element| yield element }
     end
   end
 

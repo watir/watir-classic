@@ -7,7 +7,7 @@ module Watir
 
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate
-      frame, document = @container.locate_frame_element(@how, @what).locate
+      frame, document = @container.locator_for(FrameLocator, @how, @what).locate
       if frame && document
         @o = frame
         begin

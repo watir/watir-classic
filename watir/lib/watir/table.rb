@@ -329,6 +329,20 @@ module Watir
         return inner_table?(cell, parent_element)
       end
     end
+
+    Watir::Container.module_eval do
+      def row(how={}, what=nil)
+        TableRow.new(self, how, what)
+      end
+
+      alias_method :tr, :row
+
+      def rows(how={}, what=nil)
+        TableRows.new(self, how, what)
+      end
+
+      alias_method :trs, :rows
+    end
   end
   
   # this class is a table cell - when called via the Table object
@@ -367,6 +381,19 @@ module Watir
       @o.colSpan
     end
     
+    Watir::Container.module_eval do
+      def cell(how={}, what=nil)
+        TableCell.new(self, how, what)
+      end
+
+      alias_method :td, :cell
+
+      def cells(how={}, what=nil)
+        TableCells.new(self, how, what)
+      end
+
+      alias_method :tds, :cells
+    end
   end
   
 end

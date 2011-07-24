@@ -27,6 +27,13 @@ module Watir
       @window ||= ::RAutomation::Window.new(:title => @opts[:title] || /^(#{WINDOW_TITLES.join('|')})$/)
     end
 
+    Watir::Container.module_eval do
+      def javascript_dialog(opts={})
+        JavascriptDialog.new(opts)
+      end
+
+      alias_method :dialog, :javascript_dialog
+    end
   end
 end
 

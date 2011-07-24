@@ -30,7 +30,7 @@ module Watir
 
     # iterate through each of the elements in the collection in turn
     def each
-      @container.locate_tagged_element(element_tag, @how, @what, element_class).each {|element| yield element}
+      @container.tagged_element_locator(element_tag, @how, @what, element_class).each {|element| yield element}
     end
     
     # allows access to a specific item in the collection

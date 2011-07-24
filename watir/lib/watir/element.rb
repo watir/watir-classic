@@ -33,7 +33,7 @@ module Watir
     def locate
       return if [Element, TableBodies].include? self.class
       tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.name.split("::").last
-      @o = @container.locate_tagged_element(tag, @how, @what).locate
+      @o = @container.tagged_element_locator(tag, @how, @what).locate
     end    
 
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.

@@ -2,7 +2,7 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      locator_or_element = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, self.class)
+      locator_or_element = @container.input_element_locator(@how, @what, self.class::INPUT_TYPES, self.class)
       @o = locator_or_element.is_a?(WIN32OLE) ? locator_or_element : locator_or_element.locate
     end
     def initialize(container, how, what)
@@ -560,6 +560,13 @@ module Watir
       set false
     end
 
+    Watir::Container.module_eval do
+      def checkboxes(how={}, what=nil)
+        CheckBoxes.new(self, how, what)
+      end
+
+      alias_method :checkbox, :check_box
+    end
   end
 
 end

@@ -17,5 +17,14 @@ module Watir
       super nil
     end
     
+    Watir::Container.module_eval do
+      def element(how={}, what=nil)
+        HTMLElement.new(self, how, what)  
+      end
+      
+      def elements(how={}, what=nil)
+        HTMLElements.new(self, how, what)  
+      end
+    end
   end
 end

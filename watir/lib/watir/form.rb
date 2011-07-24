@@ -33,7 +33,7 @@ module Watir
     end    
 
     def locate
-      @o = @container.locate_form_element(@how, @what).locate
+      @o = @container.locator_for(FormLocator, @how, @what).locate
     end
 
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.
