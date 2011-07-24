@@ -305,8 +305,8 @@ class TC_Hidden_Fields < Test::Unit::TestCase
       count += 1
     end
     
-    assert_equal("hid1", browser.hiddens[1].name)
-    assert_equal("hidden_1", browser.hiddens[2].id)
+    assert_equal("hid1", browser.hiddens[0].name)
+    assert_equal("hidden_1", browser.hiddens[1].id)
   end
 end
 

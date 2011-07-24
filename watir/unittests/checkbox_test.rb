@@ -147,7 +147,7 @@ class TC_CheckBox < Test::Unit::TestCase
   end
   
   def test_checkboxes_access
-    assert_equal("box1" , browser.checkboxes[1].name )
+    assert_equal("box1" , browser.checkboxes[0].name )
   end
   
   def test_checkbox_iterator

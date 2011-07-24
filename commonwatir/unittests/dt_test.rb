@@ -53,6 +53,7 @@ class TC_Dt < Test::Unit::TestCase
     end
   end
   
+  tag_method :test_dts_iterator, :fails_on_ie
   def test_dts_iterator
     assert_equal(11, browser.dts.length)
     assert_equal("experience", browser.dts[1].id)
@@ -62,6 +63,19 @@ class TC_Dt < Test::Unit::TestCase
       assert_equal(browser.dt(:index,idx+1).id, dt.id)
       assert_equal(browser.dt(:index,idx+1).class_name , dt.class_name)
       assert_equal(browser.dt(:index,idx+1).title, dt.title)
+    end
+  end
+    
+  tag_method :test_dts_iterator_ie, :fails_on_firefox
+  def test_dts_iterator_ie
+    assert_equal(11, browser.dts.length)
+    assert_equal("experience", browser.dts[0].id)
+    
+    browser.dts.each_with_index do |dt, idx|
+      assert_equal(browser.dt(:index,idx).text, dt.text)
+      assert_equal(browser.dt(:index,idx).id, dt.id)
+      assert_equal(browser.dt(:index,idx).class_name , dt.class_name)
+      assert_equal(browser.dt(:index,idx).title, dt.title)
     end
   end
     

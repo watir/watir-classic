@@ -60,7 +60,7 @@ module Watir
     
     # allows access to a specific item in the collection
     def [](n)
-      return iterator_object(n-1)
+      return iterator_object(n)
     end
 
     def first

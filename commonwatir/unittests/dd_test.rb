@@ -55,6 +55,7 @@ class TC_Dd < Test::Unit::TestCase
     end
   end
   
+  tag_method :test_dd_iterator, :fails_on_ie
   def test_dd_iterator
     assert_equal(11, browser.dds.length)
     assert_equal("education", browser.dds[2].title)
@@ -64,6 +65,19 @@ class TC_Dd < Test::Unit::TestCase
       assert_equal(browser.dd(:index,idx+1).id, dd.id)
       assert_equal(browser.dd(:index,idx+1).class_name , dd.class_name)
       assert_equal(browser.dd(:index,idx+1).title, dd.title)
+    end
+  end
+
+  tag_method :test_dd_iterator_ie, :fails_on_firefox
+  def test_dd_iterator_ie
+    assert_equal(11, browser.dds.length)
+    assert_equal("education", browser.dds[1].title)
+    
+    browser.dds.each_with_index do |dd, idx|
+      assert_equal(browser.dd(:index,idx).text, dd.text)
+      assert_equal(browser.dd(:index,idx).id, dd.id)
+      assert_equal(browser.dd(:index,idx).class_name , dd.class_name)
+      assert_equal(browser.dd(:index,idx).title, dd.title)
     end
   end
     

@@ -186,8 +186,8 @@ class TC_frames_method_for_container < Test::Unit::TestCase
   def test_frames_collection
     frames = browser.frames
     assert_equal(3, frames.length)
-    assert_equal('first_frame', frames[1].id)
-    assert_equal('pass.html', frames[3].src)
+    assert_equal('first_frame', frames[0].id)
+    assert_equal('pass.html', frames[2].src)
   end
 end
 

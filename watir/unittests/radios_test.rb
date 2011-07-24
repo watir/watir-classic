@@ -153,9 +153,9 @@ class TC_Radios < Test::Unit::TestCase
   
   def test_radio_iterators
     assert_equal(13, browser.radios.length)
-    assert_equal("box5" , browser.radios[2].id )
-    assert_equal(true ,  browser.radios[3].disabled )
-    assert_equal(false ,  browser.radios[1].disabled )
+    assert_equal("box5" , browser.radios[1].id )
+    assert_equal(true ,  browser.radios[2].disabled )
+    assert_equal(false ,  browser.radios[0].disabled )
     
     index = 0
     browser.radios.each do |r|

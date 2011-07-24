@@ -116,10 +116,10 @@ class TC_SelectList < Test::Unit::TestCase
   
   def test_iterator
     assert_equal(4, browser.select_lists.length)
-    assert_equal("o3"   ,    browser.select_lists[1].value)  
-    assert_equal("sel1" ,    browser.select_lists[1].name )  
-    assert_equal("select-one",         browser.select_lists[1].type )  
-    assert_equal("select-multiple" ,   browser.select_lists[2].type )  
+    assert_equal("o3"   ,    browser.select_lists[0].value)  
+    assert_equal("sel1" ,    browser.select_lists[0].name )  
+    assert_equal("select-one",         browser.select_lists[0].type )  
+    assert_equal("select-multiple" ,   browser.select_lists[1].type )  
     
     index = 0
     browser.select_lists.each do |l|

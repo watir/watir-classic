@@ -106,7 +106,7 @@ class TC_Links < Test::Unit::TestCase
   
   def test_link_iterator
     assert_equal(9, browser.links.length )
-    assert_equal("Link Using a name" , browser.links[7].innerText)
+    assert_equal("Link Using a name" , browser.links[6].innerText)
     
     index = 0
     browser.links.each do |link|

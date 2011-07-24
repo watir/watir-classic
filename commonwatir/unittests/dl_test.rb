@@ -53,6 +53,7 @@ class TC_Dl < Test::Unit::TestCase
     end
   end
   
+  tag_method :test_dls_iterator, :fails_on_ie
   def test_dls_iterator
     assert_equal(3, browser.dls.length)
     assert_equal("experience-list", browser.dls[1].id)
@@ -62,6 +63,19 @@ class TC_Dl < Test::Unit::TestCase
       assert_equal(browser.dl(:index,idx+1).id, dl.id)
       assert_equal(browser.dl(:index,idx+1).class_name , dl.class_name)
       assert_equal(browser.dl(:index,idx+1).title, dl.title)
+    end
+  end
+    
+  tag_method :test_dls_iterator_ie, :fails_on_firefox
+  def test_dls_iterator_ie
+    assert_equal(3, browser.dls.length)
+    assert_equal("experience-list", browser.dls[0].id)
+    
+    browser.dls.each_with_index do |dl, idx|
+      assert_equal(browser.dl(:index,idx).text, dl.text)
+      assert_equal(browser.dl(:index,idx).id, dl.id)
+      assert_equal(browser.dl(:index,idx).class_name , dl.class_name)
+      assert_equal(browser.dl(:index,idx).title, dl.title)
     end
   end
     
