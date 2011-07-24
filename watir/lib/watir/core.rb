@@ -28,4 +28,11 @@ require 'watir/image'
 require 'watir/link'
 require 'watir/html_element'
 
+require 'watir/win32'
+require 'watir/modal_dialog'
+
 require 'watir/module'
+
+require 'rautomation'
+require 'watir/dialogs/file_field'
+require 'watir/dialogs/javascript'

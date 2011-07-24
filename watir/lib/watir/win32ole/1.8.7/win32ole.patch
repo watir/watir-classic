@@ -1,0 +1,56 @@
+Index: win32ole.c
+===================================================================
+--- win32ole.c	(revision 29867)
++++ win32ole.c	(revision )
+@@ -6368,6 +6368,43 @@
+ }
+ 
+ 
++/*
++ * WIN32OLE.connect_unknown( pUnknown ) --> aWIN32OLE
++ * ----
++ * Returns running OLE Automation object or WIN32OLE object from a
++IUnknown pointer
++ * the IUnknown pointer is passed in as a FIXNUM
++ */
++static VALUE
++fole_s_connect_unknown(self, iUnknown)
++    VALUE self;
++    VALUE iUnknown;
++{
++ HRESULT hr;
++ IDispatch *pDispatch;
++    IUnknown *pUnknown;
++
++ /* initialize to use OLE */
++  ole_initialize();
++
++ //cast from int to IUnknown*
++ pUnknown = (IUnknown*)FIX2INT(iUnknown);
++
++ hr = pUnknown->lpVtbl->QueryInterface(pUnknown, &IID_IDispatch,
++                                              (void **)&pDispatch);
++     if(FAILED(hr)) {
++         OLE_RELEASE(pUnknown);
++         ole_raise(hr, eWIN32OLE_RUNTIME_ERROR,
++                   "Failed to connect to WIN32OLE server `%d'",
++                   FIX2INT(iUnknown));
++     }
++
++ OLE_RELEASE(pUnknown);
++
++    return create_win32ole_object(self, pDispatch, Qnil, Qnil);
++}
++
++
+ void
+ Init_win32ole()
+ {
+@@ -6400,6 +6437,7 @@
+     rb_define_method(cWIN32OLE, "initialize", fole_initialize, -1);
+ 
+     rb_define_singleton_method(cWIN32OLE, "connect", fole_s_connect, -1);
++    rb_define_singleton_method(cWIN32OLE, "connect_unknown", fole_s_connect_unknown, 1);
+     rb_define_singleton_method(cWIN32OLE, "const_load", fole_s_const_load, -1);
+ 
+     rb_define_singleton_method(cWIN32OLE, "ole_free", fole_s_free, 1);

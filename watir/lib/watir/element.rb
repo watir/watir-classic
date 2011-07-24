@@ -125,6 +125,13 @@ module Watir
       return ole_object.innerText.strip
     end
 
+    # IE9 only returns empty string for ole_object.name for non-input elements
+    # so get at it through the attribute which will make the matchers work
+    def name
+      assert_exists
+      ole_object.getAttribute('name') || ''
+    end
+
     def ole_inner_elements
       assert_exists
       return ole_object.all
@@ -204,14 +211,14 @@ module Watir
     def highlight(set_or_clear)
       if set_or_clear == :set
         begin
-          @original_color ||= style.backgroundColor
-          style.backgroundColor = @container.activeObjectHighLightColor
+          @original_color ||= ole_object.style.backgroundColor
+          ole_object.style.backgroundColor = @container.activeObjectHighLightColor
         rescue
           @original_color = nil
         end
-      else # BUG: assumes is :clear, but could actually be anything
+      else
         begin
-          style.backgroundColor = @original_color unless @original_color == nil
+          ole_object.style.backgroundColor = @original_color if @original_color
         rescue
           # we could be here for a number of reasons...
           # e.g. page may have reloaded and the reference is no longer valid
@@ -251,7 +258,7 @@ module Watir
     def generate_ruby_code(element, method_name, *args)
       element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
       method = build_method(method_name, *args)
-      ruby_code = "$:.unshift(#{$LOAD_PATH.grep(%r{watir(-.*?)?/lib}).map {|p| "'#{p}'" }.join(").unshift(")});" <<
+      ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
                     "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
       return ruby_code
     end
@@ -276,7 +283,10 @@ module Watir
       assert_enabled
 
       highlight(:set)
-      ole_object.click
+      # Not sure why but in IE9 Document mode, passing a parameter
+      # to click seems to work. Firing the onClick event breaks other tests
+      # so this seems to be the safest change and also works fine in IE8
+      ole_object.click(0)
       highlight(:clear)
     end
 
@@ -300,12 +310,54 @@ module Watir
     def fire_event(event)
       assert_exists
       assert_enabled
-
       highlight(:set)
-      ole_object.fireEvent(event)
+      dispatch_event(event)
       @container.wait
       highlight(:clear)
     end
+
+    def dispatch_event(event)
+      if IE.version_parts.first.to_i >= 9
+        begin
+          # we're in IE9 document standards mode
+          ole_object.dispatchEvent(create_event(event))
+        rescue WIN32OLERuntimeError
+          ole_object.fireEvent(event)
+        end
+      else
+        ole_object.fireEvent(event)
+      end
+    end
+
+    def create_event(event)
+       event =~ /on(.*)/i
+       event = $1 if $1
+       event.downcase!
+       # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
+       case event
+         when 'abort', 'blur', 'change', 'error', 'focus', 'load',
+              'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
+           event_name = :initEvent
+           event_type = 'HTMLEvents'
+           event_args = [event, true, true]
+         when 'keydown', 'keypress', 'keyup'
+           event_name = :initKeyboardEvent
+           event_type = 'KeyboardEvent'
+           # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+           event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
+         when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+              'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
+           event_name = :initMouseEvent
+           event_type = 'MouseEvents'
+           # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
+           event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
+         else
+           raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
+       end
+       event = @container.page_container.document.createEvent(event_type)
+       event.send event_name, *event_args
+       event
+     end
 
     # This method sets focus on the active element.
     #   raises: UnknownObjectException  if the object is not found
@@ -320,10 +372,10 @@ module Watir
     def exists?
       begin
         locate if defined?(locate)
-      rescue WIN32OLERuntimeError
+      rescue WIN32OLERuntimeError, UnknownObjectException
         @o = nil
       end
-      @o ? true: false
+      !!@o
     end
 
     alias :exist? :exists?

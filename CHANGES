@@ -1,3 +1,28 @@
+== Version 1.9.2 - 2011/07/11
+
+=== IE improvements
+* Bump RAutomation dependency version to 0.6.2 to:
+ - fix/improve Watir::IE#send_keys.
+ - fix Watir::IE loading for certain Windows XP environments (http://jira.openqa.org/browse/WTR-484).
+* Restored Watir::IE#autoit method to use RAutomation's AutoIt adapter with a deprecation warning.
+* Cache IE.version result to not access registry with each execution - was causing slowness in TextField#set for example.
+* Do not raise UnknownObjectException if parent element doesn't exist when calling Element#exists?
+* Element#flash highlights elements again (http://jira.openqa.org/browse/WTR-478)
+
+== Version 1.9.1 - 2011/06/30
+
+* Bug fixes for IE9
+
+== Version 1.9.0 - 2011/06/15
+
+* Added support for IE9
+* Updated watir/ie for Ruby 1.8.7 and are no longer supporting Ruby 1.8.6.
+  * Using RAutomation instead of Autoit, WinClicker and the WindowHelper
+  * New implementation of ie.file_field
+  * Replaced ie.dialog with ie.javascript_dialog
+  * Recompiled win32ole for 1.8.7 mingw and removed win32ole for 1.8.6
+
+
 == Version 1.8.1 - 2011/04/08
 
 === IE improvements

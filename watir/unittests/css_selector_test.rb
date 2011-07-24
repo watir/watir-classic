@@ -34,7 +34,7 @@ if Watir::Browser.default == 'ie'
 	  
 	  def test_form
 	    goto_page "forms2.html"
-	    assert_equal(browser.form(:css, "#f2").action, "pass2.html")
+	    assert(browser.form(:css, "#f2").action =~ /pass2.html$/)
 	    assert_equal(browser.button(:css, "form #b2").value, "Click Me")
 	  end
 	

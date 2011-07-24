@@ -159,12 +159,12 @@ class TC_Fields < Test::Unit::TestCase
     browser.text_field(:name, 'events_tester').requires_typing.set('p')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:name, 'events_text').value.gsub("\r\n" , "")  )
+    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:name, 'events_text').value.gsub(/(\r|\n)/ , "")  )
     browser.button(:value, "Clear Events Box").click
     browser.text_field(:name, 'events_tester').requires_typing.set('ab')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup", browser.text_field(:name , 'events_text').value.gsub("\r\n" , "") )
+    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup", browser.text_field(:name , 'events_text').value.gsub(/(\r|\n)/ , "") )
   end
   
   def test_password

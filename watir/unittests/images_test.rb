@@ -30,7 +30,7 @@ class TC_Images < Test::Unit::TestCase
     assert(    browser.image(:id , /squ/ ).exists?  )
     
     assert( !  browser.image(:src, "missingsrc.gif").exists?  )
-    
+
     assert(    browser.image(:src, "file:///#{$myDir}/html/images/triangle.jpg").exists?  )
     assert(    browser.image(:src , /triangle/ ).exists?  )
     

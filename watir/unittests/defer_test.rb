@@ -8,7 +8,7 @@ class TC_Defer < Test::Unit::TestCase
     @new_browser.close if defined?(@new_browser)
     browser.goto('about:blank')
   end
-  tag_method :test_binding_to_newly_loaded_page, :fails_on_firefox, :attach
+  tag_method :test_binding_to_newly_loaded_page, :fails_on_firefox, :fails_on_ie, :attach
   def test_binding_to_newly_loaded_page
     @new_browser = Watir::Browser.new
     text_field = @new_browser.text_field(:name, 'text1')
@@ -19,6 +19,7 @@ class TC_Defer < Test::Unit::TestCase
     assert_equal('Clear Events Box', button.value)
     assert_equal('Div Text', div.text)
   end
+  tag_method :test_binding_to_refreshed_page, :fails_on_ie
   def test_binding_to_refreshed_page
     goto_page "textfields1.html"
     text_field = browser.text_field(:name, 'text1')
@@ -30,7 +31,7 @@ class TC_Defer < Test::Unit::TestCase
     assert_equal('Clear Events Box', button.value)
     assert_equal('Div Text', div.text)
   end
-  tag_method :test_exists, :fails_on_firefox, :attach
+  tag_method :test_exists, :fails_on_firefox, :fails_on_ie, :attach
   def test_exists
     @new_browser = Watir::Browser.new
     text_field = @new_browser.text_field(:name, 'text1')

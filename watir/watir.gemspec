@@ -2,10 +2,9 @@ require 'watir-rdoc'
 
 $__watir_source_patterns = [
     'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb', 'LICENSE',
-    'lib/watir/*.rb', 'lib/watir/AutoItX3.dll', 'lib/watir/AutoItX.chm',
-    'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
+    'lib/watir/*.rb', 'lib/watir/dialogs/*.rb', 'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
-    'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/win32ole.so',
+    'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/1.8.7/win32ole.so',
     'lib/watir/contrib/*.rb'] +
     $WATIR_EXTRA_RDOC_FILES
 
@@ -31,6 +30,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://www.watir.com/'
 
   s.platform = Gem::Platform::RUBY
+  s.required_ruby_version = '>= 1.8.7'
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
   s.require_path = 'lib'
 
@@ -39,6 +39,8 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'commonwatir', '= ' + version
   s.add_dependency 'firewatir', '= ' + version
   s.add_dependency 'nokogiri'
+  s.add_dependency 'ffi', '~>1.0'
+  s.add_dependency 'rautomation', '~>0.6.2'
 
   s.has_rdoc = true
   s.rdoc_options += $WATIR_RDOC_OPTIONS

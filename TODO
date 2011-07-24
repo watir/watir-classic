@@ -1,0 +1,17 @@
+document new features: javascript, rautomation
+update deprecation warnings to point to wiki
+break the connection between the gems?
+
+Release plan
+============
+
+1.9
+this release (only release new version of watir)
+
+1.9.1
+merge in convio patches and tests
+move contrib to wiki
+
+1.10
+rename watir to iewatir and make watir gem that can handle platforms appropriately
+

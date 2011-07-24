@@ -1,0 +1,18 @@
+Compiling win32ole (Ruby 1.8.7 +)
+==================================
+
+(1) Download and install the appropriate version of Ruby: http://www.ruby-lang.org/en/downloads/
+(2) Download and install the Ruby DevKit: https://github.com/oneclick/rubyinstaller/wiki/Development-Kit
+(3) Check out the source code: http://www.ruby-lang.org/en/community/ruby-core/
+(4) Go to the directory where you installded the DevKit and run devkitvars.bat
+(5) Go into the ruby source tree: ruby/etc/win32ole
+(6) Make sure you can build without the patch
+  (a) Run: 'ruby extconf.rb'
+  (b) Run: 'make'
+  (c) Presuming you didn't encounter any errors, this will create: win32ole.so
+  (d) Run: 'make clean'
+(7) Apply the win32ole.patch (if a lot has changed it might not go cleanly and require some manual steps)
+(8) Re-run through step (6) now that the code has been patched.
+  (a) Pay close attention to any warnings or errors. (the interfaces or  parameters may have changed slightly)
+  (b) Create a patch if the original patch didn't go cleanly
+  (c) copy the .so (and patch if necessary) into the watir source tree

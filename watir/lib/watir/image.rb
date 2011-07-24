@@ -107,11 +107,8 @@ module Watir
     # will not overwrite a previously existing image.  If an image already
     # exists at the given path then a dialog will be displayed prompting
     # for overwrite.
-    # Raises a WatirException if AutoIt is not correctly installed
     # path - directory path and file name of where image should be saved
     def save(path)
-      require 'watir/windowhelper'
-      WindowHelper.check_autoit_installed
       @container.goto(src)
       begin
         thrd = fill_save_image_dialog(path)
@@ -123,8 +120,12 @@ module Watir
     end
     
     def fill_save_image_dialog(path)
+      command = "require 'rautomation';" <<
+                "window=::RAutomation::Window.new(:title => 'Save Picture');" <<
+                "window.text_field(:class => 'Edit', :index => 0).set('#{path}');" <<
+                "window.button(:value => '&Save').click"
       Thread.new do
-        system("ruby -e \"require 'win32ole'; @autoit=WIN32OLE.new('AutoItX3.Control'); waitresult=@autoit.WinWait 'Save Picture', '', 15; if waitresult == 1\" -e \"@autoit.ControlSetText 'Save Picture', '', '1148', '#{path}'; @autoit.ControlSend 'Save Picture', '', '1', '{ENTER}';\" -e \"end\"")
+        system("ruby -e \"#{command}\"")
       end
     end
     private :fill_save_image_dialog

@@ -249,7 +249,21 @@ module Watir
       end
     end
 
-    # return internet explorer instance as specified. if none is found, 
+    def self.version
+      @ie_version ||= begin
+                        require 'win32/registry'
+                        ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
+                          ie_key.read('Version').last
+                        end
+                        # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
+                      end
+    end
+
+    def self.version_parts
+      version.split('.')
+    end
+
+    # return internet explorer instance as specified. if none is found,
     # return nil.
     # arguments:
     #   :url, url -- the URL of the IE browser window
@@ -413,43 +427,55 @@ module Watir
 
     # Maximize the window (expands to fill the screen)
     def maximize
-      set_window_state :SW_MAXIMIZE
+      rautomation.maximize
     end
 
     # Minimize the window (appears as icon on taskbar)
     def minimize
-      set_window_state :SW_MINIMIZE
+      rautomation.minimize
+    end
+
+    def minimized?
+      rautomation.minimized?
     end
 
     # Restore the window (after minimizing or maximizing)
     def restore
-      set_window_state :SW_RESTORE
+      rautomation.restore
     end
 
     # Make the window come to the front
-    def bring_to_front
-      autoit.WinActivate title, ''
+    def activate
+      rautomation.activate
+    end
+    alias :bring_to_front :activate
+
+    def active?
+      rautomation.active?
+    end
+    alias :front? :active?
+
+    def rautomation
+      @rautomation ||= ::RAutomation::Window.new(:hwnd => hwnd)
+      @rautomation
     end
 
-    def front?
-      1 == autoit.WinActive(title, '')
-    end
-
-    private
-    def set_window_state(state)
-      autoit.WinSetState title, '', autoit.send(state)
-    end
     def autoit
-      Watir::autoit
+      Kernel.warn "Usage of Watir::IE#autoit method is DEPRECATED! Use Watir::IE#rautomation method instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
+      @autoit ||= ::RAutomation::Window.new(:hwnd => hwnd, :adapter => :autoit)
+      @autoit
     end
-    public
 
-    # Send key events to IE window.
-    # See http://www.autoitscript.com/autoit3/docs/appendix/SendKeys.htm
-    # for complete documentation on keys supported and syntax.
+    # Activates the window and sends keys to it.
+    #
+    # Example:
+    #   browser.send_keys("Hello World{enter}")
+    #
+    # Refer to RAutomation::Adapter::WinFfi::KeystrokeConverter.convert_special_characters for
+    # special characters conversion.
+    # @see RAutomation::Window#send_keys
     def send_keys(key_string)
-      autoit.WinActivate title
-      autoit.Send key_string
+      rautomation.send_keys key_string
     end
 
     def dir
@@ -860,7 +886,12 @@ module Watir
           end
         rescue
           #handling text nodes
-          htmlString += xml_escape(element.toString)
+          if element.toString(0) == '[object Text]'   #IE9 has a different method for getting text
+            element_text = element.wholeText
+          else
+            element_text = element.toString(0)
+          end
+          htmlString += xml_escape(element_text)
           return htmlString
         end
         #puts tagName

@@ -43,6 +43,5 @@ class TC_Elements < Test::Unit::TestCase
     assert !browser.element(:id, 'buttons1').button(:index,3).exists? 
     assert browser.element(:id, 'buttons1').button(:name,'b1').exists? 
   end
-  
 
 end

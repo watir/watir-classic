@@ -1,12 +1,7 @@
 require 'watir'
 require 'watir/core'
-require 'watir/winClicker'
 require 'watir/close_all'
 require 'watir/ie-process'
-
-require 'dl/import'
-require 'dl/struct'
-require 'Win32API'
 
 # these switches need to be deleted from ARGV to enable the Test::Unit
 # functionality that grabs
@@ -25,8 +20,10 @@ $FAST_SPEED = ARGV.delete('-f')
 ARGV.delete('-s')
 
 require 'watir/win32'
-require 'watir/popup'
 require 'watir/modal_dialog'
 require 'watir/collections'
 
 require 'watir/camel_case'
+
+
+

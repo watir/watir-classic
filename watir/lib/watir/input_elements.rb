@@ -40,14 +40,14 @@ module Watir
       highlight(:clear)
     end
 
-    
+
     # This method selects an item, or items in a select box, by text.
     # Raises NoValueFoundException   if the specified value is not found.
     #  * item   - the thing to select, string or reg exp
     def select(item)
       select_item_in_select_list(:text, item)
     end
-    alias :set :select 
+    alias :set :select
        
     # Selects an item, or items in a select box, by value.
     # Raises NoValueFoundException   if the specified value is not found.
@@ -75,7 +75,7 @@ module Watir
             break
           else
             option.selected = true
-            @o.fireEvent("onChange")
+            dispatch_event("onChange")
             @container.wait
             found = true
             break
@@ -88,7 +88,7 @@ module Watir
       end
       highlight(:clear)
     end
-    
+
     # Returns array of all text items displayed in a select box
     # An empty array is returned if the select box has no contents.
     # Raises UnknownObjectException if the select box is not found
@@ -308,14 +308,14 @@ module Watir
       @o.select
       value = self.value
       
-      @o.fireEvent("onSelect")
-      @o.fireEvent("ondragstart")
-      @o.fireEvent("ondrag")
-      destination.fireEvent("onDragEnter")
-      destination.fireEvent("onDragOver")
-      destination.fireEvent("ondrop")
+      dispatch_event("onSelect")
+      dispatch_event("ondragstart")
+      dispatch_event("ondrag")
+      destination.dispatch_event("onDragEnter")
+      destination.dispatch_event("onDragOver")
+      destination.dispatch_event("ondrop")
       
-      @o.fireEvent("ondragend")
+      dispatch_event("ondragend")
       destination.value = destination.value + value.to_s
       self.value = ""
     end
@@ -334,10 +334,10 @@ module Watir
       @o.scrollIntoView
       @o.focus
       @o.select
-      @o.fireEvent("onSelect")
+      dispatch_event("onSelect")
       @o.value = ""
-      @o.fireEvent("onKeyPress")
-      @o.fireEvent("onChange")
+      dispatch_event("onKeyPress")
+      dispatch_event("onChange")
       @container.wait
       highlight(:clear)
     end
@@ -366,33 +366,33 @@ module Watir
       assert_exists
       assert_enabled
       assert_not_readonly
-      
+
       highlight(:set)
       @o.scrollIntoView
       if type_keys
 	      @o.focus
 	      @o.select
-	      @o.fireEvent("onSelect")
-	      @o.fireEvent("onKeyPress")
+	      dispatch_event("onSelect")
+	      dispatch_event("onKeyPress")
 	      @o.value = ""
 	      type_by_character(value)
-	      @o.fireEvent("onChange")
-	      @o.fireEvent("onBlur")
+	      dispatch_event("onChange")
+	      dispatch_event("onBlur")
 	    else
 				@o.value = limit_to_maxlength(value)
 	    end
       highlight(:clear)
     end
-    
-    # Sets the value of the text field directly. 
-    # It causes no events to be fired or exceptions to be raised, 
+
+    # Sets the value of the text field directly.
+    # It causes no events to be fired or exceptions to be raised,
     # so generally shouldn't be used.
     # It is preffered to use the set method.
     def value=(v)
       assert_exists
       @o.value = v.to_s
     end
-    
+
     def requires_typing #:nodoc:
     	@type_keys = true
     	self
@@ -403,7 +403,7 @@ module Watir
     end
 
     private
-    
+
     # Type the characters in the specified string (value) one by one.
     # It should not be used externally.
     #   * value - string - The string to enter into the text field
@@ -411,10 +411,10 @@ module Watir
       value = limit_to_maxlength(value)
       characters_in(value) do |c|
         sleep @container.typingspeed
-        @o.value = @o.value.to_s + c   
-        @o.fireEvent("onKeyDown")
-        @o.fireEvent("onKeyPress")
-        @o.fireEvent("onKeyUp")
+        @o.value = @o.value.to_s + c
+        dispatch_event("onKeyDown")
+        dispatch_event("onKeyPress")
+        dispatch_event("onKeyUp")
       end
     end
     
@@ -476,51 +476,7 @@ module Watir
     end
     
   end
-  
-  # For fields that accept file uploads
-  # Windows dialog is opened and handled in this case by autoit 
-  # launching into a new process.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#file_field method
-  class FileField < InputElement
-    #:stopdoc:
-    INPUT_TYPES = ["file"]
-    POPUP_TITLES = ['Choose file', 'Choose File to Upload']
-    #:startdoc:
-    
-    # set the file location in the Choose file dialog in a new process
-    # will raise a WatirException if AutoIt is not correctly installed
-    def set(path_to_file)
-      assert_exists
-      require 'watir/windowhelper'
-      WindowHelper.check_autoit_installed
-      begin
-        Thread.new do
-          sleep 1 # it takes some time for popup to appear
 
-          system %{ruby -e '
-              require "win32ole"
-
-              @autoit = WIN32OLE.new("AutoItX3.Control")
-              time    = Time.now
-
-              while (Time.now - time) < 15 # the loop will wait up to 15 seconds for popup to appear
-                #{POPUP_TITLES.inspect}.each do |popup_title|
-                  next unless @autoit.WinWait(popup_title, "", 1) == 1
-
-                  @autoit.ControlSetText(popup_title, "", "Edit1", #{path_to_file.inspect})
-                  @autoit.ControlSend(popup_title, "", "Button2", "{ENTER}")
-                  exit
-                end # each
-              end # while
-          '}
-        end.join(1)
-      rescue
-        raise Watir::Exception::WatirException, "Problem accessing Choose file dialog"
-      end
-      click
-    end
-  end
-  
   # This class contains common methods to both radio buttons and check boxes.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or by Watir::Container#radio methods
   #--
@@ -547,15 +503,7 @@ module Watir
     end
     alias checked? set?
     
-    # This method is the common code for setting or clearing checkboxes and radio.
-    def set_clear_item(set)
-      @o.checked = set
-      @o.fireEvent("onClick")
-      @container.wait
-    end
-    private :set_clear_item
-    
-  end
+   end
   
   #--
   #  this class makes the docs better
@@ -572,7 +520,8 @@ module Watir
       assert_exists
       assert_enabled
       highlight(:set)
-      set_clear_item(false)
+      @o.checked = false
+      highlight(:clear)
       highlight(:clear)
     end
     
@@ -584,12 +533,13 @@ module Watir
       assert_enabled
       highlight(:set)
       @o.scrollIntoView
-      set_clear_item(true)
+      @o.checked = true
+      click
       highlight(:clear)
     end
-    
+
   end
-  
+
   # This class is the watir representation of a check box.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
   class CheckBox < RadioCheckCommon
@@ -603,8 +553,9 @@ module Watir
       assert_exists
       assert_enabled
       highlight :set
-      unless @o.checked == value
-        set_clear_item value
+      current_value = @o.checked
+      unless value == current_value
+        click
       end
       highlight :clear
     end
@@ -615,7 +566,7 @@ module Watir
     def clear
       set false
     end
-        
+
   end
-  
+
 end

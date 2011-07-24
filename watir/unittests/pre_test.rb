@@ -46,7 +46,7 @@ class TC_Pre < Test::Unit::TestCase
   tag_method :test_html, :fails_on_firefox # http://jira.openqa.org/browse/WTR-260
   def test_html
     pre = browser.pre(:index, 1)
-    assert( pre.html.include?( "id=1 name=\"1\"" ) )
+    assert( pre.html.gsub('"','').include?( "id=1 name=1" ) )
   end
   
 end

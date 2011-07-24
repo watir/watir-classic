@@ -91,12 +91,12 @@ class TC_Fields_XPath < Test::Unit::TestCase
     browser.text_field(:xpath , "//input[@name='events_tester']/").set('p')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:xpath , "//textarea[@name='events_text']/").value.gsub("\r\n" , "")  )
+    assert_equal( "keypresskeydownkeypresskeyup" , browser.text_field(:xpath , "//textarea[@name='events_text']/").value.gsub(/(\n|\r)/ , "")  )
     browser.button(:value , "Clear Events Box").click
     browser.text_field(:xpath , "//input[@name='events_tester']/").set('ab')
     
     # the following line has an extra keypress at the begining, as we mimic the delete key being pressed
-    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , browser.text_field(:xpath , "//textarea[@name='events_text']/").value.gsub("\r\n" , "") )
+    assert_equal( "keypresskeydownkeypresskeyupkeydownkeypresskeyup" , browser.text_field(:xpath , "//textarea[@name='events_text']/").value.gsub(/(\n|\r)/, "") )
   end
   
   def test_password

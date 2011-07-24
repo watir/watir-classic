@@ -23,10 +23,4 @@ class TC_SendKeys < Test::Unit::TestCase
     assert(browser.text.include?('PASS'))
   end
   
-  tag_method :test_autoregistration, :fails_on_ie
-  def test_autoregistration
-    Watir::_unregister('AutoItX3.dll')
-    assert_raises(WIN32OLERuntimeError) { WIN32OLE.new('AutoItX3.Control') }
-    assert_nothing_raised { browser.send_keys('{tab}') }
-  end    
 end

@@ -18,7 +18,8 @@ Rake::RDocTask.new('rdoc') do |rdoc|
     rdoc.rdoc_files.include(file)
   end
   rdoc.rdoc_files.include('lib/watir/contrib/*.rb')  
-  rdoc.rdoc_files.include('lib/watir/*.rb')   
+  rdoc.rdoc_files.include('lib/watir/dialogs/*.rb')
+  rdoc.rdoc_files.include('lib/watir/*.rb')
   rdoc.rdoc_files.exclude('lib/watir/camel_case.rb')
 end
 
@@ -28,6 +29,12 @@ Rake::TestTask.new do |t|
 end
 
 CLEAN << 'pkg' << 'rdoc'
+
+
+desc 'Attach to an active IE window'
+task :attach do
+  sh "irb.bat -r attach.rb"
+end
 
 task :default => :package
 
@@ -44,3 +51,4 @@ if defined? Rake::GemPackageTask
 else
   puts 'Warning: without Rubygems packaging tasks are not available'
 end
+

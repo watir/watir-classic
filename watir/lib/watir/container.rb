@@ -209,7 +209,7 @@ module Watir
     # loaded.
     
     def modal_dialog(how=nil, what=nil)
-      ModalDialog.new(self, how, what)
+      ModalDialog.new(self)
     end
 
     # This is the main method for accessing a button. Often declared as an <tt><input type = submit></tt> tag.
@@ -271,7 +271,12 @@ module Watir
     def file_field(how, what=nil)
       FileField.new(self, how, what)
     end
-    
+
+    def javascript_dialog(opts={})
+      JavascriptDialog.new(opts)
+    end
+    alias :dialog :javascript_dialog
+
     # this is the main method for accessing the file_fields iterator. It returns a FileFields object
     #
     # Typical usage:

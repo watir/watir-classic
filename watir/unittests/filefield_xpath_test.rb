@@ -18,7 +18,10 @@ class TC_FileField_XPath < Test::Unit::TestCase
     assert_false(browser.file_field(:xpath, "//input[@name='missing']/").exists?)   
     assert_false(browser.file_field(:xpath, "//input[@name='totallybogus']/").exists?)
     #pop one open and put something in it.
-    browser.file_field(:xpath, "//input[@name='file1']/").set($htmlRoot + "fileupload.html")	
+    file = $htmlRoot + "fileupload.html"
+    file.gsub! 'file:///', ''
+    file.gsub! '/', '\\'
+    browser.file_field(:xpath, "//input[@name='file1']/").set(file)
     #click the upload button
     browser.button(:xpath, "//input[@name='upload']/").click
     

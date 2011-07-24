@@ -11,9 +11,11 @@ module Watir
     # This exception is raised if an attempt is made to access an object that doesn't exist
     class UnknownObjectException < WatirException; end
     # This exception is raised if an attempt is made to access an object that is in a disabled state
-    class ObjectDisabledException   < WatirException; end
+    class ObjectDisabledException < WatirException; end
     # This exception is raised if an attempt is made to access a frame that cannot be found
-    class UnknownFrameException< WatirException; end
+    class UnknownFrameException < WatirException; end
+    # This exception is raised if an attempt is made to access a frame that IE is denying access to
+    class FrameAccessDeniedException < WatirException; end
     # This exception is raised if an attempt is made to access a form that cannot be found
     class UnknownFormException< WatirException; end
     # This exception is raised if an attempt is made to access an object that is in a read only state
@@ -30,6 +32,8 @@ module Watir
     class NoStatusBarException < WatirException; end
     # This exception is raised if an http error, such as a 404, 500 etc is encountered while navigating
     class NavigationException < WatirException; end
+    # This exception is raised when an event is fired that we don't know how to handle
+    class UnhandledEventException < WatirException; end
     # This exception is raised if a timeout is exceeded
     class TimeOutException < WatirException
       def initialize(duration, timeout)

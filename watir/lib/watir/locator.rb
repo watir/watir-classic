@@ -194,7 +194,7 @@ module Watir
           @specifiers[:index] == 1 && @specifiers.length == 2
         @element = @document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
-        return true if @element && @element.invoke('id') == the_id
+        return true if @element && @element.invoke('id') == the_id && @types.include?(@element.getAttribute('type'))
       end
 
       the_name = @specifiers[:name]
