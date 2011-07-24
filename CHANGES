@@ -1,3 +1,29 @@
+== Version 2.0.0 - 2011/07/XX
+
+* all elements are using 0-based indexing instead of old 1-based indexing:
+ - disable it temporarily: require "watir"; Watir.options[:zero_based_indexing] = false
+* #radio and #checkbox methods doesn't allow 3 parameters anymore for locating with "value"
+ - use browser.radio(:name => "something", :value => "some value") syntax instead for locating with "value"
+* all element methods accept now multiple-specifiers with hash syntax, for example:
+ - browser.element(:class => "someclass", :name => "somename")
+* all elements are searchable by :xpath and :css now (note that it's usually slower than searching by other specifiers)
+* #button, #form and #frame doesn't accept single string as a specifier anymore to search by name:
+ - use browser.frame(:name => "name") or browser.frame(:name, "name") syntax instead
+* :index => 0 is used as a default specifier if nothing is specified:
+ - browser.div(:id => "id").table.tr is same as browser.div(:id => "id").table(:index => 0).tr(:index => 0)
+* all collection methods accept now specifiers too:
+ - browser.divs(:class => "someclass").each {|div| puts div.class_name} # => "someclass"
+* removed FormElement class
+* renamed CheckBox class to Checkbox
+* renamed CheckBoxes class to Checkboxes
+* added aliases:
+ - tr => row
+ - trs => rows
+ - td => cell
+ - tds => cells
+ - a => link
+ - as => links
+
 == Version 1.9.2 - 2011/07/11
 
 === IE improvements
