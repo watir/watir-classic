@@ -8,8 +8,9 @@ module Watir
     #   * container - an instance of an IE object
     def initialize(container, how, what)
       if how == :index || (how.is_a?(Hash) && how[:index])
-        raise MissingWayOfFindingObjectException,
-                    "#{self.class} does not support attribute :index in #{@how.inspect}"
+        _how = what ? "#{how.inspect}, #{what.inspect}" : "#{how.inspect}"
+        raise Exception::MissingWayOfFindingObjectException,
+                    "#{self.class} does not support attribute :index in #{_how}"
       end
 
       @container = container
@@ -60,6 +61,10 @@ module Watir
     
     # allows access to a specific item in the collection
     def [](n)
+      unless n.between?(0, length - 1)
+        raise Exception::MissingWayOfFindingObjectException,
+          "Can't find #{element_tag.downcase} with :index #{n} from #{self.class} with size of #{length}"
+      end
       return iterator_object(n)
     end
 
