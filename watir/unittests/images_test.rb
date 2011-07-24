@@ -96,25 +96,25 @@ class TC_Images < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.image(:index, 82).alt}
     assert_raises(UnknownObjectException) { browser.image(:index, 82).title}
     
-    assert_equal( ""       , browser.image(:index, 2).name ) 
-    assert_equal( "square" , browser.image(:index, 2).id )
-    assert_match( /square\.jpg/i ,browser.image(:index, 2).src )
-    assert_equal( "" , browser.image(:index, 2).value )
-    assert_equal( "88" , browser.image(:index, 2).height )
-    assert_equal( "88" , browser.image(:index, 2).width )
+    assert_equal( ""       , browser.image(:index, 1).name ) 
+    assert_equal( "square" , browser.image(:index, 1).id )
+    assert_match( /square\.jpg/i ,browser.image(:index, 1).src )
+    assert_equal( "" , browser.image(:index, 1).value )
+    assert_equal( "88" , browser.image(:index, 1).height )
+    assert_equal( "88" , browser.image(:index, 1).width )
     
     # this line fails, as the date is when it is installed on the local oc, not the date the file was really created
     #assert_equal( "03/10/2005" , browser.image(:index, 2).fileCreatedDate )
-    assert_equal( "788",  browser.image(:index, 2).fileSize )
+    assert_equal( "788",  browser.image(:index, 1).fileSize )
     
     # tool tips: alt text + title
-    assert_equal('circle' , browser.image(:index, 6).alt) 
-    assert_equal( ""      , browser.image(:index, 2).alt) 
+    assert_equal('circle' , browser.image(:index, 5).alt) 
+    assert_equal( ""      , browser.image(:index, 1).alt) 
     assert_equal('square_image', browser.image(:id, 'square').title)
     
     # TODO: to string tests -- output should be verified!
     browser.image(:name  , "circle").to_s
-    browser.image(:index , 2).to_s
+    browser.image(:index , 1).to_s
   end
   
   def test_image_iterator
@@ -123,7 +123,7 @@ class TC_Images < Test::Unit::TestCase
     assert_equal("square", browser.images[2].id )
     assert_match(/square/, browser.images[2].src )
     
-    index = 1
+    index = 0
     browser.images.each do |i|
       assert_equal( browser.image(:index, index).id , i.id )
       assert_equal( browser.image(:index, index).name , i.name )
@@ -133,7 +133,7 @@ class TC_Images < Test::Unit::TestCase
       
       index += 1
     end
-    assert_equal(index - 1 , browser.images.length)
+    assert_equal(index, browser.images.length)
   end
   
   def test_save_local_image

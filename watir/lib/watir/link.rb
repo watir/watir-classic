@@ -5,6 +5,8 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Link < Element
+    TAG = "A"
+
     # Returns an initialized instance of a link object
     #   * container  - an instance of a container
     #   * how         - symbol - how we access the link
@@ -14,20 +16,6 @@ module Watir
       @how = how
       @what = what
       super(nil)
-    end
-    
-    def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        begin
-          @o = @container.locate_tagged_element('A', @how, @what)
-        rescue UnknownObjectException
-          @o = nil
-        end
-      end
     end
     
     # if an image is used as part of the link, this will return true
@@ -61,6 +49,11 @@ module Watir
       r = string_creator
       r = r + link_string_creator
       return r.join("\n")
+    end
+
+    Watir::Container.module_eval do
+      alias_method :a, :link
+      alias_method :as, :links
     end
   end
   

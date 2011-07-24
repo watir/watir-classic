@@ -44,6 +44,9 @@ module Watir
       :default => 'fast'
       builder.add_choice :visible,
       :type => :boolean
+      builder.add_choice :zero_based_indexing,
+      :type => :boolean,
+      :default => true
     end
     def execute 
       @user_choices[:speed] = @user_choices[:speed].to_sym

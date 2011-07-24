@@ -17,6 +17,7 @@ class TC_Strong < Test::Unit::TestCase
     assert browser.strong(:text, /this is a/).exists?, "Could not finr <strong> by :text"
   end
   
+  tag_method :test_strong_iterator, :fails_on_ie
   def test_strong_iterator
     assert_equal(2, browser.strongs.length)
     assert_equal("this is a strong", browser.strongs[1].text)
@@ -26,6 +27,19 @@ class TC_Strong < Test::Unit::TestCase
       assert_equal(browser.strong(:index,idx+1).id, strong.id)
       assert_equal(browser.strong(:index,idx+1).class_name , strong.class_name)
       assert_equal(browser.strong(:index,idx+1).title, strong.title)
+    end
+  end
+    
+  tag_method :test_strong_iterator_ie, :fails_on_firefox
+  def test_strong_iterator_ie
+    assert_equal(2, browser.strongs.length)
+    assert_equal("this is a strong", browser.strongs[0].text)
+    
+    browser.strongs.each_with_index do |strong, idx|
+      assert_equal(browser.strong(:index,idx).text, strong.text)
+      assert_equal(browser.strong(:index,idx).id, strong.id)
+      assert_equal(browser.strong(:index,idx).class_name , strong.class_name)
+      assert_equal(browser.strong(:index,idx).title, strong.title)
     end
   end
     

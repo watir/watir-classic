@@ -43,7 +43,7 @@ class TC_NewWindow< Watir::TestCase
   end
   
   def test_click_no_wait_works_in_a_container
-    browser.p(:index, 1).link(:text, 'New Window').click_no_wait
+    browser.p(:index, 0).link(:text, 'New Window').click_no_wait
     IE.attach_timeout = 6.0
     ie_new = IE.attach(:title, 'Pass Page')
     assert(ie_new.text.include?('PASS'))

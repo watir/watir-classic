@@ -2,7 +2,8 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES)
+      locator_or_element = @container.input_element_locator(@how, @what, self.class::INPUT_TYPES, self.class)
+      @o = locator_or_element.is_a?(WIN32OLE) ? locator_or_element : locator_or_element.locate
     end
     def initialize(container, how, what)
       set_container container
@@ -482,14 +483,6 @@ module Watir
   #--
   # most of the methods available to this element are inherited from the Element class
   class RadioCheckCommon < InputElement
-    def locate #:nodoc:
-      @o = @container.locate_input_element(@how, @what, self.class::INPUT_TYPES, @value, self.class)
-    end
-    def initialize(container, how, what, value=nil)
-      super container, how, what
-      @value = value
-    end
-    
     def inspect
       '#<%s:0x%x located=%s how=%s what=%s value=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect, @value.inspect]
     end
@@ -542,7 +535,7 @@ module Watir
 
   # This class is the watir representation of a check box.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
-  class CheckBox < RadioCheckCommon
+  class Checkbox < RadioCheckCommon
     INPUT_TYPES = ["checkbox"]
     # This method checks or unchecks the checkbox.
     # With no arguments supplied it sets the checkbox.
@@ -567,6 +560,13 @@ module Watir
       set false
     end
 
+    Watir::Container.module_eval do
+      remove_method :checkboxs
+
+      def checkboxes(how={}, what=nil)
+        Checkboxes.new(self, how, what)
+      end
+    end
   end
 
 end

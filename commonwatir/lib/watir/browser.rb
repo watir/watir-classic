@@ -84,6 +84,10 @@ before you invoke Browser.new.
         klass.options
       end
 
+      def base_index
+        options[:zero_based_indexing] ? 0 : 1
+      end      
+
       def klass
         key = Watir.options[:browser]
         eval @@browser_classes[key] # this triggers the autoload

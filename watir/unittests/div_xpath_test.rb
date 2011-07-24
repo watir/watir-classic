@@ -36,17 +36,17 @@ class TC_Divs_XPath < Test::Unit::TestCase
   end
   
   def test_objects_in_div
-    assert(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,1).exists? )
-    assert_false(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,3).exists? )
+    assert(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,0).exists? )
+    assert_false(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,2).exists? )
     assert(browser.div(:xpath , "//div[@id='buttons1']/").button(:name,'b1').exists? )
     
+    assert(browser.div(:xpath , "//div[@id='buttons2']/").button(:index,0).exists? )
     assert(browser.div(:xpath , "//div[@id='buttons2']/").button(:index,1).exists? )
-    assert(browser.div(:xpath , "//div[@id='buttons2']/").button(:index,2).exists? )
-    assert_false(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,3).exists? )
+    assert_false(browser.div(:xpath , "//div[@id='buttons1']/").button(:index,2).exists? )
     
-    browser.div(:xpath , "//div[@id='buttons1']/").button(:index,1).click
+    browser.div(:xpath , "//div[@id='buttons1']/").button(:index,0).click
     
-    assert_equal( 'button1' ,   browser.div(:xpath , "//div[@id='text_fields1']/").text_field(:index,1).value)
+    assert_equal( 'button1' ,   browser.div(:xpath , "//div[@id='text_fields1']/").text_field(:index,0).value)
     
     assert_equal( 3 , browser.div(:xpath , "//div[@id='text_fields1']/").text_fields.length )
   end
@@ -64,17 +64,17 @@ class TC_Divs_XPath < Test::Unit::TestCase
   end
   
   def test_objects_in_span
-    assert(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,1).exists? )
-    assert_false(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,3).exists? )
+    assert(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,0).exists? )
+    assert_false(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,2).exists? )
     assert(browser.span(:xpath , "//span[@id='buttons1']/").button(:name,'b1').exists? )
     
+    assert(browser.span(:xpath , "//span[@id='buttons2']/").button(:index,0).exists? )
     assert(browser.span(:xpath , "//span[@id='buttons2']/").button(:index,1).exists? )
-    assert(browser.span(:xpath , "//span[@id='buttons2']/").button(:index,2).exists? )
-    assert_false(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,3).exists? )
+    assert_false(browser.span(:xpath , "//span[@id='buttons1']/").button(:index,2).exists? )
     
-    browser.span(:xpath , "//span[@id='buttons1']/").button(:index,1).click
+    browser.span(:xpath , "//span[@id='buttons1']/").button(:index,0).click
     
-    assert_equal( 'button1' ,   browser.span(:xpath , "//span[@id='text_fields1']/").text_field(:index,1).value)
+    assert_equal( 'button1' ,   browser.span(:xpath , "//span[@id='text_fields1']/").text_field(:index,0).value)
     
     assert_equal( 3 , browser.span(:xpath , "//span[@id='text_fields1']/").text_fields.length )
   end

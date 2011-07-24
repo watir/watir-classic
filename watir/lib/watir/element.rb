@@ -10,15 +10,35 @@ module Watir
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
 
+    def self.inherited subclass
+      class_name = Watir::Util.demodulize(subclass.to_s)
+      method_name = Watir::Util.underscore(class_name)
+      Watir::Container.module_eval <<-RUBY
+        def #{method_name}(how={}, what=nil)
+          #{class_name}.new(self, how, what)
+        end
+
+        def #{method_name}s(how={}, what=nil)
+          #{class_name}s.new(self, how, what)
+        end         
+      RUBY
+    end
+
     # ole_object - the ole object for the element being wrapped
     def initialize(ole_object)
       @o = ole_object
       @original_color = nil
     end
 
+    def locate
+      return if [Element, TableBodies].include? self.class
+      tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.name.split("::").last
+      @o = @container.tagged_element_locator(tag, @how, @what).locate
+    end    
+
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
-    def ole_object # BUG: should use an attribute reader and rename the instance variable
-      return @o
+    def ole_object
+      @o
     end
 
     def ole_object=(o)
@@ -52,7 +72,7 @@ module Watir
 
     public
     def assert_exists
-      locate if respond_to?(:locate)
+      locate
       unless ole_object
         raise UnknownObjectException.new(
                 Watir::Exception.message_for_unable_to_locate(@how, @what))
@@ -371,7 +391,7 @@ module Watir
     # Returns whether this element actually exists.
     def exists?
       begin
-        locate if defined?(locate)
+        locate
       rescue WIN32OLERuntimeError, UnknownObjectException
         @o = nil
       end

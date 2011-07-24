@@ -73,7 +73,7 @@ class TC_Forms3_XPath < Test::Unit::TestCase
   
   def test_getObject_when_non_watir_object_before_it
     # test for bug reported by Scott Pack,  http://rubyforge.org/pipermail/wtr-general/2005-June/002223.html
-    assert_equal("check1" , browser.checkbox(:index,1).name )
+    assert_equal("check1" , browser.checkbox(:index,0).name )
   end
   
   def test_showforms # add verification of output!
@@ -164,7 +164,7 @@ class TC_Forms4_XPath < Test::Unit::TestCase
   
   def test_using_text_on_form
     browser.form(:xpath , "//form[@name='apple_form']/").text_field(:name, 'name').set('strudel')
-    assert_equal(browser.form(:index, 1).text_field(:name, 'name').value, 'strudel')
+    assert_equal(browser.form(:index, 0).text_field(:name, 'name').value, 'strudel')
   end 
   
   def test_submit
@@ -181,12 +181,12 @@ class TC_Hidden_Fields_XPath < Test::Unit::TestCase
   def test_hidden
     
     # test using index
+    assert( browser.hidden(:index,0).exists? )
     assert( browser.hidden(:index,1).exists? )
-    assert( browser.hidden(:index,2).exists? )
-    assert_false( browser.hidden(:index,3).exists? )
+    assert_false( browser.hidden(:index,2).exists? )
     
-    browser.hidden(:index,1).value = 44
-    browser.hidden(:index,2).value = 55
+    browser.hidden(:index,0).value = 44
+    browser.hidden(:index,1).value = 55
     
     browser.button(:value , "Show Hidden").click
     

@@ -31,7 +31,7 @@ class TC_CSS < Test::Unit::TestCase
   end
 
   def test_inline_style
-    assert_equal("300px", browser.form(:index, 1).style.width)
+    assert_equal("300px", browser.form(:index, 0).style.width)
   end
 
   def test_internal_style

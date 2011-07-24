@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 
-class TC_CheckBox_XPath < Test::Unit::TestCase
+class TC_Checkbox_XPath < Test::Unit::TestCase
   include Watir::Exception
   
   def setup
@@ -27,7 +27,7 @@ class TC_CheckBox_XPath < Test::Unit::TestCase
     assert_equal("" , browser.checkbox(:xpath , "//input[@name='box4' and @value='4']/").title)
   end
   
-  def test_CheckBox_Exists
+  def test_Checkbox_Exists
     assert(browser.checkbox(:xpath , "//input[@name='box4' and @value='1']/").exists?)   
     assert_false(browser.checkbox(:xpath , "//input[@name='box4' and @value='22']/").exists?)   
   end

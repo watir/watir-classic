@@ -10,8 +10,14 @@ class TC_WhiteSpace < Test::Unit::TestCase
     uses_page "whitespace.html"
   end 
 
+  tag_method :test_text_with_nbsp, :fails_on_ie
   def test_text_with_nbsp
     assert_equal 'Login', browser.link(:index => 1).text
+  end
+
+  tag_method :test_text_with_nbsp_ie, :fails_on_firefox
+  def test_text_with_nbsp_ie
+    assert_equal 'Login', browser.link(:index => 0).text
   end
 
   def test_nbsp_beginning_and_end

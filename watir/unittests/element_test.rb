@@ -23,14 +23,14 @@ class TC_Elements < Test::Unit::TestCase
     assert_equal 3, browser.elements(:class, 'blueText').size
     assert_equal("span2", browser.elements(:class, 'blueText')[2].id)
     
-    index = 1
+    index = 0
     browser.elements(:id, /div/).each do |s|
       assert_equal(browser.div(:index,index).name, s.name)
       assert_equal(browser.div(:index,index).id, s.id)
       assert_equal(browser.div(:index,index).class_name , s.class_name)
       index += 1
     end
-    assert_equal(index - 1, browser.elements(:id, /div/).length)   # -1 as we add 1 at the end of the loop
+    assert_equal(index, browser.elements(:id, /div/).length)
   end
   
   def test_element_enumerable
@@ -39,8 +39,8 @@ class TC_Elements < Test::Unit::TestCase
   end
   
   def test_objects_in_element
-    assert browser.element(:id, 'buttons1').button(:index,1).exists? 
-    assert !browser.element(:id, 'buttons1').button(:index,3).exists? 
+    assert browser.element(:id, 'buttons1').button(:index,0).exists? 
+    assert !browser.element(:id, 'buttons1').button(:index,2).exists? 
     assert browser.element(:id, 'buttons1').button(:name,'b1').exists? 
   end
 

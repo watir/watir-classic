@@ -6,27 +6,7 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class NonControlElement < Element
-
-    def self.inherited subclass
-      class_name = Watir::Util.demodulize(subclass.to_s)
-      method_name = Watir::Util.underscore(class_name)
-      Watir::Container.module_eval <<-RUBY
-        def #{method_name}(how, what=nil)
-          return #{class_name}.new(self, how, what)
-        end
-      RUBY
-    end
     include Watir::Exception
-
-    def locate
-      if @how == :xpath
-        @o = @container.element_by_xpath(@what)
-      elsif @how == :css
-        @o = @container.element_by_css(@what)
-      else
-        @o = @container.locate_tagged_element(self.class::TAG, @how, @what)
-      end
-    end
 
     def initialize(container, how, what)
       set_container container
@@ -54,38 +34,8 @@ module Watir
     end
   end
 
-
-  class Pre < NonControlElement
-    TAG = 'PRE'
-  end
-
-  class P < NonControlElement
-    TAG = 'P'
-  end
-
-  # this class is used to deal with Div tags in the html page. http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/div.asp?frame=true
-  # It would not normally be created by users
-  class Div < NonControlElement
-    TAG = 'DIV'
-  end
-
-  # this class is used to deal with Span tags in the html page. It would not normally be created by users
-  class Span < NonControlElement
-    TAG = 'SPAN'
-  end
-
-  class Map < NonControlElement
-    TAG = 'MAP'
-  end
-
-  class Area < NonControlElement
-    TAG = 'AREA'
-  end
-
   # Accesses Label element on the html page - http://msdn.microsoft.com/workshop/author/dhtml/reference/objects/label.asp?frame=true
   class Label < NonControlElement
-    TAG = 'LABEL'
-
     # this method is used to populate the properties in the to_s method
     def label_string_creator
       n = []
@@ -105,44 +55,10 @@ module Watir
     end
   end
 
-  class Li < NonControlElement
-    TAG = 'LI'
+  %w[pre p div span map area li ul h1 h2 h3 h4 h5 h6 dl dt dd strong em].each do |elem|
+    module_eval %Q{
+      class #{elem.capitalize} < NonControlElement; end
+    }
   end
-  class Ul < NonControlElement
-    TAG = 'UL'
-  end
-  class H1 < NonControlElement
-    TAG = 'H1'
-  end
-  class H2 < NonControlElement
-    TAG = 'H2'
-  end
-  class H3 < NonControlElement
-    TAG = 'H3'
-  end
-  class H4 < NonControlElement
-    TAG = 'H4'
-  end
-  class H5 < NonControlElement
-    TAG = 'H5'
-  end
-  class H6 < NonControlElement
-    TAG = 'H6'
-  end
-  class Dl < NonControlElement
-    TAG = 'DL'
-  end
-  class Dt < NonControlElement
-    TAG = 'DT'
-  end
-  class Dd < NonControlElement
-    TAG = 'DD'
-  end
-  class Strong < NonControlElement
-    TAG = 'STRONG'
-  end
-  class Em < NonControlElement
-    TAG = 'EM'
-  end
-
+  
 end

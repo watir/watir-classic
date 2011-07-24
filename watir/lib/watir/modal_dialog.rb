@@ -76,5 +76,11 @@ module Watir
       return @modal.exists?
     end
     alias :exist? :exists?
+
+    Watir::Container.module_eval do
+      def modal_dialog(*args)
+        ModalDialog.new(self)
+      end
+    end
   end
 end

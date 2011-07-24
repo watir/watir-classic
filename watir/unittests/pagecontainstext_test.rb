@@ -64,6 +64,6 @@ class TC_contains_text_in_frame < Test::Unit::TestCase
     goto_page "frame_links.html"
   end        
   def test_in_frame
-    assert browser.frame('linkFrame').contains_text('The button is really a link')
+    assert browser.frame(:name => 'linkFrame').contains_text('The button is really a link')
   end
 end
