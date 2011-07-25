@@ -561,11 +561,17 @@ module Watir
     end
 
     Watir::Container.module_eval do
+      remove_method :check_boxs
+
       def checkboxes(how={}, what=nil)
         CheckBoxes.new(self, how, what)
       end
 
-      alias_method :checkbox, :check_box
+      remove_method :check_box
+
+      def checkbox(how={}, what=nil)
+        CheckBox.new(self, how, what)
+      end
     end
   end
 

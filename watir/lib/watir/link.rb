@@ -50,6 +50,12 @@ module Watir
       r = r + link_string_creator
       return r.join("\n")
     end
+
+    Watir::Container.module_eval do
+      alias_method :a, :link
+      alias_method :as, :links
+    end    
+
   end
   
 end
