@@ -15,8 +15,6 @@
 * all collection methods accept now specifiers too:
  - browser.divs(:class => "someclass").each {|div| puts div.class_name} # => "someclass"
 * removed FormElement class
-* renamed CheckBox class to Checkbox
-* renamed CheckBoxes class to Checkboxes
 * added aliases:
  - tr => row
  - trs => rows
