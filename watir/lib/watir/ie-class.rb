@@ -58,6 +58,10 @@ module Watir
       @@zero_based_indexing
     end
 
+    def self.base_index
+      self.zero_based_indexing ? 0 : 1
+    end  
+
     # Used internally to determine when IE has finished loading a page
     READYSTATES = {:complete => 4}
 
