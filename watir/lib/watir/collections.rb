@@ -25,8 +25,8 @@ module Watir
 
   # this class accesses the check boxes in the document as a collection
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkboxes method
-  class Checkboxes < InputElementCollections
-    def element_class; Checkbox; end
+  class CheckBoxes < InputElementCollections
+    def element_class; CheckBox; end
   end
     
   # this class accesses the select boxes in the document as a collection
