@@ -35,10 +35,10 @@ class TC_Tables_XPath < Test::Unit::TestCase
   
   def test_links_and_images_in_table
     table = browser.table(:xpath , "//table[@id='pic_table']/")
-    image = table[1][2].image(:index,1)
+    image = table[0][1].image(:index,0)
     assert_equal("106", image.width)
     
-    link = table[1][4].link(:index,1)
+    link = table[0][3].link(:index,0)
     assert_equal("Google", link.innerText)
   end
   
@@ -48,7 +48,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
     button = browser.button(:xpath , "//input[@id='b1']/")
     table = Watir::Table.create_from_element(browser,button)
     
-    table[2][1].button(:index,1).click
+    table[1][0].button(:index,0).click
     assert(browser.text_field(:name,"confirmtext").verify_contains(/CLICK2/i))
   end
   
@@ -63,7 +63,7 @@ class TC_Tables_XPath < Test::Unit::TestCase
     assert( browser.row(:xpath , "//tr[@id='row1']/").exists? )  
     assert_false( browser.row(:xpath , "//tr[@id='no_exist']/").exists? )
     
-    assert_equal('Row 2 Col1' ,  browser.row(:xpath , "//tr[@id='row1']/")[1].to_s.strip )
+    assert_equal('Row 2 Col1' ,  browser.row(:xpath , "//tr[@id='row1']/")[0].to_s.strip )
   end
   
   
@@ -85,22 +85,22 @@ class TC_Tables_XPath < Test::Unit::TestCase
         compare_text = "This text is in the THIRD TBODY."
       end
       
-      assert_equal( compare_text , n[1][1].to_s.strip )   # this is the 1st cell of the first row of this particular body
+      assert_equal( compare_text , n[0][0].to_s.strip )   # this is the 1st cell of the first row of this particular body
       
       count +=1
     end
     assert_equal( count-1, browser.table(:xpath , "//table[@id='body_test']/").bodies.length  )
     
-    assert_equal( "This text is in the THIRD TBODY." ,browser.table(:xpath , "//table[@id='body_test']/").body(:index,3)[1][1].to_s.strip ) 
+    assert_equal( "This text is in the THIRD TBODY." ,browser.table(:xpath , "//table[@id='body_test']/").body(:index,2)[0][0].to_s.strip )
     
     # iterate through all the rows in a table body
     count = 1
-    browser.table(:xpath , "//table[@id='body_test']/").body(:index,2).each do | row |
+    browser.table(:xpath , "//table[@id='body_test']/").body(:index,1).each do | row |
       # row.flash    # this line commented out, to speed up the tests
       if count == 1
-        assert_equal('This text is in the SECOND TBODY.' , row[1].text.strip )
+        assert_equal('This text is in the SECOND TBODY.' , row[0].text.strip )
       elsif count == 1
-        assert_equal('This text is also in the SECOND TBODY.' , row[1].text.strip )
+        assert_equal('This text is also in the SECOND TBODY.' , row[0].text.strip )
       end
       count+=1
     end
