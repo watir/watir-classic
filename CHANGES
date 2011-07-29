@@ -22,6 +22,8 @@
  - tds => cells
  - a => link
  - as => links 
+ - img => image
+ - imgs => images
 
 == Version 1.9.3 - 2011/07/24
 
