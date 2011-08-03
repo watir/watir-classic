@@ -145,6 +145,23 @@ module Watir
       return ole_object.innerText.strip
     end
 
+    # Return the innertext of the visible object only
+     def visible_text
+       x = self.document
+        count = 1
+        text = []
+        z = x.firstChild
+        text = z.innerText unless z.invoke('isDisabled')
+        until count > x.childnodes.length
+          if (z.nextSibling) &&(z.nextSibling.nodeType == 1) 
+            text << z.nextSibling.innerText unless z.nextSibling.invoke('isDisabled')  
+          end
+         z = z.nextSibling
+         count +=1
+        end
+      return text
+     end
+
     # IE9 only returns empty string for ole_object.name for non-input elements
     # so get at it through the attribute which will make the matchers work
     def name
