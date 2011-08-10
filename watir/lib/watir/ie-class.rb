@@ -344,7 +344,7 @@ module Watir
     def exists?
       begin
         !!(@ie.name =~ /Internet Explorer/)
-      rescue WIN32OLERuntimeError
+      rescue WIN32OLERuntimeError, NoMethodError
         false
       end
     end
