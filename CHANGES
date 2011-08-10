@@ -1,6 +1,7 @@
 == Version 2.0.1 - 2011/xx/xx
 
 * fixed Watir::IE#close for Ruby 1.9.2 - fixes http://jira.openqa.org/browse/WTR-481
+* fixed locating elements on Ruby 1.9.2
 
 == Version 2.0.0 - 2011/08/10
 
