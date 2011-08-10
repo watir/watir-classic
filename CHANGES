@@ -1,4 +1,4 @@
-== Version 2.0.0 - 2011/07/XX
+== Version 2.0.0 - 2011/08/10
 
 * RIP FireWatir - there won't be any new releases due to the lack of JSSH extension for Firefox 4+ versions.
 * all elements are using 0-based indexing instead of old 1-based indexing:
