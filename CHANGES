@@ -1,3 +1,8 @@
+== Version 2.x.x - 2011/xx/xx
+
+* added support for del, ins, font, meta and ol tags
+* added support for h1, h2, h3, h4, h5, h6 and ul collection methods 
+
 == Version 2.0.1 - 2011/08/10
 
 * fixed Watir::IE#close for Ruby 1.9.2 - fixes http://jira.openqa.org/browse/WTR-481
