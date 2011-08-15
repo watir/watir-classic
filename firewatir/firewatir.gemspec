@@ -39,7 +39,6 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency 'commonwatir', '>=1.9.2'
 
-  s.has_rdoc = true
   s.rdoc_options <<
       '--title' << 'FireWatir API Reference' <<
   		'--accessor' << 'def_wrap=R,def_wrap_guard=R,def_creator=R,def_creator_with_default=R' <<
