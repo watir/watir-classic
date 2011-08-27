@@ -59,7 +59,7 @@ module Watir
         else
           element = @klass.new(@container, @specifiers, nil)
           element.ole_object = ole_object
-          def element.locate; @o; end unless @klass == TableRow
+          def element.locate; @o; end
         end
         yield element
       end
