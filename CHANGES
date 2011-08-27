@@ -3,6 +3,7 @@
 * added support for del, ins, font, meta and ol tags
 * added support for h1, h2, h3, h4, h5, h6 and ul collection methods
 * Watir::IE#execute_script returns now the value of the JavaScript evaluation
+* Watir::Table#rows method iterates correctly over rows
 
 == Version 2.0.1 - 2011/08/10
 
