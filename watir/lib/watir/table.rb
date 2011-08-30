@@ -370,11 +370,10 @@ module Watir
       super nil
     end
     
-    def ole_inner_elements
+    def __ole_inner_elements
       locate
       return @o.all
     end
-    private :ole_inner_elements
     
     def document
       locate

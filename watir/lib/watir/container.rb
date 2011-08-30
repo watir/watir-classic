@@ -14,7 +14,7 @@ module Watir
   #
   # there are many methods available to the Button object
   #--
-  # Is includable for classes that have @container, document and ole_inner_elements
+  # Is includable for classes that have @container, document and __ole_inner_elements
   module Container
     include Watir::Exception
     
@@ -61,10 +61,9 @@ module Watir
     # Not for external consumption
     #
     #++
-    def ole_inner_elements
+    def __ole_inner_elements
       return document.body.all
     end
-    private :ole_inner_elements
     
     # This method shows the available objects on the current page.
     # This is usually only used for debugging or writing new test scripts.
@@ -102,21 +101,18 @@ module Watir
     def input_element_locator(how, what, types, klass=nil)
       locator = InputElementLocator.new self, types, klass
       locator.set_specifier how, what
-      locator.document = document
-      return locator.element if locator.fast_locate
-      locator.elements = ole_inner_elements if locator.elements.nil?
       locator
     end
     
     def tagged_element_locator(tag, how, what, klass=nil)
-      locator = TaggedElementLocator.new(self, tag, klass)
-      locator.set_specifier(how, what)
+      locator = TaggedElementLocator.new self, tag, klass
+      locator.set_specifier how, what
       locator
     end
 
     def locator_for(locator_class, how, what)
-      locator = locator_class.new(self)
-      locator.set_specifier(how, what)
+      locator = locator_class.new self
+      locator.set_specifier how, what
       locator
     end
     

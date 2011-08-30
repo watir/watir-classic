@@ -20,10 +20,9 @@ module Watir
       end
     end
 
-    def ole_inner_elements
+    def __ole_inner_elements
       document.body.all
     end
-    private :ole_inner_elements
 
     def initialize(container, how, what)
       set_container container

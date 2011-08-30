@@ -152,12 +152,10 @@ module Watir
       ole_object.getAttribute('name') || ''
     end
 
-    def ole_inner_elements
+    def __ole_inner_elements
       assert_exists
       return ole_object.all
     end
-
-    private :ole_inner_elements
 
     def document
       assert_exists

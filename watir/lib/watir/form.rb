@@ -43,11 +43,10 @@ module Watir
       @container.wait
     end
     
-    def ole_inner_elements
+    def __ole_inner_elements
       assert_exists
       @o.elements
     end
-    private :ole_inner_elements
 
     # This method is responsible for setting and clearing the colored highlighting on the specified form.
     # use :set  to set the highlight

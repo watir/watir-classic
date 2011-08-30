@@ -3,6 +3,10 @@ module Watir
     include Watir
     include Watir::Exception
 
+    def document
+      @document ||= @container.document
+    end
+
     def normalize_specifiers!(specifiers)
       specifiers.each do |how, what|
         case how
@@ -53,7 +57,7 @@ module Watir
     end
 
     def each_element tag
-      @container.document.getElementsByTagName(tag).each do |ole_object|
+      document.getElementsByTagName(tag).each do |ole_object|
         if @klass == Element
           element = Element.new(ole_object)
         else
@@ -111,9 +115,9 @@ module Watir
     end
 
     def each_element tag
-      frames = @container.document.frames
+      frames = document.frames
       i = 0
-      @container.document.getElementsByTagName(tag).each do |ole_object|
+      document.getElementsByTagName(tag).each do |ole_object|
         frame = Frame.new(@container, @specifiers, nil)
         frame.ole_object = ole_object
         frame.document = frames.item(i)
@@ -150,7 +154,7 @@ module Watir
     end
 
     def each_element(tag)
-      @container.document.forms.each do |form|
+      document.forms.each do |form|
         form_element = Form.new(@container, @specifiers, nil)
         form_element.ole_object = form
         def form_element.locate; @o; end
@@ -160,18 +164,15 @@ module Watir
   end
 
   class InputElementLocator < Locator
-
-    attr_accessor :document, :element, :elements, :klass
-
     def initialize container, types, klass
       @container = container
       @types = types
-      @elements = nil
       @klass = klass || Element
     end
 
     def each_element
-      @elements.each do |object|
+      elements = locate_by_name || @container.__ole_inner_elements
+      elements.each do |object|
         if @klass == Element
           element = Element.new(object)
         else
@@ -186,6 +187,11 @@ module Watir
 
     def locate
       return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
+
+      if @specifiers[:id]
+        element = locate_by_id
+        return element if element
+      end
 
       count = Watir::IE.base_index - 1
       each do |element|
@@ -214,10 +220,12 @@ module Watir
       what.matches(attribute)
     end
 
-    def fast_locate
-      # Searching through all elements returned by ole_inner_elements
+    private
+
+    def locate_by_id
+      # Searching through all elements returned by __ole_inner_elements
       # is *significantly* slower than IE's getElementById() and
-      # getElementsByName() calls when how is :id or :name.  However
+      # getElementsByName() calls when how is :id.  However
       # IE doesn't match Regexps, so first we make sure what is a String.
       # In addition, IE's getElementById() will also return an element
       # where the :name matches, so we will only return the results of
@@ -227,16 +235,20 @@ module Watir
       the_id = @specifiers[:id]
       if the_id && the_id.class == String &&
           @specifiers[:index] == Watir::IE.base_index && @specifiers.length == 2
-        @element = @document.getElementById(the_id) rescue nil
+        element = document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
-        return true if @element && @element.invoke('id') == the_id && @types.include?(@element.getAttribute('type'))
+        return element if element && element.invoke('id') == the_id && @types.include?(element.getAttribute('type'))
       end
 
+      nil
+    end
+
+    def locate_by_name
       the_name = @specifiers[:name]
       if the_name && the_name.class == String
-        @elements = @document.getElementsByName(the_name) rescue nil
-      end
-      false
+        return document.getElementsByName(the_name) rescue nil
+      end      
+      nil
     end
   end
 
