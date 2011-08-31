@@ -32,10 +32,34 @@ module Watir
       @specifiers.all? {|how, what| how == :index || match?(element, how, what)}
     end
 
+    def has_excluding_specifiers?
+      @specifiers.keys.any? {|specifier| [:css, :xpath, :ole_object].include? specifier}
+    end
+
     def set_specifier(how, what=nil)
       specifiers = what ? {how => what} : how
       @specifiers = {:index => Watir::IE.base_index} # default if not specified
       normalize_specifiers! specifiers
+    end
+    
+    def locate_by_id
+      # Searching through all elements returned by __ole_inner_elements
+      # is *significantly* slower than IE's getElementById() and
+      # getElementsByName() calls when how is :id.  However
+      # IE doesn't match Regexps, so first we make sure what is a String.
+      # In addition, IE's getElementById() will also return an element
+      # where the :name matches, so we will only return the results of
+      # getElementById() if the matching element actually HAS a matching
+      # :id.
+
+      the_id = @specifiers[:id]
+      if the_id && the_id.class == String 
+        element = document.getElementById(the_id) rescue nil
+        # Return if our fast match really HAS a matching :id
+        return element if element && element.invoke('id') == the_id 
+      end
+
+      nil
     end
 
     def locate_by_xpath_css_ole
@@ -45,7 +69,18 @@ module Watir
         return @container.element_by_css(@specifiers[:css])
       elsif @specifiers[:ole_object]
         return @specifiers[:ole_object]
+      end      
+    end
+
+    def create_element ole_object
+      if @klass == Element
+        element = Element.new(ole_object)
+      else
+        element = @klass.new(@container, @specifiers, nil)
+        element.ole_object = ole_object
+        def element.locate; @o; end
       end
+      element
     end
   end
 
@@ -58,14 +93,7 @@ module Watir
 
     def each_element tag
       document.getElementsByTagName(tag).each do |ole_object|
-        if @klass == Element
-          element = Element.new(ole_object)
-        else
-          element = @klass.new(@container, @specifiers, nil)
-          element.ole_object = ole_object
-          def element.locate; @o; end
-        end
-        yield element
+        yield create_element ole_object
       end
     end
 
@@ -78,7 +106,9 @@ module Watir
     end    
 
     def locate
-      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
+      el = locate_by_id
+      return el if el
+      return locate_by_xpath_css_ole if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |element|
@@ -93,7 +123,7 @@ module Watir
         method = element.method(how)
       rescue NameError
         raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tag || @tags.join(", ")}> element (#{what})"
       end
       case method.arity
       when 0
@@ -102,7 +132,7 @@ module Watir
         method.call(what)
       else
         raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tag}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tag || @tags.join(", ")}> element (#{what})"
       end
     end
 
@@ -110,26 +140,23 @@ module Watir
 
   class FrameLocator < TaggedElementLocator
     def initialize(container)
-      @container = container
-      @tags = Frame::TAG
+      super(container, Frame::TAG, Frame)
     end
 
     def each_element tag
       frames = document.frames
       i = 0
       document.getElementsByTagName(tag).each do |ole_object|
-        frame = Frame.new(@container, @specifiers, nil)
-        frame.ole_object = ole_object
+        frame = create_element ole_object
         frame.document = frames.item(i)
-        def frame.locate; @o; end
         yield frame
         i += 1
       end
     end
 
     def each
-      @tags.each do |tag|
-        each_element(tag) do |element| 
+      @tag.each do |t|
+        each_element(t) do |element| 
           next unless match_with_specifiers?(element)
           yield element          
         end 
@@ -138,7 +165,9 @@ module Watir
     end        
 
     def locate
-      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]      
+      # do not locate frames by getElementById since can't get the correct
+      # 'document' related with that ole_object like it's done in #each_element
+      return locate_by_xpath_css_ole if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |frame|
@@ -155,10 +184,7 @@ module Watir
 
     def each_element(tag)
       document.forms.each do |form|
-        form_element = Form.new(@container, @specifiers, nil)
-        form_element.ole_object = form
-        def form_element.locate; @o; end
-        yield form_element
+        yield create_element form
       end
     end
   end
@@ -173,25 +199,15 @@ module Watir
     def each_element
       elements = locate_by_name || @container.__ole_inner_elements
       elements.each do |object|
-        if @klass == Element
-          element = Element.new(object)
-        else
-          element = @klass.new(@container, @specifiers, nil)
-          element.ole_object = object
-          def element.locate; @o; end          
-        end
-        yield element
+        yield create_element object
       end
       nil
     end    
 
     def locate
-      return locate_by_xpath_css_ole if @specifiers[:xpath] || @specifiers[:css] || @specifiers[:ole_object]
-
-      if @specifiers[:id]
-        element = locate_by_id
-        return element if element
-      end
+      el = locate_by_id
+      return el if el
+      return locate_by_xpath_css_ole if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |element|
@@ -221,27 +237,6 @@ module Watir
     end
 
     private
-
-    def locate_by_id
-      # Searching through all elements returned by __ole_inner_elements
-      # is *significantly* slower than IE's getElementById() and
-      # getElementsByName() calls when how is :id.  However
-      # IE doesn't match Regexps, so first we make sure what is a String.
-      # In addition, IE's getElementById() will also return an element
-      # where the :name matches, so we will only return the results of
-      # getElementById() if the matching element actually HAS a matching
-      # :id.
-
-      the_id = @specifiers[:id]
-      if the_id && the_id.class == String &&
-          @specifiers[:index] == Watir::IE.base_index && @specifiers.length == 2
-        element = document.getElementById(the_id) rescue nil
-        # Return if our fast match really HAS a matching :id
-        return element if element && element.invoke('id') == the_id && @types.include?(element.getAttribute('type'))
-      end
-
-      nil
-    end
 
     def locate_by_name
       the_name = @specifiers[:name]

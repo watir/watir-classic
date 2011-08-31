@@ -173,8 +173,8 @@ class TC_Frame_multiple_attributes < Test::Unit::TestCase
     goto_page "frame_multi.html"
   end
 
-  def test_get_frame_by_name_and_id
-    assert_equal('blankpage.html', browser.frame(:id => 'second_frame', :name => 'buttonFrame2').src)
+  def test_get_frame_by_name_and_src
+    assert_equal('blankpage.html', browser.frame(:src => 'blankpage.html', :name => 'buttonFrame2').src)
   end
 end
 
