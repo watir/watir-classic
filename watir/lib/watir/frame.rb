@@ -40,6 +40,10 @@ module Watir
       end
     end
 
+    def document_mode
+      document.documentMode
+    end
+
     def attach_command
       @container.page_container.attach_command + ".frame(#{@how.inspect}, #{@what.inspect})".gsub('"','\'')
     end

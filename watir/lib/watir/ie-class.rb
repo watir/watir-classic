@@ -368,6 +368,13 @@ module Watir
       @ie.document.title
     end
 
+    # The document standards mode used by IE
+    # can be overridden in the html with: <meta http-equiv="x-ua-compatible" content="IE=8">
+    def document_mode
+      @ie.document.documentMode.to_i
+    end
+
+
     # Return the status of the window, typically from the status bar at the bottom.
     def status
       return @ie.statusText
