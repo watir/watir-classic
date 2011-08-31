@@ -1,6 +1,18 @@
-== Version 2.0.0 - 2011/07/XX
+== Version 2.x.x - 2011/xx/xx
 
-* RIP FireWatir - there won't be any new releases
+* added support for del, ins, font, meta and ol tags
+* added support for h1, h2, h3, h4, h5, h6 and ul collection methods
+* Watir::IE#execute_script returns now the value of the JavaScript evaluation
+* Watir::Table#rows method iterates correctly over rows
+
+== Version 2.0.1 - 2011/08/10
+
+* fixed Watir::IE#close for Ruby 1.9.2 - fixes http://jira.openqa.org/browse/WTR-481
+* fixed locating elements on Ruby 1.9.2
+
+== Version 2.0.0 - 2011/08/10
+
+* RIP FireWatir - there won't be any new releases due to the lack of JSSH extension for Firefox 4+ versions.
 * all elements are using 0-based indexing instead of old 1-based indexing:
  - disable it temporarily: require "watir"; Watir.options[:zero_based_indexing] = false
 * #radio and #checkbox methods doesn't allow 3 parameters anymore for locating with "value"
@@ -22,6 +34,12 @@
  - tds => cells
  - a => link
  - as => links 
+ - img => image
+ - imgs => images
+
+== Version 1.9.3 - 2011/07/24
+
+* Only FireWatir version released to make a dependency for commonwatir to be less strict to make it possible to use FireWatir together with Watir 2+ versions if needed.
 
 == Version 1.9.2 - 2011/07/11
 

@@ -70,7 +70,7 @@ module Watir
     end
 
     def element_tag
-      element_class.constants.include?("TAG") ? element_class::TAG : element_class.name.split("::").last
+      element_class.const_defined?(:TAG) ? element_class::TAG : element_class.name.split("::").last
     end
   end
 end

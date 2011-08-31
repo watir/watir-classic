@@ -121,6 +121,11 @@ module Watir
       end
     end
     private :fill_save_image_dialog
+
+    Watir::Container.module_eval do
+      alias_method :img, :image
+      alias_method :imgs, :images
+    end        
   end
   
 end

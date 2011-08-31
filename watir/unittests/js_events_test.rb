@@ -23,4 +23,9 @@ class TC_JSEvents < Test::Unit::TestCase
     assert(browser.div(:id, 'event_name').text == 'onchange')
   end
 
+  def test_execute_script
+    assert_equal(browser.execute_script("2+2").to_i, 4)
+    assert_nil(browser.execute_script("null"))
+  end
+
 end

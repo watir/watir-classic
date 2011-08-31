@@ -81,5 +81,14 @@ class TC_ElementCollections < Test::Unit::TestCase
     assert_raises(Watir::Exception::MissingWayOfFindingObjectException) {browser.divs(:index, 1)}
   end
 
+  def test_table_rows
+    rows = browser.table.rows
+    assert 2, rows.size
+    rows.each_with_index do |row, i|
+      assert Watir::TableRow, row.class
+      assert i == 0 ? "one" : "two", row.class_name
+    end
+  end
+
 end
 

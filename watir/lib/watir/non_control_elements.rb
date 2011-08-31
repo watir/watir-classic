@@ -55,9 +55,20 @@ module Watir
     end
   end
 
-  %w[pre p div span map area li ul h1 h2 h3 h4 h5 h6 dl dt dd strong em].each do |elem|
+  class Ins < NonControlElement
+    Watir::Container.module_eval do
+      remove_method :inss
+
+      def inses(how={}, what=nil)
+        Inses.new(self, how, what)
+      end
+    end
+  end
+
+  %w[Pre P Div Span Map Area Li Ul H1 H2 H3 H4 H5 H6
+     Dl Dt Dd Strong Em Del Font Meta Ol].each do |elem|
     module_eval %Q{
-      class #{elem.capitalize} < NonControlElement; end
+      class #{elem} < NonControlElement; end
     }
   end
   

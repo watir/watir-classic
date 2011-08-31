@@ -247,13 +247,20 @@ module Watir
     
     def locate
       super
-      if @o # cant call the assert_exists here, as an exists? method call will fail
-        @cells = []
-        @o.cells.each do |oo|
-          @cells << TableCell.new(@container, :ole_object, oo)
-        end
-      end
+      cells if @o
     end
+
+    def cells
+      return @cells if @cells
+
+      @cells = []
+      @o.cells.each do |c|
+        @cells << TableCell.new(@container, :ole_object, c)
+      end
+      @cells
+    end
+
+    private :cells
     
     # Returns an initialized instance of a table row
     #   * o  - the object contained in the row
@@ -270,16 +277,16 @@ module Watir
     # this method iterates through each of the cells in the row. Yields a TableCell object
     def each
       locate
-      0.upto(@cells.length - 1) { |i| yield @cells[i] }
+      0.upto(cells.length - 1) { |i| yield cells[i] }
     end
     
     # Returns an element from the row as a TableCell object
     def [](index)
       assert_exists
-      if @cells.length <= index
+      if cells.length <= index
         raise UnknownCellException, "Unable to locate a cell at index #{index}" 
       end
-      return @cells[index]
+      return cells[index]
     end
     
     # defaults all missing methods to the array of elements, to be able to
@@ -289,7 +296,7 @@ module Watir
     #        end
     def column_count
       locate
-      @cells.length
+      cells.length
     end
 
     # Returns (multi-dimensional) array of the cell texts in table's row.

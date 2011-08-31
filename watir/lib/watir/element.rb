@@ -32,7 +32,7 @@ module Watir
 
     def locate
       return if [Element, TableBodies].include? self.class
-      tag = self.class.constants.include?("TAG") ? self.class::TAG : self.class.name.split("::").last
+      tag = self.class.const_defined?(:TAG) ? self.class::TAG : self.class.name.split("::").last
       @o = @container.tagged_element_locator(tag, @how, @what).locate
     end    
 

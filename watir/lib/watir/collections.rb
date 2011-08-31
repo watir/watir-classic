@@ -35,16 +35,21 @@ module Watir
     def element_tag; 'SELECT'; end
   end  
 
-  %w[Buttons FileFields Radios TextFields Hiddens].each do |collection|
+  %w[Button FileField Radio TextField Hidden].each do |element|
     module_eval %Q{
-      class #{collection} < InputElementCollections; end
+      class #{element}s < InputElementCollections; end
     }
   end
+
+  class Inses < ElementCollections
+    def element_class; Ins; end
+  end
   
-  %w[Links Lis Maps Areas Images Tables TableRows TableCells
-     Labels Pres Ps Spans Divs Dls Dts Dds Strongs Ems].each do |collection|
+  %w[Link Li Map Area Image Table TableRow TableCell
+     Label Pre P Span Div Dl Dt Dd Strong Em Del
+     Font H1 H2 H3 H4 H5 H6 Meta Ol Ul].each do |element|
     module_eval %Q{
-      class #{collection} < ElementCollections; end
+      class #{element}s < ElementCollections; end
     }
   end
   
