@@ -338,10 +338,9 @@ module Watir
 
     def dispatch_event(event)
       if IE.version_parts.first.to_i >= 9
-        begin
-          # we're in IE9 document standards mode
+        if @container.document_mode.to_i >= 9
           ole_object.dispatchEvent(create_event(event))
-        rescue WIN32OLERuntimeError
+        else
           ole_object.fireEvent(event)
         end
       else
