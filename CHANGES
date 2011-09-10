@@ -1,8 +1,9 @@
-== Version 2.x.x - 2011/xx/xx
+== Version 2.0.2 - 2011/09/10
 
 * added support for del, ins, font, meta and ol tags
 * added support for h1, h2, h3, h4, h5, h6 and ul collection methods
 * Watir::IE#execute_script returns now the value of the JavaScript evaluation
+* Watir::IE#fire_event now checks for the document mode in IE9
 * Watir::Table#rows method iterates correctly over rows
 * speed up dealing with html elements in some situations
 
