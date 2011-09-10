@@ -133,10 +133,7 @@ module FireWatir
 
     # Executes the given JavaScript string
     def execute_script(source)
-      result = js_eval source.to_s
-      wait()
-
-      result
+      js_eval source.to_s
     end
 
     private
