@@ -15,6 +15,9 @@ module Watir::UnitTest
     return $browser if $browser && $browser.exists?
     $browser = Watir::Browser.new
   end
+  def close_browser
+    $browser.close if $browser.exists?
+  end
 
   def assert_class element, klass
     assert_match(Regexp.new(klass, Regexp::IGNORECASE), element.class.to_s, "element class should be #{klass}; got #{element.class}")
