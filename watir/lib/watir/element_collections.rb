@@ -36,8 +36,9 @@ module Watir
     # allows access to a specific item in the collection
     def [](n)
       number = n - Watir::IE.base_index
-      offset = Watir::IE.base_index == 0? (length - 1) : length
-      unless number.between?(Watir::IE.base_index, offset)
+      offset = Watir::IE.base_index == 0 ? (length - 1) : length
+
+      unless number.between?(0, offset)
         raise Exception::MissingWayOfFindingObjectException,
           "Can't find #{element_tag.downcase} with :index #{n} from #{self.class} with size of #{length}"
       end
