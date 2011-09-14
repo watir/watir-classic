@@ -36,7 +36,7 @@ module Watir
     # allows access to a specific item in the collection
     def [](n)
       number = n - Watir::IE.base_index
-      offset = Watir::IE.base_index == 0 ? (length - 1) : length
+      offset = Watir::IE.zero_based_indexing ? (length - 1) : length
 
       unless number.between?(0, offset)
         raise Exception::MissingWayOfFindingObjectException,
