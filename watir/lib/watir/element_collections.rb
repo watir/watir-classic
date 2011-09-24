@@ -3,7 +3,7 @@ module Watir
   # it would normally only be accessed by the iterator methods (spans, links etc) of IE
   class ElementCollections
     include Enumerable
-    
+
     # Super class for all the iteractor classes
     #   * container - an instance of an IE object
     def initialize(container, how, what)
@@ -19,7 +19,7 @@ module Watir
       @length = length
       @page_container = container.page_container
     end
-    
+
     def length
       count = 0
       each {|element| count += 1 }
@@ -32,14 +32,17 @@ module Watir
     def each
       @container.tagged_element_locator(element_tag, @how, @what, element_class).each {|element| yield element}
     end
-    
+
     # allows access to a specific item in the collection
     def [](n)
-      unless n.between?(0, length - 1)
+      number = n - Watir::IE.base_index
+      offset = Watir::IE.zero_based_indexing ? (length - 1) : length
+
+      unless number.between?(0, offset)
         raise Exception::MissingWayOfFindingObjectException,
           "Can't find #{element_tag.downcase} with :index #{n} from #{self.class} with size of #{length}"
       end
-      return iterator_object(n)
+      return iterator_object(number)
     end
 
     def first
@@ -64,7 +67,7 @@ module Watir
       count = 0
       each {|e| return e if count == i; count += 1}
     end
-    
+
     def element_class
       Watir.const_get self.class.name.split("::").last.chop
     end
