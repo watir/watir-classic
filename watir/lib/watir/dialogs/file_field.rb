@@ -21,15 +21,15 @@ module Watir
     end
 
     def open_button
-      file_upload_window.button(:value => '&Open')
+      file_upload_window.button(:value => /&Open|&Abrir/)
     end
 
     def cancel_button
-      file_upload_window.button(:value => 'Cancel')
+      file_upload_window.button(:value => /Cancel/)
     end
 
     def file_upload_window
-      @window ||= RAutomation::Window.new(:title => /^choose file( to upload)?$/i)
+      @window ||= RAutomation::Window.new(:title => /^choose file( to upload)?|Elegir archivos para cargar$/i)
     end
 
   end

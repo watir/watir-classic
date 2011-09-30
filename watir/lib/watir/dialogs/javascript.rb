@@ -1,7 +1,7 @@
 module Watir
 
   class JavascriptDialog
-    WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer','Microsoft Internet Explorer']
+    WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer','Microsoft Internet Explorer',/Mensaje de p.*/]
 
     def initialize(opts={})
       @opts = opts
