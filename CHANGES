@@ -1,3 +1,10 @@
+== Version 2.0.3 - 2011/10/21
+
+* fix ElementCollections#[]
+* fix IE::Process.start for IE9 when opening multiple windows
+* add support for Spanish JavaScript and file upload dialogs
+* fix IE#execute_script for Ruby 1.9 with IE9
+
 == Version 2.0.2 - 2011/09/10
 
 * added support for del, ins, font, meta and ol tags
