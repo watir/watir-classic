@@ -420,7 +420,7 @@ module Watir
     # Execute the given JavaScript string
     def execute_script(source)
       document.parentWindow.eval(source.to_s)
-    rescue WIN32OLERuntimeError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
+    rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
       wrapper = "_watir_helper_div_#{rand(100000)}"
       escaped_src = source.to_s
       escaped_src = escaped_src.gsub("'", "\\\\'")
