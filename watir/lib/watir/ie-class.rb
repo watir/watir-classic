@@ -16,38 +16,38 @@ module Watir
 
     # Return the options used when creating new instances of IE.
     # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
-		def self.options
-			{:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout, :zero_based_indexing => self.zero_based_indexing}
-	  end
+    def self.options
+      {:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout, :zero_based_indexing => self.zero_based_indexing}
+    end
     # set values for options used when creating new instances of IE.
-		def self.set_options options
-			options.each do |name, value|
-				send "#{name}=", value
-			end
-		end
-		# The globals $FAST_SPEED and $HIDE_IE are checked both at initialization
-		# and later, because they
-		# might be set after initialization. Setting them beforehand (e.g. from
-		# the command line) will affect the class, otherwise it is only a temporary
-		# effect
-		@@speed = $FAST_SPEED ? :fast : :slow
-		def self.speed
-			return :fast if $FAST_SPEED
-			@@speed
-		end
-		def self.speed= x
-			$FAST_SPEED = nil
-			@@speed = x
-		end
-		@@visible = $HIDE_IE ? false : true
-		def self.visible
-			return false if $HIDE_IE
-			@@visible
-		end
-		def self.visible= x
-			$HIDE_IE = nil
-			@@visible = x
-		end
+    def self.set_options options
+      options.each do |name, value|
+        send "#{name}=", value
+      end
+    end
+    # The globals $FAST_SPEED and $HIDE_IE are checked both at initialization
+    # and later, because they
+    # might be set after initialization. Setting them beforehand (e.g. from
+    # the command line) will affect the class, otherwise it is only a temporary
+    # effect
+    @@speed = $FAST_SPEED ? :fast : :slow
+    def self.speed
+      return :fast if $FAST_SPEED
+      @@speed
+    end
+    def self.speed= x
+      $FAST_SPEED = nil
+      @@speed = x
+    end
+    @@visible = $HIDE_IE ? false : true
+    def self.visible
+      return false if $HIDE_IE
+      @@visible
+    end
+    def self.visible= x
+      $HIDE_IE = nil
+      @@visible = x
+    end
 
     @@zero_based_indexing = true
     def self.zero_based_indexing= enabled
@@ -202,20 +202,20 @@ module Watir
     def speed= how_fast
       case how_fast
       when :zippy then
-	      @typingspeed = 0
-	      @pause_after_wait = 0.01
-	      @type_keys = false
-	      @speed = :fast
+        @typingspeed = 0
+        @pause_after_wait = 0.01
+        @type_keys = false
+        @speed = :fast
       when :fast then
-	      @typingspeed = 0
-	      @pause_after_wait = 0.01
-	      @type_keys = true
-	      @speed = :fast
+        @typingspeed = 0
+        @pause_after_wait = 0.01
+        @type_keys = true
+        @speed = :fast
       when :slow then
-	      @typingspeed = 0.08
-	      @pause_after_wait = 0.1
-	      @type_keys = true
-	      @speed = :slow
+        @typingspeed = 0.08
+        @pause_after_wait = 0.1
+        @type_keys = true
+        @speed = :slow
       else
         raise ArgumentError, "Invalid speed: #{how_fast}"
       end
@@ -228,12 +228,12 @@ module Watir
 
     # deprecated: use speed = :fast instead
     def set_fast_speed
-    	self.speed = :fast
+      self.speed = :fast
     end
 
     # deprecated: use speed = :slow instead    
     def set_slow_speed
-    	self.speed = :slow
+      self.speed = :slow
     end
 
     def visible
@@ -327,7 +327,7 @@ module Watir
         end
       rescue Watir::Wait::TimeoutError
         raise NoMatchingWindowFoundException,
-                 "Unable to locate a window with #{how} of #{what}"
+        "Unable to locate a window with #{how} of #{what}"
       end
       @ie = ieTemp
     end
@@ -340,7 +340,7 @@ module Watir
     end
     attr_writer :hwnd
 
-  	# Are we attached to an open browser?
+    # Are we attached to an open browser?
     def exists?
       begin
         !!(@ie.name =~ /Internet Explorer/)
