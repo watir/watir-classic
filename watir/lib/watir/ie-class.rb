@@ -419,12 +419,11 @@ module Watir
 
     # Execute the given JavaScript string
     def execute_script(source)
-      document.parentWindow.eval(source.to_s)
+      escaped_src = source.to_s.gsub(/[\r\n']/) {|m| "\\#{m}"}
+      document.parentWindow.eval(escaped_src)
     rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
       wrapper = "_watir_helper_div_#{rand(100000)}"
-      escaped_src = source.to_s
-      escaped_src = escaped_src.gsub("'", "\\\\'")
-      cmd = "var e= document.createElement('DIV'); e.id='#{wrapper}'; e.innerHTML= eval('#{escaped_src}');document.body.appendChild(e);"
+      cmd = "var e = document.createElement('DIV'); e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
       document.parentWindow.execScript(cmd)
       wrapper_obj = document.getElementById(wrapper)
       result_value = wrapper_obj.innerHTML
