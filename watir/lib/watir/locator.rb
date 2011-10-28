@@ -29,6 +29,7 @@ module Watir
     end
 
     def match_with_specifiers?(element)
+      return true if has_excluding_specifiers?
       @specifiers.all? {|how, what| how == :index || match?(element, how, what)}
     end
 

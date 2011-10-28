@@ -62,6 +62,12 @@ class TC_ElementCollections < Test::Unit::TestCase
     elements.each do |element|
       assert Watir::Div, element.class
     end
+
+    elements = browser.elements(:css => "div")
+    assert 2, elements.size
+    elements.each do |element|
+      assert Watir::Div, element.class
+    end
   end
 
   def test_multiple_specifiers
