@@ -33,7 +33,7 @@ module Watir
     #
 
     def present?
-      exists? && visible?
+      exists? && visible? rescue false
     end
 
     #
