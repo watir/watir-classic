@@ -367,7 +367,7 @@ module Watir
     # Navigate to the specified URL.
     #  * url - string - the URL to navigate to
     def goto(url)
-      url = "http://" + url unless url =~ URI.regexp
+      url = "http://" + url unless url =~ %r{://} || url == "about:blank"
       @ie.navigate(url)
       wait
       return @down_load_time
