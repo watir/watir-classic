@@ -174,11 +174,6 @@ module Watir
       ie
     end
 
-    def create_browser_window
-      @ie = WIN32OLE.new('InternetExplorer.Application')
-    end
-    private :create_browser_window
-
     def initialize_options
       self.visible = IE.visible
       self.speed = IE.speed
@@ -317,21 +312,6 @@ module Watir
       end
       return ieTemp
     end
-
-    def attach_browser_window how, what
-      log "Seeking Window with #{how}: #{what}"
-      ieTemp = nil
-      begin
-        Watir::until_with_timeout do
-          ieTemp = IE._find how, what
-        end
-      rescue Watir::Wait::TimeoutError
-        raise NoMatchingWindowFoundException,
-        "Unable to locate a window with #{how} of #{what}"
-      end
-      @ie = ieTemp
-    end
-    private :attach_browser_window
 
     # Return the current window handle
     def hwnd
@@ -764,6 +744,72 @@ module Watir
     	return @xml_parser_doc
     end
 
+    # execute css selector and return an array of (ole object) elements
+    def elements_by_css(selector)
+      xmlparser_document_object # Needed to ensure Nokogiri has been loaded
+      xpath = Nokogiri::CSS.xpath_for(selector)[0]
+      elements_by_xpath(xpath)
+    end
+
+    # return the first (ole object) element that matches the css selector
+    def element_by_css(selector)
+      temp = elements_by_css(selector)
+      return temp[0] if temp
+    end
+
+    # return the first element that matches the xpath
+    def element_by_xpath(xpath)
+      temp = elements_by_xpath(xpath)
+      temp = temp[0] if temp
+      return temp
+    end
+
+    # execute xpath and return an array of elements
+    def elements_by_xpath(xpath)
+      doc = xmlparser_document_object
+      modifiedXpath = ""
+      selectedElements = Array.new
+
+      # strip any trailing slash from the xpath expression (as used in watir unit tests)
+      xpath.chop! unless (/\/$/ =~ xpath).nil?
+
+      doc.xpath(xpath).each do |element|
+        modifiedXpath = element.path
+        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
+        selectedElements << temp if temp != nil
+      end
+      #puts selectedElements.length
+      if selectedElements.length == 0
+        return nil
+      else
+        return selectedElements
+      end
+    end
+
+    def attach_command
+      "Watir::IE.attach(:hwnd, #{hwnd})"
+    end
+
+    private
+
+    def create_browser_window
+      @ie = WIN32OLE.new('InternetExplorer.Application')
+    end
+
+    def attach_browser_window how, what
+      log "Seeking Window with #{how}: #{what}"
+      ieTemp = nil
+      begin
+        Watir::until_with_timeout do
+          ieTemp = IE._find how, what
+        end
+      rescue Watir::Wait::TimeoutError
+        raise NoMatchingWindowFoundException,
+        "Unable to locate a window with #{how} of #{what}"
+      end
+      @ie = ieTemp
+    end
+
     # Create the Nokogiri object if it is nil. This method is private so can be called only
     # from xmlparser_document_object method.
     def create_xml_parser_doc
@@ -772,8 +818,8 @@ module Watir
         htmlSource ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<HTML>\n"
         htmlSource = html_source(document.body,htmlSource," ")
         htmlSource += "\n</HTML>\n"
-				# Angrez: Resolving Jira issue WTR-114
-				htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
+        # Angrez: Resolving Jira issue WTR-114
+        htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
         begin
          #@xml_parser_doc = Nokogiri::HTML::Document.new(htmlSource)
           @xml_parser_doc = Nokogiri.parse(htmlSource)
@@ -783,14 +829,12 @@ module Watir
         end
       end
     end
-    private :create_xml_parser_doc
 
     def output_xml_parser_doc(name, text)
       file = File.open(name,"w")
       file.print(text)
       file.close
     end
-    private :output_xml_parser_doc
 
     #Function Tokenizes the tag line and returns array of tokens.
     #Token could be either tagName or "=" or attribute name or attribute value
@@ -841,7 +885,6 @@ module Watir
       end
       return tokens
     end
-    private :tokenize_tagline
 
     # This function get and clean all the attributes of the tag.
     def all_tag_attributes(outerHtml)
@@ -882,7 +925,6 @@ module Watir
       #puts tagLine
       return tagLine
     end
-    private :all_tag_attributes
 
     # This function is used to escape the characters that are not valid XML data.
     def xml_escape(str)
@@ -892,7 +934,6 @@ module Watir
       str = str.gsub(/"/, '&quot;')
       str
     end
-    private :xml_escape
 
     # Returns HTML Source
     # Traverse the DOM tree rooted at body element
@@ -953,49 +994,6 @@ module Watir
         puts e.to_s
       end
       return htmlString
-    end
-    private :html_source
-
-    # execute css selector and return an array of (ole object) elements
-    def elements_by_css(selector)
-      xmlparser_document_object # Needed to ensure Nokogiri has been loaded
-      xpath = Nokogiri::CSS.xpath_for(selector)[0]
-      elements_by_xpath(xpath)
-    end
-
-    # return the first (ole object) element that matches the css selector
-    def element_by_css(selector)
-      temp = elements_by_css(selector)
-      return temp[0] if temp
-    end
-
-    # return the first element that matches the xpath
-    def element_by_xpath(xpath)
-      temp = elements_by_xpath(xpath)
-      temp = temp[0] if temp
-      return temp
-    end
-
-    # execute xpath and return an array of elements
-    def elements_by_xpath(xpath)
-      doc = xmlparser_document_object
-      modifiedXpath = ""
-      selectedElements = Array.new
-
-      # strip any trailing slash from the xpath expression (as used in watir unit tests)
-      xpath.chop! unless (/\/$/ =~ xpath).nil?
-
-      doc.xpath(xpath).each do |element|
-        modifiedXpath = element.path
-        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
-        selectedElements << temp if temp != nil
-      end
-      #puts selectedElements.length
-      if selectedElements.length == 0
-        return nil
-      else
-        return selectedElements
-      end
     end
 
     # Method that iterates over IE DOM object and get the elements for the given
@@ -1076,12 +1074,6 @@ module Watir
         return nil
       end
     end
-    private :element_by_absolute_xpath
-
-    def attach_command
-      "Watir::IE.attach(:hwnd, #{hwnd})"
-    end
-
 
   end # class IE
 end
