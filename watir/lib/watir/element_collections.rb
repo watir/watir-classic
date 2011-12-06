@@ -38,7 +38,7 @@ module Watir
       number = n - Watir::IE.base_index
       offset = Watir::IE.zero_based_indexing ? (length - 1) : length
 
-      unless number.between?(0, offset)
+      unless number.abs.between?(0, offset)
         raise Exception::MissingWayOfFindingObjectException,
           "Can't find #{element_tag.downcase} with :index #{n} from #{self.class} with size of #{length}"
       end
@@ -65,7 +65,10 @@ module Watir
 
     def iterator_object(i)
       count = 0
-      each {|e| return e if count == i; count += 1}
+      each do |e|
+        return e if (i >= 0 && count == i) || (i < 0 && count == length + i)
+        count += 1
+      end
     end
 
     def element_class
