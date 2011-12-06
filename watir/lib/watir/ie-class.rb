@@ -735,55 +735,12 @@ module Watir
       document.focus
     end
 
-
     # Functions written for using xpath for getting the elements.
     def xmlparser_document_object
     	if @xml_parser_doc == nil
     		create_xml_parser_doc
     	end
     	return @xml_parser_doc
-    end
-
-    # execute css selector and return an array of (ole object) elements
-    def elements_by_css(selector)
-      xmlparser_document_object # Needed to ensure Nokogiri has been loaded
-      xpath = Nokogiri::CSS.xpath_for(selector)[0]
-      elements_by_xpath(xpath)
-    end
-
-    # return the first (ole object) element that matches the css selector
-    def element_by_css(selector)
-      temp = elements_by_css(selector)
-      return temp[0] if temp
-    end
-
-    # return the first element that matches the xpath
-    def element_by_xpath(xpath)
-      temp = elements_by_xpath(xpath)
-      temp = temp[0] if temp
-      return temp
-    end
-
-    # execute xpath and return an array of elements
-    def elements_by_xpath(xpath)
-      doc = xmlparser_document_object
-      modifiedXpath = ""
-      selectedElements = Array.new
-
-      # strip any trailing slash from the xpath expression (as used in watir unit tests)
-      xpath.chop! unless (/\/$/ =~ xpath).nil?
-
-      doc.xpath(xpath).each do |element|
-        modifiedXpath = element.path
-        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
-        selectedElements << temp if temp != nil
-      end
-      #puts selectedElements.length
-      if selectedElements.length == 0
-        return nil
-      else
-        return selectedElements
-      end
     end
 
     def attach_command
@@ -1072,6 +1029,48 @@ module Watir
         end
       rescue
         return nil
+      end
+    end
+
+    # execute css selector and return an array of (ole object) elements
+    def elements_by_css(selector)
+      xmlparser_document_object # Needed to ensure Nokogiri has been loaded
+      xpath = Nokogiri::CSS.xpath_for(selector)[0]
+      elements_by_xpath(xpath)
+    end
+
+    # return the first (ole object) element that matches the css selector
+    def element_by_css(selector)
+      temp = elements_by_css(selector)
+      return temp[0] if temp
+    end
+
+    # return the first element that matches the xpath
+    def element_by_xpath(xpath)
+      temp = elements_by_xpath(xpath)
+      temp = temp[0] if temp
+      return temp
+    end
+
+    # execute xpath and return an array of elements
+    def elements_by_xpath(xpath)
+      doc = xmlparser_document_object
+      modifiedXpath = ""
+      selectedElements = Array.new
+
+      # strip any trailing slash from the xpath expression (as used in watir unit tests)
+      xpath.chop! unless (/\/$/ =~ xpath).nil?
+
+      doc.xpath(xpath).each do |element|
+        modifiedXpath = element.path
+        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
+        selectedElements << temp if temp != nil
+      end
+      #puts selectedElements.length
+      if selectedElements.length == 0
+        return nil
+      else
+        return selectedElements
       end
     end
 
