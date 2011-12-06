@@ -65,9 +65,9 @@ module Watir
 
     def locate_by_xpath_css_ole
       if @specifiers[:xpath]
-        return @container.element_by_xpath(@specifiers[:xpath])
+        return @container.send(:element_by_xpath, @specifiers[:xpath])
       elsif @specifiers[:css]
-        return @container.element_by_css(@specifiers[:css])
+        return @container.send(:element_by_css, @specifiers[:css])
       elsif @specifiers[:ole_object]
         return @specifiers[:ole_object]
       end      
