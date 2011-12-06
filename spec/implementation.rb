@@ -17,7 +17,7 @@ WatirSpec.implementation do |imp|
   end
 
   imp.guard_proc = lambda { |args|
-    args.any? { |arg| arg == :watir || arg == [:watir, browser] }
+    args.any? { |arg| arg == :watir || arg == [:watir, browser] || arg == :ie }
   }
 end
 
