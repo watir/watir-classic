@@ -8,7 +8,7 @@ module Watir
       assert_file_exists(file_path)
       assert_exists
       click_no_wait
-      set_file_name file_path
+      set_file_name file_path.gsub(File::SEPARATOR, File::ALT_SEPARATOR)
       open_button.click
     end
 
