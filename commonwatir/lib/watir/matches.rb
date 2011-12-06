@@ -15,3 +15,9 @@ class Integer
     return self == x
   end
 end
+
+class Object
+  def matches(x)
+    raise TypeError, "#{self.class} is not supported as a locator"
+  end
+end
