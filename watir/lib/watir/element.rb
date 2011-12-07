@@ -140,11 +140,12 @@ module Watir
       end
     end
 
-    # Return the innerText of the object
+    # Return the innerText of the object or an empty string if the object is
+    # not visible
     # Raise an ObjectNotFound exception if the object cannot be found
     def text
       assert_exists
-      return ole_object.innerText.strip
+      visible? ? ole_object.innerText.strip : ""
     end
 
     # IE9 only returns empty string for ole_object.name for non-input elements
@@ -258,6 +259,14 @@ module Watir
       @container.wait
     end
 
+    def right_click
+      perform_action {fire_event("oncontextmenu"); @container.wait}
+    end
+
+    def double_click
+      perform_action {fire_event("ondblclick"); @container.wait}
+    end
+
     def replace_method(method)
       method == 'click' ? 'click!' : method
     end
@@ -299,15 +308,12 @@ module Watir
     private :spawned_no_wait_command
 
     def click!
-      assert_exists
-      assert_enabled
-
-      highlight(:set)
-      # Not sure why but in IE9 Document mode, passing a parameter
-      # to click seems to work. Firing the onClick event breaks other tests
-      # so this seems to be the safest change and also works fine in IE8
-      ole_object.click(0)
-      highlight(:clear)
+      perform_action do
+        # Not sure why but in IE9 Document mode, passing a parameter
+        # to click seems to work. Firing the onClick event breaks other tests
+        # so this seems to be the safest change and also works fine in IE8
+        ole_object.click(0)
+      end
     end
 
     # Flash the element the specified number of times.
@@ -328,12 +334,7 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     #           ObjectDisabledException if the object is currently disabled
     def fire_event(event)
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      dispatch_event(event)
-      @container.wait
-      highlight(:clear)
+      perform_action {dispatch_event(event); @container.wait}
     end
 
     def dispatch_event(event)
@@ -437,14 +438,22 @@ module Watir
       return ole_object.getAttribute(attribute_name)
     end
 
+    def perform_action
+      assert_exists
+      assert_enabled
+      highlight(:set)
+      yield
+      highlight(:clear)
+    end
+
+    private :perform_action
+
     def method_missing(method_name, *args, &block)
       if method_name.to_s =~ /(.*)_no_wait/ && self.respond_to?($1)
-        assert_exists
-        assert_enabled
-        highlight(:set)
-        ruby_code = generate_ruby_code(self, $1, *args)
-        system(spawned_no_wait_command(ruby_code))
-        highlight(:clear)
+        perform_action do
+          ruby_code = generate_ruby_code(self, $1, *args)
+          system(spawned_no_wait_command(ruby_code))
+        end
       else
         super
       end
