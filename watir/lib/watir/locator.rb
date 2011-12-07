@@ -30,7 +30,7 @@ module Watir
 
     def match_with_specifiers?(element)
       return true if has_excluding_specifiers?
-      @specifiers.all? {|how, what| how == :index || match?(element, how, what)}
+      @specifiers.all? {|how, what| how == :index || (match?(element, how, what) && type_matches?(element.ole_object))}
     end
 
     def has_excluding_specifiers?
@@ -57,7 +57,7 @@ module Watir
       if the_id && the_id.class == String 
         element = document.getElementById(the_id) rescue nil
         # Return if our fast match really HAS a matching :id
-        return element if element && element.invoke('id') == the_id 
+        return element if element && element.invoke('id') == the_id && type_matches?(element) && match_with_specifiers?(create_element element)
       end
 
       nil
@@ -77,7 +77,7 @@ module Watir
     end
     
     def type_matches?(el)
-      @tag == "*" || (@tag && el.type == @tag.downcase) || (@types && @types.include?(el.type))
+      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@types && @types.map(&:downcase).include?(el.type.downcase))
     end
 
     def create_element ole_object
