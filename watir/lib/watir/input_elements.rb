@@ -224,6 +224,16 @@ module Watir
     #:stopdoc:
     INPUT_TYPES = ["button", "submit", "image", "reset"]
     #:startdoc:
+    
+    alias_method :__value, :value
+
+    def text
+      val = __value
+      val.empty? ? super : val
+    end
+
+    alias_method :value, :text
+
   end
 
   #
