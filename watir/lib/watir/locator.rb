@@ -64,13 +64,20 @@ module Watir
     end
 
     def locate_by_xpath_css_ole
+      el = nil
       if @specifiers[:xpath]
-        return @container.send(:element_by_xpath, @specifiers[:xpath])
+        el = @container.send(:element_by_xpath, @specifiers[:xpath])
       elsif @specifiers[:css]
-        return @container.send(:element_by_css, @specifiers[:css])
+        el = @container.send(:element_by_css, @specifiers[:css])
       elsif @specifiers[:ole_object]
-        return @specifiers[:ole_object]
+        el = @specifiers[:ole_object]
       end      
+
+      return el if el && type_matches?(el)
+    end
+    
+    def type_matches?(el)
+      @tag == "*" || (@tag && el.type == @tag.downcase) || (@types && @types.include?(el.type))
     end
 
     def create_element ole_object
