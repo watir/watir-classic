@@ -97,10 +97,6 @@ module Watir
     # return the title of the element
     def_wrap_guard :title
 
-    def_wrap_guard :currentstyle
-    # return current style instead of the inline style of the element
-    alias style currentstyle
-
     def_wrap_guard :alt
     def_wrap_guard :src
 
@@ -117,6 +113,12 @@ module Watir
     def_wrap :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     def_wrap :html, :outerHTML
+
+    # return the css style as a string
+    def style
+      assert_exists
+      ole_object.style.cssText
+    end
 
     # return the text before the element
     def before_text # label only
