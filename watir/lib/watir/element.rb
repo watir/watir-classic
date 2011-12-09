@@ -104,8 +104,6 @@ module Watir
     def_wrap_guard :type # input elements only
     # return the url the link points to
     def_wrap :href # link only
-    # return the ID of the control that this label is associated with
-    def_wrap :for, :htmlFor # label only
     # return the class name of the element
     # raise an ObjectNotFound exception if the object cannot be found
     def_wrap :class_name, :className
@@ -113,6 +111,26 @@ module Watir
     def_wrap :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     def_wrap :html, :outerHTML
+
+    # returns specific Element subclass for current Element
+    def to_subtype
+      assert_exists
+
+      tag = ole_object.tagName
+      if tag == "HTML"
+        html_element(:ole_object, ole_object)
+      elsif tag == "INPUT" 
+        self.send(ole_object.type, :ole_object, ole_object)
+      else
+        self.send(tag.downcase, :ole_object, ole_object)
+      end
+    end
+
+    # send keys to element
+    def send_keys(key_string)
+      focus
+      page_container.send_keys key_string
+    end
 
     # return the css style as a string
     def style
@@ -151,8 +169,12 @@ module Watir
     # IE9 only returns empty string for ole_object.name for non-input elements
     # so get at it through the attribute which will make the matchers work
     def name
-      assert_exists
-      ole_object.getAttribute('name') || ''
+      attribute_value('name') || ''
+    end
+
+    # Return the "for" attribute value for label element
+    def for
+      ole_object.htmlFor rescue ''
     end
 
     def __ole_inner_elements
@@ -168,7 +190,9 @@ module Watir
     # Return the element immediately containing self. 
     def parent
       assert_exists
-      result = Element.new(ole_object.parentelement)
+      parent_element = ole_object.parentelement
+      return unless parent_element
+      result = Element.new(parent_element).to_subtype
       result.set_container self
       result
     end
@@ -180,6 +204,8 @@ module Watir
       other.assert_exists
       ole_object.sourceindex <=> other.ole_object.sourceindex
     end
+
+    alias_method :eql?, :==
 
     # Return true if self is contained earlier in the html than other. 
     alias :before? :<
@@ -449,11 +475,14 @@ module Watir
     private :perform_action
 
     def method_missing(method_name, *args, &block)
-      if method_name.to_s =~ /(.*)_no_wait/ && self.respond_to?($1)
+      meth = method_name.to_s
+      if meth =~ /(.*)_no_wait/ && self.respond_to?($1)
         perform_action do
           ruby_code = generate_ruby_code(self, $1, *args)
           system(spawned_no_wait_command(ruby_code))
         end
+      elsif meth =~ /^data_(.*)/
+        self.send(:attribute_value, meth.gsub("_", "-")) || ''
       else
         super
       end
