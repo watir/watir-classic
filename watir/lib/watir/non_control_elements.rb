@@ -65,8 +65,23 @@ module Watir
     end
   end
 
+  class FieldSet < NonControlElement
+    Watir::Container.module_eval do
+      remove_method :field_set
+      remove_method :field_sets
+
+      def fieldset(how={}, what=nil)
+        FieldSet.new(self, how, what)
+      end
+
+      def fieldsets(how={}, what=nil)
+        FieldSets.new(self, how, what)
+      end
+    end
+  end
+
   %w[Pre P Div Span Map Area Li Ul H1 H2 H3 H4 H5 H6
-     Dl Dt Dd Strong Em Del Font Meta Ol].each do |elem|
+     Dl Dt Dd Strong Em Del Font Meta Ol Body].each do |elem|
     module_eval %Q{
       class #{elem} < NonControlElement; end
     }
