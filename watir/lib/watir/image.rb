@@ -42,22 +42,22 @@ module Watir
       return @o.invoke("fileCreatedDate")
     end
     
-    # this method returns the filesize of the image
+    # this method returns the filesize of the image, as an int
     def file_size
       assert_exists
-      return @o.invoke("fileSize").to_s
+      return @o.invoke("fileSize").to_i
     end
     
-    # returns the width in pixels of the image, as a string
+    # returns the width in pixels of the image, as an int
     def width
       assert_exists
-      return @o.invoke("width").to_s
+      return @o.invoke("width").to_i
     end
     
-    # returns the height in pixels of the image, as a string
+    # returns the height in pixels of the image, as an int
     def height
       assert_exists
-      return @o.invoke("height").to_s
+      return @o.invoke("height").to_i
     end
     
     # This method attempts to find out if the image was actually loaded by the web browser.
