@@ -12,8 +12,10 @@ module Watir
       open_button.click
     end
 
+    alias_method :value=, :set
+
     def assert_file_exists(file_path)
-      raise WatirException, "#{file_path} has to exist to set!" unless File.exists?(file_path)
+      raise Errno::ENOENT, "#{file_path} has to exist to set!" unless File.exists?(file_path)
     end
 
     def set_file_name(path_to_file)
