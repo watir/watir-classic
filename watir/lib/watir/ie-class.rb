@@ -737,10 +737,7 @@ module Watir
 
     # Functions written for using xpath for getting the elements.
     def xmlparser_document_object
-    	if @xml_parser_doc == nil
-    		create_xml_parser_doc
-    	end
-    	return @xml_parser_doc
+      @xml_parser_doc ||= create_xml_parser_doc
     end
 
     def attach_command
@@ -778,7 +775,6 @@ module Watir
         # Angrez: Resolving Jira issue WTR-114
         htmlSource = htmlSource.gsub(/&nbsp;/, '&#160;')
         begin
-         #@xml_parser_doc = Nokogiri::HTML::Document.new(htmlSource)
           @xml_parser_doc = Nokogiri.parse(htmlSource)
         rescue => e
           output_xml_parser_doc("error.xml", htmlSource)
@@ -1041,37 +1037,24 @@ module Watir
 
     # return the first (ole object) element that matches the css selector
     def element_by_css(selector)
-      temp = elements_by_css(selector)
-      return temp[0] if temp
+      elements_by_css(selector)[0]
     end
 
     # return the first element that matches the xpath
     def element_by_xpath(xpath)
-      temp = elements_by_xpath(xpath)
-      temp = temp[0] if temp
-      return temp
+      elements_by_xpath(xpath)[0]
     end
 
     # execute xpath and return an array of elements
     def elements_by_xpath(xpath)
       doc = xmlparser_document_object
-      modifiedXpath = ""
-      selectedElements = Array.new
 
       # strip any trailing slash from the xpath expression (as used in watir unit tests)
-      xpath.chop! unless (/\/$/ =~ xpath).nil?
+      xpath.chop! if xpath =~ /\/$/
 
-      doc.xpath(xpath).each do |element|
-        modifiedXpath = element.path
-        temp = element_by_absolute_xpath(modifiedXpath) # temp = a DOM/COM element
-        selectedElements << temp if temp != nil
-      end
-      #puts selectedElements.length
-      if selectedElements.length == 0
-        return nil
-      else
-        return selectedElements
-      end
+      doc.xpath(xpath).reduce([]) do |memo, element|
+        memo << element_by_absolute_xpath(element.path)
+      end.compact
     end
 
   end # class IE
