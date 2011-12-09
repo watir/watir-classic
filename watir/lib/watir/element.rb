@@ -74,8 +74,12 @@ module Watir
     def assert_exists
       locate
       unless ole_object
-        raise UnknownObjectException.new(
-                Watir::Exception.message_for_unable_to_locate(@how, @what))
+        if self.is_a?(Frame)
+          raise UnknownFrameException.new(Watir::Exception.message_for_unable_to_locate(@how, @what))
+        else
+          raise UnknownObjectException.new(
+                  Watir::Exception.message_for_unable_to_locate(@how, @what))
+        end
       end
     end
 
