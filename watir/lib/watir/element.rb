@@ -50,19 +50,18 @@ module Watir
     end
 
     private
-    def self.def_wrap(ruby_method_name, ole_method_name=nil)
-      ole_method_name = ruby_method_name unless ole_method_name
-      class_eval "def #{ruby_method_name}
+    def self.def_wrap(method_name, ole_method_name=nil)
+      class_eval "def #{method_name}
                           assert_exists
-                          ole_object.invoke('#{ole_method_name}')
+                          ole_object.invoke('#{ole_method_name || method_name}')
                         end"
     end
 
-    def self.def_wrap_guard(method_name)
+    def self.def_wrap_guard(method_name, ole_method_name = nil)
       class_eval "def #{method_name}
                           assert_exists
                           begin
-                            ole_object.invoke('#{method_name}')
+                            ole_object.invoke('#{ole_method_name || method_name}')
                           rescue
                             ''
                           end
@@ -115,6 +114,8 @@ module Watir
     def_wrap :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     def_wrap :html, :outerHTML
+    # Return the "for" attribute for label
+    def_wrap_guard :for, :htmlFor
 
     # returns specific Element subclass for current Element
     def to_subtype
@@ -174,12 +175,6 @@ module Watir
     # so get at it through the attribute which will make the matchers work
     def name
       attribute_value('name') || ''
-    end
-
-    # Return the "for" attribute value for label element
-    def for
-      assert_exists
-      ole_object.htmlFor rescue ''
     end
 
     def __ole_inner_elements
