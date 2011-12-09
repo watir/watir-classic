@@ -178,6 +178,7 @@ module Watir
 
     # Return the "for" attribute value for label element
     def for
+      assert_exists
       ole_object.htmlFor rescue ''
     end
 
