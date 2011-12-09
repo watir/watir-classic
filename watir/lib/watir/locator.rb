@@ -30,7 +30,11 @@ module Watir
 
     def match_with_specifiers?(element)
       return true if has_excluding_specifiers?
-      @specifiers.all? {|how, what| how == :index || (match?(element, how, what) && type_matches?(element.ole_object))}
+      @specifiers.all? do |how, what|
+        how == :index || 
+          ((how.to_s =~ /^data_.*/ && element.send(how) == what) || 
+           match?(element, how, what)) && type_matches?(element.ole_object)
+      end
     end
 
     def has_excluding_specifiers?
@@ -42,7 +46,7 @@ module Watir
       @specifiers = {:index => Watir::IE.base_index} # default if not specified
       normalize_specifiers! specifiers
     end
-    
+
     def locate_by_id
       # Searching through all elements returned by __ole_inner_elements
       # is *significantly* slower than IE's getElementById() and
@@ -63,19 +67,20 @@ module Watir
       nil
     end
 
-    def locate_by_xpath_css_ole
-      el = nil
+    def locate_elements_by_xpath_css_ole
+      els = []
+
       if @specifiers[:xpath]
-        el = @container.send(:element_by_xpath, @specifiers[:xpath])
+        els = @container.send(:elements_by_xpath, @specifiers[:xpath])
       elsif @specifiers[:css]
-        el = @container.send(:element_by_css, @specifiers[:css])
+        els = @container.send(:elements_by_css, @specifiers[:css])
       elsif @specifiers[:ole_object]
-        el = @specifiers[:ole_object]
+        els << @specifiers[:ole_object]
       end      
 
-      return el if el && type_matches?(el)
+      els.select {|element| type_matches?(element) && match_with_specifiers?(create_element element)}
     end
-    
+
     def type_matches?(el)
       @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@types && @types.map(&:downcase).include?(el.type.downcase))
     end
@@ -106,17 +111,23 @@ module Watir
     end
 
     def each
-      each_element(@tag) do |element| 
-        next unless match_with_specifiers?(element)
-        yield element          
-      end 
+      if has_excluding_specifiers?
+        locate_elements_by_xpath_css_ole.each do |element|
+          yield element
+        end
+      else
+        each_element(@tag) do |element| 
+          next unless match_with_specifiers?(element)
+          yield element          
+        end 
+      end
       nil
     end    
 
     def locate
       el = locate_by_id
       return el if el
-      return locate_by_xpath_css_ole if has_excluding_specifiers?
+      return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |element|
@@ -163,11 +174,17 @@ module Watir
     end
 
     def each
-      @tag.each do |t|
-        each_element(t) do |element| 
-          next unless match_with_specifiers?(element)
-          yield element          
-        end 
+      if has_excluding_specifiers?
+        locate_elements_by_xpath_css_ole.each do |element|
+          yield element
+        end
+      else
+        @tag.each do |t|
+          each_element(t) do |element| 
+            next unless match_with_specifiers?(element)
+            yield element          
+          end 
+        end
       end
       nil
     end        
@@ -175,7 +192,7 @@ module Watir
     def locate
       # do not locate frames by getElementById since can't get the correct
       # 'document' related with that ole_object like it's done in #each_element
-      return locate_by_xpath_css_ole if has_excluding_specifiers?
+      return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |frame|
@@ -215,7 +232,7 @@ module Watir
     def locate
       el = locate_by_id
       return el if el
-      return locate_by_xpath_css_ole if has_excluding_specifiers?
+      return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
 
       count = Watir::IE.base_index - 1
       each do |element|
@@ -225,10 +242,16 @@ module Watir
     end
 
     def each
-      each_element do |element| 
-        next unless @types.include?(element.type) && match_with_specifiers?(element)
-        yield element
-      end 
+      if has_excluding_specifiers?
+        locate_elements_by_xpath_css_ole.each do |element|
+          yield element
+        end
+      else
+        each_element do |element| 
+          next unless @types.include?(element.type) && match_with_specifiers?(element)
+          yield element
+        end 
+      end
       nil
     end    
     
