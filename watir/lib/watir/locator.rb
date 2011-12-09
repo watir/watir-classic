@@ -82,7 +82,7 @@ module Watir
     end
 
     def type_matches?(el)
-      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@types && @types.map(&:downcase).include?(el.type.downcase))
+      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@tags && (@tags.include?(el.tagname) || @tags.include?(el.type)))
     end
 
     def create_element ole_object
@@ -159,7 +159,9 @@ module Watir
 
   class FrameLocator < TaggedElementLocator
     def initialize(container)
-      super(container, Frame::TAG, Frame)
+      @container = container
+      @tags = Frame::TAG
+      @klass = Frame
     end
 
     def each_element tag
@@ -179,7 +181,7 @@ module Watir
           yield element
         end
       else
-        @tag.each do |t|
+        @tags.each do |t|
           each_element(t) do |element| 
             next unless match_with_specifiers?(element)
             yield element          
@@ -215,9 +217,9 @@ module Watir
   end
 
   class InputElementLocator < Locator
-    def initialize container, types, klass
+    def initialize container, tags, klass
       @container = container
-      @types = types
+      @tags = tags
       @klass = klass || Element
     end
 
@@ -248,7 +250,7 @@ module Watir
         end
       else
         each_element do |element| 
-          next unless @types.include?(element.type) && match_with_specifiers?(element)
+          next unless @tags.include?(element.type) && match_with_specifiers?(element)
           yield element
         end 
       end
