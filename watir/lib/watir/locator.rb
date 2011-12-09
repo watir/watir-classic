@@ -176,26 +176,18 @@ module Watir
     end
 
     def each
-      if has_excluding_specifiers?
-        locate_elements_by_xpath_css_ole.each do |element|
-          yield element
-        end
-      else
-        @tags.each do |t|
-          each_element(t) do |element| 
-            next unless match_with_specifiers?(element)
-            yield element          
-          end 
-        end
+      @tags.each do |t|
+        each_element(t) do |element| 
+          next unless match_with_specifiers?(element)
+          yield element          
+        end 
       end
       nil
     end        
 
     def locate
-      # do not locate frames by getElementById since can't get the correct
+      # do not locate frames by getElementById or by xpath since can't get the correct
       # 'document' related with that ole_object like it's done in #each_element
-      return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
-
       count = Watir::IE.base_index - 1
       each do |frame|
         count += 1

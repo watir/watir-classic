@@ -953,30 +953,22 @@ module Watir
     # xpath.
     def element_by_absolute_xpath(xpath)
       curElem = nil
+      xpath = xpath.scan(/^.*\/body\[?\d*\]?\/(.*)/).flatten.first
+      return unless xpath
 
-      #puts "Hello; Given xpath is : #{xpath}"
-      doc = document
-      curElem = doc.getElementsByTagName("body").item(0)
-      xpath =~ /^.*\/body\[?\d*\]?\/(.*)/
-      xpath = $1
-
-      if xpath == nil
-        puts "Function Requires absolute XPath."
-        return
-      end
-
-      arr = xpath.split(/\//)
+      arr = xpath.split("/")
       return nil if arr.length == 0
 
-      lastTagName = arr[arr.length-1].to_s.upcase
+      doc = document
+      root_tag = arr[0].scan(/(\w*)\[?\d*\]?/).flatten.first
+      curElem = doc.getElementsByTagName(root_tag).item(0)
+      lastTagName = arr.last.to_s.upcase
 
       # lastTagName is like tagName[number] or just tagName. For the first case we need to
       # separate tagName and number.
-      lastTagName =~ /(\w*)\[?\d*\]?/
-      lastTagName = $1
-      #puts lastTagName
+      lastTagName = lastTagName.scan(/(\w*)\[?\d*\]?/).flatten.first
 
-      for element in arr do
+      arr.each do |element|
         element =~ /(\w*)\[?(\d*)\]?/
         tagname = $1
         tagname = tagname.upcase
@@ -988,44 +980,28 @@ module Watir
           index = 0
         end
 
-        #puts "#{element} #{tagname} #{index}"
-        allElemns = curElem.childnodes
-        if allElemns == nil || allElemns.length == 0
-          puts "#{element} is null"
-          next # Go to next element
-        end
+        allElemns = tagname == "FRAME" ? [curElem] : curElem.childnodes
+        next if allElemns == nil || allElemns.length == 0
 
-        #puts "Current element is : #{curElem.tagName}"
         allElemns.each do |child|
-          gotIt = false
           begin
             curTag = child.tagName
-            curTag = EMPTY_TAG_NAME if curTag == ""
+            curTag = EMPTY_TAG_NAME if curTag.empty?
           rescue
             next
           end
-          #puts child.tagName
+
           if curTag == tagname
-            index-=1
+            index -= 1
             if index < 0
               curElem = child
               break
             end
           end
         end
+      end
 
-      #puts "Node selected at index #{index.to_s} : #{curElem.tagName}"
-      end
-      begin
-        if curElem.tagName == lastTagName
-          #puts curElem.tagName
-          return curElem
-        else
-          return nil
-        end
-      rescue
-        return nil
-      end
+      curElem.tagName == lastTagName ? curElem : nil rescue nil
     end
 
     # execute css selector and return an array of (ole object) elements
