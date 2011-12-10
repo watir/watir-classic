@@ -116,6 +116,14 @@ module Watir
     def_wrap :html, :outerHTML
     # Return the "for" attribute for label
     def_wrap_guard :for, :htmlFor
+    # Return the content attribute for meta tag
+    def_wrap_guard :content
+    # Return the http-equiv attribute for meta tag
+    def_wrap_guard :http_equiv, :httpEquiv
+    # Return font tag attributes
+    def_wrap_guard :color
+    def_wrap_guard :face
+    def_wrap_guard :size
 
     # returns specific Element subclass for current Element
     def to_subtype

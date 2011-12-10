@@ -80,14 +80,8 @@ module Watir
     end
   end
 
-  class Font < NonControlElement
-    def_wrap :color
-    def_wrap :face
-    def_wrap :size
-  end
-
   %w[Pre P Div Span Map Area Li Ul H1 H2 H3 H4 H5 H6
-     Dl Dt Dd Strong Em Del Meta Ol Body].each do |elem|
+     Dl Dt Dd Strong Em Del Ol Body Meta Font].each do |elem|
     module_eval %Q{
       class #{elem} < NonControlElement; end
     }
