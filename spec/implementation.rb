@@ -21,4 +21,5 @@ WatirSpec.implementation do |imp|
   }
 end
 
+include Watir
 include Watir::Exception
