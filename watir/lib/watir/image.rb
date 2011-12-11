@@ -103,9 +103,8 @@ module Watir
     def save(path)
       @container.goto(src)
       begin
-        thrd = fill_save_image_dialog(path)
+        fill_save_image_dialog(path)
         @container.document.execCommand("SaveAs")
-        thrd.join(5)
       ensure
         @container.back
       end
@@ -116,9 +115,7 @@ module Watir
                 "window=::RAutomation::Window.new(:title => 'Save Picture');" <<
                 "window.text_field(:class => 'Edit', :index => 0).set('#{path.gsub(File::SEPARATOR, File::ALT_SEPARATOR)}');" <<
                 "window.button(:value => '&Save').click"
-      Thread.new do
-        system("ruby -e \"#{command}\"")
-      end
+      IO.popen("ruby -e \"#{command}\"")
     end
     private :fill_save_image_dialog
 
