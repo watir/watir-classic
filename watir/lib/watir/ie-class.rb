@@ -960,8 +960,7 @@ module Watir
       return nil if arr.length == 0
 
       doc = document
-      root_tag = arr[0].scan(/(\w*)\[?\d*\]?/).flatten.first
-      curElem = doc.getElementsByTagName(root_tag).item(0)
+      curElem = doc.getElementsByTagName("body").item(0)
       lastTagName = arr.last.to_s.upcase
 
       # lastTagName is like tagName[number] or just tagName. For the first case we need to
