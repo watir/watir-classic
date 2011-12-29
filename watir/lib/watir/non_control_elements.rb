@@ -67,16 +67,8 @@ module Watir
 
   class FieldSet < NonControlElement
     Watir::Container.module_eval do
-      remove_method :field_set
-      remove_method :field_sets
-
-      def fieldset(how={}, what=nil)
-        FieldSet.new(self, how, what)
-      end
-
-      def fieldsets(how={}, what=nil)
-        FieldSets.new(self, how, what)
-      end
+      alias_method :fieldset, :field_set
+      alias_method :fieldsets, :field_sets
     end
   end
 
