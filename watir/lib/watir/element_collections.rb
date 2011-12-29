@@ -4,7 +4,7 @@ module Watir
   class ElementCollections
     include Enumerable
 
-    # Super class for all the iteractor classes
+    # Super class for all the iterator classes
     #   * container - an instance of an IE object
     def initialize(container, how, what)
       if how == :index || (how.is_a?(Hash) && how[:index])
