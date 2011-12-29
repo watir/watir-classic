@@ -79,7 +79,6 @@ module Watir
 
     # the OLE Internet Explorer object
     attr_accessor :ie
-
     # access to the logger object
     attr_accessor :logger
 
@@ -285,13 +284,18 @@ module Watir
     end
 
     def self._find(how, what)
-      ieTemp = nil
+      self._find_all(how, what).first
+    end
+
+    def self._find_all(how, what)
+      ies = []
+      count = -1
       IE.each do |ie|
         window = ie.ie
 
         case how
         when :url
-          ieTemp = window if (what.matches(window.locationURL))
+          ies << window if (what.matches(window.locationURL))
         when :title
           # normal windows explorer shells do not have document
           # note window.document will fail for "new" browsers
@@ -300,17 +304,26 @@ module Watir
             title = window.document.title
           rescue WIN32OLERuntimeError
           end
-          ieTemp = window if what.matches(title)
+          ies << window if what.matches(title)
         when :hwnd
           begin
-            ieTemp = window if what == window.HWND
+            ies << window if what == window.HWND
           rescue WIN32OLERuntimeError
           end
+        when :index
+          count += 1
+          if count == what
+            ies << window
+            break
+          end
+        when nil
+          ies << window
         else
           raise ArgumentError
         end
-      end
-      return ieTemp
+      end      
+
+      ies
     end
 
     # Return the current window handle
@@ -502,6 +515,16 @@ module Watir
     # returns the current url, as displayed in the address bar of the browser
     def url
       return @ie.LocationURL
+    end
+
+    def window(how={}, &blk)
+      win = Window.new(self, how, &blk)
+      win.use &blk if blk
+      win
+    end
+
+    def windows(how={}, &blk)
+      self.class._find_all(how.keys.first, how.values.first).map {|ie| Window.new(self, how, IE.bind(ie), &blk)}
     end
 
     #
