@@ -124,6 +124,12 @@ module Watir
     def_wrap_guard :color
     def_wrap_guard :face
     def_wrap_guard :size
+    # Return option label attribute
+    def_wrap_guard :label
+    # Return table rules attribute
+    def_wrap_guard :rules
+    # Return td headers attribute
+    def_wrap_guard :headers
 
     # returns specific Element subclass for current Element
     def to_subtype
@@ -132,8 +138,10 @@ module Watir
       tag = ole_object.tagName
       if tag == "HTML"
         html_element(:ole_object, ole_object)
-      elsif tag == "INPUT" 
+      elsif tag == "INPUT"
         self.send(ole_object.type, :ole_object, ole_object)
+      elsif tag == "SELECT"
+        self.select_list(:ole_object, ole_object)
       else
         self.send(tag.downcase, :ole_object, ole_object)
       end
@@ -304,6 +312,7 @@ module Watir
     def replace_method(method)
       method == 'click' ? 'click!' : method
     end
+
     private :replace_method
 
     def build_method(method_name, *args)
@@ -316,6 +325,7 @@ module Watir
       end
       "#{replace_method(method_name)}(#{arguments.join(',')})"
     end
+
     private :build_method
 
     def generate_ruby_code(element, method_name, *args)
@@ -325,6 +335,7 @@ module Watir
                     "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
       return ruby_code
     end
+
     private :generate_ruby_code
 
     def spawned_no_wait_command(command)
@@ -372,6 +383,8 @@ module Watir
     end
 
     def dispatch_event(event)
+      assert_exists
+
       if IE.version_parts.first.to_i >= 9
         if @container.page_container.document_mode.to_i >= 9
           ole_object.dispatchEvent(create_event(event))
@@ -384,34 +397,34 @@ module Watir
     end
 
     def create_event(event)
-       event =~ /on(.*)/i
-       event = $1 if $1
-       event.downcase!
-       # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
-       case event
-         when 'abort', 'blur', 'change', 'error', 'focus', 'load',
-              'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
-           event_name = :initEvent
-           event_type = 'HTMLEvents'
-           event_args = [event, true, true]
-         when 'keydown', 'keypress', 'keyup'
-           event_name = :initKeyboardEvent
-           event_type = 'KeyboardEvent'
-           # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-           event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
-         when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
-              'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
-           event_name = :initMouseEvent
-           event_type = 'MouseEvents'
-           # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
-           event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
-         else
-           raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
-       end
-       event = @container.page_container.document.createEvent(event_type)
-       event.send event_name, *event_args
-       event
+     event =~ /on(.*)/i
+     event = $1 if $1
+     event.downcase!
+     # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
+     case event
+       when 'abort', 'blur', 'change', 'error', 'focus', 'load',
+            'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
+         event_name = :initEvent
+         event_type = 'HTMLEvents'
+         event_args = [event, true, true]
+       when 'keydown', 'keypress', 'keyup'
+         event_name = :initKeyboardEvent
+         event_type = 'KeyboardEvent'
+         # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+         event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
+       when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+            'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
+         event_name = :initMouseEvent
+         event_type = 'MouseEvents'
+         # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
+         event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
+       else
+         raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
      end
+     event = @container.page_container.document.createEvent(event_type)
+     event.send event_name, *event_args
+     event
+   end
 
     # This method sets focus on the active element.
     #   raises: UnknownObjectException  if the object is not found
@@ -438,7 +451,7 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     def enabled?
       assert_exists
-      return ! disabled
+      !disabled
     end
 
     # If any parent element isn't visible then we cannot write to the
@@ -469,7 +482,7 @@ module Watir
     # Returns null if attribute doesn't exist.
     def attribute_value(attribute_name)
       assert_exists
-      return ole_object.getAttribute(attribute_name)
+      ole_object.getAttribute(attribute_name)
     end
 
     def perform_action
@@ -495,21 +508,6 @@ module Watir
         super
       end
     end
-  end
-
-  class ElementMapper # Still to be used
-    include Container
-
-    def initialize wrapper_class, container, how, what
-      @wrapper_class = wrapper_class
-      set_container
-      @how = how
-      @what = what
-    end
-
-    def method_missing method, *args
-      locate
-      @wrapper_class.new(@o).send(method, *args)
-    end
+      
   end
 end  
