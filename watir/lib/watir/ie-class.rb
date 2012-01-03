@@ -939,7 +939,6 @@ module Watir
           htmlString += xml_escape(element_text)
           return htmlString
         end
-        #puts tagName
         #Skip comment and script tag
         if tagName =~ /^!/ || tagName== "script" || tagName =="style"
           return htmlString
