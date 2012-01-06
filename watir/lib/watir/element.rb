@@ -31,7 +31,7 @@ module Watir
     end
 
     def locate
-      return if [Element, TableBodies].include? self.class
+      return if self.class == Element
       tag = self.class.const_defined?(:TAG) ? self.class::TAG : self.class.name.split("::").last
       @o = @container.tagged_element_locator(tag, @how, @what).locate
     end    
@@ -131,16 +131,21 @@ module Watir
     # Return td headers attribute
     def_wrap_guard :headers
 
+    def tag_name
+      assert_exists
+      @o.tagName.downcase
+    end
+
     # returns specific Element subclass for current Element
     def to_subtype
       assert_exists
 
-      tag = ole_object.tagName
-      if tag == "HTML"
+      tag = tag_name
+      if tag == "html"
         html_element(:ole_object, ole_object)
-      elsif tag == "INPUT"
+      elsif tag == "input"
         self.send(ole_object.type, :ole_object, ole_object)
-      elsif tag == "SELECT"
+      elsif tag == "select"
         self.select_list(:ole_object, ole_object)
       else
         self.send(tag.downcase, :ole_object, ole_object)
