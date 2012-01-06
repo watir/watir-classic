@@ -22,11 +22,11 @@ module Watir
     # Return the Watir options, as a hash. If they haven't been parsed yet,
     # they will be now.
     def options
-      @@options ||= Watir::Options.new.execute
+      @@options ||= Watir::WatirOptions.new.execute
     end
   end
 
-  class Options < UserChoices::Command
+  class WatirOptions < UserChoices::Command
     include UserChoices
     def add_sources builder
       builder.add_source EnvironmentSource, :with_prefix, 'watir_'
