@@ -5,16 +5,20 @@ module Watir
     #   * index         - the index of the row
     def [](index)
       assert_exists
-      TableRow.new(@container, :ole_object, @o.rows.item(index))
+      TableRow.new(self, :ole_object, @o.rows.item(index))
     end
     
     def strings
       assert_exists
-      rows.reduce([]) do |rows_memo, row|
-        rows_memo << row.cells.reduce([]) do |cells_memo, cell|
-          cells_memo << cell.text
+      rows_memo = []
+      @o.rows.each do |row|
+        cells_memo = []
+        row.cells.each do |cell|
+          cells_memo << TableCell.new(self, :ole_object, cell).text
         end
+        rows_memo << cells_memo
       end
+      rows_memo
     end
 
     def hashes
