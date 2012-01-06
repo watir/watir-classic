@@ -21,14 +21,6 @@ module Watir
       rows_memo
     end
 
-    def hashes
-      headers = cells.map(&:text) 
-      rows.reduce([]) do |rows_memo, row|
-        rows_memo << row.cells.each_with_index.reduce({}) do |cells_memo, cell_with_index|
-          cells_memo.merge headers[cell_with_index[1]] => cell_with_index[0].text
-        end
-      end
-    end
   end
 
   # This class is used for dealing with tables.
@@ -122,6 +114,34 @@ module Watir
       return (0..column_count(rownumber) - 1).collect {|i| self[rownumber][i].text}
     end
     
+    def hashes
+      assert_exists
+
+      headers = []
+      @o.rows.item(0).cells.each do |cell|
+        headers << TableCell.new(self, :ole_object, cell).text
+      end
+
+      rows_memo = []
+      i = 0
+      @o.rows.each do |row|
+        next if row.uniqueID == @o.rows.item(0).uniqueID
+
+        cells_memo = {}
+        cells = row.cells
+        raise "row at index #{i} has #{cells.length} cells, expected #{headers.length}" if cells.length < headers.length
+
+        j = 0
+        cells.each do |cell|
+          cells_memo[headers[j]] = TableCell.new(self, :ole_object, cell).text
+          j += 1
+        end
+
+        rows_memo << cells_memo
+        i += 1
+      end
+      rows_memo
+    end
   end
 
   class TableSection < NonControlElement

@@ -75,7 +75,7 @@ module Watir
       elsif @specifiers[:css]
         els = @container.send(:elements_by_css, @specifiers[:css])
       elsif @specifiers[:ole_object]
-        els << @specifiers[:ole_object]
+        return [@specifiers[:ole_object]]
       end      
 
       els.select {|element| type_matches?(element) && match_with_specifiers?(create_element element)}
