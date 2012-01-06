@@ -39,7 +39,7 @@ module Watir
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.
     def submit 
       assert_exists
-      @o.invoke('submit')
+      @o.submit if dispatch_event "onSubmit"
       @container.wait
     end
     
