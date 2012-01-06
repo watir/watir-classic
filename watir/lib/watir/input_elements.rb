@@ -22,199 +22,120 @@ module Watir
   class SelectList < InputElement
     #:stopdoc:
     INPUT_TYPES = ["select-one", "select-multiple"]
-    #exposed to Option class
-    attr_accessor :o
     #:startdoc:
+
+    def_wrap :multiple?, :multiple
 
     # This method clears the selected items in the select box
     def clear
-      assert_exists
-      highlight(:set)
-      wait = false
-      @o.each do |selectBoxItem|
-        if selectBoxItem.selected
-          selectBoxItem.selected = false
-          wait = true
-        end
+      perform_action do
+        options.each {|option| option.clear}
       end
-      @container.wait if wait
-      highlight(:clear)
     end
-
 
     # This method selects an item, or items in a select box, by text.
     # Raises NoValueFoundException   if the specified value is not found.
     #  * item   - the thing to select, string or reg exp
     def select(item)
-      select_item_in_select_list(:text, item)
+      matching_options = []
+      perform_action do
+        matching_options = matching_items_in_select_list(:text, item) + 
+          matching_items_in_select_list(:label, item) + 
+          matching_items_in_select_list(:value, item)
+        raise NoValueFoundException, "No option with :text, :label or :value of #{item.inspect} in this select element" if matching_options.empty?
+        matching_options.each(&:select)
+      end
+      matching_options.first.text
     end
-    alias :set :select
        
     # Selects an item, or items in a select box, by value.
-    # Raises NoValueFoundException   if the specified value is not found.
-    #  * item   - the value of the thing to select, string, reg exp
+    # Raises NoValueFoundException if the specified value is not found.
+    #  * item   - the value of the thing to select, string or reg exp
     def select_value(item)
-      select_item_in_select_list(:value, item)
-    end
-    
-    # BUG: Should be private
-    # Selects something from the select box
-    #  * name  - symbol  :value or :text - how we find an item in the select box
-    #  * item  - string or reg exp - what we are looking for
-    def select_item_in_select_list(attribute, value) #:nodoc:
-      assert_exists
-      highlight(:set)
-      found = false
-
-      value = value.to_s unless [Regexp, String].any? { |e| value.kind_of? e }
-
-      @container.log "Setting box #{@o.name} to #{attribute.inspect} => #{value.inspect}"
-      @o.each do |option| # items in the list
-        if value.matches(option.invoke(attribute.to_s))
-          if option.selected
-            found = true
-            break
-          else
-            option.selected = true
-            dispatch_event("onChange")
-            @container.wait
-            found = true
-            break
-          end
-        end
-      end
-
-      unless found
-        raise NoValueFoundException, "No option with #{attribute.inspect} of #{value.inspect} in this select element"
-      end
-      highlight(:clear)
-    end
-
-    # Returns array of all text items displayed in a select box
-    # An empty array is returned if the select box has no contents.
-    # Raises UnknownObjectException if the select box is not found
-    def options 
-      assert_exists
-      @container.log "There are #{@o.length} items"
-      returnArray = []
-      @o.each { |thisItem| returnArray << thisItem.text }
-      return returnArray
+      matching_options = matching_items_in_select_list(:value, item)
+      raise NoValueFoundException, "No option with :value of #{item.inspect} in this select element" if matching_options.empty?
+      matching_options.each(&:select)
+      matching_options.first.value
     end
     
     # Returns array of the selected text items in a select box
     # Raises UnknownObjectException if the select box is not found.
     def selected_options
-      assert_exists
-      returnArray = []
-      @container.log "There are #{@o.length} items"
-      @o.each do |thisItem|
-        if thisItem.selected
-          @container.log "Item (#{thisItem.text}) is selected"
-          returnArray << thisItem.text
-        end
-      end
-      return returnArray
+      options.select(&:selected?)
     end
 
     # Does the SelectList include the specified option (text)?
     def include? text_or_regexp
-      getAllContents.grep(text_or_regexp).size > 0
+      !options.map(&:text).grep(text_or_regexp).empty?
     end
 
     # Is the specified option (text) selected? Raises exception of option does not exist.
     def selected? text_or_regexp
-      unless includes? text_or_regexp
-        raise UnknownObjectException, "Option #{text_or_regexp.inspect} not found."
-      end
-
-      getSelectedItems.grep(text_or_regexp).size > 0
+      raise UnknownObjectException, "Option #{text_or_regexp.inspect} not found." unless include? text_or_regexp
+      !selected_options.map(&:text).grep(text_or_regexp).empty?
     end
 
-    # this method provides the access to the <tt><option></tt> item in select_list
-    #
-    # Usage example:
-    #
-    # Given the following html:
-    #
-    #   <select  id="gender">
-    #     <option value="U">Unknown</option>
-    #     <option value="M" selected>Male</option>
-    #     <option value="F">Female</option>
-    #   </select>
-    #
-    # get the +value+ attribute of option with visible +text+ 'Female'
-    #   browser.select_list(:id, 'gender').option(:text, 'Female').value #=> 'F'
-    # or find out if the +value+ 'M' is selected
-    #   browser.select_list(:id, 'gender').option(:value, 'M').selected #=> true
-    #
-    #  * attribute  - Symbol :value, :text or other attribute - how we find an item in the select box
-    #  * value  - string or reg exp - what we are looking for
-    def option(attribute, value)
-      assert_exists
-      Option.new(self, attribute, value)
-    end
-  end
-  
-  module OptionAccess
-    # text of SelectList#option
-    def text
-      @option.text
-    end
-    # value of SelectList#option
-    def value
-      @option.value
-    end
-    # return true if SelectList#option is selected, else false
-    def selected
-      @option.selected
-    end
-  end
-  
-  class OptionWrapper #:nodoc:all
-    include OptionAccess
-    def initialize(option)
-      @option = option
-    end
-  end
-  
-  # An item in a select list.
-  # Normally a user would not need to create this object as it is returned by the Watir::SelectList#option method
-  class Option
-    include OptionAccess
-    include Watir::Exception
-    def initialize(select_list, attribute, value)
-      @select_list = select_list
-      @how = attribute
-      @what = value
-      @option = nil
-      
-      unless [:text, :value, :label].include? attribute
-        raise MissingWayOfFindingObjectException,
-                    "Option does not support attribute #{@how}"
-      end
-      @select_list.o.each do |option| # items in the list
-        if value.matches(option.invoke(attribute.to_s))
-          @option = option
-          break
+    private
+
+    def matching_items_in_select_list(attribute, value)
+      options.select do |opt|
+        if value.is_a?(Regexp)
+          opt.send(attribute) =~ value
+        elsif value.is_a?(String) || value.is_a?(Numeric)
+          opt.send(attribute) == value
+        else
+          raise TypeError, "#{value.inspect} can be only String, Regexp or Numeric!"
         end
       end
-      
-    end
-    def assert_exists
-      unless @option
-        raise UnknownObjectException,
-                    "Unable to locate an option using #{@how} and #{@what}"
-      end
-    end
-    private :assert_exists
-    
-    # select the accessed option in select_list
-    def select
-      assert_exists
-      @select_list.select_item_in_select_list(@how, @what)
     end
   end
   
+  class Option < NonControlElement
+
+    def select
+      perform_action do
+        unless selected?
+          ole_object.selected = true
+          select_list.dispatch_event("onChange")
+          @container.wait
+        end
+      end
+    end
+
+    def clear
+      raise TypeError, "you can only clear multi-selects" unless select_list.multiple?
+
+      perform_action do
+        if selected?
+          ole_object.selected = false
+          select_list.dispatch_event("onChange")
+          @container.wait
+        end
+      end
+    end
+
+    def selected?
+      assert_exists
+      ole_object.selected
+    end
+
+    def text
+      l = label
+      l.empty? ? super : l rescue ''
+    end
+
+    private
+
+    def select_list
+      return @select_list if @select_list
+      el = parent
+      el = el.parent until el.is_a?(SelectList)
+
+      raise "SELECT element was not found for #{self}!" unless el
+      @select_list = el
+    end
+  end
+
   # 
   # Input: Button
   #
@@ -252,6 +173,8 @@ module Watir
     #   Raises UnknownObjectException if the object can't be found.
     def_wrap :readonly?, :readOnly
 
+    alias_method :text, :value
+
     #:startdoc:
     
     # return number of maxlength attribute
@@ -264,7 +187,6 @@ module Watir
       end
     end
         
-    
     def text_string_creator
       n = []
       n << "length:".ljust(TO_S_SIZE) + self.size.to_s

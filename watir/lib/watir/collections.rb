@@ -44,10 +44,10 @@ module Watir
   class Inses < ElementCollections
     def element_class; Ins; end
   end
-  
+
   %w[Link Li Map Area Image Table TableRow TableCell
      Label Pre P Span Div Dl Dt Dd Strong Em Del
-     Font H1 H2 H3 H4 H5 H6 Meta Ol Ul FieldSet].each do |element|
+     Font H1 H2 H3 H4 H5 H6 Meta Ol Ul FieldSet Option].each do |element|
     module_eval %Q{
       class #{element}s < ElementCollections; end
     }
