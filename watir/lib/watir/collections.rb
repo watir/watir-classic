@@ -45,7 +45,7 @@ module Watir
     def element_class; Ins; end
   end
 
-  %w[Link Li Map Area Image Table TableRow TableCell
+  %w[Link Li Map Area Image Table TableRow TableCell TableHeader TableFooter TableBody
      Label Pre P Span Div Dl Dt Dd Strong Em Del
      Font H1 H2 H3 H4 H5 H6 Meta Ol Ul FieldSet Option].each do |element|
     module_eval %Q{

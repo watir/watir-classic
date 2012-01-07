@@ -80,7 +80,7 @@ module Watir
     def each
       assert_exists
       @o.rows.each do |row| 
-        yield TableRow.new(@container, :ole_object, row)
+        yield TableRow.new(self, :ole_object, row)
       end
     end
     
