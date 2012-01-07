@@ -73,7 +73,7 @@ module Watir
   end
 
   %w[Pre P Div Span Map Area Li Ul H1 H2 H3 H4 H5 H6
-     Dl Dt Dd Strong Em Del Ol Body Meta Font].each do |elem|
+     Dl Dt Dd Strong Em Del Ol Body Meta Font Frameset].each do |elem|
     module_eval %Q{
       class #{elem} < NonControlElement; end
     }
