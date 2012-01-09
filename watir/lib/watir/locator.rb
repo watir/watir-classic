@@ -82,7 +82,7 @@ module Watir
     end
 
     def type_matches?(el)
-      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@tags && (@tags.include?(el.tagname) || @tags.include?(el.type)))
+      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@tags && (@tags.include?(el.tagname) || @tags.include?(el.invoke('type'))))
     end
 
     def create_element ole_object

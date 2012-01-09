@@ -144,7 +144,7 @@ module Watir
       if tag == "html"
         html_element(:ole_object, ole_object)
       elsif tag == "input"
-        self.send(ole_object.type, :ole_object, ole_object)
+        self.send(ole_object.invoke('type'), :ole_object, ole_object)
       elsif tag == "select"
         self.select_list(:ole_object, ole_object)
       else
