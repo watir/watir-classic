@@ -111,7 +111,7 @@ module Watir
     end
     
     def fill_save_image_dialog(path)
-      command = "require 'rautomation';" <<
+      command = "require 'rubygems';require 'rautomation';" <<
                 "window=::RAutomation::Window.new(:title => 'Save Picture');" <<
                 "window.text_field(:class => 'Edit', :index => 0).set('#{path.gsub(File::SEPARATOR, File::ALT_SEPARATOR)}');" <<
                 "window.button(:value => '&Save').click"
