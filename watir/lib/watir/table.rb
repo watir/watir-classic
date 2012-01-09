@@ -241,16 +241,6 @@ module Watir
   class TableCell < NonControlElement
     TAG = "TD"
 
-    def __ole_inner_elements
-      locate
-      return @o.all
-    end
-    
-    def document
-      locate
-      return @o
-    end
-    
     alias to_s text
     
     def colspan
