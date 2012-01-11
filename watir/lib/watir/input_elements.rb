@@ -374,6 +374,10 @@ module Watir
       end
       value
     end
+
+    def label
+      @container.label(:for => name).text
+    end
   end
   
   # this class can be used to access hidden field objects
