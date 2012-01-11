@@ -32,9 +32,11 @@ module Watir
 
     def locate
       return if self.class == Element
-      tag = self.class.const_defined?(:TAG) ? self.class::TAG : self.class.name.split("::").last
-      @o = @container.tagged_element_locator(tag, @how, @what).locate
-    end    
+
+      tags = self.class.const_defined?(:TAG) ? [self.class::TAG] : 
+             self.class.const_defined?(:TAGS) ? self.class::TAGS : [self.class.name.split("::").last.upcase]
+      @o = @container.locator_for(TaggedElementLocator, tags, @how, @what, self.class).locate
+    end  
 
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
     def ole_object

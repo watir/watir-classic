@@ -1,6 +1,8 @@
 module Watir
 
   class Form < Element
+    TAG = 'FORM'
+
     #   * container   - the containing object, normally an instance of IE
     #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
     #   * what        - what we use to access the form
@@ -33,7 +35,7 @@ module Watir
     end    
 
     def locate
-      @o = @container.locator_for(FormLocator, @how, @what).locate
+      @o = @container.locator_for(FormLocator, [self.class::TAG], @how, @what, self.class).locate
     end
 
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.

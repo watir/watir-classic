@@ -1,25 +1,13 @@
 module Watir
   class InputElementCollections < ElementCollections
     def each
-      @container.input_element_locator(@how, @what, element_class::INPUT_TYPES, element_class).each {|element| yield element}
+      @container.locator_for(InputElementLocator, element_class::INPUT_TYPES, @how, @what, element_class).each {|element| yield element}
     end    
   end
 
-  class Frames < ElementCollections
-    def each
-      @container.locator_for(FrameLocator, @how, @what).each {|element| yield element}
-    end
-  end
-
-  class Forms < ElementCollections
-    def each
-      @container.locator_for(FormLocator, @how, @what).each {|element| yield element}
-    end    
-  end
-  
   class HTMLElements < ElementCollections
     def each
-      @container.locator_for(ElementLocator, @how, @what).each { |element| yield element }
+      @container.locator_for(TaggedElementLocator, ["*"], @how, @what, Element).each { |element| yield element }
     end
   end
 
@@ -45,7 +33,7 @@ module Watir
     def element_class; Ins; end
   end
 
-  %w[Link Li Map Area Image Table TableRow TableCell TableHeader TableFooter TableBody
+  %w[Form Frame Link Li Map Area Image Table TableRow TableCell TableHeader TableFooter TableBody
      Label Pre P Span Div Dl Dt Dd Strong Em Del
      Font H1 H2 H3 H4 H5 H6 Meta Ol Ul FieldSet Option].each do |element|
     module_eval %Q{

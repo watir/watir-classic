@@ -2,9 +2,9 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      locator_or_element = @container.input_element_locator(@how, @what, self.class::INPUT_TYPES, self.class)
-      @o = locator_or_element.is_a?(WIN32OLE) ? locator_or_element : locator_or_element.locate
+      @o = @container.locator_for(InputElementLocator, self.class::INPUT_TYPES, @how, @what, self.class).locate
     end
+
     def initialize(container, how, what)
       set_container container
       @how = how

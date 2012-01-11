@@ -3,6 +3,28 @@ module Watir
     include Watir
     include Watir::Exception
 
+    def initialize container, tags, klass
+      @container = container
+      @tags = tags
+      @klass = klass
+    end
+
+    def each
+      if has_excluding_specifiers?
+        locate_elements_by_xpath_css_ole.each do |element|
+          yield element
+        end
+      else
+        @tags.each do |tag|
+          each_element(tag) do |element| 
+            next unless type_matches?(element.ole_object) && match_with_specifiers?(element)
+            yield element          
+          end 
+        end
+      end
+      nil
+    end    
+
     def document
       @document ||= @container.document
     end
@@ -32,8 +54,8 @@ module Watir
       return true if has_excluding_specifiers?
       @specifiers.all? do |how, what|
         how == :index || 
-          ((how.to_s =~ /^data_.*/ && element.send(how) == what) || 
-           match?(element, how, what)) && type_matches?(element.ole_object)
+          (how.to_s =~ /^data_.*/ && element.send(how) == what) || 
+           match?(element, how, what)
       end
     end
 
@@ -82,7 +104,9 @@ module Watir
     end
 
     def type_matches?(el)
-      @tag == "*" || (@tag && el.nodeName.downcase == @tag.downcase) || (@tags && (@tags.include?(el.tagname) || @tags.include?(el.invoke('type'))))
+      @tags == ["*"] || 
+        @tags.include?(el.tagName) || 
+        @tags.include?(el.invoke('type')) rescue false
     end
 
     def create_element ole_object
@@ -98,31 +122,11 @@ module Watir
   end
 
   class TaggedElementLocator < Locator
-    def initialize(container, tag, klass)
-      @container = container
-      @tag = tag
-      @klass = klass || Element
-    end
-
-    def each_element tag
+    def each_element(tag)
       document.getElementsByTagName(tag).each do |ole_object|
         yield create_element ole_object
       end
     end
-
-    def each
-      if has_excluding_specifiers?
-        locate_elements_by_xpath_css_ole.each do |element|
-          yield element
-        end
-      else
-        each_element(@tag) do |element| 
-          next unless match_with_specifiers?(element)
-          yield element          
-        end 
-      end
-      nil
-    end    
 
     def locate
       el = locate_by_id
@@ -142,7 +146,7 @@ module Watir
         method = element.method(how)
       rescue NameError
         raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tag || @tags.join(", ")}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
       end
       case method.arity
       when 0
@@ -151,20 +155,14 @@ module Watir
         method.call(what)
       else
         raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tag || @tags.join(", ")}> element (#{what})"
+          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
       end
     end
 
   end
 
   class FrameLocator < TaggedElementLocator
-    def initialize(container)
-      @container = container
-      @tags = Frame::TAG
-      @klass = Frame
-    end
-
-    def each_element tag
+    def each_element(tag)
       frames = document.frames
       i = 0
       document.getElementsByTagName(tag).each do |ole_object|
@@ -174,16 +172,6 @@ module Watir
         i += 1
       end
     end
-
-    def each
-      @tags.each do |t|
-        each_element(t) do |element| 
-          next unless match_with_specifiers?(element)
-          yield element          
-        end 
-      end
-      nil
-    end        
 
     def locate
       # do not locate frames by getElementById or by xpath since can't get the correct
@@ -197,10 +185,6 @@ module Watir
   end
 
   class FormLocator < TaggedElementLocator
-    def initialize(container)
-      super(container, 'FORM', Form)
-    end
-
     def each_element(tag)
       document.forms.each do |form|
         yield create_element form
@@ -209,12 +193,6 @@ module Watir
   end
 
   class InputElementLocator < Locator
-    def initialize container, tags, klass
-      @container = container
-      @tags = tags
-      @klass = klass || Element
-    end
-
     def each_element
       elements = locate_by_name || @container.__ole_inner_elements
       elements.each do |object|
@@ -242,13 +220,13 @@ module Watir
         end
       else
         each_element do |element| 
-          next unless @tags.include?(element.type) && match_with_specifiers?(element)
+          next unless type_matches?(element.ole_object) && match_with_specifiers?(element)
           yield element
         end 
       end
       nil
     end    
-    
+
     # return true if the element matches the provided how and what
     def match? element, how, what
       begin
@@ -272,11 +250,4 @@ module Watir
     end
   end
 
-  # This is like the TaggedElementLocator but
-  # get all the elements by forcing @tag to be '*'
-  class ElementLocator < TaggedElementLocator
-    def initialize(container)
-      super(container, "*", Element)
-    end
-  end  
 end    

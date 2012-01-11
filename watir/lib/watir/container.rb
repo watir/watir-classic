@@ -98,20 +98,8 @@ module Watir
     # Not for external use, but cannot set to private due to usages in Element
     # classes.
 
-    def input_element_locator(how, what, types, klass=nil)
-      locator = InputElementLocator.new self, types, klass
-      locator.set_specifier how, what
-      locator
-    end
-    
-    def tagged_element_locator(tag, how, what, klass=nil)
-      locator = TaggedElementLocator.new self, tag, klass
-      locator.set_specifier how, what
-      locator
-    end
-
-    def locator_for(locator_class, how, what)
-      locator = locator_class.new self
+    def locator_for(locator_class, tags, how, what, klass)
+      locator = locator_class.new self, tags, klass
       locator.set_specifier how, what
       locator
     end

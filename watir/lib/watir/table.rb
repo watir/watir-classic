@@ -239,7 +239,7 @@ module Watir
   
   # this class is a table cell - when called via the Table object
   class TableCell < NonControlElement
-    TAG = "TD"
+    TAGS = ["TH", "TD"]
 
     alias to_s text
     

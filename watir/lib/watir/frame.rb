@@ -1,13 +1,13 @@
 module Watir
   class Frame < Element
     include PageContainer
-    TAG = ['FRAME', 'IFRAME']
+    TAGS = ['FRAME', 'IFRAME']
 
     attr_accessor :document
 
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate
-      frame, document = @container.locator_for(FrameLocator, @how, @what).locate
+      frame, document = @container.locator_for(FrameLocator, self.class::TAGS, @how, @what, self.class).locate
       if frame && document
         @o = frame
         begin
