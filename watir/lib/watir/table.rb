@@ -148,48 +148,34 @@ module Watir
     include RowContainer
 
     Watir::Container.module_eval do
-      remove_method :table_section
-    end
-  end
-  
-  class TableBody < TableSection
-    TAG = "TBODY"
-
-    Watir::Container.module_eval do
       def tbody(how={}, what=nil)
-        TableBody.new(self, how, what)
+        how = {how => what} if what
+        TableSection.new(self, how.merge(:tag_name => "tbody"), nil)
       end
 
       def tbodys(how={}, what=nil)
-        TableBodys.new(self, how, what)
+        how = {how => what} if what
+        TableSectionCollection.new(self, how.merge(:tag_name => "tbody"), nil)
       end
-    end
-  end
 
-  class TableHeader < TableSection
-    TAG = "THEAD"
-
-    Watir::Container.module_eval do
       def thead(how={}, what=nil)
-        TableHeader.new(self, how, what)
+        how = {how => what} if what
+        TableSection.new(self, how.merge(:tag_name => "thead"), nil)
       end
 
       def theads(how={}, what=nil)
-        TableHeaders.new(self, how, what)
+        how = {how => what} if what
+        TableSectionCollection.new(self, how.merge(:tag_name => "thead"), nil)
       end
-    end
-  end
-    
-  class TableFooter < TableSection
-    TAG = "TFOOT"
 
-    Watir::Container.module_eval do
       def tfoot(how={}, what=nil)
-        TableFooter.new(self, how, what)
+        how = {how => what} if what
+        TableSection.new(self, how.merge(:tag_name => "tfoot"), nil)
       end
 
       def tfoots(how={}, what=nil)
-        TableFooters.new(self, how, what)
+        how = {how => what} if what
+        TableSectionCollection.new(self, how.merge(:tag_name => "tfoot"), nil)
       end
     end
   end

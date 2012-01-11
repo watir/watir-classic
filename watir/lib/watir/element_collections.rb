@@ -71,8 +71,10 @@ module Watir
     end
 
     def element_tags
-      tags = element_class.const_defined?(:TAG) ? [element_class::TAG] : 
-             element_class.const_defined?(:TAGS) ? element_class::TAGS : [element_class.name.split("::").last.upcase]      
+      tags = @how.is_a?(Hash) && @how[:tag_name] ? [@how[:tag_name].upcase] : 
+             element_class.const_defined?(:TAG) ? [element_class::TAG] : 
+             element_class.const_defined?(:TAGS) ? element_class::TAGS : 
+             [element_class.name.split("::").last.upcase]      
       tags
     end
   end

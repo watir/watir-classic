@@ -33,6 +33,10 @@ module Watir
     def element_class; Ins; end
   end
 
+  class TableSectionCollection < ElementCollections
+    def element_class; TableSection; end
+  end
+
   %w[Form Frame Link Li Map Area Image Table TableRow TableCell TableHeader TableFooter TableBody
      Label Pre P Span Div Dl Dt Dd Strong Em Del
      Font H1 H2 H3 H4 H5 H6 Meta Ol Ul FieldSet Option].each do |element|
