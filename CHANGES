@@ -1,3 +1,44 @@
+== 3.0.0 - 2012/01/13 - more conformance with WatirSpec
+
+* Button#text returns value if exists instead of text
+* Browser#goto prepends url automatically with http:// if scheme is missing
+* Browser#element(s)_by_(xpath/css) are now private methods - use #element(:css => ...) and #element(:xpath => ...) instead
+* Browser#label supports searching by :for attribute
+* Browser#options method for searching <option> elements
+* Browser#body, #thead, #tfoot, #tbody, #frameset and #fieldset added
+* Browser#window and Browser#windows added implementing window switching API (https://github.com/jarib/watirspec/blob/master/window_switching_spec.rb)
+* Element#present? returns false if exception is thrown by #exists? or #visible?
+* Element#style returns CSS text instead of OLE object
+* Element#text returns an empty string for non-visible elements
+* Element#parent returns correct instance of Element class (e.g. Div instead of Element)
+* Element#focus focuses document before focusing on the element
+* Element#right_click and Element#double_click added
+* Element#to_subtype added which returns specific instance of Watir::Element subclass
+* Element#send_keys added
+* Element#eql? as an alias for Element#== added
+* Element#tag_name added
+* ElementCollection#[] method supports negative indexes like regular Arrays
+* ElementCollection#[] returns always an object, even if the index is out of bounds
+* FileField#set and Image#save uses correct Windows file path (e.g. convert "\"-es into "/"-es)
+* FileField#set raises Errno::ENOENT instead of WatirException if file doesn't exist
+* FileField#value= as an alias for FileField#set added
+* Font#color, #face and #size added
+* Form#submit triggers onSubmit event and doesn't submit the form if event's callback returns false
+* Frame#execute_script added
+* Image#file_size, #height and #width return integer instead of a string
+* Image#save blocking fixed
+* Meta#content and #http_equiv added
+* Option code rewritten, causing changes in its API
+* SelectList code rewritten, causing changes in its API
+* SelectList#(selected_)options returns now Options collection instead of an array of strings
+* Table and its subelements code rewritten, causing changes in its API
+* Table#strings and #hashes added
+* TextField#label added
+* searching elements will find only correct types - e.g. using Browser#div returns only DIV element even if all other provided selectors match
+* all selectors and tag of the element needs to match even if searching by :id
+* supporting html5 data-* attributes by using :data_* for locating and #data_* for retrieving attribute values
+* many other internal changes
+
 == Version 2.0.4 - 2011/10/29
 
 * IE#execute_script escapes multi-line JavaScript scripts
