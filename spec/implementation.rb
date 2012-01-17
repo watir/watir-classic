@@ -11,7 +11,7 @@ WatirSpec.implementation do |imp|
     imp.browser_class = FireWatir::Firefox
     browser = :firefox
   else
-    WatirSpec.persistent_browser = true
+    WatirSpec.persistent_browser = false
     imp.browser_class = Watir::IE
     browser = :ie
   end

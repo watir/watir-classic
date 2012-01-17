@@ -416,6 +416,10 @@ module Watir
          event_name = :initEvent
          event_type = 'HTMLEvents'
          event_args = [event, true, true]
+       when 'select'
+         event_name = :initUIEvent
+         event_type = 'UIEvent'
+         event_args = [event, true, true, @container.page_container.document.parentWindow.window,0]
        when 'keydown', 'keypress', 'keyup'
          event_name = :initKeyboardEvent
          event_type = 'KeyboardEvent'

@@ -237,8 +237,8 @@ module Watir
         raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "
       end
       
-      @o.focus
-      @o.select
+      @o.focus(0)
+      @o.select(0)
       value = self.value
       
       dispatch_event("onSelect")
@@ -265,8 +265,8 @@ module Watir
       highlight(:set)
       
       @o.scrollIntoView
-      @o.focus
-      @o.select
+      @o.focus(0)
+      @o.select(0)
       dispatch_event("onSelect")
       @o.value = ""
       dispatch_event("onKeyPress")
@@ -286,7 +286,7 @@ module Watir
       
       highlight(:set)
       @o.scrollIntoView
-      @o.focus
+      @o.focus(0)
       type_by_character(value)
       highlight(:clear)
     end
@@ -303,8 +303,8 @@ module Watir
       highlight(:set)
       @o.scrollIntoView
       if type_keys
-	      @o.focus
-	      @o.select
+	      @o.focus(0)
+	      @o.select(0)
 	      dispatch_event("onSelect")
 	      dispatch_event("onKeyPress")
 	      @o.value = ""
