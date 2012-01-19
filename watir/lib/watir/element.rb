@@ -151,8 +151,10 @@ module Watir
         self.send(ole_object.invoke('type'), :ole_object, ole_object)
       elsif tag == "select"
         self.select_list(:ole_object, ole_object)
-      else
+      elsif self.respond_to?(tag.downcase)
         self.send(tag.downcase, :ole_object, ole_object)
+      else
+        self
       end
     end
 
