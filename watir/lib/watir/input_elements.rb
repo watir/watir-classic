@@ -335,6 +335,10 @@ module Watir
     	self
     end
 
+    def label
+      @container.label(:for => name).text
+    end
+
     private
 
     # Type the characters in the specified string (value) one by one.
@@ -375,8 +379,19 @@ module Watir
       value
     end
 
-    def label
-      @container.label(:for => name).text
+  end
+
+  class TextArea < TextField
+    INPUT_TYPES = ["textarea"]
+
+    Watir::Container.module_eval do
+      def textareas(how={}, what=nil)
+        TextAreas.new(self, how, what)
+      end
+
+      def textarea(how={}, what=nil)
+        TextArea.new(self, how, what)
+      end
     end
   end
   

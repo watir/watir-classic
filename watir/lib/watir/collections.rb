@@ -23,7 +23,7 @@ module Watir
     def element_tag; 'SELECT'; end
   end  
 
-  %w[Button FileField Radio TextField Hidden].each do |element|
+  %w[Button FileField Radio TextField TextArea Hidden].each do |element|
     module_eval %Q{
       class #{element}s < InputElementCollections; end
     }
