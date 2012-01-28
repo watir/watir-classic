@@ -451,6 +451,12 @@ module Watir
       ole_object.focus
     end
 
+    def focused?
+      assert_exists
+      assert_enabled
+      @page_container.document.activeElement.uniqueNumber == unique_number
+    end
+
     # Returns whether this element actually exists.
     def exists?
       begin
