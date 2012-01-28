@@ -54,9 +54,26 @@ module Watir
       return true if has_excluding_specifiers?
       @specifiers.all? do |how, what|
         how == :index || 
-          (how.to_s =~ /^data_.*/ && element.send(how) == what) || 
-           match?(element, how, what)
+          (how == :class_name && match_class?(element, what)) ||
+          match?(element, how, what)
       end
+    end
+
+    def match_class? element, what
+      classes = element.class_name.split(/\s+/)
+      classes.any? {|clazz| what.matches(clazz)}
+    end
+
+    # return true if the element matches the provided how and what
+    def match? element, how, what
+      begin
+        attribute = element.send(how)
+      rescue NoMethodError
+        raise MissingWayOfFindingObjectException,
+          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
+      end
+
+      what.matches(attribute)
     end
 
     def has_excluding_specifiers?
@@ -140,25 +157,6 @@ module Watir
       end # elements
       nil
     end
-
-    def match?(element, how, what)
-      begin
-        method = element.method(how)
-      rescue NameError
-        raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
-      end
-      case method.arity
-      when 0
-        what.matches method.call
-      when 1
-        method.call(what)
-      else
-        raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
-      end
-    end
-
   end
 
   class FrameLocator < TaggedElementLocator
@@ -226,18 +224,6 @@ module Watir
       end
       nil
     end    
-
-    # return true if the element matches the provided how and what
-    def match? element, how, what
-      begin
-        attribute = element.send(how)
-      rescue NoMethodError
-        raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding an <INPUT> element (#{what})"
-      end
-
-      what.matches(attribute)
-    end
 
     private
 
