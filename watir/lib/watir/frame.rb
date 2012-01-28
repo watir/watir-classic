@@ -55,9 +55,7 @@ module Watir
       wrapper = "_watir_helper_div_#{Time.now.to_i}"
       cmd = "var e = document.createElement('DIV'); e.style.display = 'none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
       document.parentWindow.execScript(cmd)
-      wrapper_obj = document.getElementById(wrapper)
-      result_value = wrapper_obj.innerHTML
-      result_value
+      document.getElementById(wrapper).wrapper_obj.innerHTML
     end
 
   end

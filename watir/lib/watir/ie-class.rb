@@ -417,12 +417,9 @@ module Watir
     rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
       escaped_src = source.to_s.gsub(/[\r\n']/) {|m| "\\#{m}"}
       wrapper = "_watir_helper_div_#{rand(100000)}"
-      cmd = "var e = document.createElement('DIV'); e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
+      cmd = "var e = document.createElement('DIV'); e.style.display='none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
       document.parentWindow.execScript(cmd)
-      wrapper_obj = document.getElementById(wrapper)
-      result_value = wrapper_obj.innerHTML
-      wrapper_obj.style.display = 'none'
-      result_value
+      document.getElementById(wrapper).innerHTML
     end
 
     # clear the list of urls that we have visited
