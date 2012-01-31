@@ -56,20 +56,24 @@ module Watir
     private
     def self.def_wrap(method_name, ole_method_name=nil)
       class_eval "def #{method_name}
-                          assert_exists
-                          ole_object.invoke('#{ole_method_name || method_name}')
-                        end"
+                    assert_exists
+                    ole_object.invoke('#{ole_method_name || method_name}')
+                  end"
     end
 
     def self.def_wrap_guard(method_name, ole_method_name = nil)
       class_eval "def #{method_name}
-                          assert_exists
-                          begin
-                            ole_object.invoke('#{ole_method_name || method_name}')
-                          rescue
-                            ''
-                          end
-                        end"
+                    assert_exists
+                    begin
+                      ole_object.invoke('#{ole_method_name || method_name}')
+                    rescue
+                      begin
+                        ole_object.getAttribute('#{ole_method_name || method_name}') || ''
+                      rescue
+                        ''
+                      end
+                    end
+                  end"
     end
 
 
