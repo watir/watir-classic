@@ -448,7 +448,7 @@ module Watir
       assert_exists
       assert_enabled
       @page_container.focus
-      ole_object.focus
+      ole_object.focus(0)
     end
 
     def focused?
