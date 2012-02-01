@@ -14,10 +14,11 @@ WatirSpec.implementation do |imp|
     WatirSpec.persistent_browser = false
     imp.browser_class = Watir::IE
     browser = :ie
+    browser_version = (ENV['watir_browser_version'] || :ie8).to_sym
   end
 
   imp.guard_proc = lambda { |args|
-    args.any? { |arg| arg == :watir || arg == [:watir, browser] || arg == :ie }
+    args.any? {|arg| arg == :watir || arg == [:watir, browser] || arg == :ie || arg == browser_version}
   }
 end
 
