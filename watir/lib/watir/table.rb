@@ -14,7 +14,7 @@ module Watir
       @o.rows.each do |row|
         cells_memo = []
         row.cells.each do |cell|
-          cells_memo << TableCell.new(self, :ole_object, cell).text
+          cells_memo << TableCell.new(self, :ole_object, cell).text.gsub("\r\n","")
         end
         rows_memo << cells_memo
       end
