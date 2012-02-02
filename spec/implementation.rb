@@ -6,6 +6,7 @@ require "watir"
 
 WatirSpec.implementation do |imp|
   imp.name = :watir
+
   if ENV['watir_browser'] =~ /firefox/
     imp.browser_class = FireWatir::Firefox
     browser = :firefox
@@ -17,7 +18,7 @@ WatirSpec.implementation do |imp|
   end
 
   imp.guard_proc = lambda { |args|
-    args.any? {|arg| arg == :watir || arg == [:watir, browser] || arg == :ie || arg == browser_version}
+    args.any? {|arg| arg == :watir || arg == [:watir, browser] || arg == :ie || arg == browser_version || arg == [:watir, browser_version] }
   }
 end
 
