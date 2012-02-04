@@ -1,4 +1,12 @@
-== 3.0.0 - 2012/01/13 - more conformance with WatirSpec
+== 3.0.0.rc2 - 2012/02/04
+
+* Browser#textarea(s) method for searching <textarea> elements
+* Element#focus works with IE9
+* Element#focused? returns the state of focus on that element
+* Element#to_subtype returns Element if non-supported tag found instead of crashing
+* searching by :class will match now partially like other tools behave (e.g. jQuery)
+
+== 3.0.0.rc1 - 2012/01/13 - more conformance with WatirSpec
 
 * Button#text returns value if exists instead of text
 * Browser#goto prepends url automatically with http:// if scheme is missing
