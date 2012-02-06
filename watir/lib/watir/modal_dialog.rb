@@ -36,7 +36,11 @@ module Watir
       locate
       @document
     end
-    
+
+    def document_mode
+      document.documentMode
+    end
+
     def title
       document.title
     end
