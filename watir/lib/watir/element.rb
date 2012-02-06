@@ -401,7 +401,7 @@ module Watir
       assert_exists
 
       if IE.version_parts.first.to_i >= 9
-        if @container.page_container.document_mode.to_i >= 9
+        if @container.page_container.document.documentMode.to_i >= 9
           ole_object.dispatchEvent(create_event(event))
         else
           ole_object.fireEvent(event)

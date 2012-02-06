@@ -37,10 +37,6 @@ module Watir
       @document
     end
 
-    def document_mode
-      document.documentMode
-    end
-
     def title
       document.title
     end
