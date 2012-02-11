@@ -10,14 +10,14 @@ class TC_Frame_Links < Test::Unit::TestCase
   end
   
   def test_click_in_a_frame
-    browser.frame('linkFrame').link(:text, 'test1').click
-    assert(browser.frame('linkFrame').text.include?('Links2-Pass'))
+    browser.frame(:name, 'linkFrame').link(:text, 'test1').click
+    assert(browser.frame(:name, 'linkFrame').text.include?('Links2-Pass'))
   end
   
   def test_click_no_wait_in_a_frame
-    browser.frame('linkFrame').link(:text, 'test1').click_no_wait
-    Wait.until(10){browser.frame('linkFrame').text.include?('Links2-Pass')}
-    assert(browser.frame('linkFrame').text.include?('Links2-Pass'))
+    browser.frame(:name, 'linkFrame').link(:text, 'test1').click_no_wait
+    Watir::Wait.until(10){browser.frame(:name, 'linkFrame').text.include?('Links2-Pass')}
+    assert(browser.frame(:name, 'linkFrame').text.include?('Links2-Pass'))
   end  
   
 end

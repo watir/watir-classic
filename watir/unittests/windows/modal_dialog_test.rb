@@ -25,7 +25,7 @@ class TC_ModalDialog < Watir::TestCase
 
   def test_modal_simple_use_case
     browser.button(:value, 'Launch Dialog').click_no_wait
-    modal = browser.modal_dialog(:title, 'Modal Dialog')
+    modal = browser.modal_dialog
 
     assert(modal.text.include?('Enter some text:'))
     modal.text_field(:name, 'modal_text').set('hello')
@@ -35,7 +35,7 @@ class TC_ModalDialog < Watir::TestCase
 
   def test_wait_should_not_block
     browser.button(:value, 'Launch Dialog').click_no_wait
-    modal = browser.modal_dialog(:title, 'Modal Dialog')
+    modal = browser.modal_dialog
 
     modal.text_field(:name, 'modal_text').set('hello')
     modal.wait

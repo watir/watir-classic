@@ -23,14 +23,6 @@ class TC_NewWindow< Watir::TestCase
     ie_new.close
   end
   
-  def test_attach_to_new_window_using_separate_process
-    browser.eval_in_spawned_process "link(:text, 'New Window').click"
-    IE.attach_timeout = 6.0
-    ie_new = IE.attach(:title, 'Pass Page')
-    assert(ie_new.text.include?('PASS'))
-    ie_new.close
-  end
-  
   def test_attach_to_new_window_using_click_no_wait
     # this test is sometimes failing with a "Canvas does not allow drawing" error
     # this is with IE7. I think the problem could be with the highlighting of the

@@ -41,6 +41,6 @@ class TC_IE_Each < Test::Unit::TestCase
   
   def teardown
     @ie.each {|ie| ie.close }
-    Wait.until {Watir::IE.process_count == 0}
+    Watir::Wait.until {Watir::IE.process_count == 0}
   end
 end
