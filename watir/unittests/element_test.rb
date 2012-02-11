@@ -21,7 +21,7 @@ class TC_Elements < Test::Unit::TestCase
   def test_element_iterator
     assert_equal 3, browser.elements(:class, 'blueText').length
     assert_equal 3, browser.elements(:class, 'blueText').size
-    assert_equal("span2", browser.elements(:class, 'blueText')[2].id)
+    assert_equal("number3", browser.elements(:class, 'blueText')[2].id)
     
     index = 0
     browser.elements(:id, /div/).each do |s|
