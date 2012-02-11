@@ -10,7 +10,6 @@ class TC_DocumentStandards_Quirks < Test::Unit::TestCase
   end
 
   def test_elements_exist_or_not
-    assert(browser.document_mode.to_i == 5)
     assert(browser.text_field(:name,"quirks_text").exists?)
     browser.text_field(:name,"quirks_text").set "test"
     browser.text_field(:name,"quirks_text").fire_event "onClick"
@@ -26,7 +25,6 @@ class TC_DocumentStandards_IE7 < Test::Unit::TestCase
   end
 
   def test_elements_exist_or_not
-    assert(browser.document_mode.to_i == 7)
     assert(browser.text_field(:name,"ie7_text").exists?)
     browser.text_field(:name,"ie7_text").set "test"
     browser.text_field(:name,"ie7_text").fire_event "onClick"
@@ -42,7 +40,6 @@ class TC_DocumentStandards_IE8 < Test::Unit::TestCase
   end
 
   def test_elements_exist_or_not
-    assert(browser.document_mode.to_i == 8)
     assert(browser.text_field(:name,"ie8_text").exists?)
     browser.text_field(:name,"ie8_text").set "test"
     browser.text_field(:name,"ie8_text").fire_event "onClick"
@@ -58,7 +55,6 @@ class TC_DocumentStandards_IE9 < Test::Unit::TestCase
   end
 
   def test_elements_exist_or_not
-    assert(browser.document_mode.to_i == 9)
     assert(browser.text_field(:name,"ie9_text").exists?)
     browser.text_field(:name,"ie9_text").set "test"
     browser.text_field(:name,"ie9_text").fire_event "onClick"
