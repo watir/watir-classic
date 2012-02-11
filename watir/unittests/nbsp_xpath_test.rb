@@ -10,7 +10,7 @@ class TC_Nbsp_Xpath < Test::Unit::TestCase
   end
   
   def test_nbsp
-  	div = browser.element_by_xpath("//div")
+  	div = browser.element(:xpath,"//div")
   	assert(div.innerText, "Hello world")
   end
 end
