@@ -4,7 +4,7 @@ $__watir_source_patterns = [
     'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb', 'LICENSE',
     'lib/watir/*.rb', 'lib/watir/dialogs/*.rb', 'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
     'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
-    'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/1.8.7/win32ole.so',
+    'lib/watir/IEDialog/Release/IEDialog.dll', 'lib/watir/win32ole/1.8.7/win32ole.so','lib/watir/win32ole/1.9.3/win32ole.so',
     'lib/watir/contrib/*.rb'] +
     $WATIR_EXTRA_RDOC_FILES
 
