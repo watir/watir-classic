@@ -29,20 +29,14 @@ class TC_SelectList < Test::Unit::TestCase
   end
 
   def test_select_by_text
-    assert_equal(['Option 3'], browser.select_list(:name, "sel1").getSelectedItems)
+    assert_equal('Option 3', browser.select_list(:name, "sel1").getSelectedItems.first.text)
     browser.select_list(:name, "sel1").select('Option 2')
-    assert_equal(['Option 2'], browser.select_list(:name, "sel1").getSelectedItems)
+    assert_equal('Option 2', browser.select_list(:name, "sel1").getSelectedItems.first.text)
   end
   
   def test_select_by_value
     browser.select_list(:name, "sel3").select_value(/2/)
     assert(browser.text.include?("PASS"))
-  end
-  
-  def test_set # by text
-    assert_equal(['Option 3'], browser.select_list(:name, "sel1").getSelectedItems)
-    browser.select_list(:name, "sel1").set('Option 2')
-    assert_equal(['Option 2'], browser.select_list(:name, "sel1").getSelectedItems)
   end
   
   # Option
@@ -141,7 +135,7 @@ class TC_Select_Options < Test::Unit::TestCase
   
   def test_options_text
     browser.select_list(:name, 'op_numhits').option(:text, '>=').select
-    assert(browser.select_list(:name, 'op_numhits').option(:text, '>=').selected)
+    assert(browser.select_list(:name, 'op_numhits').option(:text, '>=').selected?)
   end
 end
 
