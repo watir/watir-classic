@@ -18,11 +18,11 @@ class TC_No_Wait_Commands < Test::Unit::TestCase
     }
   end
 
-  def test_set_no_wait_text_select_list
+  def test_select_no_wait_text_select_list
     goto_page "selectboxes1.html"
-    browser.select_list(:name,'sel1').set_no_wait(/Option 1/)
+    browser.select_list(:name,'sel1').select_no_wait(/Option 1/)
     assert_nothing_raised{
-      Watir::Wait.until {browser.select_list(:name , 'sel1').selected_options.first == 'Option 1'}
+      Watir::Wait.until {browser.select_list(:name , 'sel1').selected_options.first.text == 'Option 1'}
     }
   end
 end
