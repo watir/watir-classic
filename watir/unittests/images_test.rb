@@ -100,12 +100,12 @@ class TC_Images < Test::Unit::TestCase
     assert_equal( "square" , browser.image(:index, 1).id )
     assert_match( /square\.jpg/i ,browser.image(:index, 1).src )
     assert_equal( "" , browser.image(:index, 1).value )
-    assert_equal( "88" , browser.image(:index, 1).height )
-    assert_equal( "88" , browser.image(:index, 1).width )
+    assert_equal( 88 , browser.image(:index, 1).height )
+    assert_equal( 88 , browser.image(:index, 1).width )
     
     # this line fails, as the date is when it is installed on the local oc, not the date the file was really created
     #assert_equal( "03/10/2005" , browser.image(:index, 2).fileCreatedDate )
-    assert_equal( "788",  browser.image(:index, 1).fileSize )
+    assert_equal( 788,  browser.image(:index, 1).fileSize )
     
     # tool tips: alt text + title
     assert_equal('circle' , browser.image(:index, 5).alt) 
@@ -119,9 +119,9 @@ class TC_Images < Test::Unit::TestCase
   
   def test_image_iterator
     assert_equal(6 , browser.images.length)
-    assert_equal("" , browser.images[2].name )
-    assert_equal("square", browser.images[2].id )
-    assert_match(/square/, browser.images[2].src )
+    assert_equal("" , browser.images[1].name )
+    assert_equal("square", browser.images[1].id )
+    assert_match(/square/, browser.images[1].src )
     
     index = 0
     browser.images.each do |i|
