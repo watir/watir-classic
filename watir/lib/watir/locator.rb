@@ -65,22 +65,15 @@ module Watir
     end
 
     # return true if the element matches the provided how and what
-    def match?(element, how, what)
+    def match? element, how, what
       begin
-        method = element.method(how)
-      rescue NameError
+        attribute = element.send(how)
+      rescue NoMethodError
         raise MissingWayOfFindingObjectException,
           "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
       end
-      case method.arity
-      when 0
-        what.matches method.call
-      when 1
-       	method.call(what)
-      else
-        raise MissingWayOfFindingObjectException,
-          "#{how} is an unknown way of finding a <#{@tags.join(", ")}> element (#{what})"
-      end
+
+      what.matches(attribute)
     end
 
     def has_excluding_specifiers?
