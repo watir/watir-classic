@@ -31,11 +31,11 @@ class TC_CSS < Test::Unit::TestCase
   end
 
   def test_inline_style
-    assert_equal("300px", browser.form(:index, 0).style.width)
+    assert_match(/300px/, browser.form(:index, 0).style)
   end
 
   def test_internal_style
-    assert_equal("#f00", browser.div(:id => "Container").style.backgroundColor)
+    assert_match(/#f00/, browser.div(:id => "Container").style)
   end
 end
 
