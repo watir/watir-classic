@@ -11,21 +11,21 @@ class TC_Frames < Test::Unit::TestCase
   end
 
   def test_frame_no_what
-    assert_raises(UnknownFrameException) { browser.frame(:name => "missingFrame")  }
+    assert_raises(UnknownFrameException) { browser.frame(:name => "missingFrame").html  }
     assert_raises(UnknownObjectException) { browser.frame(:name => "buttonFrame2").button(:id, "b2").enabled?  }
     assert(browser.frame(:name => "buttonFrame").button(:id, "b2").enabled?)
     assert_false(browser.frame(:name => "buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
 
   def test_frame_using_name
-    assert_raises(UnknownFrameException) { browser.frame(:name, "missingFrame")  }
+    assert_raises(UnknownFrameException) { browser.frame(:name, "missingFrame").html  }
     assert_raises(UnknownObjectException) { browser.frame(:name, "buttonFrame2").button(:id, "b2").enabled?  }
     assert(browser.frame(:name, "buttonFrame").button(:id, "b2").enabled?)
     assert_false(browser.frame(:name, "buttonFrame").button(:caption, "Disabled Button").enabled?)
   end
 
   def test_frame_using_name_and_regexp
-    assert_raises(UnknownObjectException) { browser.frame(:name, /missingFrame/).button(:id, "b2").enabled?  }
+    assert_raises(UnknownFrameException) { browser.frame(:name, /missingFrame/).button(:id, "b2").enabled?  }
     assert(browser.frame(:name, /button/).button(:id, "b2").enabled?)
   end
 
@@ -58,11 +58,11 @@ class TC_Frames2 < Test::Unit::TestCase
   end
 
   def test_frame_with_no_name
-    assert_raises(UnknownObjectException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownFrameException) { browser.frame(:name, "missingFrame").button(:id, "b2").enabled?  }
   end
 
   def test_frame_by_id
-    assert_raises(UnknownObjectException) { browser.frame(:id, "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownFrameException) { browser.frame(:id, "missingFrame").button(:id, "b2").enabled?  }
     assert(browser.frame(:id, 'first_frame').button(:id, "b2").enabled?)
   end
 
@@ -80,8 +80,8 @@ class TC_NestedFrames < Test::Unit::TestCase
   end
 
   def test_frame
-    assert_raises(UnknownObjectException) { browser.frame(:name => "missingFrame").button(:id, "b2").enabled?  }
-    assert_raises(UnknownObjectException) { browser.frame(:name => "nestedFrame").frame(:name => "subFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownFrameException) { browser.frame(:name => "missingFrame").button(:id, "b2").enabled?  }
+    assert_raises(UnknownFrameException) { browser.frame(:name => "nestedFrame").frame(:name => "subFrame").button(:id, "b2").enabled?  }
     assert(browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").button(:name, "sendIt").enabled?)
     browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").text_field(:index, "0").set("Hello")
     browser.frame(:name => "nestedFrame").frame(:name => "senderFrame").button(:name, "sendIt").click
