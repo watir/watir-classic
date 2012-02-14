@@ -28,8 +28,8 @@ class TC_ElementCollections < Test::Unit::TestCase
   def test_brackets
     assert browser.buttons[0], browser.buttons(:class => "one")
     assert browser.buttons[1].exists?
-    assert_raises(Watir::Exception::MissingWayOfFindingObjectException) {browser.buttons[2].exists?}
-    assert_raises(Watir::Exception::MissingWayOfFindingObjectException) {browser.buttons[-1].exists?}
+    assert_raise(Watir::Exception::UnknownObjectException) {browser.buttons[2].exists?}
+    assert_raise(Watir::Exception::UnknownObjectException) {browser.buttons[-1].exists?}
   end
 
   def test_first

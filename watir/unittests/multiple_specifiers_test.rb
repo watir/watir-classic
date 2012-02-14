@@ -23,7 +23,7 @@ class TC_MultipleSpecifiers < Test::Unit::TestCase
     goto_page "frame_buttons.html"
     assert "buttons1.html", browser.frame(:name => /buttonFrame/, :src => "buttons1.html").src
     assert "blankpage.html", browser.frame(:name => /buttonFrame/, :src => "blankpage.html").src
-    assert_raises(UnknownObjectException) {browser.frame(:name => "nonexistent", :src => "buttons1.html").src}      
+    assert_raises(UnknownFrameException) {browser.frame(:name => "nonexistent", :src => "buttons1.html").src}
   end
 
 end
