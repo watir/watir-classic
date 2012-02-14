@@ -46,12 +46,15 @@ class TC_SelectList < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.select_list(:name, "sel1").option(:text, /missing/).select }  
     assert_raises(MissingWayOfFindingObjectException) { browser.select_list(:name, "sel1").option(:missing, "Option 1").select }
     
-    # the select method keeps any currently selected items - use the clear selection method first
-    browser.select_list(:name, "sel1").clearSelection
     browser.select_list(:name, "sel1").option(:text, "Option 1").select
-    assert_equal(["Option 1" ], browser.select_list(:name, "sel1").getSelectedItems)   
+    assert_equal("Option 1", browser.select_list(:name, "sel1").getSelectedItems.first.text)
   end    
-  
+
+  def test_clear_selection
+    assert_raises(TypeError) { browser.select_list(:name, "sel1").clearSelection }
+    assert_nothing_thrown    { browser.select_list(:name, "sel2").clearSelection }
+  end
+
   def xtest_option_class_name
     # the option object doesnt inherit from element, so this doesnt work
     assert_raises(UnknownObjectException) { browser.select_list(:name, "sel1").option(:text, "missing item").class_name }  
