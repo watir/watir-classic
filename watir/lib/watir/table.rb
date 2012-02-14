@@ -95,7 +95,7 @@ module Watir
     #   * index         - the index of the row
     def column_count(index=0)
       assert_exists
-      row[index].cells.length
+      rows[index].cells.length
     end
     
     # Returns an array containing all the text values in the specified column
