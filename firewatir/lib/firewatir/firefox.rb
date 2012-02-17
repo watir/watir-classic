@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 module FireWatir
   include Watir::Exception
@@ -182,6 +183,22 @@ module FireWatir
       jssh_command.gsub!(/\n/, "")
       js_eval jssh_command
 
+      # add code for deleting cookies
+      jssh_command = 'var deleteCookies = function (host) {
+  var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager);
+  var iter = cookieManager.enumerator;
+  while (iter.hasMoreElements()) {
+    var cookie = iter.getNext();
+    if (cookie instanceof Components.interfaces.nsICookie){
+      if (cookie.host.match(host)) {
+        cookieManager.remove(cookie.host, cookie.name, cookie.path, false);
+      }
+    }
+  }
+};'
+      jssh_command.gsub!(/\n/, "")
+      js_eval jssh_command
+
       jssh_command =  "var #{window_var} = getWindows()[#{@window_index}];"
       jssh_command << "var #{browser_var} = #{window_var}.getBrowser();"
       # Add listener create above to browser object
@@ -233,6 +250,13 @@ module FireWatir
         end
 
       end
+    end
+
+    # Delete cookies matching host from the cookie manager in firefox
+    #
+    # ff.delete_cookies('google.com')
+    def delete_cookies(host)
+      js_eval("deleteCookies('#{host}')")
     end
 
     # Closes all firefox windows
