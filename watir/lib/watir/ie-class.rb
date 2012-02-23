@@ -485,8 +485,8 @@ module Watir
     # Refer to RAutomation::Adapter::WinFfi::KeystrokeConverter.convert_special_characters for
     # special characters conversion.
     # @see RAutomation::Window#send_keys
-    def send_keys(key_string)
-      rautomation.send_keys key_string
+    def send_keys(*keys)
+      rautomation.send_keys *keys
     end
 
     def dir

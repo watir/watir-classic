@@ -163,9 +163,9 @@ module Watir
     end
 
     # send keys to element
-    def send_keys(key_string)
+    def send_keys(*keys)
       focus
-      page_container.send_keys key_string
+      page_container.send_keys *keys
     end
 
     # return the css style as a string
