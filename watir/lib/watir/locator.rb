@@ -81,6 +81,8 @@ module Watir
     end
 
     def set_specifier(how, what=nil)
+      specifiers = what ? {how => what} : how
+      @specifiers = {:index => Watir::IE.base_index} # default if not specified
       normalize_specifiers! specifiers
     end
 
