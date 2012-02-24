@@ -6,16 +6,15 @@ module Watir
 
     # Super class for all the iterator classes
     #   * container - an instance of an IE object
-    def initialize(container, how, what)
-      if how == :index || (how.is_a?(Hash) && how[:index])
-        _how = what ? "#{how.inspect}, #{what.inspect}" : "#{how.inspect}"
+    def initialize(container, how)
+      if how[:index]
         raise Exception::MissingWayOfFindingObjectException,
-                    "#{self.class} does not support attribute :index in #{_how}"
+                    "#{self.class} does not support attribute :index in #{how.inspect}"
       end
 
       @container = container
       @how = how
-      @what = what
+      @what = nil
       @length = length
       @page_container = container.page_container
     end
@@ -67,7 +66,7 @@ module Watir
     end
 
     def element_class
-      Watir.const_get self.class.name.split("::").last.chop
+      Watir.const_get self.class.name.split("::").last.scan(/(.*)Collection/).flatten.first
     end
 
     def element_tags

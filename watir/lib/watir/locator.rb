@@ -130,7 +130,7 @@ module Watir
       if @klass == Element
         element = Element.new(ole_object)
       else
-        element = @klass.new(@container, @specifiers, nil)
+        element = @klass.new(@container, @specifiers)
         element.ole_object = ole_object
         def element.locate; @o; end
       end

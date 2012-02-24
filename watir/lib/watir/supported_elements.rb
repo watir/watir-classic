@@ -16,7 +16,7 @@ module Watir
         end
 
         unless Watir.const_defined? "#{args[:class]}Collection"
-          Watir.class_eval %Q[class #{args[:class]}Collection; end]
+          Watir.class_eval %Q[class #{args[:class]}Collection < ElementCollection; end]
         end
 
         Watir::Container.module_eval %Q[
@@ -25,7 +25,9 @@ module Watir
           end
 
           def #{args.delete(:plural) || args[:name].to_s + "s"}(how={}, what=nil)
-            #{args[:class]}Collection.new(self, format_specifiers("#{args[:tag_name]}", how, what))
+            specifiers = format_specifiers("#{args[:tag_name]}", how, what)
+            specifiers.delete(:index)
+            #{args[:class]}Collection.new(self, specifiers)
           end
         ]
       end
@@ -40,7 +42,7 @@ module Watir
 
     private :format_specifiers
 
-    support_element :name => :uga,  :class => :Ugas, :tag_name => "ummmm"
+    support_element :name => :div, :class => :Div, :tag_name => "div"
     #support_element :name => :link, :plural => :links, :class => :Link, :tag_name => "a"
     #alias_method :a, :link
     #alias_method :as, :links
