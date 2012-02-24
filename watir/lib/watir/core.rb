@@ -28,6 +28,7 @@ require 'watir/image'
 require 'watir/link'
 require 'watir/html_element'
 require 'watir/window'
+require 'watir/supported_elements'
 
 require 'watir/win32'
 require 'watir/modal_dialog'
