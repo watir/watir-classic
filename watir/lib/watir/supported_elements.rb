@@ -4,10 +4,11 @@ module Watir
     class << self
       def support_element method_name, args={}
         klass = args[:class] || method_name.capitalize
+        super_class = args[:super_class] || "Element"
 
         unless Watir.const_defined? klass
           Watir.class_eval %Q[
-            class #{klass} < Element
+            class #{klass} < #{super_class}
               def initialize(container, how)
                 set_container container
                 @how = how
@@ -18,7 +19,7 @@ module Watir
         end
 
         unless Watir.const_defined? "#{klass}Collection"
-          Watir.class_eval %Q[class #{klass}Collection < ElementCollection; end]
+          Watir.class_eval %Q[class #{klass}Collection < #{super_class}Collection; end]
         end
 
         tag_name = args[:tag_name] || method_name
@@ -47,7 +48,7 @@ module Watir
     private :format_specifiers
 
     support_element :div
-    support_element :hidden
+    support_element :hidden, :super_class => :InputElement
     support_element :element, :tag_name => "*", :class => :HTMLElement
   end
 end

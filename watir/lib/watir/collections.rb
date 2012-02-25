@@ -11,7 +11,7 @@ module Watir
     end
   end
 
-  %w[Button FileField Radio TextField TextArea Hidden SelectList CheckBox].each do |element|
+  %w[Button FileField Radio TextField TextArea SelectList CheckBox].each do |element|
     module_eval %Q[class #{element}Collection < InputElementCollection; end]
   end
 
