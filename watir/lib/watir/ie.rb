@@ -18,12 +18,4 @@ $FAST_SPEED = ARGV.delete('-f')
 
 # Eat the -s command line switch (deprecated)
 ARGV.delete('-s')
-
-require 'watir/win32'
-require 'watir/modal_dialog'
-require 'watir/collections'
-
 require 'watir/camel_case'
-
-
-

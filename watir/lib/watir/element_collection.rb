@@ -29,7 +29,7 @@ module Watir
 
     # iterate through each of the elements in the collection in turn
     def each
-      @container.locator_for(TaggedElementLocator, element_tags, @how, @what, element_class).each {|element| yield element}
+      @container.locator_for(TaggedElementLocator, @how, element_class).each {|element| yield element}
     end
 
     # allows access to a specific item in the collection
@@ -69,12 +69,5 @@ module Watir
       Watir.const_get self.class.name.split("::").last.scan(/(.*)Collection/).flatten.first
     end
 
-    def element_tags
-      tags = @how.is_a?(Hash) && @how[:tag_name] ? [@how[:tag_name].upcase] : 
-             element_class.const_defined?(:TAG) ? [element_class::TAG] : 
-             element_class.const_defined?(:TAGS) ? element_class::TAGS : 
-             [element_class.name.split("::").last.upcase]      
-      tags
-    end
   end
 end

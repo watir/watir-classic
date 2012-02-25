@@ -98,10 +98,8 @@ module Watir
     # Not for external use, but cannot set to private due to usages in Element
     # classes.
 
-    def locator_for(locator_class, tags, how, what, klass)
-      locator = locator_class.new self, tags, klass
-      locator.set_specifier how, what
-      locator
+    def locator_for(locator_class, how, klass)
+      locator_class.new self, how, klass
     end
     
   end # module

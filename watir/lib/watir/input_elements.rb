@@ -2,14 +2,13 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      @o = @container.locator_for(InputElementLocator, self.class::INPUT_TYPES, @how, @what, self.class).locate
+      @o = @container.locator_for(InputElementLocator, @how, self.class).locate
     end
 
-    def initialize(container, how, what)
+    def initialize(container, how)
       set_container container
       @how = how
-      @what = what
-      super(nil)
+      super nil
     end
   end
 
@@ -398,10 +397,6 @@ module Watir
   # this class can be used to access hidden field objects
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
   class Hidden < TextField
-    #:stopdoc:
-    INPUT_TYPES = ["hidden"]
-    #:startdoc:
-    
     # set is overriden in this class, as there is no way to set focus to a hidden field
     def set(n)
       self.value = n
@@ -426,7 +421,6 @@ module Watir
       assert_exists
       false
     end
-    
   end
 
   # This class contains common methods to both radio buttons and check boxes.

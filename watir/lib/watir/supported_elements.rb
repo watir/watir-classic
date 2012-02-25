@@ -38,12 +38,13 @@ module Watir
     end
 
     def format_specifiers(tag_name, how, what)
-      defaults = {:tag_name => tag_name, :index => Watir::IE.base_index}
+      defaults = {:tag_name => [tag_name].flatten, :index => Watir::IE.base_index}
       defaults.merge(what ? {how => what} : how)
     end
 
     private :format_specifiers
 
     support_element :name => :div
+    support_element :name => :hidden
   end
 end

@@ -3,9 +3,10 @@ module Watir
     include Watir
     include Watir::Exception
 
-    def initialize container, tags, klass
+    def initialize container, specifiers, klass
       @container = container
-      @tags = tags
+      @specifiers = normalize_specifiers(specifiers)
+      @tags = @specifiers.delete(:tag_name)
       @klass = klass
     end
 
@@ -29,8 +30,9 @@ module Watir
       @document ||= @container.document
     end
 
-    def normalize_specifiers!(specifiers)
-      specifiers.each do |how, what|
+    def normalize_specifiers(specifiers)
+      specifiers.reduce({}) do |memo, pair|
+        how, what = *pair
         case how
         when :index
           what = what.to_i
@@ -46,7 +48,8 @@ module Watir
           what = what.is_a?(Regexp) ? what : what.to_s
         end
 
-        @specifiers[how] = what
+        memo[how] = what
+        memo
       end
     end
 
@@ -78,12 +81,6 @@ module Watir
 
     def has_excluding_specifiers?
       @specifiers.keys.any? {|specifier| [:css, :xpath, :ole_object].include? specifier}
-    end
-
-    def set_specifier(how, what=nil)
-      specifiers = what ? {how => what} : how
-      @specifiers = {:index => Watir::IE.base_index} # default if not specified
-      normalize_specifiers! specifiers
     end
 
     def locate_by_id
@@ -122,8 +119,8 @@ module Watir
 
     def type_matches?(el)
       @tags == ["*"] || 
-        @tags.include?(el.tagName) || 
-        @tags.include?(el.invoke('type')) rescue false
+        @tags.include?(el.tagName.downcase) || 
+        @tags.include?(el.invoke('type').downcase) rescue false
     end
 
     def create_element ole_object
