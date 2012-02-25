@@ -28,7 +28,7 @@ module Watir
   #
   # many of the methods available to this object are inherited from the Element class
   #
-  class Table < NonControlElement
+  class Table < Element
     include RowContainer
 
     # override the highlight method, as if the tables rows are set to have a background color,
@@ -144,7 +144,7 @@ module Watir
     end
   end
 
-  class TableSection < NonControlElement
+  class TableSection < Element
     include RowContainer
 
     Watir::Container.module_eval do
@@ -180,7 +180,7 @@ module Watir
     end
   end
 
-  class TableRow < NonControlElement
+  class TableRow < Element
     TAG = "TR"
     
     # this method iterates through each of the cells in the row. Yields a TableCell object
@@ -224,7 +224,7 @@ module Watir
   end
   
   # this class is a table cell - when called via the Table object
-  class TableCell < NonControlElement
+  class TableCell < Element
     TAGS = ["TH", "TD"]
 
     alias to_s text
