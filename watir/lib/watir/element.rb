@@ -12,6 +12,8 @@ module Watir
 
     def initialize(container, specifiers)
       set_container container
+      raise ArgumentError, "#{specifiers.inspect} has to be Hash" unless specifiers.is_a?(Hash)
+
       @o = specifiers[:ole_object]
       @specifiers = specifiers
     end
