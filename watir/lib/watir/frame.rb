@@ -3,14 +3,14 @@ module Watir
     include PageContainer
     attr_accessor :document
 
-    def initialize(container, how)
+    def initialize(container, specifiers)
       super
       copy_test_config container
     end
     
-    # Find the frame denoted by how and what in the container and return its ole_object
+    # Find the frame denoted by specifiers in the container and return its ole_object
     def locate
-      frame, document = @container.locator_for(FrameLocator, @how, self.class).locate
+      frame, document = @container.locator_for(FrameLocator, @specifiers, self.class).locate
       if frame && document
         @o = frame
         begin
@@ -37,7 +37,7 @@ module Watir
     end
 
     def attach_command
-      @container.page_container.attach_command + ".frame(#{@how.inspect}, #{@what.inspect})".gsub('"','\'')
+      @container.page_container.attach_command + ".frame(#{@specifiers.inspect})".gsub('"','\'')
     end
 
     def execute_script(source)

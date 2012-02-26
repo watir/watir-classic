@@ -148,7 +148,7 @@ module Watir
     support_element :sup
     support_element :table
     support_element :tbody, :class => :TableSection
-    support_element :td, :tag_name => [:td, :th], :class => :TableCell
+    support_element :td, :tag_name => [:th, :td], :class => :TableCell
     alias_method :cell, :td
     alias_method :cells, :tds
     support_element :text_field, :tag_name => [:text, :password, :textarea], :class => :TextField, :super_class => :InputElement

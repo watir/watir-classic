@@ -1,10 +1,7 @@
 module Watir
 
   class Form < Element
-    #   * container   - the containing object, normally an instance of IE
-    #   * how         - symbol - how we access the form (:name, :id, :index, :action, :method)
-    #   * what        - what we use to access the form
-    def initialize(container, how)
+    def initialize(container, specifiers)
       super
       copy_test_config container
     end
@@ -31,7 +28,7 @@ module Watir
     end    
 
     def locate
-      @o = @container.locator_for(FormLocator, @how, self.class).locate
+      @o = @container.locator_for(FormLocator, @specifiers, self.class).locate
     end
 
     # Submit the data -- equivalent to pressing Enter or Return to submit a form.

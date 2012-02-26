@@ -56,8 +56,7 @@ module Watir
     # We look for these missing properties to see if the image is really there or not.
     # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
     def loaded?
-      locate
-      raise UnknownObjectException, "Unable to locate image using #{@how} and #{@what}" if @o == nil
+      assert_exists
       return false if @o.fileCreatedDate == "" and @o.fileSize.to_i == -1
       return true
     end

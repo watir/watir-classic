@@ -507,14 +507,14 @@ module Watir
       return @ie.LocationURL
     end
 
-    def window(how={}, &blk)
-      win = Window.new(self, how, &blk)
+    def window(specifiers={}, &blk)
+      win = Window.new(self, specifiers, &blk)
       win.use &blk if blk
       win
     end
 
-    def windows(how={}, &blk)
-      self.class._find_all(how.keys.first, how.values.first).map {|ie| Window.new(self, how, IE.bind(ie), &blk)}
+    def windows(specifiers={}, &blk)
+      self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, IE.bind(ie), &blk)}
     end
 
     #

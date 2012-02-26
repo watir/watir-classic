@@ -10,14 +10,14 @@ module Watir
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
 
-    def initialize(container, how)
+    def initialize(container, specifiers)
       set_container container
-      @o = how[:ole_object]
-      @how = how
+      @o = specifiers[:ole_object]
+      @specifiers = specifiers
     end
 
     def locate
-      @o = @container.locator_for(TaggedElementLocator, @how, self.class).locate
+      @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
     end  
 
     # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
@@ -30,7 +30,7 @@ module Watir
     end
 
     def inspect
-      '#<%s:0x%x located=%s how=%s what=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect]
+      '#<%s:0x%x located=%s specifiers=%s>' % [self.class, hash*2, !!ole_object, @specifiers.inspect]
     end
 
     private
@@ -62,17 +62,17 @@ module Watir
       locate
       unless ole_object
         if self.is_a?(Frame)
-          raise UnknownFrameException.new(Watir::Exception.message_for_unable_to_locate(@how, @what))
+          raise UnknownFrameException.new(Watir::Exception.message_for_unable_to_locate(@specifiers))
         else
           raise UnknownObjectException.new(
-                  Watir::Exception.message_for_unable_to_locate(@how, @what))
+                  Watir::Exception.message_for_unable_to_locate(@specifiers))
         end
       end
     end
 
     def assert_enabled
       unless enabled?
-        raise ObjectDisabledException, "object #{@how} and #{@what} is disabled"
+        raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled"
       end
     end
 
@@ -323,12 +323,12 @@ module Watir
 
     def generate_ruby_code(element, method_name, *args)
       # needs to be done like this to avoid segfault on ruby 1.9.3
-      tag_name = @how[:tag_name].join("' << '")
-      element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{self.unique_number})"
+      tag_name = @specifiers[:tag_name].join("' << '")
+      element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{unique_number})"
       method = build_method(method_name, *args)
       ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
                     "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
-      return ruby_code
+      ruby_code
     end
 
     private :generate_ruby_code

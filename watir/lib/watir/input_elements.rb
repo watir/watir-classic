@@ -2,7 +2,7 @@ module Watir
   
   class InputElement < Element #:nodoc:all
     def locate
-      @o = @container.locator_for(InputElementLocator, @how, self.class).locate
+      @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
     end
   end
 
@@ -186,7 +186,7 @@ module Watir
     def assert_not_readonly #:nodoc:
       if self.readonly?
         raise ObjectReadOnlyException, 
-          "Textfield #{@how} and #{@what} is read only."
+          "Textfield #{@specifiers.inspect} is read only."
       end
     end
     
@@ -398,7 +398,7 @@ module Watir
   # most of the methods available to this element are inherited from the Element class
   class RadioCheckCommon < InputElement
     def inspect
-      '#<%s:0x%x located=%s how=%s what=%s value=%s>' % [self.class, hash*2, !!ole_object, @how.inspect, @what.inspect, @value.inspect]
+      '#<%s:0x%x located=%s specifiers=%s value=%s>' % [self.class, hash*2, !!ole_object, @specifiers.inspect, @value.inspect]
     end
     
     # This method determines if a radio button or check box is set.

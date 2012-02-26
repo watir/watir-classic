@@ -6,15 +6,14 @@ module Watir
 
     # Super class for all the iterator classes
     #   * container - an instance of an IE object
-    def initialize(container, how)
-      if how[:index]
+    def initialize(container, specifiers)
+      if specifiers[:index]
         raise Exception::MissingWayOfFindingObjectException,
-                    "#{self.class} does not support attribute :index in #{how.inspect}"
+                    "#{self.class} does not support attribute :index in #{specifiers.inspect}"
       end
 
       @container = container
-      @how = how
-      @what = nil
+      @specifiers = specifiers
       @length = length
       @page_container = container.page_container
     end
@@ -29,7 +28,7 @@ module Watir
 
     # iterate through each of the elements in the collection in turn
     def each
-      @container.locator_for(TaggedElementLocator, @how, element_class).each {|element| yield element}
+      @container.locator_for(TaggedElementLocator, @specifiers, element_class).each {|element| yield element}
     end
 
     # allows access to a specific item in the collection
@@ -73,13 +72,13 @@ module Watir
 
   class InputElementCollection < ElementCollection
     def each
-      @container.locator_for(InputElementLocator, @how, element_class).each {|element| yield element}
+      @container.locator_for(InputElementLocator, @specifiers, element_class).each {|element| yield element}
     end    
   end
 
   class HTMLElementCollection < ElementCollection
     def each
-      @container.locator_for(TaggedElementLocator, @how, Element).each { |element| yield element }
+      @container.locator_for(TaggedElementLocator, @specifiers, Element).each { |element| yield element }
     end
   end
 
