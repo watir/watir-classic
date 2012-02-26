@@ -16,48 +16,44 @@ module Watir
     end
 
     def locate
+      @modal.wait_until_present rescue raise NoMatchingWindowFoundException
+
       intUnknown = 0
-      begin
-        Watir::until_with_timeout do
-          intPointer = " " * 4 # will contain the int value of the IUnknown*
-          GetUnknown.call(hwnd, intPointer)
-          intArray = intPointer.unpack('L')
-          intUnknown = intArray.first
-          intUnknown > 0
-        end
-      rescue Wait::TimeoutError => e
-        raise NoMatchingWindowFoundException,
-          "Unable to attach to Modal Window after #{e.duration} seconds."
+      Watir::until_with_timeout do
+        intPointer = " " * 4 # will contain the int value of the IUnknown*
+        GetUnknown.call(hwnd, intPointer)
+        intArray = intPointer.unpack('L')
+        intUnknown = intArray.first
+        intUnknown > 0
       end
-      @document = WIN32OLE.connect_unknown(intUnknown)
+      
+      WIN32OLE.connect_unknown(intUnknown)
+    rescue NoMatchingWindowFoundException, Wait::TimeoutError
+      raise NoMatchingWindowFoundException,
+        "Unable to attach to Modal Window."
     end
 
-    def document
-      locate
-      @document
-    end
+    alias_method :document, :locate
 
     def title
       document.title
     end
 
-    def close
+    def close(timeout=5)
+      return unless exists?
       document.parentWindow.close
+      Watir::Wait.until(timeout) {!exists?} rescue nil
+      wait
     end
 
     def attach_command
       "Watir::IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
     end
-      
+
     def wait(no_sleep=false)
-      sleep 1
-      if exists?
-        # do nothing
-      else
-        @container.page_container.wait
-      end
+      @container.page_container.wait unless exists?
     end
-    
+
     def hwnd
       @modal.hwnd
     end
@@ -66,21 +62,11 @@ module Watir
       @modal.active?
     end
 
-    # When checking to see if the modal exists we give it some time to
-    # find it. So if it does see a modal it returns immediately, otherwise it waits and checks
-    def exists?(timeout=5)
-      begin
-        Watir::Wait.until(timeout) {@modal.exists?}
-      rescue Watir::Wait::TimeoutError
-      end
-      return @modal.exists?
+    def exists?
+      @modal.exists?
     end
-    alias :exist? :exists?
 
-    Watir::Container.module_eval do
-      def modal_dialog
-        ModalDialog.new(self)
-      end
-    end
+    alias_method :exist?, :exists?
+
   end
 end

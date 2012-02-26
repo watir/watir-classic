@@ -57,6 +57,10 @@ module Watir
         
     public
 
+    def modal_dialog
+      ModalDialog.new(self)
+    end
+
     # Searching for Page Elements
     # Not for external consumption
     #
@@ -98,8 +102,8 @@ module Watir
     # Not for external use, but cannot set to private due to usages in Element
     # classes.
 
-    def locator_for(locator_class, how, klass)
-      locator_class.new self, how, klass
+    def locator_for(locator_class, specifiers, klass)
+      locator_class.new self, specifiers, klass
     end
     
   end # module

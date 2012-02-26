@@ -39,7 +39,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'commonwatir', '= ' + version
   s.add_dependency 'nokogiri'
   s.add_dependency 'ffi', '~>1.0'
-  s.add_dependency 'rautomation', '~>0.7.0'
+  s.add_dependency 'rautomation', '~>0.7.1'
 
   s.rdoc_options += $WATIR_RDOC_OPTIONS
   s.extra_rdoc_files = $WATIR_EXTRA_RDOC_FILES
