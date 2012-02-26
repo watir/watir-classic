@@ -5,19 +5,6 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Link < Element
-    TAG = "A"
-
-    # Returns an initialized instance of a link object
-    #   * container  - an instance of a container
-    #   * how         - symbol - how we access the link
-    #   * what         - what we use to access the link, text, url, index etc
-    def initialize(container, how, what)
-      set_container container
-      @how = how
-      @what = what
-      super(nil)
-    end
-    
     # if an image is used as part of the link, this will return true
     def link_has_image
       assert_exists
@@ -50,11 +37,6 @@ module Watir
       r = r + link_string_creator
       return r.join("\n")
     end
-
-    Watir::Container.module_eval do
-      alias_method :a, :link
-      alias_method :as, :links
-    end    
 
   end
   

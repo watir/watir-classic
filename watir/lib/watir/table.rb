@@ -5,7 +5,7 @@ module Watir
     #   * index         - the index of the row
     def [](index)
       assert_exists
-      TableRow.new(self, :ole_object, @o.rows.item(index))
+      TableRow.new(self, :ole_object => @o.rows.item(index))
     end
     
     def strings
@@ -14,7 +14,7 @@ module Watir
       @o.rows.each do |row|
         cells_memo = []
         row.cells.each do |cell|
-          cells_memo << TableCell.new(self, :ole_object, cell).text.gsub("\r\n","")
+          cells_memo << TableCell.new(self, :ole_object => cell).text.gsub("\r\n","")
         end
         rows_memo << cells_memo
       end
@@ -119,7 +119,7 @@ module Watir
 
       headers = []
       @o.rows.item(0).cells.each do |cell|
-        headers << TableCell.new(self, :ole_object, cell).text
+        headers << TableCell.new(self, :ole_object => cell).text
       end
 
       rows_memo = []
@@ -133,7 +133,7 @@ module Watir
 
         j = 0
         cells.each do |cell|
-          cells_memo[headers[j]] = TableCell.new(self, :ole_object, cell).text
+          cells_memo[headers[j]] = TableCell.new(self, :ole_object => cell).text
           j += 1
         end
 
@@ -146,43 +146,9 @@ module Watir
 
   class TableSection < Element
     include RowContainer
-
-    Watir::Container.module_eval do
-      def tbody(how={}, what=nil)
-        how = {how => what} if what
-        TableSection.new(self, how.merge(:tag_name => "tbody"), nil)
-      end
-
-      def tbodys(how={}, what=nil)
-        how = {how => what} if what
-        TableSectionCollection.new(self, how.merge(:tag_name => "tbody"), nil)
-      end
-
-      def thead(how={}, what=nil)
-        how = {how => what} if what
-        TableSection.new(self, how.merge(:tag_name => "thead"), nil)
-      end
-
-      def theads(how={}, what=nil)
-        how = {how => what} if what
-        TableSectionCollection.new(self, how.merge(:tag_name => "thead"), nil)
-      end
-
-      def tfoot(how={}, what=nil)
-        how = {how => what} if what
-        TableSection.new(self, how.merge(:tag_name => "tfoot"), nil)
-      end
-
-      def tfoots(how={}, what=nil)
-        how = {how => what} if what
-        TableSectionCollection.new(self, how.merge(:tag_name => "tfoot"), nil)
-      end
-    end
   end
 
   class TableRow < Element
-    TAG = "TR"
-    
     # this method iterates through each of the cells in the row. Yields a TableCell object
     def each
       locate
@@ -198,54 +164,20 @@ module Watir
       return cells[index]
     end
     
-    # defaults all missing methods to the array of elements, to be able to
-    # use the row as an array
-    #        def method_missing(aSymbol, *args)
-    #            return @o.send(aSymbol, *args)
-    #        end
     def column_count
       locate
       cells.length
     end
 
-    Watir::Container.module_eval do
-      def row(how={}, what=nil)
-        TableRow.new(self, how, what)
-      end
-
-      alias_method :tr, :row
-
-      def rows(how={}, what=nil)
-        TableRows.new(self, how, what)
-      end
-
-      alias_method :trs, :rows
-    end
   end
   
   # this class is a table cell - when called via the Table object
   class TableCell < Element
-    TAGS = ["TH", "TD"]
-
     alias to_s text
     
     def colspan
       locate
       @o.colSpan
-    end
-    
-    Watir::Container.module_eval do
-      def cell(how={}, what=nil)
-        TableCell.new(self, how, what)
-      end
-
-      alias_method :td, :cell
-
-      def cells(how={}, what=nil)
-        TableCells.new(self, how, what)
-      end
-
-      alias_method :tds, :cells
     end
   end
   

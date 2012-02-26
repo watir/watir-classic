@@ -10,14 +10,13 @@ module Watir
     # number of spaces that separate the property from the value in the to_s method
     TO_S_SIZE = 14
 
-    # ole_object - the ole object for the element being wrapped
-    def initialize(ole_object)
-      @o = ole_object
-      @original_color = nil
+    def initialize(container, how)
+      set_container container
+      @o = how[:ole_object]
+      @how = how
     end
 
     def locate
-      return if self.class == Element
       @o = @container.locator_for(TaggedElementLocator, @how, self.class).locate
     end  
 
@@ -131,13 +130,13 @@ module Watir
 
       tag = tag_name
       if tag == "html"
-        html_element(:ole_object, ole_object)
+        element(:ole_object => ole_object)
       elsif tag == "input"
-        self.send(ole_object.invoke('type'), :ole_object, ole_object)
+        send(ole_object.invoke('type'), :ole_object => ole_object)
       elsif tag == "select"
-        self.select_list(:ole_object, ole_object)
-      elsif self.respond_to?(tag.downcase)
-        self.send(tag.downcase, :ole_object, ole_object)
+        select_list(:ole_object => ole_object)
+      elsif respond_to?(tag.downcase)
+        send(tag.downcase, :ole_object => ole_object)
       else
         self
       end
@@ -204,9 +203,7 @@ module Watir
       assert_exists
       parent_element = ole_object.parentelement
       return unless parent_element
-      result = Element.new(parent_element).to_subtype
-      result.set_container self
-      result
+      Element.new(self, :ole_object => parent_element).to_subtype
     end
 
     include Comparable
@@ -325,7 +322,9 @@ module Watir
     private :build_method
 
     def generate_ruby_code(element, method_name, *args)
-      element = "#{self.class}.new(#{@page_container.attach_command}, :unique_number, #{self.unique_number})"
+      # needs to be done like this to avoid segfault on ruby 1.9.3
+      tag_name = @how[:tag_name].join("' << '")
+      element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{self.unique_number})"
       method = build_method(method_name, *args)
       ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
                     "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"

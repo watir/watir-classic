@@ -1,9 +1,5 @@
 module Watir
   class FileField < InputElement
-    #:stopdoc:
-    INPUT_TYPES = ["file"]
-    #:startdoc:
-
     def set(file_path)
       assert_file_exists(file_path)
       assert_exists

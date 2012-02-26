@@ -36,7 +36,7 @@ module Watir
     def [](n)
       number = n - Watir::IE.base_index
       offset = Watir::IE.zero_based_indexing ? (length - 1) : length
-      iterator_object(number) || element_class.new(@container, :index, n)
+      iterator_object(number) || element_class.new(@container, :index => n)
     end
 
     def first
@@ -70,4 +70,17 @@ module Watir
     end
 
   end
+
+  class InputElementCollection < ElementCollection
+    def each
+      @container.locator_for(InputElementLocator, @how, element_class).each {|element| yield element}
+    end    
+  end
+
+  class HTMLElementCollection < ElementCollection
+    def each
+      @container.locator_for(TaggedElementLocator, @how, Element).each { |element| yield element }
+    end
+  end
+
 end

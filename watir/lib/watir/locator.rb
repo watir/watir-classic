@@ -5,7 +5,7 @@ module Watir
 
     def initialize container, specifiers, klass
       @container = container
-      @specifiers = normalize_specifiers(specifiers)
+      @specifiers = {:index => Watir::IE.base_index}.merge(normalize_specifiers(specifiers))
       @tags = @specifiers.delete(:tag_name)
       @klass = klass
     end
@@ -124,13 +124,9 @@ module Watir
     end
 
     def create_element ole_object
-      if @klass == Element
-        element = Element.new(ole_object)
-      else
-        element = @klass.new(@container, @specifiers)
-        element.ole_object = ole_object
-        def element.locate; @o; end
-      end
+      element = @klass.new(@container, @specifiers)
+      element.ole_object = ole_object
+      def element.locate; @o; end
       element
     end
   end

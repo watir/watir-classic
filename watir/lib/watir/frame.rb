@@ -1,13 +1,16 @@
 module Watir
   class Frame < Element
     include PageContainer
-    TAGS = ['FRAME', 'IFRAME']
-
     attr_accessor :document
 
+    def initialize(container, how)
+      super
+      copy_test_config container
+    end
+    
     # Find the frame denoted by how and what in the container and return its ole_object
     def locate
-      frame, document = @container.locator_for(FrameLocator, self.class::TAGS, @how, @what, self.class).locate
+      frame, document = @container.locator_for(FrameLocator, @how, self.class).locate
       if frame && document
         @o = frame
         begin
@@ -24,13 +27,6 @@ module Watir
       document.body.all
     end
 
-    def initialize(container, how, what)
-      set_container container
-      @how = how
-      @what = what
-      copy_test_config container
-    end
-    
     def document
       assert_exists
       if @document

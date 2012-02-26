@@ -6,15 +6,6 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Image < Element
-    TAG = "IMG"
-
-    def initialize(container, how, what)
-      set_container container
-      @how = how
-      @what = what
-      super nil
-    end
-    
     # this method produces the properties for an image as an array
     def image_string_creator
       n = []
@@ -119,10 +110,6 @@ module Watir
     end
     private :fill_save_image_dialog
 
-    Watir::Container.module_eval do
-      alias_method :img, :image
-      alias_method :imgs, :images
-    end        
   end
   
 end

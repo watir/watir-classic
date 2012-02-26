@@ -4,12 +4,6 @@ module Watir
     def locate
       @o = @container.locator_for(InputElementLocator, @how, self.class).locate
     end
-
-    def initialize(container, how)
-      set_container container
-      @how = how
-      super nil
-    end
   end
 
   #
@@ -19,10 +13,6 @@ module Watir
   # This class is the way in which select boxes are manipulated.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
   class SelectList < InputElement
-    #:stopdoc:
-    INPUT_TYPES = ["select-one", "select-multiple"]
-    #:startdoc:
-
     def_wrap :multiple?, :multiple
 
     # This method clears the selected items in the select box
@@ -89,8 +79,7 @@ module Watir
     end
   end
   
-  class Option < NonControlElement
-
+  class Option < Element
     def select
       perform_action do
         unless selected?
@@ -141,10 +130,6 @@ module Watir
   
   # Returned by the Watir::Container#button method
   class Button < InputElement
-    #:stopdoc:
-    INPUT_TYPES = ["button", "submit", "image", "reset"]
-    #:startdoc:
-    
     alias_method :__value, :value
 
     def text
@@ -153,7 +138,6 @@ module Watir
     end
 
     alias_method :value, :text
-
   end
 
   #
@@ -163,9 +147,6 @@ module Watir
   # This class is the main class for Text Fields
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
   class TextField < InputElement
-    #:stopdoc:
-    INPUT_TYPES = ["text", "password", "textarea"]
-    
     def_wrap_guard :size
 
     # Returns true or false if the text field is read only.
@@ -380,19 +361,7 @@ module Watir
 
   end
 
-  class TextArea < TextField
-    INPUT_TYPES = ["textarea"]
-
-    Watir::Container.module_eval do
-      def textareas(how={}, what=nil)
-        TextAreas.new(self, how, what)
-      end
-
-      def textarea(how={}, what=nil)
-        TextArea.new(self, how, what)
-      end
-    end
-  end
+  class TextArea < TextField; end
   
   # this class can be used to access hidden field objects
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
@@ -449,7 +418,6 @@ module Watir
   # This class is the watir representation of a radio button.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#radio method
   class Radio < RadioCheckCommon
-    INPUT_TYPES = ["radio"]
     # This method clears a radio button. One of them will almost always be set.
     # Returns true if set or false if not set.
     #   Raises UnknownObjectException if its unable to locate an object
@@ -481,7 +449,6 @@ module Watir
   # This class is the watir representation of a check box.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
   class CheckBox < RadioCheckCommon
-    INPUT_TYPES = ["checkbox"]
     # This method checks or unchecks the checkbox.
     # With no arguments supplied it sets the checkbox.
     # Setting false argument unchecks/clears the checkbox.
@@ -505,19 +472,6 @@ module Watir
       set false
     end
 
-    Watir::Container.module_eval do
-      remove_method :check_boxs
-
-      def checkboxes(how={}, what=nil)
-        CheckBoxes.new(self, how, what)
-      end
-
-      remove_method :check_box
-
-      def checkbox(how={}, what=nil)
-        CheckBox.new(self, how, what)
-      end
-    end
   end
 
 end
