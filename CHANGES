@@ -1,6 +1,8 @@
 == 3.0.0.rc3 - 2012/xx/xx
 
-* Browser#send_keys and Element#send_keys have now same syntax as Watir-WebDriver has
+* Browser#send_keys and Element#send_keys have now same syntax as specified in WatirSpec
+* Browser#modal_dialog improved
+* all html elements are now supported (even html5 ones)
 
 == 3.0.0.rc2 - 2012/02/04
 
