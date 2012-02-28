@@ -34,7 +34,7 @@ module Watir
     def format_specifiers(tag_name, how, what)
       defaults = {:tag_name => [tag_name].flatten.map(&:to_s)}
       formatted_specifiers = defaults.merge(what ? {how => what} : how)
-      if formatted_specifiers[:xpath] && formatted_specifiers.size > 1
+      if formatted_specifiers[:xpath] && formatted_specifiers.size > 2
         raise ArgumentError, ":xpath specifier should be the only one when used in #{formatted_specifiers.inspect}"
       end
       formatted_specifiers
