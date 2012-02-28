@@ -8,6 +8,7 @@ module Watir
   class Image < Element
     attr_ole :alt
     attr_ole :src
+    attr_ole :file_created_date, :fileCreatedDate
 
     # this method produces the properties for an image as an array
     def image_string_creator
@@ -30,28 +31,22 @@ module Watir
       return r.join("\n")
     end
     
-    # this method returns the file created date of the image
-    def file_created_date
-      assert_exists
-      return @o.invoke("fileCreatedDate")
-    end
-    
     # this method returns the filesize of the image, as an int
     def file_size
       assert_exists
-      return @o.invoke("fileSize").to_i
+      @o.invoke("fileSize").to_i
     end
     
     # returns the width in pixels of the image, as an int
     def width
       assert_exists
-      return @o.invoke("width").to_i
+      @o.invoke("width").to_i
     end
     
     # returns the height in pixels of the image, as an int
     def height
       assert_exists
-      return @o.invoke("height").to_i
+      @o.invoke("height").to_i
     end
     
     # This method attempts to find out if the image was actually loaded by the web browser.
@@ -60,8 +55,7 @@ module Watir
     # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
     def loaded?
       assert_exists
-      return false if @o.fileCreatedDate == "" and @o.fileSize.to_i == -1
-      return true
+      !file_created_date.empty? && file_size != -1
     end
     
     # this method highlights the image (in fact it adds or removes a border around the image)
