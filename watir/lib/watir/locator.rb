@@ -154,7 +154,7 @@ module Watir
 
   class FrameLocator < TaggedElementLocator
     def each_element(tag)
-      frames = document.frames
+      frames = @container.page_container.document.frames
       i = 0
       document.getElementsByTagName(tag).each do |ole_object|
         frame = create_element ole_object
