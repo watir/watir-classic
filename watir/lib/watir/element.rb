@@ -2,6 +2,7 @@ module Watir
   # Base class for html elements.
   # This is not a class that users would normally access.
   class Element # Wrapper
+    include Comparable
     include ElementExtensions
     include Exception
     include Container # presumes @container is defined
@@ -17,6 +18,14 @@ module Watir
       @o = specifiers[:ole_object]
       @specifiers = specifiers
     end
+
+    def <=> other
+      assert_exists
+      other.assert_exists
+      ole_object.sourceindex <=> other.ole_object.sourceindex
+    end
+
+    alias_method :eql?, :==
 
     def locate
       @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
@@ -41,7 +50,7 @@ module Watir
       class_eval %Q[
         def #{method_name}
           assert_exists
-          ole_method_name = '#{ole_method_name || method_name}'
+          ole_method_name = '#{ole_method_name || method_name.to_s.gsub(/\?$/, '')}'
           ole_object.invoke(ole_method_name) rescue attribute_value(ole_method_name) || '' rescue ''
         end]
     end
@@ -60,25 +69,10 @@ module Watir
       raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled" unless enabled?
     end
 
-    # return the name of the element (as defined in html)
-    attr_ole :name
     # return the id of the element
     attr_ole :id
-    # return whether the element is disabled
-    attr_ole :disabled
-    alias_method :disabled?, :disabled
-    # return the value of the element
-    attr_ole :value
     # return the title of the element
     attr_ole :title
-
-    attr_ole :alt
-    attr_ole :src
-
-    # return the type of the element
-    attr_ole :type # input elements only
-    # return the url the link points to
-    attr_ole :href # link only
     # return the class name of the element
     # raise an ObjectNotFound exception if the object cannot be found
     attr_ole :class_name, :className
@@ -86,20 +80,6 @@ module Watir
     attr_ole :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     attr_ole :html, :outerHTML
-    # Return the content attribute for meta tag
-    attr_ole :content
-    # Return the http-equiv attribute for meta tag
-    attr_ole :http_equiv, :httpEquiv
-    # Return font tag attributes
-    attr_ole :color
-    attr_ole :face
-    attr_ole :size
-    # Return option label attribute
-    attr_ole :label
-    # Return table rules attribute
-    attr_ole :rules
-    # Return td headers attribute
-    attr_ole :headers
 
     def tag_name
       assert_exists
@@ -164,20 +144,14 @@ module Watir
       visible? ? ole_object.innerText.strip : ""
     end
 
-    # IE9 only returns empty string for ole_object.name for non-input elements
-    # so get at it through the attribute which will make the matchers work
-    def name
-      attribute_value('name') || ''
-    end
-
     def __ole_inner_elements
       assert_exists
-      return ole_object.all
+      ole_object.all
     end
 
     def document
       assert_exists
-      return ole_object
+      ole_object
     end
 
     # Return the element immediately containing self. 
@@ -187,16 +161,6 @@ module Watir
       return unless parent_element
       Element.new(self, :ole_object => parent_element).to_subtype
     end
-
-    include Comparable
-
-    def <=> other
-      assert_exists
-      other.assert_exists
-      ole_object.sourceindex <=> other.ole_object.sourceindex
-    end
-
-    alias_method :eql?, :==
 
     # Return true if self is contained earlier in the html than other. 
     alias :before? :<
@@ -208,8 +172,7 @@ module Watir
     end
 
     def type_keys
-      return @container.type_keys if @type_keys.nil?
-      @type_keys
+      @type_keys || @container.type_keys
     end
 
     def activeObjectHighLightColor
@@ -439,7 +402,12 @@ module Watir
     #   raises: UnknownObjectException  if the object is not found
     def enabled?
       assert_exists
-      !disabled
+      !disabled?
+    end
+
+    def disabled?
+      assert_exists
+      false
     end
 
     # If any parent element isn't visible then we cannot write to the

@@ -3,6 +3,9 @@ module Watir
     include PageContainer
     attr_accessor :document
 
+    attr_ole :name
+    attr_ole :src
+
     def initialize(container, specifiers)
       super
       copy_test_config container
@@ -38,16 +41,6 @@ module Watir
 
     def attach_command
       @container.page_container.attach_command + ".frame(#{@specifiers.inspect})".gsub('"','\'')
-    end
-
-    def execute_script(source)
-      document.parentWindow.eval(source.to_s)
-    rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
-      escaped_src = source.to_s.gsub(/[\r\n']/) {|m| "\\#{m}"}
-      wrapper = "_watir_helper_div_#{Time.now.to_i}"
-      cmd = "var e = document.createElement('DIV'); e.style.display = 'none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
-      document.parentWindow.execScript(cmd)
-      document.getElementById(wrapper).wrapper_obj.innerHTML
     end
 
   end

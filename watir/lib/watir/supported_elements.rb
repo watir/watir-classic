@@ -11,7 +11,7 @@ module Watir
         end
 
         unless Watir.const_defined? "#{klass}Collection"
-          Watir.class_eval %Q[class #{klass}Collection < #{super_class}Collection; end]
+          Watir.class_eval %Q[class #{klass}Collection < #{args[:super_collection] || super_class}Collection; end]
         end
 
         tag_name = args[:tag_name] || method_name
@@ -80,11 +80,13 @@ module Watir
     alias_method :field_sets, :fieldsets
     support_element :figcaption
     support_element :figure
-    support_element :file_field, :tag_name => :file, :class => :FileField, :super_class => :InputElement
+    support_element :file_field, :tag_name => :file, :class => :FileField
     support_element :font
     support_element :footer
     support_element :form
     support_element :frame, :tag_name => [:frame, :iframe]
+    alias_method :iframe, :frame
+    alias_method :iframes, :frames
     support_element :frameset
     support_element :h1
     support_element :h2
@@ -95,11 +97,10 @@ module Watir
     support_element :head
     support_element :header
     support_element :hgroup
-    support_element :hidden, :super_class => :InputElement
+    support_element :hidden, :super_class => :TextField, :super_collection => :InputElement
     support_element :hr
     # html and htmls?!
     support_element :i
-    support_element :iframe
     support_element :img, :class => :Image
     alias_method :image, :img
     alias_method :images, :imgs
@@ -152,7 +153,7 @@ module Watir
     alias_method :cell, :td
     alias_method :cells, :tds
     support_element :text_field, :tag_name => [:text, :password, :textarea], :class => :TextField, :super_class => :InputElement
-    support_element :textarea, :class => :TextArea, :super_class => :InputElement
+    support_element :textarea, :class => :TextArea, :super_class => :TextField, :super_collection => :InputElement
     support_element :tfoot, :class => :TableSection
     support_element :th
     support_element :thead, :class => :TableSection

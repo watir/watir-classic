@@ -6,6 +6,9 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Image < Element
+    attr_ole :alt
+    attr_ole :src
+
     # this method produces the properties for an image as an array
     def image_string_creator
       n = []

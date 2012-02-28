@@ -31,6 +31,8 @@ module Watir
   class Table < Element
     include RowContainer
 
+    attr_ole :rules
+
     # override the highlight method, as if the tables rows are set to have a background color,
     # this will override the table background color, and the normal flash method won't work
     def highlight(set_or_clear)
@@ -173,7 +175,9 @@ module Watir
   
   # this class is a table cell - when called via the Table object
   class TableCell < Element
-    alias to_s text
+    attr_ole :headers
+
+    alias_method :to_s, :text
     
     def colspan
       locate

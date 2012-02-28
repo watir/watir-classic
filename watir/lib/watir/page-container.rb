@@ -33,6 +33,17 @@ module Watir
 
     private :page
 
+    # Execute the given JavaScript string
+    def execute_script(source)
+      document.parentWindow.eval(source.to_s)
+    rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
+      escaped_src = source.to_s.gsub(/[\r\n']/) {|m| "\\#{m}"}
+      wrapper = "_watir_helper_div_#{rand(100000)}"
+      cmd = "var e = document.createElement('DIV'); e.style.display='none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
+      document.parentWindow.execScript(cmd)
+      document.getElementById(wrapper).innerHTML
+    end
+
     # The HTML of the current page
     def html
       page.outerhtml

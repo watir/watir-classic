@@ -7,12 +7,7 @@ module Watir
     end
 
     attr_ole :action
-
-    def name
-      assert_exists
-      name = @o.getAttributeNode('name')
-      name ? name.value : ''
-    end
+    attr_ole :name
 
     def form_method
       assert_exists
@@ -23,7 +18,7 @@ module Watir
       if arg.nil?
         form_method
       else
-        super(arg)
+        super
       end
     end    
 

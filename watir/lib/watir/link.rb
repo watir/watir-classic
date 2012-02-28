@@ -5,6 +5,9 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Link < Element
+    attr_ole :type
+    attr_ole :href
+
     # if an image is used as part of the link, this will return true
     def link_has_image
       assert_exists

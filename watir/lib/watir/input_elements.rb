@@ -4,6 +4,13 @@ module Watir
     def locate
       @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
     end
+
+    attr_ole :disabled?
+    attr_ole :name
+    attr_ole :value
+    attr_ole :alt
+    attr_ole :src
+    attr_ole :type
   end
 
   #
@@ -13,7 +20,7 @@ module Watir
   # This class is the way in which select boxes are manipulated.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
   class SelectList < InputElement
-    attr_ole :multiple?, :multiple
+    attr_ole :multiple?
 
     # This method clears the selected items in the select box
     def clear
@@ -80,6 +87,11 @@ module Watir
   end
   
   class Option < Element
+    attr_ole :disabled?
+    attr_ole :name
+    attr_ole :value
+    attr_ole :label
+
     def select
       perform_action do
         unless selected?
@@ -148,11 +160,7 @@ module Watir
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
   class TextField < InputElement
     attr_ole :size
-
-    # Returns true or false if the text field is read only.
-    #   Raises UnknownObjectException if the object can't be found.
-    attr_ole :readonly?, :readOnly
-
+    attr_ole :readonly?
     alias_method :text, :value
 
     #:startdoc:
@@ -361,8 +369,6 @@ module Watir
 
   end
 
-  class TextArea < TextField; end
-  
   # this class can be used to access hidden field objects
   # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
   class Hidden < TextField
@@ -392,32 +398,28 @@ module Watir
     end
   end
 
-  # This class contains common methods to both radio buttons and check boxes.
+  # This module contains common methods to both radio buttons and check boxes.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or by Watir::Container#radio methods
-  #--
-  # most of the methods available to this element are inherited from the Element class
-  class RadioCheckCommon < InputElement
+  module RadioCheckCommon
+    def self.included(base)
+      base.instance_eval do
+        attr_ole :set?, :checked
+        alias_method :checked?, :set?
+      end
+    end
+
     def inspect
       '#<%s:0x%x located=%s specifiers=%s value=%s>' % [self.class, hash*2, !!ole_object, @specifiers.inspect, @value.inspect]
     end
-    
-    # This method determines if a radio button or check box is set.
-    # Returns true if set/checked; false if not set/checked.
-    # Raises UnknownObjectException if its unable to locate an object.
-    def set? 
-      assert_exists
-      return @o.checked
-    end
-    alias checked? set?
-    
-   end
+  end
   
   #--
   #  this class makes the docs better
   #++
   # This class is the watir representation of a radio button.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#radio method
-  class Radio < RadioCheckCommon
+  class Radio < InputElement
+    include RadioCheckCommon
     # This method clears a radio button. One of them will almost always be set.
     # Returns true if set or false if not set.
     #   Raises UnknownObjectException if its unable to locate an object
@@ -448,7 +450,8 @@ module Watir
 
   # This class is the watir representation of a check box.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
-  class CheckBox < RadioCheckCommon
+  class CheckBox < InputElement
+    include RadioCheckCommon
     # This method checks or unchecks the checkbox.
     # With no arguments supplied it sets the checkbox.
     # Setting false argument unchecks/clears the checkbox.
