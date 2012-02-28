@@ -36,90 +36,70 @@ module Watir
     end
 
     private
-    def self.def_wrap(method_name, ole_method_name=nil)
-      class_eval "def #{method_name}
-                    assert_exists
-                    ole_object.invoke('#{ole_method_name || method_name}')
-                  end"
-    end
 
-    def self.def_wrap_guard(method_name, ole_method_name = nil)
-      class_eval "def #{method_name}
-                    assert_exists
-                    begin
-                      ole_object.invoke('#{ole_method_name || method_name}')
-                    rescue
-                      begin
-                        ole_object.getAttribute('#{ole_method_name || method_name}') || ''
-                      rescue
-                        ''
-                      end
-                    end
-                  end"
+    def self.attr_ole(method_name, ole_method_name=nil)
+      class_eval %Q[
+        def #{method_name}
+          assert_exists
+          ole_method_name = '#{ole_method_name || method_name}'
+          ole_object.invoke(ole_method_name) rescue attribute_value(ole_method_name) || '' rescue ''
+        end]
     end
-
 
     public
+
     def assert_exists
       locate
       unless ole_object
-        if self.is_a?(Frame)
-          raise UnknownFrameException.new(Watir::Exception.message_for_unable_to_locate(@specifiers))
-        else
-          raise UnknownObjectException.new(
-                  Watir::Exception.message_for_unable_to_locate(@specifiers))
-        end
+        exception_class = self.is_a?(Frame) ? UnknownFrameException : UnknownObjectException
+        raise exception_class.new(Watir::Exception.message_for_unable_to_locate(@specifiers))
       end
     end
 
     def assert_enabled
-      unless enabled?
-        raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled"
-      end
+      raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled" unless enabled?
     end
 
     # return the name of the element (as defined in html)
-    def_wrap_guard :name
+    attr_ole :name
     # return the id of the element
-    def_wrap_guard :id
+    attr_ole :id
     # return whether the element is disabled
-    def_wrap :disabled
-    alias disabled? disabled
+    attr_ole :disabled
+    alias_method :disabled?, :disabled
     # return the value of the element
-    def_wrap_guard :value
+    attr_ole :value
     # return the title of the element
-    def_wrap_guard :title
+    attr_ole :title
 
-    def_wrap_guard :alt
-    def_wrap_guard :src
+    attr_ole :alt
+    attr_ole :src
 
     # return the type of the element
-    def_wrap_guard :type # input elements only
+    attr_ole :type # input elements only
     # return the url the link points to
-    def_wrap :href # link only
+    attr_ole :href # link only
     # return the class name of the element
     # raise an ObjectNotFound exception if the object cannot be found
-    def_wrap :class_name, :className
+    attr_ole :class_name, :className
     # return the unique COM number for the element
-    def_wrap :unique_number, :uniqueNumber
+    attr_ole :unique_number, :uniqueNumber
     # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
-    def_wrap :html, :outerHTML
-    # Return the "for" attribute for label
-    def_wrap_guard :for, :htmlFor
+    attr_ole :html, :outerHTML
     # Return the content attribute for meta tag
-    def_wrap_guard :content
+    attr_ole :content
     # Return the http-equiv attribute for meta tag
-    def_wrap_guard :http_equiv, :httpEquiv
+    attr_ole :http_equiv, :httpEquiv
     # Return font tag attributes
-    def_wrap_guard :color
-    def_wrap_guard :face
-    def_wrap_guard :size
+    attr_ole :color
+    attr_ole :face
+    attr_ole :size
     # Return option label attribute
-    def_wrap_guard :label
+    attr_ole :label
     # Return table rules attribute
-    def_wrap_guard :rules
+    attr_ole :rules
     # Return td headers attribute
-    def_wrap_guard :headers
+    attr_ole :headers
 
     def tag_name
       assert_exists

@@ -13,7 +13,7 @@ module Watir
   # This class is the way in which select boxes are manipulated.
   # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
   class SelectList < InputElement
-    def_wrap :multiple?, :multiple
+    attr_ole :multiple?, :multiple
 
     # This method clears the selected items in the select box
     def clear
@@ -147,11 +147,11 @@ module Watir
   # This class is the main class for Text Fields
   # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
   class TextField < InputElement
-    def_wrap_guard :size
+    attr_ole :size
 
     # Returns true or false if the text field is read only.
     #   Raises UnknownObjectException if the object can't be found.
-    def_wrap :readonly?, :readOnly
+    attr_ole :readonly?, :readOnly
 
     alias_method :text, :value
 

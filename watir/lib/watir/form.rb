@@ -6,7 +6,7 @@ module Watir
       copy_test_config container
     end
 
-    def_wrap_guard :action
+    attr_ole :action
 
     def name
       assert_exists
