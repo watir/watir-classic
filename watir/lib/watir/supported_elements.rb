@@ -37,6 +37,7 @@ module Watir
       if formatted_specifiers[:xpath] && formatted_specifiers.size > 1
         raise ArgumentError, ":xpath specifier should be the only one when used in #{formatted_specifiers.inspect}"
       end
+      formatted_specifiers
     end
 
     private :format_specifiers
