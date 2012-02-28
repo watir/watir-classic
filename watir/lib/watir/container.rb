@@ -17,6 +17,7 @@ module Watir
   # Is includable for classes that have @container, document and __ole_inner_elements
   module Container
     include Watir::Exception
+    include XpathHelper
     
     # Note: @container is the container of this object, i.e. the container
     # of this container.

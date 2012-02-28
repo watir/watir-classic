@@ -13,6 +13,7 @@ require 'watir/element_extensions'
 
 require 'logger'
 require 'watir/logger'
+require 'watir/xpath_helper'
 require 'watir/container'
 require 'watir/locator'
 require 'watir/page-container'
