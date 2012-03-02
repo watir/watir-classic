@@ -84,7 +84,7 @@ module Watir
     alias_method :field_sets, :fieldsets
     support_element :figcaption
     support_element :figure
-    support_element :file_field, :tag_name => :file, :class => :FileField
+    support_element :file_field, :tag_name => :file, :class => :FileField, :super_collection => :InputElement
     support_element :font
     support_element :footer
     support_element :form
