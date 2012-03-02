@@ -1,5 +1,5 @@
 module Watir
-  module XpathHelper
+  module XpathLocator
 
     def xmlparser_document_object
       @xml_parser_doc ||= begin

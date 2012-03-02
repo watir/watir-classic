@@ -2,7 +2,7 @@ module Watir
   class Locator
     include Watir
     include Watir::Exception
-    include XpathHelper
+    include XpathLocator
 
     def initialize container, specifiers, klass
       @container = container
