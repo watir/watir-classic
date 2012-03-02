@@ -2,6 +2,7 @@ module Watir
   class Locator
     include Watir
     include Watir::Exception
+    include XpathHelper
 
     def initialize container, specifiers, klass
       @container = container
@@ -107,9 +108,9 @@ module Watir
       els = []
 
       if @specifiers[:xpath]
-        els = @container.send(:elements_by_xpath, @specifiers[:xpath])
+        els = elements_by_xpath(@specifiers[:xpath])
       elsif @specifiers[:css]
-        els = @container.send(:elements_by_css, @specifiers[:css])
+        els = elements_by_css(@specifiers[:css])
       elsif @specifiers[:ole_object]
         return [@specifiers[:ole_object]]
       end      

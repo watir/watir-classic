@@ -1,12 +1,10 @@
 module Watir
   module XpathHelper
 
-    private
-
     def xmlparser_document_object
       @xml_parser_doc ||= begin
                             require 'nokogiri'
-                            Nokogiri.parse("<html>#{html}</html>")
+                            Nokogiri.parse("<html>#{@container.html}</html>")
                           end
     end
 
@@ -30,13 +28,13 @@ module Watir
     # execute xpath selector and return an array of elements
     def elements_by_xpath(xpath)
       doc = xmlparser_document_object
-      current_tag = self.is_a?(Watir::IE) ? "body" : tag_name
+      current_tag = @container.is_a?(IE) ? "body" : @container.tag_name
 
       doc.xpath(xpath).reduce([]) do |elements, element|
         absolute_xpath_parts = element.path.split("/")
         first_tag_position = absolute_xpath_parts.index(current_tag) || absolute_xpath_parts.index("html") + 1
         element_xpath_parts = absolute_xpath_parts[first_tag_position..-1]
-        elements << element_xpath_parts.reduce(@container || @page_container) do |container, tag|
+        elements << element_xpath_parts.reduce(@container.page_container) do |container, tag|
           tag_name, index = tag.split(/[\[\]]/)
           index = index ? index.to_i - 1 : 0
           specifiers = {:tag_name => [tag_name]}
@@ -46,7 +44,7 @@ module Watir
     end    
 
     def direct_children container, elements
-      return elements if container == @page_container
+      return elements if container.is_a?(IE)
       elements.select {|el| el.parent == container}
     end
 
