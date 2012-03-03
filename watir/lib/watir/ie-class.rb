@@ -501,6 +501,10 @@ module Watir
       self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, IE.bind(ie), &blk)}
     end
 
+    def cookies
+      Cookies.new(self)
+    end
+
     #
     # Synchronization
     #
