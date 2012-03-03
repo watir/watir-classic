@@ -14,7 +14,6 @@ module Watir
 
       @container = container
       @specifiers = specifiers
-      @length = length
       @page_container = container.page_container
     end
 
@@ -35,7 +34,9 @@ module Watir
     def [](n)
       number = n - Watir::IE.base_index
       offset = Watir::IE.zero_based_indexing ? (length - 1) : length
-      iterator_object(number) || element_class.new(@container, :index => n)
+      non_existing_element = element_class.new(@container, @specifiers.merge(:index => n))
+      def non_existing_element.locate; nil end
+      iterator_object(number) || non_existing_element
     end
 
     def first
@@ -51,7 +52,7 @@ module Watir
     end
 
     def inspect
-      '#<%s:0x%x length=%s container=%s>' % [self.class, hash*2, @length.inspect, @container.inspect]
+      '#<%s:0x%x length=%s container=%s>' % [self.class, hash*2, length.inspect, @container.inspect]
     end
 
     private
@@ -69,6 +70,29 @@ module Watir
     end
 
   end
+
+  class TableElementCollection < ElementCollection
+    def initialize(container, specifiers, ole_collection=nil)
+      super container, specifiers
+      @ole_collection = ole_collection
+    end
+
+    def each
+      if @ole_collection
+        elements = []
+        @ole_collection.each {|element| elements << element_class.new(@container, :ole_object => element)}
+        super do |element|
+          yield element if elements.include?(element)
+        end
+      else
+        super
+      end
+    end
+  end
+
+  class TableRowCollection < TableElementCollection; end
+
+  class TableCellCollection < TableElementCollection; end
 
   class InputElementCollection < ElementCollection
     def each

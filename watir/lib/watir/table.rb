@@ -1,6 +1,6 @@
 module Watir
 
-  module RowContainer
+  module TableContainer
     # Returns a row in the table
     #   * index         - the index of the row
     def [](index)
@@ -20,7 +20,45 @@ module Watir
       end
       rows_memo
     end
+  end
 
+  module TableElementsContainer
+    def table_elements(klass, tags, how, what, ole_collection)
+      specifiers = format_specifiers(tags, how, what)
+      klass.new(self, specifiers, ole_collection)
+    end
+
+    private :table_elements
+  end
+
+  module TableCellsContainer
+    include TableElementsContainer
+
+    def cells(how={}, what=nil)
+      assert_exists
+      table_elements(TableCellCollection, [:th, :td], how, what, @o.cells)
+    end
+
+    def cell(how={}, what=nil)
+      specifiers = format_specifiers([], how, what)
+      index = specifiers.delete(:index) || 0
+      cells(specifiers)[index]
+    end
+  end
+
+  module TableRowsContainer
+    include TableElementsContainer
+
+    def rows(how={}, what=nil)
+      assert_exists
+      table_elements(TableRowCollection, [:tr], how, what, @o.rows)
+    end
+
+    def row(how={}, what=nil)
+      specifiers = format_specifiers([:tr], how, what)
+      index = specifiers.delete(:index) || 0
+      rows(specifiers)[index]
+    end
   end
 
   # This class is used for dealing with tables.
@@ -29,7 +67,9 @@ module Watir
   # many of the methods available to this object are inherited from the Element class
   #
   class Table < Element
-    include RowContainer
+    include TableContainer
+    include TableRowsContainer
+    include TableCellsContainer
 
     attr_ole :rules
 
@@ -147,10 +187,14 @@ module Watir
   end
 
   class TableSection < Element
-    include RowContainer
+    include TableContainer
+    include TableRowsContainer
+    include TableCellsContainer
   end
 
   class TableRow < Element
+    include TableCellsContainer
+
     # this method iterates through each of the cells in the row. Yields a TableCell object
     def each
       locate
@@ -167,7 +211,7 @@ module Watir
     end
     
     def column_count
-      locate
+      assert_exists
       cells.length
     end
 

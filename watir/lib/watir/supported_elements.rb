@@ -154,8 +154,6 @@ module Watir
     support_element :table
     support_element :tbody, :class => :TableSection
     support_element :td, :tag_name => [:th, :td], :class => :TableCell
-    alias_method :cell, :td
-    alias_method :cells, :tds
     support_element :text_field, :tag_name => [:text, :password, :textarea], :class => :TextField, :super_class => :InputElement
     support_element :textarea, :class => :TextArea, :super_class => :TextField, :super_collection => :InputElement
     support_element :tfoot, :class => :TableSection
@@ -164,8 +162,6 @@ module Watir
     support_element :time
     support_element :title
     support_element :tr, :class => :TableRow
-    alias_method :row, :tr
-    alias_method :rows, :trs
     support_element :track
     support_element :u
     support_element :ul

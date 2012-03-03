@@ -125,8 +125,7 @@ module Watir
     end
 
     def create_element ole_object
-      element = @klass.new(@container, @specifiers)
-      element.ole_object = ole_object
+      element = @klass.new(@container, @specifiers.merge(:ole_object => ole_object))
       def element.locate; @o; end
       element
     end
