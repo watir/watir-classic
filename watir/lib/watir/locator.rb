@@ -165,12 +165,23 @@ module Watir
     end
 
     def locate
-      # do not locate frames by getElementById or by xpath since can't get the correct
-      # 'document' related with that ole_object like it's done in #each_element
       count = Watir::IE.base_index - 1
       each do |frame|
         count += 1
         return frame.ole_object, frame.document if count == @specifiers[:index]
+      end
+    end
+
+    def locate_elements_by_xpath_css_ole
+      super.map do |frame|
+        frame = create_element frame
+        each_element(frame.tag_name) do |frame_with_document|
+          if frame_with_document == frame
+            frame = frame_with_document
+            break
+          end
+        end
+        frame
       end
     end
   end
