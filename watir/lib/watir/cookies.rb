@@ -18,28 +18,59 @@ module Watir
     def add name, value, options={}
       options = options.map do |option|
         k, v = option
-        case k
-        when :expires
+        if k == :expires
           "#{k}=#{v.gmtime.strftime("%a, %-d %b %Y %H:%M:%S UTC")}"
-        when :secure
-          "secure"
+        elsif k == :secure
+          "secure" if v
         else
           "#{k}=#{v}"
         end
-      end.join("; ")
+      end.compact.join("; ")
 
       options = "; #{options}" unless options.empty?
       @page_container.document.cookie = "#{name}=#{value}#{options}" 
     end
 
-    def delete name, options={}
-      add name, nil, options.merge(:expires => Time.now - 1000)
-    end
+    def delete name
+      options = {:expires => Time.now - 10000}
+      add name, nil, options 
 
-    def clear options={}
-      each do |cookie|
-        delete cookie[:name], options
+      # make sure that the cookie gets deleted
+      # there's got to be some easier way to do this
+      uri = URI.parse(@page_container.url)
+      domain = uri.host
+
+      paths = uri.path.split("/").reduce([]) do |paths, path|
+        paths << "#{paths.last}/#{path}".squeeze("/")
+      end
+
+      subdomains = domain.split(".").reverse.reduce([]) do |subdomains, part|
+        subdomain = "#{part}#{subdomains.last}"
+        subdomain = "." + subdomain unless subdomain == domain
+        subdomains << subdomain
+      end
+
+      subdomains.each do |subdomain|
+        domain_options = options.merge :domain => subdomain
+        delete_with_options name, domain_options
+        delete_with_options name, domain_options.merge(:secure => true)
+
+        paths.each do |path|
+          path_options = domain_options.merge :path => path
+          delete_with_options name, path_options 
+          delete_with_options name, path_options.merge(:secure => true)
+        end
       end
     end
+
+    def clear
+      each {|cookie| delete cookie[:name]}
+    end
+
+    def delete_with_options name, options={}
+      add name, nil, options
+    end
+
+    private :delete_with_options
   end
 end
