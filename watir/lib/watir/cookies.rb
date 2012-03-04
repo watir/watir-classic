@@ -9,8 +9,8 @@ module Watir
     end
 
     def each
-      @page_container.document.cookie.split("; ").each do |cookie|
-        name, value = cookie.split("=")
+      @page_container.document.cookie.split(";").each do |cookie|
+        name, value = cookie.strip.split("=")
         yield({:name => name, :value => value})
       end
     end
@@ -32,8 +32,8 @@ module Watir
     end
 
     def delete name
-      options = {:expires => Time.now - 10000}
-      add name, nil, options 
+      options = {:expires => Time.now - 60 * 60 * 24}
+      delete_with_options name, options
 
       # make sure that the cookie gets deleted
       # there's got to be some easier way to do this
@@ -42,7 +42,7 @@ module Watir
 
       paths = uri.path.split("/").reduce([]) do |paths, path|
         paths << "#{paths.last}/#{path}".squeeze("/")
-      end
+      end << "/"
 
       subdomains = domain.split(".").reverse.reduce([]) do |subdomains, part|
         subdomain = "#{part}#{subdomains.last}"
@@ -56,9 +56,13 @@ module Watir
         delete_with_options name, domain_options.merge(:secure => true)
 
         paths.each do |path|
-          path_options = domain_options.merge :path => path
+          path_options = options.merge :path => path
           delete_with_options name, path_options 
           delete_with_options name, path_options.merge(:secure => true)
+
+          path_domain_options = domain_options.merge :path => path
+          delete_with_options name, path_domain_options 
+          delete_with_options name, path_domain_options.merge(:secure => true)
         end
       end
     end
