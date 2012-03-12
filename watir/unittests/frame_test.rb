@@ -112,47 +112,6 @@ class TC_IFrames < Test::Unit::TestCase
 
 end
 
-class TC_show_frames < Test::Unit::TestCase
-  include CaptureIOHelper
-
-  def capture_and_compare(page, expected)
-    goto_page page
-    actual = capture_stdout { browser.showFrames }
-    assert_equal(expected, actual)
-  end
-
-  tag_method :test_show_nested_frames, :fails_on_firefox
-
-  def test_show_nested_frames
-    capture_and_compare("nestedFrames.html", <<END_OF_MESSAGE)
-there are 2 frames
-frame  index: 1 name: nestedFrame
-frame  index: 2 name: nestedFrame2
-END_OF_MESSAGE
-  end
-
-  tag_method :test_button_frames, :fails_on_firefox
-
-  def test_button_frames
-    capture_and_compare("frame_buttons.html", <<END_OF_MESSAGE)
-there are 2 frames
-frame  index: 1 name: buttonFrame
-frame  index: 2 name: buttonFrame2
-END_OF_MESSAGE
-  end
-
-  tag_method :test_iframes, :fails_on_firefox
-
-  def test_iframes
-    capture_and_compare("iframeTest.html", <<END_OF_MESSAGE)
-there are 2 frames
-frame  index: 1 name: senderFrame
-frame  index: 2 name: receiverFrame
-END_OF_MESSAGE
-  end
-
-end
-
 class TC_Frames_click_no_wait < Test::Unit::TestCase
   def setup
     goto_page "frame_buttons.html"
