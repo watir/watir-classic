@@ -31,18 +31,4 @@ class TC_Links_Multi < Test::Unit::TestCase
     assert_match(/papa.html/, browser.link(:class => 'Papa', :index => 1).href)
   end  
 
-  def test_not_found_single
-    exception = assert_raise(UnknownObjectException) do
-      browser.link(:id, 'Missing').href
-    end
-    assert_equal('Unable to locate element, using :id, "Missing"', exception.message)
-  end
-  
-  def test_not_found_with_multi
-    exception = assert_raise(UnknownObjectException) do
-      browser.link(:class => 'Missing', :index => 1).href
-    end
-    assert_equal('Unable to locate element, using {:class=>"Missing", :index=>1}', exception.message)
-  end
-  
 end
