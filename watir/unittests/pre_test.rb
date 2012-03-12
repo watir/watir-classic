@@ -21,9 +21,6 @@ class TC_Pre < Test::Unit::TestCase
     assert( browser.pre( :id, /[3-9]/ ).exists? )
     assert_false( browser.pre( :id, /missing_pre/ ).exists? )
     assert_false( browser.pre( :id, 'missingPre' ).exists? )
-        
-    assert( browser.pre( :name, '3' ).exists? )
-    assert_false( browser.pre( :name, "name_missing" ).exists? )
   end
     
   def test_simple_access
