@@ -32,7 +32,7 @@ module Watir
     end
 
     def delete name
-      options = {:expires => Time.now - 60 * 60 * 24}
+      options = {:expires => ::Time.now - 60 * 60 * 24}
       delete_with_options name, options
 
       # make sure that the cookie gets deleted

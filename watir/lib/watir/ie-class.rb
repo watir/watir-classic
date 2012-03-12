@@ -411,11 +411,11 @@ module Watir
       wait rescue nil
       chwnd = @ie.hwnd.to_i
       @ie.quit
-      t = Time.now
+      t = ::Time.now
       while exists?
         # just in case to avoid possible endless loop if failing to close some
         # window or tab
-        break if Time.now - t > 10
+        break if ::Time.now - t > 10
         sleep 0.3
       end
     end
@@ -519,7 +519,7 @@ module Watir
       @xml_parser_doc = nil
       @down_load_time = 0.0
       interval = 0.05
-      start_load_time = Time.now
+      start_load_time = ::Time.now
 
       Timeout::timeout(5*60) do
         begin
@@ -537,7 +537,7 @@ module Watir
 
           documents_to_wait_for = [@ie.document]
         rescue WIN32OLERuntimeError # IE window must have been closed
-          @down_load_time = Time.now - start_load_time
+          @down_load_time = ::Time.now - start_load_time
           return @down_load_time
         end
 
@@ -558,7 +558,7 @@ module Watir
         end
       end
 
-      @down_load_time = Time.now - start_load_time
+      @down_load_time = ::Time.now - start_load_time
       run_error_checks
       sleep @pause_after_wait unless no_sleep
       @down_load_time

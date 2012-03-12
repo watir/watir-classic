@@ -3,7 +3,7 @@ module Watir
 
     class << self
       def support_element method_name, args={}
-        klass = args[:class] || method_name.capitalize
+        klass = args[:class] || method_name.to_s.capitalize
         super_class = args[:super_class] || "Element"
 
         unless Watir.const_defined? klass

@@ -20,7 +20,7 @@ class TimeKeeper
     @sleep_time += Kernel.sleep seconds    
   end
   def now
-    Time.now
+    ::Time.now
   end
 end
 
