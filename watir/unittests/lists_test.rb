@@ -15,18 +15,9 @@ class Lists_Tests < Watir::TestCase
     assert_equal('Coffee', browser.li(:index, 0).text)
   end
 
-  def test_list_item_exists_by_name
-    assert(browser.li(:name, 'x1').exists?)
-    assert ! (browser.li(:name, 'maptest02').exists?)
-  end  
-  
   def test_li_length
     assert_equal(6, browser.lis.length)
   end
   
-  def test_multiple_attributes
-    assert_equal('Phil', browser.li(:id => 'ordered1', :name => 'x1').text)
-  end
-
 end 
 
