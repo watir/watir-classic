@@ -18,17 +18,12 @@ class TC_Fields < Test::Unit::TestCase
     assert(browser.text_field(:id, "text2").exists?)   
     assert_false(browser.text_field(:id, "alsomissing").exists?)   
     
-    assert(browser.text_field(:beforeText, "This Text After").exists? )
-    assert(browser.text_field(:afterText, "This Text Before").exists? )
-    
-    assert(browser.text_field(:beforeText, /after/i).exists? )
-    assert(browser.text_field(:afterText, /before/i).exists? )
     assert(browser.text_field(:value, 'foo').exists?)
   end
   
   tag_method :test_text_field_dragContentsTo, :fails_on_firefox
   def test_text_field_dragContentsTo
-    browser.text_field(:name, "text1").dragContentsTo(:id, "text2")
+    browser.text_field(:name, "text1").drag_contents_to(:id, "text2")
     assert_equal(browser.text_field(:name, "text1").value, "") 
     assert_equal(browser.text_field(:id, "text2").value, "goodbye allHello World") 
   end
@@ -61,34 +56,6 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal("Hello World", browser.text_field(:name, "text1").value)  
   end
   
-  tag_method :test_text_field_to_s, :fails_on_firefox
-  def test_text_field_to_s
-    expected = [
-    build_to_s_regex("type", "text"),
-    build_to_s_regex("id", ""),
-    build_to_s_regex("name", "text1"),
-    build_to_s_regex("value", "Hello World"),
-    build_to_s_regex("disabled", "false"),
-    build_to_s_regex("length", "20"),
-    build_to_s_regex("max length", "20"),
-    build_to_s_regex("read only", "false")
-    ]
-    items = browser.text_field(:index, 0).to_s.split(/\n/)
-    expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
-    expected[1] = build_to_s_regex("id", "text2")
-    expected[2] = build_to_s_regex("name", "")
-    expected[3] = build_to_s_regex("value", "goodbye all")
-    expected[6] = build_to_s_regex("max length", "2147483647")  
-      
-    items = browser.text_field(:index, 1).to_s.split(/\n/)
-    expected.each_with_index{|regex, x| assert_match(regex, items[x]) }
-    assert_raises(UnknownObjectException) { browser.text_field(:index, 999).to_s }  
-  end
-  
-  def build_to_s_regex(lhs, rhs)
-    Regexp.new("^#{lhs}: +#{rhs}$")
-  end
-  
   tag_method :test_text_field_append, :fails_on_firefox
   def test_text_field_append
     assert_raises(ObjectReadOnlyException) { browser.text_field(:id, "readOnly2").append("Some Text") }  
@@ -116,19 +83,19 @@ class TC_Fields < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).value }  
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).name }  
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).id }  
-    assert_raises(UnknownObjectException) { browser.text_field(:index, 199).disabled }  
+    assert_raises(UnknownObjectException) { browser.text_field(:index, 199).disabled? }  
     assert_raises(UnknownObjectException) { browser.text_field(:index, 199).type }  
     
     assert_equal("Hello World" , browser.text_field(:index, 0).value) 
     assert_equal("text"        , browser.text_field(:index, 0).type)
     assert_equal("text1"       , browser.text_field(:index, 0).name)
     assert_equal(""            , browser.text_field(:index, 0).id)
-    assert_equal(false         , browser.text_field(:index, 0).disabled)
+    assert_equal(false         , browser.text_field(:index, 0).disabled?)
     
     assert_equal(""            , browser.text_field(:index, 1).name)
     assert_equal("text2"       , browser.text_field(:index, 1).id)
     
-    assert(browser.text_field(:index, 3).disabled)
+    assert(browser.text_field(:index, 3).disabled?)
     
     assert_equal("This used to test :afterText", browser.text_field(:name, "aftertest").title)
     assert_equal("", browser.text_field(:index, 0).title)
@@ -176,8 +143,8 @@ class TC_Fields < Test::Unit::TestCase
   
   def test_labels_iterator
     assert_equal(3, browser.labels.length)
-    assert_equal('Label For this Field' , browser.labels[0].innerText.strip )
-    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[2].innerText )
+    assert_equal('Label For this Field' , browser.labels[0].text.strip )
+    assert_equal('Password With ID ( the text here is a label for it )' , browser.labels[2].text )
     
     count=0
     browser.labels.each do |l|
@@ -187,10 +154,8 @@ class TC_Fields < Test::Unit::TestCase
   end
   
   def test_label_properties
-    assert_raises(UnknownObjectException) { browser.label(:index,20).innerText } 
+    assert_raises(UnknownObjectException) { browser.label(:index,20).text } 
     assert_raises(UnknownObjectException) { browser.label(:index,20).for } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).name } 
-    assert_raises(UnknownObjectException) { browser.label(:index,20).type } 
     assert_raises(UnknownObjectException) { browser.label(:index,20).id } 
     
     assert_false(browser.label(:index,10).exists?) 
@@ -203,7 +168,7 @@ class TC_Fields < Test::Unit::TestCase
     
     assert_equal("label2", browser.label(:index,1).id )
     
-    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index,2).innerText)
+    assert_equal("Password With ID ( the text here is a label for it )" , browser.label(:index,2).text)
     assert_equal("password1", browser.label(:index,2).for)
   end
 
@@ -216,8 +181,4 @@ class TC_Fields < Test::Unit::TestCase
     assert_equal(20, browser.text_field(:name, 'text1').maxlength)
   end
   
-  def test_additional_events
-    browser.text_field(:value, 'foo').set 'bar'
-	assert(browser.text_field(:value, 'bar').exists?)
-  end
 end

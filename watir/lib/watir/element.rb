@@ -189,9 +189,6 @@ module Watir
       n = []
       n <<   "type:".ljust(TO_S_SIZE) + self.type
       n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
-      n <<   "name:".ljust(TO_S_SIZE) +       self.name.to_s
-      n <<   "value:".ljust(TO_S_SIZE) +      self.value.to_s
-      n <<   "disabled:".ljust(TO_S_SIZE) +   self.disabled.to_s
       return n
     end
 
