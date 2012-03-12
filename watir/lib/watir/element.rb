@@ -121,26 +121,6 @@ module Watir
       ole_object.style.cssText
     end
 
-    # return the text before the element
-    def before_text # label only
-      assert_exists
-      begin
-        ole_object.getAdjacentText("afterEnd").strip
-      rescue
-        ''
-      end
-    end
-
-    # return the text after the element
-    def after_text # label only
-      assert_exists
-      begin
-        ole_object.getAdjacentText("beforeBegin").strip
-      rescue
-        ''
-      end
-    end
-
     # Return the innerText of the object or an empty string if the object is
     # not visible
     # Raise an ObjectNotFound exception if the object cannot be found
@@ -166,11 +146,6 @@ module Watir
       return unless parent_element
       Element.new(self, :ole_object => parent_element).to_subtype
     end
-
-    # Return true if self is contained earlier in the html than other. 
-    alias :before? :<
-    # Return true if self is contained later in the html than other. 
-    alias :after? :>
 
     def typingspeed
       @container.typingspeed

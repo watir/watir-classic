@@ -24,21 +24,4 @@ class TC_Relative < Test::Unit::TestCase
     assert_not_nil catalog_entry.page_container
   end
     
-  tag_method :test_before_and_after, :fails_on_firefox
-  def test_before_and_after
-    link = browser.link(:class => 'addtocart', :index => 1)
-    assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
-    assert(link.after?(@headline))
-    assert(@headline.before?(link))
-    assert !(link.before? @headline)
-    assert !(@headline.after? link)
-    assert !(link.after? link)
-  end   
-    
-  tag_method :test_find_after, :fails_on_firefox
-  def test_find_after
-    link = browser.link(:class => 'addtocart', :after? => @headline)
-    assert_equal 'http://localhost:3000/store/add_to_cart/12', link.href  
-  end
-    
 end
