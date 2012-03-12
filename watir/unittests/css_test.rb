@@ -34,8 +34,5 @@ class TC_CSS < Test::Unit::TestCase
     assert_match(/300px/, browser.form(:index, 0).style)
   end
 
-  def test_internal_style
-    assert_match(/#f00/, browser.div(:id => "Container").style)
-  end
 end
 

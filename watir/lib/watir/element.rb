@@ -115,6 +115,9 @@ module Watir
     # return the css style as a string
     def style
       assert_exists
+      # this works for IE9
+      ole_object.currentStyle.cssText
+    rescue WIN32OLERuntimeError
       ole_object.style.cssText
     end
 
