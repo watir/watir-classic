@@ -6,6 +6,8 @@ module Watir
     include ElementExtensions
     include Exception
     include Container # presumes @container is defined
+    include DragAndDropHelper
+
     attr_accessor :container
 
     # number of spaces that separate the property from the value in the to_s method
@@ -325,12 +327,8 @@ module Watir
     def dispatch_event(event)
       assert_exists
 
-      if IE.version_parts.first.to_i >= 9
-        if @container.page_container.document.documentMode.to_i >= 9
-          ole_object.dispatchEvent(create_event(event))
-        else
-          ole_object.fireEvent(event)
-        end
+      if IE.version_parts.first.to_i >= 9 && container.page_container.document.documentMode.to_i >= 9
+        ole_object.dispatchEvent(create_event(event))
       else
         ole_object.fireEvent(event)
       end
