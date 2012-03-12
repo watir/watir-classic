@@ -80,36 +80,6 @@ class TC_Forms_Collection < Test::Unit::TestCase
   end
 end
 
-class TC_Form_Display < Test::Unit::TestCase
-  include CaptureIOHelper
-  def test_showforms
-    goto_page "forms2.html"
-    actual = capture_stdout { browser.showForms }
-    expected = <<END_OF_MESSAGE
-There are 4 forms
-Form name:
-       id:
-   method: get
-   action: pass.html
-Form name: test2
-       id: f2
-   method: get
-   action: pass2.html
-Form name: test3
-       id:
-   method: get
-   action: pass2.html
-Form name: test2
-       id:
-   method: get
-   action: pass2.html
-END_OF_MESSAGE
-    actual.gsub!(/(action: )file:.*\/(.*)$/,'\\1\\2') if actual =~ /file:/
-    actual.gsub!(/\s+\n/,"\n")
-    assert_equal(expected, actual)
-  end
-end
-
 class TC_Forms3 < Test::Unit::TestCase
   def setup
     goto_page "forms3.html"

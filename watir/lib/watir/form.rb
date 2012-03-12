@@ -7,11 +7,16 @@ module Watir
     end
 
     attr_ole :action
-    attr_ole :name
+
+    def name
+      assert_exists
+      name = ole_object.getAttributeNode('name')
+      name ? name.value : ''
+    end
 
     def form_method
       assert_exists
-      @o.invoke('method')
+      ole_object.invoke('method')
     end
 
     def method(arg = nil)
