@@ -13,7 +13,7 @@ class TC_Button < Test::Unit::TestCase
   def test_exceptions_on_methods
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").id }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").name }  
-    assert_raises(UnknownObjectException) { browser.button(:name, "noName").disabled }  
+    assert_raises(UnknownObjectException) { browser.button(:name, "noName").disabled? }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").type }  
     assert_raises(UnknownObjectException) { browser.button(:name, "noName").value }  
   end
@@ -37,7 +37,7 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("b2", browser.button(:index, 1).id) 
     assert_equal("button", browser.button(:index, 1).type) 
     assert_equal("Click Me", browser.button(:index, 1).value) 
-    assert_equal(false, browser.button(:index, 1).disabled) 
+    assert_equal(false, browser.button(:index, 1).disabled?) 
     assert_equal("italic_button", browser.button(:name, "b1").class_name) 
     assert_equal("", browser.button(:name , "b4").class_name) 
     
@@ -49,7 +49,7 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("b5", browser.button(:index, 2).id) 
     assert_equal("button", browser.button(:index, 2).type) 
     assert_equal("Disabled Button", browser.button(:index, 2).value) 
-    assert_equal(true, browser.button(:index, 2).disabled) 
+    assert_equal(true, browser.button(:index, 2).disabled?) 
     
     assert_equal("", browser.button(:index, 2).title)
     assert_equal("this is button1", browser.button(:index, 1).title)
@@ -61,7 +61,7 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("b2", browser.button(:index, 0).id) 
     assert_equal("button", browser.button(:index, 0).type) 
     assert_equal("Click Me", browser.button(:index, 0).value) 
-    assert_equal(false, browser.button(:index, 0).disabled) 
+    assert_equal(false, browser.button(:index, 0).disabled?) 
     assert_equal("italic_button", browser.button(:name, "b1").class_name) 
     assert_equal("", browser.button(:name , "b4").class_name) 
     
@@ -73,7 +73,7 @@ class TC_Button < Test::Unit::TestCase
     assert_equal("b5", browser.button(:index, 1).id) 
     assert_equal("button", browser.button(:index, 1).type) 
     assert_equal("Disabled Button", browser.button(:index, 1).value) 
-    assert_equal(true, browser.button(:index, 1).disabled) 
+    assert_equal(true, browser.button(:index, 1).disabled?) 
     
     assert_equal("", browser.button(:index, 1).title)
     assert_equal("this is button1", browser.button(:index, 0).title)
@@ -131,7 +131,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b6", browser.button(:id, "b7").name) 
     assert_equal("b7", browser.button(:name, "b6").id) 
     assert_equal("Click Me2", browser.button(:id, "b7").value) 
-    assert_equal(false, browser.button(:id, "b7").disabled) 
+    assert_equal(false, browser.button(:id, "b7").disabled?) 
     assert_equal("italic_button", browser.button(:name, "b6").class_name  ) 
     
     assert_equal("b8", browser.button(:id, "b9").name) 
@@ -191,7 +191,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b1", arr_buttons[1].name) 
     assert_equal("button", arr_buttons[1].type) 
     assert_equal("Click Me", arr_buttons[1].value) 
-    assert_equal(false, arr_buttons[1].disabled) 
+    assert_equal(false, arr_buttons[1].disabled?) 
     assert_equal("italic_button", arr_buttons[1].class_name) 
     assert_equal( "this is button1", arr_buttons[1].title)
     
@@ -199,7 +199,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b4", arr_buttons[2].name) 
     assert_equal("button", arr_buttons[2].type) 
     assert_equal("Disabled Button", arr_buttons[2].value) 
-    assert_equal(true, arr_buttons[2].disabled) 
+    assert_equal(true, arr_buttons[2].disabled?) 
     assert_equal( "", arr_buttons[2].title)
     assert_equal("", arr_buttons[2].class_name) 
     
@@ -221,7 +221,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b1", arr_buttons[0].name) 
     assert_equal("button", arr_buttons[0].type) 
     assert_equal("Click Me", arr_buttons[0].value) 
-    assert_equal(false, arr_buttons[0].disabled) 
+    assert_equal(false, arr_buttons[0].disabled?) 
     assert_equal("italic_button", arr_buttons[0].class_name) 
     assert_equal( "this is button1", arr_buttons[0].title)
     
@@ -229,7 +229,7 @@ class TC_Button2 < Test::Unit::TestCase
     assert_equal("b4", arr_buttons[1].name) 
     assert_equal("button", arr_buttons[1].type) 
     assert_equal("Disabled Button", arr_buttons[1].value) 
-    assert_equal(true, arr_buttons[1].disabled) 
+    assert_equal(true, arr_buttons[1].disabled?) 
     assert_equal( "", arr_buttons[1].title)
     assert_equal("", arr_buttons[1].class_name) 
     
@@ -266,7 +266,7 @@ class TC_Button2 < Test::Unit::TestCase
       browser.button(:value => 'Click Me', :index => 2).name
     end
     # can't assume hash ordering
-    assert_match(/Unable to locate element, using \{(:index=>2, :value=>"Click Me"|:value=>"Click Me", :index=>2)\}/, exception.message)
+    assert_match(/Unable to locate element, using \{.*(:index=>2, :value=>"Click Me"|:value=>"Click Me", :index=>2).*\}/, exception.message)
   end
 end
 
