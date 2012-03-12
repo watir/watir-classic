@@ -10,17 +10,6 @@ class TC_Divs < Test::Unit::TestCase
     uses_page "div.html"
   end
   
-  def test_divs
-    assert_raises(UnknownObjectException) { browser.div(:id, "div77").click }
-    assert_raises(UnknownObjectException) { browser.div(:title, "div77").click }
-    
-    assert browser.text_field(:name, "text1").verify_contains("0")  
-    browser.div(:id, "div3").click
-    assert browser.text_field(:name, "text1").verify_contains("1")  
-    browser.div(:id, "div4").click
-    assert browser.text_field(:name, "text1").verify_contains("0") 
-  end
-  
   tag_method :test_div_properties, :fails_on_firefox
   def test_div_properties
     assert_raises(UnknownObjectException) { browser.div(:id, "div77").text }
@@ -39,9 +28,7 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("div1" ,      browser.div(:index, 0).id)
     assert_equal("" ,          browser.div(:index, 0).class_name)
     assert_equal("blueText" ,  browser.div(:index, 1).class_name)
-    assert_equal(""    ,       browser.div(:index, 1).value)
-    assert_equal(false ,       browser.div(:index, 1).disabled)
-    assert_equal(""    ,       browser.div(:index, 1).name)
+    assert_equal(false ,       browser.div(:index, 1).disabled?)
     assert_equal("div2",       browser.div(:index, 1).id)
   end
   
@@ -51,7 +38,6 @@ class TC_Divs < Test::Unit::TestCase
     
     index = 0
     browser.divs.each do |s|
-      assert_equal(browser.div(:index,index).name, s.name)
       assert_equal(browser.div(:index,index).id, s.id)
       assert_equal(browser.div(:index,index).class_name , s.class_name)
       index += 1
@@ -118,9 +104,7 @@ class TC_Divs < Test::Unit::TestCase
     assert_equal("span1" ,     browser.span(:index , 0).id )
     assert_equal("" ,          browser.span(:index , 0).class_name )
     assert_equal("blueText" ,  browser.span(:index , 1).class_name )
-    assert_equal(""    ,       browser.span(:index , 1).value)
-    assert_equal(false ,       browser.span(:index , 1).disabled)
-    assert_equal(""    ,       browser.span(:index , 1).name)
+    assert_equal(false ,       browser.span(:index , 1).disabled?)
     assert_equal("span2",      browser.span(:index , 1).id)
   end
   
@@ -130,8 +114,6 @@ class TC_Divs < Test::Unit::TestCase
     
     index = 0
     browser.spans.each do |s|
-      # puts "each - span = " + s.to_s
-      assert_equal(browser.span(:index, index ).name , s.name )
       assert_equal(browser.span(:index, index ).id , s.id )
       assert_equal(browser.span(:index, index ).class_name , s.class_name )
       index += 1
@@ -166,7 +148,7 @@ class TC_Divs < Test::Unit::TestCase
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').text }
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').title }
     assert_raises( UnknownObjectException) {browser.p(:id , 'missing').to_s }
-    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').disabled }
+    assert_raises( UnknownObjectException) {browser.p(:id , 'missing').disabled? }
     
     assert_equal('redText' , browser.p(:index,0).class_name)
     assert_equal('P_tag_1' , browser.p(:index,0).title)
