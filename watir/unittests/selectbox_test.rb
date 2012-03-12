@@ -29,9 +29,9 @@ class TC_SelectList < Test::Unit::TestCase
   end
 
   def test_select_by_text
-    assert_equal('Option 3', browser.select_list(:name, "sel1").getSelectedItems.first.text)
+    assert_equal('Option 3', browser.select_list(:name, "sel1").selected_options.first.text)
     browser.select_list(:name, "sel1").select('Option 2')
-    assert_equal('Option 2', browser.select_list(:name, "sel1").getSelectedItems.first.text)
+    assert_equal('Option 2', browser.select_list(:name, "sel1").selected_options.first.text)
   end
   
   def test_select_by_value
@@ -47,12 +47,12 @@ class TC_SelectList < Test::Unit::TestCase
     assert_raises(MissingWayOfFindingObjectException) { browser.select_list(:name, "sel1").option(:missing, "Option 1").select }
     
     browser.select_list(:name, "sel1").option(:text, "Option 1").select
-    assert_equal("Option 1", browser.select_list(:name, "sel1").getSelectedItems.first.text)
+    assert_equal("Option 1", browser.select_list(:name, "sel1").selected_options.first.text)
   end    
 
   def test_clear_selection
-    assert_raises(TypeError) { browser.select_list(:name, "sel1").clearSelection }
-    assert_nothing_thrown    { browser.select_list(:name, "sel2").clearSelection }
+    assert_raises(TypeError) { browser.select_list(:name, "sel1").clear }
+    assert_nothing_thrown    { browser.select_list(:name, "sel2").clear }
   end
 
   def xtest_option_class_name
@@ -66,10 +66,10 @@ class TC_SelectList < Test::Unit::TestCase
     
   tag_method :test_includes, :fails_on_firefox
   def test_includes
-    assert browser.select_list(:name, 'sel1').includes?('Option 1')
-    assert browser.select_list(:name, 'sel1').includes?(/option/i)
-    assert ! browser.select_list(:name, 'sel1').includes?('Option 6')
-    assert ! browser.select_list(:name, 'sel1').includes?(/foobar/)
+    assert browser.select_list(:name, 'sel1').include?('Option 1')
+    assert browser.select_list(:name, 'sel1').include?(/option/i)
+    assert ! browser.select_list(:name, 'sel1').include?('Option 6')
+    assert ! browser.select_list(:name, 'sel1').include?(/foobar/)
   end  
   
   # SelectList#selected?
@@ -94,7 +94,7 @@ class TC_SelectList < Test::Unit::TestCase
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).value }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).name }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).id }  
-    assert_raises(UnknownObjectException) { browser.select_list(:index, 199).disabled }  
+    assert_raises(UnknownObjectException) { browser.select_list(:index, 199).disabled? }  
     assert_raises(UnknownObjectException) { browser.select_list(:index, 199).type }  
     
     assert_equal("o3"   ,    browser.select_list(:index, 0).value)  
@@ -106,9 +106,9 @@ class TC_SelectList < Test::Unit::TestCase
     browser.select_list(:index,0).select(/1/)
     assert_equal("o1", browser.select_list(:index, 0).value)  
     
-    assert_false( browser.select_list(:index, 0).disabled)
-    assert(browser.select_list(:index, 3).disabled)
-    assert(browser.select_list(:id, 'selectbox_4').disabled)
+    assert_false( browser.select_list(:index, 0).disabled?)
+    assert(browser.select_list(:index, 3).disabled?)
+    assert(browser.select_list(:id, 'selectbox_4').disabled?)
   end
   
   def test_iterator

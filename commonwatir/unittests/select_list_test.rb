@@ -11,7 +11,7 @@ class TC_SelectLists < Test::Unit::TestCase
   def test_select_by_numeric
     # make sure we still find the right option if passed a number
     browser.select_list(:id, 'year').select(2011)
-    assert_equal(['2011'], browser.select_list(:id, 'year').selected_options)
+    assert_equal(['2011'], browser.select_list(:id, 'year').selected_options.map(&:text))
   end
 
 end

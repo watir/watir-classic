@@ -78,7 +78,7 @@ module Watir
         if value.is_a?(Regexp)
           opt.send(attribute) =~ value
         elsif value.is_a?(String) || value.is_a?(Numeric)
-          opt.send(attribute) == value
+          opt.send(attribute) == value.to_s
         else
           raise TypeError, "#{value.inspect} can be only String, Regexp or Numeric!"
         end
