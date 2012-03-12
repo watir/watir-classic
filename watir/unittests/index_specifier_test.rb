@@ -10,7 +10,6 @@ class TC_BaseIndex < Test::Unit::TestCase
 
   def test_default_index
     assert "one", browser.table.row.cell.class_name
-    assert "testcell", browser.table.row.cell.name
   end
 
   def test_zero_based_indexing

@@ -40,7 +40,7 @@ module Watir
     end
 
     def cell(how={}, what=nil)
-      specifiers = format_specifiers([], how, what)
+      specifiers = format_specifiers([:th, :td], how, what)
       index = specifiers.delete(:index) || 0
       cells(specifiers)[index]
     end
