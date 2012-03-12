@@ -37,13 +37,8 @@ class TC_CSS_Selector < Test::Unit::TestCase
     assert_equal( "circle", browser.image(:css, "*[id ^= 'circ']").id )
   end
 
-  def test_link
-    goto_page "links1.html"
-    assert_equal( "link_name", browser.link(:css, "*[name *= ink_nam]").name )
-  end
-
   def test_table
     goto_page "table1.html"
-    assert_equal( "Header", browser.cell(:css , ".sample th").text )
+    assert_equal( "Header", browser.th(:css , ".sample th").text )
   end
 end
