@@ -23,7 +23,7 @@ module Watir
     # to appear and does not raise exception if no window is found.
     # returns true if modal was found and close, otherwise false
     def close_modal
-      while self.modal_dialog.exists?(0) do
+      while self.modal_dialog.exists? do
         self.modal_dialog.close
       end
     end
