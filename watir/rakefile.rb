@@ -6,7 +6,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rake/gempackagetask'
 
-require 'watir-rdoc'
+require './watir-rdoc'
 
 $VERBOSE = nil
 desc 'Generate Watir API Documentation'
