@@ -19,7 +19,7 @@ module Watir
       options = options.map do |option|
         k, v = option
         if k == :expires
-          "#{k}=#{v.gmtime.strftime("%a, %-d %b %Y %H:%M:%S UTC")}"
+          "#{k}=#{v.gmtime.strftime("%a, %d %b %Y %H:%M:%S UTC")}"
         elsif k == :secure
           "secure" if v
         else
