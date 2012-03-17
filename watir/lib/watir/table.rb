@@ -118,14 +118,6 @@ module Watir
       return r.join("\n")
     end
     
-    # iterates through the rows in the table. Yields a TableRow object
-    def each
-      assert_exists
-      @o.rows.each do |row| 
-        yield TableRow.new(self, :ole_object, row)
-      end
-    end
-    
     # Returns the number of rows inside the table, including rows in nested tables.
     def row_count
       assert_exists

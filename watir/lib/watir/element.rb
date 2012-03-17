@@ -162,7 +162,6 @@ module Watir
     # Return an array with many of the properties, in a format to be used by the to_s method
     def string_creator
       n = []
-      n <<   "type:".ljust(TO_S_SIZE) + self.type
       n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
       return n
     end

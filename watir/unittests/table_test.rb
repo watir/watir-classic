@@ -58,8 +58,7 @@ class TC_Tables < Test::Unit::TestCase
   tag_method :test_row_counts, :fails_on_firefox
   def test_row_counts
     table = browser.table(:id => 't2')
-    assert_equal(3, table.row_count)
-    assert_equal(2, table.row_count_excluding_nested_tables)
+    assert_equal(2, table.row_count)
   end
 
   tag_method :test_dynamic_tables, :fails_on_firefox
@@ -82,25 +81,19 @@ class TC_Tables < Test::Unit::TestCase
     assert_equal(1, browser.table(:id, 't1').column_count)   # row one has 1 cell with a colspan of 2
   end
   
-  def test_to_a
-    expected = [ ["Row 1 Col1" , "Row 1 Col2"],
-                 [ "Row 2 Col1" , "Row 2 Col2"] ]
-    assert_equal(expected, browser.table(:index , 0).to_a)
-  end
-  
   def test_links_and_images_in_table
     table = browser.table(:id, 'pic_table')
     image = table[0][1].image(:index,0)
-    assert_equal("106", image.width)
+    assert_equal(106, image.width)
     
     link = table[0][3].link(:index,0)
-    assert_equal("Google", link.innerText)
+    assert_equal("Google", link.text)
   end
   
   def test_cell_directly
-    assert browser.cell(:id, 'cell1').exists?
-    assert ! browser.cell(:id, 'no_exist').exists?
-    assert_equal("Row 1 Col1", browser.cell(:id, 'cell1').to_s.strip)
+    assert browser.td(:id, 'cell1').exists?
+    assert ! browser.td(:id, 'no_exist').exists?
+    assert_equal("Row 1 Col1", browser.td(:id, 'cell1').to_s.strip)
   end
   
   def test_cell_another_way
@@ -108,27 +101,17 @@ class TC_Tables < Test::Unit::TestCase
   end
   
   def test_row_directly
-    assert browser.row(:id, 'row1').exists?
-    assert ! browser.row(:id, 'no_exist').exists?
+    assert browser.tr(:id, 'row1').exists?
+    assert ! browser.tr(:id, 'no_exist').exists?
   end
   def test_row_another_way
-    assert_equal('Row 2 Col1',  browser.row(:id, 'row1')[0].to_s.strip)
+    assert_equal('Row 2 Col1',  browser.tr(:id, 'row1')[0].to_s.strip)
   end
 
   tag_method :test_row_in_table, :fails_on_firefox
   def test_row_in_table
     assert_equal 'Row 2 Col1 Row 2 Col2', 
       browser.table(:id, 't1').row(:id, 'row1').text.gsub(/(\r|\n)/,'')
-  end
-  
-  def test_row_iterator
-    t = browser.table(:index, 0)
-    count = 1
-    t.each do |row|
-      assert("Row #{count} Col1", row[0].text)
-      assert("Row #{count} Col2", row[1].text)
-      count += 1
-    end
   end
   
   def test_row_collection
@@ -148,11 +131,11 @@ class TC_Tables < Test::Unit::TestCase
    
   tag_method :test_table_body, :fails_on_firefox
   def test_table_body
-    assert_equal(1, browser.table(:index, 0).bodies.length)
-    assert_equal(3, browser.table(:id, 'body_test').bodies.length)
+    assert_equal(1, browser.table(:index, 0).tbodys.length)
+    assert_equal(3, browser.table(:id, 'body_test').tbodys.length)
     
     count = 1
-    browser.table(:id, 'body_test').bodies.each do |n|
+    browser.table(:id, 'body_test').tbodys.each do |n|
       # do something better here!
       case count 
       when 1 
@@ -165,19 +148,8 @@ class TC_Tables < Test::Unit::TestCase
       assert_equal(compare_text, n[0][0].to_s.strip )   # this is the 1st cell of the first row of this particular body
       count += 1
     end
-    assert_equal( count - 1, browser.table(:id, 'body_test').bodies.length )
-    assert_equal( "This text is in the THIRD TBODY." ,browser.table(:id, 'body_test' ).body(:index,2)[0][0].to_s.strip ) 
-    
-    # iterate through all the rows in a table body
-    count = 1
-    browser.table(:id, 'body_test').body(:index, 1).each do | row |
-      if count == 1
-        assert_equal('This text is in the SECOND TBODY.', row[0].text.strip )
-      elsif count == 2
-        assert_equal("This text is also in the SECOND TBODY.", row[0].text.strip )        
-      end
-      count+=1
-    end
+    assert_equal( count - 1, browser.table(:id, 'body_test').tbodys.length )
+    assert_equal( "This text is in the THIRD TBODY." ,browser.table(:id, 'body_test' ).tbody(:index,2)[0][0].to_s.strip ) 
   end
   
   def test_table_container
@@ -265,30 +237,6 @@ class TC_Tables_Buttons < Test::Unit::TestCase
     assert_match(/3\.gif/, table[2][0].image(:index, 2).src)
   end
   
-  def test_table_with_hidden_or_visible_rows
-    t = browser.table(:id , 'show_hide')
-    
-    # expand the table
-    t.each do |r|
-      r[0].image(:src, /plus/).click if r[0].image(:src, /plus/).exists?
-    end
-    
-    # shrink rows 1,2,3
-    count = 1
-    t.each do |r|
-      r[0].image(:src, /minus/).click if r[0].image(:src, /minus/).exists? and (1..3) === count 
-      count = 2
-    end
-  end
-  
-  tag_method :test_table_from_element, :fails_on_firefox
-  def test_table_from_element
-    button = browser.button(:id, "b1")
-    table = Watir::Table.create_from_element(browser, button)
-    
-    table[1][0].button(:index, 0).click
-    assert(browser.text_field(:name, "confirmtext").verify_contains(/CLICK2/i))
-  end
 end
 
 class TC_Table_Columns < Test::Unit::TestCase
@@ -345,17 +293,4 @@ class TC_Tables_Complex < Test::Unit::TestCase
     assert_equal("subtable2 Row 1 Col1",table[1][0].table(:index,0)[0][0].text.strip)
   end
   
-  def test_each_itterator
-    # for WTR-324: keep Watir::Table.each from crashing when run on nested tables
-    table = browser.table(:index,0)
-    assert_equal(table.row_count, 4)
-    assert_equal(table.row_count_excluding_nested_tables, 2)
-    example_row_count = 0
-    assert_nothing_thrown do 
-      table.each do
-        example_row_count += 1
-      end
-    end
-    assert_equal(example_row_count, 2)
-  end
 end
