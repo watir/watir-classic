@@ -1,8 +1,21 @@
-== 3.0.0.rc3 - 2012/xx/xx
+== 3.0.0.rc3 - 2012/03/18
 
-* Browser#send_keys and Element#send_keys have now same syntax as specified in WatirSpec
-* Browser#modal_dialog improved
 * all html elements are now supported (even html5 ones)
+* CookieManager removed
+* cookies API support added (https://github.com/watir/watirspec/blob/master/cookies_spec.rb)
+* drag and drop API support added (https://github.com/watir/watirspec/blob/master/drag_and_drop_spec.rb)
+* Element#(before|after)? removed
+* Element#(before|after)_text removed
+* Browser#cell(s) and Browser#row(s) removed
+* Browser#Element camelCase methods removed, use under_score methods instead
+* Browser#element(s) supports only general attributes like :id, :title, :class_name, :text, :html and such
+* Browser#modal_dialog improved
+* Browser#send_keys and Element#send_keys have now same syntax as specified in WatirSpec
+* Element#style returns internal styles only for IE9, inline style will be returned for IE8
+* Table#each removed - use Table#(trs|rows).each instead
+* Table#row(s) and Table#cell(s) added which ignore inner tables - use #td/#tr for all.
+* raise an Exception if more locators are specified with :xpath/:css
+* searching by :xpath and :css code rewritten
 
 == 3.0.0.rc2 - 2012/02/04
 
