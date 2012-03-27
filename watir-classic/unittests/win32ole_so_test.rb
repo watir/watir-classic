@@ -8,7 +8,7 @@ class TC_Win32OLE < Test::Unit::TestCase
 
   def setup
     # this will find the IEDialog.dll file in its build location
-    @iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../lib/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+    @iedialog_file = (File.expand_path(File.dirname(__FILE__)) + "/../lib/watir-classic/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
 
     @ie = Watir::IE.new
     @ie.goto 'www.google.com'
