@@ -21,7 +21,7 @@ You have to install Ruby and RubyGems first. To be able to drive Firefox you hav
 To install Internet Explorer and Firefox driver:
 
   gem update --system
-  gem install watir
+  gem install watir-classic
 
 === Mac
 
