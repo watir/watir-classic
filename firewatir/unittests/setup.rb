@@ -4,7 +4,7 @@ $myDir = File.expand_path(File.dirname(__FILE__))
 
 topdir = File.join(File.dirname(__FILE__), '..')
 $firewatir_dev_lib = File.join(topdir, 'lib')
-$watir_dev_lib = File.join(topdir, '..', 'watir', 'lib')
+$watir_dev_lib = File.join(topdir, '..', 'watir-classic', 'lib')
 commonwatir_dir = "commonwatir#{File.exist?('VERSION') ? "-#{File.read('VERSION').strip}" : ""}"
 libs = []
 libs << File.join(topdir, '..', commonwatir_dir, 'lib')

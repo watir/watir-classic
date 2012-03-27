@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../commonwatir/lib")
-$LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../watir/lib")
+$LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../watir-classic/lib")
 $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../firewatir/lib")
 
 require "watir"
