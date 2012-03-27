@@ -47,7 +47,7 @@ task :test => [:test_watir, :test_firewatir]
 
 desc 'Run tests for Watir'
 task :test_watir do
-  Dir.chdir("watir") do
+  Dir.chdir("watir-classic") do
     launch_subrake "test"
   end
 end
