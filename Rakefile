@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
 
-projects = ['watir', 'commonwatir']
+projects = ['watir-classic', 'commonwatir']
 
 def launch_subrake(cmd)
   system("#{Gem.ruby} -S rake #{cmd}")
