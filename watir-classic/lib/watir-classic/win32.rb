@@ -5,7 +5,7 @@ require 'Win32API'
 module Watir
   module Win32
     # this will find the IEDialog.dll file in its build location
-    @@iedialog_file = (File.expand_path(File.dirname(__FILE__) + '/..') + "/watir/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
+    @@iedialog_file = (File.expand_path(File.dirname(__FILE__) + '/..') + "/watir-classic/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
 
     GetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')    
     User32 = DL.dlopen('user32')

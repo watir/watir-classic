@@ -4,7 +4,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..') unless $SETUP_LOADED
 require 'unittests/setup'
 require 'ftools'
 require 'webrick'
-require 'watir/cookiemanager'
+require 'watir-classic/cookiemanager'
 
 class TC_Images_XPath < Test::Unit::TestCase
   include Watir

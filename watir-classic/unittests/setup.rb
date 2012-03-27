@@ -17,10 +17,10 @@ libs << File.join(commonwatir_absolute_dir, 'lib')
 libs << commonwatir_absolute_dir # for the unit tests
 libs.each { |lib| append_to_load_path(lib) }
 
-require 'watir/browser'
+require 'watir-classic/browser'
 Watir::Browser.default = 'ie'
 require 'unittests/setup/lib'
-require 'watir/testcase'
+require 'watir-classic/testcase'
 
 # Standard Tags
 # :must_be_visible

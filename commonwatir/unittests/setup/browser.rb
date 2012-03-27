@@ -1,5 +1,5 @@
 # setup/browser
-require 'watir/browser'
+require 'watir-classic/browser'
 case Watir.options[:browser]
 when 'ie'
   $LOAD_PATH.unshift File.expand_path($watir_dev_lib)

@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'watir/testcase'
+require 'watir-classic/testcase'
 
 class TC_NewWindow< Watir::TestCase
   include Watir

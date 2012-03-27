@@ -2,8 +2,8 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'test/unit'
-require 'watir'
-require 'watir/process'
+require 'watir-classic'
+require 'watir-classic/process'
 
 class TC_IE_Each < Test::Unit::TestCase  
   def setup

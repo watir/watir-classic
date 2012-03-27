@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', 'lib')
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'commonwatir', 'lib')
 require 'test/unit'
-require 'watir/ie'
+require 'watir-classic/ie'
 
 class TC_NewProcess < Test::Unit::TestCase
   def test_new_process_single_window

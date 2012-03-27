@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'watir/assertions'
+require 'watir-classic/assertions'
 
 module Watir
 
@@ -8,7 +8,7 @@ module Watir
   #
   # Example Usage
   #
-  #   require 'watir/testcase'
+  #   require 'watir-classic/testcase'
   #
   #   class MyTestCase < Watir::TestCase
   #

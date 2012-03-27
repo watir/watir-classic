@@ -8,7 +8,7 @@ IRB.conf[:HISTORY_FILE] = File::expand_path(history_file)
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
 
 title = ENV['window_title'] || '.'
-require 'watir/ie'
+require 'watir-classic/ie'
 @ie = Watir::IE.attach :title, /#{title}/
 puts "Attached to: #{@ie.title}"
 puts "Your browser instance is: ie, browser"

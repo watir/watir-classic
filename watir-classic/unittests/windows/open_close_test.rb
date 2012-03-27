@@ -3,8 +3,8 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', 'lib')
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..', '..', 'commonwatir', 'lib')
 require 'test/unit'
-require 'watir/ie'
-require 'watir/contrib/ie-new-process'
+require 'watir-classic/ie'
+require 'watir-classic/contrib/ie-new-process'
 
 class ZZ_OpenClose < Test::Unit::TestCase
   20.times do | i |

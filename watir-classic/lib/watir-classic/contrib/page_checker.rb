@@ -1,7 +1,7 @@
 #  This module includes checkers which are run on every page load
 # 
 #  In order to use this module, add a require to one of your test scripts: 
-#  require 'watir/contrib/page_checker' 
+#  require 'watir-classic/contrib/page_checker'
 #  To add checkers, call the ie.add_checker method
 #
 #  ie.add_checker(PageCheckers::NAVIGATION_CHECKER)

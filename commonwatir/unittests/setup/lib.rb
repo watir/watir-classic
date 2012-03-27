@@ -1,6 +1,6 @@
 $myDir.sub!( %r{/cygdrive/(\w)/}, '\1:/' ) # convert from cygwin to dos
 
-require 'watir/options'
+require 'watir-classic/options'
 Watir.options_file = $suite_options_file = $myDir + '/options.yml' 
 require 'unittests/setup/options'
 unit_options = Watir::UnitTest::Options.new.execute

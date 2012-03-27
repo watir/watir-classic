@@ -1,6 +1,6 @@
 # 3 tests, 10 assertions, 4 failures, 0 errors
 
-require 'watir/testcase'
+require 'watir-classic/testcase'
 
 class VerifyTests < Watir::TestCase
   

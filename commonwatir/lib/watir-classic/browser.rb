@@ -1,5 +1,5 @@
-# watir/browser
-require 'watir/options'
+# watir-classic/browser
+require 'watir-classic/options'
 module Watir
   
 =begin rdoc
@@ -21,7 +21,7 @@ that tests can use to access any browser. The actual browser (and thus
 the actual Watir driver) is determined at runtime based on configuration
 settings.
 
-  require 'watir'
+  require 'watir-classic'
   browser = Watir::Browser.new
   browser.goto 'http://google.com'
   browser.text_field(:name, 'q').set 'pickaxe'  
@@ -146,4 +146,4 @@ before you invoke Browser.new.
 
 end
 
-require 'watir/browsers'
+require 'watir-classic/browsers'

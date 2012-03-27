@@ -1,4 +1,4 @@
-require 'watir/ie'
+require 'watir-classic/ie'
 
 module Watir
   class IE

@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', '..') unless $SETUP_LOADED
 require 'unittests/setup'
-require 'watir/close_all'
+require 'watir-classic/close_all'
 
 class TC_ModalDialog < Watir::TestCase
   include Watir

@@ -1,12 +1,12 @@
-require 'watir'
-require 'watir/core'
-require 'watir/close_all'
-require 'watir/ie-process'
+require 'watir-classic'
+require 'watir-classic/core'
+require 'watir-classic/close_all'
+require 'watir-classic/ie-process'
 
 # these switches need to be deleted from ARGV to enable the Test::Unit
 # functionality that grabs
 # the remaining ARGV as a filter on what tests to run.
-# Note: this means that watir must be require'd BEFORE test/unit.
+# Note: this means that watir-classic must be require'd BEFORE test/unit.
 # (Alternatively, you could require test/unit first and then put the Watir::IE
 # arguments after the '--'.)
 

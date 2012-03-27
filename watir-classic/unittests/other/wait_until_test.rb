@@ -3,9 +3,9 @@
 # Watir::Waiter is DEPRECATED! Use methods from Watir::Wait and Watir::ElementExtensions instead!
 #
 
-require 'watir/testcase'
-require 'watir/waiter'
-require 'watir'
+require 'watir-classic/testcase'
+require 'watir-classic/waiter'
+require 'watir-classic'
 require 'spec' # gem install rspec
 
 # used for unit testing
@@ -94,7 +94,7 @@ class WaitUntilClassTest < Watir::TestCase
   end
   
   include Watir
-  def test_watir_method
+  def test_watir_classic_method
     wait_until {@mock_checkee.check}
   end
 

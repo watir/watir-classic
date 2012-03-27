@@ -48,7 +48,7 @@ Some examples from http://watir.com/examples
 
 Loading Watir gem to drive Internet Explorer on Windows
 
-  require 'watir'
+  require 'watir-classic'
 
 Loading FireWatir gem to drive Firefox on Windows/Mac/Linux
 

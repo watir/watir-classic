@@ -3,7 +3,7 @@
 # Using Watir::Waiter is DEPRECATED and will be removed in some newer version of Watir! Use Watir::Wait and Watir::ElementExtensions methods instead!
 #
 #######
-require 'watir/exceptions'
+require 'watir-classic/exceptions'
 
 module Watir
   

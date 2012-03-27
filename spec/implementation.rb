@@ -2,7 +2,7 @@ $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../commonwatir/li
 $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../watir-classic/lib")
 $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../firewatir/lib")
 
-require "watir"
+require "watir-classic"
 
 WatirSpec.implementation do |imp|
   imp.name = :watir
