@@ -40,7 +40,7 @@ task :default => :package
 
 if defined? Rake::GemPackageTask
 
-  gemspec = eval(File.read('watir.gemspec'))
+  gemspec = eval(File.read('watir-classic.gemspec'))
 
   Rake::GemPackageTask.new(gemspec) do |p|
     p.gem_spec = gemspec
