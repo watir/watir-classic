@@ -1,7 +1,6 @@
 *~
 .loadpath
 .externalToolBuilders
-commonwatir/pkg
 watir-classic/pkg
 gems
 .idea
