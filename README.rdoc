@@ -23,25 +23,6 @@ To install Internet Explorer and Firefox driver:
   gem update --system
   gem install watir-classic
 
-=== Mac
-
-To install Firefox driver:
-
-  sudo gem update --system
-  sudo gem install firewatir
-
-To install Safari driver, you have to install Xcode first and then:
-
-  sudo gem install rb-appscript
-  sudo gem install safariwatir
-
-=== Linux
-
-To install Firefox driver:
-
-  sudo gem update --system
-  sudo gem install firewatir
-
 == Examples
 
 Some examples from http://watir.com/examples
@@ -49,10 +30,6 @@ Some examples from http://watir.com/examples
 Loading Watir gem to drive Internet Explorer on Windows
 
   require 'watir-classic'
-
-Loading FireWatir gem to drive Firefox on Windows/Mac/Linux
-
-  require 'firewatir'
 
 Starting a new browser & and going to our site
 

@@ -4,7 +4,7 @@
 # These options can also be set using environment variables prefixed with 'watir_'.
 # These environment variables will override settings from this file.
 
-# 'ie' (Watir::IE) or 'firefox' (FireWatir::Firefox)
+# 'ie' (Watir::IE)
 browser: ie
 
 # These options only affect IE. 

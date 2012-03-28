@@ -2,6 +2,5 @@
 $root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 $watir_lib = File.join($root, 'watir-classic', 'lib')
 $watir_common_lib = File.join($root, 'commonwatir', 'lib')
-$firewatir_lib = File.join($root, 'firewatir', 'lib')
-$libs = "-I #{$watir_lib} -I #{$watir_common_lib} -I #{$firewatir_lib}"
+$libs = "-I #{$watir_lib} -I #{$watir_common_lib}"
 exec "irb.bat #{$libs} -r rubygems -r irb/completion -r watir/irb-history -r watir --simple-prompt --readline"
