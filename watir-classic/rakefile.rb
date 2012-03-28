@@ -13,14 +13,14 @@ desc 'Generate Watir API Documentation'
 Rake::RDocTask.new('rdoc') do |rdoc| 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.options += $WATIR_RDOC_OPTIONS
-  rdoc.rdoc_files.include('lib/watir/ie.rb')
+  rdoc.rdoc_files.include('lib/watir-classic/ie.rb')
   $WATIR_EXTRA_RDOC_FILES.each do |file|
     rdoc.rdoc_files.include(file)
   end
-  rdoc.rdoc_files.include('lib/watir/contrib/*.rb')  
-  rdoc.rdoc_files.include('lib/watir/dialogs/*.rb')
-  rdoc.rdoc_files.include('lib/watir/*.rb')
-  rdoc.rdoc_files.exclude('lib/watir/camel_case.rb')
+  rdoc.rdoc_files.include('lib/watir-classic/contrib/*.rb')
+  rdoc.rdoc_files.include('lib/watir-classic/dialogs/*.rb')
+  rdoc.rdoc_files.include('lib/watir-classic/*.rb')
+  rdoc.rdoc_files.exclude('lib/watir-classic/camel_case.rb')
 end
 
 Rake::TestTask.new do |t|

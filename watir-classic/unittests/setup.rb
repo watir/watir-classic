@@ -6,7 +6,7 @@ def append_to_load_path path
   $LOAD_PATH.unshift File.expand_path(path)
 end
 
-# use local development versions of watir, firewatir, commonwatir if available
+# use local development versions of watir
 topdir = File.join(File.dirname(__FILE__), '..')
 $watir_dev_lib = File.join(topdir, 'lib')
 commonwatir_dir = "commonwatir#{File.exist?('VERSION') ? "-#{File.read('VERSION').strip}" : ""}"

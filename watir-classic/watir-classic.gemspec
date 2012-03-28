@@ -36,7 +36,6 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6'
-  s.add_dependency 'commonwatir', '= ' + version
   s.add_dependency 'nokogiri'
   s.add_dependency 'ffi', '~>1.0'
   s.add_dependency 'rautomation', '~>0.7.2'
