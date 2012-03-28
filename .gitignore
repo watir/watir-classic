@@ -3,7 +3,7 @@
 .externalToolBuilders
 commonwatir/pkg
 firewatir/pkg
-watir/pkg
+watir-classic/pkg
 gems
 .idea
 test/
