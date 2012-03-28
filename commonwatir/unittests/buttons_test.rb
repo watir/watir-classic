@@ -266,7 +266,9 @@ class TC_Button2 < Test::Unit::TestCase
       browser.button(:value => 'Click Me', :index => 2).name
     end
     # can't assume hash ordering
-    assert_match(/Unable to locate element, using \{.*(:index=>2, :value=>"Click Me"|:value=>"Click Me", :index=>2).*\}/, exception.message)
+    assert_match(/Unable to locate element/, exception.message)
+    assert_match(/:index=>2/, exception.message)
+    assert_match(/:value=>"Click Me"/, exception.message)
   end
 end
 
