@@ -4,7 +4,6 @@ $myDir = File.expand_path(File.dirname(__FILE__))
 
 # use local development versions of watir, firewatir, commonwatir if available
 topdir = File.join(File.dirname(__FILE__), '..')
-$firewatir_dev_lib = File.join(topdir, '..', 'firewatir', 'lib')
 $watir_dev_lib = File.join(topdir, '..', 'watir-classic', 'lib')
 $LOAD_PATH.unshift File.expand_path(File.join(topdir, 'lib'))
 
