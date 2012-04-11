@@ -37,7 +37,7 @@ module Watir
     end
 
     def top_edge
-      ole_object.getBoundingClientRect.top.to_i
+      ole_object.getBoundingClientRect(0).top.to_i
     end
 
     def top_edge_absolute
@@ -45,7 +45,7 @@ module Watir
     end
 
     def left_edge
-      ole_object.getBoundingClientRect.left.to_i
+      ole_object.getBoundingClientRect(0).left.to_i
     end
 
     def left_edge_absolute
@@ -53,11 +53,11 @@ module Watir
     end
 
     def right_edge
-      ole_object.getBoundingClientRect.right.to_i
+      ole_object.getBoundingClientRect(0).right.to_i
     end
 
     def bottom_edge
-      ole_object.getBoundingClientRect.bottom.to_i
+      ole_object.getBoundingClientRect(0).bottom.to_i
     end
 
     def center_x_y_absolute x, y
