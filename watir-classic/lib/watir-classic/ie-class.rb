@@ -358,7 +358,9 @@ module Watir
 
     # Return the status of the window, typically from the status bar at the bottom.
     def status
-      return @ie.statusText
+      @ie.statusText
+    rescue WIN32OLERuntimeError
+      ""
     end
 
     #
