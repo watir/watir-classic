@@ -50,11 +50,11 @@ module Watir
     end
 
     def current?
-      @main_browser.hwnd == browser.hwnd
+      @main_browser.hwnd == browser.hwnd && @main_browser.html == browser.html
     end
 
     def ==(other)
-      browser.hwnd == other.hwnd
+      browser.hwnd == other.hwnd && browser.html == other.browser.html
     end
 
     alias_method :eql?, :==
