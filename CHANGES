@@ -1,4 +1,4 @@
-== 3.0.0.rc4 - 2012/04/23
+== 3.0.0 - 2012/04/23
 
 * Browser#status returns an empty string if status bar is disabled in IE9
 * Browser#style fixed for IE9
@@ -6,9 +6,6 @@
 * #execute_script returns nil instead of 'undefined'
 * drag and drop fixed for IE9
 * Window#current? and Window#== are more robust
-
-== 3.0.0.rc3 - 2012/03/18
-
 * all html elements are now supported (even html5 ones)
 * CookieManager removed
 * cookies API support added (https://github.com/watir/watirspec/blob/master/cookies_spec.rb)
@@ -25,17 +22,11 @@
 * Table#row(s) and Table#cell(s) added which ignore inner tables - use #td/#tr for all.
 * raise an Exception if more locators are specified with :xpath/:css
 * searching by :xpath and :css code rewritten
-
-== 3.0.0.rc2 - 2012/02/04
-
 * Browser#textarea(s) method for searching <textarea> elements
 * Element#focus works with IE9
 * Element#focused? returns the state of focus on that element
 * Element#to_subtype returns Element if non-supported tag found instead of crashing
 * searching by :class will match now partially like other tools behave (e.g. jQuery)
-
-== 3.0.0.rc1 - 2012/01/13 - more conformance with WatirSpec
-
 * Button#text returns value if exists instead of text
 * Browser#goto prepends url automatically with http:// if scheme is missing
 * Browser#element(s)_by_(xpath/css) are now private methods - use #element(:css => ...) and #element(:xpath => ...) instead
