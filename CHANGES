@@ -1,3 +1,12 @@
+== 3.0.0.rc4 - 2012/04/23
+
+* Browser#status returns an empty string if status bar is disabled in IE9
+* Browser#style fixed for IE9
+* #execute_script evaluates JavaScript code inside of an anonymous function - use "return" statement if value is needed by Ruby
+* #execute_script returns nil instead of 'undefined'
+* drag and drop fixed for IE9
+* Window#current? and Window#== are more robust
+
 == 3.0.0.rc3 - 2012/03/18
 
 * all html elements are now supported (even html5 ones)
