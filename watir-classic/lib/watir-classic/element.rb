@@ -296,8 +296,6 @@ module Watir
     end
 
     def dispatch_event(event)
-      assert_exists
-
       if IE.version_parts.first.to_i >= 9 && container.page_container.document.documentMode.to_i >= 9
         ole_object.dispatchEvent(create_event(event))
       else
