@@ -37,17 +37,18 @@ module Watir
     def execute_script(source)
       result = nil
       begin
-        source = "(function() {#{source}})()"
+        source = with_json2_if_needed source
         result = document.parentWindow.eval(source)
       rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
-        escaped_src = source.gsub(/[\r\n']/) {|m| "\\#{m}"}
+        escaped_src = source.gsub(/\r?\n/, "\\n").gsub("'", "\\\\'")
         wrapper = "_watir_helper_div_#{::Time.now.to_i + ::Time.now.usec}"
         cmd = "var e = document.createElement('DIV'); e.style.display='none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
         document.parentWindow.execScript(cmd)
         result = document.getElementById(wrapper).innerHTML
       end
 
-      result == "undefined" ? nil : result
+      require 'yajl'      
+      Yajl::Parser.parse(result) rescue nil
     end
 
     # The HTML of the current page
@@ -110,5 +111,24 @@ module Watir
       end
     end
 
+    def with_json2_if_needed source
+      %Q[
+      (function() {
+        if (!window.JSON || !window.JSON.stringify) {
+          var json2=document.createElement('script');
+          json2.type='text/javascript';
+          json2.src='file:///#{File.expand_path(File.dirname(__FILE__) + "/ext/json2.js")}'; 
+          document.getElementsByTagName('head')[0].appendChild(json2)
+        } 
+
+        return JSON.stringify((function() {#{source}})());
+      })()
+      ]
+    end
+
+    private :with_json2_if_needed
+
   end # module
 end
+
+
