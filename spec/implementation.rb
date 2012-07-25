@@ -9,6 +9,7 @@ WatirSpec.implementation do |imp|
   WatirSpec.persistent_browser = false
   imp.browser_class = Watir::IE
   browser = :ie
+  imp.browser_args = [browser]
   browser_version = "ie#{imp.browser_class.version.to_i}".to_sym
 
   imp.guard_proc = lambda { |args|
