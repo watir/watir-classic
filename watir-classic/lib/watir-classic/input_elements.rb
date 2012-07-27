@@ -232,6 +232,7 @@ module Watir
       dispatch_event("onSelect")
       dispatch_event("ondragstart")
       dispatch_event("ondrag")
+      destination.assert_exists
       destination.dispatch_event("onDragEnter")
       destination.dispatch_event("onDragOver")
       destination.dispatch_event("ondrop")
