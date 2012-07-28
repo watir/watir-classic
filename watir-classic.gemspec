@@ -1,18 +1,9 @@
-require './watir-rdoc'
-
-$__watir_source_patterns = [
-    'CHANGES', 'rakefile.rb', 'VERSION', "README.rdoc", 'watir.gemspec', 'watir-rdoc.rb', 'LICENSE',
-    'lib/watir-classic.rb', 'lib/watir-classic/*.rb', 'lib/watir-classic/dialogs/*.rb', 'unittests/*.rb', 'unittests/html/*.html', 'unittests/html/images/*.*',
-    'unittests/other/*.rb', 'unittests/testcase/*.rb', 'unittests/windows/*.rb',
-    'lib/watir-classic/IEDialog/Release/IEDialog.dll', 'lib/watir-classic/win32ole/1.8.7/win32ole.so','lib/watir-classic/win32ole/1.9.3/win32ole.so',
-    'lib/watir-classic/contrib/*.rb'] +
-    $WATIR_EXTRA_RDOC_FILES
-
-spec = Gem::Specification.new do |s|
-  version = File.exist?('VERSION') ? File.read('VERSION').strip : "0.0.0"
+# -*- encoding: utf-8 -*-
+Gem::Specification.new do |s|
   s.name = 'watir-classic'
-  s.version = version
-  s.summary = 'Automated testing tool for web applications.'
+  s.version = File.read("VERSION").strip
+  s.author = 'Bret Pettichord'
+  s.email = 'watir-general@groups.google.com'
   s.description = <<-EOF
     WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free,
     open-source functional testing tool for automating browser-based tests of web applications.
@@ -24,15 +15,13 @@ spec = Gem::Specification.new do |s|
     Watir can test web applications written in any language.
     Watir is a Ruby library that works with Internet Explorer on Windows.
   EOF
-  s.author = 'Bret Pettichord'
-  s.email = 'watir-general@groups.google.com'
-  s.rubyforge_project = 'Watir'
-  s.homepage = 'http://www.watir.com/'
+  s.homepage = 'http://watir.com/'
+  s.summary = 'Automated testing tool for web applications.'
 
-  s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 1.8.7'
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- spec/*`.split("\n")
+  s.require_paths = ["lib"]  
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
-  s.require_path = 'lib'
 
   s.add_dependency 'win32-process', '>= 0.5.5'
   s.add_dependency 'windows-pr', '>= 0.6.6'
@@ -42,17 +31,5 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'user-choices'
   s.add_dependency 'yajl-ruby'
 
-  s.rdoc_options += $WATIR_RDOC_OPTIONS
-  s.extra_rdoc_files = $WATIR_EXTRA_RDOC_FILES
-  s.executables << 'watir-console'
-
-#  s.test_file  = 'unittests/core_tests.rb'
-
-  s.files = $__watir_source_patterns.inject([]) { |list, glob|
-  	list << Dir[glob].delete_if { |path|
-      File.directory?(path) or
-      path.include?('CVS')
-    }
-  }.flatten
-
+  s.add_development_dependency("rspec", "~>2.3")
 end

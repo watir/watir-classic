@@ -1,56 +1,19 @@
 require 'rubygems'
-require 'rake/clean'
-require 'fileutils'
+require 'bundler'
 
-projects = ['watir-classic']
+Bundler::GemHelper.install_tasks
 
-def launch_subrake(cmd)
-  system("#{Gem.ruby} -S rake #{cmd}")
+task :default => :spec
+
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
+
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.rcov = true
 end
 
-task :default => :gems
-
-task :gemdir do
-  mkdir_p "gems" if !File.exist?("gems")
-end
-
-desc "Generate all the Watir gems"
-task :gems => :gemdir do
-  projects.each do |project|
-    tmp_files = %w{CHANGES VERSION  README.rdoc LICENSE}
-    FileUtils.cp tmp_files, project
-    Dir.chdir(project) do
-      launch_subrake "gem"
-      FileUtils.rm tmp_files
-    end
-  end
-  gems = Dir['*/pkg/*.gem']
-  gems.each {|gem| FileUtils.install gem, 'gems'}
-end
-
-desc "Clean all the projects"
-task :clean_subprojects do
-  projects.each do |project|
-    Dir.chdir(project) do
-      launch_subrake "clean"
-    end
-  end
-end
-
-desc "Clean the build environment and projects"
-task :clean => [:clean_subprojects] do
-  FileUtils.rm_r Dir.glob("gems/*") << "test/reports", :force => true
-end
-
-desc "Run tests for Watir"
-task :test => [:test_watir]
-
-desc 'Run tests for Watir'
-task :test_watir do
-  Dir.chdir("watir-classic") do
-    launch_subrake "test"
-  end
-end
+require 'yard'
+YARD::Rake::YardocTask.new
 
 #
 # ------------------------------ watirspec -----------------------------------
