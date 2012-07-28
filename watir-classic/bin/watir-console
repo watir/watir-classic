@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-$root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
-$watir_lib = File.join($root, 'watir-classic', 'lib')
-$libs = "-I #{$watir_lib}"
-exec "irb.bat #{$libs} -r rubygems -r irb/completion -r watir-classic/irb-history -r watir --simple-prompt --readline"
