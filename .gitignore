@@ -1,7 +1,7 @@
 *~
 .loadpath
 .externalToolBuilders
-watir-classic/pkg
-gems
-.idea
-test/
+pkg/
+.idea/
+.yardoc/
+doc/

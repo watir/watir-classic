@@ -32,4 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'yajl-ruby'
 
   s.add_development_dependency("rspec", "~>2.3")
+  s.add_development_dependency("syntax")
+  s.add_development_dependency("yard")
+  s.add_development_dependency("sinatra")
 end
