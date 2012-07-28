@@ -6,6 +6,7 @@ module Watir
       click_no_wait
       set_file_name file_path.gsub(File::SEPARATOR, File::ALT_SEPARATOR)
       open_button.click
+      Wait.until(5) {value.include?(File.basename(file_path))}
     end
 
     alias_method :value=, :set
