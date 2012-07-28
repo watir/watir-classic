@@ -1,27 +1,21 @@
 = Watir Classic
 
-Watir, pronounced water, is an open-source (BSD) family of Ruby libraries for automating web browsers. It supports your app no matter what technology it is developed in. They support Internet Explorer on Windows, Firefox and Chrome on Windows, Mac and Linux and Safari on Mac.
+Watir, pronounced water, is an open-source (BSD) family of Ruby libraries for automating web browsers.
+It supports your app no matter what technology it is developed in.
+They support Internet Explorer on Windows, Firefox and Chrome on Windows, Mac and Linux and Safari on Mac.
 
 Project Home:: http://watir.com
-Source Code:: http://github.com/bret/watir
+Source Code:: http://github.com/watir/watir-classic
 Support:: http://watir.com/support
-Gem:: https://rubygems.org/gems/watir
-Gem:: https://rubygems.org/gems/firewatir
-Gem:: https://rubygems.org/gems/commonwatir
-Gem:: https://rubygems.org/gems/safariwatir
-Gem:: https://rubygems.org/gems/watir-webdriver
-Gem:: https://rubygems.org/gems/celerity
+Gem:: https://rubygems.org/gems/watir-classic
 
 == Install
 
-You have to install Ruby and RubyGems first. To be able to drive Firefox you have to install Firefox add-on. Detailed installation instructions are at http://watir.com/installation
-
-=== Windows
-
-To install Internet Explorer and Firefox driver:
-
+You have to install Ruby and RubyGems first.
   gem update --system
   gem install watir-classic
+
+Detailed installation instructions are at http://watir.com/installation
 
 == Examples
 
