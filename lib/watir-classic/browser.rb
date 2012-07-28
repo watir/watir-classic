@@ -60,7 +60,7 @@ before you invoke Browser.new.
       # Create a new instance of a browser driver, as determined by the
       # configuration settings. (Don't be fooled: this is not actually 
       # an instance of Browser class.)
-      def new
+      def new ignored=nil # argument is needed to make watir-classic more compatible with watir-webdriver
         set_sub_options
         klass.new
       end

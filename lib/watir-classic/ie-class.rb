@@ -89,7 +89,7 @@ module Watir
 
     # Create an IE browser.
     def initialize suppress_new_window=nil
-      _new_window_init unless suppress_new_window && suppress_new_window != :ie
+      _new_window_init unless suppress_new_window
     end
 
     def _new_window_init
