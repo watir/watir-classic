@@ -88,8 +88,8 @@ module Watir
     end
 
     # Create an IE browser.
-    def initialize *args
-      _new_window_init
+    def initialize suppress_new_window=nil
+      _new_window_init unless suppress_new_window && suppress_new_window != :ie
     end
 
     def _new_window_init
