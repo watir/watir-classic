@@ -4,6 +4,7 @@ module Watir
     WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer','Microsoft Internet Explorer',/Mensaje de p.*/]
 
     def initialize(opts={})
+      Kernel.warn "JavascriptDialog is deprecated and will be removed in the future. Use Browser#alert instead."
       @opts = opts
     end
 
