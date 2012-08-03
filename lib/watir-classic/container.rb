@@ -61,6 +61,10 @@ module Watir
       ModalDialog.new(self)
     end
 
+    def alert
+      Alert.new(self)
+    end
+
     # Searching for Page Elements
     # Not for external consumption
     #

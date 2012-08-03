@@ -30,6 +30,7 @@ require 'watir-classic/image'
 require 'watir-classic/link'
 require 'watir-classic/window'
 require 'watir-classic/cookies'
+require 'watir-classic/dialogs/alert'
 
 require 'watir-classic/win32'
 require 'watir-classic/modal_dialog'
