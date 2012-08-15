@@ -497,6 +497,10 @@ module Watir
       return @ie.LocationURL
     end
 
+    def screenshot
+      Screenshot.new(hwnd)
+    end
+
     def window(specifiers={}, &blk)
       win = Window.new(self, specifiers, &blk)
       win.use &blk if blk
