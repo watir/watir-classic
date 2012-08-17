@@ -22,6 +22,17 @@ module Watir
     attr_ole :value
   end
 
+  class Dl < Element
+    def to_hash
+      dts.each_with_index.reduce({}) do |memo, item|
+        dt, i = *item
+        dd = dds[i]
+        memo[dt.text] = dd.present? ? dd.text : nil
+        memo
+      end
+    end
+  end
+
   class Embed < Element
     attr_ole :src
     attr_ole :type
