@@ -1,0 +1,5 @@
+--readme README.rdoc
+--no-private
+--hide-void-return
+--title "Watir Classic"
+--files CHANGES,LICENSE,VERSION
