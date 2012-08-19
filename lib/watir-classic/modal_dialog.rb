@@ -13,7 +13,7 @@ module Watir
       @modal.wait_until_present rescue raise NoMatchingWindowFoundException
 
       intUnknown = 0
-      Watir::until_with_timeout do
+      Wait.until do
         intPointer = " " * 4 # will contain the int value of the IUnknown*
         GetUnknown.call(hwnd, intPointer)
         intArray = intPointer.unpack('L')
