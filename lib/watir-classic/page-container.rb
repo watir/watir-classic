@@ -47,7 +47,6 @@ module Watir
         result = document.getElementById(wrapper).innerHTML
       end
 
-      require 'yajl'      
       Yajl::Parser.parse(result) rescue nil
     end
 
@@ -69,27 +68,6 @@ module Watir
     def set_container container
       @container = container
       @page_container = self
-    end
-
-    # This method is used to display the available html frames that Internet Explorer currently has loaded.
-    # This method is usually only used for debugging test scripts.
-    def show_frames
-      if allFrames = document.frames
-        count = allFrames.length
-        puts "there are #{count} frames"
-        for i in 0..count-1 do
-          begin
-            fname = allFrames.item(i).name.to_s
-            puts "frame  index: #{i + 1} name: #{fname}"
-          rescue => e
-            if e.to_s.match(/Access is denied/)
-              puts "frame  index: #{i + 1} Access Denied, see http://wiki.openqa.org/display/WTR/FAQ#access-denied"
-            end
-          end
-        end
-      else
-        puts "no frames"
-      end
     end
 
     # Search the current page for specified text or regexp.
