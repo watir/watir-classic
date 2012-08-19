@@ -363,7 +363,6 @@ module Watir
       return value if @o.invoke('type') =~ /textarea/i # text areas don't have maxlength
       if value.length > maxlength
         value = value[0 .. maxlength - 1]
-        @container.log " Supplied string is #{value.length} chars, which exceeds the max length (#{maxlength}) of the field. Using value: #{value}"
       end
       value
     end

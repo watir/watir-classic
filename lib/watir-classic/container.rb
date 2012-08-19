@@ -38,11 +38,6 @@ module Watir
     end
     private :copy_test_config
     
-    # Write the specified string to the log.
-    def log(what)
-      @container.logger.debug(what) if @logger
-    end
-    
     # Wait until Browser has finished loading the page.
     #--
     # called explicitly by most click and set methods

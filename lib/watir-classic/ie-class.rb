@@ -74,8 +74,6 @@ module Watir
 
     # the OLE Internet Explorer object
     attr_accessor :ie
-    # access to the logger object
-    attr_accessor :logger
 
     # this contains the list of unique urls that have been visited
     attr_reader :url_list
@@ -176,9 +174,6 @@ module Watir
       @page_container = self
       @error_checkers = []
       @activeObjectHighLightColor = HIGHLIGHT_COLOR
-
-
-      @logger = DefaultLogger.new
       @url_list = []
     end
 
@@ -341,15 +336,6 @@ module Watir
       end
     end
     alias :exist? :exists?
-
-    # deprecated: use logger= instead
-    def set_logger(logger)
-      @logger = logger
-    end
-
-    def log(what)
-      @logger.debug(what) if @logger
-    end
 
     #
     # Accessing data outside the document
@@ -758,13 +744,12 @@ module Watir
     end
 
     def attach_browser_window how, what
-      log "Seeking Window with #{how}: #{what}"
       ieTemp = nil
       begin
-        Watir::until_with_timeout do
+        Wait.until(IE.attach_timeout) do
           ieTemp = IE._find how, what
         end
-      rescue Watir::Wait::TimeoutError
+      rescue Wait::TimeoutError
         raise NoMatchingWindowFoundException,
         "Unable to locate a window with #{how} of #{what}"
       end
