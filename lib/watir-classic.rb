@@ -4,7 +4,6 @@
 # implementations.
 
 require 'watir-classic/version'
-require 'watir-classic/waiter' # this will be removed in some future version
 require 'watir-classic/wait'
 require 'watir-classic/wait_helper'
 require 'watir-classic/element_extensions'
