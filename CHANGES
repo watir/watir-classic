@@ -1,3 +1,22 @@
+== 3.1.0 - 2012/08/20
+
+* Add Browser#name, which returns :ie.
+* Add Dl#to_hash.
+* Add support for Alert API (https://github.com/watir/watirspec/blob/master/alert_spec.rb).
+* Add support for Browser#screenshot API (https://github.com/watir/watirspec/blob/master/screenshot_spec.rb).
+* Browser#execute_script returns now correct Ruby objects instead of String.
+* Browser#new accepts ignored parameter to make API more compatible with Watir-WebDriver.
+* Element#drag_and_drop methods work also with elements not in the viewport.
+* Fix TextField#set slow text entry.
+* Remove all show_* methods. Use element collection methods with #each instead. For example browser.links.each {|link| puts link.href}.
+* Remove already deprecated Watir::Waiter. Use Watir::Wait instead.
+* Remove already deprecated WinClicker.
+* Remove Browser#(javascript_)dialog. Use Browser#alert API instead.
+* Remove ScreenCapture module. Use Browser#screenshot API instead.
+* Remove Watir console. Use regular IRB or debugger instead.
+* Remove Watir.log method, WatirLogger and DefaultLogger classes. Use standard Ruby Logger instead.
+* Remove Watir.until_with_timeout. Use Watir::Wait.until instead.
+
 == 3.0.0 - 2012/04/23
 
 * Browser#status returns an empty string if status bar is disabled in IE9
