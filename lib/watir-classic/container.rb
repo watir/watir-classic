@@ -30,6 +30,7 @@ module Watir
     attr_accessor :activeObjectHighLightColor
     # The PageContainer object containing this element
     attr_accessor :page_container
+    alias_method :browser, :page_container
     
     def copy_test_config(container) # only used by form and frame
       @typingspeed = container.typingspeed
