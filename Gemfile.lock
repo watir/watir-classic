@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    watir-classic (3.0.0)
+    watir-classic (3.1.0)
       ffi (~> 1.0)
       nokogiri
       rautomation (~> 0.7.2)
@@ -19,7 +19,7 @@ GEM
       ffi (~> 1.0, >= 1.0.6)
     diff-lcs (1.1.3)
     ffi (1.1.3-x86-mingw32)
-    hoe (3.0.6)
+    hoe (3.0.8)
       rake (~> 0.8)
     mini_magick (3.2.1)
       subexec (~> 0.0.4)
@@ -51,8 +51,8 @@ GEM
       s4t-utils (>= 1.0.3)
       xml-simple (>= 1.0.11)
     win32-api (1.4.8-x86-mingw32)
-    win32-process (0.6.6)
-      windows-pr (>= 1.2.2)
+    win32-process (0.7.0)
+      ffi (>= 1.0.0)
     win32screenshot (1.0.7)
       ffi (~> 1.0)
       mini_magick (~> 3.2.1)
