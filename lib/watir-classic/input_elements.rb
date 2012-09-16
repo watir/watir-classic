@@ -25,7 +25,7 @@ module Watir
     # This method clears the selected items in the select box
     def clear
       perform_action do
-        options.each {|option| option.clear}
+        options.each(&:clear)
       end
     end
 
@@ -94,11 +94,7 @@ module Watir
 
     def select
       perform_action do
-        unless selected?
-          ole_object.selected = true
-          select_list.dispatch_event("onChange")
-          @container.wait
-        end
+        change_selected true unless selected?
       end
     end
 
@@ -106,11 +102,7 @@ module Watir
       raise TypeError, "you can only clear multi-selects" unless select_list.multiple?
 
       perform_action do
-        if selected?
-          ole_object.selected = false
-          select_list.dispatch_event("onChange")
-          @container.wait
-        end
+        change_selected false if selected?
       end
     end
 
@@ -133,6 +125,13 @@ module Watir
 
       raise "SELECT element was not found for #{self}!" unless el
       @select_list = el
+    end
+
+    def change_selected(value)
+      select_list.focus
+      ole_object.selected = value
+      select_list.dispatch_event("onChange")
+      @container.wait
     end
   end
 
