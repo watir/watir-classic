@@ -51,7 +51,7 @@ before you invoke Browser.new.
 
 =end rdoc
   
-  module Browser
+  class Browser
     @@browser_classes = {}
     @@sub_options = {}
     @@default = nil
