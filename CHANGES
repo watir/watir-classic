@@ -2,7 +2,7 @@
 
 * Add Element#browser method as an alias for Element#page_container.
 * Fix SelectList#{select|clear} to fire onChange events for <select> element.
-* Watir::Browser is now a class and not a module - beware if you're monkey-patching.
+* Watir::Browser is now a class instead of a module - beware if you're monkey-patching.
 
 == 3.1.0 - 2012/08/20
 
