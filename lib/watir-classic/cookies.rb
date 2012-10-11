@@ -39,6 +39,7 @@ module Watir
       # there's got to be some easier way to do this
       uri = URI.parse(@page_container.url)
       domain = uri.host
+      return unless domain
 
       paths = uri.path.split("/").reduce([]) do |paths, path|
         paths << "#{paths.last}/#{path}".squeeze("/")
@@ -71,10 +72,11 @@ module Watir
       each {|cookie| delete cookie[:name]}
     end
 
+    private
+
     def delete_with_options name, options={}
       add name, nil, options
     end
 
-    private :delete_with_options
   end
 end
