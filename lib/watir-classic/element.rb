@@ -343,7 +343,7 @@ module Watir
     def focus
       assert_exists
       assert_enabled
-      @page_container.focus
+      @container.focus
       ole_object.focus(0)
     end
 
