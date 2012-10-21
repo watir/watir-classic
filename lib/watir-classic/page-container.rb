@@ -47,7 +47,7 @@ module Watir
         result = document.getElementById(wrapper).innerHTML
       end
 
-      Yajl::Parser.parse(result) rescue nil
+      MultiJson.load(result)["value"] rescue nil
     end
 
     # The HTML of the current page
@@ -99,7 +99,7 @@ module Watir
           document.getElementsByTagName('head')[0].appendChild(json2)
         } 
 
-        return JSON.stringify((function() {#{source}})());
+        return JSON.stringify({value: (function() {#{source}})()});
       })()
       ]
     end

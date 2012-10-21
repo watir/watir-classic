@@ -3,7 +3,7 @@ require 'watir-classic/core'
 require 'watir-classic/close_all'
 require 'watir-classic/ie-process'
 require 'watir-classic/screenshot'
-require 'yajl'      
+require 'multi_json'      
 
 # these switches need to be deleted from ARGV to enable the Test::Unit
 # functionality that grabs
