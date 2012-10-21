@@ -7,12 +7,12 @@ module Watir
   class Link < Element
     attr_ole :type
     attr_ole :href
+    attr_ole :name
 
     # if an image is used as part of the link, this will return true
     def link_has_image
       assert_exists
-      return true if @o.getElementsByTagName("IMG").length > 0
-      return false
+      @o.getElementsByTagName("IMG").length > 0
     end
     
     # this method returns the src of an image, if an image is used as part of the link
