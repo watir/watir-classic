@@ -8,7 +8,6 @@ module Watir
   class Image < Element
     attr_ole :alt
     attr_ole :src
-    attr_ole :file_created_date, :fileCreatedDate
 
     # this method produces the properties for an image as an array
     def image_string_creator
@@ -55,7 +54,7 @@ module Watir
     # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
     def loaded?
       assert_exists
-      !file_created_date.empty? && file_size != -1
+      file_size != -1
     end
     
     # this method highlights the image (in fact it adds or removes a border around the image)
