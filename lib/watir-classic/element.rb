@@ -113,9 +113,16 @@ module Watir
     end
 
     # return the css style as a string
-    def style
+    def style(property=nil)
       assert_exists
-      ole_object.style.cssText
+      css = ole_object.style.cssText
+
+      if property
+       properties = Hash[css.downcase.split(";").map { |p| p.split(":").map(&:strip) }]
+       properties[property]
+      else
+        css
+      end
     end
 
     # Return the innerText of the object or an empty string if the object is
