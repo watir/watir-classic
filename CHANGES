@@ -1,3 +1,12 @@
+== 3.3.0 - 2012/10/27
+
+* Add support for optional Element#style property argument, which allows to get specific css style attribute value.
+* Add support for locating Link by a :name. Fixes #42.
+* Avoid endless loop when focusing elements inside of a frame. Closes #41. 
+* Cookies#delete handles the situation if browser is on about:blank.
+* Remove Image#file_created_date method since IE does not provide accurate information. Closes #36.
+* Use MultiJSON gem instead of the Yajl::Ruby gem as a dependency for parsing #execute_script results.
+
 == 3.2.0 - 2012/09/17
 
 * Add Element#browser method as an alias for Element#page_container.
