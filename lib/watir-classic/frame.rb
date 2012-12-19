@@ -40,7 +40,8 @@ module Watir
     end
 
     def attach_command
-      @container.page_container.attach_command + ".frame(#{@specifiers.inspect})".gsub('"','\'')
+      tag_name = @specifiers[:tag_name].join("' << '")
+      @container.page_container.attach_command + ".frame(:tag_name => Array.new << '#{tag_name}', :unique_number => #{unique_number})"
     end
 
   end
