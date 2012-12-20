@@ -40,7 +40,7 @@ module Watir
     end
 
     def attach_command
-      @container.page_container.attach_command + ".frame(#{@specifiers.inspect})".gsub('"','\'')
+      @container.page_container.attach_command + ".frame(:unique_number => #{unique_number})"
     end
 
   end
