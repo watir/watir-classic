@@ -1,8 +1,6 @@
 = Watir Classic
 
-Watir, pronounced water, is an open-source (BSD) family of Ruby libraries for automating web browsers.
-It supports your app no matter what technology it is developed in.
-They support Internet Explorer on Windows, Firefox and Chrome on Windows, Mac and Linux and Safari on Mac.
+Watir Classic is a Watir[https://github.com/watir/watir] driver for automating Internet Explorer on Windows.
 
 Project Home:: http://watir.com
 Source Code:: http://github.com/watir/watir-classic
@@ -11,8 +9,8 @@ Gem:: https://rubygems.org/gems/watir-classic
 
 == Install
 
-You have to install Ruby and RubyGems first.
-  gem update --system
+Install the gem:
+
   gem install watir-classic
 
 Detailed installation instructions are at http://watir.com/installation
@@ -25,7 +23,7 @@ Loading Watir gem to drive Internet Explorer on Windows
 
   require 'watir-classic'
 
-Starting a new browser & and going to our site
+Starting a new browser & going to our site
 
   browser = Watir::Browser.new
   browser.goto("http://bit.ly/watir-example")
@@ -56,7 +54,7 @@ Clicking a button
 Clearing, getting and selecting selection list values
 
   browser.select_list(:name => "entry.6.single").clear
-  puts browser.select_list(:name => "entry.6.single").options
+  puts browser.select_list(:name => "entry.6.single").options.map(&:text)
   browser.select_list(:name => "entry.6.single").select "Chrome"
 
 Clicking a button
