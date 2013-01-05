@@ -6,62 +6,204 @@ module Watir
     include Container
     include PageContainer
 
-    # Maximum number of seconds to wait when attaching to a window
-    @@attach_timeout = 2.0 # default value
-    def self.attach_timeout
-      @@attach_timeout
-    end
-    def self.attach_timeout=(timeout)
-      @@attach_timeout = timeout
-    end
+    class << self
+      # Maximum number of seconds to wait when attaching to a window
+      attr_writer :attach_timeout
 
-    # Return the options used when creating new instances of IE.
-    # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
-    def self.options
-      {:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout, :zero_based_indexing => self.zero_based_indexing}
-    end
-    # set values for options used when creating new instances of IE.
-    def self.set_options options
-      options.each do |name, value|
-        send "#{name}=", value
+      def attach_timeout
+        @attach_timeout ||= 2
       end
-    end
-    # The globals $FAST_SPEED and $HIDE_IE are checked both at initialization
-    # and later, because they
-    # might be set after initialization. Setting them beforehand (e.g. from
-    # the command line) will affect the class, otherwise it is only a temporary
-    # effect
-    @@speed = $FAST_SPEED ? :fast : :slow
-    def self.speed
-      return :fast if $FAST_SPEED
-      @@speed
-    end
-    def self.speed= x
-      $FAST_SPEED = nil
-      @@speed = x
-    end
-    @@visible = $HIDE_IE ? false : true
-    def self.visible
-      return false if $HIDE_IE
-      @@visible
-    end
-    def self.visible= x
-      $HIDE_IE = nil
-      @@visible = x
-    end
 
-    @@zero_based_indexing = true
-    def self.zero_based_indexing= enabled
-      @@zero_based_indexing = enabled
-    end
+      # Return the options used when creating new instances of IE.
+      # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
+      def options
+        {:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
+      end
 
-    def self.zero_based_indexing
-      @@zero_based_indexing
-    end
+      # set values for options used when creating new instances of IE.
+      def set_options options
+        options.each do |name, value|
+          send "#{name}=", value
+        end
+      end
 
-    def self.base_index
-      self.zero_based_indexing ? 0 : 1
-    end  
+      # The speed in which browser will type keys etc. Possible values are
+      # :slow (default), :fast and :zippy.
+      attr_writer :speed
+
+      def speed
+        @speed ||= :slow
+      end
+
+      # Set browser window to visible or hidden. Defaults to true.
+      attr_writer :visible
+
+      def visible
+        @visible ||= true
+      end
+
+      # Create a new IE window.
+      def new_window
+        ie = new true
+        ie._new_window_init
+        ie
+      end
+
+      # Create a new IE, starting at the specified url.
+      # @param [String] url url to navigate to.
+      def start(url=nil)
+        start_window url
+      end
+
+      # Create a new IE window, starting at the specified url.
+      # @param [String] url url to navigate to.
+      def start_window(url=nil)
+        ie = new_window
+        ie.goto url if url
+        ie
+      end
+
+      # Create a new IE window in a new process. 
+      # @note This method will not work when
+      #   Watir/Ruby is run under a service (instead of a user).
+      def new_process
+        ie = new true
+        ie._new_process_init
+        ie
+      end
+
+      # Create a new IE window in a new process, starting at the specified URL. 
+      # @param [String] url url to navigate to.
+      def start_process(url=nil)
+        ie = new_process
+        ie.goto url if url
+        ie
+      end
+
+      # Attach to an existing IE {Browser}.
+      #
+      # @example Attach with full title:
+      #   Watir::Browser.attach(:title, "Full title of IE")
+      #
+      # @example Attach with part of the title using {Regexp}:
+      #   Watir::Browser.attach(:title, /part of the title of IE/)
+      #
+      # @example Attach with part of the url:
+      #   Watir::Browser.attach(:url, /google/)
+      #
+      # @example Attach with window handle:
+      #   Watir::Browser.attach(:hwnd, 123456)
+      #
+      # @param [Symbol] how type of the locator. Can be :title, :url or :hwnd.
+      # @param [Symbol] what value of the locator. Can be {String}, {Regexp} or {Fixnum}
+      #   depending of the type parameter.
+      #
+      # @note This method will not work when
+      #   Watir/Ruby is run under a service (instead of a user).
+      def attach(how, what)
+        ie = new true # don't create window
+        ie._attach_init(how, what)
+        ie
+      end
+
+      # Return an IE object that wraps the given window, typically obtained from
+      # Shell.Application.windows.
+      # @private
+      def bind(window)
+        ie = new true
+        ie.ie = window
+        ie.initialize_options
+        ie
+      end
+
+      # Yields successively to each IE window on the current desktop. Takes a block.
+      # @note This method will not work when
+      #   Watir/Ruby is run under a service (instead of a user).
+      # @yieldparam [IE] ie instances of IE found.
+      def each
+        shell = WIN32OLE.new('Shell.Application')
+        ie_browsers = []
+        shell.Windows.each do |window|
+          next unless (window.path =~ /Internet Explorer/ rescue false)
+          next unless (hwnd = window.hwnd rescue false)
+          ie = bind(window)
+          ie.hwnd = hwnd
+          ie_browsers << ie
+        end
+        ie_browsers.each do |ie|
+          yield ie
+        end
+      end
+
+      # @return [String] the IE browser version number as a string.
+      def version
+        @ie_version ||= begin
+                          require 'win32/registry'
+                          ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
+                            ie_key.read('Version').last
+                          end
+                          # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
+                        end
+      end
+
+      # @return [Array<String>] the IE browser version numbers split by "." in an Array.
+      def version_parts
+        version.split('.')
+      end
+
+      # Find existing IE window with locators.
+      # @see .attach
+      def find(how, what)
+        ie_ole = _find(how, what)
+        bind ie_ole if ie_ole
+      end
+
+      # @private
+      def _find(how, what)
+        _find_all(how, what).first
+      end
+
+      # @private
+      def _find_all(how, what)
+        ies = []
+        count = -1
+        each do |ie|
+          window = ie.ie
+
+          case how
+          when :url
+            ies << window if (what.matches(window.locationURL))
+          when :title
+            # normal windows explorer shells do not have document
+            # note window.document will fail for "new" browsers
+            begin
+              title = window.locationname
+              title = window.document.title
+            rescue WIN32OLERuntimeError
+            end
+            ies << window if what.matches(title)
+          when :hwnd
+            begin
+              ies << window if what == window.HWND
+            rescue WIN32OLERuntimeError
+            end
+          when :index
+            count += 1
+            if count == what
+              ies << window
+              break
+            end
+          when nil
+            ies << window
+          else
+            raise ArgumentError
+          end
+        end      
+
+        ies
+      end
+
+    end
 
     # Used internally to determine when IE has finished loading a page.
     # @private
@@ -81,13 +223,6 @@ module Watir
     # The list of unique urls that have been visited.
     attr_reader :url_list
 
-    # Create a new IE window.
-    def self.new_window
-      ie = new true
-      ie._new_window_init
-      ie
-    end
-
     # Create an IE browser instance.
     # @param [Boolean] suppress_new_window set to true for not creating a IE
     #   window.
@@ -102,29 +237,6 @@ module Watir
       goto 'about:blank' # this avoids numerous problems caused by lack of a document
     end
 
-    # Create a new IE, starting at the specified url.
-    # @param [String] url url to navigate to.
-    def self.start(url=nil)
-      start_window url
-    end
-
-    # Create a new IE window, starting at the specified url.
-    # @param [String] url url to navigate to.
-    def self.start_window(url=nil)
-      ie = new_window
-      ie.goto url if url
-      ie
-    end
-
-    # Create a new IE window in a new process. 
-    # @note This method will not work when
-    #   Watir/Ruby is run under a service (instead of a user).
-    def self.new_process
-      ie = new true
-      ie._new_process_init
-      ie
-    end
-
     # @private
     def _new_process_init
       iep = Process.start
@@ -134,56 +246,12 @@ module Watir
       goto 'about:blank'
     end
 
-    # Create a new IE window in a new process, starting at the specified URL. 
-    # @param [String] url url to navigate to.
-    def self.start_process(url=nil)
-      ie = new_process
-      ie.goto url if url
-      ie
-    end
-
-    # Attach to an existing IE {Browser}.
-    #
-    # @example Attach with full title:
-    #   Watir::Browser.attach(:title, "Full title of IE")
-    #
-    # @example Attach with part of the title using {Regexp}:
-    #   Watir::Browser.attach(:title, /part of the title of IE/)
-    #
-    # @example Attach with part of the url:
-    #   Watir::Browser.attach(:url, /google/)
-    #
-    # @example Attach with window handle:
-    #   Watir::Browser.attach(:hwnd, 123456)
-    #
-    # @param [Symbol] how type of the locator. Can be :title, :url or :hwnd.
-    # @param [Symbol] what value of the locator. Can be {String}, {Regexp} or {Fixnum}
-    #   depending of the type parameter.
-    #
-    # @note This method will not work when
-    #   Watir/Ruby is run under a service (instead of a user).
-    def self.attach(how, what)
-      ie = new true # don't create window
-      ie._attach_init(how, what)
-      ie
-    end
-
     # this method is used internally to attach to an existing window
     # @private
     def _attach_init how, what
       attach_browser_window how, what
       initialize_options
       wait
-    end
-
-    # Return an IE object that wraps the given window, typically obtained from
-    # Shell.Application.windows.
-    # @private
-    def self.bind(window)
-      ie = new true
-      ie.ie = window
-      ie.initialize_options
-      ie
     end
 
     # @private
@@ -260,93 +328,6 @@ module Watir
     #   otherwise.
     def visible=(boolean)
       @ie.visible = boolean if boolean != @ie.visible
-    end
-
-    # Yields successively to each IE window on the current desktop. Takes a block.
-    # @note This method will not work when
-    #   Watir/Ruby is run under a service (instead of a user).
-    # @yieldparam [IE] ie instances of IE found.
-    def self.each
-      shell = WIN32OLE.new('Shell.Application')
-      ie_browsers = []
-      shell.Windows.each do |window|
-        next unless (window.path =~ /Internet Explorer/ rescue false)
-        next unless (hwnd = window.hwnd rescue false)
-        ie = IE.bind(window)
-        ie.hwnd = hwnd
-        ie_browsers << ie
-      end
-      ie_browsers.each do |ie|
-        yield ie
-      end
-    end
-
-    # @return [String] the IE browser version number as a string.
-    def self.version
-      @ie_version ||= begin
-                        require 'win32/registry'
-                        ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
-                          ie_key.read('Version').last
-                        end
-                        # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
-                      end
-    end
-
-    # @return [Array<String>] the IE browser version numbers split by "." in an Array.
-    def self.version_parts
-      version.split('.')
-    end
-
-    # Find existing IE window with locators.
-    # @see .attach
-    def self.find(how, what)
-      ie_ole = IE._find(how, what)
-      IE.bind ie_ole if ie_ole
-    end
-
-    # @private
-    def self._find(how, what)
-      self._find_all(how, what).first
-    end
-
-    # @private
-    def self._find_all(how, what)
-      ies = []
-      count = -1
-      IE.each do |ie|
-        window = ie.ie
-
-        case how
-        when :url
-          ies << window if (what.matches(window.locationURL))
-        when :title
-          # normal windows explorer shells do not have document
-          # note window.document will fail for "new" browsers
-          begin
-            title = window.locationname
-            title = window.document.title
-          rescue WIN32OLERuntimeError
-          end
-          ies << window if what.matches(title)
-        when :hwnd
-          begin
-            ies << window if what == window.HWND
-          rescue WIN32OLERuntimeError
-          end
-        when :index
-          count += 1
-          if count == what
-            ies << window
-            break
-          end
-        when nil
-          ies << window
-        else
-          raise ArgumentError
-        end
-      end      
-
-      ies
     end
 
     # @return [Fixnum] current IE window handle.

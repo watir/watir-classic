@@ -7,7 +7,7 @@ module Watir
 
     def initialize container, specifiers, klass
       @container = container
-      @specifiers = {:index => Watir::IE.base_index}.merge(normalize_specifiers(specifiers))
+      @specifiers = {:index => 0}.merge(normalize_specifiers(specifiers))
       @tags = @specifiers.delete(:tag_name)
       @klass = klass
     end
@@ -145,10 +145,10 @@ module Watir
       return el if el
       return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
 
-      count = Watir::IE.base_index - 1
+      count = 0
       each do |element|
-        count += 1
         return element.ole_object if count == @specifiers[:index]
+        count += 1
       end # elements
       nil
     end
@@ -168,10 +168,10 @@ module Watir
     end
 
     def locate
-      count = Watir::IE.base_index - 1
+      count = 0
       each do |frame|
-        count += 1
         return frame.ole_object, frame.document if count == @specifiers[:index]
+        count += 1
       end
     end
 
@@ -213,10 +213,10 @@ module Watir
       return el if el
       return locate_elements_by_xpath_css_ole[0] if has_excluding_specifiers?
 
-      count = Watir::IE.base_index - 1
+      count = 0
       each do |element|
-        count += 1
         return element.ole_object if count == @specifiers[:index]
+        count += 1
       end
     end
 

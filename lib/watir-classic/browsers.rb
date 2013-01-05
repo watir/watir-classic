@@ -4,4 +4,4 @@
 
 Watir::Browser.support :name => 'ie', :class => 'Watir::IE', 
   :library => 'watir-classic/ie', :gem => 'watir-classic',
-  :options => [:speed, :visible, :zero_based_indexing]
+  :options => [:speed, :visible]

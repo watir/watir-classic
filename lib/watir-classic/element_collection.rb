@@ -40,11 +40,9 @@ module Watir
     # @param [Fixnum] n n-th element to retrieve.
     # @return [Element] element with specified index from this collection.
     def [](n)
-      number = n - Watir::IE.base_index
-      offset = Watir::IE.zero_based_indexing ? (length - 1) : length
       non_existing_element = element_class.new(@container, @specifiers.merge(:index => n))
       def non_existing_element.locate; nil end
-      iterator_object(number) || non_existing_element
+      iterator_object(n) || non_existing_element
     end
 
     # @return [Element] first element from this collection.
