@@ -36,11 +36,6 @@ module Watir
       end
     end    
 
-    # @private
-    def locate
-      @o = @container.locator_for(FormLocator, @specifiers, self.class).locate
-    end
-
     # Submit the form.
     # @note Will not submit the form if its onSubmit JavaScript callback
     #   returns false.
@@ -51,11 +46,40 @@ module Watir
       @container.wait
     end
    
+    # Flash the element the specified number of times for troubleshooting purposes.
+    # @param [Fixnum] number Number of times to flash the element.
+    # @macro exists
+    def flash(number=10)
+      assert_exists
+      @original_styles = {}
+      number.times do
+        count = 0
+        @o.elements.each do |element|
+          highlight(:set, element, count)
+          count += 1
+        end
+        sleep 0.05
+        count = 0
+        @o.elements.each do |element|
+          highlight(:clear, element, count)
+          count += 1
+        end
+        sleep 0.05
+      end
+    end
+
+    # @private
+    def locate
+      @o = @container.locator_for(FormLocator, @specifiers, self.class).locate
+    end
+
     # @private
     def __ole_inner_elements
       assert_exists
       @o.elements
     end
+
+    private
 
     # This method is responsible for setting and clearing the colored highlighting on the specified form.
     # use :set  to set the highlight
@@ -82,29 +106,6 @@ module Watir
           # we could be here for a number of reasons...
         ensure
         end
-      end
-    end
-    private :highlight
-    
-    # Flash the element the specified number of times for troubleshooting purposes.
-    # @param [Fixnum] number Number of times to flash the element.
-    # @macro exists
-    def flash(number=10)
-      assert_exists
-      @original_styles = {}
-      number.times do
-        count = 0
-        @o.elements.each do |element|
-          highlight(:set, element, count)
-          count += 1
-        end
-        sleep 0.05
-        count = 0
-        @o.elements.each do |element|
-          highlight(:clear, element, count)
-          count += 1
-        end
-        sleep 0.05
       end
     end
     

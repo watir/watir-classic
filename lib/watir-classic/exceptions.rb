@@ -3,11 +3,11 @@ module Watir
 
     # Root class for all Watir Exceptions
     class WatirException < RuntimeError  
-			def initialize(message="")
-				super(message)
-			end
+      def initialize(message="")
+        super(message)
+      end
     end
-    
+
     # This exception is raised if an attempt is made to access an object that doesn't exist
     class UnknownObjectException < WatirException; end
     # This exception is raised if an attempt is made to access an object that is in a disabled state
