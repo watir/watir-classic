@@ -65,7 +65,7 @@ GEM
       win32-api (>= 1.4.5)
       windows-api (>= 0.3.0)
     xml-simple (1.1.2)
-    yard (0.8.2.1)
+    yard (0.8.3)
 
 PLATFORMS
   x86-mingw32
