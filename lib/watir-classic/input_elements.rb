@@ -1,24 +1,21 @@
 module Watir
-  
+
   # Super-class for input elements like {SelectList}, {Button} etc.
   class InputElement < Element
-    # @private
-    def locate
-      @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
-    end
-
     attr_ole :disabled?
     attr_ole :name
     attr_ole :value
     attr_ole :alt
     attr_ole :src
     attr_ole :type
+
+    # @private
+    def locate
+      @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
+    end
+
   end
 
-  #
-  # Input: Select
-  #
-  
   # Returned by {Container#select_list}.
   class SelectList < InputElement
     attr_ole :multiple?
@@ -50,7 +47,7 @@ module Watir
       end
       matching_options.first.text
     end
-       
+
     # Select an item or items in a select box by option's value.
     #
     # @param [String,Regexp] item option to select by value.
@@ -63,7 +60,7 @@ module Watir
       matching_options.each(&:select)
       matching_options.first.value
     end
-    
+
     # @example Retrieve selected options as a text:
     #   browser.select_list.selected_options.map(&:text)
     #
@@ -104,7 +101,7 @@ module Watir
       end
     end
   end
-  
+
   # Returned by {Container#option}.
   class Option < Element
     attr_ole :disabled?
@@ -167,10 +164,6 @@ module Watir
     end
   end
 
-  # 
-  # Input: Button
-  #
-  
   # Returned by the {Container#button} method.
   class Button < InputElement
     alias_method :__value, :value
@@ -185,10 +178,6 @@ module Watir
     alias_method :value, :text
   end
 
-  #
-  # Input: Text
-  #
-  
   # Returned be {Container#text_field}.
   class TextField < InputElement
     attr_ole :size
@@ -205,68 +194,12 @@ module Watir
         0
       end
     end
-        
-    def text_string_creator
-      n = []
-      n << "length:".ljust(TO_S_SIZE) + self.size.to_s
-      n << "max length:".ljust(TO_S_SIZE) + self.maxlength.to_s
-      n << "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
-      n
+
+    # @return [String] text field label's text.
+    def label
+      @container.label(:for => name).text
     end
-    private :text_string_creator
-    
-    def to_s
-      assert_exists
-      r = string_creator
-      r += text_string_creator
-      r.join("\n")
-    end
-    
-    # @private
-    def assert_not_readonly
-      if self.readonly?
-        raise ObjectReadOnlyException, 
-          "Textfield #{@specifiers.inspect} is read only."
-      end
-    end
-    
-    # @deprecated Use "browser.text_field.value.include?(target)" or
-    #   "browser.text_field.value.match(target)"
-    def verify_contains(target) #:nodoc:
-      assert_exists
-      if target.kind_of? String
-        return true if self.value == target
-      elsif target.kind_of? Regexp
-        return true if self.value.match(target) != nil
-      end
-      return false
-    end
-    
-    # @deprecated Not part of the WatirSpec API.
-    def drag_contents_to(destination_how, destination_what)
-      assert_exists
-      destination = @container.text_field(destination_how, destination_what)
-      unless destination.exists?
-        raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "
-      end
-      
-      @o.focus(0)
-      @o.select(0)
-      value = self.value
-      
-      dispatch_event("onSelect")
-      dispatch_event("ondragstart")
-      dispatch_event("ondrag")
-      destination.assert_exists
-      destination.dispatch_event("onDragEnter")
-      destination.dispatch_event("onDragOver")
-      destination.dispatch_event("ondrop")
-      
-      dispatch_event("ondragend")
-      destination.value = destination.value + value.to_s
-      self.value = ""
-    end
-    
+
     # Clear the contents of the text field.
     #
     # @macro exists
@@ -285,7 +218,7 @@ module Watir
         @container.wait
       end
     end
-    
+
     # Append the specified text value to the contents of the text field.
     #
     # @param [String] value text to append to current text field's value.
@@ -300,7 +233,7 @@ module Watir
         type_by_character(value)
       end
     end
-    
+
     # Sets the contents of the text field to the specified value.
     #
     # @param [String] value text to set as value.
@@ -338,21 +271,68 @@ module Watir
       @o.value = value.to_s
     end
 
+    # @deprecated Use "browser.text_field.value.include?(target)" or
+    #   "browser.text_field.value.match(target)"
+    def verify_contains(target) #:nodoc:
+      assert_exists
+      if target.kind_of? String
+        return true if self.value == target
+      elsif target.kind_of? Regexp
+        return true if self.value.match(target) != nil
+      end
+      return false
+    end
+
+    # @deprecated Not part of the WatirSpec API.
+    def drag_contents_to(destination_how, destination_what)
+      assert_exists
+      destination = @container.text_field(destination_how, destination_what)
+      unless destination.exists?
+        raise UnknownObjectException, "Unable to locate destination using #{destination_how } and #{destination_what } "
+      end
+
+      @o.focus(0)
+      @o.select(0)
+      value = self.value
+
+      dispatch_event("onSelect")
+      dispatch_event("ondragstart")
+      dispatch_event("ondrag")
+      destination.assert_exists
+      destination.dispatch_event("onDragEnter")
+      destination.dispatch_event("onDragOver")
+      destination.dispatch_event("ondrop")
+
+      dispatch_event("ondragend")
+      destination.value = destination.value + value.to_s
+      self.value = ""
+    end
+
+    def to_s
+      assert_exists
+      r = string_creator
+      r += text_string_creator
+      r.join("\n")
+    end
+
     # @private
     def requires_typing
-    	@type_keys = true
-    	self
+      @type_keys = true
+      self
     end
 
     # @private
     def abhors_typing
-    	@type_keys = false
-    	self
+      @type_keys = false
+      self
     end
 
-    # @return [String] text field label's text.
-    def label
-      @container.label(:for => name).text
+    # @private
+    def assert_not_readonly
+      if self.readonly?
+        raise ObjectReadOnlyException, 
+          "Textfield #{@specifiers.inspect} is read only."
+      end
     end
 
     private
@@ -370,7 +350,7 @@ module Watir
         dispatch_event("onKeyUp")
       end
     end
-    
+
     # Supports double-byte characters
     def characters_in(value, &blk) 
       if RUBY_VERSION =~ /^1\.8/
@@ -384,7 +364,7 @@ module Watir
         value.each_char(&blk)
       end
     end
-    
+
     # Return the value (a string), limited to the maxlength of the element.
     def limit_to_maxlength(value)
       return value if @o.invoke('type') =~ /textarea/i # text areas don't have maxlength
@@ -392,6 +372,14 @@ module Watir
         value = value[0 .. maxlength - 1]
       end
       value
+    end
+
+    def text_string_creator
+      n = []
+      n << "length:".ljust(TO_S_SIZE) + self.size.to_s
+      n << "max length:".ljust(TO_S_SIZE) + self.maxlength.to_s
+      n << "read only:".ljust(TO_S_SIZE) + self.readonly?.to_s
+      n
     end
 
   end
@@ -402,22 +390,22 @@ module Watir
     def set(value)
       self.value = value
     end
-    
+
     # @see TextField#append
     def append(value)
       self.value = self.value.to_s + value.to_s
     end
-    
+
     # @see TextField#clear
     def clear
       self.value = ""
     end
-    
+
     # This method will do nothing since it is impossible to set focus to
     # a hidden field.
     def focus
     end
-    
+
     # @return [Boolean] always false, since hidden element is never visible.
     # @macro exists
     def visible?
@@ -440,7 +428,7 @@ module Watir
       '#<%s:0x%x located=%s specifiers=%s value=%s>' % [self.class, hash*2, !!ole_object, @specifiers.inspect, @value.inspect]
     end
   end
-  
+
   # Returned by {Container#radio}.
   class Radio < InputElement
     include RadioCheckCommon
@@ -452,7 +440,7 @@ module Watir
     def clear
       perform_action { @o.checked = false }
     end
-    
+
     # Check a radio button.
     #
     # @macro exists
@@ -485,7 +473,7 @@ module Watir
       end
       highlight :clear
     end
-    
+
     # Clear the checkbox.
     # @macro exists
     # @macro enabled
