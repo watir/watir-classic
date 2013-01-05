@@ -10,6 +10,34 @@ module Watir
 
     attr_accessor :container
 
+    class << self
+
+      private
+
+      # @!macro attr_ole
+      #   @!method $1
+      #   Retrieve element's $1 from the $2 OLE method.
+      #   @see http://msdn.microsoft.com/en-us/library/hh773183(v=vs.85).aspx MSDN Documentation
+      #   @return [String, Boolean, Fixnum] element's "$1" attribute value.
+      #     Return type depends of the attribute type.
+      #   @return [String] an empty String if the "$1" attribute does not exist.
+      #   @macro exists
+      def self.attr_ole(method_name, ole_method_name=nil)
+        class_eval %Q[
+          def #{method_name}
+            assert_exists
+            ole_method_name = '#{ole_method_name || method_name.to_s.gsub(/\?$/, '')}'
+            ole_object.invoke(ole_method_name) rescue attribute_value(ole_method_name) || '' rescue ''
+          end]
+      end
+    end
+
+    attr_ole :id
+    attr_ole :title
+    attr_ole :class_name, :className
+    attr_ole :unique_number, :uniqueNumber
+    attr_ole :html, :outerHTML
+
     # number of spaces that separate the property from the value in the to_s method
     # @private
     TO_S_SIZE = 14
@@ -30,66 +58,20 @@ module Watir
 
     alias_method :eql?, :==
 
-    # @private
-    def locate
-      @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
-    end  
-
-    # @return [WIN32OLE] OLE object of the element, allowing any methods of the DOM
-    #   that Watir doesn't support to be used.
-    def ole_object
-      @o
-    end
-
-    # @private
-    def ole_object=(o)
-      @o = o
-    end
+      # @return [WIN32OLE] OLE object of the element, allowing any methods of the DOM
+      #   that Watir doesn't support to be used.
+      def ole_object
+        @o
+      end
 
     def inspect
       '#<%s:0x%x located=%s specifiers=%s>' % [self.class, hash*2, !!ole_object, @specifiers.inspect]
     end
 
-    private
-
-    # @!macro attr_ole
-    #   @!method $1
-    #   Retrieve element's $1 from the $2 OLE method.
-    #   @see http://msdn.microsoft.com/en-us/library/hh773183(v=vs.85).aspx MSDN Documentation
-    #   @return [String, Boolean, Fixnum] element's "$1" attribute value.
-    #     Return type depends of the attribute type.
-    #   @return [String] an empty String if the "$1" attribute does not exist.
-    #   @macro exists
-    def self.attr_ole(method_name, ole_method_name=nil)
-      class_eval %Q[
-        def #{method_name}
-          assert_exists
-          ole_method_name = '#{ole_method_name || method_name.to_s.gsub(/\?$/, '')}'
-          ole_object.invoke(ole_method_name) rescue attribute_value(ole_method_name) || '' rescue ''
-        end]
+    def to_s
+      assert_exists
+      string_creator.join("\n")
     end
-
-    public
-
-    # @private
-    def assert_exists
-      locate
-      unless ole_object
-        exception_class = self.is_a?(Frame) ? UnknownFrameException : UnknownObjectException
-        raise exception_class.new(Watir::Exception.message_for_unable_to_locate(@specifiers))
-      end
-    end
-
-    # @private
-    def assert_enabled
-      raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled" unless enabled?
-    end
-
-    attr_ole :id
-    attr_ole :title
-    attr_ole :class_name, :className
-    attr_ole :unique_number, :uniqueNumber
-    attr_ole :html, :outerHTML
 
     # @return [String] element's html tag name in downcase.
     # @macro exists
@@ -140,8 +122,8 @@ module Watir
       css = ole_object.style.cssText
 
       if property
-       properties = Hash[css.downcase.split(";").map { |p| p.split(":").map(&:strip) }]
-       properties[property]
+        properties = Hash[css.downcase.split(";").map { |p| p.split(":").map(&:strip) }]
+        properties[property]
       else
         css
       end
@@ -156,18 +138,6 @@ module Watir
       visible? ? ole_object.innerText.strip : ""
     end
 
-    # @private
-    def __ole_inner_elements
-      assert_exists
-      ole_object.all
-    end
-
-    # @private
-    def document
-      assert_exists
-      ole_object
-    end
-
     # Retrieve the element immediately containing self.
     # @return [Element] parent element of self.
     # @return [Element] self when parent element does not exist.
@@ -178,55 +148,6 @@ module Watir
       return unless parent_element
       Element.new(self, :ole_object => parent_element).to_subtype
     end
-
-    # @private
-    def typingspeed
-      @container.typingspeed
-    end
-
-    # @private
-    def type_keys
-      @type_keys || @container.type_keys
-    end
-
-    # @private
-    def active_object_highlight_color
-      @container.active_object_highlight_color
-    end
-
-    # Return an array with many of the properties, in a format to be used by the to_s method
-    def string_creator
-      n = []
-      n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
-      n
-    end
-
-    private :string_creator
-
-    def to_s
-      assert_exists
-      string_creator.join("\n")
-    end
-
-    # This method is responsible for setting and clearing the colored highlighting on the currently active element.
-    # use :set   to set the highlight
-    #   :clear  to clear the highlight
-    # @todo Make this two methods: set_highlight & clear_highlight
-    def highlight(set_or_clear)
-      if set_or_clear == :set
-        @original_color ||= ole_object.style.backgroundColor
-        ole_object.style.backgroundColor = @container.active_object_highlight_color
-      else
-        ole_object.style.backgroundColor = @original_color if @original_color
-      end
-    rescue
-      # we could be here for a number of reasons...
-      # e.g. page may have reloaded and the reference is no longer valid
-    ensure
-      @original_color = nil
-    end
-
-    private :highlight
 
     # Performs a left click on the element.
     # Will wait automatically until browser is ready after the click if page load was triggered for example.
@@ -253,61 +174,6 @@ module Watir
       perform_action {fire_event("ondblclick"); @container.wait}
     end
 
-    def replace_method(method)
-      method == 'click' ? 'click!' : method
-    end
-
-    private :replace_method
-
-    def build_method(method_name, *args)
-      arguments = args.map do |argument|
-        if argument.is_a?(String)
-          argument = "'#{argument}'"  
-        else
-          argument = argument.inspect
-        end
-      end
-      "#{replace_method(method_name)}(#{arguments.join(',')})"
-    end
-
-    private :build_method
-
-    def generate_ruby_code(element, method_name, *args)
-      # needs to be done like this to avoid segfault on ruby 1.9.3
-      tag_name = @specifiers[:tag_name].join("' << '")
-      element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{unique_number})"
-      method = build_method(method_name, *args)
-      ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
-                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
-      ruby_code
-    end
-
-    private :generate_ruby_code
-
-    def spawned_no_wait_command(command)
-      command = "-e #{command.inspect}"
-      unless $DEBUG
-        "start rubyw #{command}"
-      else
-        puts "#no_wait command:"
-        command = "ruby #{command}"
-        puts command
-        command
-      end
-    end
-
-    private :spawned_no_wait_command
-
-    # @private
-    def click!
-      perform_action do
-        # Not sure why but in IE9 Document mode, passing a parameter
-        # to click seems to work. Firing the onClick event breaks other tests
-        # so this seems to be the safest change and also works fine in IE8
-        ole_object.click(0)
-      end
-    end
-
     # Flash the element the specified number of times for troubleshooting purposes.
     # @param [Fixnum] number Number times to flash the element.
     # @macro exists
@@ -331,50 +197,6 @@ module Watir
     def fire_event(event)
       perform_action {dispatch_event(event); @container.wait}
     end
-
-    # @private
-    def dispatch_event(event)
-      if IE.version_parts.first.to_i >= 9 && container.page_container.document.documentMode.to_i >= 9
-        ole_object.dispatchEvent(create_event(event))
-      else
-        ole_object.fireEvent(event)
-      end
-    end
-
-    # @private
-    def create_event(event)
-     event =~ /on(.*)/i
-     event = $1 if $1
-     event.downcase!
-     # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
-     case event
-       when 'abort', 'blur', 'change', 'error', 'focus', 'load',
-            'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
-         event_name = :initEvent
-         event_type = 'HTMLEvents'
-         event_args = [event, true, true]
-       when 'select'
-         event_name = :initUIEvent
-         event_type = 'UIEvent'
-         event_args = [event, true, true, @container.page_container.document.parentWindow.window,0]
-       when 'keydown', 'keypress', 'keyup'
-         event_name = :initKeyboardEvent
-         event_type = 'KeyboardEvent'
-         # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
-         event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
-       when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
-            'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
-         event_name = :initMouseEvent
-         event_type = 'MouseEvents'
-         # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
-         event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
-       else
-         raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
-     end
-     event = @container.page_container.document.createEvent(event_type)
-     event.send event_name, *event_args
-     event
-   end
 
     # Set focus on the element.
     # @macro exists
@@ -454,17 +276,6 @@ module Watir
       ole_object.getAttribute(attribute_name)
     end
 
-    def perform_action
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      yield
-    ensure
-      highlight(:clear)
-    end
-
-    private :perform_action
-
     # Make it possible to use *_no_wait commands and retrieve element html5 data-attribute
     # values.
     #
@@ -486,6 +297,178 @@ module Watir
         super
       end
     end
-      
+
+    # @private
+    def locate
+      @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
+    end  
+
+    # @private
+    def __ole_inner_elements
+      assert_exists
+      ole_object.all
+    end
+
+    # @private
+    def document
+      assert_exists
+      ole_object
+    end
+
+    # @private
+    def assert_exists
+      locate
+      unless ole_object
+        exception_class = self.is_a?(Frame) ? UnknownFrameException : UnknownObjectException
+        raise exception_class.new(Watir::Exception.message_for_unable_to_locate(@specifiers))
+      end
+    end
+
+    # @private
+    def assert_enabled
+      raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled" unless enabled?
+    end
+
+    # @private
+    def typingspeed
+      @container.typingspeed
+    end
+
+    # @private
+    def type_keys
+      @type_keys || @container.type_keys
+    end
+
+    # @private
+    def active_object_highlight_color
+      @container.active_object_highlight_color
+    end
+
+    # @private
+    def click!
+      perform_action do
+        # Not sure why but in IE9 Document mode, passing a parameter
+        # to click seems to work. Firing the onClick event breaks other tests
+        # so this seems to be the safest change and also works fine in IE8
+        ole_object.click(0)
+      end
+    end
+
+    # @private
+    def dispatch_event(event)
+      if IE.version_parts.first.to_i >= 9 && container.page_container.document.documentMode.to_i >= 9
+        ole_object.dispatchEvent(create_event(event))
+      else
+        ole_object.fireEvent(event)
+      end
+    end
+
+    private
+
+    def create_event(event)
+      event =~ /on(.*)/i
+      event = $1 if $1
+      event.downcase!
+      # See http://www.howtocreate.co.uk/tutorials/javascript/domevents
+      case event
+      when 'abort', 'blur', 'change', 'error', 'focus', 'load',
+        'reset', 'resize', 'scroll', 'select', 'submit', 'unload'
+        event_name = :initEvent
+        event_type = 'HTMLEvents'
+        event_args = [event, true, true]
+      when 'select'
+        event_name = :initUIEvent
+        event_type = 'UIEvent'
+        event_args = [event, true, true, @container.page_container.document.parentWindow.window,0]
+      when 'keydown', 'keypress', 'keyup'
+        event_name = :initKeyboardEvent
+        event_type = 'KeyboardEvent'
+        # 'type', bubbles, cancelable, windowObject, ctrlKey, altKey, shiftKey, metaKey, keyCode, charCode
+        event_args = [event, true, true, @container.page_container.document.parentWindow.window, false, false, false, false, 0, 0]
+      when 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+        'contextmenu', 'drag', 'dragstart', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'selectstart'
+        event_name = :initMouseEvent
+        event_type = 'MouseEvents'
+        # 'type', bubbles, cancelable, windowObject, detail, screenX, screenY, clientX, clientY, ctrlKey, altKey, shiftKey, metaKey, button, relatedTarget
+        event_args = [event, true, true, @container.page_container.document.parentWindow.window, 1, 0, 0, 0, 0, false, false, false, false, 0, @container.page_container.document]
+      else
+        raise UnhandledEventException, "Don't know how to trigger event '#{event}'"
+      end
+      event = @container.page_container.document.createEvent(event_type)
+      event.send event_name, *event_args
+      event
+    end
+
+    # Return an array with many of the properties, in a format to be used by the to_s method
+    def string_creator
+      n = []
+      n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
+      n
+    end
+
+    # This method is responsible for setting and clearing the colored highlighting on the currently active element.
+    # use :set   to set the highlight
+    #   :clear  to clear the highlight
+    # @todo Make this two methods: set_highlight & clear_highlight
+    def highlight(set_or_clear)
+      if set_or_clear == :set
+        @original_color ||= ole_object.style.backgroundColor
+        ole_object.style.backgroundColor = @container.active_object_highlight_color
+      else
+        ole_object.style.backgroundColor = @original_color if @original_color
+      end
+    rescue
+      # we could be here for a number of reasons...
+      # e.g. page may have reloaded and the reference is no longer valid
+    ensure
+      @original_color = nil
+    end
+
+    def replace_method(method)
+      method == 'click' ? 'click!' : method
+    end
+
+    def build_method(method_name, *args)
+      arguments = args.map do |argument|
+        if argument.is_a?(String)
+          argument = "'#{argument}'"  
+        else
+          argument = argument.inspect
+        end
+      end
+      "#{replace_method(method_name)}(#{arguments.join(',')})"
+    end
+
+    def generate_ruby_code(element, method_name, *args)
+      # needs to be done like this to avoid segfault on ruby 1.9.3
+      tag_name = @specifiers[:tag_name].join("' << '")
+      element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{unique_number})"
+      method = build_method(method_name, *args)
+      ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
+                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
+      ruby_code
+    end
+
+    def spawned_no_wait_command(command)
+      command = "-e #{command.inspect}"
+      unless $DEBUG
+        "start rubyw #{command}"
+      else
+        puts "#no_wait command:"
+        command = "ruby #{command}"
+        puts command
+        command
+      end
+    end
+
+    def perform_action
+      assert_exists
+      assert_enabled
+      highlight(:set)
+      yield
+    ensure
+      highlight(:clear)
+    end
+
   end
 end  

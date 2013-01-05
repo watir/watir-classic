@@ -3,7 +3,6 @@
 require 'timeout'
 require 'watir-classic/win32ole'
 
-# these are required already in commonwatir-classic, but not when using click_no_wait!
 require 'watir-classic/util'
 require 'watir-classic/exceptions'
 require 'watir-classic/matches'
