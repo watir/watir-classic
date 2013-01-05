@@ -3,12 +3,12 @@ module Watir
   # Returned by {Container#form}.
   class Form < Element
 
+    attr_ole :action
+
     def initialize(container, specifiers)
       super
       copy_test_config container
     end
-
-    attr_ole :action
 
     # @return [String] form name attribute value. Will be empty string if does not
     #   exist.

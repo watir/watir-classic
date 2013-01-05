@@ -13,6 +13,24 @@ module Watir
       copy_test_config container
     end
     
+    # @return [WIN32OLE] frame's document object.
+    # @raise [FrameAccessDeniedException] when IE security settings won't allow
+    #   to access the frame
+    # @macro exists
+    def document
+      assert_exists
+      if @document
+        @document
+      else
+        raise FrameAccessDeniedException, "IE will not allow access to this frame for security reasons. You can work around this with ie.goto(frame.src)"
+      end
+    end
+
+    # @private
+    def attach_command
+      @container.page_container.attach_command + ".frame(:unique_number => #{unique_number})"
+    end
+
     # Find the frame denoted by specifiers in the container and return its ole_object
     # @private
     def locate
@@ -32,24 +50,6 @@ module Watir
     # @private
     def __ole_inner_elements
       document.body.all
-    end
-
-    # @return [WIN32OLE] frame's document object.
-    # @raise [FrameAccessDeniedException] when IE security settings won't allow
-    #   to access the frame
-    # @macro exists
-    def document
-      assert_exists
-      if @document
-        @document
-      else
-        raise FrameAccessDeniedException, "IE will not allow access to this frame for security reasons. You can work around this with ie.goto(frame.src)"
-      end
-    end
-
-    # @private
-    def attach_command
-      @container.page_container.attach_command + ".frame(:unique_number => #{unique_number})"
     end
 
   end
