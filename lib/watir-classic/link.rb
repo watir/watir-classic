@@ -21,6 +21,13 @@ module Watir
         return ""
       end
     end
+
+    def to_s
+      assert_exists
+      r = string_creator
+      r = r + link_string_creator
+      return r.join("\n")
+    end
     
     # @private
     def link_string_creator
@@ -31,13 +38,6 @@ module Watir
       return n
     end
     
-    def to_s
-      assert_exists
-      r = string_creator
-      r = r + link_string_creator
-      return r.join("\n")
-    end
-
   end
   
 end
