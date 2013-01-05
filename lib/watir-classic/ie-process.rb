@@ -16,6 +16,7 @@ module Watir
       def initialize process_id
         @process_id = process_id
       end
+
       attr_reader :process_id
       
       def window
