@@ -1,6 +1,5 @@
 require 'watir-classic'
 require 'watir-classic/core'
-require 'watir-classic/close_all'
 require 'watir-classic/ie-process'
 require 'watir-classic/screenshot'
 require 'multi_json'      
