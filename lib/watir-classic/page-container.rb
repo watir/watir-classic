@@ -4,13 +4,6 @@ module Watir
   module PageContainer
     include Watir::Exception
 
-    # The HTML Page
-    def page
-      document.documentelement
-    end
-
-    private :page
-
     # Execute the given JavaScript string in the context of the current page.
     #
     # @example
@@ -55,12 +48,6 @@ module Watir
       page.innertext.strip
     end
 
-    # @private
-    def set_container container
-      @container = container
-      @page_container = self
-    end
-
     # @deprecated Use "browser.text.include?(target)" or "browser.text.match(target)"
     def contains_text(target)
       if target.kind_of? Regexp
@@ -71,6 +58,14 @@ module Watir
         raise ArgumentError, "Argument #{target} should be a string or regexp."
       end
     end
+
+    # @private
+    def set_container container
+      @container = container
+      @page_container = self
+    end
+
+    private
 
     def with_json2_if_needed source
       %Q[
@@ -87,7 +82,10 @@ module Watir
       ]
     end
 
-    private :with_json2_if_needed
+    # The HTML Page
+    def page
+      document.documentelement
+    end
 
   end # module
 end
