@@ -1,21 +1,21 @@
 # @private
 class String
   def matches(x)
-    return self == x
+    self == x
   end
 end
 
 # @private
 class Regexp
   def matches(x)
-    return self.match(x)
+    self.match(x)
   end
 end
 
 # @private
 class Integer
   def matches(x)
-    return self == x
+    self == x
   end
 end
 
