@@ -106,16 +106,6 @@ module Watir
         ie
       end
 
-      # Return an IE object that wraps the given window, typically obtained from
-      # Shell.Application.windows.
-      # @private
-      def bind(window)
-        ie = new true
-        ie.ie = window
-        ie.initialize_options
-        ie
-      end
-
       # Yields successively to each IE window on the current desktop. Takes a block.
       # @note This method will not work when
       #   Watir/Ruby is run under a service (instead of a user).
@@ -156,6 +146,16 @@ module Watir
       def find(how, what)
         ie_ole = _find(how, what)
         bind ie_ole if ie_ole
+      end
+
+      # Return an IE object that wraps the given window, typically obtained from
+      # Shell.Application.windows.
+      # @private
+      def bind(window)
+        ie = new true
+        ie.ie = window
+        ie.initialize_options
+        ie
       end
 
       # @private
@@ -223,47 +223,14 @@ module Watir
     # The list of unique urls that have been visited.
     attr_reader :url_list
 
+    # @private
+    attr_writer :hwnd
+
     # Create an IE browser instance.
     # @param [Boolean] suppress_new_window set to true for not creating a IE
     #   window.
     def initialize(suppress_new_window=nil)
       _new_window_init unless suppress_new_window
-    end
-
-    # @private
-    def _new_window_init
-      create_browser_window
-      initialize_options
-      goto 'about:blank' # this avoids numerous problems caused by lack of a document
-    end
-
-    # @private
-    def _new_process_init
-      iep = Process.start
-      @ie = iep.window
-      @process_id = iep.process_id
-      initialize_options
-      goto 'about:blank'
-    end
-
-    # this method is used internally to attach to an existing window
-    # @private
-    def _attach_init how, what
-      attach_browser_window how, what
-      initialize_options
-      wait
-    end
-
-    # @private
-    def initialize_options
-      self.visible = IE.visible
-      self.speed = IE.speed
-
-      @ole_object = nil
-      @page_container = self
-      @error_checkers = []
-      @active_object_highlight_color = HIGHLIGHT_COLOR
-      @url_list = []
     end
 
     # Specifies the speed that commands will be executed at.
@@ -336,9 +303,6 @@ module Watir
       raise "Not attached to a browser" if @ie.nil?
       @hwnd ||= @ie.hwnd
     end
-
-    # @private
-    attr_writer :hwnd
 
     # @return [Symbol] the name of the browser. Is always :ie.
     def name
@@ -458,6 +422,7 @@ module Watir
     def active?
       rautomation.active?
     end
+
     alias :front? :active?
 
     # @return [RAutomation::Window] the RAutomation instance for this IE window.
@@ -480,11 +445,6 @@ module Watir
     # @see https://github.com/jarmo/RAutomation/blob/master/lib/rautomation/adapter/win_32/window.rb RAutomation::Window#send_keys documentation.
     def send_keys(*keys)
       rautomation.send_keys *keys
-    end
-
-    # @private
-    def dir
-      File.expand_path(File.dirname(__FILE__))
     end
 
     #
@@ -539,6 +499,71 @@ module Watir
     # Retrieve {Cookies} instance.
     def cookies
       Cookies.new(self)
+    end
+
+    # Add an error checker that gets executed after every page load, click etc.
+    #
+    # @example
+    #   browser.add_checker lambda { |browser| raise "Error!" if browser.text.include? "Error" }
+    #
+    # @param [Proc] checker Proc object which gets yielded with {IE} instance.
+    def add_checker(checker)
+      @error_checkers << checker
+    end
+
+    # Disable an error checker added via {#add_checker}.
+    #
+    # @param [Proc] checker Proc object to be removed from error checkers.
+    def disable_checker(checker)
+      @error_checkers.delete(checker)
+    end
+
+    # Gives focus to the window frame.
+    def focus
+      active_element = document.activeElement
+      active_element.blur unless active_element.tagName == "BODY"
+      document.focus
+    end
+
+    # @private
+    def attach_command
+      "Watir::IE.attach(:hwnd, #{hwnd})"
+    end
+
+    # @private
+    def _new_window_init
+      create_browser_window
+      initialize_options
+      goto 'about:blank' # this avoids numerous problems caused by lack of a document
+    end
+
+    # @private
+    def _new_process_init
+      iep = Process.start
+      @ie = iep.window
+      @process_id = iep.process_id
+      initialize_options
+      goto 'about:blank'
+    end
+
+    # this method is used internally to attach to an existing window
+    # @private
+    def _attach_init how, what
+      attach_browser_window how, what
+      initialize_options
+      wait
+    end
+
+    # @private
+    def initialize_options
+      self.visible = IE.visible
+      self.speed = IE.speed
+
+      @ole_object = nil
+      @page_container = self
+      @error_checkers = []
+      @active_object_highlight_color = HIGHLIGHT_COLOR
+      @url_list = []
     end
 
     #
@@ -610,35 +635,6 @@ module Watir
       @error_checkers.each { |e| e.call(self) }
     end
 
-    # Add an error checker that gets executed after every page load, click etc.
-    #
-    # @example
-    #   browser.add_checker lambda { |browser| raise "Error!" if browser.text.include? "Error" }
-    #
-    # @param [Proc] checker Proc object which gets yielded with {IE} instance.
-    def add_checker(checker)
-      @error_checkers << checker
-    end
-
-    # Disable an error checker added via {#add_checker}.
-    #
-    # @param [Proc] checker Proc object to be removed from error checkers.
-    def disable_checker(checker)
-      @error_checkers.delete(checker)
-    end
-
-    # Gives focus to the window frame.
-    def focus
-      active_element = document.activeElement
-      active_element.blur unless active_element.tagName == "BODY"
-      document.focus
-    end
-
-    # @private
-    def attach_command
-      "Watir::IE.attach(:hwnd, #{hwnd})"
-    end
-
     private
 
     def create_browser_window
@@ -657,6 +653,7 @@ module Watir
       end
       @ie = ieTemp
     end
+
 
   end # class IE
 end
