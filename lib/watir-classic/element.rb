@@ -190,8 +190,8 @@ module Watir
     end
 
     # @private
-    def activeObjectHighLightColor
-      @container.activeObjectHighLightColor
+    def active_object_highlight_color
+      @container.active_object_highlight_color
     end
 
     # Return an array with many of the properties, in a format to be used by the to_s method
@@ -215,7 +215,7 @@ module Watir
     def highlight(set_or_clear)
       if set_or_clear == :set
         @original_color ||= ole_object.style.backgroundColor
-        ole_object.style.backgroundColor = @container.activeObjectHighLightColor
+        ole_object.style.backgroundColor = @container.active_object_highlight_color
       else
         ole_object.style.backgroundColor = @original_color if @original_color
       end

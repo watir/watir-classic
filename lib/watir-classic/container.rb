@@ -30,7 +30,7 @@ module Watir
 
     # The color we want to use for the active object. This can be any valid web-friendly color.
     # @private
-    attr_accessor :activeObjectHighLightColor
+    attr_accessor :active_object_highlight_color
 
     # The {Browser} object containing this element.
     attr_accessor :page_container
@@ -39,7 +39,7 @@ module Watir
     def copy_test_config(container) # only used by form and frame
       @typingspeed = container.typingspeed
       @type_keys = container.type_keys
-      @activeObjectHighLightColor = container.activeObjectHighLightColor
+      @active_object_high_light_color = container.active_object_highlight_color
     end
     private :copy_test_config
     

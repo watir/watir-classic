@@ -194,7 +194,7 @@ module Watir
       @ole_object = nil
       @page_container = self
       @error_checkers = []
-      @activeObjectHighLightColor = HIGHLIGHT_COLOR
+      @active_object_highlight_color = HIGHLIGHT_COLOR
       @url_list = []
     end
 

@@ -67,7 +67,7 @@ module Watir
         begin
           original_color = element.style.backgroundColor
           original_color = "" if original_color==nil
-          element.style.backgroundColor = activeObjectHighLightColor
+          element.style.backgroundColor = active_object_highlight_color
         rescue => e
           puts e
           puts e.backtrace.join("\n")
