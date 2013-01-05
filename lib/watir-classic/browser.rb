@@ -1,4 +1,3 @@
-# watir-classic/browser
 require 'watir-classic/options'
 module Watir
   
