@@ -11,74 +11,82 @@ Watir drives browsers the same way people do. It clicks links, fills in forms,
 presses buttons. Watir also checks results, such as whether expected text 
 appears on a page.
 
-The Watir family currently includes support for Internet Explorer (on Windows),
-Firefox (on Windows, Mac and Linux) and Safari (on Mac). 
+The Watir Classic is a driver for Internet Explorer (on Windows).
 
-Project Homepage: http://wtr.rubyforge.org
+Project Homepage: http://watir.com
 
-This Browser module provides a generic interface
-that tests can use to access any browser. The actual browser (and thus
-the actual Watir driver) is determined at runtime based on configuration
-settings.
+@example usage
 
   require 'watir-classic'
   browser = Watir::Browser.new
   browser.goto 'http://google.com'
-  browser.text_field(:name, 'q').set 'pickaxe'  
-  browser.button(:name, 'btnG').click
+  browser.text_field(:name => 'q').set 'pickaxe'  
+  browser.button(:name => 'btnG').click
   if browser.text.include? 'Programming Ruby'
     puts 'Text was found'
   else
     puts 'Text was not found'
   end
 
-A comprehensive summary of the Watir API can be found here
-http://wiki.openqa.org/display/WTR/Methods+supported+by+Element
-
-There are two ways to configure the browser that will be used by your tests.
-
-One is to set the +watir_browser+ environment variable to +ie+ or +firefox+. 
-(How you do this depends on your platform.)
-
-The other is to create a file that looks like this.
-
-  browser: ie
-
-And then to add this line to your script, after the require statement and 
-before you invoke Browser.new.
-
-  Watir.options_file = 'path/to/the/file/you/just/created'
-
 =end rdoc
   
   class Browser
+    # @private
     @@browser_classes = {}
+
+    # @private
     @@sub_options = {}
+
+    # @private
     @@default = nil
+
     class << self
 
-      # Create a new instance of a browser driver, as determined by the
-      # configuration settings. (Don't be fooled: this is not actually 
-      # an instance of Browser class.)
-      def new ignored=nil # argument is needed to make watir-classic more compatible with watir-webdriver
+      # Create a new instance of the {Browser} object
+      # @param [Object] ignored Argument is only needed to make
+      #   watir-classic more compatible with watir-webdriver and is really ignored.
+      def new(ignored=nil)
         set_sub_options
         klass.new
       end
-      # Create a new instance as with #new and start the browser on the
+
+      # Create a new {Browser} instance as with {.new} and start the browser on the
       # specified url.
-      def start url
+      # @param [String] url Url to start the browser at.
+      def start(url)
         set_sub_options
         klass.start url
       end
-      # Attach to an existing browser.
+
+      # Attach to an existing IE {Browser}.
+      #
+      # @example Attach with full title:
+      #   Watir::Browser.attach(:title, "Full title of IE")
+      #
+      # @example Attach with part of the title using {Regexp}:
+      #   Watir::Browser.attach(:title, /part of the title of IE/)
+      #
+      # @example Attach with part of the url:
+      #   Watir::Browser.attach(:url, /google/)
+      #
+      # @example Attach with window handle:
+      #   Watir::Browser.attach(:hwnd, 123456)
+      #
+      # @param [Symbol] how type of the locator. Can be :title, :url or :hwnd.
+      # @param [Symbol] what value of the locator. Can be {String}, {Regexp} or {Fixnum}
+      #   depending of the type parameter.
       def attach(how, what)
         set_sub_options
         klass.attach(how, what)
       end
-      def set_options options
+      
+      # Set options for the {Browser}.
+      def set_options(options)
         return unless klass.respond_to?(:set_options)
         klass.set_options options
       end
+
+      # @return [Hash] options of the {Browser}.
       def options
         return {} unless klass.respond_to?(:options)
         klass.options
@@ -89,11 +97,14 @@ before you invoke Browser.new.
         eval @@browser_classes[key] # this triggers the autoload
       end
       private :klass
+
       # Add support for the browser option, using the specified class, 
       # provided as a string. Optionally, additional options supported by
       # the class can be specified as an array of symbols. Options specified
       # by the user and included in this list will be passed (as a hash) to 
       # the set_options class method (if defined) before creating an instance.
+      # @todo remove this and autoloading since now only IE is supported.
+      # @private
       def support hash_args
         option = hash_args[:name]
         class_string = hash_args[:class]
@@ -108,26 +119,37 @@ before you invoke Browser.new.
         activate_gem gem, option
       end
       
+      # @private
       def default
         @@default
       end
+
       # Specifies a default browser. Must be specified before options are parsed.
+      # @todo remove this since only IE is supported.
+      # @private
       def default= option
         @@default = option
       end
+
       # Returns the names of the browsers that are supported by this module.
       # These are the options for 'watir_browser' (env var) or 'browser:' (yaml).
+      # @todo remove this since only IE is supported.
+      # @private
       def browser_names
         @@browser_classes.keys
       end      
       
       private
+
+      # @todo remove this since only IE is supported.
       def autoload class_string, library
         mod, klass = class_string.split('::')
         eval "module ::#{mod}; autoload :#{klass}, '#{library}'; end"
       end
+
       # Activate the gem (if installed). The default browser will be set
       # to the first gem that activates.
+      # @todo remove this since only IE is supported.
       def activate_gem gem_name, option
         begin
           gem gem_name 
@@ -135,6 +157,8 @@ before you invoke Browser.new.
         rescue Gem::LoadError
         end
       end
+
+      # @todo remove this since only IE is supported.
       def set_sub_options
         sub_options = @@sub_options[Watir.options[:browser]]
         return if sub_options.nil?

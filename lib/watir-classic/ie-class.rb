@@ -1,4 +1,5 @@
 module Watir
+  # Main browser class.
   class IE
     include WaitHelper
     include Exception
@@ -62,63 +63,69 @@ module Watir
       self.zero_based_indexing ? 0 : 1
     end  
 
-    # Used internally to determine when IE has finished loading a page
+    # Used internally to determine when IE has finished loading a page.
+    # @private
     READYSTATES = {:complete => 4}
 
     # The default color for highlighting objects as they are accessed.
+    # @private
     HIGHLIGHT_COLOR = 'yellow'
 
-    # The time, in seconds, it took for the new page to load after executing the
-    # the last command
+    # The time, in seconds, it took for the new page to load after executing
+    # the last command.
     attr_reader :down_load_time
 
-    # the OLE Internet Explorer object
+    # The OLE Internet Explorer object.
     attr_accessor :ie
 
-    # this contains the list of unique urls that have been visited
+    # The list of unique urls that have been visited.
     attr_reader :url_list
 
-    # Create a new IE window. Works just like IE.new in Watir 1.4.
+    # Create a new IE window.
     def self.new_window
       ie = new true
       ie._new_window_init
       ie
     end
 
-    # Create an IE browser.
-    def initialize suppress_new_window=nil
+    # Create an IE browser instance.
+    # @param [Boolean] suppress_new_window set to true for not creating a IE
+    #   window.
+    def initialize(suppress_new_window=nil)
       _new_window_init unless suppress_new_window
     end
 
+    # @private
     def _new_window_init
       create_browser_window
       initialize_options
       goto 'about:blank' # this avoids numerous problems caused by lack of a document
     end
 
-    # Create a new IE Window, starting at the specified url.
-    # If no url is given, start empty.
-    def self.start url=nil
+    # Create a new IE, starting at the specified url.
+    # @param [String] url url to navigate to.
+    def self.start(url=nil)
       start_window url
     end
 
     # Create a new IE window, starting at the specified url.
-    # If no url is given, start empty. Works like IE.start in Watir 1.4.
-    def self.start_window url=nil
+    # @param [String] url url to navigate to.
+    def self.start_window(url=nil)
       ie = new_window
       ie.goto url if url
       ie
     end
 
     # Create a new IE window in a new process. 
-    # This method will not work when
-    # Watir/Ruby is run under a service (instead of a user).
+    # @note This method will not work when
+    #   Watir/Ruby is run under a service (instead of a user).
     def self.new_process
       ie = new true
       ie._new_process_init
       ie
     end
 
+    # @private
     def _new_process_init
       iep = Process.start
       @ie = iep.window
@@ -128,29 +135,41 @@ module Watir
     end
 
     # Create a new IE window in a new process, starting at the specified URL. 
-    # Same as IE.start.
-    def self.start_process url=nil
+    # @param [String] url url to navigate to.
+    def self.start_process(url=nil)
       ie = new_process
       ie.goto url if url
       ie
     end
 
-    # Return a Watir::IE object for an existing IE window. Window can be
-    # referenced by url, title, or window handle.
-    # Second argument can be either a string or a regular expression in the 
-    # case of of :url or :title. 
-    # IE.attach(:url, 'http://www.google.com')
-    # IE.attach(:title, 'Google')
-    # IE.attach(:hwnd, 528140)
-    # This method will not work when
-    # Watir/Ruby is run under a service (instead of a user).
-    def self.attach how, what
+    # Attach to an existing IE {Browser}.
+    #
+    # @example Attach with full title:
+    #   Watir::Browser.attach(:title, "Full title of IE")
+    #
+    # @example Attach with part of the title using {Regexp}:
+    #   Watir::Browser.attach(:title, /part of the title of IE/)
+    #
+    # @example Attach with part of the url:
+    #   Watir::Browser.attach(:url, /google/)
+    #
+    # @example Attach with window handle:
+    #   Watir::Browser.attach(:hwnd, 123456)
+    #
+    # @param [Symbol] how type of the locator. Can be :title, :url or :hwnd.
+    # @param [Symbol] what value of the locator. Can be {String}, {Regexp} or {Fixnum}
+    #   depending of the type parameter.
+    #
+    # @note This method will not work when
+    #   Watir/Ruby is run under a service (instead of a user).
+    def self.attach(how, what)
       ie = new true # don't create window
       ie._attach_init(how, what)
       ie
     end
 
     # this method is used internally to attach to an existing window
+    # @private
     def _attach_init how, what
       attach_browser_window how, what
       initialize_options
@@ -159,13 +178,15 @@ module Watir
 
     # Return an IE object that wraps the given window, typically obtained from
     # Shell.Application.windows.
-    def self.bind window
+    # @private
+    def self.bind(window)
       ie = new true
       ie.ie = window
       ie.initialize_options
       ie
     end
 
+    # @private
     def initialize_options
       self.visible = IE.visible
       self.speed = IE.speed
@@ -177,60 +198,74 @@ module Watir
       @url_list = []
     end
 
-    # Specifies the speed that commands will be executed at. Choices are:
+    # Specifies the speed that commands will be executed at.
+    # Possible choices are:
     # * :slow (default)
     # * :fast 
     # * :zippy
-    # With IE#speed=  :zippy, text fields will be entered at once, instead of
-    # character by character (default).
-    def speed= how_fast
+    # 
+    # With :zippy, text fields will be entered at once, instead of
+    # character by character.
+    #
+    # @note :zippy speed does not trigger JavaScript events like onChange etc.
+    #
+    # @param [Symbol] how_fast possible choices are :slow (default), :fast and
+    #   :zippy
+    # @raise [ArgumentError] when invalid speed is specified.
+    def speed=(how_fast)
       case how_fast
-      when :zippy then
+      when :zippy
         @typingspeed = 0
         @pause_after_wait = 0.01
         @type_keys = false
         @speed = :fast
-      when :fast then
+      when :fast
         @typingspeed = 0
         @pause_after_wait = 0.01
         @type_keys = true
         @speed = :fast
-      when :slow then
+      when :slow
         @typingspeed = 0.08
         @pause_after_wait = 0.1
         @type_keys = true
         @speed = :slow
       else
-        raise ArgumentError, "Invalid speed: #{how_fast}"
+        raise ArgumentError, "Invalid speed: #{how_fast}. Possible choices are :slow, :fast and :zippy."
       end
     end
 
+    # @return [Symbol] current speed setting. May be :slow, :fast or :zippy.
     def speed
       return @speed if @speed == :slow
       return @type_keys ? :fast : :zippy
     end
 
-    # deprecated: use speed = :fast instead
+    # @deprecated Use {#speed=} with :fast argument instead.
     def set_fast_speed
       self.speed = :fast
     end
 
-    # deprecated: use speed = :slow instead    
+    # @deprecated Use {#speed=} with :slow argument instead.
     def set_slow_speed
       self.speed = :slow
     end
 
+    # @return [Boolean] true when window is visible, false otherwise.
     def visible
       @ie.visible
     end
+    
+    # Set the visibility of IE window.
+    # @param [Boolean] boolean set to true if IE window should be visible, false
+    #   otherwise.
     def visible=(boolean)
       @ie.visible = boolean if boolean != @ie.visible
     end
 
     # Yields successively to each IE window on the current desktop. Takes a block.
-    # This method will not work when
-    # Watir/Ruby is run under a service (instead of a user).
-    # Yields to the window and its hwnd.
+    # @note This method will not work when
+    #   Watir/Ruby is run under a service (instead of a user).
+    # @yieldparam [IE] ie instances of IE found.
     def self.each
       shell = WIN32OLE.new('Shell.Application')
       ie_browsers = []
@@ -246,6 +281,7 @@ module Watir
       end
     end
 
+    # @return [String] the IE browser version number as a string.
     def self.version
       @ie_version ||= begin
                         require 'win32/registry'
@@ -256,27 +292,24 @@ module Watir
                       end
     end
 
+    # @return [Array<String>] the IE browser version numbers split by "." in an Array.
     def self.version_parts
       version.split('.')
     end
 
-    # return internet explorer instance as specified. if none is found,
-    # return nil.
-    # arguments:
-    #   :url, url -- the URL of the IE browser window
-    #   :title, title -- the title of the browser page
-    #   :hwnd, hwnd -- the window handle of the browser window.
-    # This method will not work when
-    # Watir/Ruby is run under a service (instead of a user).
+    # Find existing IE window with locators.
+    # @see .attach
     def self.find(how, what)
       ie_ole = IE._find(how, what)
       IE.bind ie_ole if ie_ole
     end
 
+    # @private
     def self._find(how, what)
       self._find_all(how, what).first
     end
 
+    # @private
     def self._find_all(how, what)
       ies = []
       count = -1
@@ -316,37 +349,37 @@ module Watir
       ies
     end
 
-    # Return the current window handle
+    # @return [Fixnum] current IE window handle.
+    # @raise [RuntimeError] when not attached to a browser.
     def hwnd
       raise "Not attached to a browser" if @ie.nil?
       @hwnd ||= @ie.hwnd
     end
+
+    # @private
     attr_writer :hwnd
 
+    # @return [Symbol] the name of the browser. Is always :ie.
     def name
       :ie
     end
 
-    # Are we attached to an open browser?
+    # @return [Boolean] true when IE is window exists, false otherwise.
     def exists?
-      begin
-        !!(@ie.name =~ /Internet Explorer/)
-      rescue WIN32OLERuntimeError, NoMethodError
-        false
-      end
+      !!(@ie.name =~ /Internet Explorer/)
+    rescue WIN32OLERuntimeError, NoMethodError
+      false
     end
+
     alias :exist? :exists?
 
-    #
-    # Accessing data outside the document
-    #
-
-    # Return the title of the document
+    # @return [String] the title of the document.
     def title
       @ie.document.title
     end
 
-    # Return the status of the window, typically from the status bar at the bottom.
+    # @return [String] the status text of the window, typically from the status bar at the bottom.
+    #   Will be empty if there's no status or when there are problems accessing status text.
     def status
       @ie.statusText
     rescue WIN32OLERuntimeError
@@ -358,7 +391,8 @@ module Watir
     #
 
     # Navigate to the specified URL.
-    #  * url - string - the URL to navigate to
+    # @param [String] url url to navigate to.
+    # @return [Fixnum] time in seconds the page took to load.
     def goto(url)
       url = "http://" + url unless url =~ %r{://} || url == "about:blank"
       @ie.navigate(url)
@@ -366,22 +400,22 @@ module Watir
       return @down_load_time
     end
 
-    # Go to the previous page - the same as clicking the browsers back button
-    # an WIN32OLERuntimeError exception is raised if the browser cant go back
+    # Go to the previous page - the same as clicking the browsers back button.
+    # @raise [WIN32OLERuntimeError] when the browser can't go back.
     def back
       @ie.GoBack
       wait
     end
 
-    # Go to the next page - the same as clicking the browsers forward button
-    # an WIN32OLERuntimeError exception is raised if the browser cant go forward
+    # Go to the next page - the same as clicking the browsers forward button.
+    # @raise [WIN32OLERuntimeError] when the browser can't go forward.
     def forward
       @ie.GoForward
       wait
     end
 
-    # Refresh the current page - the same as clicking the browsers refresh button
-    # an WIN32OLERuntimeError exception is raised if the browser cant refresh
+    # Refresh the current page - the same as clicking the browsers refresh button.
+    # @raise [WIN32OLERuntimeError] when the browser can't refresh.
     def refresh
       @ie.refresh2(3)
       wait
@@ -391,12 +425,12 @@ module Watir
       '#<%s:0x%x url=%s title=%s>' % [self.class, hash*2, url.inspect, title.inspect]
     end
 
-    # clear the list of urls that we have visited
+    # Clear the list of urls that have been visited.
     def clear_url_list
       @url_list.clear
     end
 
-    # Closes the Browser
+    # Close the {Browser}.
     def close
       return unless exists?
       @ie.stop
@@ -412,91 +446,116 @@ module Watir
       end
     end
 
-    # Maximize the window (expands to fill the screen)
+    # Maximize the window (expands to fill the screen).
     def maximize
       rautomation.maximize
     end
 
-    # Minimize the window (appears as icon on taskbar)
+    # Minimize the window (appears as icon on taskbar).
     def minimize
       rautomation.minimize
     end
 
+    # @return [Boolean] true when window is minimized, false otherwise.
     def minimized?
       rautomation.minimized?
     end
 
-    # Restore the window (after minimizing or maximizing)
+    # Restore the window (after minimizing or maximizing).
     def restore
       rautomation.restore
     end
 
-    # Make the window come to the front
+    # Make the window come to the front.
     def activate
       rautomation.activate
     end
+
     alias :bring_to_front :activate
 
+    # @return [Boolean] true when window is in front e.g. in focus, false otherwise.
     def active?
       rautomation.active?
     end
     alias :front? :active?
 
+    # @return [RAutomation::Window] the RAutomation instance for this IE window.
+    # @see https://github.com/jarmo/rautomation
     def rautomation
       @rautomation ||= ::RAutomation::Window.new(:hwnd => hwnd)
-      @rautomation
     end
 
+    # @deprecated use {#rautomation} instead.
     def autoit
       Kernel.warn "Usage of Watir::IE#autoit method is DEPRECATED! Use Watir::IE#rautomation method instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
       @autoit ||= ::RAutomation::Window.new(:hwnd => hwnd, :adapter => :autoit)
-      @autoit
     end
 
     # Activates the window and sends keys to it.
     #
-    # Example:
-    #   browser.send_keys("Hello World{enter}")
+    # @example
+    #   browser.send_keys("Hello World", :enter)
     #
-    # Refer to RAutomation::Adapter::WinFfi::KeystrokeConverter.convert_special_characters for
-    # special characters conversion.
-    # @see RAutomation::Window#send_keys
+    # @see https://github.com/jarmo/RAutomation/blob/master/lib/rautomation/adapter/win_32/window.rb RAutomation::Window#send_keys documentation.
     def send_keys(*keys)
       rautomation.send_keys *keys
     end
 
+    # @private
     def dir
-      return File.expand_path(File.dirname(__FILE__))
+      File.expand_path(File.dirname(__FILE__))
     end
 
     #
     # Document and Document Data
     #
 
-    # Return the current document
+    # @return [WIN32OLE] current IE document.
     def document
-      return @ie.document
+      @ie.document
     end
 
-    # returns the current url, as displayed in the address bar of the browser
+    # @return [String] current url, as displayed in the address bar of the browser.
     def url
-      return @ie.LocationURL
+      @ie.LocationURL
     end
 
+    # Create a {Screenshot} instance.
     def screenshot
       Screenshot.new(hwnd)
     end
 
+    # Retrieve a {Window} instance.
+    # 
+    # @example Retrieve a different window without block.
+    #   browser.window(:title => /other window title/).use
+    #   browser.title # => "other window title"
+    #
+    # @example Use different window with block.
+    #   browser.window(:title => /other window title/) do
+    #     browser.title # => "other window title"
+    #   end
+    #   browser.title # => "current window title"
+    #
+    # @param [Hash] specifiers options for finding window.
+    # @option specifiers [String,Regexp] :title Title of the window.
+    # @option specifiers [String,Regexp] :url Url of the window.
+    # @option specifiers [Fixnum] :index The index of the window.
+    # @yield yield optionally to the found window.
+    # @return [Window] found window instance.
     def window(specifiers={}, &blk)
       win = Window.new(self, specifiers, &blk)
       win.use &blk if blk
       win
     end
 
-    def windows(specifiers={}, &blk)
-      self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, IE.bind(ie), &blk)}
+    # @see #window
+    # @return [Array<Window>] array of found windows.
+    def windows(specifiers={})
+      self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, IE.bind(ie))}
     end
 
+    # Retrieve {Cookies} instance.
     def cookies
       Cookies.new(self)
     end
@@ -508,9 +567,10 @@ module Watir
     # Block execution until the page has loaded.
     #
     # Will raise Timeout::Error if page hasn't been loaded within 5 minutes.
-    # =nodoc
     # Note: This code needs to be prepared for the ie object to be closed at 
     # any moment!
+    #
+    # @private
     def wait(no_sleep=false)
       @xml_parser_doc = nil
       @down_load_time = 0.0
@@ -562,30 +622,38 @@ module Watir
 
     # Error checkers
 
-    # this method runs the predefined error checks
+    # Run the predefined error checks.
+    #
+    # @private
     def run_error_checks
       @error_checkers.each { |e| e.call(self) }
     end
 
-    # this method is used to add an error checker that gets executed on every page load
-    # *  checker   Proc Object, that contains the code to be run
+    # Add an error checker that gets executed after every page load, click etc.
+    #
+    # @example
+    #   browser.add_checker lambda { |browser| raise "Error!" if browser.text.include? "Error" }
+    #
+    # @param [Proc] checker Proc object which gets yielded with {IE} instance.
     def add_checker(checker)
       @error_checkers << checker
     end
 
-    # this allows a checker to be disabled
-    # *  checker   Proc Object, the checker that is to be disabled
+    # Disable an error checker added via {#add_checker}.
+    #
+    # @param [Proc] checker Proc object to be removed from error checkers.
     def disable_checker(checker)
       @error_checkers.delete(checker)
     end
 
-    # Gives focus to the frame
+    # Gives focus to the window frame.
     def focus
       active_element = document.activeElement
       active_element.blur unless active_element.tagName == "BODY"
       document.focus
     end
 
+    # @private
     def attach_command
       "Watir::IE.attach(:hwnd, #{hwnd})"
     end

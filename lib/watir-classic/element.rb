@@ -11,6 +11,7 @@ module Watir
     attr_accessor :container
 
     # number of spaces that separate the property from the value in the to_s method
+    # @private
     TO_S_SIZE = 14
 
     def initialize(container, specifiers)
@@ -29,15 +30,18 @@ module Watir
 
     alias_method :eql?, :==
 
+    # @private
     def locate
       @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
     end  
 
-    # Return the ole object, allowing any methods of the DOM that Watir doesn't support to be used.
+    # @return [WIN32OLE] OLE object of the element, allowing any methods of the DOM
+    #   that Watir doesn't support to be used.
     def ole_object
       @o
     end
 
+    # @private
     def ole_object=(o)
       @o = o
     end
@@ -48,6 +52,14 @@ module Watir
 
     private
 
+    # @!macro attr_ole
+    #   @!method $1
+    #   Retrieve element's $1 from the $2 OLE method.
+    #   @see http://msdn.microsoft.com/en-us/library/hh773183(v=vs.85).aspx MSDN Documentation
+    #   @return [String, Boolean, Fixnum] element's "$1" attribute value.
+    #     Return type depends of the attribute type.
+    #   @return [String] an empty String if the "$1" attribute does not exist.
+    #   @macro exists
     def self.attr_ole(method_name, ole_method_name=nil)
       class_eval %Q[
         def #{method_name}
@@ -59,6 +71,7 @@ module Watir
 
     public
 
+    # @private
     def assert_exists
       locate
       unless ole_object
@@ -67,28 +80,29 @@ module Watir
       end
     end
 
+    # @private
     def assert_enabled
       raise ObjectDisabledException, "object #{@specifiers.inspect} is disabled" unless enabled?
     end
 
-    # return the id of the element
     attr_ole :id
-    # return the title of the element
     attr_ole :title
-    # return the class name of the element
-    # raise an ObjectNotFound exception if the object cannot be found
     attr_ole :class_name, :className
-    # return the unique COM number for the element
     attr_ole :unique_number, :uniqueNumber
-    # Return the outer html of the object - see http://msdn.microsoft.com/workshop/author/dhtml/reference/properties/outerhtml.asp?frame=true
     attr_ole :html, :outerHTML
 
+    # @return [String] element's html tag name in downcase.
+    # @macro exists
     def tag_name
       assert_exists
       @o.tagName.downcase
     end
 
-    # returns specific Element subclass for current Element
+    # Cast {Element} into specific subclass.
+    # @example Convert div element to {Div} class:
+    #   browser.element(:tag_name => "div").to_subtype # => Watir::Div
+    # @return {Element} element casted into specific sub-class of Element.
+    # @macro exists
     def to_subtype
       assert_exists
 
@@ -106,13 +120,21 @@ module Watir
       end
     end
 
-    # send keys to element
+    # Send keys to the element
+    # @example
+    #   browser.text_field.send_keys "hello", [:control, "a"], :backspace
+    # @param [String, Array<Symbol, String>, Symbol] keys Keys to send to the element.
+    # @see https://github.com/jarmo/RAutomation/blob/master/lib/rautomation/adapter/win_32/window.rb RAutomation::Window#send_keys documentation.
     def send_keys(*keys)
       focus
       page_container.send_keys *keys
     end
 
-    # return the css style as a string
+    # Retrieve element's css style.
+    # @param [String] property When property is specified then only css for that property is returned. 
+    # @return [String] css style as a one long String.
+    # @return [String] css style for specified property if property parameter is specified.
+    # @macro exists
     def style(property=nil)
       assert_exists
       css = ole_object.style.cssText
@@ -125,25 +147,31 @@ module Watir
       end
     end
 
-    # Return the innerText of the object or an empty string if the object is
-    # not visible
-    # Raise an ObjectNotFound exception if the object cannot be found
+    # The text value of the element between html tags.
+    # @return [String] element's text.
+    # @return [String] empty String when element is not visible.
+    # @macro exists
     def text
       assert_exists
       visible? ? ole_object.innerText.strip : ""
     end
 
+    # @private
     def __ole_inner_elements
       assert_exists
       ole_object.all
     end
 
+    # @private
     def document
       assert_exists
       ole_object
     end
 
-    # Return the element immediately containing self. 
+    # Retrieve the element immediately containing self.
+    # @return [Element] parent element of self.
+    # @return [Element] self when parent element does not exist.
+    # @macro exists
     def parent
       assert_exists
       parent_element = ole_object.parentelement
@@ -151,14 +179,17 @@ module Watir
       Element.new(self, :ole_object => parent_element).to_subtype
     end
 
+    # @private
     def typingspeed
       @container.typingspeed
     end
 
+    # @private
     def type_keys
       @type_keys || @container.type_keys
     end
 
+    # @private
     def activeObjectHighLightColor
       @container.activeObjectHighLightColor
     end
@@ -167,62 +198,57 @@ module Watir
     def string_creator
       n = []
       n <<   "id:".ljust(TO_S_SIZE) +         self.id.to_s
-      return n
+      n
     end
 
     private :string_creator
 
-    # Display basic details about the object. Sample output for a button is shown.
-    # Raises UnknownObjectException if the object is not found.
-    #      name      b4
-    #      type      button
-    #      id         b5
-    #      value      Disabled Button
-    #      disabled   true
     def to_s
       assert_exists
-      return string_creator.join("\n")
+      string_creator.join("\n")
     end
 
     # This method is responsible for setting and clearing the colored highlighting on the currently active element.
     # use :set   to set the highlight
     #   :clear  to clear the highlight
-    # TODO: Make this two methods: set_highlight & clear_highlight
-    # TODO: Remove begin/rescue blocks
+    # @todo Make this two methods: set_highlight & clear_highlight
     def highlight(set_or_clear)
       if set_or_clear == :set
-        begin
-          @original_color ||= ole_object.style.backgroundColor
-          ole_object.style.backgroundColor = @container.activeObjectHighLightColor
-        rescue
-          @original_color = nil
-        end
+        @original_color ||= ole_object.style.backgroundColor
+        ole_object.style.backgroundColor = @container.activeObjectHighLightColor
       else
-        begin
-          ole_object.style.backgroundColor = @original_color if @original_color
-        rescue
-          # we could be here for a number of reasons...
-          # e.g. page may have reloaded and the reference is no longer valid
-        ensure
-          @original_color = nil
-        end
+        ole_object.style.backgroundColor = @original_color if @original_color
       end
+    rescue
+      # we could be here for a number of reasons...
+      # e.g. page may have reloaded and the reference is no longer valid
+    ensure
+      @original_color = nil
     end
 
     private :highlight
 
-    #   This method clicks the active element.
-    #   raises: UnknownObjectException  if the object is not found
-    #   ObjectDisabledException if the object is currently disabled
+    # Performs a left click on the element.
+    # Will wait automatically until browser is ready after the click if page load was triggered for example.
+    # @macro exists
+    # @macro enabled
     def click
       click!
       @container.wait
     end
 
+    # Performs a right click on the element.
+    # Will wait automatically until browser is ready after the click if page load was triggered for example.
+    # @macro enabled
+    # @macro exists
     def right_click
       perform_action {fire_event("oncontextmenu"); @container.wait}
     end
 
+    # Performs a double click on the element.
+    # Will wait automatically until browser is ready after the click if page load was triggered for example.
+    # @macro exists
+    # @macro enabled
     def double_click
       perform_action {fire_event("ondblclick"); @container.wait}
     end
@@ -272,6 +298,7 @@ module Watir
 
     private :spawned_no_wait_command
 
+    # @private
     def click!
       perform_action do
         # Not sure why but in IE9 Document mode, passing a parameter
@@ -281,9 +308,10 @@ module Watir
       end
     end
 
-    # Flash the element the specified number of times.
-    # Defaults to 10 flashes.
-    def flash number=10
+    # Flash the element the specified number of times for troubleshooting purposes.
+    # @param [Fixnum] number Number times to flash the element.
+    # @macro exists
+    def flash(number=10)
       assert_exists
       number.times do
         highlight(:set)
@@ -294,14 +322,17 @@ module Watir
       nil
     end
 
-    # Executes a user defined "fireEvent" for objects with JavaScript events tied to them such as DHTML menus.
-    #   usage: allows a generic way to fire javascript events on page objects such as "onMouseOver", "onClick", etc.
-    #   raises: UnknownObjectException  if the object is not found
-    #           ObjectDisabledException if the object is currently disabled
+    # Executes a user defined "fireEvent" for element with JavaScript events.
+    #
+    # @example Fire a onchange event on select_list:
+    #   browser.select_list.fire_event "onchange"
+    #
+    # @macro exists
     def fire_event(event)
       perform_action {dispatch_event(event); @container.wait}
     end
 
+    # @private
     def dispatch_event(event)
       if IE.version_parts.first.to_i >= 9 && container.page_container.document.documentMode.to_i >= 9
         ole_object.dispatchEvent(create_event(event))
@@ -310,6 +341,7 @@ module Watir
       end
     end
 
+    # @private
     def create_event(event)
      event =~ /on(.*)/i
      event = $1 if $1
@@ -344,9 +376,9 @@ module Watir
      event
    end
 
-    # This method sets focus on the active element.
-    #   raises: UnknownObjectException  if the object is not found
-    #           ObjectDisabledException if the object is currently disabled
+    # Set focus on the element.
+    # @macro exists
+    # @macro enabled
     def focus
       assert_exists
       assert_enabled
@@ -354,13 +386,16 @@ module Watir
       ole_object.focus(0)
     end
 
+    # @return [Boolean] true when element is in focus, false otherwise.
+    # @macro exists
+    # @macro enabled
     def focused?
       assert_exists
       assert_enabled
       @page_container.document.activeElement.uniqueNumber == unique_number
     end
 
-    # Returns whether this element actually exists.
+    # @return [Boolean] true when element exists, false otherwise.
     def exists?
       begin
         locate
@@ -372,22 +407,24 @@ module Watir
 
     alias :exist? :exists?
 
-    # Returns true if the element is enabled, false if it isn't.
-    #   raises: UnknownObjectException  if the object is not found
+    # @return [Boolean] true if the element is enabled, false otherwise.
+    # @macro exists
     def enabled?
       assert_exists
       !disabled?
     end
 
+    # @return [Boolean] true if the element is disabled, false otherwise.
+    # @macro exists
     def disabled?
       assert_exists
       false
     end
 
-    # If any parent element isn't visible then we cannot write to the
-    # element. The only realiable way to determine this is to iterate
-    # up the DOM element tree checking every element to make sure it's
-    # visible.
+    # Retrieve the status of element's visibility.
+    # When any parent element is not also visible then the current element is determined as not visible too.
+    # @return [Boolean] true if element is visible, false otherwise.
+    # @macro exists
     def visible?
       # Now iterate up the DOM element tree and return false if any
       # parent element isn't visible 
@@ -409,7 +446,9 @@ module Watir
     end
 
     # Get attribute value for any attribute of the element.
-    # Returns null if attribute doesn't exist.
+    # @return [String] the value of the attribute.
+    # @return [Object] nil if the attribute does not exist.
+    # @macro exists
     def attribute_value(attribute_name)
       assert_exists
       ole_object.getAttribute(attribute_name)
@@ -420,11 +459,20 @@ module Watir
       assert_enabled
       highlight(:set)
       yield
+    ensure
       highlight(:clear)
     end
 
     private :perform_action
 
+    # Make it possible to use *_no_wait commands and retrieve element html5 data-attribute
+    # values.
+    #
+    # @example Use click without waiting:
+    #   browser.button.click_no_wait
+    #
+    # @example Retrieve html5 data attribute value:
+    #   browser.div.data_model # => value of data-model="foo" html attribute
     def method_missing(method_name, *args, &block)
       meth = method_name.to_s
       if meth =~ /(.*)_no_wait/ && self.respond_to?($1)

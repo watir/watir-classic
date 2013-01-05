@@ -3,6 +3,7 @@ require 'dl/struct'
 require 'Win32API'
 
 module Watir
+  # @private
   module Win32
     # this will find the IEDialog.dll file in its build location
     @@iedialog_file = (File.expand_path(File.dirname(__FILE__) + '/..') + "/watir-classic/IEDialog/Release/IEDialog.dll").gsub('/', '\\')

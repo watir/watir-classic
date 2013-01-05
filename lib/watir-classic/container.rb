@@ -1,5 +1,5 @@
 module Watir
-  # This module contains the factory methods that are used to access most html objects
+  # This module contains the factory methods that are used to access all html objects.
   #
   # For example, to access a button on a web page that has the following html
   #  <input type=button name='b1' value='Click Me' onClick='javascript:doSomething()'>
@@ -12,9 +12,7 @@ module Watir
   #
   #  browser.button(:value, 'Click Me').name
   #
-  # there are many methods available to the Button object
-  #--
-  # Is includable for classes that have @container, document and __ole_inner_elements
+  # there are many methods available to the {Button} object
   module Container
     include Watir::Exception
     
@@ -24,11 +22,17 @@ module Watir
     # container of this_thing is the table.
     
     # This is used to change the typing speed when entering text on a page.
+    # @private
     attr_accessor :typingspeed
+
+    # @private
     attr_accessor :type_keys
+
     # The color we want to use for the active object. This can be any valid web-friendly color.
+    # @private
     attr_accessor :activeObjectHighLightColor
-    # The PageContainer object containing this element
+
+    # The {Browser} object containing this element.
     attr_accessor :page_container
     alias_method :browser, :page_container
     
@@ -42,41 +46,46 @@ module Watir
     # Wait until Browser has finished loading the page.
     #--
     # called explicitly by most click and set methods
+    # @private
     def wait(no_sleep=false)
       @container.wait(no_sleep)
     end
     
-    def set_container container #:nodoc:
+    # @private
+    def set_container(container)
       @container = container 
       @page_container = container.page_container
     end
         
     public
 
+    # @return [ModalDialog] modal dialog instance.
     def modal_dialog
       ModalDialog.new(self)
     end
 
+    # Retrieve the JavaScript dialog instance.
+    # Supported dialogs are alert, confirm and prompt.
+    # @return [Alert] JavaScript dialog instance.
     def alert
       Alert.new(self)
     end
 
     # Searching for Page Elements
     # Not for external consumption
-    #
-    #++
+    # @private
     def __ole_inner_elements
-      return document.body.all
+      document.body.all
     end
     
     # Locator Methods
     #
     # Not for external use, but cannot set to private due to usages in Element
     # classes.
-
+    # @private
     def locator_for(locator_class, specifiers, klass)
       locator_class.new self, specifiers, klass
     end
     
-  end # module
+  end
 end

@@ -1,14 +1,13 @@
 # encoding: utf-8
 
 module Watir
-# This assumes that Element#visible? is defined
+  # This module adds some helper methods for asynchronous testing.
   module ElementExtensions
 
-    #
-    # Wraps a {Celerity,Watir}::Element so that any subsequent method calls are
+    # Wraps an {Element} so that any subsequent method calls are
     # put on hold until the element is present on the page.
     #
-
+    # @private
     class WhenPresentDecorator
       def initialize(element, timeout)
         @element = element
@@ -28,26 +27,25 @@ module Watir
 
     end
 
-    #
-    # Returns true if the element exists and is visible on the page
-    #
-
+    # @return [Boolean] true when element exists and is visible, false otherwise.
     def present?
       exists? && visible? rescue false
     end
 
+    # Waits until the element is present before calling its methods.
     #
-    # Waits until the element is present.
+    # @example
+    #   browser.button(:id, 'foo').when_present.click
     #
-    # Optional argument:
+    # @example
+    #   browser.div(:id, 'bar').when_present { |div| ... }
     #
-    #   timeout   -  seconds to wait before timing out (default: 60)
+    # @example
+    #   browser.p(:id, 'baz').when_present(60).text
     #
-    #     browser.button(:id, 'foo').when_present.click
-    #     browser.div(:id, 'bar').when_present { |div| ... }
-    #     browser.p(:id, 'baz').when_present(60).text
-    #
-
+    # @param [Fixnum] timeout seconds to wait before timing out.
+    # @raise [Watir::Wait::TimeoutError] will be raised when element is not
+    #   present within specified timeout.
     def when_present(timeout = 60)
       if block_given?
         Watir::Wait.until(timeout) { self.present? }
@@ -57,10 +55,18 @@ module Watir
       end
     end
 
+    # Wait until element is present before continuing.
+    #
+    # @raise [Watir::Wait::TimeoutError] will be raised when element is not
+    #   present within specified timeout.
     def wait_until_present(timeout = 60)
       Watir::Wait.until(timeout) { self.present? }
     end
 
+    # Wait while element is present before continuing.
+    #
+    # @raise [Watir::Wait::TimeoutError] will be raised when element is still present
+    #   after specified timeout.
     def wait_while_present(timeout = 60)
       Watir::Wait.while(timeout) { self.present? }
     end

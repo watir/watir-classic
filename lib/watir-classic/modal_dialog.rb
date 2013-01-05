@@ -1,4 +1,5 @@
 module Watir
+  # Returned by {Container#modal_dialog}.
   class ModalDialog
     include Container
     include PageContainer
@@ -6,9 +7,10 @@ module Watir
 
     def initialize(container)
       set_container container
-      @modal = ::RAutomation::Window.new(:hwnd=>@container.hwnd).child(:class => 'Internet Explorer_TridentDlgFrame')
+      @modal = ::RAutomation::Window.new(:hwnd => @container.hwnd).child(:class => 'Internet Explorer_TridentDlgFrame')
     end
 
+    # @private
     def locate
       @modal.wait_until_present rescue raise NoMatchingWindowFoundException
 
@@ -29,10 +31,15 @@ module Watir
 
     alias_method :document, :locate
 
+    # @return [String] title of the dialog.
     def title
       document.title
     end
 
+    # Close the modal dialog.
+    #
+    # @param [Fixnum] timeout timeout in seconds to wait until modal dialog is
+    #   successfully closed.
     def close(timeout=5)
       return unless exists?
       document.parentWindow.close
@@ -40,22 +47,27 @@ module Watir
       wait
     end
 
+    # @private
     def attach_command
       "Watir::IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
     end
 
+    # @private
     def wait(no_sleep=false)
       @container.page_container.wait unless exists?
     end
 
+    # @return [Fixnum] window handle of the dialog.
     def hwnd
       @modal.hwnd
     end
 
+    # @return [Boolean] true when modal window is active/in focus, false otherwise.
     def active?
       @modal.active?
     end
 
+    # @return [Boolean] true when dialog exists, false otherwise.
     def exists?
       @modal.exists?
     end

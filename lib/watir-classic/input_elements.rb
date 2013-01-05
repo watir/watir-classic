@@ -1,6 +1,8 @@
 module Watir
   
-  class InputElement < Element #:nodoc:all
+  # Super-class for input elements like {SelectList}, {Button} etc.
+  class InputElement < Element
+    # @private
     def locate
       @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
     end
@@ -17,21 +19,26 @@ module Watir
   # Input: Select
   #
   
-  # This class is the way in which select boxes are manipulated.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#select_list method
+  # Returned by {Container#select_list}.
   class SelectList < InputElement
     attr_ole :multiple?
 
-    # This method clears the selected items in the select box
+    # Clear the selected options in the select list.
+    #
+    # @macro exists
+    # @macro enabled
     def clear
       perform_action do
         options.each(&:clear)
       end
     end
 
-    # This method selects an item, or items in a select box, by text.
-    # Raises NoValueFoundException   if the specified value is not found.
-    #  * item   - the thing to select, string or reg exp
+    # Select an item or items in a select box.
+    #
+    # @param [String,Regexp] item option to select by text, label or value.
+    # @raise [NoValueFoundException] when no options found.
+    # @macro exists
+    # @macro enabled
     def select(item)
       matching_options = []
       perform_action do
@@ -44,9 +51,12 @@ module Watir
       matching_options.first.text
     end
        
-    # Selects an item, or items in a select box, by value.
-    # Raises NoValueFoundException if the specified value is not found.
-    #  * item   - the value of the thing to select, string or reg exp
+    # Select an item or items in a select box by option's value.
+    #
+    # @param [String,Regexp] item option to select by value.
+    # @raise [NoValueFoundException] when no options found.
+    # @macro exists
+    # @macro enabled
     def select_value(item)
       matching_options = matching_items_in_select_list(:value, item)
       raise NoValueFoundException, "No option with :value of #{item.inspect} in this select element" if matching_options.empty?
@@ -54,19 +64,28 @@ module Watir
       matching_options.first.value
     end
     
-    # Returns array of the selected text items in a select box
-    # Raises UnknownObjectException if the select box is not found.
+    # @example Retrieve selected options as a text:
+    #   browser.select_list.selected_options.map(&:text)
+    #
+    # @return [Array<OptionCollection>] array of selected options.
+    # @macro exists
     def selected_options
       options.select(&:selected?)
     end
 
-    # Does the SelectList include the specified option (text)?
-    def include? text_or_regexp
+    # @param [String,Regexp] text_or_regexp option with text to search for.
+    # @return [Boolean] true when option with text includes in select list,
+    #   false otherwise.
+    # @macro exists
+    def include?(text_or_regexp)
       !options.map(&:text).grep(text_or_regexp).empty?
     end
 
-    # Is the specified option (text) selected? Raises exception of option does not exist.
-    def selected? text_or_regexp
+    # @param [String,Regexp] text_or_regexp option with text to search for.
+    # @return [Boolean] true when option with text is selected in select list,
+    #   false otherwise.
+    # @macro exists
+    def selected?(text_or_regexp)
       raise UnknownObjectException, "Option #{text_or_regexp.inspect} not found." unless include? text_or_regexp
       !selected_options.map(&:text).grep(text_or_regexp).empty?
     end
@@ -86,18 +105,28 @@ module Watir
     end
   end
   
+  # Returned by {Container#option}.
   class Option < Element
     attr_ole :disabled?
     attr_ole :name
     attr_ole :value
     attr_ole :label
 
+    # Select the option in its select list.
+    #
+    # @macro exists
+    # @macro enabled
     def select
       perform_action do
         change_selected true unless selected?
       end
     end
 
+    # Clear option in multi-select list.
+    #
+    # @raise [TypeError] when select list is not multi-select.
+    # @macro exists
+    # @macro enabled
     def clear
       raise TypeError, "you can only clear multi-selects" unless select_list.multiple?
 
@@ -106,11 +135,14 @@ module Watir
       end
     end
 
+    # @return [Boolean] true when option is selected, false otherwise.
+    # @macro exists
     def selected?
       assert_exists
       ole_object.selected
     end
 
+    # Text of the option.
     def text
       l = label
       l.empty? ? super : l rescue ''
@@ -139,10 +171,12 @@ module Watir
   # Input: Button
   #
   
-  # Returned by the Watir::Container#button method
+  # Returned by the {Container#button} method.
   class Button < InputElement
     alias_method :__value, :value
 
+    # @return [String] button contents of value attribute or inner text if there's no value.
+    # @see Element#text
     def text
       val = __value
       val.empty? ? super : val
@@ -155,18 +189,16 @@ module Watir
   # Input: Text
   #
   
-  # This class is the main class for Text Fields
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#text_field method
+  # Returned be {Container#text_field}.
   class TextField < InputElement
     attr_ole :size
     attr_ole :readonly?
     alias_method :text, :value
 
-    #:startdoc:
-    
-    # return number of maxlength attribute
+    # @return [Fixnum] value of maxlength attribute.
+    # @macro exists
     def maxlength
-      assert_exists unless @o
+      assert_exists
       begin
         ole_object.invoke('maxlength').to_i
       rescue WIN32OLERuntimeError
@@ -190,19 +222,16 @@ module Watir
       r.join("\n")
     end
     
-    def assert_not_readonly #:nodoc:
+    # @private
+    def assert_not_readonly
       if self.readonly?
         raise ObjectReadOnlyException, 
           "Textfield #{@specifiers.inspect} is read only."
       end
     end
     
-    # Returns true if the text field contents is matches the specified target,
-    # which can be either a string or a regular expression.
-    #   Raises UnknownObjectException if the object can't be found
-    #--
-    # I vote for deprecating this
-    # we should use text_field().text.include?(some) or text.match(/some/) instead of this method
+    # @deprecated Use "browser.text_field.value.include?(target)" or
+    #   "browser.text_field.value.match(target)"
     def verify_contains(target) #:nodoc:
       assert_exists
       if target.kind_of? String
@@ -213,10 +242,7 @@ module Watir
       return false
     end
     
-    # Drag the entire contents of the text field to another text field
-    #  19 Jan 2005 - It is added as prototype functionality, and may change
-    #   * destination_how   - symbol, :id, :name how we identify the drop target
-    #   * destination_what  - string or regular expression, the name, id, etc of the text field that will be the drop target
+    # @deprecated Not part of the WatirSpec API.
     def drag_contents_to(destination_how, destination_what)
       assert_exists
       destination = @container.text_field(destination_how, destination_what)
@@ -241,88 +267,90 @@ module Watir
       self.value = ""
     end
     
-    # Clears the contents of the text box.
-    #   Raises UnknownObjectException if the object can't be found
-    #   Raises ObjectDisabledException if the object is disabled
-    #   Raises ObjectReadOnlyException if the object is read only
+    # Clear the contents of the text field.
+    #
+    # @macro exists
+    # @macro enabled
+    # @raise [ObjectReadOnlyException] if the text field is read only.
     def clear
-      assert_exists
-      assert_enabled
-      assert_not_readonly
-      
-      highlight(:set)
-      
-      @o.scrollIntoView
-      @o.focus(0)
-      @o.select(0)
-      dispatch_event("onSelect")
-      @o.value = ""
-      dispatch_event("onKeyPress")
-      dispatch_event("onChange")
-      @container.wait
-      highlight(:clear)
+      perform_action do
+        assert_not_readonly
+        @o.scrollIntoView
+        @o.focus(0)
+        @o.select(0)
+        dispatch_event("onSelect")
+        @o.value = ""
+        dispatch_event("onKeyPress")
+        dispatch_event("onChange")
+        @container.wait
+      end
     end
     
-    # Appends the specified string value to the contents of the text box.
-    #   Raises UnknownObjectException if the object cant be found
-    #   Raises ObjectDisabledException if the object is disabled
-    #   Raises ObjectReadOnlyException if the object is read only
+    # Append the specified text value to the contents of the text field.
+    #
+    # @param [String] value text to append to current text field's value.
+    # @macro exists
+    # @macro enabled
+    # @raise [ObjectReadOnlyException] if the text field is read only.
     def append(value)
-      assert_exists
-      assert_enabled
-      assert_not_readonly
-      
-      highlight(:set)
-      @o.scrollIntoView
-      @o.focus(0)
-      type_by_character(value)
-      highlight(:clear)
+      perform_action do
+        assert_not_readonly
+        @o.scrollIntoView
+        @o.focus(0)
+        type_by_character(value)
+      end
     end
     
-    # Sets the contents of the text box to the specified text value
-    #   Raises UnknownObjectException if the object cant be found
-    #   Raises ObjectDisabledException if the object is disabled
-    #   Raises ObjectReadOnlyException if the object is read only
+    # Sets the contents of the text field to the specified value.
+    #
+    # @param [String] value text to set as value.
+    # @macro exists
+    # @macro enabled
+    # @raise [ObjectReadOnlyException] if the text field is read only.
     def set(value)
-      assert_exists
-      assert_enabled
-      assert_not_readonly
-
-      highlight(:set)
-      @o.scrollIntoView
-      if type_keys
-	      @o.focus(0)
-	      @o.select(0)
-	      dispatch_event("onSelect")
-	      dispatch_event("onKeyPress")
-	      @o.value = ""
-	      type_by_character(value)
-	      dispatch_event("onChange")
-	      dispatch_event("onBlur")
-	    else
-				@o.value = limit_to_maxlength(value)
-	    end
-      highlight(:clear)
+      perform_action do
+        assert_not_readonly
+        @o.scrollIntoView
+        if type_keys
+          @o.focus(0)
+          @o.select(0)
+          dispatch_event("onSelect")
+          dispatch_event("onKeyPress")
+          @o.value = ""
+          type_by_character(value)
+          dispatch_event("onChange")
+          dispatch_event("onBlur")
+        else
+          @o.value = limit_to_maxlength(value)
+        end
+      end
     end
 
     # Sets the value of the text field directly.
-    # It causes no events to be fired or exceptions to be raised,
-    # so generally shouldn't be used.
-    # It is preffered to use the set method.
-    def value=(v)
+    #
+    # @note it does not cause any JavaScript events to be fired or exceptions
+    #   to be raised. Using {#set} is recommended.
+    #
+    # @param [String] value value to be set.
+    # @macro exists
+    def value=(value)
       assert_exists
-      @o.value = v.to_s
+      @o.value = value.to_s
     end
 
-    def requires_typing #:nodoc:
+    # @private
+    def requires_typing
     	@type_keys = true
     	self
     end
-    def abhors_typing #:nodoc:
+
+    # @private
+    def abhors_typing
     	@type_keys = false
     	self
     end
 
+    # @return [String] text field label's text.
     def label
       @container.label(:for => name).text
     end
@@ -368,29 +396,30 @@ module Watir
 
   end
 
-  # this class can be used to access hidden field objects
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#hidden method
+  # Returned by the {Container#hidden}.
   class Hidden < TextField
-    # set is overriden in this class, as there is no way to set focus to a hidden field
-    def set(n)
-      self.value = n
+    # @see TextField#set
+    def set(value)
+      self.value = value
     end
     
-    # override the append method, so that focus isnt set to the hidden object
-    def append(n)
-      self.value = self.value.to_s + n.to_s
+    # @see TextField#append
+    def append(value)
+      self.value = self.value.to_s + value.to_s
     end
     
-    # override the clear method, so that focus isnt set to the hidden object
+    # @see TextField#clear
     def clear
       self.value = ""
     end
     
-    # this method will do nothing, as you cant set focus to a hidden field
+    # This method will do nothing since it is impossible to set focus to
+    # a hidden field.
     def focus
     end
     
-    # Hidden element is never visible - returns false.
+    # @return [Boolean] always false, since hidden element is never visible.
+    # @macro exists
     def visible?
       assert_exists
       false
@@ -398,7 +427,7 @@ module Watir
   end
 
   # This module contains common methods to both radio buttons and check boxes.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox or by Watir::Container#radio methods
+  # Normally a user would not need to create this object as it is returned by the {Container#checkbox} or by {Container#radio} methods.
   module RadioCheckCommon
     def self.included(base)
       base.instance_eval do
@@ -412,50 +441,40 @@ module Watir
     end
   end
   
-  #--
-  #  this class makes the docs better
-  #++
-  # This class is the watir representation of a radio button.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#radio method
+  # Returned by {Container#radio}.
   class Radio < InputElement
     include RadioCheckCommon
-    # This method clears a radio button. One of them will almost always be set.
-    # Returns true if set or false if not set.
-    #   Raises UnknownObjectException if its unable to locate an object
-    #         ObjectDisabledException IF THE OBJECT IS DISABLED
+
+    # Clear a radio button.
+    #
+    # @macro exists
+    # @macro enabled
     def clear
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      @o.checked = false
-      highlight(:clear)
-      highlight(:clear)
+      perform_action { @o.checked = false }
     end
     
-    # This method sets the radio list item.
-    #   Raises UnknownObjectException  if it's unable to locate an object
-    #         ObjectDisabledException  if the object is disabled
+    # Check a radio button.
+    #
+    # @macro exists
+    # @macro enabled
     def set
-      assert_exists
-      assert_enabled
-      highlight(:set)
-      @o.scrollIntoView
-      @o.checked = true
-      click
-      highlight(:clear)
+      perform_action do
+        @o.scrollIntoView
+        @o.checked = true
+        click
+      end
     end
 
   end
 
-  # This class is the watir representation of a check box.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#checkbox method
+  # Returned by the {Watir::Container#checkbox} method.
   class CheckBox < InputElement
     include RadioCheckCommon
-    # This method checks or unchecks the checkbox.
-    # With no arguments supplied it sets the checkbox.
-    # Setting false argument unchecks/clears the checkbox.
-    #   Raises UnknownObjectException if it's unable to locate an object
-    #         ObjectDisabledException if the object is disabled
+
+    # Check or clear the checkbox.
+    # @param [Boolean] value If set to true (default) then checkbox is set, cleared otherwise.
+    # @macro exists
+    # @macro enabled
     def set(value=true)
       assert_exists
       assert_enabled
@@ -467,9 +486,9 @@ module Watir
       highlight :clear
     end
     
-    # Clears a check box.
-    #   Raises UnknownObjectException if its unable to locate an object
-    #         ObjectDisabledException if the object is disabled
+    # Clear the checkbox.
+    # @macro exists
+    # @macro enabled
     def clear
       set false
     end

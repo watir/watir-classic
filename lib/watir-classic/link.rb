@@ -1,22 +1,19 @@
 module Watir  
   
-  # This class is the means of accessing a link on a page
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#link method
-  # many of the methods available to this object are inherited from the Element class
-  #
+  # Returned by {Container#link}.
   class Link < Element
     attr_ole :type
     attr_ole :href
     attr_ole :name
 
-    # if an image is used as part of the link, this will return true
+    # @deprecated Use "browser.link.imgs.length > 0" instead.
     def link_has_image
       assert_exists
       @o.getElementsByTagName("IMG").length > 0
     end
     
-    # this method returns the src of an image, if an image is used as part of the link
-    def src # BUG?
+    # @deprecated Use "browser.link.imgs.first.src rescue ''" instead.
+    def src
       assert_exists
       if @o.getElementsByTagName("IMG").length > 0
         return @o.getElementsByTagName("IMG")[0.to_s].src
@@ -25,6 +22,7 @@ module Watir
       end
     end
     
+    # @private
     def link_string_creator
       n = []
       n <<   "href:".ljust(TO_S_SIZE) + self.href
@@ -33,7 +31,6 @@ module Watir
       return n
     end
     
-    # returns a textual description of the link
     def to_s
       assert_exists
       r = string_creator

@@ -1,5 +1,14 @@
 module Watir
+  # Returned by {Container#file_field}.
   class FileField < InputElement
+    # Set the path of the file field.
+    #
+    # @example
+    #   browser.file_field.set("c:/foo/bar.txt")
+    #
+    # @param [String] file_path absolute path to existing file.
+    # @macro exists
+    # @raise [Errno::ENOENT] when file does not exist.
     def set(file_path)
       assert_file_exists(file_path)
       assert_exists
@@ -10,6 +19,8 @@ module Watir
     end
 
     alias_method :value=, :set
+
+    private
 
     def assert_file_exists(file_path)
       raise Errno::ENOENT, "#{file_path} has to exist to set!" unless File.exists?(file_path)

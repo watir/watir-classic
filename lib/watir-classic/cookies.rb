@@ -1,6 +1,7 @@
 require "uri"
 
 module Watir
+  # Returned by {IE#cookies}.
   class Cookies
     include Enumerable
 
@@ -8,6 +9,15 @@ module Watir
       @page_container = page_container
     end
 
+    # Iterate over each cookie. 
+    #
+    # @example
+    #   browser.cookies.each do |cookie|
+    #     puts cookie[:name]
+    #     puts cookie[:value]
+    #   end
+    #
+    # @yieldparam [Hash] cookie name and value pair of the cookie.
     def each
       @page_container.document.cookie.split(";").each do |cookie|
         name, value = cookie.strip.split("=")
@@ -15,7 +25,21 @@ module Watir
       end
     end
 
-    def add name, value, options={}
+    # Add a cookie.
+    #
+    # @example Add a cookie with default options:
+    #   browser.cookies.add "name", "value'
+    #
+    # @example Add a cookie with options:
+    #   browser.cookie.add "name", "value", :expires => Time.now, :secure => true, :path => "/foo/bar"
+    #
+    # @param [String] name name of the cookie.
+    # @param [String] value value of the cookie.
+    # @param [Hash] options options for the cookie.
+    # @option options [Time] :expires Expiration time.
+    # @option options [Boolean] :secure (false) Secure flag. Set when value is true.
+    # @option options [String] :path Path for cookie.
+    def add(name, value, options={})
       options = options.map do |option|
         k, v = option
         if k == :expires
@@ -31,7 +55,12 @@ module Watir
       @page_container.document.cookie = "#{name}=#{value}#{options}" 
     end
 
-    def delete name
+    # Delete a cookie.
+    #
+    # @note does not raise any exceptions when cookie with the specified name is not found.
+    #
+    # @param [String] name Cookie with the specified name to be deleted.
+    def delete(name)
       options = {:expires => ::Time.now - 60 * 60 * 24}
       delete_with_options name, options
 
@@ -68,6 +97,7 @@ module Watir
       end
     end
 
+    # Delete all cookies for the page.
     def clear
       each {|cookie| delete cookie[:name]}
     end

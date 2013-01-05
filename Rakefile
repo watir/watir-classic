@@ -13,7 +13,9 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
 end
 
 require 'yard'
-YARD::Rake::YardocTask.new
+YARD::Rake::YardocTask.new do |t|
+  t.files = ["lib/watir-classic/yard/global_macros.rb", "lib/**/*.rb"]
+end
 
 #
 # ------------------------------ watirspec -----------------------------------

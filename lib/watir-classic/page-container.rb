@@ -6,7 +6,7 @@ module Watir
 
     # This method checks the currently displayed page for http errors, 404, 500 etc
     # It gets called internally by the wait method, so a user does not need to call it explicitly
-
+    # @private
     def check_for_http_error
       # check for IE7
       n = self.document.invoke('parentWindow').navigator.appVersion
@@ -33,7 +33,19 @@ module Watir
 
     private :page
 
-    # Execute the given JavaScript string
+    # Execute the given JavaScript string in the context of the current page.
+    #
+    # @example
+    #   browser.execute_script "var a=1; var b=a+1; return b"
+    #
+    # @example
+    #   browser.execute_script("return {a: 1, b: 2}")["b"] # => 1
+    #
+    # @note It is needed to call return inside of the JavaScript if the value
+    #   is needed at Ruby side.
+    #
+    # @return [Object] appropriate type of the object, which is returned from the
+    #   JavaScript via "return" keyword or nil when "return" is omitted.
     def execute_script(source)
       result = nil
       begin
@@ -50,35 +62,28 @@ module Watir
       MultiJson.load(result)["value"] rescue nil
     end
 
-    # The HTML of the current page
+    # @return [String] html of the current page.
     def html
       page.outerhtml
     end
 
-    # The url of the page object.
+    # @return [String] url of the page.
     def url
       page.document.location.href
     end
 
-    # The text of the current page
+    # @return [String] text of the page.
     def text
       page.innertext.strip
     end
 
+    # @private
     def set_container container
       @container = container
       @page_container = self
     end
 
-    # Search the current page for specified text or regexp.
-    # Returns the index if the specified text was found.
-    # Returns matchdata object if the specified regexp was found.
-    #
-    # *Deprecated*
-    # Instead use
-    #   IE#text.include? target
-    # or
-    #   IE#text.match target
+    # @deprecated Use "browser.text.include?(target)" or "browser.text.match(target)"
     def contains_text(target)
       if target.kind_of? Regexp
         self.text.match(target)

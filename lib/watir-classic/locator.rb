@@ -1,4 +1,5 @@
 module Watir
+  # @private
   class Locator
     include Watir
     include Watir::Exception
@@ -131,6 +132,7 @@ module Watir
     end
   end
 
+  # @private
   class TaggedElementLocator < Locator
     def each_element(tag)
       document.getElementsByTagName(tag).each do |ole_object|
@@ -152,6 +154,7 @@ module Watir
     end
   end
 
+  # @private
   class FrameLocator < TaggedElementLocator
     def each_element(tag)
       frames = @container.page_container.document.frames
@@ -186,6 +189,7 @@ module Watir
     end
   end
 
+  # @private
   class FormLocator < TaggedElementLocator
     def each_element(tag)
       document.forms.each do |form|
@@ -194,6 +198,7 @@ module Watir
     end
   end
 
+  # @private
   class InputElementLocator < Locator
     def each_element
       elements = locate_by_name || @container.__ole_inner_elements

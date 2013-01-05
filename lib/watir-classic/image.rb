@@ -1,10 +1,6 @@
 module Watir
   
-  # This class is the means of accessing an image on a page.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#image method
-  #
-  # many of the methods available to this object are inherited from the Element class
-  #
+  # Returned by {Container#image}
   class Image < Element
     attr_ole :alt
     attr_ole :src
@@ -22,7 +18,6 @@ module Watir
     end
     private :image_string_creator
     
-    # returns a string representation of the object
     def to_s
       assert_exists
       r = string_creator
@@ -30,28 +25,29 @@ module Watir
       return r.join("\n")
     end
     
-    # this method returns the filesize of the image, as an int
+    # @return [Fixnum] file size of the image in bytes.
+    # @macro exists
     def file_size
       assert_exists
       @o.invoke("fileSize").to_i
     end
     
-    # returns the width in pixels of the image, as an int
+    # @return [Fixnum] width of the image in pixels.
+    # @macro exists
     def width
       assert_exists
       @o.invoke("width").to_i
     end
     
-    # returns the height in pixels of the image, as an int
+    # @return [Fixnum] height of the image in pixels.
+    # @macro exists
     def height
       assert_exists
       @o.invoke("height").to_i
     end
     
-    # This method attempts to find out if the image was actually loaded by the web browser.
-    # If the image was not loaded, the browser is unable to determine some of the properties.
-    # We look for these missing properties to see if the image is really there or not.
-    # If the Disk cache is full (tools menu -> Internet options -> Temporary Internet Files), it may produce incorrect responses.
+    # @return [Boolean] true if image is loaded by the browser, false otherwise.
+    # @macro exists
     def loaded?
       assert_exists
       file_size != -1
@@ -59,6 +55,7 @@ module Watir
     
     # this method highlights the image (in fact it adds or removes a border around the image)
     #  * set_or_clear   - symbol - :set to set the border, :clear to remove it
+    # @todo improve this method like there's a plan for Element#highlight
     def highlight(set_or_clear)
       if set_or_clear == :set
         begin
@@ -80,12 +77,18 @@ module Watir
     end
     private :highlight
     
-    # This method saves the image to the file path that is given.  The
-    # path must be in windows format (c:\\dirname\\somename.gif).  This method
-    # will not overwrite a previously existing image.  If an image already
-    # exists at the given path then a dialog will be displayed prompting
-    # for overwrite.
-    # path - directory path and file name of where image should be saved
+    # Save the image to the file.
+    #
+    # @example
+    #   browser.image.save("c:/foo/bar.jpg")
+    #
+    # @param [String] path path to the file.
+    #
+    # @note This method will not overwrite a previously existing image.
+    #   If an image already exists at the given path then a dialog
+    #   will be displayed prompting for overwrite.
+    #
+    # @todo it should raise an Exception if image already exists.
     def save(path)
       @container.goto(src)
       begin

@@ -1,6 +1,8 @@
 module Watir
 
+  # Returned by {Container#form}.
   class Form < Element
+
     def initialize(container, specifiers)
       super
       copy_test_config container
@@ -8,17 +10,24 @@ module Watir
 
     attr_ole :action
 
+    # @return [String] form name attribute value. Will be empty string if does not
+    #   exist.
+    # @macro exists
     def name
       assert_exists
       name = ole_object.getAttributeNode('name')
       name ? name.value : ''
     end
 
+    # @return [String] form method attribute value.
+    # @macro exists
     def form_method
       assert_exists
       ole_object.invoke('method')
     end
-
+    
+    # @param [Object] arg when argument is nil, {#form_method} will be called.
+    #   Otherwise Ruby's {Kernel#method} will be called.
     def method(arg = nil)
       if arg.nil?
         form_method
@@ -27,17 +36,22 @@ module Watir
       end
     end    
 
+    # @private
     def locate
       @o = @container.locator_for(FormLocator, @specifiers, self.class).locate
     end
 
-    # Submit the data -- equivalent to pressing Enter or Return to submit a form.
+    # Submit the form.
+    # @note Will not submit the form if its onSubmit JavaScript callback
+    #   returns false.
+    # @macro exists
     def submit 
       assert_exists
       @o.submit(0) if dispatch_event "onSubmit"
       @container.wait
     end
-    
+   
+    # @private
     def __ole_inner_elements
       assert_exists
       @o.elements
@@ -46,6 +60,8 @@ module Watir
     # This method is responsible for setting and clearing the colored highlighting on the specified form.
     # use :set  to set the highlight
     #   :clear  to clear the highlight
+    # @todo clean this method up and extract two methods
+    #   from here similarly to the plan of Element#highlight
     def highlight(set_or_clear, element, count)
       if set_or_clear == :set
         begin
@@ -70,9 +86,10 @@ module Watir
     end
     private :highlight
     
-    # causes the object to flash. Normally used in IRB when creating scripts
-    # Default is 10
-    def flash number=10
+    # Flash the element the specified number of times for troubleshooting purposes.
+    # @param [Fixnum] number Number of times to flash the element.
+    # @macro exists
+    def flash(number=10)
       assert_exists
       @original_styles = {}
       number.times do

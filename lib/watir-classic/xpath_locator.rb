@@ -1,4 +1,5 @@
 module Watir
+  # @private
   module XpathLocator
 
     def xmlparser_document_object

@@ -2,7 +2,27 @@ module Watir
   module Container
 
     class << self
-      def support_element method_name, args={}
+      # @!macro support_element
+      #   @!method $1
+      #   Create an $1 html element instance.
+      #
+      #   Elements can be searched by using different locators.
+      #   
+      #   @example Search by partial text:
+      #     browser.$1(:text => /partial text/)
+      #   
+      #   @example Search by id:
+      #     browser.$1(:id => "htmlid")
+      #
+      #   @example Search by any arbitrary html attribute:
+      #     browser.$1(:foo => "value-of-foo-attribute)
+      #
+      #   @example Search by multiple attributes, all provided locators should evaluate to true - only then element is considered to be found:
+      #     browser.$1(:text => "some text", :class => "css class")
+      #
+      #   @example It is also possible to search for multiple elements of the same type like this:
+      #     browser.divs(:class => "foo") # => instance of Watir::DivCollection
+      def support_element(method_name, args={})
         klass = args[:class] || method_name.to_s.capitalize
         super_class = args[:super_class] || "Element"
 
@@ -103,7 +123,6 @@ module Watir
     support_element :hgroup
     support_element :hidden, :super_class => :TextField, :super_collection => :InputElement
     support_element :hr
-    # html and htmls?!
     support_element :i
     support_element :img, :class => :Image
     alias_method :image, :img

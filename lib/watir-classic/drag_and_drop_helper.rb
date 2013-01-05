@@ -1,6 +1,14 @@
 module Watir
+  # This module has methods for performing drag & drop functionality. It is
+  # included into {Element} making each element draggable if they're draggable
+  # on the web page too.
   module DragAndDropHelper
 
+    # Drag and drop this element onto another element.
+    #
+    # @param [Element] target element to be dragged on.
+    # @macro exists
+    # @macro enabled
     def drag_and_drop_on(target)
       perform_action do
         assert_target target
@@ -12,6 +20,12 @@ module Watir
       end
     end
 
+    # Drag and drop this element by a distance.
+    #
+    # @param [Fixnum] distance_x distance to drag element on x-axis. Can be negative.
+    # @param [Fixnum] distance_y distance to drag element on y-axis. Can be negative.
+    # @macro exists
+    # @macro enabled
     def drag_and_drop_by(distance_x, distance_y)
       perform_action do
         drag_to do |mouse|

@@ -1,11 +1,12 @@
 module Watir
-  # this class is the super class for the iterator classes (buttons, links, spans etc
-  # it would normally only be accessed by the iterator methods (spans, links etc) of IE
+  # This class is the super class for the iterator classes (buttons, links, spans etc).
+  # It would normally only be accessed by the iterator methods (spans, links etc) of {Container}.
   class ElementCollection
     include Enumerable
 
     # Super class for all the iterator classes
-    #   * container - an instance of an IE object
+    # @param [Element] container container element instance.
+    # @param [Hash] specifiers locators for elements.
     def initialize(container, specifiers)
       if specifiers[:index]
         raise Exception::MissingWayOfFindingObjectException,
@@ -17,6 +18,7 @@ module Watir
       @page_container = container.page_container
     end
 
+    # @return [Fixnum] count of elements in this collection.
     def length
       count = 0
       each {|element| count += 1 }
@@ -25,12 +27,18 @@ module Watir
 
     alias_method :size, :length
 
-    # iterate through each of the elements in the collection in turn
+    # Iterate through each of the elements in the collection in turn.
+    # @yieldparam [Element] element element instance.
     def each
       @container.locator_for(TaggedElementLocator, @specifiers, element_class).each {|element| yield element}
     end
 
-    # allows access to a specific item in the collection
+    # Access a specific item in the collection.
+    #
+    # @note {Element} will be always returned even if the index is out of
+    #   bounds. Use {Element#exists?} to verify if the element actually exists.
+    # @param [Fixnum] n n-th element to retrieve.
+    # @return [Element] element with specified index from this collection.
     def [](n)
       number = n - Watir::IE.base_index
       offset = Watir::IE.zero_based_indexing ? (length - 1) : length
@@ -39,14 +47,18 @@ module Watir
       iterator_object(number) || non_existing_element
     end
 
+    # @return [Element] first element from this collection.
     def first
       iterator_object(0)
     end
 
+    # @return [Element] last element from this collection.
     def last
       iterator_object(length - 1)
     end
 
+    # @return [String] String representation of each element in this collection
+    #   separated by line-feed.
     def to_s
       map { |e| e.to_s }.join("\n")
     end
@@ -71,12 +83,14 @@ module Watir
 
   end
 
+  # This class represents table elements collection.
   class TableElementCollection < ElementCollection
     def initialize(container, specifiers, ole_collection=nil)
       super container, specifiers
       @ole_collection = ole_collection
     end
 
+    # @see ElementCollection#each
     def each
       if @ole_collection
         elements = []
@@ -90,17 +104,23 @@ module Watir
     end
   end
 
+  # This class represents table row elements collection.
   class TableRowCollection < TableElementCollection; end
 
+  # This class represents table cell elements collection.
   class TableCellCollection < TableElementCollection; end
 
+  # This class represents input elements collection.  
   class InputElementCollection < ElementCollection
+    # @see ElementCollection#each
     def each
       @container.locator_for(InputElementLocator, @specifiers, element_class).each {|element| yield element}
     end    
   end
 
+  # This class represents general elements collection.
   class HTMLElementCollection < ElementCollection
+    # @see ElementCollection#each
     def each
       @container.locator_for(TaggedElementLocator, @specifiers, Element).each { |element| yield element }
     end

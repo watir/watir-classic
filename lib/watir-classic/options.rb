@@ -26,6 +26,7 @@ module Watir
     end
   end
 
+  # @private
   class WatirOptions < UserChoices::Command
     include UserChoices
     def add_sources builder

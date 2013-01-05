@@ -1,10 +1,23 @@
-# include this module if there's a need to have wait_until and wait_while methods in some different scope
 module Watir
   module WaitHelper
+    # Wait until block evaluates to true or times out.
+    #
+    # @example
+    #   browser.wait_until(5) { browser.text_field.exists? }
+    #
+    # @see Wait
+    # @see ElementExtensions
     def wait_until(*args, &blk)
       Wait.until(*args, &blk)
     end
 
+    # Wait while block evaluates to true or times out.
+    #
+    # @example
+    #   browser.wait_while(5) { browser.text_field.exists? }
+    #
+    # @see Wait
+    # @see ElementExtensions
     def wait_while(*args, &blk)
       Wait.while(*args, &blk)
     end

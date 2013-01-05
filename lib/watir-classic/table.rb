@@ -1,13 +1,16 @@
 module Watir
 
   module TableContainer
-    # Returns a row in the table
-    #   * index         - the index of the row
+    # @return [TableRow] a row in the {Table}.
+    # @param [Fixnum] index row number to retrieve.
+    # @macro exists
     def [](index)
       assert_exists
       TableRow.new(self, :ole_object => @o.rows.item(index))
     end
     
+    # @return [Array<String>] array of table element texts.
+    # @macro exists
     def strings
       assert_exists
       rows_memo = []
@@ -34,11 +37,15 @@ module Watir
   module TableCellsContainer
     include TableElementsContainer
 
+    # @return [TableCellCollection] cells inside of the {Table}.
+    # @macro exists
     def cells(how={}, what=nil)
       assert_exists
       table_elements(TableCellCollection, [:th, :td], how, what, @o.cells)
     end
 
+    # @return [TableCell] cell inside of the {Table}.
+    # @macro exists
     def cell(how={}, what=nil)
       specifiers = format_specifiers([:th, :td], how, what)
       index = specifiers.delete(:index) || 0
@@ -49,11 +56,15 @@ module Watir
   module TableRowsContainer
     include TableElementsContainer
 
+    # @return [TableRowCollection] rows inside of the {Table}.
+    # @macro exists
     def rows(how={}, what=nil)
       assert_exists
       table_elements(TableRowCollection, [:tr], how, what, @o.rows)
     end
 
+    # @return [TableRow] row inside of the {Table}.
+    # @macro exists
     def row(how={}, what=nil)
       specifiers = format_specifiers([:tr], how, what)
       index = specifiers.delete(:index) || 0
@@ -61,11 +72,7 @@ module Watir
     end
   end
 
-  # This class is used for dealing with tables.
-  # Normally a user would not need to create this object as it is returned by the Watir::Container#table method
-  #
-  # many of the methods available to this object are inherited from the Element class
-  #
+  # Returned by {Container#table}
   class Table < Element
     include TableContainer
     include TableRowsContainer
@@ -75,6 +82,7 @@ module Watir
 
     # override the highlight method, as if the tables rows are set to have a background color,
     # this will override the table background color, and the normal flash method won't work
+    # @private
     def highlight(set_or_clear)
       if set_or_clear == :set
         begin
@@ -109,8 +117,6 @@ module Watir
     end
     private :table_string_creator
     
-    # returns the properties of the object in a string
-    # raises an ObjectNotFound exception if the object cannot be found
     def to_s
       assert_exists
       r = string_creator
@@ -118,36 +124,39 @@ module Watir
       return r.join("\n")
     end
     
-    # Returns the number of rows inside the table, including rows in nested tables.
+    # @return [Fixnum] number of rows inside of the table, including rows from
+    #   nested tables.
+    # @macro exists
     def row_count
       assert_exists
       rows.length
     end
 
-    # This method returns the number of columns in a row of the table.
-    # Raises an UnknownObjectException if the table doesn't exist.
-    #   * index         - the index of the row
+    # @return [Fixnum] number of columns inside of the table, including columns from
+    #   nested tables.
+    # @param [Fixnum] index the number of row.
+    # @macro exists
     def column_count(index=0)
       assert_exists
       rows[index].cells.length
     end
     
-    # Returns an array containing all the text values in the specified column
-    # Raises an UnknownCellException if the specified column does not exist in every
-    # Raises an UnknownObjectException if the table doesn't exist.
-    # row of the table
-    #   * columnnumber  - column index to extract values from
+    # @return [Array<String>] array of each row's specified column text.
+    # @param [Fixnum] columnnumber the number of column to extract text from.
+    # @macro exists
     def column_values(columnnumber)
-      return (0..row_count - 1).collect {|i| self[i][columnnumber].text}
+      (0..row_count - 1).collect {|i| self[i][columnnumber].text}
     end
     
-    # Returns an array containing all the text values in the specified row
-    # Raises an UnknownObjectException if the table doesn't exist.
-    #   * rownumber  - row index to extract values from
+    # @return [Array<String>] array of each column's text on specified row.
+    # @param [Fixnum] rownumber the number of row to extract column texts from.
+    # @macro exists
     def row_values(rownumber)
-      return (0..column_count(rownumber) - 1).collect {|i| self[rownumber][i].text}
+      (0..column_count(rownumber) - 1).collect {|i| self[rownumber][i].text}
     end
     
+    # @return [Array<Hash>] array with hashes of table data.
+    # @macro exists
     def hashes
       assert_exists
 
@@ -184,24 +193,30 @@ module Watir
     include TableCellsContainer
   end
 
+  # Returned by {Container#tr}.
   class TableRow < Element
     include TableCellsContainer
 
-    # this method iterates through each of the cells in the row. Yields a TableCell object
+    # Iterate over each of the cell in the row.
+    # @yieldparam [TableCell] cell cell instance.
     def each
       locate
       cells.each {|cell| yield cell}
     end
     
-    # Returns an element from the row as a TableCell object
+    # @return [TableCell] cell from the row.
+    # @param [Fixnum] index cell index in the row.
+    # @macro exists
     def [](index)
       assert_exists
       if cells.length <= index
         raise UnknownCellException, "Unable to locate a cell at index #{index}" 
       end
-      return cells[index]
+      cells[index]
     end
     
+    # @return [Fixnum] cells count in the row.
+    # @macro exists
     def column_count
       assert_exists
       cells.length
@@ -209,12 +224,14 @@ module Watir
 
   end
   
-  # this class is a table cell - when called via the Table object
+  # Returned by {Container#td} and {Container#th}.
   class TableCell < Element
     attr_ole :headers
 
     alias_method :to_s, :text
     
+    # @return [Fixnum] colspan attribute value.
+    # @macro exists
     def colspan
       locate
       @o.colSpan
