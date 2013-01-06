@@ -180,9 +180,9 @@ module Watir
     def flash(number=10)
       assert_exists
       number.times do
-        highlight(:set)
+        set_highlight
         sleep 0.05
-        highlight(:clear)
+        clear_highlight
         sleep 0.05
       end
       self
@@ -406,22 +406,26 @@ module Watir
       n
     end
 
-    # This method is responsible for setting and clearing the colored highlighting on the currently active element.
-    # use :set   to set the highlight
-    #   :clear  to clear the highlight
-    # @todo Make this two methods: set_highlight & clear_highlight
-    def highlight(set_or_clear)
-      if set_or_clear == :set
-        @original_color ||= ole_object.style.backgroundColor
+    # This method is responsible for setting colored highlighting on the currently active element.
+    def set_highlight
+      perform_highlight do
+        @original_color = ole_object.style.backgroundColor
         ole_object.style.backgroundColor = @container.active_object_highlight_color
-      else
+      end
+    end
+
+    # This method is responsible for clearing colored highlighting on the currently active element.
+    def clear_highlight
+      perform_highlight do
         ole_object.style.backgroundColor = @original_color if @original_color
       end
+    end
+
+    def perform_highlight
+      yield
     rescue
       # we could be here for a number of reasons...
       # e.g. page may have reloaded and the reference is no longer valid
-    ensure
-      @original_color = nil
     end
 
     def replace_method(method)
@@ -464,10 +468,10 @@ module Watir
     def perform_action
       assert_exists
       assert_enabled
-      highlight(:set)
+      set_highlight
       yield
     ensure
-      highlight(:clear)
+      clear_highlight
     end
 
   end

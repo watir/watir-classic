@@ -466,14 +466,10 @@ module Watir
     # @macro exists
     # @macro enabled
     def set(value=true)
-      assert_exists
-      assert_enabled
-      highlight :set
-      current_value = @o.checked
-      unless value == current_value
-        click
+      perform_action do
+        current_value = @o.checked
+        click unless value == current_value
       end
-      highlight :clear
     end
 
     # Clear the checkbox.

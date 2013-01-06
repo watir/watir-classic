@@ -151,34 +151,6 @@ module Watir
       r.join("\n")
     end
 
-    # override the highlight method, as if the tables rows are set to have a background color,
-    # this will override the table background color, and the normal flash method won't work
-    # @private
-    def highlight(set_or_clear)
-      if set_or_clear == :set
-        begin
-          @original_border = @o.border.to_i
-          if @o.border.to_i==1
-            @o.border = 2
-          else
-            @o.border = 1
-          end
-        rescue
-          @original_border = nil
-        end
-      else
-        begin
-          @o.border= @original_border unless @original_border == nil
-          @original_border = nil
-        rescue
-          # we could be here for a number of reasons...
-        ensure
-          @original_border = nil
-        end
-      end
-      super
-    end
-    
     private
 
     # this method is used to populate the properties in the to_s method
@@ -187,6 +159,23 @@ module Watir
       n << "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
       n << "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
       n
+    end
+
+    # override the highlight method, as if the tables rows are set to have a background color,
+    # this will override the table background color, and the normal flash method won't work
+    def set_highlight
+      perform_highlight do
+        @original_border = @o.border.to_i
+        @o.border = @original_border + 1
+        super
+      end
+    end
+
+    def clear_highlight
+      perform_highlight do
+        @o.border = @original_border if @original_border
+        super
+      end
     end
         
   end

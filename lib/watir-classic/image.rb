@@ -84,26 +84,18 @@ module Watir
       IO.popen("ruby -e \"#{command}\"")
     end
 
-    # this method highlights the image (in fact it adds or removes a border around the image)
-    #  * set_or_clear   - symbol - :set to set the border, :clear to remove it
-    # @todo improve this method like there's a plan for Element#highlight
-    def highlight(set_or_clear)
-      if set_or_clear == :set
-        begin
-          @original_border = @o.border
-          @o.border = 1
-        rescue
-          @original_border = nil
-        end
-      else
-        begin
-          @o.border = @original_border
-          @original_border = nil
-        rescue
-          # we could be here for a number of reasons...
-        ensure
-          @original_border = nil
-        end
+    # Highlight the image (in fact it adds a border around the image).
+    def set_highlight
+      perform_highlight do
+        @original_border = @o.border
+        @o.border = 1
+      end
+    end
+
+    # Clear the highlight of the image (in fact it removes a border around the image).
+    def clear_highlight
+      perform_highlight do
+        @o.border = @original_border if @original_border
       end
     end
 

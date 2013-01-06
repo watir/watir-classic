@@ -47,23 +47,15 @@ module Watir
     end
    
     # Flash the element the specified number of times for troubleshooting purposes.
-    # @param [Fixnum] number Number of times to flash the element.
+    # @param [Fixnum] number number of times to flash the element.
     # @macro exists
     def flash(number=10)
       assert_exists
-      @original_styles = {}
+      @original_element_colors = {}
       number.times do
-        count = 0
-        @o.elements.each do |element|
-          highlight(:set, element, count)
-          count += 1
-        end
+        set_highlight
         sleep 0.05
-        count = 0
-        @o.elements.each do |element|
-          highlight(:clear, element, count)
-          count += 1
-        end
+        clear_highlight
         sleep 0.05
       end
     end
@@ -81,32 +73,25 @@ module Watir
 
     private
 
-    # This method is responsible for setting and clearing the colored highlighting on the specified form.
-    # use :set  to set the highlight
-    #   :clear  to clear the highlight
-    # @todo clean this method up and extract two methods
-    #   from here similarly to the plan of Element#highlight
-    def highlight(set_or_clear, element, count)
-      if set_or_clear == :set
-        begin
+    # This method is responsible for setting the colored highlighting on the specified form.
+    def set_highlight
+      @o.elements.each do |element|
+        perform_highlight do
           original_color = element.style.backgroundColor
-          original_color = "" if original_color==nil
-          element.style.backgroundColor = active_object_highlight_color
-        rescue => e
-          puts e
-          puts e.backtrace.join("\n")
-          original_color = ""
-        end
-        @original_styles[count] = original_color
-      else
-        begin
-          element.style.backgroundColor = @original_styles[ count]
-        rescue => e
-          puts e
-          # we could be here for a number of reasons...
-        ensure
+          element.style.backgroundColor = active_object_highlight_color        
+          @original_element_colors[element] = original_color
         end
       end
+    end
+
+    # This method is responsible for clearing the colored highlighting on the specified form.
+    def clear_highlight
+      @original_element_colors.each_pair do |element, color|
+        perform_highlight do
+          element.style.backgroundColor = color
+        end
+      end
+      @original_element_colors.clear
     end
     
   end # class Form
