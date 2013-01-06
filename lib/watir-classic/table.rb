@@ -26,12 +26,14 @@ module Watir
   end
 
   module TableElementsContainer
+
+    private
+
     def table_elements(klass, tags, how, what, ole_collection)
       specifiers = format_specifiers(tags, how, what)
       klass.new(self, specifiers, ole_collection)
     end
 
-    private :table_elements
   end
 
   module TableCellsContainer
@@ -80,50 +82,6 @@ module Watir
 
     attr_ole :rules
 
-    # override the highlight method, as if the tables rows are set to have a background color,
-    # this will override the table background color, and the normal flash method won't work
-    # @private
-    def highlight(set_or_clear)
-      if set_or_clear == :set
-        begin
-          @original_border = @o.border.to_i
-          if @o.border.to_i==1
-            @o.border = 2
-          else
-            @o.border = 1
-          end
-        rescue
-          @original_border = nil
-        end
-      else
-        begin
-          @o.border= @original_border unless @original_border == nil
-          @original_border = nil
-        rescue
-          # we could be here for a number of reasons...
-        ensure
-          @original_border = nil
-        end
-      end
-      super
-    end
-    
-    # this method is used to populate the properties in the to_s method
-    def table_string_creator
-      n = []
-      n << "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
-      n << "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
-      return n
-    end
-    private :table_string_creator
-    
-    def to_s
-      assert_exists
-      r = string_creator
-      r += table_string_creator
-      return r.join("\n")
-    end
-    
     # @return [Fixnum] number of rows inside of the table, including rows from
     #   nested tables.
     # @macro exists
@@ -185,6 +143,52 @@ module Watir
       end
       rows_memo
     end
+
+    def to_s
+      assert_exists
+      r = string_creator
+      r += table_string_creator
+      r.join("\n")
+    end
+
+    # override the highlight method, as if the tables rows are set to have a background color,
+    # this will override the table background color, and the normal flash method won't work
+    # @private
+    def highlight(set_or_clear)
+      if set_or_clear == :set
+        begin
+          @original_border = @o.border.to_i
+          if @o.border.to_i==1
+            @o.border = 2
+          else
+            @o.border = 1
+          end
+        rescue
+          @original_border = nil
+        end
+      else
+        begin
+          @o.border= @original_border unless @original_border == nil
+          @original_border = nil
+        rescue
+          # we could be here for a number of reasons...
+        ensure
+          @original_border = nil
+        end
+      end
+      super
+    end
+    
+    private
+
+    # this method is used to populate the properties in the to_s method
+    def table_string_creator
+      n = []
+      n << "rows:".ljust(TO_S_SIZE) + self.row_count.to_s
+      n << "cols:".ljust(TO_S_SIZE) + self.column_count.to_s
+      n
+    end
+        
   end
 
   class TableSection < Element
