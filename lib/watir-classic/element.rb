@@ -22,7 +22,7 @@ module Watir
       #     Return type depends of the attribute type.
       #   @return [String] an empty String if the "$1" attribute does not exist.
       #   @macro exists
-      def self.attr_ole(method_name, ole_method_name=nil)
+      def attr_ole(method_name, ole_method_name=nil)
         class_eval %Q[
           def #{method_name}
             assert_exists
@@ -185,7 +185,7 @@ module Watir
         highlight(:clear)
         sleep 0.05
       end
-      nil
+      self
     end
 
     # Executes a user defined "fireEvent" for element with JavaScript events.
