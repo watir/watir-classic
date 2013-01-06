@@ -3,6 +3,7 @@
 Watir Classic is a Watir[https://github.com/watir/watir] driver for automating Internet Explorer on Windows.
 
 Project Home:: http://watir.com
+Documentation:: http://rubydoc.info/github/watir/watir-classic/frames
 Source Code:: http://github.com/watir/watir-classic
 Support:: http://watir.com/support
 Gem:: https://rubygems.org/gems/watir-classic
