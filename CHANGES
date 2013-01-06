@@ -1,3 +1,20 @@
+== 3.4.0 - 2013/01/06
+
+* All deprecated methods will print out warnings.
+* Documentation overhaul - http://rubydoc.info/github/watir/watir-classic/frames
+* Element#flash returns self instead of nil.
+* Fix frame locator in Frame#attach_command (issue #45).
+* Remove :zero_based_indexing option - from now on all index options are starting from zero.
+* Remove global variable $HIDE_IE - use IE.visible= method instead. Support for command line switch -b is also removed.
+* Remove global varialbe $FAST_SPEED - IE.speed= method instead. Support for command line switch -f is also removed.
+* Remove IE#close_all - use browser.windows.each(&:close) instead.
+* Remove IE#close_modal - use browser.modal_dialog.close instead. 
+* Remove IE#close_others - use browser.windows.reject(&:current?).each(&:close) instead.
+* Remove unused ie-new-process.rb.
+* Remove unused PageContainer module.
+* Remove unused PageContainer#check_for_http_error.
+* Remove unused PageContainer#enabled_popup - use browser.modal_dialog instead.
+
 == 3.3.0 - 2012/10/27
 
 * Add support for optional Element#style property argument, which allows to get specific css style attribute value.
