@@ -272,8 +272,9 @@ module Watir
     end
 
     # @deprecated Use "browser.text_field.value.include?(target)" or
-    #   "browser.text_field.value.match(target)"
-    def verify_contains(target) #:nodoc:
+    #   "browser.text_field.value.match(target) instead."
+    def verify_contains(target)
+      Kernel.warn "Deprecated(TextField#verify_contains) - use \"browser.text_field.value.include?(target)\" or \"browser.text_field.value.match(target)\" instead."
       assert_exists
       if target.kind_of? String
         return true if self.value == target
@@ -285,6 +286,7 @@ module Watir
 
     # @deprecated Not part of the WatirSpec API.
     def drag_contents_to(destination_how, destination_what)
+      Kernel.warn "Deprecated(TextField#drag_contents_to) - is not parf ot the WatirSpec API and might be deleted in the future."
       assert_exists
       destination = @container.text_field(destination_how, destination_what)
       unless destination.exists?

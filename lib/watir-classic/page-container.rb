@@ -48,8 +48,9 @@ module Watir
       page.innertext.strip
     end
 
-    # @deprecated Use "browser.text.include?(target)" or "browser.text.match(target)"
+    # @deprecated Use "browser.text.include?(target)" or "browser.text.match(target) instead."
     def contains_text(target)
+      Kernel.warn "Deprecated(Element#contains_text) - use \"browser.text.include?(target)\" or \"browser.text.match(target)\" instead."
       if target.kind_of? Regexp
         self.text.match(target)
       elsif target.kind_of? String

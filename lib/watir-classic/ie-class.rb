@@ -277,11 +277,13 @@ module Watir
 
     # @deprecated Use {#speed=} with :fast argument instead.
     def set_fast_speed
+      Kernel.warn "Deprecated(IE.set_fast_speed) - use Browser#speed = :fast instead."
       self.speed = :fast
     end
 
     # @deprecated Use {#speed=} with :slow argument instead.
     def set_slow_speed
+      Kernel.warn "Deprecated(IE.set_slow_speed) - use Browser#speed = :slow instead."
       self.speed = :slow
     end
 
@@ -433,7 +435,7 @@ module Watir
 
     # @deprecated use {#rautomation} instead.
     def autoit
-      Kernel.warn "Usage of Watir::IE#autoit method is DEPRECATED! Use Watir::IE#rautomation method instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
+      Kernel.warn "Deprecated(IE#autoit) - use IE#rautomation instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
       @autoit ||= ::RAutomation::Window.new(:hwnd => hwnd, :adapter => :autoit)
     end
 
