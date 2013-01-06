@@ -80,17 +80,17 @@ module Watir
       @main_browser.hwnd == browser.hwnd && @main_browser.html == browser.html
     end
 
-    def ==(other)
-      browser.hwnd == other.hwnd && browser.html == other.browser.html
-    end
-
-    alias_method :eql?, :==
-
     # @return [Boolean] true when {Window} browser exists, false otherwise.
     def present?
       @browser = nil
       browser && browser.exists?
     end
+
+    def ==(other)
+      browser.hwnd == other.hwnd && browser.html == other.browser.html
+    end
+
+    alias_method :eql?, :==
 
   end
 end
