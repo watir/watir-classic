@@ -306,9 +306,9 @@ module Watir
       @hwnd ||= @ie.hwnd
     end
 
-    # @return [Symbol] the name of the browser. Is always :ie.
+    # @return [Symbol] the name of the browser. Is always :internet_explorer.
     def name
-      :ie
+      :internet_explorer
     end
 
     # @return [Boolean] true when IE is window exists, false otherwise.
