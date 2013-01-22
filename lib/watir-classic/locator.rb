@@ -15,7 +15,7 @@ module Watir
     def each
       if has_excluding_specifiers?
         locate_elements_by_xpath_css_ole.each do |element|
-          yield element
+          yield create_element element
         end
       else
         @tags.each do |tag|
