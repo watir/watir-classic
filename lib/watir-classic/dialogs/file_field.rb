@@ -1,6 +1,24 @@
 module Watir
   # Returned by {Container#file_field}.
   class FileField < InputElement
+    # File upload dialog titles to search for.
+    #
+    # @example When the title of your IE dialog is missing, add a new one:
+    #   Watir::FileField::WINDOW_TITLES << "My missing title"    
+    WINDOW_TITLES = [/choose file( to upload)?/i, "Elegir archivos para cargar", "Datei zum Hochladen"] 
+
+    # File upload dialog "OK" button values to search for.
+    #
+    # @example When the "OK" button of your IE is missing, add a new one:
+    #   Watir::FileField::OK_BUTTON_VALUES << "My missing button value"    
+    OK_BUTTON_VALUES = ['&Open', '&Abrir', '&ffnen']
+
+    # File upload dialog "Cancel" button values to search for.
+    #
+    # @example When the "Cancel" button of your IE is missing, add a new one:
+    #   Watir::FileField::CANCEL_BUTTON_VALUES << "My missing button value"    
+    CANCEL_BUTTON_VALUES = ['Cancel', 'Abbrechen']
+
     # Set the path of the file field.
     #
     # @example
@@ -31,15 +49,21 @@ module Watir
     end
 
     def open_button
-      file_upload_window.button(:value => /&Open|&Abrir/)
+      file_upload_window.button(:value => formatted_regexp(OK_BUTTON_VALUES))
     end
 
     def cancel_button
-      file_upload_window.button(:value => /Cancel/)
+      file_upload_window.button(:value => formatted_regexp(CANCEL_BUTTON_VALUES))
     end
 
     def file_upload_window
-      @window ||= RAutomation::Window.new(:title => /^choose file( to upload)?|Elegir archivos para cargar$/i)
+      @window ||= RAutomation::Window.new(:title => formatted_regexp(WINDOW_TITLES))
+    end
+
+    private
+
+    def formatted_regexp(values)
+      Regexp.new("^#{Regexp.union values}$", Regexp::IGNORECASE)
     end
 
   end

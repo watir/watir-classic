@@ -8,7 +8,7 @@ module Watir
     #
     # @example When the title of your IE dialog is missing, add a new one:
     #   Watir::Alert::WINDOW_TITLES << "My missing title"
-    WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer', 'Microsoft Internet Explorer', /Mensaje de p.*/, "Explorer User Prompt"]
+    WINDOW_TITLES = ['Message from webpage', 'Windows Internet Explorer', 'Microsoft Internet Explorer', /Mensaje de p.*/, 'Explorer User Prompt']
 
     def initialize(container)
       @container = container
@@ -47,7 +47,7 @@ module Watir
     private 
 
     def dialog
-      @window ||= RAutomation::Window.new(:hwnd => @container.hwnd).child(:title => /^(#{WINDOW_TITLES.join('|')})$/)
+      @window ||= RAutomation::Window.new(:hwnd => @container.hwnd).child(:title => Regexp.new("^#{Regexp.union WINDOW_TITLES}$", Regexp::IGNORECASE))
     end
 
     def wait_until_not_exists
