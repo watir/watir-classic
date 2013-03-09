@@ -523,7 +523,7 @@ module Watir
     # Gives focus to the window frame.
     def focus
       active_element = document.activeElement
-      active_element.blur unless active_element.tagName == "BODY"
+      active_element.blur if active_element && active_element.tagName != "BODY"
       document.focus
     end
 
