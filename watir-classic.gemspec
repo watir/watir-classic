@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'windows-pr', '>= 0.6.6'
   s.add_dependency 'nokogiri'
   s.add_dependency 'ffi', '~>1.0'
-  s.add_dependency 'rautomation', '~>0.7.2'
+  s.add_dependency 'rautomation', '~>0.7'
   s.add_dependency 'user-choices'
   s.add_dependency 'multi_json'
   s.add_dependency 'win32screenshot'
