@@ -251,12 +251,17 @@ module Watir
       # Now iterate up the DOM element tree and return false if any
       # parent element isn't visible 
       assert_exists
+      visible_child = false
       object = @o
       while object
         begin
-          if object.currentstyle.invoke('visibility') =~ /^hidden$/i
+          visibility = object.currentstyle.invoke('visibility')
+          if visibility =~ /^visible$/i
+            visible_child = true
+          elsif !visible_child && visibility =~ /^hidden$/i
             return false
           end
+
           if object.currentstyle.invoke('display') =~ /^none$/i
             return false
           end
