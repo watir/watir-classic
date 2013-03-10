@@ -1,6 +1,7 @@
-== 3.5.0 - 2013/03/xx
+== 3.5.0 - 2013/03/10
 
 * Browser#name returns :internet_explorer instead of :ie.
+* Element#visible? returns true for child element with visibility set to visible even if parent has visibility set to hidden. Fixes #52.
 * Loosen up RAutomation dependency version.
 * Make FileField window titles, button values etc configurable for multi language environments. Closes #50.
 * When searching elements with :css locator then elements should be of class Watir::Element. Closes https://github.com/watir/watir/issues/7
