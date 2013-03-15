@@ -45,7 +45,7 @@ module Watir
         raise NoValueFoundException, "No option with :text, :label or :value of #{item.inspect} in this select element" if matching_options.empty?
         matching_options.each(&:select)
       end
-      matching_options.first.text
+      first_present_option_value matching_options, :text
     end
 
     # Select an item or items in a select box by option's value.
@@ -58,7 +58,7 @@ module Watir
       matching_options = matching_items_in_select_list(:value, item)
       raise NoValueFoundException, "No option with :value of #{item.inspect} in this select element" if matching_options.empty?
       matching_options.each(&:select)
-      matching_options.first.value
+      first_present_option_value matching_options, :value
     end
 
     # @example Retrieve selected options as a text:
@@ -99,6 +99,11 @@ module Watir
           raise TypeError, "#{value.inspect} can be only String, Regexp or Numeric!"
         end
       end
+    end
+
+    def first_present_option_value(matching_options, field_to_return)
+      first_matching_option = matching_options.first
+      first_matching_option.present? ? first_matching_option.send(field_to_return) : ""
     end
   end
 
