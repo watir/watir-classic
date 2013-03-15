@@ -130,9 +130,12 @@ module Watir
         @ie_version ||= begin
                           require 'win32/registry'
                           ::Win32::Registry::HKEY_LOCAL_MACHINE.open("SOFTWARE\\Microsoft\\Internet Explorer") do |ie_key|
-                            ie_key.read('Version').last
+                            begin
+                              ie_key['svcVersion']
+                            rescue ::Win32::Registry::Error
+                              ie_key['Version']
+                            end
                           end
-                          # OR: ::WIN32OLE.new("WScript.Shell").RegRead("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer\\Version")
                         end
       end
 
