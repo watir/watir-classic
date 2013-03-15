@@ -4,7 +4,7 @@ require "watir-classic"
 WatirSpec.implementation do |imp|
   imp.name = :watir_classic
 
-  WatirSpec.persistent_browser = false
+  WatirSpec.persistent_browser = true
   imp.browser_class = Watir::IE
   browser = :internet_explorer
   browser_version = "#{browser}#{imp.browser_class.version.to_i}".to_sym
