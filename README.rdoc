@@ -69,3 +69,11 @@ Checking for text in a page
 Checking the title of a page
 
   puts browser.title == "Thanks!"
+
+== Supported Platforms
+
+Watir-Classic is supported on Ruby 1.8.7, 1.9.3 and 2.0.0. It should work on Internet Explorer 8, 9 and 10.
+
+Let us know at {Watir's Mailing List}[https://groups.google.com/forum/?fromgroups#!forum/watir-general] or
+through {Issues}[https://github.com/watir-classic-issues] if there's any problems.
+
