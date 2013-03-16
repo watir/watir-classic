@@ -1,3 +1,11 @@
+== 3.6.0 - 2013/03/16
+
+* Add full support for Ruby 2.0 and IE10.
+* Add support for modal dialogs on Ruby 2.0.
+* Bump up nokogiri dependency for Ruby 2.0 support.
+* Fix Browser#version for IE10.
+* SelectList#select and SelectList#select_value return empty string when value is removed after selection.
+
 == 3.5.0 - 2013/03/10
 
 * Browser#name returns :internet_explorer instead of :ie.
