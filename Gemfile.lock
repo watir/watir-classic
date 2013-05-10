@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    watir-classic (3.6.0)
+    watir-classic (3.7.0)
       ffi (~> 1.0)
       multi_json
       nokogiri (>= 1.5.7.rc3)
