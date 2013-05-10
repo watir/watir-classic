@@ -5,6 +5,8 @@ Bundler::GemHelper.install_tasks
 
 task :default => :spec
 
+task :release => :spec
+
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
