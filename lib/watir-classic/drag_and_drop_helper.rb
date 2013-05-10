@@ -54,7 +54,10 @@ module Watir
     end
 
     def source_x_y_relative
-      center_x_y_absolute left_edge, top_edge
+      document_element = ole_object.document.documentElement
+      x = left_edge + document_element.scrollLeft - ole_object.offsetWidth
+      y = top_edge + document_element.scrollTop - ole_object.offsetHeight
+      center_x_y_absolute x, y
     end
 
     def assert_target(target)
@@ -63,7 +66,7 @@ module Watir
     end
 
     def top_edge
-      ole_object.getBoundingClientRect(0).top.to_i
+      bounding_client_rect(:top)
     end
 
     def top_edge_absolute
@@ -71,7 +74,7 @@ module Watir
     end
 
     def left_edge
-      ole_object.getBoundingClientRect(0).left.to_i
+      bounding_client_rect(:left)
     end
 
     def left_edge_absolute
@@ -79,16 +82,21 @@ module Watir
     end
 
     def right_edge
-      ole_object.getBoundingClientRect(0).right.to_i
+      bounding_client_rect(:right)
     end
 
     def bottom_edge
-      ole_object.getBoundingClientRect(0).bottom.to_i
+      bounding_client_rect(:bottom)
     end
 
     def center_x_y_absolute x, y
       return (right_edge - left_edge) / 2 + x, (bottom_edge - top_edge) / 2 + y
     end
 
+    private
+
+    def bounding_client_rect(which)
+      ole_object.getBoundingClientRect(0).send(which).to_i
+    end
   end
 end
