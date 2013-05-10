@@ -1,3 +1,8 @@
+== 3.7.0 - 2013/05/10
+
+* Add #required? method for input elements.
+* Improve the stability of drag and drop methods.
+
 == 3.6.0 - 2013/03/16
 
 * Add full support for Ruby 2.0 and IE10.
