@@ -3,6 +3,7 @@ module Watir
   # Super-class for input elements like {SelectList}, {Button} etc.
   class InputElement < Element
     attr_ole :disabled?
+    attr_ole :required?
     attr_ole :name
     attr_ole :value
     attr_ole :alt
