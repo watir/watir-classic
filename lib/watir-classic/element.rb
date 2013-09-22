@@ -454,7 +454,7 @@ module Watir
       element = "#{self.class}.new(#{@page_container.attach_command}, :tag_name => Array.new << '#{tag_name}', :unique_number => #{unique_number})"
       method = build_method(method_name, *args)
       ruby_code = "$:.unshift(#{$LOAD_PATH.map {|p| "'#{p}'" }.join(").unshift(")});" <<
-                    "require '#{File.expand_path(File.dirname(__FILE__))}/core';#{element}.#{method};"
+                    "require '#{File.expand_path(File.dirname(__FILE__))}/../watir-classic';#{element}.#{method};"
       ruby_code
     end
 

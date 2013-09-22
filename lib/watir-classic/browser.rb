@@ -1,5 +1,3 @@
-require File.expand_path("ie", File.dirname(__FILE__))
-
 module Watir
   # Main browser class.
   class Browser
