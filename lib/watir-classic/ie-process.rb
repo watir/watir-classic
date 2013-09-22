@@ -1,13 +1,13 @@
 require 'win32/process'
 
 module Watir
-  class IE
+  class Browser
     class Process
       def self.start
         program_files = ENV['ProgramFiles'] || "c:\\Program Files"
         startup_command = "#{program_files}\\Internet Explorer\\iexplore.exe"
-        startup_command << " -nomerge" if IE.version_parts.first.to_i == 8
-        startup_command << " -noframemerging" if IE.version_parts.first.to_i >= 9
+        startup_command << " -nomerge" if Browser.version_parts.first.to_i == 8
+        startup_command << " -noframemerging" if Browser.version_parts.first.to_i >= 9
         process_info = ::Process.create('app_name' => "#{startup_command} about:blank")
         process_id = process_info.process_id
         new process_id
@@ -22,7 +22,7 @@ module Watir
       def window
         Wait.until do
           found_window = nil
-          IE.each do | ie |
+          Browser.each do | ie |
             window = ie.ie
             hwnd = ie.hwnd
             process_id = Process.process_id_from_hwnd hwnd        

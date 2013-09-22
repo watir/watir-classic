@@ -66,7 +66,7 @@ module Watir
 
     # @private
     def attach_command
-      "Watir::IE.find(:hwnd, #{@container.hwnd}).modal_dialog"
+      "Watir::Browser.find(:hwnd, #{@container.hwnd}).modal_dialog"
     end
 
     # @private

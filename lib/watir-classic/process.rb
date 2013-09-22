@@ -12,7 +12,7 @@ module Watir
     
   end
   
-  class IE
+  class Browser
     # Returns the number of IEXPLORE processes currently running.
     # @return [Fixnum] number of ie processes.
     def self.process_count

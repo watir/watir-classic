@@ -1,6 +1,8 @@
+require File.expand_path("ie", File.dirname(__FILE__))
+
 module Watir
   # Main browser class.
-  class IE
+  class Browser
     include WaitHelper
     include Exception
     include Container
@@ -14,13 +16,13 @@ module Watir
         @attach_timeout ||= 2
       end
 
-      # Return the options used when creating new instances of IE.
-      # BUG: this interface invites misunderstanding/misuse such as IE.options[:speed] = :zippy]
+      # Return the options used when creating new instances of {Browser}.
+      # BUG: this interface invites misunderstanding/misuse such as Browser.options[:speed] = :zippy]
       def options
         {:speed => self.speed, :visible => self.visible, :attach_timeout => self.attach_timeout}
       end
 
-      # set values for options used when creating new instances of IE.
+      # set values for options used when creating new instances of {Browser}.
       def set_options options
         options.each do |name, value|
           send "#{name}=", value
@@ -109,7 +111,7 @@ module Watir
       # Yields successively to each IE window on the current desktop. Takes a block.
       # @note This method will not work when
       #   Watir/Ruby is run under a service (instead of a user).
-      # @yieldparam [IE] ie instances of IE found.
+      # @yieldparam [Browser] ie instances of IE found.
       def each
         shell = WIN32OLE.new('Shell.Application')
         ie_browsers = []
@@ -151,7 +153,7 @@ module Watir
         bind ie_ole if ie_ole
       end
 
-      # Return an IE object that wraps the given window, typically obtained from
+      # Return an Browser object that wraps the given window, typically obtained from
       # Shell.Application.windows.
       # @private
       def bind(window)
@@ -280,13 +282,13 @@ module Watir
 
     # @deprecated Use {#speed=} with :fast argument instead.
     def set_fast_speed
-      Kernel.warn "Deprecated(IE.set_fast_speed) - use Browser#speed = :fast instead."
+      Kernel.warn "Deprecated(Browser.set_fast_speed) - use Browser#speed = :fast instead."
       self.speed = :fast
     end
 
     # @deprecated Use {#speed=} with :slow argument instead.
     def set_slow_speed
-      Kernel.warn "Deprecated(IE.set_slow_speed) - use Browser#speed = :slow instead."
+      Kernel.warn "Deprecated(Browser.set_slow_speed) - use Browser#speed = :slow instead."
       self.speed = :slow
     end
 
@@ -314,7 +316,7 @@ module Watir
       :internet_explorer
     end
 
-    # @return [Boolean] true when IE is window exists, false otherwise.
+    # @return [Boolean] true when IE window exists, false otherwise.
     def exists?
       !!(@ie.name =~ /Internet Explorer/)
     rescue WIN32OLERuntimeError, NoMethodError
@@ -438,7 +440,7 @@ module Watir
 
     # @deprecated use {#rautomation} instead.
     def autoit
-      Kernel.warn "Deprecated(IE#autoit) - use IE#rautomation instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
+      Kernel.warn "Deprecated(Browser#autoit) - use Browser#rautomation instead. Refer to https://github.com/jarmo/RAutomation for updating your scripts."
       @autoit ||= ::RAutomation::Window.new(:hwnd => hwnd, :adapter => :autoit)
     end
 
@@ -498,7 +500,7 @@ module Watir
     # @see #window
     # @return [Array<Window>] array of found windows.
     def windows(specifiers={})
-      self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, IE.bind(ie))}
+      self.class._find_all(specifiers.keys.first, specifiers.values.first).map {|ie| Window.new(self, specifiers, self.class.bind(ie))}
     end
 
     # Retrieve {Cookies} instance.
@@ -511,7 +513,7 @@ module Watir
     # @example
     #   browser.add_checker lambda { |browser| raise "Error!" if browser.text.include? "Error" }
     #
-    # @param [Proc] checker Proc object which gets yielded with {IE} instance.
+    # @param [Proc] checker Proc object which gets yielded with {Browser} instance.
     def add_checker(checker)
       @error_checkers << checker
     end
@@ -532,7 +534,7 @@ module Watir
 
     # @private
     def attach_command
-      "Watir::IE.attach(:hwnd, #{hwnd})"
+      "Watir::Browser.attach(:hwnd, #{hwnd})"
     end
 
     # @private
@@ -561,8 +563,8 @@ module Watir
 
     # @private
     def initialize_options
-      self.visible = IE.visible
-      self.speed = IE.speed
+      self.visible = self.class.visible
+      self.speed = self.class.speed
 
       @ole_object = nil
       @page_container = self
@@ -649,8 +651,8 @@ module Watir
     def attach_browser_window how, what
       ieTemp = nil
       begin
-        Wait.until(IE.attach_timeout) do
-          ieTemp = IE._find how, what
+        Wait.until(self.class.attach_timeout) do
+          ieTemp = self.class._find how, what
         end
       rescue Wait::TimeoutError
         raise NoMatchingWindowFoundException,
@@ -660,5 +662,5 @@ module Watir
     end
 
 
-  end # class IE
+  end
 end

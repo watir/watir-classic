@@ -1,5 +1,5 @@
 module Watir
-  # Returned by {IE#window}.
+  # Returned by {Browser#window}.
   class Window
     include ElementExtensions
 
@@ -43,7 +43,7 @@ module Watir
     # @return [Browser] browser of the window.
     def browser
       @browser ||= begin
-                    IE.find(@locators.keys.first, @locators.values.first)
+                    Browser.find(@locators.keys.first, @locators.values.first)
                    end
     end
 
@@ -68,7 +68,7 @@ module Watir
         ensure
           @main_browser.ie = self.class.__main_ie
           # try to find some existing IE when needed
-          @main_browser.ie = IE._find(:index, 0) unless @main_browser.exists?
+          @main_browser.ie = Browser._find(:index, 0) unless @main_browser.exists?
         end
       end
       self

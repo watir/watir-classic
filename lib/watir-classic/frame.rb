@@ -22,7 +22,7 @@ module Watir
       if @document
         @document
       else
-        raise FrameAccessDeniedException, "IE will not allow access to this frame for security reasons. You can work around this with ie.goto(frame.src)"
+        raise FrameAccessDeniedException, "IE will not allow access to this frame for security reasons. You can work around this with browser.goto(frame.src)"
       end
     end
 

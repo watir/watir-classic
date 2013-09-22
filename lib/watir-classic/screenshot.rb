@@ -3,7 +3,7 @@ require "base64"
 require "win32/screenshot"
 
 module Watir
-  # Returned by {IE#screenshot}.
+  # Returned by {Browser#screenshot}.
   class Screenshot
     def initialize(browser_hwnd)
       @hwnd = browser_hwnd

@@ -1,7 +1,7 @@
 require "uri"
 
 module Watir
-  # Returned by {IE#cookies}.
+  # Returned by {Browser#cookies}.
   class Cookies
     include Enumerable
 

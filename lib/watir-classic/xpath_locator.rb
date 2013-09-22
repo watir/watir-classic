@@ -29,7 +29,7 @@ module Watir
     # execute xpath selector and return an array of elements
     def elements_by_xpath(xpath)
       doc = xmlparser_document_object
-      current_tag = @container.is_a?(IE) ? "body" : @container.tag_name
+      current_tag = @container.is_a?(Browser) ? "body" : @container.tag_name
 
       doc.xpath(xpath).reduce([]) do |elements, element|
         absolute_xpath_parts = element.path.split("/")
@@ -45,7 +45,7 @@ module Watir
     end    
 
     def direct_children container, elements
-      return elements if container.is_a?(IE)
+      return elements if container.is_a?(Browser)
       elements.select {|el| el.parent == container}
     end
 
