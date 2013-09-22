@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', ">= 1.5.7.rc3"
   s.add_dependency 'ffi', '~>1.0'
   s.add_dependency 'rautomation', '~>0.7'
-  s.add_dependency 'user-choices'
   s.add_dependency 'multi_json'
   s.add_dependency 'win32screenshot'
 
