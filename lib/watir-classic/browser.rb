@@ -233,7 +233,7 @@ module Watir
     # @param [Boolean] suppress_new_window set to true for not creating a IE
     #   window.
     def initialize(suppress_new_window=nil)
-      _new_window_init unless suppress_new_window
+      _new_window_init unless suppress_new_window == true 
     end
 
     # Specifies the speed that commands will be executed at.
