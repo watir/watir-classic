@@ -1,3 +1,7 @@
+== 4.0.1 - 2013/10/05
+
+* Bump win32screenshot dependency version.
+
 == 4.0.0 - 2013/10/05
 
 * Browser#add_checker also accepts block instead of a proc object.

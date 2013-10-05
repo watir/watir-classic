@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ffi', '~>1.0'
   s.add_dependency 'rautomation', '~>0.7'
   s.add_dependency 'multi_json'
-  s.add_dependency 'win32screenshot'
+  s.add_dependency 'win32screenshot', "~> 1.0.9"
 
   s.add_development_dependency("rspec", "~>2.3")
   s.add_development_dependency("syntax")
