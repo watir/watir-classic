@@ -1,3 +1,9 @@
+== 4.0.0 - 2013/10/05
+
+* Browser#add_checker also accepts block instead of a proc object.
+* Browser#initialize suppresses window only when actual "true" value is given as an argument.
+* Rename Watir::IE to Watir::Browser. Closes #47 and #53.
+
 == 3.7.0 - 2013/05/10
 
 * Add #required? method for input elements.
