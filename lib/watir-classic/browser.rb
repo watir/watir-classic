@@ -512,8 +512,14 @@ module Watir
     #   browser.add_checker lambda { |browser| raise "Error!" if browser.text.include? "Error" }
     #
     # @param [Proc] checker Proc object which gets yielded with {Browser} instance.
-    def add_checker(checker)
-      @error_checkers << checker
+    def add_checker(checker = nil, &block)
+      if block_given?
+        @error_checkers << block
+      elsif checker.respond_to? :call
+        @error_checkers << checker
+      else
+        raise ArgumentError, "expected block or object responding to #call"
+      end
     end
 
     # Disable an error checker added via {#add_checker}.
