@@ -177,11 +177,13 @@ module Watir
     # @return [String] button contents of value attribute or inner text if there's no value.
     # @see Element#text
     def text
-      val = __value
+      val = tag_name == "button" ? super : __value
       val.empty? ? super : val
     end
 
-    alias_method :value, :text
+    def value
+      tag_name == "button" ? attribute_value("value") : text
+    end
   end
 
   # Returned be {Container#text_field}.
