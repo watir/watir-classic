@@ -15,6 +15,11 @@ module Watir
       document.title
     end
 
+    # Brings the modal dialog to front.
+    def focus
+      @modal.activate
+    end
+
     # Close the modal dialog.
     #
     # @param [Fixnum] timeout timeout in seconds to wait until modal dialog is
