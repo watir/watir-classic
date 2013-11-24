@@ -8,7 +8,7 @@ module Watir
     def initialize container, specifiers, klass
       @container = container
       @specifiers = {:index => 0}.merge(normalize_specifiers(specifiers))
-      @tags = @specifiers.delete(:tag_name)
+      @tags = [@specifiers.delete(:tag_name)].flatten
       @klass = klass
     end
 
