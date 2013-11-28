@@ -17,7 +17,8 @@ module Watir
     # @raise [TimeoutError] when timeout exceeds.
     # @see WaitHelper
     # @see ElementExtensions
-    def until(timeout = 60, &block)
+    def until(timeout = nil, &block)
+      timeout ||= Watir.default_timeout
       end_time = ::Time.now + timeout
 
       until ::Time.now > end_time
@@ -39,7 +40,8 @@ module Watir
     # @raise [TimeoutError] when timeout exceeds.
     # @see WaitHelper
     # @see ElementExtensions    
-    def while(timeout = 60, &block)
+    def while(timeout = nil, &block)
+      timeout ||= Watir.default_timeout
       end_time = ::Time.now + timeout
 
       until ::Time.now > end_time

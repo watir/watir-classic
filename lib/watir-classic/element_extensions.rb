@@ -46,7 +46,8 @@ module Watir
     # @param [Fixnum] timeout seconds to wait before timing out.
     # @raise [Watir::Wait::TimeoutError] will be raised when element is not
     #   present within specified timeout.
-    def when_present(timeout = 60)
+    def when_present(timeout = nil)
+      timeout ||= Watir.default_timeout
       if block_given?
         Watir::Wait.until(timeout) { self.present? }
         yield self
@@ -59,7 +60,8 @@ module Watir
     #
     # @raise [Watir::Wait::TimeoutError] will be raised when element is not
     #   present within specified timeout.
-    def wait_until_present(timeout = 60)
+    def wait_until_present(timeout = nil)
+      timeout ||= Watir.default_timeout
       Watir::Wait.until(timeout) { self.present? }
     end
 
@@ -67,7 +69,8 @@ module Watir
     #
     # @raise [Watir::Wait::TimeoutError] will be raised when element is still present
     #   after specified timeout.
-    def wait_while_present(timeout = 60)
+    def wait_while_present(timeout = nil)
+      timeout ||= Watir.default_timeout
       Watir::Wait.while(timeout) { self.present? }
     end
 

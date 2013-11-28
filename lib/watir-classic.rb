@@ -38,4 +38,18 @@ require 'watir-classic/supported_elements'
 
 module Watir
   autoload :IE, File.expand_path("watir-classic/ie_deprecated", File.dirname(__FILE__))
+
+  class << self
+    def default_timeout
+      @default_timeout ||= 30
+    end
+
+    #
+    # Default wait time for wait methods.
+    #
+
+    def default_timeout=(value)
+      @default_timeout = value
+    end
+  end
 end
