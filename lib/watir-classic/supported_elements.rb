@@ -18,7 +18,7 @@ module Watir
       #     browser.$1(:id => "htmlid")
       #
       #   @example Search by any arbitrary html attribute:
-      #     browser.$1(:foo => "value-of-foo-attribute)
+      #     browser.$1(:foo => "value-of-foo-attribute")
       #
       #   @example Search by multiple attributes, all provided locators should evaluate to true - only then element is considered to be found:
       #     browser.$1(:text => "some text", :class => "css class")
