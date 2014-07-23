@@ -113,7 +113,7 @@ module Watir
     end
 
     # Retrieve element's css style.
-    # @param [String] property When property is specified then only css for that property is returned. 
+    # @param [String] property When property is specified then only css for that property is returned.
     # @return [String] css style as a one long String.
     # @return [String] css style for specified property if property parameter is specified.
     # @macro exists
@@ -249,7 +249,7 @@ module Watir
     # @macro exists
     def visible?
       # Now iterate up the DOM element tree and return false if any
-      # parent element isn't visible 
+      # parent element isn't visible
       assert_exists
       visible_child = false
       object = @o
@@ -296,7 +296,7 @@ module Watir
           ruby_code = generate_ruby_code(self, $1, *args)
           system(spawned_no_wait_command(ruby_code))
         end
-      elsif meth =~ /^data_(.*)/
+      elsif meth =~ /^(aria|data)_(.+)$/
         self.send(:attribute_value, meth.gsub("_", "-")) || ''
       else
         super
@@ -306,7 +306,7 @@ module Watir
     # @private
     def locate
       @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
-    end  
+    end
 
     # @private
     def __ole_inner_elements
@@ -440,7 +440,7 @@ module Watir
     def build_method(method_name, *args)
       arguments = args.map do |argument|
         if argument.is_a?(String)
-          argument = "'#{argument}'"  
+          argument = "'#{argument}'"
         else
           argument = argument.inspect
         end
@@ -480,4 +480,4 @@ module Watir
     end
 
   end
-end  
+end
