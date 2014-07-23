@@ -296,7 +296,7 @@ module Watir
           ruby_code = generate_ruby_code(self, $1, *args)
           system(spawned_no_wait_command(ruby_code))
         end
-      elsif meth =~ /^data_(.*)/
+      elsif meth =~ /^(aria|data_).+$/
         self.send(:attribute_value, meth.gsub("_", "-")) || ''
       else
         super
