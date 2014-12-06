@@ -88,15 +88,25 @@ module Watir
     def to_subtype
       assert_exists
 
-      tag = tag_name
+      tag = tag_name.downcase
       if tag == "html"
         element(:ole_object => ole_object)
       elsif tag == "input"
-        send(ole_object.invoke('type'), :ole_object => ole_object)
-      elsif tag == "select"
-        select_list(:ole_object => ole_object)
-      elsif respond_to?(tag.downcase)
-        send(tag.downcase, :ole_object => ole_object)
+        input_type = case ole_object.invoke("type")
+          when *%w[button reset submit image]
+            "button"
+          when "checkbox"
+            "checkbox"
+          when "radio"
+            "radio"
+          when "file"
+            "file_field"
+          else
+            "text_field"
+          end
+          send(input_type, :ole_object => ole_object)
+      elsif respond_to?(tag)
+        send(tag, :ole_object => ole_object)
       else
         self
       end
@@ -113,7 +123,7 @@ module Watir
     end
 
     # Retrieve element's css style.
-    # @param [String] property When property is specified then only css for that property is returned. 
+    # @param [String] property When property is specified then only css for that property is returned.
     # @return [String] css style as a one long String.
     # @return [String] css style for specified property if property parameter is specified.
     # @macro exists
@@ -249,7 +259,7 @@ module Watir
     # @macro exists
     def visible?
       # Now iterate up the DOM element tree and return false if any
-      # parent element isn't visible 
+      # parent element isn't visible
       assert_exists
       visible_child = false
       object = @o
@@ -306,7 +316,7 @@ module Watir
     # @private
     def locate
       @o = @container.locator_for(TaggedElementLocator, @specifiers, self.class).locate
-    end  
+    end
 
     # @private
     def __ole_inner_elements
@@ -440,7 +450,7 @@ module Watir
     def build_method(method_name, *args)
       arguments = args.map do |argument|
         if argument.is_a?(String)
-          argument = "'#{argument}'"  
+          argument = "'#{argument}'"
         else
           argument = argument.inspect
         end
@@ -480,4 +490,4 @@ module Watir
     end
 
   end
-end  
+end
