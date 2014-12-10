@@ -164,7 +164,7 @@ module Watir
     support_element :table
     support_element :tbody, :class => :TableSection
     support_element :td, :tag_name => [:th, :td], :class => :TableCell
-    support_element :text_field, :tag_name => [:text, :password, :textarea], :class => :TextField, :super_class => :InputElement
+    support_element :text_field, :tag_name => [:text, :password, :textarea, :number, :email, :url, :search, :tel], :class => :TextField, :super_class => :InputElement
     support_element :textarea, :class => :TextArea, :super_class => :TextField, :super_collection => :InputElement
     support_element :tfoot, :class => :TableSection
     support_element :th
