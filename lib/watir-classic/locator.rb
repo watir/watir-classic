@@ -43,7 +43,7 @@ module Watir
         when :class
           how = :class_name
         when :caption
-          how = :value
+          how = :text
         when :method
           how = :form_method
         when :value
