@@ -10,6 +10,11 @@ module Watir
     attr_ole :src
     attr_ole :type
 
+    # @return [String] text field label's text.
+    def label
+      @container.label(:for => id).text
+    end
+
     # @private
     def locate
       @o = @container.locator_for(InputElementLocator, @specifiers, self.class).locate
@@ -40,8 +45,8 @@ module Watir
     def select(item)
       matching_options = []
       perform_action do
-        matching_options = matching_items_in_select_list(:text, item) + 
-          matching_items_in_select_list(:label, item) + 
+        matching_options = matching_items_in_select_list(:text, item) +
+          matching_items_in_select_list(:label, item) +
           matching_items_in_select_list(:value, item)
         raise NoValueFoundException, "No option with :text, :label or :value of #{item.inspect} in this select element" if matching_options.empty?
         matching_options.each(&:select)
@@ -203,11 +208,6 @@ module Watir
       end
     end
 
-    # @return [String] text field label's text.
-    def label
-      @container.label(:for => name).text
-    end
-
     # Clear the contents of the text field.
     #
     # @macro exists
@@ -340,7 +340,7 @@ module Watir
     # @private
     def assert_not_readonly
       if self.readonly?
-        raise ObjectReadOnlyException, 
+        raise ObjectReadOnlyException,
           "Textfield #{@specifiers.inspect} is read only."
       end
     end
@@ -362,14 +362,14 @@ module Watir
     end
 
     # Supports double-byte characters
-    def characters_in(value, &blk) 
+    def characters_in(value, &blk)
       if RUBY_VERSION =~ /^1\.8/
         index = 0
-        while index < value.length 
+        while index < value.length
           len = value[index] > 128 ? 2 : 1
           yield value[index, len]
           index += len
-        end 
+        end
       else
         value.each_char(&blk)
       end
