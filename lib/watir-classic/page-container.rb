@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module Watir
   # A PageContainer contains an HTML Document. In other words, it is a
   # what JavaScript calls a Window.
@@ -24,7 +26,7 @@ module Watir
         result = document.parentWindow.eval(source)
       rescue WIN32OLERuntimeError, NoMethodError #if eval fails we need to use execScript(source.to_s) which does not return a value, hence the workaround
         escaped_src = source.gsub(/\r?\n/, "\\n").gsub("'", "\\\\'")
-        wrapper = "_watir_helper_div_#{::Time.now.to_i + ::Time.now.usec}_#{rand(2**64).to_s(36)}" # ensure unique ID"
+        wrapper = "_watir_helper_div_#{SecureRandom.uuid}"
         cmd = "var e = document.createElement('DIV'); e.style.display='none'; e.id='#{wrapper}'; e.innerHTML = eval('#{escaped_src}'); document.body.appendChild(e);"
         document.parentWindow.execScript(cmd)
         result = document.getElementById(wrapper).innerHTML
