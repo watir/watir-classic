@@ -1,3 +1,15 @@
+== 4.1.0 - 2015/06/10
+
+* Add text field support for number, email, url, search, and tel types (#68)
+* Add support for locating all input elements via label text (#58)
+* Add support for aria-* attributes when locating elements and retrieving attribute values
+* Add support for String values for :tag_name locators (#62)
+* Fix Button#value for button tags
+* Fix Input#label to locate label using id (#57)
+* Fix interacting with elements within modal dialog (#64)
+* Fix Element#to_subtype for button, text and file inputs
+* Fix Browser#execute_script returning wrong result (#75, thanks @michaelcm)
+
 == 4.0.1 - 2013/10/05
 
 * Bump win32screenshot dependency version.
@@ -39,7 +51,7 @@
 * Remove global variable $HIDE_IE - use IE.visible= method instead. Support for command line switch -b is also removed.
 * Remove global varialbe $FAST_SPEED - IE.speed= method instead. Support for command line switch -f is also removed.
 * Remove IE#close_all - use browser.windows.each(&:close) instead.
-* Remove IE#close_modal - use browser.modal_dialog.close instead. 
+* Remove IE#close_modal - use browser.modal_dialog.close instead.
 * Remove IE#close_others - use browser.windows.reject(&:current?).each(&:close) instead.
 * Remove unused ie-new-process.rb.
 * Remove unused PageContainer module.
@@ -50,7 +62,7 @@
 
 * Add support for optional Element#style property argument, which allows to get specific css style attribute value.
 * Add support for locating Link by a :name. Fixes #42.
-* Avoid endless loop when focusing elements inside of a frame. Closes #41. 
+* Avoid endless loop when focusing elements inside of a frame. Closes #41.
 * Cookies#delete handles the situation if browser is on about:blank.
 * Remove Image#file_created_date method since IE does not provide accurate information. Closes #36.
 * Use MultiJSON gem instead of the Yajl::Ruby gem as a dependency for parsing #execute_script results.
@@ -197,7 +209,7 @@
  - td => cell
  - tds => cells
  - a => link
- - as => links 
+ - as => links
  - img => image
  - imgs => images
 
@@ -386,16 +398,16 @@ Charley Baker was release manager for this release of Watir.
     TextField#dragContentsTo    => drag_contents_to
     Radio/Checkbox#isSet?       => set?
 * Patch for winclicker fix. http://jira.openqa.org/browse/WTR-279 (Derek Berner)
-* Add support for using a Regexp as the third argument (value) when locating 
+* Add support for using a Regexp as the third argument (value) when locating
   checkboxes/radio buttons. (Jarib)
 * Add support for <strong> element. (Jarib)
 * Add support and tests for <em> element. (Jarib)
 * SelectList#select now supports Numeric arguments. (Jarib)
-* Additional inspect implementations for both IE and FF. 
+* Additional inspect implementations for both IE and FF.
   Closes http://jira.openqa.org/browse/WTR-158 (Jarib)
 * Add ElementCollections#{first,last}. (Jarib)
 * Fixes for running on Ruby 1.9. (Jarib)
-  
+
 === Firefox Improvements
 
 * SelectList#set is now defined for Firefox. Like with IE, it is an alias for
@@ -404,25 +416,25 @@ Charley Baker was release manager for this release of Watir.
   and @map@ to be used with methods such as @divs@ and @links@.
 * FireWatir.attach is now available, analogous to IE.attach. Includes http://jira.openqa.org/browse/WTR-296
 * Some Javascript errors that were being ignored, now raise Ruby exceptions.
-* Added event handler which resets the context of document 
+* Added event handler which resets the context of document
 * Fix bug that occurred when new page was automatically loaded. (Angrez, 3ef8b6)
   when page gets loaded automatically (Angrez)
-* Changed code to use document_var, body_var, window_var, browser_var instead of 
+* Changed code to use document_var, body_var, window_var, browser_var instead of
   "document", "body", "window", "browser" variables. (Angrez)
-* Changed code to replace every quote (") in xpath query with (\") so that it 
+* Changed code to replace every quote (") in xpath query with (\") so that it
   doesn't give error while executing the xpath query (Angrez)
 * Fire onchange event for FireWatir file fields. Closes http://jira.openqa.org/browse/WTR-286. (Jarib)
 * Fixes for running and closing Firefox on Mac OS X http://jira.openqa.org/browse/WTR-272 (Jarib)
-* Added functionality to allow Watir::Browser.attach with no arguments to open 
+* Added functionality to allow Watir::Browser.attach with no arguments to open
   a new firefox window rather than taking over the existing focused window (Rob Aldred)
-* Also modified some setup functions to correctly handle closed browsers, 
+* Also modified some setup functions to correctly handle closed browsers,
   browserless windows and others (Rob Aldred)
 * Add test and implementation for Firefox#status http://jira.openqa.org/browse/WTR-250 (Jarib)
 * 2 problems fixed with .click (jubishop)
-  a) When chaining together element calls the @container becomes an 
+  a) When chaining together element calls the @container becomes an
      HTMLElement, but there's no container_var defined for HTMLElement
   b) When an <a tag has no href then element_type was returning nil.
-* Fix bug in Firefox#document. Change creating error class by eval in jssh 
+* Fix bug in Firefox#document. Change creating error class by eval in jssh
   socket to creating class with ruby. (Ethan)
 * Add support for Browser#frames. (Ethan)
 * Make the version dependencies for Watir and FireWatir be the same. (This change
@@ -433,7 +445,7 @@ Charley Baker was release manager for this release of Watir.
 * Allow attach timeout to be accessed as an option. Thus:
     IE.set_options :attach_timeout => 5.0
   This was previously available as class method.
-* Fix for Autoit auto-registration. (Bret) 
+* Fix for Autoit auto-registration. (Bret)
   * Fixes http://jira.openqa.org/browse/WTR-290, http://jira.openqa.org/browse/WTR-308, http://jira.openqa.org/browse/WTR-298
 * Fix for IE6, 7 and 8 file uploads. (Zeljko Filipin & Jarmo Pertman)
 * Replaced REXML with Nokogiri for xml parsing. Fixes http://jira.openqa.org/browse/WTR-19 (Aidy Lewis)
@@ -443,17 +455,17 @@ Charley Baker was release manager for this release of Watir.
 * Fix for Browser#execute_script on IE7. (Jarib)
 * Removed ActiveSupport dependency. (Jarib)
 * Fix Browser#status so it works even when the status bar is not visible. (Bret)
-* Fix bug when using "each" with nested tables. 
+* Fix bug when using "each" with nested tables.
   http://jira.openqa.org/browse/WTR-324 (Alan Baird)
 * Now uses UTF-8 codepage by default http://jira.openqa.org/browse/WTR-219 (Jarib)
 
 === Structure Improvements
 
-* Lots of rework of the FireWatir code, including removing duplication and 
+* Lots of rework of the FireWatir code, including removing duplication and
   dead code, renaming variables, and simplifying code. Also a few performance
   improvements. (Bret & Charley)
 * Rename source file names for consistency.
-  
+
 === Unit Tests
 
 * Add tests demonstrating known bugs.
@@ -462,20 +474,20 @@ Charley Baker was release manager for this release of Watir.
 * Tag tests that are known to fail on IE or Firefox.
 * Fixed one test that was failing on non-English platforms. (Jarib)
 * New Rake task (:test) runs all tests. (Jim Matthews)
-* Use ci_reporter to provide more detailed test results for watirbuild.com. 
+* Use ci_reporter to provide more detailed test results for watirbuild.com.
   Use xls transform to format results. (Jim Matthews)
 * Add WatirSpec submodule + load it in Rakefile if available. (Jarib)
 
-== Version 1.6.2 
+== Version 1.6.2
 
 * Changed the method of setting Watir::Browser.default when the user does not
   specify a browser option. This fixes the problem where it would be 'ie' on
   Mac.
 
 * Fixed FireWatir's "text" method to return the same character's as Watir's
-  method. It had been returning extra spaces and other characters. 
+  method. It had been returning extra spaces and other characters.
   Fix included contribution from Tony. Closes #266
-  
+
 * Fixed "activesupport" error. Users no longer need to have the latest version
   installed.
 
@@ -485,10 +497,10 @@ Charley Baker was release manager for this release of Watir.
 
 == Version 1.6.0
 
-This release merges the Watir and FireWatir projects. It contains many 
+This release merges the Watir and FireWatir projects. It contains many
 compatibility fixes,
 as well as a new browser-independent interface your tests can use to allow you
-to specify the browser at run time. 
+to specify the browser at run time.
 
 We have also updated our existing support for modal dialogs so that it now works
 with Ruby 1.8.6. Users who have been using Ruby 1.8.2 because of this will now
@@ -496,7 +508,7 @@ need to upgrade to Ruby 1.8.6.
 
 This release also contains many other fixes. Details below.
 
-Watir and FireWatir are still distributed as separate gems. Installing the 
+Watir and FireWatir are still distributed as separate gems. Installing the
 Watir gem will automatically install FireWatir. Both gems now use common code
 contained in the "commonwatir" gem.
 
@@ -509,13 +521,13 @@ To install both Watir and FireWatir:
 
   gem update --system
   gem install watir
-  
+
 To only install FireWatir (e.g. on Mac or Linux)
 
   gem update --system
   gem install firewatir
-  
-To enable Firefox to work with Watir, you will also need to install the 
+
+To enable Firefox to work with Watir, you will also need to install the
 JSSH plugin. See this page for details.
 http://wiki.openqa.org/display/WTR/FireWatir+Installation#FireWatirInstallation-3%29InstalltheJSSHFirefoxExtension
 
@@ -533,7 +545,7 @@ In addition to 'browser', options supported by Browser.new (on IE only right now
 are 'speed' and 'visible'.
 
 Unit tests no longer run from the gems. You will need to get the source if you
-want to run the unit tests. 
+want to run the unit tests.
 
 === Compatibility Fixes
 * FireWatir now raises Watir exceptions.
@@ -541,7 +553,7 @@ want to run the unit tests.
 * Watir now supports multiple attributes for most page elements.
 * Added support to FireWatir for many more element types.
 * Added Radio#checked? and Checkbox#checked? methods to FireWatir.
-* Now firefox.radio().set will click a radio button (as does IE) even if it 
+* Now firefox.radio().set will click a radio button (as does IE) even if it
   is already set. This is important if there is javascript attached to the
   radio button.
 * TextField#set now respects the maxlength of the field. Previously, FireWatir
@@ -555,20 +567,20 @@ want to run the unit tests.
 * Watir#wait_until is now available to FireWatir.
 * Fixed versioning. With FireWatir 1.2.1, FireWatir::Firefox::VERSION
   actually reported '1.1.1.'.
-* FireWatir will now automatically starts Firefox on Mac (as it did previously 
+* FireWatir will now automatically starts Firefox on Mac (as it did previously
   on Windows and Linux).
 
 === IE Fixes
-* Fix for: form field named "submit" causes "submit" method to not work. 
+* Fix for: form field named "submit" causes "submit" method to not work.
   Closes #223.
 * Calling ie.radio().set now scrolls the page to the control, as with other
   controls. Thanks to Jonathan Kohl for the fix. Closes #172.
 * Fixed ie.speed, which was returning ":fast" when speed was actually ":zippy".
-* Fix for visible? method not being inherited correctly. From Alan Baird. 
+* Fix for visible? method not being inherited correctly. From Alan Baird.
   Closes #253
 * Added ie.forms method. Thanks to Jarmo P.
 * Fix for "undefined method 'document'" error that was occuring when loading
-  pages with frames that were slow to load. Reported here: 
+  pages with frames that were slow to load. Reported here:
   http://groups.google.com/group/watir-general/browse_thread/thread/ddde6251e30588c9
 * Fixed accessing checkboxes and radio buttons using :ole_object on IE.
   Closes #217.
@@ -578,7 +590,7 @@ want to run the unit tests.
   from a complete source tree.
 * New rake targets for Watir: test and cruise, each of which runs the core tests.
 * Numerous fixes and cleanup to the unit test suite.
-* The unit tests both both Watir and FireWatir now use the new Browser.new 
+* The unit tests both both Watir and FireWatir now use the new Browser.new
   interface and can be run
   against either implementation (Watir::IE or FireWatir::Firefox or others for
   that matter). See this page for details.
@@ -613,7 +625,7 @@ To install this:
 
 Installer Fix
 
-This update fixes an installer problem in Watir 1.5.5 that affected some users. 
+This update fixes an installer problem in Watir 1.5.5 that affected some users.
 If you installed 1.5.5 without error, there is no reason to get this update.
 
 == Watir 1.5.5.
@@ -621,13 +633,13 @@ If you installed 1.5.5 without error, there is no reason to get this update.
 New Features
 
 * Multiple attributes can now be specified for these elements:
-  li, ul, map, area, h1, h2, h3, h4, h5, h6. (This was claimed to work earlier, 
+  li, ul, map, area, h1, h2, h3, h4, h5, h6. (This was claimed to work earlier,
   but never did.)
   http://jira.openqa.org/browse/WTR-196
 
 Bug Fixes
 
-* Statements such at ie.table().row() now work (no longer private). 
+* Statements such at ie.table().row() now work (no longer private).
   http://jira.openqa.org/browse/WTR-117
 * Fixed bug with images method when used with anything but ie. (Paul Rogers)
   E.g. ie.div().images. http://jira.openqa.org/browse/WTR-211
@@ -640,11 +652,11 @@ Bug Fixes
   http://jira.openqa.org/browse/WTR-181
 * Made examples and unit tests somewhat better examples: removed unnecessary
   "include Watir" statements; started using "browser" instead of "$ie"; use
-  new methods 'goto_page' and 'uses_page' (this last improves performance of 
-  unit tests). 
+  new methods 'goto_page' and 'uses_page' (this last improves performance of
+  unit tests).
   http://jira.openqa.org/browse/WTR-159
 * Moved brittle unit test that was causing cascading failures; renamed another
-  that was causing a namespace collision.  
+  that was causing a namespace collision.
   http://jira.openqa.org/browse/WTR-92
 
 == Version 1.5.4
@@ -653,7 +665,7 @@ New Features
 
 * Add new speed, :zippy. This is like fast, but, in effect, it does a TextField#value= instead of a TextField#set. If you have specific text fields that you never want this to happen to, use ie.text_field(:how, what).requires_typing.set instead.
   http://svn.openqa.org/fisheye/changelog/watir/?cs=1295
-* Add support for Chinese input as supplied by Vincent Xu. 
+* Add support for Chinese input as supplied by Vincent Xu.
   http://jira.openqa.org/browse/WTR-71.
 
 Bug Fixes
@@ -677,15 +689,15 @@ Bug fixes and minor cleanup.
 * Update documentation.
 
 Major Changes in 1.5.2
-    Support for IE's Modal Dialogs. 
-      showModalDialog() 
-    Any method can be used to specify an element (:text, :class, etc.). 
+    Support for IE's Modal Dialogs.
+      showModalDialog()
+    Any method can be used to specify an element (:text, :class, etc.).
       ie.button(:class,'Button Menu').click
       ie.div(:text, 'Type').text_field(:class, 'TextInput-input').set('my value')
-      ie.button(:text, 'Save').click 
+      ie.button(:text, 'Save').click
     One can now use multiple attributes to specify an element.
       ie.span(:class =>'Label', :text => 'Add new').click
-      
+
 Other Changes in 1.5.2
     * Migrated IE.new_process from watir/contrib and improved its reliability. We now recommend IE.new_process over IE.new as a way to avoid numerous errors detailed in http://jira.openqa.org/browse/WTR-150.
     * Added IE.start_process. This works like IE.start, but uses the new_process mechanism to start IE.
@@ -743,7 +755,7 @@ Other Changes in 1.5.2
     * Released new IE.new_process method to 'watir/contrib/ie-new-process'. This starts up a new IE process for each IE window, which is really how it should be done. To close these use IE#kill. Any one getting intermittent RPC errors when opening windows may want to use this instead.
     * Several examples have been updated.
     * Moved enabled_popup to a new contrib directory.
-    * Added several tests. 
+    * Added several tests.
 
 Changes in 1.4
    fix method name for accessing class name of P/Span/Div (change from style to class_name)
@@ -788,7 +800,7 @@ Changes in 1.3
    added index to print out from show_xx methods. Link shows img src if an image is used
    added onKeyUp and onKeyDown to text_fields#set
    installer now installs AutoIt to deal with javascript popups, file uploads etc
-   the spinner is now off by default 
+   the spinner is now off by default
    bug fix in text_fields iterator where it wasnt iterating through password or text ares. Added test for password fields
    bug fix for flash for tables
    bug fixes for images and links in cells
