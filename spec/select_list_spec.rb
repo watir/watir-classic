@@ -9,10 +9,10 @@ describe "SelectList" do
   context "#select" do
     it "selects option within frame" do
       list = browser.frame.select_list
-      list.should exist
-      list.should be_selected("value1")
+      expect(list).to exist
+      expect(list).to be_selected("value1")
       list.select "value2"
-      list.should be_selected("value2")
+      expect(list).to be_selected("value2")
     end
   end
 end

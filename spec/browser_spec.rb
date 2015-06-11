@@ -7,15 +7,15 @@ describe "Browser" do
 
   context "#attach" do
     it "attaches to existing browser by title" do
-      Browser.attach(:title, /Images/).hwnd.should == browser.hwnd
+      expect(Browser.attach(:title, /Images/).hwnd).to eq(browser.hwnd)
     end
 
     it "attaches to existing browser by url" do
-      Browser.attach(:url, /images\.html/).hwnd.should == browser.hwnd
+      expect(Browser.attach(:url, /images\.html/).hwnd).to eq(browser.hwnd)
     end
 
     it "attaches to existing browser by handle" do
-      Browser.attach(:hwnd, browser.hwnd).hwnd.should == browser.hwnd
+      expect(Browser.attach(:hwnd, browser.hwnd).hwnd).to eq(browser.hwnd)
     end
 
     it "fails with an error if specified browser was not found" do

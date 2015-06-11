@@ -8,7 +8,7 @@ describe "Link" do
 
   context "#exists?" do
     it "finds link by a name" do
-      browser.a(:name => "bad_attribute").should exist
+      expect(browser.a(:name => "bad_attribute")).to exist
     end
   end
 end

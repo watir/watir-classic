@@ -9,9 +9,9 @@ describe "Elements" do
 
   it "returns a collection of Watir::Element when searching with :css" do
     elements = browser.elements(:css => "div")
-    elements.size.should > 0
+    expect(elements.size).to be > 0
     elements.each do |element|
-      element.class.should == Watir::Element 
+      expect(element.class).to eq(Watir::Element)
     end
   end
 
