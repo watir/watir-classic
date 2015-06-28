@@ -1,3 +1,7 @@
+== 4.2.0 - 2015/06/28
+
+* Bump win32screenshot dependency version
+
 == 4.1.0 - 2015/06/10
 
 * Add text field support for number, email, url, search, and tel types (#68)
