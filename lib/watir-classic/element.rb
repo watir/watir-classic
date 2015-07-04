@@ -36,7 +36,9 @@ module Watir
     attr_ole :title
     attr_ole :class_name, :className
     attr_ole :unique_number, :uniqueNumber
-    attr_ole :html, :outerHTML
+    attr_ole :inner_html, :innerHTML
+    attr_ole :outer_html, :outerHTML
+    alias_method :html, :outer_html
 
     # number of spaces that separate the property from the value in the to_s method
     # @private
