@@ -1,5 +1,9 @@
-require 'dl/import'
-require 'dl/struct'
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.2.0')
+  require 'fiddle/import'
+else
+  require 'dl/import'
+  require 'dl/struct'
+end
 require 'Win32API'
 
 module Watir
@@ -8,8 +12,14 @@ module Watir
     # this will find the IEDialog.dll file in its build location
     @@iedialog_file = (File.expand_path(File.dirname(__FILE__) + '/..') + "/watir-classic/IEDialog/Release/IEDialog.dll").gsub('/', '\\')
 
-    GetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'v')    
-    User32 = DL.dlopen('user32')
+    GetUnknown = Win32API.new(@@iedialog_file, 'GetUnknown', ['l', 'p'], 'V')
+
+
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.2.0')
+      User32 = Fiddle.dlopen('user32')
+    else
+      User32 = DL.dlopen('user32')
+    end
     if RUBY_VERSION =~ /^1\.8/
       FindWindowEx = User32['FindWindowEx', 'LLLpp']
       # method for this found in wet-winobj/wet/winobjects/WinUtils.rb
@@ -20,7 +30,7 @@ module Watir
         raise NotImplementedError, "1.9's DL API not compatible with 1.8, see http://www.ruby-forum.com/topic/138277"
       end
     end
-    
+
     ## GetWindows Constants
     GW_HWNDFIRST = 0
     GW_HWNDLAST = 1
@@ -38,4 +48,4 @@ module Watir
       rtn == 1
     end
   end
-end  
+end

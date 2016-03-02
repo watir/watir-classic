@@ -1,0 +1,64 @@
+From 00a7fb5e218b730337bf19afb6afe5a5ba6e8161 Mon Sep 17 00:00:00 2001
+From: Justin Ko <jkotests@gmail.com>
+Date: Tue, 1 Mar 2016 13:22:19 -0500
+Subject: [PATCH 1/1] Patch for Watir-Classic
+
+---
+ ext/win32ole/win32ole.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/ext/win32ole/win32ole.c b/ext/win32ole/win32ole.c
+index 57da91c..8636514 100644
+--- a/ext/win32ole/win32ole.c
++++ b/ext/win32ole/win32ole.c
+@@ -9112,6 +9112,39 @@ free_enc2cp(void)
+     st_free_table(enc2cp_table);
+ }
+ 
++/*
++ * WIN32OLE.connect_unknown( pUnknown ) --> aWIN32OLE
++ * ----
++ * Returns running OLE Automation object or WIN32OLE object from an IUnknown pointer
++ * the IUnknown pointer is passed in as a FIXNUM
++ */
++static VALUE
++fole_s_connect_unknown(VALUE self, VALUE iUnknown)
++{
++    HRESULT hr;
++    IDispatch *pDispatch;
++    IUnknown *pUnknown;
++
++    /* initialize to use OLE */
++    ole_initialize();
++
++    //cast from int to IUnknown*
++    pUnknown = (IUnknown*)FIX2INT(iUnknown);
++
++    hr = pUnknown->lpVtbl->QueryInterface(pUnknown, &IID_IDispatch,
++                                              (void **)&pDispatch);
++    if(FAILED(hr)) {
++        OLE_RELEASE(pUnknown);
++        ole_raise(hr, eWIN32OLERuntimeError,
++                  "Failed to connect to WIN32OLE server `%d'",
++                  FIX2INT(iUnknown));
++    }
++
++    OLE_RELEASE(pUnknown);
++
++    return create_win32ole_object(self, pDispatch, 0,0);
++}
++
+ void
+ Init_win32ole(void)
+ {
+@@ -9145,6 +9178,7 @@ Init_win32ole(void)
+     rb_define_method(cWIN32OLE, "initialize", fole_initialize, -1);
+ 
+     rb_define_singleton_method(cWIN32OLE, "connect", fole_s_connect, -1);
++    rb_define_singleton_method(cWIN32OLE, "connect_unknown", fole_s_connect_unknown, 1);
+     rb_define_singleton_method(cWIN32OLE, "const_load", fole_s_const_load, -1);
+ 
+     rb_define_singleton_method(cWIN32OLE, "ole_free", fole_s_free, 1);
+-- 
+2.5.3.windows.1
+
