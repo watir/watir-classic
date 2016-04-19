@@ -1,3 +1,9 @@
+﻿== 4.3.0 - TBD
+
+* Add Element#inner_html and Element#outer_html
+* Bump win32screenshot dependency version
+* Fix LoadError for dl/import in Ruby 2.2
+
 == 4.2.0 - 2015/06/28
 
 * Bump win32screenshot dependency version
