@@ -1,5 +1,12 @@
 = Watir Classic
 
+== Status
+
+Watir Classic is now deprecated. Please use Watir 6.0+ which is based on Selenium.
+Update your dependencies to use "watir", "~> 6.0"
+
+== Details
+
 Watir Classic is a Watir[https://github.com/watir/watir] driver for automating Internet Explorer on Windows.
 
 Project Home:: http://watir.com

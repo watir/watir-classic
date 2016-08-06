@@ -5,22 +5,16 @@ Gem::Specification.new do |s|
   s.author = 'Bret Pettichord'
   s.email = 'watir-general@groups.google.com'
   s.description = <<-EOF
-    WATIR is "Web Application Testing in Ruby". Watir (pronounced water) is a free,
-    open-source functional testing tool for automating browser-based tests of web applications.
-    It works with applications written in any language.
-    Watir drives the Internet Explorer browser the same way an end user would.
-    It clicks links, fills in forms, presses buttons.
-    Watir also checks results, such as whether expected text appears on the
-    page, or whether a control is enabled.
-    Watir can test web applications written in any language.
-    Watir is a Ruby library that works with Internet Explorer on Windows.
+    The watir-classic gem is no longer being actively maintained.
+    As of version 6.0, Watir is implemented with selenium-webdriver.
+    If you are requiring watir-classic, update your dependencies to use "watir", "~> 6.0"
   EOF
   s.homepage = 'http://watir.com/'
   s.summary = 'Automated testing tool for web applications.'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- spec/*`.split("\n")
-  s.require_paths = ["lib"]  
+  s.require_paths = ["lib"]
   s.requirements << 'Microsoft Windows running Internet Explorer 5.5 or later.'
 
   s.add_dependency 'win32-process', '>= 0.5.5'
