@@ -1,5 +1,9 @@
 module Watir
   # Returned by {Browser#window}.
+  
+  Point = Struct.new(:x, :y)
+  Dimension = Struct.new(:width, :height)
+  
   class Window
     include ElementExtensions
 
@@ -91,6 +95,73 @@ module Watir
     end
 
     alias_method :eql?, :==
+
+    #
+    # Returns window size.
+    #
+    # @example
+    # size = browser.window.size
+    # [size.width, size.height] #=> [1600, 1200]
+    #
+
+    def size
+      dimensions = browser.rautomation.dimensions
+      Dimension.new(dimensions[:width], dimensions[:height])
+    end
+
+    #
+    # Returns window position.
+    #
+    # @example
+    # position = browser.window.position
+    # [position.x, position.y] #=> [92, 76]
+    #
+
+    def position
+      dimensions = browser.rautomation.dimensions
+      Point.new(dimensions[:left], dimensions[:top])
+    end
+
+    #
+    # Resizes window to given width and height.
+    #
+    # @example
+    # browser.window.resize_to 1600, 1200
+    #
+    # @param [Fixnum] width
+    # @param [Fixnum] height
+    #
+
+    def resize_to(width, height)
+      browser.rautomation.move(width: width, height: height)
+      size
+    end
+
+    #
+    # Moves window to given x and y coordinates.
+    #
+    # @example
+    # browser.window.move_to 300, 200
+    #
+    # @param [Fixnum] x
+    # @param [Fixnum] y
+    #
+
+    def move_to(x, y)
+      browser.rautomation.move(left: x, top: y)
+      position
+    end
+
+    #
+    # Maximizes window.
+    #
+    # @example
+    # browser.window.maximize
+    #
+
+    def maximize
+      browser.rautomation.maximize
+    end
 
   end
 end
